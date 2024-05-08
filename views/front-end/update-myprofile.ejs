@@ -1,0 +1,392 @@
+<%- include('common/header') -%>
+<link href="/front-end/css/myprofile-style.css" rel="stylesheet" type="text/css">
+<%- include('common/header-banner') -%>
+
+<!-- ============== Section1 Start =============== -->
+<section class="main-content my-profile-content">
+  <div class="container">
+     <div class="my-profile-wrapper">
+        <form id="myprofile" enctype="multipart/form-data">
+            <input type="hidden" name="user_id" value="<%= user.user_id %>">
+            <div class="row">
+                <%- include('common/profile-sidebar') -%>
+                <div class="col-md-8">
+                    <div class="profile-right-content">
+                        <div class="profile-info-table">
+                            <table class="table">
+                            <tbody>
+                                <tr>
+                                <td>Name<sup style="color: #f20e0efd;">*</sup></td>
+                                <td>:</td>
+                                <td><div class="custom-form m-0"><input type="text" name="first_name" placeholder="" class="form-control" value="<%= user.first_name %>" required /></div> </td>
+                                <td><div class="custom-form m-0"><input type="text" name="last_name" placeholder="" class="form-control"  value="<%= user.last_name %>" required /></div></td>
+                                </tr>
+                                <tr>
+                                <td>Alias Name<sup style="color: #f20e0efd;">*</sup></td>
+                                <td>:</td>
+                                <td colspan="2"><div class="custom-form m-0"><input type="text" name="alise_name" placeholder="" class="form-control" value="<%= user.alise_name %>" required /></div> </td>
+                                </tr>
+                                <tr>
+                                <td>Email<sup style="color: #f20e0efd;">*</sup></td>
+                                <td>:</td>
+                                <td colspan="2"><div class="custom-form m-0"><input type="text" name="email" placeholder="" class="form-control" value="<%= user.email %>" readonly /></div> </td>
+                                </tr>
+                                <tr>
+                                <td>Mobile number<sup style="color: #f20e0efd;">*</sup></td>
+                                <td>:</td>
+                                <td colspan="2"><div class="custom-form m-0"><input type="text" name="phone" placeholder="" class="numericInput form-control" id="numericInputPhone" value="<%= user.phone %>" required /></div></td>
+                                </tr>
+                                <tr>
+                                <td>Alternate Number</td>
+                                <td>:</td>
+                                <td colspan="2"><div class="custom-form m-0"><input type="text" name="alternate_phone" placeholder="" class="numericInput form-control" id="" value="<% if(userMeta && userMeta.alternate_phone){ %><%= userMeta.alternate_phone %><% } %>" /></div></td>
+                                </tr>
+                                <tr>
+                                <td>Address<sup style="color: #f20e0efd;">*</sup></td>
+                                <td>:</td>
+                                <td colspan="2"><div class="custom-form m-0"><input type="text" name="address" placeholder="" class="form-control" value="<% if(userMeta && userMeta.address){ %><%= userMeta.address %><% } %>" required /></div></td>
+                                </tr>
+                                <tr>
+                                <td>City<sup style="color: #f20e0efd;">*</sup></td>
+                                <td>:</td>
+                                <td colspan="2"><div class="custom-form m-0"><input type="text" name="city" placeholder="" class="form-control" value="<% if(userMeta && userMeta.city){ %><%= userMeta.city %><% } %>" required /></div></td>
+                                </tr>
+                                <tr>
+                                <td>Country<sup style="color: #f20e0efd;">*</sup></td>
+                                <td>:</td>
+                                <td colspan="2">
+                                    <div class="custom-form m-0">
+                                        <% if(userMeta && userMeta.country){ %>
+                                            <select id="select_country" name="country" class="form-select " required >
+                                                <option value="">Select a Country...</option>
+                                                <% countries.forEach( item => { %>
+                                                <option  value="<%= item.id %>" <% if(item.id==userMeta.country){ %>selected <% } %> ><%= item.name %></option>
+                                                <% }) %>
+                                            </select>
+                                        <% }else{ %>
+                                            <select id="select_country" name="country"  class="form-select" required>
+                                                <option value="">Select a Country...</option>
+                                                <% countries.forEach( item => { %>
+                                                <option value="<%= item.id %>" ><%= item.name %></option>
+                                                <% }) %>
+                                            </select>
+                                        <% } %>
+                                        
+                                    </div> 
+                                </td>
+                                </tr>
+                                <tr>
+                                <td>State<sup style="color: #f20e0efd;">*</sup></td>
+                                <td>:</td>
+                                <td colspan="2">
+                                    <div class="custom-form m-0 dynamic_state_field_wrapper" >
+                                        
+                                        <select id="select_state" name="state"  class="form-select" required>
+                                            <option value="">Select a State...</option>
+                                            <% if(states){ %>
+                                                <% states.forEach( item => { %>
+                                                    <option value="<%=  item.id  %>" <% if(item.id==userMeta.state){ %>selected <% } %> ><%= item && item.name ? item.name : '' %></option>
+                                                    <% }) %>
+                                                <% } %>
+                                            
+                                        </select>
+                                        
+                                    </div> 
+                                </td>
+                                </tr>
+                                <tr>
+                                <td>Pin Code<sup style="color: #f20e0efd;">*</sup></td>
+                                <td>:</td>
+                                <td colspan="2"><div class="custom-form m-0"><input type="text" name="zip" placeholder="" id="numericInputPin" class="form-control" value="<%= userMeta && userMeta.zip ? userMeta.zip : '' %>" required /></div></td>
+                                </tr>
+                                
+                                
+                                <tr>
+                                <%
+                                if(userMeta && userMeta.date_of_birth){
+                                    const date = new Date(userMeta.date_of_birth);
+                                    const year = date.getFullYear();
+                                    const month = String(date.getMonth() + 1).padStart(2, '0');
+                                    const day = String(date.getDate()).padStart(2, '0');
+                                    const formattedDate = `${year}-${month}-${day}`;
+                                %>
+                                <td>DOB<sup style="color: #f20e0efd;">*</sup></td>
+                                <td>:</td>
+                                <td colspan="2"><div class="custom-form m-0"><input type="date" name="date_of_birth" placeholder="" class="form-control" value="<%= formattedDate%>" required /></div></td>
+                                <%
+                                    }else{
+                                    %>
+                                    <td>DOB<sup style="color: #f20e0efd;">*</sup></td>
+                                <td>:</td>
+                                <td colspan="2"><div class="custom-form m-0"><input type="date" name="date_of_birth" placeholder="" class="form-control" value="" required /></div></td>
+                                    <% } %>
+                                </tr>
+                                <tr>
+                                <td>Gender</td>
+                                <td>:</td>
+                                <td colspan="2">
+                                    <div class="custom-form m-0">
+                                        <% 
+                                            var gender = 'unisex'
+                                            if(userMeta && userMeta.gender){
+                                                var gender = '';
+                                                if(userMeta.gender == 'male') {
+                                                    gender = 'male';
+                                                }else if(userMeta.gender == 'female'){
+                                                    gender = 'female';
+                                                }else{
+                                                    gender = 'unisex';
+                                                }
+                                            }
+                                        %>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="gender"  id="inlineRadio1" value="male" <%= gender == 'male' ? 'checked' : '' %>>
+                                            <label class="form-check-label" for="inlineRadio1">Male</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="gender"  id="inlineRadio2" value="female"  <%= gender == 'female' ? 'checked' : '' %> >
+                                            <label class="form-check-label" for="inlineRadio2">Female</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="gender"  id="inlineRadio3" value="unisex"  <%= gender == 'unisex' ? 'checked' : '' %> >
+                                            <label class="form-check-label" for="inlineRadio3">Unisex</label>
+                                        </div>
+                                    </div>
+                                </td>
+                                
+                                </tr>
+                                <% 
+                                    var marital_status = 'Unmarried'
+                                    if(userMeta && userMeta.marital_status){
+                                        if(userMeta.marital_status == 'Married') {
+                                            marital_status = 'Married';
+                                        }else{
+                                            marital_status = 'Unmarried';
+                                        }
+                                    }
+                                %>
+                                <tr>
+                                <td>Marital Status</td>
+                                <td>:</td>
+                                <td colspan="2">
+                                    <div class="custom-form m-0">
+                                        <div class="custom-form m-0">
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="marital_status" id="marital_status1" value="Married" <%= marital_status == 'Married' ? 'checked' : '' %>>
+                                                <label class="form-check-label" for="marital_status1">Married</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="marital_status" id="marital_status2" value="Unmarried" <%= marital_status == 'Unmarried' ? 'checked' : '' %>>
+                                                <label class="form-check-label" for="marital_status2">Unmarried</label>
+                                            </div>
+                                            
+                                        </div>
+                                    <!-- <input type="text" name="email" placeholder="" class="form-control" value="<%= userMeta && userMeta.marital_status ? userMeta.marital_status : '' %>" /> -->
+                                    </div>
+                                </td>
+                                </tr>
+                            </tbody>
+                            </table>
+                        </div>
+                        <div class="about-me-area">
+                            <h2>About Me</h2>
+                            <p><div class="custom-form m-0"><textarea class="form-control" name="about"><%= userMeta && userMeta.about ? userMeta.about : '' %></textarea></div></p>
+                        </div>
+                        <div class="profile-info-table">
+                        <!-- <table class="table">
+                            <tbody>
+                            <tr>
+                                <td colspan="3" style="font-weight: 600;">Spouse</td>
+                            </tr>
+                            <tr>
+                                <td>Name</td>
+                                <td>:</td>
+                                <td>John Doe</td>
+                            </tr>
+                            <tr>
+                                <td>Age</td>
+                                <td>:</td>
+                                <td>32 y</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        </div>
+                        <div class="profile-info-table">
+                        <table class="table">
+                            <tbody>
+                            <tr>
+                                <td colspan="3" style="font-weight: 600;">Children</td>
+                            </tr>
+                            <tr>
+                                <td>Name</td>
+                                <td>:</td>
+                                <td>Katherina Doe</td>
+                            </tr>
+                            <tr>
+                                <td>Age</td>
+                                <td>:</td>
+                                <td>22 y</td>
+                            </tr>
+                            <tr>
+                                <td>Name</td>
+                                <td>:</td>
+                                <td>Sam Joe</td>
+                            </tr>
+                            <tr>
+                                <td>Age</td>
+                                <td>:</td>
+                                <td>18 y</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        </div> -->
+                        <div class="text-end"><div class="custom-form m-0"><input type="submit" value="Submit" class="btn-default btn-warning" id="myprofile_submit_btn" /></div></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="register-now frm-loading" style="display: none;">
+                    <span class="indicator-progress">Please wait...
+                      <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                    </span>
+                </div>
+                <div style=" width: 100%; text-align: center; display: block; border: 2px solid #fccb06; padding: 6px; margin-top: 20px;
+                border-radius: 5px; display: none;" class="profile-edit-message"></div>
+            </div>
+        </form>
+     </div>
+  </div>
+</section>
+<!-- ============== Section1 End =============== -->
+
+<%- include('common/footer') -%>
+
+<script>
+    $(document).ready(function () {
+
+        $('#select_country').change(function() {
+        $('#select_state').empty();
+        //$("#select_state").prop('required',false);
+        $('#dynamic_state_field_wrapper').hide();
+        var country_id = $(this).val();
+        $('#country_name').val(this.options[this.selectedIndex].text);
+        $.ajax({
+            url: '/api/states',
+            method: 'POST',
+            data: {country_id:country_id},
+            ContentType: 'application/json',
+            success: function (data) {
+                if (data.status == 'ok') {
+                    $('#dynamic_state_field_wrapper').show();
+                    //$("#select_state").prop('required',true);
+                    $.each(data.data, function (i, item) {
+                        $('#select_state').append($('<option>', { 
+                            value: item.id,
+                            text : item.name 
+                        }));
+                    });                
+                } else {
+                    $('#dynamic_state_field_wrapper').hide();
+                    $("#select_state").prop('required',false);
+                }
+            },
+            error: function (error) {
+                // Handle any errors
+                Swal.fire({
+                    text: error,
+                    icon: "error",
+                    buttonsStyling: false,
+                    confirmButtonText: "Ok, got it!",
+                    customClass: {
+                        confirmButton: "btn btn-primary"
+                    }
+                });
+                submitButton.disabled = false;
+                }
+            });    
+        });
+        $('#select_state').change(function() {  
+            $('#state_name').val(this.options[this.selectedIndex].text);
+        }); 
+
+      $('form#myprofile').submit(function (e) {
+        e.preventDefault();
+        $('.profile-edit-message').hide();
+        $('.profile-edit-message').text('');
+        $('#myprofile_submit_btn').prop('disabled', true);
+        $('.frm-loading').show();
+        const formData = new FormData($('#myprofile')[0]);
+        console.log(formData);
+        $.ajax({
+          url: '/auth/update-myprofile', // URL for your API endpoint
+          method: 'POST',
+          data: formData,
+          processData: false,
+          contentType: false,
+          success: function (data) {
+            if (data.status == 'ok') {
+              $('.profile-edit-message').text(data.message);
+              $('.profile-edit-message').show();
+              $('#myprofile_submit_btn').prop('disabled', false);
+              $('.frm-loading').hide();
+              setTimeout(function() {
+                window.location.href = '/myprofile';
+            }, 2000);
+            } else {
+              $('.profile-edit-message').text(data.message);
+              $('.profile-edit-message').show();
+              $('#myprofile_submit_btn').prop('disabled', false);
+              $('.frm-loading').hide();
+              console.log('Something went wrong');
+            }
+          },
+          
+          error: function (xhr, status, error) {
+            // Handle any errors that occur during the request
+            console.log(error);
+          }
+        })
+      });
+
+
+
+        $('#profile_pic').change( function(event) {
+            var tmppath = URL.createObjectURL(event.target.files[0]);
+            $('.profile-img .profile_pic').attr('src',tmppath);       
+        });
+
+        // Number validation
+        $('.numericInput').on('input', function() {
+            // Get the current input value
+            let inputValue = $(this).val();
+
+            // Remove any non-numeric characters using a regular expression
+            inputValue = inputValue.replace(/[^0-9]/g, '');
+
+            // Ensure that the input has exactly 10 digits
+            if (inputValue.length > 10) {
+                inputValue = inputValue.slice(0, 10);
+            }
+
+            // Update the input field with the sanitized value
+            $(this).val(inputValue);
+        });
+
+        $('#numericInputPin').on('input', function() {
+            // Get the current input value
+            let inputValue = $(this).val();
+
+            // Remove any non-numeric characters using a regular expression
+            inputValue = inputValue.replace(/[^0-9]/g, '');
+
+            // Ensure that the input has exactly 10 digits
+            if (inputValue.length > 6) {
+                inputValue = inputValue.slice(0, 6);
+            }
+
+            // Update the input field with the sanitized value
+            $(this).val(inputValue);
+        });
+
+
+    }); 
+  </script>

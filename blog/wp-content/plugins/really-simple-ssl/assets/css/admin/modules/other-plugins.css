@@ -1,0 +1,78 @@
+.rsssl .rsssl-other-plugins .rsssl-placeholder {
+  background-color: transparent;
+}
+.rsssl .rsssl-other-plugins .rsp-logo img {
+  height: 20px;
+}
+.rsssl .rsssl-other-plugins-container {
+  display: flex !important;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+  font-size: var(--rsp-fs-300);
+  line-height: 1.7;
+  gap: var(--rsp-spacing-xxs);
+}
+@media screen and (max-width: 992px) {
+  .rsssl .rsssl-other-plugins-container {
+    flex-direction: row;
+    overflow: hidden;
+  }
+}
+.rsssl .rsssl-other-plugins-container .rsssl-other-plugins-element {
+  width: 100%;
+  display: flex;
+  align-content: space-between;
+  justify-content: space-between;
+  gap: 10px;
+  --rsp-other-plugins-color: var(---rsp-brand-primary);
+}
+.rsssl .rsssl-other-plugins-container .rsssl-other-plugins-element.rsssl-zip-recipes {
+  --rsp-other-plugins-color: var(--rsp-pink);
+}
+.rsssl .rsssl-other-plugins-container .rsssl-other-plugins-element.rsssl-burst-statistics {
+  --rsp-other-plugins-color: var(--rsp-green);
+}
+.rsssl .rsssl-other-plugins-container .rsssl-other-plugins-element.rsssl-complianz-gdpr {
+  --rsp-other-plugins-color: var(--rsp-blue);
+}
+.rsssl .rsssl-other-plugins-container .rsssl-other-plugins-element.rsssl-complianz-terms-conditions {
+  --rsp-other-plugins-color: var(--rsp-black);
+}
+.rsssl .rsssl-other-plugins-container .rsssl-other-plugins-element.rsssl-really-simple-ssl {
+  --rsp-other-plugins-color: var(--rsp-yellow);
+}
+.rsssl .rsssl-other-plugins-container .rsssl-other-plugins-element a {
+  width: -moz-max-content;
+  width: max-content;
+  color: var(--rsp-text-color-light);
+  transition: color 0.3s ease;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  gap: var(--rsp-spacing-xs);
+  text-decoration: none;
+}
+.rsssl .rsssl-other-plugins-container .rsssl-other-plugins-element a:hover {
+  color: var(--rsp-other-plugins-color);
+  text-decoration: underline;
+}
+.rsssl .rsssl-other-plugins-container .rsssl-other-plugins-element a:hover .rsssl-bullet {
+  background-color: var(--rsp-other-plugins-color);
+}
+.rsssl .rsssl-other-plugins-container .rsssl-other-plugins-element a:hover .rsssl-other-plugins-content {
+  text-decoration: underline;
+}
+.rsssl .rsssl-other-plugins-container .rsssl-other-plugins-element .rsssl-bullet {
+  transition: background-color 0.3s ease;
+  background-color: var(--rsp-other-plugins-color);
+}
+.rsssl .rsssl-other-plugins-container .rsssl-other-plugins-element .rsssl-other-plugins-content {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.rsssl .rsssl-other-plugins-container .rsssl-other-plugins-element .rsssl-other-plugin-status {
+  min-width: -moz-fit-content;
+  min-width: fit-content;
+}/*# sourceMappingURL=other-plugins.css.map */

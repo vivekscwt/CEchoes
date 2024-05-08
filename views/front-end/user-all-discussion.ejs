@@ -1,0 +1,206 @@
+<%- include('common/header') -%>
+<link href="/front-end/css/review-style.css" rel="stylesheet" type="text/css">
+<link href="/front-end/css/profile-dashboard-style.css" rel="stylesheet" type="text/css">
+<link href="/front-end/css/company-profile-dashboard.css" rel="stylesheet" type="text/css">
+<%- include('common/header-banner') -%>
+<!-- ============== Section1 Start =============== -->
+<section class="main-content bottom-main-content">
+   <div class="container">
+      <!--<div class="review-search-select-area">
+         <div class="review-search-box position-relative">
+            <form>
+               <input type="text" class="form-control" placeholder="Search for Organization/Institution/Place of Interest" required="">
+            </form>
+            <input type="submit">
+         </div>
+         <div class="short-by-select">
+            <div class="custom-select-box">
+               <div class="custom-select-label">Sort By</div>
+               <div class="custom-select-change">Select</div>
+               <div class="custom-select-dropdown">
+                  <ul class="m-0 p-0">
+                     <li><a href="#">Date</a></li>
+                     <li><a href="#">City</a></li>
+                  </ul>
+               </div>
+            </div>
+         </div>
+      </div>-->
+      <div class="review-slider-wrap">
+         <h2 class="inner-main-head">All Discussions</h2>
+         <div class="each_box update_basic_information all_review_listing_for_company">
+            <div class="table-responsive">
+                <% if (DiscussionsByUserId.length === 0) { %>
+                    <p>No results found.</p>
+                <% } else { %>
+                <table class="table table-hover custom-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Date</th>
+                            <th scope="col" style="width: 450px;">Topic</th>
+                            <th scope="col">Tags</th>
+                            <th scope="col">Total Comments</th>
+                            <th scope="col">Total Views</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% DiscussionsByUserId.forEach( discussion => { %>
+                        <tr>
+                            <td>
+                                <% const dateString = discussion.created_at; %>
+                                <% const date = new Date(dateString); %>
+                                <%= date.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) %>
+                                <!-- ,<br>
+                                <small><%= date.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }) %></small> -->
+                            </td>
+                            <td><a href="/discussion-details/<%- discussion.id %>"><%- discussion.topic -%></a></td>
+                            <td>
+                                <%
+                                let tags = []
+                                if(discussion.tags != ''){
+                                    tags = JSON.parse(discussion.tags)
+                                }
+                                %>
+                                <% tags.forEach((tag) =>{ %> 
+                                    <span class="badge badge-square badge-warning"><%= tag %></span>
+                                <% }) %>
+                            </td>
+                            <td>
+                                <%- discussion.total_comments -%>
+                            </td>
+                            <td>
+                                <%- discussion.total_views -%>
+                            </td>
+                            <td>
+                                <% if (discussion.discussion_status == 0) { %>
+                                    <a href="/update-discussion/<%= discussion.id %>" style="color: #000;">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <% } else if (discussion.discussion_status == 1) { %>
+
+                                    <i class="fa fa-check" aria-hidden="true"></i>
+                                    </a>
+                                <% } %>
+                            </td>                           
+                        </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+                <% } %>
+            </div>
+        </div>
+      </div>
+   </div>
+</section>
+
+
+<!-- ============== Section1 End =============== -->
+<%- include('common/footer') -%>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/css/dataTables.bootstrap4.min.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/1.0.4/css/dataTables.responsive.css" />
+
+<script src="https://cdn.datatables.net/1.10.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/plug-ins/f2c75b7247b/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+<script src="https://cdn.datatables.net/responsive/1.0.4/js/dataTables.responsive.js"></script>
+
+
+<script>
+    jQuery(function ($) {
+        $(document).ready(() => {
+            // Initialize DataTables
+            $('.table').DataTable({
+                "order": [[ 4, "desc" ]]
+            });
+
+        //     // Form submission event handler
+        //     $('form#create_discussion_form').submit(function (e) {
+        //         e.preventDefault();
+        //         $('.response-message').hide();
+        //         $('.response-message').text('');
+        //         $('#invitation_email').prop('disabled', true);
+        //         $('.frm-loading').show(); 
+
+        //         var allTags = [];
+        //         var transformedResponse = {};
+
+        //         // Collect tags
+        //         $(this).find('#sendreviewtags_discussion').find('span').each(function(){
+        //             var enteredTag = $(this).text();
+        //             allTags.push(enteredTag);
+        //         });
+
+        //         // Serialize form data
+        //         const formData = $('#create_discussion_form').serializeArray();
+        //         $(formData).each(function (index, field) {
+        //             transformedResponse[field.name] = field.value;
+        //         });
+
+        //         // Attach tags to the transformedResponse
+        //         transformedResponse['tags'] = allTags;
+        //         console.log(transformedResponse);
+
+        //         // AJAX request
+        //         $.ajax({
+        //             url: '/auth/edit-discussion', 
+        //             method: 'POST',
+        //             data: JSON.stringify(transformedResponse),
+        //             processData: false,
+        //             contentType: 'application/json',
+        //             success: function (data) {
+        //                 if (data.status == 'ok') {
+        //                     $('.response-message').text(data.message);
+        //                     $('.response-message').show();
+        //                     $('#invitation_email').prop('disabled', false);
+        //                     $('.frm-loading').hide();
+        //                     setTimeout(function() {
+        //                         window.location.reload();
+        //                     }, 2000);
+        //                 } else {
+        //                     $('.response-message').text(data.message);
+        //                     $('.response-message').show();
+        //                     $('#invitation_email').prop('disabled', false);
+        //                     $('.frm-loading').hide();
+        //                     console.log('Something went wrong');
+        //                 }
+        //             },
+        //             error: function (xhr, status, error) {
+        //                 // Handle any errors that occur during the request
+        //                 console.log(error);
+        //             }
+        //         });
+        //     });
+
+        //     $(".edit-discussion-btn").click(function() {
+        //     const discussionId = $(this).data('discussion-id');
+
+        //     $.ajax({
+        //     url: '/auth/get-discussions/' + discussionId, 
+        //     method: 'GET',
+        //     success: function (data) {
+        //         console.log(data);
+        //         $('#creatediscussion').html(data);
+        //         $("#creatediscussion").modal("show");
+        //     },
+        //     error: function (xhr, status, error) {
+        //         console.error(error);
+        //         // Handle error
+        //     }
+        // });
+        // });
+        });
+    });
+</script>
+
+
+
+    <!-- <script>
+        jQuery(function ($) {
+            $(document).ready(() => {
+                $('.table').DataTable({
+                    "order": [[ 4, "desc" ]]
+                });
+            });
+        });
+    </script> -->

@@ -1,0 +1,846 @@
+<%- include('../common/header') -%>
+    <!--begin::Content-->
+    <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+        <!--begin::Toolbar-->
+        <div class="toolbar" id="kt_toolbar">
+            <!--begin::Container-->
+            <div id="kt_toolbar_container" class="container-fluid d-flex flex-stack">
+                <!--begin::Page title-->
+                <div data-kt-swapper="true" data-kt-swapper-mode="prepend"
+                    data-kt-swapper-parent="{default: '#kt_content_container', 'lg' : '#kt_toolbar_container'}"
+                    class="page-title d-flex align-items-center flex-wrap me-3 mb-5 mb-lg-0">
+                    <!--begin::Title-->
+                    <h1 class="d-flex align-items-center text-dark fw-bolder fs-3 my-1">
+                        <%= page_title %>
+                            <!--end::Description-->
+                    </h1>
+                    <!--end::Title-->
+                </div>
+                <!--end::Page title-->
+            </div>
+            <!--end::Container-->
+        </div>
+        <!--end::Toolbar-->
+        <!--begin::Post-->
+        <div class="post d-flex flex-column-fluid" id="kt_post">
+            <!--begin::Container-->
+            <div id="kt_content_container" class="container-xxl">
+                <!--begin::Basic info-->
+                <div class="card mb-5 mb-xl-10">
+                    <!--begin::Card header-->
+
+                    <!--begin::Card header-->
+                    <!--begin::Content-->
+                    <div id="kt_account_profile_details" class="collapse show">
+                        <!--begin::Form-->
+                        <form id="kt_account_profile_details_form" class="form" action="auth/update-about" method="POST"
+                            enctype="multipart/form-data">
+                            <!--begin::Card body-->
+                            <input type="hidden" name="about_id" id="" value="<%= about_info.id %>" />
+                            <div class="card-header border-0 cursor-pointer" role="button"
+                                data-bs-target="#kt_account_profile_details" aria-expanded="true"
+                                aria-controls="kt_account_profile_details">
+                                <!--begin::Card title-->
+                                <div class="card-title m-0">
+                                    <h3 class="fw-bolder m-0">Title Section</h3>
+                                </div>
+                                <!--end::Card title-->
+                            </div>
+                            <div class="card-body border-top p-9">
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Title</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <input type="text" name="title" id="title"
+                                            class="form-control form-control-lg form-control-solid" placeholder="Title"
+                                            value="<%= about_info.title %>" />
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <!--end::Input group-->
+                                <!--begin::Input group-->
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Mata Title</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <input type="text" name="meta_title" id="meta_title"
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Mata Title" value="<%= about_info.meta_title %>" />
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <!--end::Input group-->
+                                <!--begin::Input group-->
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Meta Description</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <input type="text" name="meta_desc" id="meta_desc"
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Meta Description" value="<%= about_info.meta_desc %>" />
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <!--end::Input group-->
+                                <!--begin::Input group-->
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Meta Keyword</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <input type="text" name="meta_keyword" id="meta_keyword"
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Meta Keyword" value="<%= about_info.meta_keyword %>" />
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+
+                            </div>
+                            <div class="card-header border-0 cursor-pointer" role="button"
+                                data-bs-target="#kt_account_profile_details" aria-expanded="true"
+                                aria-controls="kt_account_profile_details">
+                                <!--begin::Card title-->
+                                <div class="card-title m-0">
+                                    <h3 class="fw-bolder m-0">Banner Section</h3>
+                                </div>
+                                <!--end::Card title-->
+                            </div>
+                            <div class="card-body border-top p-9">
+
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span>Banner Content</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <textarea name="banner_content" id=""
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Joing Reason For Business"><%= meta_values_array.banner_content %></textarea>
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Banner Image 1</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-7 fv-row">
+                                        <input type="file" name="banner_img_1" id=""
+                                            class="form-control form-control-lg form-control-solid" placeholder=""
+                                            value="" />
+                                    </div>
+                                    <div class="col-lg-1 fv-row">
+                                        <img src="/<%= meta_values_array.banner_img_1 %>" alt="img" width="50"
+                                            height="50" loading="">
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Banner Image 2</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-7 fv-row">
+                                        <input type="file" name="banner_img_2" id=""
+                                            class="form-control form-control-lg form-control-solid" placeholder=""
+                                            value="" />
+                                    </div>
+                                    <div class="col-lg-1 fv-row">
+                                        <img src="/<%= meta_values_array.banner_img_2 %>" alt="img" width="50"
+                                            height="50" loading="">
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Banner Image 3</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-7 fv-row">
+                                        <input type="file" name="banner_img_3" id=""
+                                            class="form-control form-control-lg form-control-solid" placeholder=""
+                                            value="" />
+                                    </div>
+                                    <div class="col-lg-1 fv-row">
+                                        <img src="/<%= meta_values_array.banner_img_3 %>" alt="img" width="50"
+                                            height="50" loading="">
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Banner Image 4</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-7 fv-row">
+                                        <input type="file" name="banner_img_4" id=""
+                                            class="form-control form-control-lg form-control-solid" placeholder=""
+                                            value="" />
+                                    </div>
+                                    <div class="col-lg-1 fv-row">
+                                        <img src="/<%= meta_values_array.banner_img_4 %>" alt="img" width="50"
+                                            height="50" loading="">
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Banner Image 5</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-7 fv-row">
+                                        <input type="file" name="banner_img_5" id=""
+                                            class="form-control form-control-lg form-control-solid" placeholder=""
+                                            value="" />
+                                    </div>
+                                    <div class="col-lg-1 fv-row">
+                                        <img src="/<%= meta_values_array.banner_img_5 %>" alt="img" width="50"
+                                            height="50" loading="">
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Banner Image 6</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-7 fv-row">
+                                        <input type="file" name="banner_img_6" id=""
+                                            class="form-control form-control-lg form-control-solid" placeholder=""
+                                            value="" />
+                                    </div>
+                                    <div class="col-lg-1 fv-row">
+                                        <img src="/<%= meta_values_array.banner_img_6 %>" alt="img" width="50"
+                                            height="50" loading="">
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Banner Image 7</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-7 fv-row">
+                                        <input type="file" name="banner_img_7" id=""
+                                            class="form-control form-control-lg form-control-solid" placeholder=""
+                                            value="" />
+                                    </div>
+                                    <div class="col-lg-1 fv-row">
+                                        <img src="/<%= meta_values_array.banner_img_7 %>" alt="img" width="50"
+                                            height="50" loading="">
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Banner Image 8</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-7 fv-row">
+                                        <input type="file" name="banner_img_8" id=""
+                                            class="form-control form-control-lg form-control-solid" placeholder=""
+                                            value="" />
+                                    </div>
+                                    <div class="col-lg-1 fv-row">
+                                        <img src="/<%= meta_values_array.banner_img_8 %>" alt="img" width="50"
+                                            height="50" loading="">
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                            </div>
+                            <div class="card-header border-0 cursor-pointer" role="button"
+                                data-bs-target="#kt_account_profile_details" aria-expanded="true"
+                                aria-controls="kt_account_profile_details">
+                                <!--begin::Card title-->
+                                <div class="card-title m-0">
+                                    <h3 class="fw-bolder m-0">Banner Section For App</h3>
+                                </div>
+                                <!--end::Card title-->
+                            </div>
+                            <div class="card-body border-top p-9">
+
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span>Banner Content 1</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <textarea name="app_banner_content_1" id=""
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Banner Content 1"><%= meta_values_array.app_banner_content_1 %></textarea>
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span>Banner Content 2</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <textarea name="app_banner_content_2" id=""
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Banner Content 2"><%= meta_values_array.app_banner_content_2 %></textarea>
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Banner Image 1</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-7 fv-row">
+                                        <input type="file" name="app_banner_img_1" id=""
+                                            class="form-control form-control-lg form-control-solid" placeholder=""
+                                            value="" />
+                                    </div>
+                                    <div class="col-lg-1 fv-row">
+                                        <img src="/<%= meta_values_array.app_banner_img_1 %>" alt="img" width="50"
+                                            height="50" loading="">
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Banner Image 2</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-7 fv-row">
+                                        <input type="file" name="app_banner_img_2" id=""
+                                            class="form-control form-control-lg form-control-solid" placeholder=""
+                                            value="" />
+                                    </div>
+                                    <div class="col-lg-1 fv-row">
+                                        <img src="/<%= meta_values_array.app_banner_img_2 %>" alt="img" width="50"
+                                            height="50" loading="">
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                            </div>
+                            <div class="card-header border-0 cursor-pointer" role="button"
+                                data-bs-target="#kt_account_profile_details" aria-expanded="true"
+                                aria-controls="kt_account_profile_details">
+                                <!--begin::Card title-->
+                                <div class="card-title m-0">
+                                    <h3 class="fw-bolder m-0">Our Mission Section</h3>
+                                </div>
+                                <!--end::Card title-->
+                            </div>
+                            <div class="card-body border-top p-9">
+
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span>Mission Title</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <input type="text" name="mission_title" id=""
+                                            class="form-control form-control-lg form-control-solid" placeholder="Title"
+                                            value="<%= meta_values_array.mission_title %>" />
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span>Mission Content</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <textarea name="mission_content" id=""
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Joing Reason For Customer"><%= meta_values_array.mission_content %></textarea>
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                            </div>
+                            <div class="card-header border-0 cursor-pointer" role="button"
+                                data-bs-target="#kt_account_profile_details" aria-expanded="true"
+                                aria-controls="kt_account_profile_details">
+                                <!--begin::Card title-->
+                                <div class="card-title m-0">
+                                    <h3 class="fw-bolder m-0">About Platform</h3>
+                                </div>
+                                <!--end::Card title-->
+                            </div>
+                            <div class="card-body border-top p-9">
+
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span>Platform Content</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <textarea name="platform_content" id=""
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Organization Responsibility Content"><%= meta_values_array.platform_content %></textarea>
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Platform Image 1</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-7 fv-row">
+                                        <input type="file" name="platform_img_1" id=""
+                                            class="form-control form-control-lg form-control-solid" placeholder=""
+                                            value="" />
+                                    </div>
+                                    <div class="col-lg-1 fv-row">
+                                        <img src="/<%= meta_values_array.platform_img_1 %>" alt="img" width="50"
+                                            height="50" loading="">
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Platform Image 2</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-7 fv-row">
+                                        <input type="file" name="platform_img_2" id="org_responsibility_img_2"
+                                            class="form-control form-control-lg form-control-solid" placeholder=""
+                                            value="" />
+                                    </div>
+                                    <div class="col-lg-1 fv-row">
+                                        <img src="/<%= meta_values_array.platform_img_2 %>" alt="img" width="50"
+                                            height="50" loading="">
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Platform Image 3</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-7 fv-row">
+                                        <input type="file" name="platform_img_3" id=""
+                                            class="form-control form-control-lg form-control-solid" placeholder=""
+                                            value="" />
+                                    </div>
+                                    <div class="col-lg-1 fv-row">
+                                        <img src="/<%= meta_values_array.platform_img_3 %>" alt="img" width="50"
+                                            height="50" loading="">
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Platform Image 4</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-7 fv-row">
+                                        <input type="file" name="platform_img_4" id=""
+                                            class="form-control form-control-lg form-control-solid" placeholder=""
+                                            value="" />
+                                    </div>
+                                    <div class="col-lg-1 fv-row">
+                                        <img src="/<%= meta_values_array.platform_img_4 %>" alt="img" width="50"
+                                            height="50" loading="">
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Platform Image 5</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-7 fv-row">
+                                        <input type="file" name="platform_img_5" id=""
+                                            class="form-control form-control-lg form-control-solid" placeholder=""
+                                            value="" />
+                                    </div>
+                                    <div class="col-lg-1 fv-row">
+                                        <img src="/<%= meta_values_array.platform_img_5 %>" alt="img" width="50"
+                                            height="50" loading="">
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Platform Image 6</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-7 fv-row">
+                                        <input type="file" name="platform_img_6" id=""
+                                            class="form-control form-control-lg form-control-solid" placeholder=""
+                                            value="" />
+                                    </div>
+                                    <div class="col-lg-1 fv-row">
+                                        <img src="/<%= meta_values_array.platform_img_6 %>" alt="img" width="50"
+                                            height="50" loading="">
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Platform Image 7</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-7 fv-row">
+                                        <input type="file" name="platform_img_7" id=""
+                                            class="form-control form-control-lg form-control-solid" placeholder=""
+                                            value="" />
+                                    </div>
+                                    <div class="col-lg-1 fv-row">
+                                        <img src="/<%= meta_values_array.platform_img_7 %>" alt="img" width="50"
+                                            height="50" loading="">
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Platform Image 8</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-7 fv-row">
+                                        <input type="file" name="platform_img_8" id=""
+                                            class="form-control form-control-lg form-control-solid" placeholder=""
+                                            value="" />
+                                    </div>
+                                    <div class="col-lg-1 fv-row">
+                                        <img src="/<%= meta_values_array.platform_img_8 %>" alt="img" width="50"
+                                            height="50" loading="">
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+
+                            </div>
+                            <div class="card-header border-0 cursor-pointer" role="button"
+                                data-bs-target="#kt_account_profile_details" aria-expanded="true"
+                                aria-controls="kt_account_profile_details">
+                                <!--begin::Card title-->
+                                <div class="card-title m-0">
+                                    <h3 class="fw-bolder m-0">About Platform For App</h3>
+                                </div>
+                                <!--end::Card title-->
+                            </div>
+                            <div class="card-body border-top p-9">
+
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span>Platform Content 1</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <textarea name="app_platform_content_1" id=""
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Platform Content 1"><%= meta_values_array.app_platform_content_1 %></textarea>
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span>Platform Content 2</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <textarea name="app_platform_content_2" id=""
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Platform Content 2"><%= meta_values_array.app_platform_content_2 %></textarea>
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                            </div>
+                            <div class="card-header border-0 cursor-pointer" role="button"
+                                data-bs-target="#kt_account_profile_details" aria-expanded="true"
+                                aria-controls="kt_account_profile_details">
+                                <!--begin::Card title-->
+                                <div class="card-title m-0">
+                                    <h3 class="fw-bolder m-0">Customers Rights Section</h3>
+                                </div>
+                                <!--end::Card title-->
+                            </div>
+                            <div class="card-body border-top p-9">
+
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span>CEchoes Technology would Content</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <textarea name="CEchoesTechnology_would_content" id=""
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Organization Responsibility Content"><%= meta_values_array.CEchoesTechnology_would_content %></textarea>
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Customers Rights Image 1</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-7 fv-row">
+                                        <input type="file" name="right_img_1" id=""
+                                            class="form-control form-control-lg form-control-solid" placeholder=""
+                                            value="" />
+                                    </div>
+                                    <div class="col-lg-1 fv-row">
+                                        <img src="/<%= meta_values_array.right_img_1 %>" alt="img" width="50"
+                                            height="50" loading="">
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Customers Rights Image 2</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-7 fv-row">
+                                        <input type="file" name="right_img_2" id=""
+                                            class="form-control form-control-lg form-control-solid" placeholder=""
+                                            value="" />
+                                    </div>
+                                    <div class="col-lg-1 fv-row">
+                                        <img src="/<%= meta_values_array.right_img_2 %>" alt="img" width="50"
+                                            height="50" loading="">
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span>Customers Content</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <textarea name="customers_content" id=""
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Organization Responsibility Content"><%= meta_values_array.customers_content %></textarea>
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span>Service Providers Content</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <textarea name="service_providers_content" id=""
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Organization Responsibility Content"><%= meta_values_array.service_providers_content %></textarea>
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+
+                            </div>
+
+                            <div class="card-footer d-flex justify-content-end py-6 px-9">
+                                <button type="reset"
+                                    class="btn btn-light btn-active-light-primary me-2">Discard</button>
+                                <button type="submit" class="btn btn-primary"
+                                    id="kt_account_profile_details_submit">Submit</button>
+                            </div>
+                            <!--end::Actions-->
+                        </form>
+                        <!--end::Form-->
+                    </div>
+                    <!--end::Content-->
+                </div>
+                <!--end::Basic info-->
+
+                <!--end::Modals-->
+            </div>
+            <!--end::Container-->
+        </div>
+        <!--end::Post-->
+    </div>
+    <!--end::Content-->
+    <%- include('../common/footer') -%>
+        <script>
+/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+                var __webpack_exports__ = {};
+                /*!*********************************************************************************************!*\
+                  !*** ../../../themes/metronic/html/demo1/src/js/custom/account/settings/profile-details.js ***!
+                  \*********************************************************************************************/
+
+
+                // Class definition
+                var KTAccountSettingsProfileDetails = function () {
+                    // Private variables
+                    var form;
+                    var submitButton;
+                    var validation;
+
+                    var handleForm = function () {
+
+                        $("#kt_datepicker_1").flatpickr();
+                        validation = FormValidation.formValidation(
+                            form,
+                            {
+
+                                plugins: {
+                                    trigger: new FormValidation.plugins.Trigger(),
+                                    submitButton: new FormValidation.plugins.SubmitButton(),
+                                    //defaultSubmit: new FormValidation.plugins.DefaultSubmit(), // Uncomment this line to enable normal button submit after form validation
+                                    bootstrap: new FormValidation.plugins.Bootstrap5({
+                                        rowSelector: '.fv-row',
+                                        eleInvalidClass: '',
+                                        eleValidClass: ''
+                                    })
+                                }
+                            }
+                        );
+
+                        // Handle form submit
+                        submitButton.addEventListener('click', function (e) {
+                            e.preventDefault();
+
+                            validation.validate().then(function (status) {
+                                if (status == 'Valid') {
+                                    const form = document.getElementById('kt_account_profile_details_form');
+                                    const formData = new FormData(form);
+                                    console.log(formData);
+                                    //return false;
+
+                                    $.ajax({
+                                        url: '/auth/update-about', // URL for your API endpoint
+                                        type: 'POST',
+                                        data: formData,
+                                        processData: false,
+                                        contentType: false,
+                                        success: function (data) {
+                                            if (data.status == 'ok') {
+                                                Swal.fire({
+                                                    text: data.message,
+                                                    icon: "success",
+                                                    buttonsStyling: false,
+                                                    confirmButtonText: "Ok, got it!",
+                                                    customClass: {
+                                                        confirmButton: "btn btn-primary"
+                                                    }
+                                                }).then(function (result) {
+                                                    if (result.isConfirmed) {
+                                                        window.location.href = "/edit-about";
+                                                    }
+                                                });
+                                            } else {
+                                                Swal.fire({
+                                                    text: data.message,
+                                                    icon: "error",
+                                                    buttonsStyling: false,
+                                                    confirmButtonText: "Ok, got it!",
+                                                    customClass: {
+                                                        confirmButton: "btn btn-primary"
+                                                    }
+                                                });
+                                            }
+                                        },
+                                        error: function (xhr, status, error) {
+                                            // Handle any errors that occur during the request
+                                            console.log(error);
+                                        }
+                                    });
+                                } else {
+                                    swal.fire({
+                                        text: "Sorry, looks like there are some errors detected, please try again.",
+                                        icon: "error",
+                                        buttonsStyling: false,
+                                        confirmButtonText: "Ok, got it!",
+                                        customClass: {
+                                            confirmButton: "btn fw-bold btn-light-primary"
+                                        }
+                                    });
+                                }
+                            });
+                        });
+
+                    }
+
+
+                    // Public methods
+                    return {
+                        init: function () {
+                            form = document.getElementById('kt_account_profile_details_form');
+                            submitButton = form.querySelector('#kt_account_profile_details_submit');
+
+                            handleForm();
+                        }
+                    }
+                }();
+
+                // On document ready
+                KTUtil.onDOMContentLoaded(function () {
+                    KTAccountSettingsProfileDetails.init();
+                });
+
+            })()
+                ;
+//# sourceMappingURL=profile-details.js.map    
+        </script>

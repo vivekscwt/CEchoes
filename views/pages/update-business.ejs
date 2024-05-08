@@ -1,0 +1,1198 @@
+<%- include('../common/header') -%>
+    <!--begin::Content-->
+    <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+        <!--begin::Toolbar-->
+        <div class="toolbar" id="kt_toolbar">
+            <!--begin::Container-->
+            <div id="kt_toolbar_container" class="container-fluid d-flex flex-stack">
+                <!--begin::Page title-->
+                <div data-kt-swapper="true" data-kt-swapper-mode="prepend"
+                    data-kt-swapper-parent="{default: '#kt_content_container', 'lg' : '#kt_toolbar_container'}"
+                    class="page-title d-flex align-items-center flex-wrap me-3 mb-5 mb-lg-0">
+                    <!--begin::Title-->
+                    <h1 class="d-flex align-items-center text-dark fw-bolder fs-3 my-1">
+                        <%= page_title %>
+                            <!--end::Description-->
+                    </h1>
+                    <!--end::Title-->
+                </div>
+                <!--end::Page title-->
+            </div>
+            <!--end::Container-->
+        </div>
+        <!--end::Toolbar-->
+        <!--begin::Post-->
+        <div class="post d-flex flex-column-fluid" id="kt_post">
+            <!--begin::Container-->
+            <div id="kt_content_container" class="container-xxl">
+                <!--begin::Basic info-->
+                <div class="card mb-5 mb-xl-10">
+                    <!--begin::Card header-->
+
+                    <!--begin::Card header-->
+                    <!--begin::Content-->
+                    <div id="kt_account_profile_details" class="collapse show">
+                        <!--begin::Form-->
+                        <form id="kt_account_profile_details_form" class="form" action="auth/update-business"
+                            method="POST" enctype="multipart/form-data">
+                            <!--begin::Card body-->
+                            <input type="hidden" name="business_id" id="" value="<%= common.id %>" />
+                            <div class="card-header border-0 cursor-pointer" role="button"
+                                data-bs-target="#kt_account_profile_details" aria-expanded="true"
+                                aria-controls="kt_account_profile_details">
+                                <!--begin::Card title-->
+                                <div class="card-title m-0">
+                                    <h3 class="fw-bolder m-0">Title Section</h3>
+                                </div>
+                                <!--end::Card title-->
+                            </div>
+                            <div class="card-body border-top p-9">
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Title</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <input type="text" name="title" id="title"
+                                            class="form-control form-control-lg form-control-solid" placeholder="Title"
+                                            value="<%= common.title %>" />
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <!--end::Input group-->
+                                <!--begin::Input group-->
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Mata Title</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <input type="text" name="meta_title" id="meta_title"
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Mata Title" value="<%= common.meta_title %>" />
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <!--end::Input group-->
+                                <!--begin::Input group-->
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Meta Description</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <input type="text" name="meta_desc" id="meta_desc"
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Meta Description" value="<%= common.meta_desc %>" />
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <!--end::Input group-->
+                                <!--begin::Input group-->
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Meta Keyword</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <input type="text" name="meta_keyword" id="meta_keyword"
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Meta Keyword" value="<%= common.meta_keyword %>" />
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+
+                            </div>
+                            <div class="card-header border-0 cursor-pointer" role="button"
+                                data-bs-target="#kt_account_profile_details" aria-expanded="true"
+                                aria-controls="kt_account_profile_details">
+                                <!--begin::Card title-->
+                                <div class="card-title m-0">
+                                    <h3 class="fw-bolder m-0">Banner Section</h3>
+                                </div>
+                                <!--end::Card title-->
+                            </div>
+                            <div class="card-body border-top p-9">
+
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span>Banner Content</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <textarea name="bannner_content" id="bannner_content"
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Banner Content"><%= meta_values_array.bannner_content %></textarea>
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <!--end::Input group-->
+                                <!--begin::Input group-->
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Banner Image 1</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-7 fv-row">
+                                        <input type="file" name="banner_img_1" id="banner_img_1	"
+                                            class="form-control form-control-lg form-control-solid" placeholder=""
+                                            value="" />
+                                    </div>
+                                    <div class="col-lg-1 fv-row">
+                                        <img src="/<%= meta_values_array.banner_img_1 %>" alt="img" width="50"
+                                            height="50" loading="">
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Banner Image 2</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-7 fv-row">
+                                        <input type="file" name="banner_img_2" id="banner_img_2"
+                                            class="form-control form-control-lg form-control-solid" placeholder=""
+                                            value="" />
+                                    </div>
+                                    <div class="col-lg-1 fv-row">
+                                        <img src="/<%= meta_values_array.banner_img_2 %>" alt="img" width="50"
+                                            height="50" loading="">
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Banner Image 3</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-7 fv-row">
+                                        <input type="file" name="banner_img_3" id="banner_img_3"
+                                            class="form-control form-control-lg form-control-solid" placeholder=""
+                                            value="" />
+                                    </div>
+                                    <div class="col-lg-1 fv-row">
+                                        <img src="/<%= meta_values_array.banner_img_3 %>" alt="img" width="50"
+                                            height="50" loading="">
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Banner Image 4</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-7 fv-row">
+                                        <input type="file" name="banner_img_4" id="banner_img_4	"
+                                            class="form-control form-control-lg form-control-solid" placeholder=""
+                                            value="" />
+                                    </div>
+                                    <div class="col-lg-1 fv-row">
+                                        <img src="/<%= meta_values_array.banner_img_4 %>" alt="img" width="50"
+                                            height="50" loading="">
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Banner Image 5</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-7 fv-row">
+                                        <input type="file" name="banner_img_5" id="banner_img_5"
+                                            class="form-control form-control-lg form-control-solid" placeholder=""
+                                            value="" />
+                                    </div>
+                                    <div class="col-lg-1 fv-row">
+                                        <img src="/<%= meta_values_array.banner_img_5 %>" alt="img" width="50"
+                                            height="50" loading="">
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Banner Image 6</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-7 fv-row">
+                                        <input type="file" name="banner_img_6" id="banner_img_6"
+                                            class="form-control form-control-lg form-control-solid" placeholder=""
+                                            value="" />
+                                    </div>
+                                    <div class="col-lg-1 fv-row">
+                                        <img src="/<%= meta_values_array.banner_img_6 %>" alt="img" width="50"
+                                            height="50" loading="">
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Banner Image 7</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-7 fv-row">
+                                        <input type="file" name="banner_img_7" id="banner_img_7"
+                                            class="form-control form-control-lg form-control-solid" placeholder=""
+                                            value="" />
+                                    </div>
+                                    <div class="col-lg-1 fv-row">
+                                        <img src="/<%= meta_values_array.banner_img_7 %>" alt="img" width="50"
+                                            height="50" loading="">
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Banner Image 8</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-7 fv-row">
+                                        <input type="file" name="banner_img_8" id="banner_img_8"
+                                            class="form-control form-control-lg form-control-solid" placeholder=""
+                                            value="" />
+                                    </div>
+                                    <div class="col-lg-1 fv-row">
+                                        <img src="/<%= meta_values_array.banner_img_8 %>" alt="img" width="50"
+                                            height="50" loading="">
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                            </div>
+                            <div class="card-header border-0 cursor-pointer" role="button"
+                                data-bs-target="#kt_account_profile_details" aria-expanded="true"
+                                aria-controls="kt_account_profile_details">
+                                <!--begin::Card title-->
+                                <div class="card-title m-0">
+                                    <h3 class="fw-bolder m-0">Banner Section For App</h3>
+                                </div>
+                                <!--end::Card title-->
+                            </div>
+                            <div class="card-body border-top p-9">
+
+                                <div class="row mb-6">
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span>Banner Content Title</span>
+                                    </label>
+                                    <div class="col-lg-8 fv-row">
+                                        <textarea name="app_bannner_content_title" id="bannner_content"
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Banner Content Title"><%= meta_values_array.app_bannner_content_title %></textarea>
+                                    </div>
+                                </div>
+                                <div class="row mb-6">
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span>Banner Content 1</span>
+                                    </label>
+                                    <div class="col-lg-8 fv-row">
+                                        <textarea name="app_bannner_content_1" id=""
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Banner Content 1"><%= meta_values_array.app_bannner_content_1 %></textarea>
+                                    </div>
+                                </div>
+                                <div class="row mb-6">
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span>Banner Content 2</span>
+                                    </label>
+                                    <div class="col-lg-8 fv-row">
+                                        <textarea name="app_bannner_content_2" id=""
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Banner Content 2"><%= meta_values_array.app_bannner_content_2 %></textarea>
+                                    </div>
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">App Banner Image 1</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-7 fv-row">
+                                        <input type="file" name="app_banner_img_1" id=""
+                                            class="form-control form-control-lg form-control-solid" placeholder=""
+                                            value="" />
+                                    </div>
+                                    <div class="col-lg-1 fv-row">
+                                        <img src="/<%= meta_values_array.app_banner_img_1 %>" alt="img" width="50"
+                                            height="50" loading="">
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">App Banner Image 2</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-7 fv-row">
+                                        <input type="file" name="app_banner_img_2" id=""
+                                            class="form-control form-control-lg form-control-solid" placeholder=""
+                                            value="" />
+                                    </div>
+                                    <div class="col-lg-1 fv-row">
+                                        <img src="/<%= meta_values_array.app_banner_img_2 %>" alt="img" width="50"
+                                            height="50" loading="">
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                
+                            </div>
+                            <div class="card-header border-0 cursor-pointer" role="button"
+                                data-bs-target="#kt_account_profile_details" aria-expanded="true"
+                                aria-controls="kt_account_profile_details">
+                                <!--begin::Card title-->
+                                <div class="card-title m-0">
+                                    <h3 class="fw-bolder m-0">Features Section</h3>
+                                </div>
+                                <!--end::Card title-->
+                            </div>
+                            <div class="card-body border-top p-9">
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Features Title</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <input type="text" name="features_title" id=""
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Features Title" value="<%= meta_values_array.features_title %>" />
+                                    </div>
+                                </div>
+                                <div id="features_main_div">
+                                    <% BusinessFeature.forEach( (feature,index)=> { %>
+                                    <div class="features_repeater_div">
+                                        <div class="row mb-6">
+                                            <!--begin::Label-->
+                                            <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                                <span>Feature Content</span>
+                                            </label>
+                                            <div class="col-lg-8 fv-row">
+                                                <textarea name="feature_content" id=""
+                                                    class="form-control form-control-lg form-control-solid"
+                                                    placeholder="Feature Content" required><%= feature.content %></textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-6">
+                                            <!--begin::Label-->
+                                            <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                                <span class="">Icon</span>
+                                            </label>
+                                            <!--end::Label-->
+                                            <!--begin::Col-->
+                                            <div class="col-lg-7 fv-row">
+                                                <textarea name="feature_icon" id=""
+                                                    class="form-control form-control-lg form-control-solid"
+                                                    placeholder="Feature Logo" required><%= feature.image %></textarea>
+                                            </div>
+                                            <div class="col-lg-1 fv-row">
+                                                <%- feature.image %>
+                                            </div>
+                                            <!--end::Col-->
+                                        </div>
+                                        <% if(index > 0) { %>
+                                            <button type="button" class="btn btn-danger features_remove_btn" style="float: right;"><i class="fa fa-minus"></i></button>
+                                            <% } %>
+                                    </div>
+                                    <% }) %>
+                                    <button class="btn btn-primary" id="features_add_more_btn">Add More
+                                        Content</button>
+                                </div>
+                            </div>
+
+                            <div class="card-header border-0 cursor-pointer" role="button"
+                                data-bs-target="#kt_account_profile_details" aria-expanded="true"
+                                aria-controls="kt_account_profile_details">
+                                <!--begin::Card title-->
+                                <div class="card-title m-0">
+                                    <h3 class="fw-bolder m-0">Advantage Section</h3>
+                                </div>
+                                <!--end::Card title-->
+                            </div>
+                            <div class="card-body border-top p-9">
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Title</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <input type="text" name="advantage_title" id=""
+                                            class="form-control form-control-lg form-control-solid" placeholder="Title"
+                                            value="<%= meta_values_array.advantage_title %>" />
+                                    </div>
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span>Content</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <textarea name="advantage_content" id="advantage_content"
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Banner Content"><%= meta_values_array.advantage_content %></textarea>
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <!--end::Input group-->
+                                <!--begin::Input group-->
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Image 1</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-7 fv-row">
+                                        <input type="file" name="advantage_img_1" id="advantage_img_1	"
+                                            class="form-control form-control-lg form-control-solid" placeholder=""
+                                            value="" />
+                                    </div>
+                                    <div class="col-lg-1 fv-row">
+                                        <img src="/<%= meta_values_array.advantage_img_1 %>" alt="img" width="50"
+                                            height="50" loading="">
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Image 2</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-7 fv-row">
+                                        <input type="file" name="advantage_img_2" id="advantage_img_2"
+                                            class="form-control form-control-lg form-control-solid" placeholder=""
+                                            value="" />
+                                    </div>
+                                    <div class="col-lg-1 fv-row">
+                                        <img src="/<%= meta_values_array.advantage_img_2 %>" alt="img" width="50"
+                                            height="50" loading="">
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Image 3</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-7 fv-row">
+                                        <input type="file" name="advantage_img_3" id="advantage_img_3"
+                                            class="form-control form-control-lg form-control-solid" placeholder=""
+                                            value="" />
+                                    </div>
+                                    <div class="col-lg-1 fv-row">
+                                        <img src="/<%= meta_values_array.advantage_img_3 %>" alt="img" width="50"
+                                            height="50" loading="">
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Image 4</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-7 fv-row">
+                                        <input type="file" name="advantage_img_4" id="advantage_img_4	"
+                                            class="form-control form-control-lg form-control-solid" placeholder=""
+                                            value="" />
+                                    </div>
+                                    <div class="col-lg-1 fv-row">
+                                        <img src="/<%= meta_values_array.advantage_img_4 %>" alt="img" width="50"
+                                            height="50" loading="">
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Image 5</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-7 fv-row">
+                                        <input type="file" name="advantage_img_5" id="advantage_img_5"
+                                            class="form-control form-control-lg form-control-solid" placeholder=""
+                                            value="" />
+                                    </div>
+                                    <div class="col-lg-1 fv-row">
+                                        <img src="/<%= meta_values_array.advantage_img_5 %>" alt="img" width="50"
+                                            height="50" loading="">
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Image 6</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-7 fv-row">
+                                        <input type="file" name="advantage_img_6" id=""
+                                            class="form-control form-control-lg form-control-solid" placeholder=""
+                                            value="" />
+                                    </div>
+                                    <div class="col-lg-1 fv-row">
+                                        <img src="/<%= meta_values_array.advantage_img_6 %>" alt="img" width="50"
+                                            height="50" loading="">
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Image 7</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-7 fv-row">
+                                        <input type="file" name="advantage_img_7" id="banner_img_7"
+                                            class="form-control form-control-lg form-control-solid" placeholder=""
+                                            value="" />
+                                    </div>
+                                    <div class="col-lg-1 fv-row">
+                                        <img src="/<%= meta_values_array.advantage_img_7 %>" alt="img" width="50"
+                                            height="50" loading="">
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Image 8</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-7 fv-row">
+                                        <input type="file" name="advantage_img_8" id="banner_img_8"
+                                            class="form-control form-control-lg form-control-solid" placeholder=""
+                                            value="" />
+                                    </div>
+                                    <div class="col-lg-1 fv-row">
+                                        <img src="/<%= meta_values_array.advantage_img_8 %>" alt="img" width="50"
+                                            height="50" loading="">
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                            </div>
+                            <div class="card-header border-0 cursor-pointer" role="button"
+                                data-bs-target="#kt_account_profile_details" aria-expanded="true"
+                                aria-controls="kt_account_profile_details">
+                                <!--begin::Card title-->
+                                <div class="card-title m-0">
+                                    <h3 class="fw-bolder m-0">Advantage Section For App</h3>
+                                </div>
+                                <!--end::Card title-->
+                            </div>
+                            <div class="card-body border-top p-9">
+                                <% 
+                                    let app_advantage_points = [];
+                                    if(typeof meta_values_array.app_advantage_points !== 'undefined'){
+                                        app_advantage_points =  JSON.parse(meta_values_array.app_advantage_points)
+                                    }
+                                    
+                                %>
+                                <div id="app_advantage_main_div">
+                                    <% app_advantage_points.forEach( (app_advantage_point,index)=> { %>
+                                        <div class="app_advantage_repeater_div">
+                                            <div class="row mb-6">
+                                                <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                                    <span class="">Advantage Point</span>
+                                                </label>
+                                                <div class="col-lg-8 fv-row">
+                                                    <input type="text" name="app_advantage_point" id=""
+                                                        class="form-control form-control-lg form-control-solid" placeholder="Advantage Point" value="<%= app_advantage_point %>" />
+                                                </div>
+                                            </div>
+                                            <button type="button" class="btn btn-danger app_advantage_remove_btn" style="float: right;"><i class="fa fa-minus"></i></button>
+                                        </div>
+                                    
+                                    <% }) %>
+                                    <button class="btn btn-primary" id="app_advantage_add_more_btn">Add More Advantage Point</button>
+                                </div>
+                                
+                                
+                            </div>
+                            <div class="card-header border-0 cursor-pointer" role="button"
+                                data-bs-target="#kt_account_profile_details" aria-expanded="true"
+                                aria-controls="kt_account_profile_details">
+                                <!--begin::Card title-->
+                                <div class="card-title m-0">
+                                    <h3 class="fw-bolder m-0">Don’t Forget Section</h3>
+                                </div>
+                                <!--end::Card title-->
+                            </div>
+                            <div class="card-body border-top p-9">
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Title</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <input type="text" name="dont_forget_title" id=""
+                                            class="form-control form-control-lg form-control-solid" placeholder="Title"
+                                            value="<%= meta_values_array.dont_forget_title %>" />
+                                    </div>
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span>Content 1</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <textarea name="dont_forget_content_1" id=""
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Content 1"><%= meta_values_array.dont_forget_content_1 %></textarea>
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span>Content 2</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <textarea name="dont_forget_content_2" id="for_business"
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Content 2"><%= meta_values_array.dont_forget_content_2 %></textarea>
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                            </div>
+                            <div class="card-header border-0 cursor-pointer" role="button"
+                                data-bs-target="#kt_account_profile_details" aria-expanded="true"
+                                aria-controls="kt_account_profile_details">
+                                <!--begin::Card title-->
+                                <div class="card-title m-0">
+                                    <h3 class="fw-bolder m-0">Don’t Forget Section For App</h3>
+                                </div>
+                                <!--end::Card title-->
+                            </div>
+                            <div class="card-body border-top p-9">
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Content 1 Title</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <input type="text" name="app_dont_forget_content_1_title" id=""
+                                            class="form-control form-control-lg form-control-solid" placeholder="Content 1 Title"
+                                            value="<%= meta_values_array.app_dont_forget_content_1_title %>" />
+                                    </div>
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span>Content 1</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <textarea name="app_dont_forget_content_1" id=""
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Content 1"><%= meta_values_array.app_dont_forget_content_1 %></textarea>
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Content 2 Title</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <input type="text" name="app_dont_forget_content_2_title" id=""
+                                            class="form-control form-control-lg form-control-solid" placeholder="Content 2 Title"
+                                            value="<%= meta_values_array.app_dont_forget_content_2_title %>" />
+                                    </div>
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span>Content 2</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <textarea name="app_dont_forget_content_2" id=""
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Content 2"><%= meta_values_array.app_dont_forget_content_2 %></textarea>
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                            </div>
+                            <div class="card-header border-0 cursor-pointer" role="button"
+                                data-bs-target="#kt_account_profile_details" aria-expanded="true"
+                                aria-controls="kt_account_profile_details">
+                                <!--begin::Card title-->
+                                <div class="card-title m-0">
+                                    <h3 class="fw-bolder m-0">Did you know? Section</h3>
+                                </div>
+                                <!--end::Card title-->
+                            </div>
+                            <div class="card-body border-top p-9">
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Title</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <input type="text" name="did_you_know_title" id=""
+                                            class="form-control form-control-lg form-control-solid" placeholder=""
+                                            value="<%= meta_values_array.did_you_know_title %>" />
+                                    </div>
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span>Content 1</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <textarea name="did_you_know_content_1" id=""
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Content 1"><%= meta_values_array.did_you_know_content_1 %></textarea>
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span>Content 2</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <textarea name="did_you_know_content_2" id="for_business"
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Content 2"><%= meta_values_array.did_you_know_content_2 %></textarea>
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Image </span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-7 fv-row">
+                                        <input type="file" name="did_you_know_img" id="banner_img_8"
+                                            class="form-control form-control-lg form-control-solid" placeholder=""
+                                            value="" />
+                                    </div>
+                                    <div class="col-lg-1 fv-row">
+                                        <img src="/<%= meta_values_array.did_you_know_img %>" alt="img" width="50"
+                                            height="50" loading="">
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                            </div>
+                            <div class="card-header border-0 cursor-pointer" role="button"
+                                data-bs-target="#kt_account_profile_details" aria-expanded="true"
+                                aria-controls="kt_account_profile_details">
+                                <!--begin::Card title-->
+                                <div class="card-title m-0">
+                                    <h3 class="fw-bolder m-0">Upcoming Features Section</h3>
+                                </div>
+                                <!--end::Card title-->
+                            </div>
+                            <div class="card-body border-top p-9">
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Title</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <input type="text" name="upcoming_features_title" id=""
+                                            class="form-control form-control-lg form-control-solid" placeholder=""
+                                            value="Title" />
+                                    </div>
+                                </div>
+                                <div id="upcoming_features_main_div">
+                                    <% UpcomingBusinessFeature.forEach( (upcoming_feature,index)=> { %>
+                                    <div class="upcoming_features_repeater_div">
+                                        <div class="row mb-6">
+                                            <!--begin::Label-->
+                                            <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                                <span>Upcomming Feature Content</span>
+                                            </label>
+                                            <!--end::Label-->
+                                            <!--begin::Col-->
+                                            <div class="col-lg-8 fv-row">
+                                                <textarea name="upcoming_features_content" id=""
+                                                    class="form-control form-control-lg form-control-solid"
+                                                    placeholder="Upcomming Feature Content"><%= upcoming_feature.content %></textarea>
+                                            </div>
+                                            <!--end::Col-->
+                                        </div>
+                                        <% if(index > 0) { %>
+                                        <button type="button" class="btn btn-danger upcoming_features_remove_btn" style="float: right;"><i class="fa fa-minus"></i></button>
+                                        <% } %>
+                                    </div>
+                                    <% })%>
+                                    <button class="btn btn-primary" id="upcoming_features_add_more_btn">Add More
+                                        Content</button>
+                                </div>
+                            </div>
+                            <div class="card-header border-0 cursor-pointer" role="button"
+                                data-bs-target="#kt_account_profile_details" aria-expanded="true"
+                                aria-controls="kt_account_profile_details">
+                                <!--begin::Card title-->
+                                <div class="card-title m-0">
+                                    <h3 class="fw-bolder m-0">Membership Plan Section</h3>
+                                </div>
+                                <!--end::Card title-->
+                            </div>
+                            <div class="card-body border-top p-9">
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span>Basic</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <textarea name="basic_plan_content" id=""
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Basic Content"><%= meta_values_array.basic_plan_content %></textarea>
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span>Standard</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <textarea name="standard_plan_content" id=""
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Standard Content"><%= meta_values_array.standard_plan_content %></textarea>
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span>Advanced</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <textarea name="advanced_plan_content" id=""
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Advanced Content"><%= meta_values_array.advanced_plan_content %></textarea>
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span>Premium</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <textarea name="premium_plan_content" id=""
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Premium Content"><%= meta_values_array.premium_plan_content %></textarea>
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span>Enterprise</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <textarea name="enterprice_plan_content" id=""
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Enterprise Content"><%= meta_values_array.enterprice_plan_content %></textarea>
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                            </div>
+                            <div class="card-header border-0 cursor-pointer" role="button"
+                                data-bs-target="#kt_account_profile_details" aria-expanded="true"
+                                aria-controls="kt_account_profile_details">
+                                <!--begin::Card title-->
+                                <div class="card-title m-0">
+                                    <h3 class="fw-bolder m-0">Bottom Section</h3>
+                                </div>
+                                <!--end::Card title-->
+                            </div>
+                            <div class="card-body border-top p-9">
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span>Bottom Content</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <textarea name="bottom_content" id=""
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Bottom Content"><%= meta_values_array.bottom_content %></textarea>
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                            </div>
+                            <div class="card-footer d-flex justify-content-end py-6 px-9">
+                                <button type="reset"
+                                    class="btn btn-light btn-active-light-primary me-2">Discard</button>
+                                <button type="submit" class="btn btn-primary"
+                                    id="kt_account_profile_details_submit">Submit</button>
+                            </div>
+                            <!--end::Actions-->
+                        </form>
+                        <!--end::Form-->
+                    </div>
+                    <!--end::Content-->
+                </div>
+                <!--end::Basic info-->
+
+                <!--end::Modals-->
+            </div>
+            <!--end::Container-->
+        </div>
+        <!--end::Post-->
+    </div>
+    <!--end::Content-->
+    <%- include('../common/footer') -%>
+        <script>
+/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+                var __webpack_exports__ = {};
+                /*!*********************************************************************************************!*\
+                  !*** ../../../themes/metronic/html/demo1/src/js/custom/account/settings/profile-details.js ***!
+                  \*********************************************************************************************/
+
+
+                // Class definition
+                var KTAccountSettingsProfileDetails = function () {
+                    // Private variables
+                    var form;
+                    var submitButton;
+                    var validation;
+
+                    var handleForm = function () {
+
+                        $("#kt_datepicker_1").flatpickr();
+                        validation = FormValidation.formValidation(
+                            form,
+                            {
+                                
+                                plugins: {
+                                    trigger: new FormValidation.plugins.Trigger(),
+                                    submitButton: new FormValidation.plugins.SubmitButton(),
+                                    //defaultSubmit: new FormValidation.plugins.DefaultSubmit(), // Uncomment this line to enable normal button submit after form validation
+                                    bootstrap: new FormValidation.plugins.Bootstrap5({
+                                        rowSelector: '.fv-row',
+                                        eleInvalidClass: '',
+                                        eleValidClass: ''
+                                    })
+                                }
+                            }
+                        );
+
+                        // Handle form submit
+                        submitButton.addEventListener('click', function (e) {
+                            e.preventDefault();
+
+                            validation.validate().then(function (status) {
+                                if (status == 'Valid') {
+                                    const formData = new FormData($('#kt_account_profile_details_form')[0]);
+                                    //const jsonResponse = $('#kt_account_profile_details_form').serializeArray();
+
+
+                                    // const transformedResponse = {};
+                                    // // Loop through the JSON response using forEach
+                                    // jsonResponse.forEach(item => {
+                                    //     const { name, value } = item;
+
+                                    //     if (name === "feature_content") {
+                                    //         transformedResponse.feature = transformedResponse.feature || [];
+                                    //         transformedResponse.feature.push({ [name]: value });
+                                    //     } else if (name === "upcoming_features_content") {
+                                    //         transformedResponse.upcoming_features = transformedResponse.upcoming_features || [];
+                                    //         transformedResponse.upcoming_features.push({ [name]: value });
+                                    //     } else {
+                                    //         transformedResponse[name] = value;
+                                    //     }
+                                    // });
+                                    console.log(formData);
+                                    //return false;
+
+                                    $.ajax({
+                                        url: '/auth/update-business', // URL for your API endpoint
+                                        method: 'POST',
+                                        data: formData,
+                                        processData: false,
+                                        contentType: false,
+
+                                        // data: JSON.stringify(transformedResponse),
+                                        // contentType: 'application/json',
+                                        success: function (data) {
+                                            if (data.status == 'ok') {
+                                                Swal.fire({
+                                                    text: data.message,
+                                                    icon: "success",
+                                                    buttonsStyling: false,
+                                                    confirmButtonText: "Ok, got it!",
+                                                    customClass: {
+                                                        confirmButton: "btn btn-primary"
+                                                    }
+                                                }).then(function (result) {
+                                                    if (result.isConfirmed) {
+                                                        window.location.href = "/edit-business";
+                                                    }
+                                                });
+                                            } else {
+                                                Swal.fire({
+                                                    text: data.message,
+                                                    icon: "error",
+                                                    buttonsStyling: false,
+                                                    confirmButtonText: "Ok, got it!",
+                                                    customClass: {
+                                                        confirmButton: "btn btn-primary"
+                                                    }
+                                                });
+                                            }
+                                        },
+                                        error: function (xhr, status, error) {
+                                            // Handle any errors that occur during the request
+                                            console.log(error);
+                                        }
+                                    });
+                                } else {
+                                    swal.fire({
+                                        text: "Sorry, looks like there are some errors detected, please try again.",
+                                        icon: "error",
+                                        buttonsStyling: false,
+                                        confirmButtonText: "Ok, got it!",
+                                        customClass: {
+                                            confirmButton: "btn fw-bold btn-light-primary"
+                                        }
+                                    });
+                                }
+                            });
+                        });
+
+                    }
+
+
+                    // Public methods
+                    return {
+                        init: function () {
+                            form = document.getElementById('kt_account_profile_details_form');
+                            submitButton = form.querySelector('#kt_account_profile_details_submit');
+
+                            handleForm();
+                        }
+                    }
+                }();
+
+                // On document ready
+                KTUtil.onDOMContentLoaded(function () {
+                    KTAccountSettingsProfileDetails.init();
+                });
+
+            })()
+                ;
+
+            $(document).ready(function () {
+                $(document).on('click', '#upcoming_features_add_more_btn', function (e) {
+                    e.preventDefault();
+                    $(this).parent().append('<div class="upcoming_features_repeater_div"> <div class="row mb-6"> <label class="col-lg-4 col-form-label fw-bold fs-6"> <span>Upcomming Feature Content</span> </label> <div class="col-lg-8 fv-row"> <textarea name="upcoming_features_content" id="for_business" class="form-control form-control-lg form-control-solid" placeholder="Feature Content"></textarea> </div></div><button type="button" class="btn btn-danger upcoming_features_remove_btn" style="float: right;"><i class="fa fa-minus"></i></button></div>');
+                    $(this).parent().append('<button class="btn btn-primary" id="upcoming_features_add_more_btn">Add More Content</button>');
+                    $(this).remove();
+                    //initializeCKEditor($(this).parents('.main-repeater'))
+                });
+
+                // Remove Category
+                $('#upcoming_features_main_div').on('click', '.upcoming_features_remove_btn', function () {
+                    $(this).parent('.upcoming_features_repeater_div').remove();
+                });
+
+                $(document).on('click', '#features_add_more_btn', function (e) {
+                    e.preventDefault();
+                    $(this).parent().append('<div class="features_repeater_div"> <div class="row mb-6"> <label class="col-lg-4 col-form-label fw-bold fs-6"> <span>Feature Content</span> </label> <div class="col-lg-8 fv-row"> <textarea name="feature_content" id="" class="form-control form-control-lg form-control-solid" placeholder="Feature Content" required></textarea> </div></div><div class="row mb-6"> <label class="col-lg-4 col-form-label fw-bold fs-6"> <span class="">Icon</span> </label> <div class="col-lg-8 fv-row"> <textarea name="feature_icon" class="form-control form-control-lg form-control-solid" placeholder="Feature Logo" ></textarea> </div></div><button type="button" class="btn btn-danger features_remove_btn" style="float: right;"><i class="fa fa-minus"></i></button></div>');
+                    $(this).parent().append('<button class="btn btn-primary" id="features_add_more_btn">Add More Content</button>');
+                    $(this).remove();
+                    //initializeCKEditor($(this).parents('.main-repeater'))
+                });
+
+                // Remove Category
+                $('#features_main_div').on('click', '.features_remove_btn', function () {
+                    $(this).parent('.features_repeater_div').remove();
+                });
+
+                //App Advantage repeater
+                $(document).on('click', '#app_advantage_add_more_btn', function (e) {
+                    e.preventDefault();
+                    $(this).parent().append('<div class="app_advantage_repeater_div"><div class="row mb-6"><label class="col-lg-4 col-form-label fw-bold fs-6"><span class="">Advantage Point</span></label><div class="col-lg-8 fv-row"><input type="text" name="app_advantage_point" id="" class="form-control form-control-lg form-control-solid" placeholder="Advantage Point" value="" /></div></div><button type="button" class="btn btn-danger app_advantage_remove_btn" style="float: right;"><i class="fa fa-minus"></i></button></div>');
+                    $(this).parent().append('<button class="btn btn-primary" id="app_advantage_add_more_btn">Add More Advantage Point</button>');
+                    $(this).remove();
+                    //initializeCKEditor($(this).parents('.main-repeater'))
+                });
+
+                // Remove App Advantage repeater
+                $('#app_advantage_main_div').on('click', '.app_advantage_remove_btn', function () {
+                    $(this).parent('.app_advantage_repeater_div').remove();
+                });
+            })
+        </script>

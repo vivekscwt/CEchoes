@@ -1,0 +1,245 @@
+<%- include('common/header') -%>
+<link href="/front-end/css/review-style.css" rel="stylesheet" type="text/css">
+<link href="/front-end/css/company-profile-dashboard.css" rel="stylesheet" type="text/css">
+<%- include('common/header-banner') -%>
+
+<!-- ============== Section1 Start =============== -->
+<section class="main-content premium_company_profile">
+    <div class="container">
+        <div class="main_box">
+            <%- include('common/premium-company-sidebar') -%>
+        </div>
+        <div class="company_profile_management">
+            <div class="company_review_replay">
+                <div class="review-box">
+                    <h3><%= company.company_name || '' %></h3>
+                    <% if(company && company.main_address){ %>
+                    <div class="user-info-panel">
+                        <span><i class="fa-solid fa-location-dot"></i></span>
+                        <p class="m-0">
+                            <strong>Location</strong><br>
+                            <%= company.main_address || '' %>
+                        </p>
+                    </div>
+                    <% } %>
+                    <% if(finalsingleReviewData[0].review_title){ %>
+                    <div class="user-info-panel">
+                        <span><i class="fa-solid fa-box"></i></span>
+                        <p class="m-0">
+                            <strong>Product/division</strong><br>
+                            <%= finalsingleReviewData[0].review_title %>
+                        </p>
+                    </div>
+                    <% } %>
+                    <div class="user-review-text">
+                        <% finalsingleReviewData[0].Tags.forEach(tag => { %>
+                        <span class="user-select-tag"><%= tag.tag_name %></span>
+                        <% }); %>
+                        <div class="review-description-wrap">
+                            <%- finalsingleReviewData[0].review_content -%>
+                        </div>
+                    </div>
+                    <div class="user-bio_rating">
+                        <div class="user-profile-info">
+                            <div class="user-name-show position-relative">
+                                <% if(finalsingleReviewData[0].user_privacy == '1'){ %>
+                                    <% if(finalsingleReviewData[0].profile_pic != null){ %>
+                                        <span><img src="/<%- finalsingleReviewData[0].profile_pic -%>" alt="<%- finalsingleReviewData[0].first_name+' '+finalsingleReviewData[0].last_name -%>" width="20px"></span>
+                                    <% }else{ %>
+                                        <span><img src="/assets/media/avatars/blank.png" alt="<%- finalsingleReviewData[0].first_name+' '+finalsingleReviewData[0].last_name -%>" width="20px"></span>
+                                    <% } %>   
+                                    <span><%- finalsingleReviewData[0].first_name+' '+finalsingleReviewData[0].last_name -%> </span>
+                                <% }else{ %>
+                                    <span><img src="/front-end/images/blur-img.png" alt="img" width="20px"></span>
+                                    <span><img src="/front-end/images/blur-name.png" alt="img"></span>
+                                <% } %>
+                            </div>
+                            <% const dateString = finalsingleReviewData[0].created_at; %>
+                            <% const date = new Date(dateString); %>
+                            <div class="user-review-date"><%= date.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) %></div>
+                        </div>
+                        <div class="user-rating">
+                            <span>
+                                <% allRatingTags.forEach( tag => { %>
+                                    <% if(tag.review_rating_value == finalsingleReviewData[0].rating){ %>
+                                       <img src="/<%= tag.rating_image %>" alt="img-gif-<%- finalsingleReviewData[0].rating -%>" style="display: inline-block;" width="35">
+                                    <% } %>
+                                 <% }) %>
+                            </span>
+                            <span><%= finalsingleReviewData[0].rating %>/5</span>
+                        </div>
+                    </div>
+                    <!-- <div class="review-like-dislike">
+                        <span><a href=""><i class="fa-solid fa-thumbs-up"></i> 10</a></span>
+                        <span><a href=""><i class="fa-solid fa-thumbs-down"></i> 8</a></span>
+                        </div> -->
+                </div>
+                <% var singulrReview = finalsingleReviewData[0]
+                    const privacy = singulrReview.user_privacy;
+                    const company_owner_name = currentUserData.first_name +' '+ currentUserData.last_name;
+                    const company_owner_image = currentUserData.profile_pic;
+                    const customer_image = singulrReview.profile_pic;
+                    const company_owner_id = company.claimed_by;
+                %>
+                <div class="chat_box_wrapper">
+                    <div class="chat_box">
+                        <div class="heading">
+                            <h4>Flag the review</h4>
+                        </div>
+                        <form action="" id="review_flag_form">
+                            <div class="custom-form">
+                                <h4>Choose Your Response</h4>
+                                <!-- <span class="fw-bold d-inline-block me-2">Show your name?</span> -->
+
+                                <div class="form_adjust">
+                                    <div class="custom-form m-0">
+                                        <input class="form-check-input" type="radio" name="flag_radio"  id="inlineRadio1"
+                                        value="Irrelevant" <% if(singulrReview.flag_company_reason_radio == "Irrelevant"){ %> checked <% } %>>
+                                        <label class="form-check-label" for="inlineRadio1">Irrelevant</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="flag_radio" id="inlineRadio2" value="Not Usefull" <% if(singulrReview.flag_company_reason_radio == "Not Usefull"){ %> checked <% } %>>
+                                        <label class="form-check-label" for="inlineRadio2">Not Usefull</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="flag_radio" id="inlineRadio3" value="Others" <% if(singulrReview.flag_company_reason_radio == "Others"){ %> checked <% } %>>
+                                        <label class="form-check-label" for="inlineRadio3">Others</label>
+                                    </div>
+                                </div>
+                               
+                                <div id="text_area" class="d-none">
+                                    <h4>Describe Here</h4>
+                                        <textarea name="flag_details" id="" cols="0" rows="4"><%= singulrReview.flag_company_reason_details %></textarea>
+                                </div>
+                                
+                                <input type="hidden" name="review_id" value="<%- singulrReview.id -%>">
+                                <input type="hidden" name="company_id" value="<%- company.ID -%>">
+                                <input type="hidden" name="company_slug" value="<%= company.slug %>">
+
+                                <% if(!singulrReview.flag_status) { %>
+                                <div class="review_btn">
+                                    <!-- <button type="submit" id="review_flag_btn">Flag review</button> -->
+                                    <input type="submit" class="btn-default btn-warning" id="review_flag_btn" value="Flag review">
+                                </div>
+                                <% } %>
+                            </div>
+
+                        </form>
+                        <div class="submit-loading" style="display: none;">Please wait..</div>
+                        <div class="submit-success" style="display: none;"></div>
+                        <div class="submit-error" style="display: none;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ============== Section6 End =============== -->
+<%- include('common/footer') -%>
+<style>
+    form#review_flag_form {
+    padding: 25px 35px;
+}
+.custom-form {
+    margin-bottom: 0;
+    position: relative;
+    /* padding: 14px 0px; */
+}
+.form_adjust {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+.review_btn {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+}
+button#review_reply_btn {
+    background-color: #ffc107;
+    padding: 14px 45px;
+    border: 1px solid #ffc107;
+    outline: none;
+    color: #000000;
+    border-radius: 10px;
+    transition: all 0.8s;
+    margin-top: 20px;
+}
+button#review_reply_btn:hover{
+    background-color: transparent;
+    border: 1px solid #ffc107
+}
+
+#text_area textarea{
+    width: 100%;
+    outline: none;
+    padding: 20px;
+
+}
+
+#text_area h4{
+    margin-top: 20px;
+}
+</style>
+<script>
+    jQuery(function ($) {
+
+        //---Review reply submit-------//
+        $('#review_flag_form').submit(function(e){
+            event.preventDefault();
+            $('#review_flag_btn').prop( "disabled", true );
+            $('.submit-success, .submit-error').hide();
+            $('.submit-loading').show();
+
+            const formData = $('#review_flag_form').serializeArray();
+            const jsonData = {};
+            $(formData).each(function (index, field) {
+                jsonData[field.name] = field.value;
+            });
+
+            $.ajax({
+              url: '/auth/add-review-flag',
+              method: 'POST',
+              data: jsonData,
+              ContentType: 'application/json',
+              success: function (data) {
+                if (data.status == 'ok') {
+                  $('.submit-loading').hide();
+                  $('#review_flag_btn').prop( "disabled", false );
+                  $('.submit-success').text(data.message);
+                  $('.submit-success').show();
+                  setTimeout( function(){
+                        window.location.href = '/company-review-listing/'+data.slug;
+                  }, 3000 );
+                } else {
+                    $('.submit-loading').hide();
+                    $('.submit-error').text(data.message);
+                    $('.submit-error').show();
+                    $('#review_flag_btn').prop( "disabled", false );
+                }
+                //console.log(data);
+              },
+              error: function (error) {
+                $('.submit-loading').hide();
+                $('.submit-error').text(error);
+                $('.submit-error').show();
+              }
+            });
+        });
+
+        $('input[type=radio][name=flag_radio]').change(function() {
+            if (this.value == 'Others') {
+                //alert('aaaaaaaa')
+            $('#text_area').removeClass('d-none');
+            } else {
+                $('#text_area').addClass('d-none');
+            }
+        });
+        if ($('input[type=radio][name=flag_radio]').is(':checked') ) {
+            $('#text_area').removeClass('d-none');
+        }else{
+            $('#text_area').addClass('d-none');
+        }
+    });
+</script>

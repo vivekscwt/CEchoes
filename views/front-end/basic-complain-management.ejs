@@ -1,0 +1,369 @@
+<%- include('common/header') -%>
+<link href="/front-end/css/company-profile-dashboard.css" rel="stylesheet" type="text/css">
+<link href="/front-end/css/business-profile-manage-style.css" rel="stylesheet" type="text/css">
+<%- include('common/header-banner') -%>
+
+
+<section class="main-content basic-complain-content">
+    <div class="container">
+        <div class="company_profile_management">
+         <%- include('common/basic-company-sidebar') -%>
+         <div class="premium-complain-management">
+            <div class="premium-complain-m-head">
+               <h2 class="inner-main-head">Complaint management - Level </h2>
+            </div>
+            <div class="premium-complain-m-wrap">
+              <!-- head section start -->
+               <div class="premium-complain-m-content-head">
+                  <div class="premium-complain-m-content-part">
+                     Level
+                  </div>
+                  <div class="premium-complain-m-content-part">
+                     Action
+                  </div>
+               </div>
+               <!-- head section end -->
+               
+                 <div class="premium-complain-clone">
+                    <% if(ComplaintLevelDetails.length > 0 ){ %>
+                       <% ComplaintLevelDetails.sort((a, b) => a.level - b.level).forEach((level, index) => { %>
+                          <div class="premium-complain-m-content-body">
+                            <form class="level_form">
+                              <input type="hidden" value="<%= level.level %>" name="label_count" class="label_count">
+                              <input type="hidden" name="company_id" value="<%= company.ID %>" class="">
+                              <div class="premium-complain-m-content-repeat">
+                                <div class="premium-complain-m-content-part count_number">
+                                  <%= level.level %>
+                                </div>
+                                <div class="premium-complain-m-content-part">
+                                  <a href="#" class="btn-default btn-warning edit-save-btn">Edit</a>
+                                </div>
+                              </div>
+                              <!-- edit email slide down start -->
+                              <div class="edit-email">
+                                <div class="row g-2 align-items-center justify-content-around mb-2">
+                                  <div class="col-sm-6">
+                                    <label for="" class="col-form-label"><strong>ETA Days</strong></label>
+                                  </div>
+                                  <div class="col-sm-6">
+                                    <input type="number" name="eta_days" id="" class="form-control" value="<%= level.eta_days %>" >
+                                  </div>
+                                </div>
+                                <div class="row g-2 justify-content-around mb-2">
+                                  <div class="col-sm-6 email_field_label">
+                                    <label for="" class="col-form-label"><strong>Enter Your E-Mail Address</strong></label>
+                                  </div>
+                                  <% const emails = JSON.parse(level.emails) %>
+                                  <% if (emails.length > 0) { %>
+                                   <div class="col-sm-6 email_clone_div">
+                                    <% emails.forEach((email,key) => { %>
+                                      <% if(key == 0) { %>
+                                           <div class="add-email-field ff mb-2">
+                                             <input type="email" name="emails" value="<%= email %>" id="" class="form-control">
+                                             <a href="#" class="add-email-btn"><i class="fa-solid fa-circle-plus"></i></a>
+                                           </div>
+                                           
+                                         
+                                      <% } else { %>
+                                              <div class="add-email-field ff mb-2">
+                                                <input type="email" name="emails" value="<%= email %>" id="" class="form-control">
+                                                <a href="#" class="close-email-field"><i class="fa-solid fa-circle-xmark"></i></a>
+                                              </div>
+                                              
+                                            
+                                      <% } %>
+                                    <% }) %>
+                                    
+                                   </div>
+                                  <% } else { %>
+                                    <div class="col-sm-6 email_clone_div">
+                                      <div class="add-email-field ff mb-2">
+                                        <input type="email" name="emails" id="" class="form-control">
+                                      </div>
+                                      <a href="#" class="add-email-btn"><i class="fa-solid fa-circle-plus"></i></a>
+                                    </div>
+                                  <% } %>
+                                </div>
+                                <div class="d-flex justify-content-end align-items-center">
+                                  <button type="submit" class="btn-default btn-warning each_form_submut">Save</button>
+                                </div>
+                              </div>
+                            </form>
+                            <% if(index > 1 && ComplaintLevelDetails.length == index+1) { %>
+                            <a class="close-level delete-level" data-level-id="<%= level.id%>"  data-company-id="<%= company.ID %>" data-bs-toggle="modal" data-bs-target="#surealertmodal" href=#><i class="fa-solid fa-circle-xmark"></i></a>
+                            <% } %>
+                            <!-- edit email slide down end -->
+                          </div>
+                        <% }) %>
+                        
+                    <% } else { %>
+                       <div class="premium-complain-m-content-body">
+                          <form class="level_form">
+                             <input type="hidden" value="1" name="label_count" class="label_count">
+                             <input type="hidden" name="company_id" value="<%= company.ID %>" class="">
+                             <div class="premium-complain-m-content-repeat">
+                                <div class="premium-complain-m-content-part count_number">
+                                   1
+                                </div>
+                                <div class="premium-complain-m-content-part">
+                                   <a href="#" class="btn-default btn-warning edit-save-btn">Edit</a>
+                                </div>
+                             </div>
+                             <!-- edit email slide down start -->
+                             <div class="edit-email">
+                                <!-- <div class="row g-2 align-items-center justify-content-around mb-2">
+                                   <div class="col-sm-6">
+                                     <label for="" class="col-form-label"><strong>Level</strong></label>
+                                   </div>
+                                   <div class="col-sm-6">
+                                     <input type="number" name="label_count" id="" class="form-control" value="1" >
+                                   </div>
+                                </div> -->
+                                <div class="row g-2 align-items-center justify-content-around mb-2">
+                                   <div class="col-sm-6">
+                                      <label for="" class="col-form-label"><strong>ETA Days</strong></label>
+                                   </div>
+                                   <div class="col-sm-6">
+                                      <input type="number" name="eta_days" id="" class="form-control">
+                                   </div>
+                                </div>
+                                <div class="row g-2 justify-content-around mb-2">
+                                   <div class="col-sm-6 email_field_label">
+                                      <label for="" class="col-form-label"><strong>Enter Your E-Mail Address</strong></label>
+                                   </div>
+                                   <div class="col-sm-6 email_clone_div">
+                                      <div class="add-email-field ff mb-2">
+                                         <input type="email" name="emails" id="" class="form-control">
+                                      </div>
+                                   <a href="#" class="add-email-btn"><i class="fa-solid fa-circle-plus"></i></a>
+                                   </div>
+                                </div>
+                                <div class="d-flex justify-content-end align-items-center">
+                                   <button type="submit" class="btn-default btn-warning each_form_submut" >Save</button>
+                                </div>
+                             </div>
+                          </form>
+                          <!-- edit email slide down end -->
+                       </div>
+                       <div class="premium-complain-m-content-body">
+                          <form class="level_form">
+                             <input type="hidden" value="2" name="label_count" class="label_count">
+                             <input type="hidden" name="company_id" value="<%= company.ID %>" class="">
+                             <div class="premium-complain-m-content-repeat">
+                                <div class="premium-complain-m-content-part count_number">
+                                   2
+                                </div>
+                                <div class="premium-complain-m-content-part">
+                                   <a href="#" class="btn-default btn-warning edit-save-btn">Edit</a>
+                                </div>
+                             </div>
+                             <div class="edit-email">
+                                <!-- <div class="row g-2 align-items-center justify-content-around mb-2">
+                                   <div class="col-sm-6">
+                                     <label for="" class="col-form-label"><strong>Level</strong></label>
+                                   </div>
+                                   <div class="col-sm-6">
+                                     <input type="number" name="label_count" id="" class="form-control" value="2" >
+                                   </div>
+                                </div> -->
+                                <div class="row g-2 align-items-center justify-content-around mb-2">
+                                   <div class="col-sm-6">
+                                      <label for="" class="col-form-label"><strong>ETA Days</strong></label>
+                                   </div>
+                                   <div class="col-sm-6">
+                                      <input type="number" name="eta_days" id="" class="form-control">
+                                   </div>
+                                </div>
+                                <div class="row g-2 justify-content-around mb-2">
+                                   <div class="col-sm-6 email_field_label">
+                                      <label for="" class="col-form-label"><strong>Enter Your E-Mail Address</strong></label>
+                                   </div>
+                                   <div class="col-sm-6 email_clone_div">
+                                      <div class="add-email-field mb-2">
+                                         <input type="email" name="emails" id="" class="form-control">
+                                      </div>
+                                      <a href="#" class="add-email-btn"><i class="fa-solid fa-circle-plus"></i></a>
+                                   </div>
+                                </div>
+                                <div class="d-flex justify-content-end align-items-center">
+                                   <button type="submit" class="btn-default btn-warning each_form_submut" >Save</button>
+                                </div>
+                             </div>
+                          </form>
+                       </div>
+                    <% } %>
+                    
+                 </div>
+              
+              <div class="text-center mt-4"><a href="#" class="add-new-hops">Add New Hops</a></div>
+              <div class="submit-loading" style="display: none;">Please wait..</div>
+           <div class="submit-success" style="width: 100%; text-align: center; display: block; border: 2px solid #fccb06; padding: 6px; margin-top: 20px; border-radius: 5px; display: none;"></div>
+           <div class="submit-error" style="width: 100%; text-align: center; display: block; border: 2px solid #fccb06; padding: 6px; margin-top: 20px; border-radius: 5px; display: none;"></div>
+            </div>
+            
+         </div>
+        </div>
+    </div>
+</section>
+ <!-- The Modal -->
+ <div class="modal" id="surealertmodal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+  
+        <!-- Modal Header -->
+        <div class="modal-header border-0">
+          <button type="button" class="btn-close" data-bs-dismiss="modal"><i class="fa-solid fa-circle-xmark"></i></button>
+        </div>
+        <div class="modal-body text-center">
+            <h5 class="mb-4">Want to delete this level ?</h5>
+            <button class="btn-default btn-warning my-1" id="okButton">Yes Delete !</button>
+            <button class="btn-default btn-dark my-1" id="cancelButton">No Cancle !</button>
+        </div>
+  
+      </div>
+    </div>
+  </div>
+
+<%- include('common/footer') -%>
+
+<script>
+    jQuery(function ($) {
+       $('body').on('submit', '.level_form', function(e){
+          e.preventDefault();
+          
+          $('.submit-loading').show();
+          $('.submit-success').hide();
+          $('.submit-error').hide();
+          const formData = $(this).serializeArray();
+    
+          // const jsonData = {};
+          // $(formData).each(function(index, field) {
+          //    if (jsonData[field.name] === undefined) {
+          //       // If the property doesn't exist in jsonData, create an array and add the value
+          //       if (field.value != '') {
+          //          jsonData[field.name] = [field.value];
+          //       }
+          //    } else {
+          //       // If the property already exists, push the value to the existing array
+          //       if (field.value !== '') {
+          //          jsonData[field.name].push(field.value);
+          //       }
+          //    }
+          // });
+          // console.log(jsonData);
+          //return false;
+    
+          $.ajax({
+             url: '/auth/create-company-level',
+             method: 'POST',
+             data: formData,
+             //processData: false,
+             //contentType: false,
+             ContentType: 'application/json',
+             success: function (data) {
+                if (data.status == 'ok') {
+                   $('.submit-loading').hide();
+                   setTimeout(function() {
+                   $('.submit-success').text(data.message);
+                   $('.submit-success').show();
+                   
+                   // Set another timeout to hide the message after 3 seconds
+                   setTimeout(function() {
+                      $('.submit-success').hide();
+                   }, 3000);
+                   }, 0);
+                } else {
+                   $('.submit-loading').hide();
+                   
+                   setTimeout( function(){
+                      $('.submit-error').text(data.message);
+                      $('.submit-error').show();
+                      //location.reload(true);
+                   }, 3000 );
+                }
+                //console.log(data);
+             },
+             error: function (error) {
+                $('.submit-loading').hide();
+                $('.submit-error').text(error);
+                $('.submit-error').show();
+             }
+          });
+       })
+    
+    
+    
+       $('body').on('click', '.delete-level', function(e){
+          event.preventDefault();
+          //alert('aaaaaaaaa');data-company-id
+          var level_id = $(this).attr('data-level-id');
+          var company_id = $(this).attr('data-company-id');
+          $("#okButton").on("click", function(e) {
+                event.preventDefault();
+                // Replace this with your desired action
+                // For example, you can place your code here
+                console.log("User clicked 'Ok'");
+    
+                $.ajax({
+                   url: '/auth/delete-company-complaint-level',
+                   method: 'POST',
+                   data: {level_id:level_id,company_id:company_id},
+                   ContentType: 'application/json',
+                   success: function (data) {
+                      if (data.status == 'ok') {
+                      $('.submit-loading').hide();
+                      $('.submit-success').text(data.message);
+                      $('.submit-success').show();
+                      setTimeout(function() { $('.submit-success').hide(); location.reload(true); }, 3000);
+                      } else {
+                         $('.submit-loading').hide();
+                         $('.submit-error').text(data.message);
+                         $('.submit-error').show();
+                      setTimeout(function() { $('.submit-error').hide();  }, 3000);
+                      }
+                      //console.log(data);
+                   },
+                   error: function (error) {
+                      $('.submit-loading').hide();
+                      $('.submit-error').text(error);
+                      $('.submit-error').show();
+                      setTimeout(function() { $('.submit-error').hide();  }, 3000);
+                   }
+                });
+                $("#surealertmodal").find('.btn-close').trigger('click');
+          });
+          $("#cancelButton").on("click", function() {
+                event.preventDefault();
+                $('.submit-loading').hide();
+                $('.submit-error').text('Level is not deleted.');
+                $('.submit-error').show();
+                setTimeout(function() { $(".submit-error").hide(); location.reload(true); }, 3000);
+                // Close the modal
+                $("#surealertmodal").find('.btn-close').trigger('click');
+          });
+          // if(confirm('Are you sure?')) {
+                
+          // } else {
+          
+          // }
+          
+       })
+    
+       $(".add-new-hops").click(function(e){
+      e.preventDefault();
+      var totalLevel = $(this).parents(".premium-complain-m-wrap").find(".premium-complain-m-content-body").length;
+      //console.log(totalLevel, 'hi');
+      if (totalLevel >= 5) {
+        console.log('কিছু হবে না');
+      }else {
+        //console.log(totalLevel+1,'cloned');
+        var count = totalLevel+1;
+        $(this).parents(".premium-complain-m-wrap").find(".premium-complain-clone").append('<div class=premium-complain-m-content-body> <form class=level_form> <input type="hidden" name="label_count" id="" class="form-control" value="'+count+'" ><input type="hidden" name="company_id" value="<%=company.ID %>" > <div class=premium-complain-m-content-repeat> <div class="premium-complain-m-content-part count_number">'+count+'</div><div class=premium-complain-m-content-part><a class="btn-default btn-warning edit-save-btn"href=#>Edit</a></div></div><div class=edit-email> <div class="mb-2 g-2 justify-content-around row align-items-center"> <div class=col-sm-6><label class=col-form-label for=""><strong>ETA Days</strong></label></div><div class=col-sm-6><input class=form-control name=eta_days type=number></div></div><div class="mb-2 g-2 justify-content-around row"> <div class="col-sm-6 email_field_label"><label class=col-form-label for=""><strong>Enter Your E-Mail Address</strong></label></div><div class="col-sm-6 email_clone_div"> <div class="mb-2 add-email-field"><input class=form-control name=emails type=email></div><a class=add-email-btn href=#><i class="fa-solid fa-circle-plus"></i></a> </div></div><div class="align-items-center d-flex justify-content-end"><button class="btn-default btn-warning each_form_submut"type=submit>Save</button></div></div><a class=close-level href=#><i class="fa-solid fa-circle-xmark"></i></a> </form></div>');
+        if(totalLevel >= 4){
+          $('body').find(".add-new-hops").hide();
+        }
+      }
+    });
+    
+    })
+    </script>

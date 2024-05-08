@@ -1,0 +1,252 @@
+<%- include('common/header') -%>
+<link href="/front-end/css/company-profile-dashboard.css" rel="stylesheet" type="text/css">
+<%- include('common/header-banner') -%>
+
+<!-- ================ Section1 Start ======================= -->
+<section class="main-content premium_company_profile">
+    <div class="container">
+        <div class="main_box">
+            <%- include('common/premium-company-sidebar') -%>
+         </div>
+         <div class="row">
+            <% if(company && company.membership_type_id>=4 ){ %>
+            <div class="col-md-4 ">
+                <div class="send-review-invitation delete_company_tags">
+                    <h4>Your Tags</h4>
+                    <div class="all_added_tags">
+                     <% if( CompanyCreatedTags.length > 0 ){ %>
+                           <% const tags = JSON.parse(CompanyCreatedTags[0].tags) %>
+                           <% if(tags.length > 0 ){ %>
+                              <% tags.forEach((tag)=>{ %>
+                                 <!-- <button class="btn-default btn-warning dis-details-top-btn" ><%= tag %></button>
+                                 <button company-id="<%= company.ID  %>" tag="<%= tag %>" tagArr="<%= CompanyCreatedTags[0].tags %>" data-bs-toggle="modal" data-bs-target="#surealertmodal" class="delete-button">X</button> -->
+                                 <div class="added_tag btn-warning">
+                                    <%= tag %>
+                                    <a title="Delete Tag" company-id="<%= company.ID  %>" tag="<%= tag %>" href="#" tagArr="<%= CompanyCreatedTags[0].tags %>" data-bs-toggle="modal" data-bs-target="#surealertmodal" class="delete-button"><i class="fa-solid fa-circle-xmark"></i></a>
+                                 </div>
+                              <% }) %>   
+                           <% } %>
+                     <% } %>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="send-review-invitation">
+                    <form id="form_create_tags">
+                       <input type="hidden" name="company_id" id="company_id" value="<%= company.ID  %>" />
+                       <input type="hidden" name="company_name" id="company_name" value="<%= company.company_name  %>" />
+                       <input type="hidden" name="user_id" id="user_id" value="<%= currentUserData.user_id  %>" />
+                       <input type="hidden" name="company_slug" id="company_slug" value="<%= company.slug  %>" />
+                       <h4>Create your Tags</h4>
+                       <div id="sendreviewtags_discussion">
+                          <input type="text" name="tags" placeholder="Add a tag" />
+                       </div>
+                       <input type="submit" name="" id="invitation_email" class="btn-default btn-warning" value="Send">
+                     </form>
+                     <div class="register-now frm-loading" style="display: none;">
+                        <span class="indicator-progress">Please wait...
+                           <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                        </span>
+                     </div>
+                     <div style=" width: 100%; text-align: center; display: block; border: 2px solid #fccb06; padding: 6px; margin-top: 20px; border-radius: 5px; display: none;" class="response-message"></div>
+                     <div class="submit-error" style="width: 100%; text-align: center; display: block; border: 2px solid #fccb06; padding: 6px; margin-top: 20px; border-radius: 5px; display: none;"></div>
+                </div>
+            </div>
+            <% }else{ %>
+            <div class="survey-content">
+               <div class="container">
+                  <div class="each_box update_basic_information all_review_listing_for_company">
+                     <h5>You have no permission to access discussion tag managemen features</h5>
+                  </div>
+               </div>
+            </div>
+            <% } %>
+         </div>
+        
+    </div>
+</section>
+<!-- The Modal -->
+<div class="modal" id="surealertmodal">
+   <div class="modal-dialog">
+     <div class="modal-content">
+ 
+       <!-- Modal Header -->
+       <div class="modal-header border-0">
+         <button type="button" class="btn-close" data-bs-dismiss="modal"><i class="fa-solid fa-circle-xmark"></i></button>
+       </div>
+       <div class="modal-body text-center">
+           <h5 class="mb-4">Want to delete this tag ?</h5>
+           <button class="btn-default btn-warning my-1" id="okButton">Yes Delete !</button>
+           <button class="btn-default btn-dark my-1" id="cancelButton">No Cancle !</button>
+       </div>
+ 
+     </div>
+   </div>
+ </div>
+<!-- ================ Section1 End ======================= -->
+<style>
+   #sendreviewtags_discussion {
+      border: 2px solid #fccb06;
+      padding: 5px 9px;
+      border-radius: 6px;
+      margin-bottom: 32px;
+   }
+   #sendreviewtags_discussion > span {
+      cursor: pointer;
+      display: block;
+      float: left;
+      color: #fff;
+      background: #fccb06;
+      padding: 7px;
+      padding-right: 25px;
+      margin: 4px;
+      border-radius: 4px;
+  }
+  #sendreviewtags_discussion > span:after {
+   position: absolute;
+   content: "×";
+   border: 1px solid;
+   padding: 2px 5px;
+   margin-left: 3px;
+   font-size: 11px;
+}
+#sendreviewtags_discussion > input {
+   background: #f2f2f2;
+   border: 0;
+   margin: 4px;
+   padding: 7px;
+   width: auto;
+   border-radius: 4px;
+   outline: none;
+}
+</style>
+<%- include('common/footer') -%>
+
+<script>
+$(document).ready(function () {
+
+   $("#sendreviewtags_discussion input").on({
+      focusout : function() {
+         var txt = this.value.replace(/[^a-z0-9+\-.\@ ]/ig, ''); // allowed characters
+         if (txt) $("<span/>", { text: txt.toLowerCase().replace(/\s/g, ' '), insertBefore: this });
+         this.value = "";
+      },
+      keyup : function(ev) {
+        // if: comma|enter (delimit more keyCodes with | pipe)
+        if (/^(188|13)$/.test(ev.which)) $(this).focusout();
+      }
+    });
+    $('#sendreviewtags_discussion').on('click', 'span', function() {
+      if(confirm("Remove "+ $(this).text() +"?")) $(this).remove(); 
+    });
+
+   var allTags = [];
+   $('form#form_create_tags').submit(function (e) {
+      e.preventDefault();
+      $('.response-message').hide();
+      $('.response-message').text('');
+      $('#invitation_email').prop('disabled', true);
+      $('.frm-loading').show(); 
+      //alert('aaaaaa')
+      $(this).find('#sendreviewtags_discussion').find('span').each(function(){
+         var enteredTag= $(this).text();
+         allTags.push(enteredTag);
+      });
+      console.log(allTags);
+      const transformedResponse = {};
+      transformedResponse['tags'] = allTags;
+      transformedResponse['user_id'] = $('#user_id').val();
+      transformedResponse['company_id'] = $('#company_id').val();
+      transformedResponse['company_name'] = $('#company_name').val();
+      transformedResponse['company_slug'] = $('#company_slug').val();
+      
+         $.ajax({
+            url: '/auth/company-create-tags', // URL for your API endpoint
+            method: 'POST',
+            data: JSON.stringify(transformedResponse),
+            //data: formData,
+            processData: false,
+            //contentType: false,
+            contentType: 'application/json',
+            success: function (data) {
+               if (data.status == 'ok') {
+                  $('.response-message').text(data.message);
+                  $('.response-message').show();
+                  $('#invitation_email').prop('disabled', false);
+                  $('.frm-loading').hide();
+                  setTimeout(function() {
+                     window.location.reload();
+                  }, 2000);
+               } else {
+                  $('.response-message').text(data.message);
+                  $('.response-message').show();
+                  $('#invitation_email').prop('disabled', false);
+                  $('.frm-loading').hide();
+                  console.log('Something went wrong');
+               }
+            },
+            error: function (xhr, status, error) {
+               // Handle any errors that occur during the request
+               console.log(error);
+            }
+         });
+   });
+
+   $('.delete-button').click(function (e){
+      e.preventDefault();
+      const tag = $(this).attr('tag')
+      const companyId = $(this).attr('company-id')
+      let tagArr =JSON.parse($(this).attr('tagArr')) ;
+      tagArr = tagArr.filter(item => item !== tag)
+      //console.log(tag, tagArr, companyId , arr);
+      const transformedResponse = {};
+      transformedResponse['tags'] = tagArr;
+      transformedResponse['company_id'] = companyId;
+      //alert(tag);
+      $("#okButton").on("click", function(e) {
+         event.preventDefault();
+         $.ajax({
+            url: '/auth/update-company-tags', // URL for your API endpoint
+            method: 'POST',
+            data: JSON.stringify(transformedResponse),
+            //data: formData,
+            processData: false,
+            //contentType: false,
+            contentType: 'application/json',
+            success: function (data) {
+               if (data.status == 'ok') {
+                  $('.response-message').text(data.message);
+                  $('.response-message').show();
+                  $('#invitation_email').prop('disabled', false);
+                  $('.frm-loading').hide();
+                  setTimeout(function() {
+                     window.location.reload();
+                  }, 2000);
+               } else {
+                  $('.response-message').text(data.message);
+                  $('.response-message').show();
+                  $('#invitation_email').prop('disabled', false);
+                  $('.frm-loading').hide();
+                  console.log('Something went wrong');
+               }
+            },
+            error: function (xhr, status, error) {
+               // Handle any errors that occur during the request
+               console.log(error);
+            }
+         });
+         $("#surealertmodal").find('.btn-close').trigger('click');
+         
+      });
+      $("#cancelButton").on("click", function() {
+            event.preventDefault();
+            $('.frm-loading').hide();
+            $('.submit-error').text('Tag is not deleted.');
+            $('.submit-error').show();
+            setTimeout(function() { $(".submit-error").hide(); }, 3000);
+            // Close the modal
+            $("#surealertmodal").find('.btn-close').trigger('click');
+      });
+   })
+});
+</script>

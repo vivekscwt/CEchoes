@@ -1,0 +1,64 @@
+<%- include('common/header') -%>
+  <link href="/front-end/css/discussion-style.css" rel="stylesheet" type="text/css">
+  <%- include('common/header-banner') -%>
+
+    <!-- ============== Section1 Start =============== -->
+    <section class="main-content bottom-main-content">
+      <div class="discussion-page-content">
+        <div class="container">
+          <h3>Discussions</h3>
+          <div class="tab-content-wrap">
+            <% if(DiscussionListingByTag.length> 0) { %>
+              <% DiscussionListingByTag.forEach((PopularDiscussion)=>{ %>
+                <% const ExpireDate=new Date(PopularDiscussion.expired_at); %>
+                  <% const date2=new Date(); %>
+                    <% const daysDiff=Math.round((ExpireDate - date2)/(1000 * 60 * 60 * 24)) %>
+                      <% if(daysDiff> -1){ %>
+                        <div class="discussion-review-panel">
+                          <a href="/discussion-details/<%= PopularDiscussion.id %>"
+                            title="<%= PopularDiscussion.topic %>">
+                            <div class="discussion-user-img"
+                              title="<%= PopularDiscussion.first_name %> <%= PopularDiscussion.last_name %>">
+                              <!-- <img src="../front-end/images/user-img.jpg" alt="img" width="60" height="60"> -->
+                              <h4>
+                                <%= PopularDiscussion.first_name.charAt(0).toUpperCase() %>
+                              </h4>
+                            </div>
+                            <div class="discussion-user-info">
+                              <h4>
+                                <% if (PopularDiscussion.topic.length> 75) { %>
+                                  <%= PopularDiscussion.topic.substring(0, 75) + ' . . . ' %>
+                                    <% } else { %>
+                                      <%= PopularDiscussion.topic %>
+                                        <% } %>
+                              </h4>
+                              <% const date=new Date(PopularDiscussion.created_at); %>
+                                <p>Created <%= date.toLocaleDateString('en-IN', { day: 'numeric' , month: 'short' ,
+                                    year: 'numeric' }) %> by <%= PopularDiscussion.first_name %>
+                                      <%= PopularDiscussion.last_name %>
+                                </p>
+
+                            </div>
+                            <div class="dis-comment-views">
+                              <span>
+                                <%= PopularDiscussion.total_comments %> Comments
+                              </span>
+                              <span>
+                                <%= PopularDiscussion.total_views %> Views
+                              </span>
+                            </div>
+                          </a>
+                        </div>
+                        <% } %>
+                          <% }) %>
+                            <% } %>
+                              <!-- <div class="text-center mt-md-5 mt-4">
+              <a href="#" class="btn-default btn-warning discussion-load-btn">Load More</a>
+          </div> -->
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- ============== Section1 End =============== -->
+
+    <%- include('common/footer') -%>

@@ -1,0 +1,660 @@
+<%- include('common/header') -%>
+<link href="/front-end/css/company-profile-dashboard.css" rel="stylesheet" type="text/css">
+<link href="/front-end/css/business-profile-manage-style.css" rel="stylesheet" type="text/css">
+<%- include('common/header-banner') -%>
+
+<!-- ============== Section1 Start =============== -->
+<section class="main-content premium_company_profile">
+    <div class="container">
+        <div class="main_box">
+            <%- include('common/premium-company-sidebar') -%>
+            <div class="company_profile_management">
+                <form id="premium_company_profile_form" enctype="multipart/form-data">
+                    <input type="hidden" name="company_id" value="<%= company.ID  %>"/>
+                    <input type="hidden" name="company_slug" value="<%= company.slug  %>"/>
+                    <input type="hidden" name="previous_logo" value="<%= company.logo %>"/>
+                    <div class="each_box update_basic_information">
+                        <h2>Basic informations</h2>
+                        <div class="row align-items-center mb-3">
+                            <div class="col-sm-7 col-md-8 col-lg-10">
+                                <label for="upload-company-logo" class="form-label">Upload logo</label>
+                                <input class="form-control" type="file" id="upload-company-logo" name="logo">
+                            </div>
+                            <div class="col-sm-5 col-md-4 col-lg-2">
+                                <div class="display_image_box">
+                                    <% if(company && company.logo) { %>
+                                    <img id="company_logo_preview" src="/<%= company.logo %>"  alt="">
+                                    <%} else {%>
+                                        <img id="company_logo_preview" src="/front-end/images/company-placeholder-image.png"  alt="">
+                                        <% } %>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row align-items-center mb-3">
+                            <div class="col-sm-7 col-md-8 col-lg-10">
+                                <label for="upload-company-coverimage" class="form-label">Upload cover
+                                    image</label>
+                                <input class="form-control" type="file" id="upload-company-coverimage" name="cover_image">
+                                <input class="form-control" type="hidden"  name="previous_cover_image" value="<%= cover_img ? cover_img : '' %>">
+                            </div>
+                            <div class="col-sm-5 col-md-4 col-lg-2">
+                                <div class="display_image_box">
+                                    <% if(cover_img) { %>
+                                        <img id="company_cover_image_preview" src="/<%= cover_img %>"  alt="">
+                                        <%} else {%>
+                                            <img id="company_cover_image_preview" src="/front-end/images/no-image.png"
+                                                alt="">
+                                            <% } %>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row align-items-center">
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="company-email" class="form-label">Email<sup>*</sup></label>
+                                    <input type="email" class="form-control" id="company-email"
+                                        placeholder="name@example.com" value="<%= company && company.comp_email ? company.comp_email : '' %>" name="comp_email" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="company-phone-number" class="form-label">Phone no<sup>*</sup></label>
+                                    <input type="text" class="numericInput form-control" id="company-phone-number"
+                                        placeholder="1234567890" value="<%= company && company.comp_phone ? company.comp_phone : '' %>" name="comp_phone" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="company-customercare-number" class="form-label">Customer care
+                                        no</label>
+                                        <input type="text" class="numericInput form-control" id="company-customercare-number"
+                                            placeholder="1800 0000 00" value="<%= company && company.tollfree_number ? company.tollfree_number : '' %>" name="tollfree_number" >
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <label for="support-email" class="form-label">Support Email</label>
+                                    <input type="email" class="form-control" id="support-email" placeholder="Support@example.com" value="<%= support_data && support_data.support_email ? support_data.support_email : '' %>" name="support_email" >
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <label for="escalation-one" class="form-label">Escalation One</label>
+                                    <input type="text" class="form-control" id="escalation-one" placeholder="" value="<%= support_data && support_data.escalation_one ? support_data.escalation_one : '' %>" name="escalation_one">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <label for="escalation-two" class="form-label">Escalation Two</label>
+                                    <input type="text" class="form-control" id="escalation-two" placeholder="" value="<%= support_data && support_data.escalation_two ? support_data.escalation_two : '' %>" name="escalation_two">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="mb-3">
+                                    <label for="escalation-three" class="form-label">Escalation Three</label>
+                                    <input type="text" class="form-control" id="escalation-three" placeholder="" value="<%= support_data && support_data.escalation_three ? support_data.escalation_three : '' %>" name="escalation_three">
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="mb-3">
+                                    <label for="company-address" class="form-label">Address<sup>*</sup></label>
+                                    <input type="text" class="form-control" id="company-address" value="<%= company && company.main_address ? company.main_address : '' %>" name="main_address" placeholder=""
+                                        required>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="mb-3">
+                                    <label for="about-company" class="form-label">About the organization<sup>*</sup></label>
+                                    <textarea class="form-control" id="about-company" placeholder="" rows="5" name="about_company"
+                                        required><%= company && company.about_company ? company.about_company : '' %></textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="mb-3">
+                                    <label for="company-tagline" class="form-label">Tagline</label>
+                                    <input type="text" class="form-control" id="company-tagline" placeholder="Tagline" value="<%= company && company.heading ? company.heading : '' %>" name="heading">
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="mb-3">
+                                    <label for="operating-hours" class="form-label">Operating Hours</label>
+                                    <input type="text" class="form-control" id="operating-hours" placeholder="10AM - 6PM (Mon-Fri)" value="<%= company && company.operating_hours ? company.operating_hours : '' %>" name="operating_hours">
+                                </div>
+                            </div>
+                           
+                        </div>
+                    </div>
+
+                    <div class="each_box update_gallery_images">
+                        <h2 class="mb-3">Upload gallery images</h2>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="upload-gallery-img" class="form-label">Choose Images</label>
+                                    <input type="file" class="form-control" name="gallery_images" multiple
+                                        id="upload-gallery-img" />
+                                </div>
+                                <div id="imagePreview" class="row">
+                                    <% if(gallery_img != "") {%>
+                                    <% gallery_img.forEach( (image,index)=> {%>
+                                    <div class="image-container col-sm-6 col-md-3">
+                                        <img class="uploaded-image" id="" src="/<%= image.gallery_images %>"  alt="image" width="50px;">
+                                        <button company-id="<%= company.ID  %>"  image-index="<%= index %>" class="delete-button">X</button>
+                                    </div>
+                                    <% }) %>
+                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="each_box update_youtuve_videos">
+                        <h2 class="mb-3">Social Links</h2>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="mb-3">
+                                    <label for="about-company" class="form-label">Facebook URL</label>
+                                    <input type="text" class="form-control" name="facebook_url" 
+                                        id="" value="<%= facebook_url ? facebook_url : '' %>" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="mb-3">
+                                    <label for="about-company" class="form-label">Twitter URL</label>
+                                    <input type="text" class="form-control" name="twitter_url" 
+                                        id="" value="<%= twitter_url ? twitter_url : '' %>" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="mb-3">
+                                    <label for="about-company" class="form-label">Instagram URL</label>
+                                    <input type="text" class="form-control" name="instagram_url" 
+                                        id="" value="<%= instagram_url ? instagram_url : '' %>"  />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="mb-3">
+                                    <label for="about-company" class="form-label">Linkedin URL</label>
+                                    <input type="text" class="form-control" name="linkedin_url" 
+                                        id="" value="<%= linkedin_url ? linkedin_url : '' %>"  />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="mb-3">
+                                    <label for="about-company" class="form-label">Youtube URL</label>
+                                    <input type="text" class="form-control" name="youtube_url" 
+                                        id="" value="<%= youtube_url ? youtube_url : '' %>"  />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <% if(company && company.membership_type_id>=4 ){ %>
+                    <div class="each_box update_youtuve_videos">
+                        <h2 class="mb-3">Upload Youtube video(iframe)</h2>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="mb-3">
+                                    <label for="about-company" class="form-label">Add youtube iframe</label>
+                                    <textarea class="form-control" id="about-company" placeholder="" rows="3" name="youtube_iframe"><%= youtube_iframe ? youtube_iframe : '' %></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <% } %>
+                        
+                    <% if(company && company.membership_type_id==3 ){ %>
+                        <% var promotions_limite = 5; %>
+                     <% }else if( company && company.membership_type_id==4 ){%>
+                        <% var promotions_limite = 50; %>
+                     <% }else if( company && company.membership_type_id>4 ){ %>
+                        <% var promotions_limite = 1000; %>
+                     <% }else{ %>  
+                        <% var promotions_limite = 0; %>
+                     <% } %> 
+
+                    <% if( promotions_limite > 0 ){ %>
+                    <div class="each_box add_promotions">                       
+                        <h2 class="mb-3">Promotions
+                            <span style="font-size: 16px; vertical-align: middle;">(Allow upto <%- promotions_limite %>)</span> 
+                        </h2>                        
+                        <div class="repeter_wrap">
+                            <div class="all_repeter">
+                                <% if(promotions && promotions.length > 0 && promotions[0].promotion_title){ %>
+                                    <% promotions.forEach( (promotion,index)=> {%>
+                                    <div class="each_repeter">
+                                        <div class="row align-items-center">
+                                            <div class="col-12">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Title<sup>*</sup></label>
+                                                    <input type="text" class="form-control" placeholder="" name="promotion_title" value="<%= promotion.promotion_title %>" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Description<sup>*</sup></label>
+                                                    <textarea class="form-control" placeholder="" rows="3" name="promotion_desc" ><%= promotion.promotion_desc %></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Discount</label>
+                                                    <input type="text" class="form-control" placeholder="In percentage (ex: 70%)" name="promotion_discount" value="<%= promotion.promotion_discount %>">
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-10">
+                                                <label class="form-label">Image</label>
+                                                <input class="form-control upload_in_repeter promotion_image" type="file" name="promotion_image">
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <div class="display_image_box">
+                                                    <% if(promotion.promotion_image != null) {%>
+                                                        <img class="promotion_image_review" src="/<%= promotion.promotion_image %>" alt="">
+                                                    <% } else {%>
+                                                        <img class="promotion_image_review" src="/front-end/images/no-image.png" alt="">
+                                                        <% } %>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="text-right">
+                                                    <button data-id="<%= index %>" company-id = "<%= company.ID %>" data-type="promotion" type="button" class="btn btn-danger delete_item">Remove</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <% }) %>
+                                <% } else { %>
+                                    <div class="each_repeter">
+                                        <div class="row align-items-center">
+                                            <div class="col-12">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Title<sup>*</sup></label>
+                                                    <input type="text" class="form-control" placeholder="" name="promotion_title" value="" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Description<sup>*</sup></label>
+                                                    <textarea class="form-control" placeholder="" rows="3" name="promotion_desc" ></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Discount</label>
+                                                    <input type="text" class="form-control" placeholder="In percentage (ex: 70%)" name="promotion_discount" value="">
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-10">
+                                                <label class="form-label">Image</label>
+                                                <input class="form-control upload_in_repeter promotion_image" type="file" name="promotion_image">
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <div class="display_image_box">
+                                                        <img class="promotion_image_review" src="/front-end/images/no-image.png" alt="">
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="text-right">
+                                                    <button data-id="null" company-id = "<%= company.ID %>" data-type="promotion" type="button" class="btn btn-danger delete_item">Remove</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <% } %>
+                            </div>
+                            <div class="add_more_btn" <% if(promotions && promotions.length >= promotions_limite){ %>style="display:none;"<% } %> >
+                                <button type="button" class="btn btn-primary add_more_promotion">Add Promotion</button>
+                            </div>
+                        </div>
+                    </div>
+                    <% } %> 
+
+                    <div class="each_box add_products">
+                        <h2 class="mb-3">Products</h2>
+                        <div class="repeter_wrap">
+                            <div class="all_repeter">
+                                <% if(products && products.length > 0 && products[0].product_title ) { %>
+                                <% products.forEach( (product,index)=> {%>
+                                <div class="each_repeter">
+                                    <div class="row align-items-center">
+                                        <div class="col-12">
+                                            <div class="mb-3">
+                                                <label class="form-label">Title<sup>*</sup></label>
+                                                <input type="text" class="form-control" placeholder="" name="product_title" value="<%= product.product_title %>" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="mb-3">
+                                                <label class="form-label">Description<sup>*</sup></label>
+                                                <textarea class="form-control" placeholder="" rows="3" name="product_desc"><%= product.product_desc %></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-10">
+                                            <label class="form-label">Image</label>
+                                            
+                                            <input class="form-control upload_in_repeter product_image" type="file" name="product_image">
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <div class="display_image_box">
+                                                <% if(product && product.product_image ) {%>
+                                                    <img class="promotion_image_review" src="/<%= product.product_image %>" alt="">
+                                                <% } else {%>
+                                                    <img class="promotion_image_review" src="/front-end/images/no-image.png" alt="">
+                                                    <% } %>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="text-right">
+                                                
+                                                <button data-id="<%= index %>" company-id = "<%= company.ID %>" data-type="product" type="button" class="btn btn-danger delete_item">Remove</button>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <% }) %>
+                                <% } else { %>
+                                    <div class="each_repeter">
+                                        <div class="row align-items-center">
+                                            <div class="col-12">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Title<sup>*</sup></label>
+                                                    <input type="text" class="form-control" placeholder="" name="product_title" value="" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Description<sup>*</sup></label>
+                                                    <textarea class="form-control" placeholder="" rows="3" name="product_desc"></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-10">
+                                                <label class="form-label">Image</label>
+                                                
+                                                <input class="form-control upload_in_repeter product_image" type="file" name="product_image">
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <div class="display_image_box">
+                                                        <img class="promotion_image_review" src="/front-end/images/no-image.png" alt="">
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="text-right">
+                                                    
+                                                    <button data-id="null" company-id = "<%= company.ID %>" data-type="product" type="button" class="btn btn-danger delete_item">Remove</button>
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <% } %>
+                            </div>
+                            <div class="add_more_btn">
+                                
+                                <button type="button" class="btn btn-primary add_more_product">Add Product</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="register-now frm-loading" style="display: none;">
+                        <span class="indicator-progress">Please wait...
+                          <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                        </span>
+                    </div>
+                    <div class="submit_button text-end custom-form m-0" >
+                        <input type="submit" value="Update" class="btn btn-warning " id="premium_update_btn" />
+                    </div>
+                    <div style=" width: 100%; text-align: center; display: block; border: 2px solid #fccb06; padding: 6px; margin-top: 20px; border-radius: 5px; display: none;" class="company-edit-message"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ============== Section6 End =============== -->
+<%- include('common/footer') -%>
+<script>
+    jQuery(function ($) {
+        $(document).ready(() => {
+
+            $('#premium_company_profile_form').submit(function (e) {
+                e.preventDefault();
+                //alert('aaaaaa');
+                $('#premium_update_btn').prop('disabled', true);
+                $('.company-edit-message').hide();
+                $('.company-edit-message').text('');
+                const formData = new FormData($('#premium_company_profile_form')[0])
+                //const formData = $('#premium_company_profile_form').serialize();
+                $('.product_image').each(function(index, element) {
+                    const fileInput = element;
+                    // Check if the file input has a selected file
+                    if (fileInput.files.length === 0) {
+                        formData.set(`product_image[${index}]`, '');
+                    }else{
+                        formData.set(`product_image[${index}]`, 'file');
+                    }
+                });
+                $('.promotion_image').each(function(index, element) {
+                    const fileInput = element;
+                    // Check if the file input has a selected file
+                    if (fileInput.files.length === 0) {
+                        // If no file is chosen, set the corresponding value to null
+                        formData.set(`promotion_image[${index}]`, '');
+                    }else{
+                        formData.set(`promotion_image[${index}]`, 'file');
+                    }
+                });
+                console.log(formData);
+                $.ajax({
+                url: '/auth/premium_company_profile_update', 
+                method: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    if (data.status == 'ok') {
+                        $('.company-edit-message').text(data.message);
+                        $('.company-edit-message').show();
+                        $('#premium_update_btn').prop('disabled', false);
+                        setTimeout(function() {
+                            window.location.href = "/company-dashboard/" + data.data;
+                        }, 2000);
+                    } else {
+                        $('.company-edit-message').text(data.message);
+                        $('.company-edit-message').show();
+                        $('#premium_update_btn').prop('disabled', false);
+                        console.log('Something went wrong');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    // Handle any errors that occur during the request
+                    console.log(error);
+                }
+                })
+            });
+
+            $('#upload-company-logo').change(function () {
+                const file = this.files[0];
+                console.log(file);
+                if (file) {
+                    let reader = new FileReader();
+                    reader.onload = function (event) {
+                        console.log(event.target.result);
+                        $('#company_logo_preview').attr('src', event.target.result);
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            $('#upload-company-coverimage').change(function () {
+                const file = this.files[0];
+                console.log(file);
+                if (file) {
+                    let reader = new FileReader();
+                    reader.onload = function (event) {
+                        console.log(event.target.result);
+                        $('#company_cover_image_preview').attr('src', event.target.result);
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            //============== Upload multiuple images\
+
+            $('#upload-gallery-img').on('change', function (e) {
+                var files = e.target.files;
+                var imagePreview = $('#imagePreview');
+
+                //imagePreview.empty(); // Clear the preview before adding new images
+
+                for (var i = 0; i < files.length; i++) {
+                    var file = files[i];
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        var imageUrl = e.target.result;
+                        var imageContainer = $('<div class="image-container col-sm-6 col-md-3">');
+                        var image = $('<img src="' + imageUrl + '" class="uploaded-image">');
+                        var deleteButton = $('<button class="delete-button">X</button>');
+
+                        // deleteButton.on('click', function (e) {
+                        //     e.preventDefault();
+                        //     imageContainer.remove();
+                        // });
+                        imageContainer.append(image, deleteButton);
+                        imagePreview.append(imageContainer);
+                    }
+
+                    reader.readAsDataURL(file);
+                }
+            });  
+
+            $('body').on('click','.delete-button',function(e){
+                e.preventDefault();
+                
+                if(typeof imgIndex == 'undefined'){
+                    $(this).parent('.image-container').remove();
+                }
+                var imgIndex = $(this).attr('image-index');
+                var companyId = $(this).attr('company-id');
+                //alert(imgIndex,companyId)
+                $.ajax({
+                    url: '/auth/deletePremiumImage',
+                    method: 'POST',
+                    data: {companyId:companyId,imgIndex:imgIndex},
+                    ContentType: 'application/json',
+                    success: function (data) {
+                        if (data.status == 'ok') {
+                            location.reload();               
+                        } else {
+                        }
+                    },
+                    error: function (error) {
+                    // Handle any errors
+                    console.log(error);
+                    }
+                });
+                
+            });
+
+            //=============== Repeter js
+            $('body').on('change','.upload_in_repeter',function (event) {
+                var tmppath = URL.createObjectURL(event.target.files[0]);
+                $(this).parents('.each_repeter').find('.promotion_image_review').attr('src',tmppath);
+            });
+
+            $('.add_more_promotion').click(function(e){
+                $(this).parents('.add_promotions').find('.all_repeter').append('<div class=each_repeter><div class="align-items-center row"><div class=col-12><div class=mb-3><label class=form-label>Title<sup>*</sup></label> <input class=form-control placeholder="" name="promotion_title" required></div></div><div class=col-12><div class=mb-3><label class=form-label>Description<sup>*</sup></label> <textarea class=form-control placeholder="" name="promotion_desc" rows=3></textarea></div></div><div class=col-12><div class=mb-3><label class=form-label>Discount</label> <input class=form-control placeholder="In percentage (ex: 70%)" name="promotion_discount" ></div></div><div class=col-sm-10><label class=form-label>Image</label> <input class="form-control upload_in_repeter promotion_image"type=file name="promotion_image"></div><div class=col-sm-2><div class=display_image_box><img alt=""class=promotion_image_review src=/front-end/images/no-image.png></div></div><div class=col-12><div class=text-right><button data-id="null" data-type="promotion" class="btn btn-danger delete_item"type=button>Remove</button></div></div></div></div>');
+                
+                var promotion_limit = <%- promotions_limite %>;
+                var promotion_count = $(this).parents('.add_promotions').find('.all_repeter .each_repeter').length;
+                if(promotion_count == promotion_limit){
+                    $(this).parent('.add_more_btn').hide();
+                }
+            });
+
+            $('.add_more_product').click(function(e){
+                $(this).parents('.add_products').find('.all_repeter').append('<div class=each_repeter><div class="align-items-center row"><div class=col-12><div class=mb-3><label class=form-label>Title<sup>*</sup></label> <input class=form-control placeholder="" name="product_title" required></div></div><div class=col-12><div class=mb-3><label class=form-label>Description<sup>*</sup></label> <textarea class=form-control placeholder="" name="product_desc" rows=3></textarea></div></div><div class=col-sm-10><label class=form-label>Image</label> <input class="form-control upload_in_repeter product_image"type=file name="product_image" ></div><div class=col-sm-2><div class=display_image_box><img alt=""class=promotion_image_review src=/front-end/images/no-image.png></div></div><div class=col-12><div class=text-right><button data-id="null" data-type="product" class="btn btn-danger delete_item"type=button>Remove</button></div></div></div></div>');
+            });
+
+            $('body').on('click','.delete_item',function(){
+                var dataIndex = $(this).attr('data-id');
+                var companyId = $(this).attr('company-id');
+                var dataType = $(this).attr('data-type');
+                if(dataIndex != 'null'){
+                    //console.log(dataIndex, companyId, dataType);
+                //$(this).parents('.each_repeter').remove();
+                    if(dataType == 'promotion'){
+                        $.ajax({
+                        url: '/auth/deletePremiumPromotion',
+                        method: 'POST',
+                        data: {companyId:companyId,dataIndex:dataIndex},
+                        ContentType: 'application/json',
+                        success: function (data) {
+                            if (data.status == 'ok') {
+                                location.reload();               
+                            } else {
+                            }
+                        },
+                        error: function (error) {
+                        // Handle any errors
+                        console.log(error);
+                        }
+                    });
+                    } else {
+                        $.ajax({
+                        url: '/auth/deletePremiumProduct',
+                        method: 'POST',
+                        data: {companyId:companyId,dataIndex:dataIndex},
+                        ContentType: 'application/json',
+                        success: function (data) {
+                            if (data.status == 'ok') {
+                                location.reload();               
+                            } else {
+                            }
+                        },
+                        error: function (error) {
+                        // Handle any errors
+                        console.log(error);
+                        }
+                    });
+                    }
+                }else{
+                    $(this).parents('.each_repeter').remove();
+                    //alert(dataType);
+                    if(dataType == 'promotion'){
+                        var promotion_limit = <%- promotions_limite %>;
+                        var promotion_count = $('.add_promotions').find('.all_repeter .each_repeter').length;
+                        if(promotion_count<promotion_limit){
+                             $('.add_promotions').find('.add_more_btn').show();
+                        }
+                    }
+                }
+                
+            });
+                // Number validation
+            $('.numericInput').on('input', function() {
+                // Get the current input value
+                let inputValue = $(this).val();
+
+                // Remove any non-numeric characters using a regular expression
+                inputValue = inputValue.replace(/[^0-9]/g, '');
+
+                // Ensure that the input has exactly 10 digits
+                if (inputValue.length > 10) {
+                    inputValue = inputValue.slice(0, 10);
+                }
+
+                // Update the input field with the sanitized value
+                $(this).val(inputValue);
+            });
+
+
+        });
+    });
+</script>

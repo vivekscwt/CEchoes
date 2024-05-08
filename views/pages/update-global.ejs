@@ -1,0 +1,369 @@
+<%- include('../common/header') -%>
+    <!--begin::Content-->
+    <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+        <!--begin::Toolbar-->
+        <div class="toolbar" id="kt_toolbar">
+            <!--begin::Container-->
+            <div id="kt_toolbar_container" class="container-fluid d-flex flex-stack">
+                <!--begin::Page title-->
+                <div data-kt-swapper="true" data-kt-swapper-mode="prepend"
+                    data-kt-swapper-parent="{default: '#kt_content_container', 'lg' : '#kt_toolbar_container'}"
+                    class="page-title d-flex align-items-center flex-wrap me-3 mb-5 mb-lg-0">
+                    <!--begin::Title-->
+                    <h1 class="d-flex align-items-center text-dark fw-bolder fs-3 my-1">
+                        <%= page_title %>
+                            <!--end::Description-->
+                    </h1>
+                    <!--end::Title-->
+                </div>
+                <!--end::Page title-->
+            </div>
+            <!--end::Container-->
+        </div>
+        <!--end::Toolbar-->
+        <!--begin::Post-->
+        <div class="post d-flex flex-column-fluid" id="kt_post">
+            <!--begin::Container-->
+            <div id="kt_content_container" class="container-xxl">
+                <!--begin::Basic info-->
+                <div class="card mb-5 mb-xl-10">
+                   
+                    <!--begin::Card header-->
+                    <!--begin::Content-->
+                    <div id="kt_account_profile_details" class="collapse show">
+                        <!--begin::Form-->
+                        <form id="kt_account_profile_details_form" class="form">
+                            <!--begin::Card body-->
+                            <div class="card-header border-0 cursor-pointer" role="button"
+                            data-bs-target="#kt_account_profile_details" aria-expanded="true"
+                            aria-controls="kt_account_profile_details">
+                            <!--begin::Card title-->
+                            <div class="card-title m-0">
+                                <h3 class="fw-bolder m-0">Global Title Section</h3>
+                            </div>
+                            <!--end::Card title-->
+                        </div>
+                            <div class="card-body border-top p-9">
+                                <input type="hidden" name="common_id" 
+                                            value="<%= common.id %>" />
+                                <!--begin::Input group-->
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="required">Title</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <input type="text" name="title" id="title"
+                                            class="form-control form-control-lg form-control-solid" placeholder="Title"
+                                            value="<%= common.title %>" />
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <!--end::Input group-->
+
+                               
+                                <!--begin::Input group-->
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Meta Title</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <input type="longtext" name="meta_title" id="meta_title"
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Meta Title" value="<%= common.meta_title %>" />
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <!--end::Input group-->
+                                <!--begin::Input group-->
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Meta Description</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <input type="longtext" name="meta_desc" id="meta_desc"
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Meta Description" value="<%= common.meta_desc %>" />
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <!--end::Input group-->
+
+                                <!--begin::Input group-->
+                                <div class="row mb-6">
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Keyword</span>
+                                    </label>
+                                    <div class="col-lg-8 fv-row">
+                                        <input type="text" name="meta_keyword" id="keyword"
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Keyword" value="<%= common.meta_keyword %>" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-header border-0 cursor-pointer" role="button"
+                                data-bs-target="#kt_account_profile_details" aria-expanded="true"
+                                aria-controls="kt_account_profile_details">
+                                <!--begin::Card title-->
+                                <div class="card-title m-0">
+                                    <h3 class="fw-bolder m-0">Footer Section</h3>
+                                </div>
+                                <!--end::Card title-->
+                            </div>
+                            <div class="card-body border-top p-9">
+
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span>Contact Info</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <textarea name="footer_contact_info" class="form-control form-control-lg form-control-solid"
+                                            placeholder="Contact Info"><%= meta_values_array.footer_contact_info %></textarea>
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span>Quick Links</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <textarea name="footer_quick_links" class="form-control form-control-lg form-control-solid"
+                                            placeholder="Quick Links"><%= meta_values_array.footer_quick_links %></textarea>
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span>The App Content</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <textarea name="footer_the_app_content" class="form-control form-control-lg form-control-solid"
+                                            placeholder="The App Content"><%= meta_values_array.footer_the_app_content %></textarea>
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span>Apps Info</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <textarea name="footer_apps_info" class="form-control form-control-lg form-control-solid"
+                                            placeholder="Apps Info"><%= meta_values_array.footer_apps_info %></textarea>
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span>Socials Info</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <textarea name="footer_socials_info" class="form-control form-control-lg form-control-solid"
+                                            placeholder="Socials Info"><%= meta_values_array.footer_socials_info %></textarea>
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <!-- <div class="row mb-6">
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span>Footer Bottom Left</span>
+                                    </label>
+                                    <div class="col-lg-8 fv-row">
+                                        <textarea name="footer_bottom_left" class="form-control form-control-lg form-control-solid"
+                                            placeholder="Footer Bottom Left"><%= meta_values_array.footer_bottom_left %></textarea>
+                                    </div>
+                                </div> -->
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span>Footer Bottom Right</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <textarea name="footer_bottom_right" class="form-control form-control-lg form-control-solid"
+                                            placeholder="Footer Bottom Right"><%= meta_values_array.footer_bottom_right %></textarea>
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                            </div>
+                            <div class="card-footer d-flex justify-content-end py-6 px-9">
+                                <button type="reset"
+                                    class="btn btn-light btn-active-light-primary me-2">Discard</button>
+                                <button type="submit" class="btn btn-primary"
+                                    id="kt_account_profile_details_submit">Submit</button>
+                            </div>
+                            <!--end::Actions-->
+                        </form>
+                    </div>
+
+                    
+                    <!--end::Content-->
+                </div>
+                <!--end::Basic info-->
+
+                <!--end::Modals-->
+            </div>
+            <!--end::Container-->
+        </div>
+        <!--end::Post-->
+
+    </div>
+    <!--end::Content-->
+    <%- include('../common/footer') -%>
+        <script>
+/******/ (() => { // webpackBootstrap 
+/******/ 	"use strict";
+                var __webpack_exports__ = {};
+                /*!*********************************************************************************************!*\
+                  !*** ../../../themes/metronic/html/demo1/src/js/custom/account/settings/profile-details.js ***!
+                  \*********************************************************************************************/
+
+
+                // Class definition
+                var KTAccountSettingsProfileDetails = function () {
+                    // Private variables
+                    var form;
+                    var submitButton;
+                    var validation;
+
+                    var handleForm = function () {
+
+                        $("#kt_datepicker_1").flatpickr();
+                        validation = FormValidation.formValidation(
+                            form,
+                            {
+                                fields: {
+                                    'title': {
+                                        validators: {
+                                            notEmpty: {
+                                                message: 'Title is required'
+                                            }
+                                        }
+                                    }
+
+                                },
+                                plugins: {
+                                    trigger: new FormValidation.plugins.Trigger(),
+                                    submitButton: new FormValidation.plugins.SubmitButton(),
+                                    //defaultSubmit: new FormValidation.plugins.DefaultSubmit(), // Uncomment this line to enable normal button submit after form validation
+                                    bootstrap: new FormValidation.plugins.Bootstrap5({
+                                        rowSelector: '.fv-row',
+                                        eleInvalidClass: '',
+                                        eleValidClass: ''
+                                    })
+                                }
+                            }
+                        );
+
+                        // Handle form submit
+                        submitButton.addEventListener('click', function (e) {
+                            e.preventDefault();
+                            validation.validate().then(function (status) {
+                                if (status == 'Valid') {
+                                    const jsonResponse = $('#kt_account_profile_details_form').serializeArray();
+                                    //console.log(jsonResponse);
+                                    const transformedResponse = {};
+                                    jsonResponse.forEach(item => {
+                                        const { name, value } = item;
+                                        transformedResponse[name] = value;
+                                    });
+                                    //console.log(transformedResponse);
+                                    //return false;
+
+                                    $.ajax({
+                                        url: '/auth/update-global-content',
+                                        method: 'POST',
+                                        data: JSON.stringify(transformedResponse),
+                                        contentType: 'application/json',
+                                        success: function (data) {
+                                            if (data.status == 'ok') {
+                                                Swal.fire({
+                                                    text: data.message,
+                                                    icon: "success",
+                                                    buttonsStyling: false,
+                                                    confirmButtonText: "Ok, got it!",
+                                                    customClass: {
+                                                        confirmButton: "btn btn-primary"
+                                                    }
+                                                }).then(function (result) {
+                                                    if (result.isConfirmed) {
+                                                        window.location.href = "/edit-global";
+                                                    }
+                                                });
+                                            } else {
+                                                Swal.fire({
+                                                    text: data.message,
+                                                    icon: "error",
+                                                    buttonsStyling: false,
+                                                    confirmButtonText: "Ok, got it!",
+                                                    customClass: {
+                                                        confirmButton: "btn btn-primary"
+                                                    }
+                                                });
+                                            }
+                                        },
+                                        error: function (xhr, status, error) {
+                                            // Handle any errors that occur during the request
+                                            console.log(error);
+                                        }
+                                    });
+                                } else {
+                                    swal.fire({
+                                        text: "Sorry, looks like there are some errors detected, please try again.",
+                                        icon: "error",
+                                        buttonsStyling: false,
+                                        confirmButtonText: "Ok, got it!",
+                                        customClass: {
+                                            confirmButton: "btn fw-bold btn-light-primary"
+                                        }
+                                    });
+                                }
+                            });
+                        });
+
+                    }
+
+
+                    // Public methods
+                    return {
+                        init: function () {
+                            form = document.getElementById('kt_account_profile_details_form');
+                            submitButton = form.querySelector('#kt_account_profile_details_submit');
+
+                            handleForm();
+                        }
+                    }
+                }();
+
+                // On document ready
+                KTUtil.onDOMContentLoaded(function () {
+                    KTAccountSettingsProfileDetails.init();
+                });
+
+            })();
+            //# sourceMappingURL=profile-details.js.map    
+
+           
+        </script>

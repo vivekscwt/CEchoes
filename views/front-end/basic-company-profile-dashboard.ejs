@@ -1,0 +1,400 @@
+<%- include('common/header') -%>
+<link href="/front-end/css/company-profile-dashboard.css" rel="stylesheet" type="text/css">
+<link href="/front-end/css/review-style.css" rel="stylesheet" type="text/css">
+<script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
+<%- include('common/header-banner') -%>
+
+<!-- ============== Section1 Start =============== -->
+<section class="main-content">
+   <div class="container">
+      <div class="main_box basic_company_profile">
+         <%- include('common/basic-company-sidebar') -%>
+         <div class="analytics_data analytics_data_row1">
+            <div class="row">
+               <% var company_total_review = companyReviewNumbers.rewiew_count.total_review_count %>
+               <div class="col-md-4">
+                  <div class="total_reviews">
+                     <p>Total Reviews</p>
+                     <div class="count"><%- company_total_review -%></div>
+                  </div>
+               </div>
+               <% var positive_count = 0;
+                  var negative_count = 0;
+                  if (companyReviewNumbers && Array.isArray(companyReviewNumbers.rewiew_rating_count)) {
+                     companyReviewNumbers.rewiew_rating_count.forEach((item, index) => {
+                        if(parseFloat(item.rating)>=4){
+                           positive_count += parseInt(item.cnt_rat);
+                        }
+                        if(parseFloat(item.rating)<=2){
+                           negative_count += parseInt(item.cnt_rat);
+                        }
+                     })
+                  }
+               %>
+               <div class="col-md-4">
+                  <div class="total_reviews total_replied">
+                     <p>Total Replied</p>
+                     <div class="count"><%= TotalReplied.totalReplied %></div>
+                  </div>
+               </div>
+               <div class="col-md-4">
+                  <div class="positive_reviews">
+                     <h4>positive<br>reviews</h4>
+                     <div class="count"><%- positive_count -%></div>
+                  </div>
+                  <div class="negative_reviews">
+                     <h4>negative<br>reviews</h4>
+                     <div class="count"><%- negative_count -%></div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="analytics_data analytics_data_row2">
+            <div class="row align-items-center">
+               <% var chat_y = 0; 
+                  reviewReatingChartArray.forEach((item, index) => { %>
+                  <% if(item.y > 0){
+                     chat_y++;
+                  } %>
+               <% }) %>
+               <% if( chat_y > 0 ){ %>
+               <div class="col-md-5">
+                  <div id="chartContainer" style="height: 250px; width: 100%;"></div>
+               </div>
+               <div class="col-md-7">
+               <% }else{ %>
+               <div class="col-md-12">
+               <% } %>
+                  <div class="display_tags">
+                     <p>Tags you got</p>
+                     <div class="all_tags">
+                        <% if(reviewTagsCount && reviewTagsCount.length>0 ){ %>
+                        <div class="row">
+                           <% reviewTagsCount.forEach((item, index) => { %>
+                           <div class="col-md-4 col-6">
+                              <div class="each_tag_info">
+                                 <!-- <div class="circale"></div> -->
+                                 <div class="tag_name"><%- item.tag_name -%></div>
+                                 <div class="tag_count"><%- item.count -%></div>
+                              </div>
+                           </div>
+                           <% }) %>
+                        </div>
+                        <% }else{ %>
+                           <p>No tags found</p>
+                        <% } %>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            </div>
+            <% if( chat_y > 0 ){ %>
+            <div class="analytics_data analytics_data_row3">
+               <div class="row">
+                  <div class="col-md-6">
+                     <div class="d-flex align-items-center justify-content-start mb-3">
+                        <h4 class="sec_heading mb-0">Rating given by users</h4>
+                     </div>
+                     <div class="all_ratings_progressbar">
+                        <div id="columnChart" style="height: 360px; width: 100%;"></div>
+                     </div>
+                  </div>
+                  <div class="col-md-6">
+                     <!--<div class="d-flex align-items-center justify-content-start mb-3">
+                        <h4 class="sec_heading mb-0">Visited by age category</h4><img style="margin-left: 5px;" src="/front-end/images/coming-soon.png" alt="image" />
+                     </div>-->
+                     <div id="ageChartContainer" style="width: 100%; height: 360px"></div>
+                  </div>
+               </div>
+            </div>
+            <% } %>
+            
+         <div class="analytics_data analytics_data_row3">
+            <div class="row">
+               <div class="col-lg-12">
+                  <!-- <button id="generatePdfButton">Generate PDF</button> -->
+                  <h4 class="sec_heading mb-3">Review Comparison by Product</h4>
+                  <div id="productGraph" style="height: 300px; width: 100%;"></div>
+               </div>
+            </div>
+         </div>
+            <!-- <div class="analytics_data analytics_data_row4">
+               <div class="select_box_and_btn">
+                  <div class="select_location">
+                     <label>Select locations</label>
+                     <div class="address_selectbox">
+                        <select name="" id="">
+                           <option value="">Select</option>
+                           <option value="">Scwebtech Saltlake</option>
+                           <option value="">Scwebtech Jadavpur</option>
+                           <option value="">Scwebtech Howrah</option>
+                           <option value="">Scwebtech Malda</option>
+                        </select>
+                     </div>
+                  </div>   
+                  <a href="/company-review-listing/<%= company.ID  %>">View All Reviews</a>
+               </div>
+               <div class="data_by_locations">
+                  <div class="row">
+                     <div class="col-md-4">
+                        <div class="total_reviews">
+                           <p>Total Reviews</p>
+                           <div class="count"><%- company_total_review -%></div>
+                        </div>
+                     </div>
+                     <div class="col-md-4">
+                        <div class="total_reviews total_replied">
+                           <p>Total Replied</p>
+                           <div class="count">0</div>
+                        </div>
+                     </div>
+                     <div class="col-md-4">
+                        <div class="positive_reviews">
+                           <h4>positive reviews</h4>
+                           <div class="count">00</div>
+                        </div>
+                        <div class="negative_reviews">
+                           <h4>negative reviews</h4>
+                           <div class="count">00</div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div> -->
+            <% if (finalCompanyallReviews.length > 0) { %>
+            <div class="company_dashboard_all_reviews_slider">
+               <div class="review-slider">   
+                  <% finalCompanyallReviews.forEach( review => { %>
+                  <div class="item">
+                     <div class="review-box">
+                        <div class="head_box d-flex align-items-center justify-content-between mb-2">
+                        <h3 style="margin:0"><a href="/company/<%= review.slug %>"><%= company && company.company_name ? company.company_name : '' %></a></h3>
+                        <% var avg = review.rating %>
+                        <div class="user-rating">
+                           <% allRatingTags.forEach( tag => { %>
+                              <% if(tag.review_rating_value == avg){ %>
+                                 <span><img src="/<%= tag.rating_image %>" alt="" style="display: inline-block;" width="35"></span>
+                              <% } %>
+                              <% }) %> 
+                           <span><%= review.rating %>/5</span>
+                        </div>
+                        </div>
+                        <% if(review.address){ %>
+                        <div class="user-info-panel">
+                           <span><i class="fa-solid fa-location-dot"></i></span>
+                           <p class="m-0">
+                              <strong>Location</strong><br>
+                              <%- review.address -%> 
+                           </p>
+                        </div>
+                        <% } %>
+                        <% if(review.review_title){ %>
+                        <div class="user-info-panel">
+                           <span><i class="fa-solid fa-box"></i></span>
+                           <p class="m-0">
+                              <strong>Product/division</strong><br>
+                              <%- review.review_title -%> 
+                           </p>
+                        </div>
+                        <% } %>
+                        <div class="user-review-text">
+                           <% review.Tags.forEach(tag => { %>
+                           <span class="user-select-tag"><%= tag.tag_name %></span>
+                           <% }); %>
+                           <% var review_content = review.review_content
+                              const review_content_words = review_content.split(' ');
+                           %>
+                           <div class="review-description-wrap">
+                              <% if(review_content_words.length <= 35){%>
+                              <%- review_content -%>
+                              <% }else{
+                                 const firstPart = review_content_words.slice(0, 35).join(' ');
+                                 const secondPart = review_content_words.slice(35).join(' ');
+                              %>
+                                 <%- firstPart -%> ...
+                              <div class="review-full-description">
+                                 <%- secondPart -%>
+                              </div>
+                              <a href="" class="read-review">View More</a>
+                              <% }%>
+                           </div>
+                        </div>
+                        <div class="user-bio_rating">
+                           <div class="user-profile-info">
+                              <div class="user-name-show position-relative">
+                              <% if(review.user_privacy == '1'){ %>
+                                 <% if(review.profile_pic != null){ %>
+                                 <span><img src="/<%- review.profile_pic -%>" alt="<%- review.first_name+' '+review.last_name -%>" width="20px"></span>
+                                 <% }else{ %>
+                                 <span><img src="/assets/media/avatars/blank.png" alt="<%- review.first_name+' '+review.last_name -%>" width="20px"></span>
+                                 <% } %>   
+                                 <span><%- review.first_name+' '+review.last_name -%> </span>
+                              <% }else{ %>
+                                 <span><img src="/front-end/images/blur-img.png" alt="img" width="20px"></span>
+                                 <span><img src="/front-end/images/blur-name.png" alt="img"></span>
+                              <% } %>
+                              </div>
+                              <% const dateString = review.created_at; %>
+                              <% const date = new Date(dateString); %>
+                              <div class="user-review-date"><%= date.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) %></div>
+                           </div>
+                           <!-- <div class="user-rating">
+                              <span>
+                                 <% allRatingTags.forEach( tag => { %>
+                                    <% if(tag.review_rating_value == review.rating){ %>
+                                       <img src="/<%= tag.rating_image %>" alt="img-gif-<%- review.rating -%>" style="display: inline-block;" width="35">
+                                    <% } %>
+                                 <% }) %>
+                              </span>
+                              <span><%= review.rating %>/5</span>
+                           </div> -->
+                        </div>
+                        <!-- <div class="review-like-dislike">
+                           <span><a href=""><i class="fa-solid fa-thumbs-up"></i> 10</a></span>
+                           <span><a href=""><i class="fa-solid fa-thumbs-down"></i> 8</a></span>
+                           </div> -->
+                     </div>
+                  </div>
+                  <% }) %>
+               </div>
+            </div>
+            <% } %>
+         </div>
+      
+   </div>
+</section>
+<!-- ============== Section6 End =============== -->
+<%- include('common/footer') -%>
+
+<script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+<script src="https://cdn.canvasjs.com/jquery.canvasjs.min.js"></script>
+
+<script>
+   window.onload = function () {
+      var dataPoints = [
+               { y: <%= reviewReatingChartArray[0].y %>, name: "<%= allRatingTags[0].review_rating_name %>", color: "red" },
+               { y: <%= reviewReatingChartArray[1].y %>, name: "<%= allRatingTags[1].review_rating_name %>", color: "#fc3003" },
+               { y: <%= reviewReatingChartArray[2].y %>, name: "<%= allRatingTags[2].review_rating_name %>", color: "#fc5603" },
+               { y: <%= reviewReatingChartArray[3].y %>, name: "<%= allRatingTags[3].review_rating_name %>", color: "#fc9003" },
+               { y: <%= reviewReatingChartArray[4].y %>, name: "<%= allRatingTags[4].review_rating_name %>", color: "#fcb503" },
+               { y: <%= reviewReatingChartArray[5].y %>, name: "<%= allRatingTags[5].review_rating_name %>", color: "#e3fc03" },
+               { y: <%= reviewReatingChartArray[6].y %>, name: "<%= allRatingTags[6].review_rating_name %>", color: "#bafc03" },
+               { y: <%= reviewReatingChartArray[7].y %>, name: "<%= allRatingTags[7].review_rating_name %>", color: "#a1fc03" },
+               { y: <%= reviewReatingChartArray[8].y %>, name: "<%= allRatingTags[8].review_rating_name %>", color: "#80fc03" },
+               { y: <%= reviewReatingChartArray[9].y %>, name: "<%= allRatingTags[9].review_rating_name %>", color: "#03fc2c" },
+            ];
+         
+      var filteredDataPoints = dataPoints.filter(function(dataPoint) {
+            return dataPoint.y !== 0;
+         });
+
+      var chart = new CanvasJS.Chart("chartContainer", {
+         exportEnabled: false,
+         animationEnabled: true,
+         legend :{ 
+            verticalAlign: "center", 
+            horizontalAlign: "right",
+            fontSize:15,
+            fontWeight:"normal",
+         }, 
+         data: [{
+            type: "doughnut",
+            innerRadius: 70,
+            showInLegend: true,
+            toolTipContent: "<b>{name}</b>: #percent%",
+            indexLabel: "#percent%",
+            indexLabelPlacement: "inside",
+            indexLabelFontColor: "black",
+            indexLabelFontSize: 13,
+            indexLabelFontWeight: "bold",
+            dataPoints: filteredDataPoints
+         }]
+      });
+      chart.render();
+
+      /*========================================*/
+
+      var columnChart = new CanvasJS.Chart("columnChart", {
+         animationEnabled: true,
+         //exportEnabled: true,
+         theme: "light1", // "light1", "light2", "dark1", "dark2"
+         title: {
+            //text: "Simple Column Chart with Index Labels"
+         },
+         axisY: {
+            includeZero: true
+         },
+         dataPointWidth: 25,
+         //backgroundColor: "#F5DEB3",
+         data: [{
+            type: "column",
+            //indexLabel: "{y}", //Shows y value on all Data Points
+            indexLabelFontColor: "#5A5757",
+            indexLabelFontSize: 16,
+            indexLabelPlacement: "outside",
+            dataPoints: [
+               <% reviewReatingChartArray.forEach((item, index) => { %>
+               { x: <%= item.x %>, y: <%= item.y %>, color: '#F8A401' },
+               <% }) %>
+            ]
+         }]
+      });
+      columnChart.render();
+
+      /*===================================================*/
+      
+      var ageChart = new CanvasJS.Chart("ageChartContainer", {  
+         legend :{ 
+            verticalAlign: "center", 
+            horizontalAlign: "right",
+            fontSize:15,
+            fontWeight:"normal",
+         }, 
+         data: [ 
+         { 
+            type: "pie", 
+            showInLegend: true, 
+            toolTipContent: "<b>Age:</b> {label} <br/> <b>Visited:</b> {y} %", 
+            indexLabel: "{y} %", 
+            dataPoints: [ 
+               { label: "<18",  y: 30.3, color:'#F87701', legendText: "< 18"}, 
+               { label: "18-24",    y: 19.1, color:'#F8A401', legendText: "18 - 24"  }, 
+               { label: "25-34",   y: 4.0, color:'#F4DD35',  legendText: "25 - 34" }, 
+               { label: "35-44",       y: 3.8, color:'#FFF6B2',  legendText: "35 - 44"}, 
+               { label: ">45",   y: 3.2, color:'#000',  legendText: "> 45" }, 
+            ] 
+         } 
+         ] 
+      });
+      ageChart.render();
+      
+//=============================== Product chart Start =============================
+         
+      var productGraph = {
+            exportEnabled: false,
+            animationEnabled: true,
+            legend: {
+               horizontalAlign: "right",
+               verticalAlign: "center"
+            },
+         data: [{
+            type: "pie",
+            showInLegend: true,
+            toolTipContent: "<b>{name}</b>: {y} (#percent%)",
+            indexLabel: "{name}",
+            legendText: "{name} (#percent%)",
+            indexLabelPlacement: "inside",
+            dataPoints: [
+            <% productGraphArray.forEach((item, index) => { %>
+                           
+               { y: <%= item.count %>, name: "<%= item.name %>" },
+                           <% }) %>
+            ]
+         }]
+      };
+
+      $("#productGraph").CanvasJSChart(productGraph);
+
+      //=============================== Product chart end =============================
+   }
+</script>

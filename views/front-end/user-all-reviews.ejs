@@ -1,0 +1,205 @@
+<%- include('common/header') -%>
+<link href="/front-end/css/review-style.css" rel="stylesheet" type="text/css">
+<link href="/front-end/css/profile-dashboard-style.css" rel="stylesheet" type="text/css">
+<%- include('common/header-banner') -%>
+<!-- ============== Section1 Start =============== -->
+<section class="main-content bottom-main-content">
+   <div class="container">
+      <!--<div class="review-search-select-area">
+         <div class="review-search-box position-relative">
+            <form>
+               <input type="text" class="form-control" placeholder="Search for Organization/Institution/Place of Interest" required="">
+            </form>
+            <input type="submit">
+         </div>
+         <div class="short-by-select">
+            <div class="custom-select-box">
+               <div class="custom-select-label">Sort By</div>
+               <div class="custom-select-change">Select</div>
+               <div class="custom-select-dropdown">
+                  <ul class="m-0 p-0">
+                     <li><a href="#">Date</a></li>
+                     <li><a href="#">City</a></li>
+                  </ul>
+               </div>
+            </div>
+         </div>
+      </div>-->
+      <div class="review-slider-wrap">
+         <h2 class="inner-main-head">All Reviews</h2>
+         <% if(AllCompaniesReviews.length>0) { %>
+         <div class="review-slider">
+                <% AllCompaniesReviews.forEach( (review,index)=> {%>
+                    <div class="item">
+                        <div class="review-box">
+                           <div class="head_box d-flex align-items-center justify-content-between mb-2">
+                             <h3 style="margin:0"><a href="/company/<%= review.slug %>"><%= review.company_name %></a></h3>
+                             <% var avg = review.rating %>
+                             <div class="user-rating">
+                               <% allRatingTags.forEach( tag => { %>
+                                   <% if(tag.review_rating_value == avg){ %>
+                                     <span><img src="/<%= tag.rating_image %>" alt="" style="display: inline-block;" width="35"></span>
+                                   <% } %>
+                                   <% }) %> 
+                               <span><%= review.rating %>/5</span>
+                             </div>
+                           </div>
+                           <div class="user-info-panel">
+                              <span><i class="fa-solid fa-location-dot"></i></span>
+                              <p class="m-0">
+                                 <strong>Location</strong><br>
+                                 <%= review.company_location %>
+                              </p>
+                           </div>
+                           <% if(review && review.product_title){ %>
+                             <div class="user-info-panel">
+                               <span><i class="fa-solid fa-box"></i></span>
+                               <p class="m-0">
+                                  <strong>Product/division</strong><br>
+                                  <%= review.product_title %>
+                               </p>
+                            </div>
+                           <% }else { %>
+                              <% if(review && review.review_title) { %>
+                                 <div class="user-info-panel">
+                                    <span><i class="fa-solid fa-box"></i></span>
+                                    <p class="m-0">
+                                       <strong>Product/division</strong><br>
+                                       <%= review.review_title %>
+                                    </p>
+                                 </div>
+                              <% } %>
+                           <% } %>
+                           <div class="user-review-text">
+                                <% AllReviewTags.forEach( (tag,index)=> {%>
+                                    <% if(tag.review_id == review.id) { %>
+                                    <span class="user-select-tag"><%= tag.tag_name %></span>
+                                    <% } %>
+                                <% }) %>
+                                 
+                                 <% var review_content = review.review_content
+                                 const review_content_words = review_content.split(' ');
+                                 %>
+                                 <div class="review-description-wrap">
+                                 <% if(review_content_words.length <= 35){%>
+                                 <%- review_content -%>
+                                 <% }else{
+                                    const firstPart = review_content_words.slice(0, 35).join(' ');
+                                    const secondPart = review_content_words.slice(35).join(' ');
+                                 %>
+                                    <%- firstPart -%> ...
+                                 <div class="review-full-description">
+                                    <%- secondPart -%>
+                                 </div>
+                                 <a href="" class="read-review">View More</a>
+                                 <% }%>
+                                 </div>
+                           </div>
+                           <div class="user-bio_rating">
+                              <div class="user-profile-info">
+                                 <!-- <div class="user-name-show position-relative">
+                                    <span><img src="front-end/images/user-img.png" alt="img"></span>
+                                    <span>Raju Sing</span>
+                                 </div> -->
+                                 <% const dateString = review.created_at; %>
+                                <% const date = new Date(dateString); %>
+                                <% const date2 = new Date(); %>
+                                 <% const daysDiff = Math.round((date2 - date)/(1000 * 60 * 60 * 24)) %>
+                                 <div class="user-review-date"><%= date.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) %></div>
+                              </div>
+                              
+                              <% if(review.labels == '2') { %>
+                                 <div><span class="invited-tag">Invited</span></div>
+                              <% } %>
+
+                              <% if(review.review_reply_count==1){ %>
+                                 <span class="user-select-tag review-reply-btn"><a href="/company/<%- review.slug -%>#review-reply-<%- review.id -%>">Reply</a></span> 
+                                 <% } %>
+                                 
+                              <% if(daysDiff < 31) { %>
+                                 <span class="user-select-tag review-reply-btn"><a href="/edit-user-review/<%- review.id -%>">Edit</a></span> 
+                              <% } %>
+                           </div>
+                           <% if(currentUserData  && currentUserData.user_id  ){ %>
+                              <% 
+                                 var totalLikes = 0;
+                                 var totalDislikes = 0;
+                                 var user_voting_value = '';
+                                 AllReviewVoting.forEach( (reviewVoting, index) => {
+                                    if(reviewVoting.review_id == review.id && reviewVoting.voting == '1'){
+                                       totalLikes ++ ;
+                                    }
+                                    if(reviewVoting.review_id == review.id && reviewVoting.voting == '0'){
+                                       totalDislikes ++ ;
+                                    }
+                                    if(reviewVoting.review_id == review.id && reviewVoting.customer_id == currentUserData.user_id){
+                                       user_voting_value = reviewVoting.voting;
+                                    }
+                                 }) 
+                              %>
+                              <div class="review-like-dislike" id="rev_<%= review.id %>">
+                                 <span><a href="#" class="review-voting like_class <% if(user_voting_value == '1'){ %> active <% } %>" data-voting="1" data-userId="<%= currentUserData.user_id %>" data-reviewId="<%= review.id %>"><i class="fa-solid fa-thumbs-up"></i> <span class="like_count"><%= totalLikes %></span></a></span>
+
+                                 <span><a href="#" class="review-voting dislike_class <% if(user_voting_value == '0'){ %> active <% } %>"  data-voting="0" data-userId="<%= currentUserData.user_id %>" data-reviewId="<%= review.id %>"><i class="fa-solid fa-thumbs-down"></i> <span class="dislike_count"><%= totalDislikes %></span></a></span>
+                              </div>
+                           <% } %>
+                        </div>
+                     </div>
+                <% }) %>
+         </div>
+         <%}else{%>
+            <div class="blank-message" style="margin: 60px 0;">
+               If you're not seeing any review listing, please start share your opinion on companies.
+               <a href="/review/#submit-review" class="btn-default btn-outline-warning">Submit Review</a>
+            </div> 
+         <% } %>
+      </div>
+   </div>
+</section>
+<!-- ============== Section1 End =============== -->
+<%- include('common/footer') -%>
+<script>
+   $(document).ready(()=>{
+      $(".review-voting").click(function(e){
+         e.preventDefault();
+         var votingValue = $(this).attr("data-voting");
+         var userId = $(this).attr("data-userId");
+         var reviewId = $(this).attr("data-reviewId");
+         console.log(votingValue,userId,reviewId);
+         var votingData = {
+            votingValue:votingValue,
+            userId:userId,
+            reviewId:reviewId
+         };
+         var jsonData = JSON.stringify(votingData);
+         console.log(votingData)
+         $.ajax({
+            url:'/auth/reviewVoting',
+            method:'POST',
+            data:votingData,
+            success: function(data) {
+               if (data.status == 'ok') {
+                  var updatedLike = data.totalLike.totalLike;
+                  var updatedDislike = data.totalDislike.totalDislike;
+                  var responseReviewId = data.reviewId;
+                  var votingValue = data.votingValue;
+                  if (votingValue == '1') {
+                     $('#rev_'+responseReviewId).find('.like_class').addClass('active')
+                     $('#rev_'+responseReviewId).find('.dislike_class').removeClass('active')
+                  } else {
+                     
+                     $('#rev_'+responseReviewId).find('.like_class').removeClass('active')
+                     $('#rev_'+responseReviewId).find('.dislike_class').addClass('active')
+                  }
+                  // Update the value displayed on the page thumbs-down-link
+                  $('#rev_'+responseReviewId).find('.like_count').text(updatedLike);
+                  $('#rev_'+responseReviewId).find('.dislike_count').text(updatedDislike);
+                  
+               }else{
+                  console.log('Error on response')
+               }
+            }
+         })
+      })
+   })
+</script>

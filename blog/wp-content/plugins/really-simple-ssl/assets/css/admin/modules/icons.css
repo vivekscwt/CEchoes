@@ -1,0 +1,8 @@
+.rsssl-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.rsssl-icon svg {
+  fill: currentColor;
+}/*# sourceMappingURL=icons.css.map */

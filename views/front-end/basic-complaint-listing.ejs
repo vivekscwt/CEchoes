@@ -1,0 +1,333 @@
+<%- include('common/header') -%>
+<link href="/front-end/css/company-profile-dashboard.css" rel="stylesheet" type="text/css">
+<link href="/front-end/css/business-profile-manage-style.css" rel="stylesheet" type="text/css">
+<%- include('common/header-banner') -%>
+
+<!-- ============== Section1 Start =============== -->
+<section class="main-content basic-complain-content">
+    <div class="container">
+        <div class="company_profile_management">
+            <%- include('common/basic-company-sidebar') -%>
+             <div class="each_box update_basic_information all_review_listing_for_company">
+                <div class="table-responsive">
+                  <table class="table table-hover custom-table">
+                     <thead>
+                        <tr>
+                           <th scope="col">Date</th>
+                           <th scope="col">Token</th>
+                           <th scope="col">Category</th>
+                           <th scope="col">Sub-Category</th>
+                           <th scope="col">Product Name</th>
+                           <th scope="col">Status</th>
+                           <th scope="col" style="width: 210px; text-align: center;">Action</th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        <% AllComplaintsByCompanyId.forEach( compnaint => { %>
+                        <tr role="row" class="odd">
+                           <td>
+                              <% const dateString = compnaint.created_at; %>
+                              <% const date = new Date(dateString); %>
+                              <%= date.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) %>
+                           </td>
+                           <td><strong><a href="/company-compnaint-details/<%= company.slug %>/<%= compnaint.id %>" ><%= compnaint.ticket_id %></a></strong></td>
+                           <td><%= compnaint.category_name %></td>
+                           <td><%= compnaint.sub_category_name %></td>
+                           <td><%= compnaint.model_desc %></td>
+                           <td>
+                              <% if(compnaint.status == '0') { %>
+                                 <span class="text-danger"><strong>Reopen</strong></span>
+                              <% } else if(compnaint.status == '1') { %>
+                                 <span class="text-success"><strong>Resolved</strong></span>
+                                 <% } else { %>
+                                    <span class="text-yellow"><strong>Ongoing</strong></span>
+                                    <% } %>
+                           </td>
+                           <td style="text-align: center;">
+                              <span class="action-select">
+                                 <span class="action-change">Action</span> <a href="" class="action-arw"><i class="fa-solid fa-angle-down"></i></a>
+                                 <% if(compnaint.status != '1') { %>
+                                 <div class="action-dropdown">
+                                    <ul class="p-0 m-0">
+                                       <li><a href="#" data-bs-toggle="modal"
+                                          data-complaint-id="<%= compnaint.id %>" data-level-id="<%= compnaint.level_id %>" data-customer-id="<%= compnaint.user_id %>"
+                                          data-bs-target="#customerquerymodal" class="respond-link">Respond
+                                          to customer with query</a></li>
+                                    <!-- <li><a href="#" data-complaint-id="<%= compnaint.id %>" class="respond-link">Respond to customer with query</a></li> -->
+
+                                    <li><a href="#" data-bs-toggle="modal"
+                                          data-complaint-id="<%= compnaint.id %>" data-level-id="<%= compnaint.level_id %>"  data-customer-id="<%= compnaint.user_id %>"
+                                          data-bs-target="#respondcustomermodal"
+                                          class="respond-link">Respond to customer & Close</a></li>
+
+                                    <% if(compnaint.level_id == 1){ %> 
+                                       <li>
+                                          <a href="#" class="escalate_next_level" data-complaint-id="<%= compnaint.id %>" data-level-id="<%= compnaint.level_id %>" data-customer-id="<%= compnaint.user_id %>" >Escalate to next level</a>
+                                       </li>
+                                    <% } %>
+                                    </ul>
+                                 </div>
+                                 <% } %>
+                              </span>
+                           </td>
+                        </tr>
+                        <% }) %>
+                     </tbody>
+                  </table>
+                </div>
+             </div>
+        </div>
+     </div>
+</section>
+
+ <!-- The Modal -->
+ <div class="modal fade" id="customerquerymodal">
+   <div class="modal-dialog">
+      <div class="modal-content">
+
+         <!-- Modal Header -->
+         <div class="modal-header border-0">
+            <button type="button" class="btn-close" data-bs-dismiss="modal"><i
+                  class="fa-solid fa-circle-xmark"></i></button>
+         </div>
+
+         <!-- Modal body -->
+         <div class="modal-body">
+            <form id="company_query_form" class="message_form">
+               <div class="custom-form">
+                  <label for=""><span>Enter Your Query</span></label>
+                  <textarea name="message" id="" class="form-control"></textarea>
+               </div>
+               <input type="hidden" name="user_id" id="customer-id-query" value="" />
+               <input type="hidden" name="company_id" value="<%= company.ID %>" />
+               <input type="hidden" id="complaint-id-input" name="complaint_id" value="">
+               <input type="hidden"  name="complaint_status" value="">
+               <input type="hidden" id="complaint-query-level" name="complaint_level" value="">
+               <input type="submit" class="btn-default btn-warning submit_btn"  value="Submit">
+            </form>
+            <div class="register-now frm-loading" style=" display: none; ">
+               <span class="indicator-progress">Please wait...
+                  <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+               </span>
+            </div>
+            <div
+               style=" width: 100%; text-align: center; display: block; border: 2px solid #fccb06; padding: 6px; margin-top: 20px; border-radius: 5px;  display: none;"
+               class="response-message"></div>
+         </div>
+      </div>
+   </div>
+</div>
+
+<div class="modal fade" id="respondcustomermodal">
+   <div class="modal-dialog">
+      <div class="modal-content">
+
+         <!-- Modal Header -->
+         <div class="modal-header border-0">
+            <button type="button" class="btn-close" data-bs-dismiss="modal"><i
+                  class="fa-solid fa-circle-xmark"></i></button>
+         </div>
+
+         <!-- Modal body -->
+         <div class="modal-body">
+            <form id="resolved_message_form" class="message_form">
+               <div class="custom-form">
+                  <label for=""><span>Resolved Message</span></label>
+                  <textarea name="message" id="" class="form-control"></textarea>
+               </div>
+               <input type="hidden" name="user_id" id="customer_id_resolve" value="" />
+               <input type="hidden" name="company_id" value="<%= company.ID %>" />
+               <input type="hidden" id="complaint-id-resolve" name="complaint_id" value="">
+               <input type="hidden"  name="complaint_status" value="1">
+               <input type="hidden" id="complaint-resolve-level" name="complaint_level" value="">
+               <input type="submit" class="btn-default btn-warning submit_btn" id="" value="Resolved">
+            </form>
+            <div class="register-now frm-loading" style=" display: none; ">
+               <span class="indicator-progress">Please wait...
+                  <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+               </span>
+            </div>
+            <div
+               style=" width: 100%; text-align: center; display: block; border: 2px solid #fccb06; padding: 6px; margin-top: 20px; border-radius: 5px;  display: none;"
+               class="response-message"></div>
+         </div>
+      </div>
+   </div>
+</div>
+
+      <!--Escalate Modal -->
+      <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+         <div class="modal-dialog" role="document">
+           <div class="modal-content">
+             <div class="modal-header">
+               <h5 class="modal-title" id="successModalLabel">Success</h5>
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                 <span aria-hidden="true">&times;</span>
+               </button>
+             </div>
+             <div class="modal-body" style=" width: 100%; text-align: center; display: block; border: 2px solid #fccb06; padding: 6px; margin-top: 20px; border-radius: 5px; ">
+               <!-- Display your success message here -->
+               <p id="successMessage"></p>
+             </div>
+             <div class="modal-footer">
+               <button type="button" class="btn-default btn-warning" data-dismiss="modal">Close</button>
+             </div>
+           </div>
+         </div>
+       </div>
+<!-- ============== Section1 Start =============== -->
+
+<%- include('common/footer') -%>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/css/dataTables.bootstrap4.min.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/1.0.4/css/dataTables.responsive.css" />
+
+<script src="https://cdn.datatables.net/1.10.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/plug-ins/f2c75b7247b/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+<script src="https://cdn.datatables.net/responsive/1.0.4/js/dataTables.responsive.js"></script>
+<script>
+   jQuery(function ($) {
+      $(document).ready(() => {
+         $('.table').DataTable({
+            "order": [[4, "desc"]]
+         });
+      });
+   });
+
+   $(document).ready(function () {
+      $('.respond-link').on('click', function (e) {
+         e.preventDefault();
+         const complaintId = $(this).data('complaint-id');
+         const customerId = $(this).data('customer-id');
+         const levelId = $(this).data('level-id');
+         $('#complaint-id-input').val(complaintId);
+         $('#complaint-id-resolve').val(complaintId);
+         $('#customer_id_resolve').val(customerId);
+         $('#customer-id-query').val(customerId);
+         $('#complaint-query-level').val(levelId);
+         $('#complaint-resolve-level').val(levelId);
+      });
+
+      // $('form.message_form').submit(function (e) {
+      //    e.preventDefault();
+      //    $('.response-message').hide();
+      //    $('.response-message').text('');
+      //    $('.submit_btn').prop('disabled', true);
+      //    $('.frm-loading').show();
+      //    //alert('aaaaaa')
+      //    const transformedResponse = {};
+      //    const formData = $(this).serializeArray();
+      //    $(formData).each(function (index, field) {
+      //       transformedResponse[field.name] = field.value;
+      //    });
+      //    console.log(transformedResponse);
+      //    return false;
+      //    $.ajax({
+      //       url: '/auth/company-response', // URL for your API endpoint
+      //       method: 'POST',
+      //       data: JSON.stringify(transformedResponse),
+      //       //data: formData,
+      //       processData: false,
+      //       //contentType: false,
+      //       contentType: 'application/json',
+      //       success: function (data) {
+      //          if (data.status == 'ok') {
+      //             $('.response-message').text(data.message);
+      //             $('.response-message').show();
+      //             $('.submit_btn').prop('disabled', false);
+      //             $('.frm-loading').hide();
+      //             setTimeout(function () {
+      //                window.location.reload();
+      //             }, 2000);
+      //          } else {
+      //             $('.response-message').text(data.message);
+      //             $('.response-message').show();
+      //             $('.submit_btn').prop('disabled', false);
+      //             $('.frm-loading').hide();
+      //             console.log('Something went wrong');
+      //          }
+      //       },
+      //       error: function (xhr, status, error) {
+      //          // Handle any errors that occur during the request
+      //          console.log(error);
+      //       }
+      //    });
+
+      // });
+
+      $('form.message_form').submit(function (e) {
+         e.preventDefault();
+         $('.response-message').hide();
+         $('.response-message').text('');
+         $('#query_submit_btn').prop('disabled', true);
+         $('.frm-loading').show();
+         //alert('aaaaaa')
+         const transformedResponse = {};
+         const formData = $(this).serializeArray();
+         $(formData).each(function (index, field) {
+            transformedResponse[field.name] = field.value;
+         });
+         console.log(transformedResponse);
+         //return false;
+         $.ajax({
+            url: '/auth/company-query', // URL for your API endpoint
+            method: 'POST',
+            data: JSON.stringify(transformedResponse),
+            //data: formData,
+            processData: false,
+            //contentType: false,
+            contentType: 'application/json',
+            success: function (data) {
+               if (data.status == 'ok') {
+                  $('.response-message').text(data.message);
+                  $('.response-message').show();
+                  $('#query_submit_btn').prop('disabled', false);
+                  $('.frm-loading').hide();
+                  setTimeout(function () {
+                     window.location.reload();
+                  }, 2000);
+               } else {
+                  $('.response-message').text(data.message);
+                  $('.response-message').show();
+                  $('#query_submit_btn').prop('disabled', false);
+                  $('.frm-loading').hide();
+                  console.log('Something went wrong');
+               }
+            },
+            error: function (xhr, status, error) {
+               // Handle any errors that occur during the request
+               console.log(error);
+            }
+         });
+
+      });
+
+      $('.escalate_next_level').on('click', function (e) {
+         const complaintId = $(this).data('complaint-id');
+         const customerId = $(this).data('customer-id');
+         const levelId = $(this).data('level-id');
+         console.log(complaintId, customerId, levelId)
+         //alert('aaaaaaaa');
+         $.ajax({
+            url:'/auth/escalate-next-level',
+            method:'POST',
+            data:JSON.stringify({complaintId:complaintId, customerId:customerId, levelId:levelId }),
+            contentType:'application/json',
+            processData:false,
+            success: function (data){
+               $('#successMessage').text(data.message);
+                  // Open the modal
+                  $('#successModal').modal('show');
+                  setTimeout(function() {
+                     location.reload(true);
+                  }, 3000);
+            },
+            error: function(error){
+               console.log(error);
+            }
+         })
+         //return false;
+      });
+
+   });
+
+</script>

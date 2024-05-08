@@ -1,0 +1,49 @@
+.rsssl a.button, .rsssl button.button, .rsssl input.button, .rsssl span.button {
+  font-size: var(--rsp-fs-300);
+  font-weight: 400;
+  transition: all 0.3s ease;
+  min-height: 10px;
+}
+.rsssl a.button.button-secondary, .rsssl a.button.button-default, .rsssl button.button.button-secondary, .rsssl button.button.button-default, .rsssl input.button.button-secondary, .rsssl input.button.button-default, .rsssl span.button.button-secondary, .rsssl span.button.button-default {
+  background: transparent;
+}
+.rsssl a.button.button-black, .rsssl button.button.button-black, .rsssl input.button.button-black, .rsssl span.button.button-black {
+  border: 1px solid var(--rsp-black);
+  background: var(--rsp-black);
+  color: var(--rsp-text-color-white);
+}
+.rsssl a.button.button-black:hover, .rsssl a.button.button-black:focus, .rsssl a.button.button-black:active, .rsssl button.button.button-black:hover, .rsssl button.button.button-black:focus, .rsssl button.button.button-black:active, .rsssl input.button.button-black:hover, .rsssl input.button.button-black:focus, .rsssl input.button.button-black:active, .rsssl span.button.button-black:hover, .rsssl span.button.button-black:focus, .rsssl span.button.button-black:active {
+  box-shadow: 0 0 0 1px #fff, 0 0 0 3px var(--rsp-black);
+}
+.rsssl a.button.button-tertiary, .rsssl a.button.button-red, .rsssl button.button.button-tertiary, .rsssl button.button.button-red, .rsssl input.button.button-tertiary, .rsssl input.button.button-red, .rsssl span.button.button-tertiary, .rsssl span.button.button-red {
+  border: 0 solid transparent;
+  background: var(--rsp-red);
+  color: var(--rsp-text-color-white);
+}
+.rsssl a.button.button-tertiary:hover, .rsssl a.button.button-tertiary:focus, .rsssl a.button.button-tertiary:active, .rsssl a.button.button-red:hover, .rsssl a.button.button-red:focus, .rsssl a.button.button-red:active, .rsssl button.button.button-tertiary:hover, .rsssl button.button.button-tertiary:focus, .rsssl button.button.button-tertiary:active, .rsssl button.button.button-red:hover, .rsssl button.button.button-red:focus, .rsssl button.button.button-red:active, .rsssl input.button.button-tertiary:hover, .rsssl input.button.button-tertiary:focus, .rsssl input.button.button-tertiary:active, .rsssl input.button.button-red:hover, .rsssl input.button.button-red:focus, .rsssl input.button.button-red:active, .rsssl span.button.button-tertiary:hover, .rsssl span.button.button-tertiary:focus, .rsssl span.button.button-tertiary:active, .rsssl span.button.button-red:hover, .rsssl span.button.button-red:focus, .rsssl span.button.button-red:active {
+  box-shadow: 0 0 0 1px #fff, 0 0 0 3px var(--rsp-red);
+  background: var(--rsp-red);
+  color: var(--rsp-text-color-white);
+}
+
+.rsssl a.rsssl-button-small, .rsssl button.rsssl-button-small, .rsssl input.rsssl-button-small {
+  font-size: var(--rsp-fs-100);
+  font-weight: 300;
+  min-height: auto;
+}
+.rsssl .rsssl-button-small + .rsssl-button-small {
+  margin-left: 10px;
+}
+
+/* Documents overview */
+.rsssl-shortcode {
+  right: 10000px;
+  position: absolute;
+  background-color: #fff;
+  padding: 0;
+  white-space: nowrap;
+}
+
+.shortcode {
+  cursor: pointer;
+}/*# sourceMappingURL=buttons.css.map */

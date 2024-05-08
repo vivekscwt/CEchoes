@@ -1,0 +1,106 @@
+.company_profile_management{
+    width: 100%;
+    display: block;
+    margin: 0;
+    padding:35px 20px;
+    border-radius: 20px;
+    background: #FFF;
+    box-shadow: 0px 14px 84px 0px rgba(0, 0, 0, 0.22);
+}
+.company_profile_management .each_box {
+    width: 100%;
+    display: block;
+    margin: 0 0 30px;
+    padding: 20px 20px;
+    border-radius: 8px;
+    border: 1px solid #ebebeb;
+    background: #FFF;
+}
+.company_profile_management .each_box h2{
+    font-size: 22px;
+    color: #F8A401;
+    font-weight: 700;
+}
+.company_profile_management .each_box .form-label{
+    font-weight: 600;
+}
+.company_profile_management .each_box .form-label sup{
+    color: red;
+    font-weight: 700;
+    font-size: 16px;
+}
+.display_image_box{
+    width: 100%;
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 4px;
+}
+.display_image_box img{
+    width: 150px;
+    height: 150px !important;
+    object-fit: contain;
+    object-position: center;
+}
+#imagePreview{
+    margin-top: 30px;
+}
+#imagePreview .image-container{
+    position: relative;
+    margin-bottom: 30px;
+}
+#imagePreview .image-container .delete-button {
+    position: absolute;
+    top: -10px;
+    right: 10px;
+    background: red;
+    border: 0;
+    border-radius: 100%;
+    font-size: 12px;
+    color: #fff;
+    width: 22px;
+    height: 22px;
+}
+#imagePreview .image-container .uploaded-image {
+    width: 100%;
+    height: 245px !important;
+    object-fit: contain;
+    object-position: center;
+    border: 1px solid #ccc;
+    box-shadow: rgba(0,0,0,0.2)0 0 10px;
+    padding: 4px;
+}
+
+.all_repeter{
+    width: 100%;
+    display: block;
+    margin: 0;
+    padding: 0;
+}
+.all_repeter .each_repeter{
+    background-color: #f7f7f7;
+    padding: 15px 10px;
+    border-radius: 4px;
+    margin-bottom: 30px;
+}
+.repeter_wrap .add_more_btn{
+    background-color: #fbfbfb;
+    padding: 15px 10px;
+    border-radius: 4px;
+    margin:15px 0 0;
+}
+
+
+
+@media only screen and (max-width:575px){
+    .display_image_box {
+        margin: 10px auto 10px;
+    }
+    .display_image_box img {
+        padding: 10px;
+    }
+}

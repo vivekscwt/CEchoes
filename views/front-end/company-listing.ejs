@@ -1,0 +1,299 @@
+<%- include('common/header') -%>
+    <link href="/front-end/css/company-listing-style.css" rel="stylesheet" type="text/css">
+    <%- include('common/header-banner') -%>
+        <!-- ============== Section1 Start =============== -->
+        <section class="main-content">
+            <div class="container">
+                <div class="row g-4">
+                    <% if(subCategories.subCategoryNames.length > 0) { %>
+                        <div class="col-md-3">
+                            <div class="company-listing-left">
+                               <h4><%= subCategories.categoryName %></h4>
+                                <ul>
+                                    <% subCategories.subCategoryNames.forEach((subCategoryName,index)=>{ %>
+                                        <li class="active"><a href="<%= subCategories.subCategorySlug[index] %>"><i class="fa-regular fa-arrow-right-long"></i><%= subCategoryName %></a></li>
+                                    <% }) %>
+                                </ul>
+                            </div>
+                        </div>
+                    <% } %>
+                    <% if(subCategories.subCategoryNames.length > 0) { %>
+                        <div class="col-md-9">
+                    <% } else { %>
+                        <div class="col-md-12">
+                    <% } %>
+                        <div class="company-listing-right">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="select_option">
+                                            <p>Sort by</p>
+                                            <div class="select_option_content">
+                                                <select class="form-select" aria-label="Default select example" onchange="document.location.href='<%= baseURL %>category/<%= subCategories.categorySlug %>'+'/'+this.options[this.selectedIndex].value;" >
+                                                    <option <% if(!filter_value) { %>selected <% } %>>Select</option>
+                                                    <option value="latest" <% if(filter_value == "latest" ) { %>selected <% } %>>Latest</option>
+                                                    <option value="trending" <% if(filter_value == "trending" ) { %>selected <% } %>>Trending</option>
+                                                    <option value="verified" <% if(filter_value == "verified" ) { %>selected <% } %>>Verified</option>
+                                                    <option value="all">All</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <% if(companyDetails.length > 0){ %>
+                                <div class="company-list-item-wrap">
+                                    <div class="row g-4">
+                                        <% companyDetails.forEach((company)=>{ %>
+                                            <div class="col-lg-4 col-sm-6 col-12 my-4">
+                                                <div class="company_listing_box">
+                                                    <!-- <% if(company.paid_status == 'paid' ) { %>
+                                                        <% if(company.cover_img) { %>
+                                                            <img src="/<%= company.cover_img %>" alt="" class="img-fluid">
+                                                        <% } else { %>
+                                                            <img src="/front-end/images/no-image.png" alt="" class="img-fluid">
+                                                        <% } %>
+                                                    <% } else { %>
+                                                        <img src="/front-end/images/no-image.png" alt="" class="img-fluid">
+                                                    <% } %> -->
+                                                    <div class="company_listing_logo">
+                                                        <% if(company.logo) { %>
+                                                            <a href="<%= baseURL %>company/<%= company.slug %>"><img src="/<%= company.logo %>" alt=""></a>
+                                                        <% } else {%>
+                                                            <a href="<%= baseURL %>company/<%= company.slug %>"><img src="/front-end/images/company-placeholder-image.png" alt="img" loading="lazy" width="100" height="100"></a>
+                                                        <% } %>
+                                                    </div>
+                                                    <div class="company_listing_all_info_wrapper">
+                                                    
+                                                    <a href="<%= baseURL %>company/<%= company.slug %>"><h4><%= company.company_name %></h4></a>
+    
+                                                    <% var average = company.comp_avg_rating %>
+                                                    <% if (average > .4 && average <= 0.9 ) {
+                                                        var avg = .5
+                                                        } else if (average >= 1 && average <= 1.25) {
+                                                        var avg = 1
+                                                        } else if (average > 1.25 && average <= 1.9) {
+                                                        var avg = 1.5
+                                                        } else if (average >= 2 && average <= 2.25) {
+                                                        var avg = 2
+                                                        } else if (average > 2.25 && average <= 2.9) {
+                                                        var avg = 2.5
+                                                        } else if (average >= 3 && average <= 3.25) {
+                                                        var avg = 3
+                                                        } else if (average > 3.25 && average <= 3.9) {
+                                                        var avg = 3.5
+                                                        } else if (average >= 4 && average <= 4.25) {
+                                                        var avg = 4
+                                                        } else if (average > 4.25 && average <= 4.9) {
+                                                        var avg = 4.5
+                                                        } else if (average > 4.5) {
+                                                        var avg = 5
+                                                        } else {
+                                                        var avg = 0
+                                                        }
+                                                    %>
+                                                    <div class="company_listing_emoji">
+                                                        <span class="company_listing_span">
+                                                            <% AllRatingTags.forEach((RatingTag)=>{  %>
+                                                                <% if(RatingTag.review_rating_value == avg) { %>
+                                                                <img src="/<%= RatingTag.rating_image %>" alt="">
+                                                                <% } %>
+                                                            <% }) %>
+                                                                
+                                                                    <%= avg %>/5
+                                                        </span>
+                                                        <p class="m-0"><span>Based on</span> <%= company.comp_total_reviews %> reviews</p>
+                                                    </div>
+                                                    <% AllRatingTags.forEach((RatingTag)=>{  %>
+                                                        <% if(RatingTag.review_rating_value == avg) { %>
+                                                            <span class="company_listing_span1"><%= RatingTag.review_rating_name %></span>
+                                                        <% } %>
+                                                    <% }) %>
+                                                    <% if(company.main_address){%>
+                                                        <p class="company_listing_p"><img src="/front-end/images/location-icon.png"
+                                                                alt=""><%= company.main_address %>
+                                                        </p>
+                                                    <% } %>
+                                                    <div class="treading_content">
+                                                        <% if(company.verified == "1"){%>
+                                                            <p><img src="/front-end/images/verifite-icon.png" alt="">Verified Business
+                                                            </p>
+                                                        <% } else {%>
+                                                            <p class="verified-tag" style="color: #f4a835;">
+                                                                <svg width="21" height="23" viewBox="0 0 21 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                  <path d="M20.6508 3.69775C20.752 3.72507 20.8403 3.7788 20.903 3.8512C20.9658 3.92361 20.9997 4.01095 21 4.10068V8.43734C21 20.1051 11.6828 22.1556 10.6018 22.3546C10.5347 22.3669 10.4653 22.3669 10.3982 22.3546C9.31715 22.1556 0 20.1051 0 8.43734V4.10068C0.000265467 4.01095 0.0342165 3.92361 0.0969704 3.8512C0.159724 3.7788 0.248048 3.72507 0.349239 3.69775C6.13839 2.10529 9.34637 0.535964 10.2398 0.0636245C10.3177 0.0220614 10.4079 0 10.5 0C10.5921 0 10.6823 0.0220614 10.7602 0.0636245C11.6536 0.534422 14.8616 2.10529 20.6508 3.69775Z" fill="#E8EDF4"/>
+                                                                  <path d="M10.7223 20.3267C10.5765 20.3676 10.4189 20.3676 10.2731 20.3267C8.2279 19.7618 2.28125 17.35 2.28125 8.43644V5.6078C2.28207 5.48298 2.32857 5.36144 2.41439 5.25983C2.50021 5.15821 2.62114 5.08151 2.7606 5.04022C5.3081 4.30068 7.7829 3.39331 10.1622 2.32648C10.2653 2.27886 10.3809 2.25391 10.4984 2.25391C10.6159 2.25391 10.7315 2.27886 10.8346 2.32648C13.2141 3.39335 15.689 4.30072 18.2367 5.04022C18.3761 5.08151 18.4971 5.15821 18.5829 5.25983C18.6687 5.36144 18.7152 5.48298 18.716 5.6078V8.43644C18.716 17.3461 12.7767 19.7591 10.7223 20.3267Z" fill="#F4A835"/>
+                                                                  <path d="M10.1636 13.105C9.54335 13.105 9.02344 13.6249 9.02344 14.2451C9.02344 14.8654 9.54335 15.3853 10.1636 15.3853C10.761 15.3853 11.3038 14.8654 11.2764 14.2725C11.3038 13.6203 10.7884 13.105 10.1636 13.105Z" fill="black"/>
+                                                                  <path d="M9.87901 6.02808C9.33703 6.16334 9 6.59299 9 7.11414C9.02733 7.42842 9.0501 7.74667 9.07743 8.06095C9.15485 9.2584 9.23228 10.432 9.3097 11.6294C9.33703 12.0352 9.69683 12.3296 10.1614 12.3296C10.6259 12.3296 10.9903 12.0153 11.0131 11.6056C11.0131 11.3589 11.0131 11.1322 11.0404 10.8815C11.0905 10.1137 11.1451 9.34592 11.1952 8.57813C11.2226 8.08085 11.2727 7.58357 11.3 7.08629C11.3 6.90727 11.2727 6.74814 11.1952 6.58901C10.963 6.14345 10.421 5.91669 9.87901 6.02808Z" fill="black"/>
+                                                                  </svg>
+                                                                Unverified Business
+                                                              </p>
+                                                            <% } %>
+                                                        <% if(company.trending == '1'){%>
+                                                            <p class="treading_content_text"><img
+                                                                src="/front-end/images/trending-icon.png" alt="">trending</p>
+                                                        <% } %>
+                                                        
+                                                    </div>
+                                                   </div>
+                                                </div>
+                                            </div>
+                                        <% }) %>
+                                    </div>
+                                </div>
+                                
+                                <!--<div class="text-center company-listing-btn">
+                                    <a href="http://localhost/CEchoesTechnology/blog/" class="view-more"><span class="position-relative"><i class="fa-solid fa-angle-right"></i>View All</span></a>
+                                </div>-->
+                            <% } else { %>
+                                <div style="text-align: center;"><h4>There is no  such company !!</h4></div>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <% 
+        // Initialize a variable to store the count of paid companies
+        var paidCompanyCount = 0;
+        
+        // Iterate through the companyDetails array
+        for (var i = 0; i < companyDetails.length; i++) {
+            // Check if the 'paid_status' property of the current company is equal to 'paid'
+            if (companyDetails[i].paid_status === 'paid') {
+                // Increment the count if it's a paid company
+                paidCompanyCount++;
+            }
+        }
+        %>
+        <% if(paidCompanyCount>0){ %>
+        <!-- The Modal -->
+        <div class="modal fade p-0" id="premiumcompanymodal">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header p-0 border-0">
+                  <button type="button" class="btn-close" data-bs-dismiss="modal">
+                    <svg width="74" height="74" viewBox="0 0 74 74" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <circle cx="37" cy="37" r="37" fill="white"/>
+                      <path d="M28 46.49L37.245 37.245L46.49 46.49M46.49 28L37.2432 37.245L28 28" stroke="#858585" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  </button>
+                </div>
+                <!-- Modal body -->
+                <div class="modal-body p-0">
+                  <div class="modal-slider-wrapper">
+                    <div class="slider-progress">
+                      <div class="progress"></div>
+                    </div>
+                    <div class="modal-slide-in">
+                    <% companyDetails.forEach((company)=>{ %>
+                        <% if(company.paid_status === 'paid'){ %>
+                        <div class="item">
+                            <div class="company_listing_box">
+                                <!-- <% if(company.cover_img) { %>
+                                <img src="/<%= company.cover_img %>" alt="" class="img-fluid">
+                                <% } else { %>
+                                <img src="/front-end/images/no-image.png" alt="" class="img-fluid">
+                                <% } %>                           -->
+                            <div class="company-list-btm-part">
+                                <div class="prem-modal-company-info">
+                                <div class="company_listing_logo">
+                                    <% if(company.logo) { %>
+                                        <a href="<%= baseURL %>company/<%= company.slug %>"><img src="/<%= company.logo %>" alt="" loading="lazy" width="100" height="100"></a>
+                                    <% } else {%>
+                                        <a href="<%= baseURL %>company/<%= company.slug %>"><img src="/front-end/images/company-placeholder-image.png" alt="img" loading="lazy" width="100" height="100"></a>
+                                    <% } %>                                
+                                </div>
+                                <div class="prem-modal-company-info-right">
+                                    <a href="<%= baseURL %>company/<%= company.slug %>">
+                                    <h4><%= company.company_name %></h4>
+                                    </a>
+                                    <% var average = company.comp_avg_rating %>
+                                    <% if (average > .4 && average <= 0.9 ) {
+                                        var avg = .5
+                                        } else if (average >= 1 && average <= 1.25) {
+                                        var avg = 1
+                                        } else if (average > 1.25 && average <= 1.9) {
+                                        var avg = 1.5
+                                        } else if (average >= 2 && average <= 2.25) {
+                                        var avg = 2
+                                        } else if (average > 2.25 && average <= 2.9) {
+                                        var avg = 2.5
+                                        } else if (average >= 3 && average <= 3.25) {
+                                        var avg = 3
+                                        } else if (average > 3.25 && average <= 3.9) {
+                                        var avg = 3.5
+                                        } else if (average >= 4 && average <= 4.25) {
+                                        var avg = 4
+                                        } else if (average > 4.25 && average <= 4.9) {
+                                        var avg = 4.5
+                                        } else if (average > 4.5) {
+                                        var avg = 5
+                                        } else {
+                                        var avg = 0
+                                        }
+                                    %>                                
+                                    <div class="company_listing_emoji">
+                                    <span class="company_listing_span">
+                                        <% AllRatingTags.forEach((RatingTag)=>{  %>
+                                            <% if(RatingTag.review_rating_value == avg) { %>
+                                            <img src="/<%= RatingTag.rating_image %>" alt="">
+                                            <% } %>
+                                        <% }) %>
+                                        <%= avg %>/5
+                                    </span>
+                                    <p class=""><span>Based on</span> <%= company.comp_total_reviews %> reviews</p>
+                                    <span class="company_listing_span1">
+                                        <% AllRatingTags.forEach((RatingTag)=>{  %>
+                                            <% if(RatingTag.review_rating_value == avg) { %>
+                                                <span class="company_listing_span1"><%= RatingTag.review_rating_name %></span>
+                                            <% } %>
+                                        <% }) %>                                    
+                                    </span>
+                                    </div>
+                                </div>
+                                </div>
+                                <% if(company.main_address){%>
+                                    <p class="company_listing_p"><img src="/front-end/images/location-icon.png" alt="">
+                                        <%= company.main_address %>
+                                    </p>
+                                <% } %>                            
+                                <div class="treading_content">
+                                    <% if(company.verified){%>
+                                        <p><img src="/front-end/images/verifite-icon.png" alt="">verified business</p>
+                                    <% } %>
+                                    <% if(company.trending == '1'){%>
+                                    <p class="treading_content_text"><img src="/front-end/images/trending-icon.png" alt="">trending</p>
+                                    <% } %>
+                                </div>
+                                <% if(company.about_company){ %>
+                                <% var about_company = company.about_company
+                                    const about_company_words = about_company.split(' ');
+                                %>
+                                <p>
+                                    <% if(about_company_words.length <= 35){%>
+                                        <%- about_company -%>
+                                    <% }else{
+                                        const firstPart = about_company_words.slice(0, 35).join(' ')+'...';
+                                    %>
+                                    <%- firstPart -%>
+                                    <% } %>
+                                </p>
+                                <% } %>
+                                <div class="text-center">
+                                <a href="<%= baseURL %>company/<%= company.slug %>" class="view-more"><span class="position-relative"><i class="fa-solid fa-angle-right"></i>Read More</span></a>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                        <% } %>
+                    <% }) %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+        <!-- ============== Section1 End =============== -->
+        <% } %>
+        <%- include('common/footer') -%>

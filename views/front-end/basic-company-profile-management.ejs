@@ -1,0 +1,240 @@
+<%- include('common/header') -%>
+<link href="/front-end/css/company-profile-dashboard.css" rel="stylesheet" type="text/css">
+<link href="/front-end/css/business-profile-manage-style.css" rel="stylesheet" type="text/css">
+<%- include('common/header-banner') -%>
+
+<!-- ============== Section1 Start =============== -->
+<section class="main-content">
+    <div class="container">
+        <div class="company_profile_management">
+            <%- include('common/basic-company-sidebar') -%>
+
+            <form id="basic_company_profile_form" enctype="multipart/form-data">
+                <input type="hidden" name="company_id" value="<%= company.ID  %>"/>
+                <input type="hidden" name="company_slug" value="<%= company.slug  %>"/>
+                <input type="hidden" name="previous_logo" value="<%= company.logo %>"/>
+
+                <div class="each_box update_basic_information">
+                    <h2>Basic informations</h2>
+                    <div class="row align-items-center mb-3">
+                        <div class="col-sm-7 col-md-8 col-lg-10">
+                            <label for="upload-company-logo" class="form-label">Upload logo</label>
+                            <input class="form-control" type="file" id="upload-company-logo" name="logo">
+                        </div>
+
+                        <div class="col-sm-5 col-md-4 col-lg-2">
+                            <div class="display_image_box">
+                                <% if(company && company.logo) { %>
+                                <img id="company_logo_preview" src="/<%= company.logo %>"  alt="">
+                                <%} else {%>
+                                    <img id="company_logo_preview" src="/front-end/images/company-placeholder-image.png"  alt="">
+                                    <% } %>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row align-items-center">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="company-email" class="form-label">Email<sup>*</sup></label>
+                                <input type="email" class="form-control" id="company-email"
+                                    placeholder="name@example.com" value="<%= company && company.comp_email ? company.comp_email : '' %>" name="comp_email" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="company-phone-number" class="form-label">Phone no<sup>*</sup></label>
+                                <input type="number" class="form-control" id="company-phone-number"
+                                    placeholder="1234567890" value="<%= company && company.comp_phone ? company.comp_phone : '' %>" name="comp_phone" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label for="company-customercare-number" class="form-label">Customer care
+                                    no</label>
+                                <input type="number" class="form-control" id="company-customercare-number"
+                                    placeholder="1800 0000 00" value="<%= company && company.tollfree_number ? company.tollfree_number : '' %>" name="tollfree_number" >
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="company-address" class="form-label">Address<sup>*</sup></label>
+                                <input type="text" class="form-control" id="company-address" value="<%= company && company.main_address ? company.main_address : '' %>" name="main_address" placeholder=""
+                                    required>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="about-company" class="form-label">About the company<sup>*</sup></label>
+                                <textarea class="form-control" id="about-company" placeholder="" rows="5" name="about_company"
+                                    required><%= company && company.about_company ? company.about_company : '' %></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="company-tagline" class="form-label">Tagline</label>
+                                <input type="text" class="form-control" id="company-tagline" placeholder="" value="<%= company && company.heading ? company.heading : '' %>" name="heading">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="operating-hours" class="form-label">Operating Hours</label>
+                                <input type="text" class="form-control" id="operating-hours" placeholder="" value="<%= company && company.operating_hours ? company.operating_hours : '' %>" name="operating_hours">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <% if(company && company.membership_type_id>0 ){ %>
+                <div class="each_box update_gallery_images">
+                    <h2 class="mb-3">Upload gallery images</h2>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="upload-gallery-img" class="form-label">Choose Images</label>
+                                <input type="file" class="form-control" name="gallery_images" multiple
+                                    id="upload-gallery-img" />
+                            </div>
+                            <div id="imagePreview" class="row">
+                                <% if(gallery_img != "") {%>
+                                <% gallery_img.forEach( (image,index)=> {%>
+                                <div class="image-container col-sm-6 col-md-3">
+                                    <img class="uploaded-image" id="" src="/<%= image.gallery_images %>"  alt="image" width="50px;">
+                                    <button company-id="<%= company.ID  %>"  image-index="<%= index %>" class="delete-button">X</button>
+                                </div>
+                                <% }) %>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <% } %>
+                <div class="submit_button text-end custom-form m-0" >
+                    <button type="submit" class="btn btn-warning ">Update</button>
+                </div>
+
+                <div style=" width: 100%; text-align: center; display: block; border: 2px solid #fccb06; padding: 6px; margin-top: 20px; border-radius: 5px; display: none;" class="basic-company-edit-message"></div>
+            </form>
+        </div>
+    </div>
+</section>
+<!-- ============== Section6 End =============== -->
+<%- include('common/footer') -%>
+
+<script>
+    jQuery(function ($) {
+        $(document).ready(() => {
+
+            $('#upload-company-logo').change(function () {
+                const file = this.files[0];
+                console.log(file);
+                if (file) {
+                    let reader = new FileReader();
+                    reader.onload = function (event) {
+                        console.log(event.target.result);
+                        $('#company_logo_preview').attr('src', event.target.result);
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            
+            $('form#basic_company_profile_form').submit(function (e) {
+                e.preventDefault();
+                //alert('aaaaaa');
+                $('.basic-company-edit-message').hide();
+                $('.basic-company-edit-message').text('');
+                const formData = new FormData($('#basic_company_profile_form')[0])
+                console.log(formData);
+                //return false;
+                //const formData = $('#feedback_form').serializeArray();
+                //const jsonData = {};
+                // $(formData).each(function (index, field) {
+                // jsonData[field.name] = field.value;
+                // });
+                //console.log(jsonData);
+                $.ajax({
+                url: '/auth/basic_company_profile_update', 
+                method: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    if (data.status == 'ok') {
+                        $('.basic-company-edit-message').text(data.message);
+                        $('.basic-company-edit-message').show();
+                        setTimeout(function() {
+                            window.location.href = "/company-profile-management/" + data.data;
+                        }, 2000);
+                    } else {
+                        $('.basic-company-edit-message').text(data.message);
+                        $('.basic-company-edit-message').show();
+                        console.log('Some thting went wrong');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    // Handle any errors that occur during the request
+                    console.log(error);
+                }
+                })
+            });
+
+            //============== Upload multiuple images\
+
+            $('#upload-gallery-img').on('change', function (e) {
+                var files = e.target.files;
+                var imagePreview = $('#imagePreview');
+
+                //imagePreview.empty(); // Clear the preview before adding new images
+
+                for (var i = 0; i < files.length; i++) {
+                    var file = files[i];
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        var imageUrl = e.target.result;
+                        var imageContainer = $('<div class="image-container col-sm-6 col-md-3">');
+                        var image = $('<img src="' + imageUrl + '" class="uploaded-image">');
+                        var deleteButton = $('<button class="delete-button">X</button>');
+
+                        // deleteButton.on('click', function (e) {
+                        //     e.preventDefault();
+                        //     imageContainer.remove();
+                        // });
+                        imageContainer.append(image, deleteButton);
+                        imagePreview.append(imageContainer);
+                    }
+
+                    reader.readAsDataURL(file);
+                }
+            });  
+
+            $('body').on('click','.delete-button',function(e){
+                e.preventDefault();
+                
+                if(typeof imgIndex == 'undefined'){
+                    $(this).parent('.image-container').remove();
+                }
+                var imgIndex = $(this).attr('image-index');
+                var companyId = $(this).attr('company-id');
+                //alert(imgIndex,companyId)
+                $.ajax({
+                    url: '/auth/deletePremiumImage',
+                    method: 'POST',
+                    data: {companyId:companyId,imgIndex:imgIndex},
+                    ContentType: 'application/json',
+                    success: function (data) {
+                        if (data.status == 'ok') {
+                            location.reload();               
+                        } else {
+                        }
+                    },
+                    error: function (error) {
+                    // Handle any errors
+                    console.log(error);
+                    }
+                });
+                
+            });
+
+        });
+    });
+</script>

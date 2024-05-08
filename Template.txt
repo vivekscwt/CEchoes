@@ -1,0 +1,21 @@
+file:///D:/Vivek/HTML/themeforest-AoLOAc6b-metronic-responsive-admin-dashboard-template/demo1/dist/authentication/flows/basic/password-reset.html
+
+file:///D:/Vivek/HTML/themeforest-AoLOAc6b-metronic-responsive-admin-dashboard-template/demo1/dist/authentication/flows/basic/new-password.html
+
+file:///D:/Vivek/HTML/themeforest-AoLOAc6b-metronic-responsive-admin-dashboard-template/demo1/dist/authentication/flows/basic/two-steps.html
+
+file:///D:/Vivek/HTML/themeforest-AoLOAc6b-metronic-responsive-admin-dashboard-template/demo1/dist/authentication/email/verify-email.html
+
+file:///D:/Vivek/HTML/themeforest-AoLOAc6b-metronic-responsive-admin-dashboard-template/demo1/dist/authentication/email/invitation.html
+
+file:///D:/Vivek/HTML/themeforest-AoLOAc6b-metronic-responsive-admin-dashboard-template/demo1/dist/authentication/email/password-reset.html
+
+file:///D:/Vivek/HTML/themeforest-AoLOAc6b-metronic-responsive-admin-dashboard-template/demo1/dist/authentication/email/password-change.html
+
+
+Advance Search:
+file:///D:/Vivek/HTML/themeforest-AoLOAc6b-metronic-responsive-admin-dashboard-template/demo1/dist/pages/search/horizontal.html
+
+
+Load More:
+file:///D:/Vivek/HTML/themeforest-AoLOAc6b-metronic-responsive-admin-dashboard-template/demo1/dist/pages/profile/connections.html

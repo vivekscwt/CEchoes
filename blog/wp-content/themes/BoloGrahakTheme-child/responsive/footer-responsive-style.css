@@ -1,0 +1,104 @@
+@media only screen and (max-width:1440.98px) {
+	.bottom-main-content:after {
+		width: 100%;
+		height: 130px;
+		background: url(../images/footerbottomshape2.png) no-repeat center bottom;
+		background-size: cover;
+	}
+}
+
+@media only screen and (max-width:1199.98px) {
+	.footer-logo svg {
+		width: 120px;
+		height: 86px;
+	}
+}
+
+@media only screen and (max-width:991.98px) {
+	.app-info a+a {
+		padding-left: 0;
+	}
+
+	.footer-part h4 {
+		font-size: 22px;
+		margin-bottom: 17px;
+	}
+
+	.footer-part ul li a {
+		font-size: 16px;
+	}
+
+	.c-email,
+	.c-link {
+		font-size: 16px;
+	}
+}
+
+@media only screen and (max-width:767.98px) {
+	.main_footer {
+		padding: 40px 0 25px;
+	}
+
+	.footer-part {
+		margin: 15px 0;
+	}
+
+	.footer-bottom {
+		display: block;
+		text-align: center;
+	}
+
+	.floating-chat {
+	    right: 10px;
+	}
+}
+
+@media only screen and (max-width:575.98px) {
+	.main_footer {
+		text-align: center;
+	}
+
+	.footer-part ul li {
+	    padding-left: 0;
+	    background-image: none;
+	}
+
+	.footer-part ul li a {
+	    line-height: 195.4%;
+	}
+
+	.footer-part h4 {
+		font-size: 18px;
+	}
+
+	.social-icons a i {
+		font-size: 15px;
+	}
+
+	.social-icons a {
+		width: 32px;
+		height: 32px;
+		padding: 5px 0;
+	}
+
+	.social-icons a+a {
+		margin-left: 10px;
+	}
+
+	.floating-chat a {
+	    width: 42px;
+	    height: 42px;
+	}
+
+	.floating-chat svg {
+	    height: 20px;
+	}
+}
+
+@media only screen and (max-width:520.98px) {
+
+	.app-info a img {
+		width: 136px;
+	}
+
+}

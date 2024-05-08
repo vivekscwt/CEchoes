@@ -1,0 +1,1609 @@
+<%- include('common/header') -%>
+<link href="/front-end/css/home-page-style.css" rel="stylesheet" type="text/css">
+<!-- ============== Banner Start =============== -->
+<section class="main-banner home-banner">
+    <div class="container"> 
+      <div class="row flex-md-row-reverse">
+        <div class="col-md-6 my-auto">
+          <div class="banner-right" data-aos="fade-left">
+            <div class="row">
+              <div class="col-6">
+                <div class="banner-mas-img banner-mas-img1">
+                  <div class="banner-slider1">
+                    <div class="item">
+                      <img src="/1692007765250-IMG_20230722_185333.jpg" alt="image" loading="lazy" width="273"
+                        height="354">
+                    </div>
+                    <div class="item">
+                      <img src="/1692007710916-AVI_5265.jpg" alt="image" loading="lazy" width="273"
+                        height="354">
+                    </div>
+                  </div>
+                  <div class="banner-counter-tag" style="background-image: url(../front-end/images/b-counter-bg2.svg);">
+                    Reviews
+                    <div class="counter-text"><span class="count">90</span>+</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="banner-mas-img banner-mas-img2">
+                  <div class="banner-slider2">
+                    <div class="item">
+                      <img src="/1692011396914-AVI_5275.jpg" alt="image" loading="lazy" width="262"
+                        height="255">
+                    </div>
+                    <div class="item">
+                      <img src="/1692011397468-1691684460818-3.jpg" alt="image" loading="lazy" width="262"
+                        height="255">
+                    </div>
+                  </div>
+                  <div class="banner-counter-tag" style="background-image: url(../front-end/images/b-counter-bg1.svg);">
+                    Impression
+                    <div class="counter-text"><span class="count">135</span>+</div>
+                  </div>
+                </div>
+                <div class="banner-mas-img banner-mas-img2">
+                  <div class="banner-slider3">
+                    <div class="item">
+                      <img src="/1691684510346-5.jpg" alt="image" loading="lazy" width="262"
+                        height="255">
+                    </div>
+                    <div class="item">
+                      <img src="/1691684510346-6.jpg" alt="image" loading="lazy" width="262"
+                        height="255">
+                    </div>
+                  </div>
+                  <div class="banner-counter-tag" style="background-image: url(../front-end/images/b-counter-bg1.svg);">
+                    Total Users
+                    <div class="counter-text"><span class="count">102</span>+</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 my-auto">
+          <div class="banner-left" data-aos="fade-right">
+            <h1><span>Find</span> Companies/ <br>Category</h1>        
+               <div class="search-area position-relative">
+                <form>
+                  <input type="text" class="form-control" id="search-input"
+                    placeholder="Business/Institute/Establishment Name" required>
+                </form>
+                <input type="submit" value="Search">
+                <div class="autofield-dropdown">
+                </div>
+              </div>
+              <div class="banner-trending-scroll">
+                <div class="like-dislike-tren-label">
+                    <i class="fa-solid fa-thumbs-up"></i> Up Trending :
+                </div>
+                <div class="like-dislike-company-scroll">
+                    <marquee behavior="scroll" direction="left" onmouseover="this.stop();" onmouseout="this.start();">
+                        <ul>
+                            <li><a href="#">Samsung</a></li>
+                            <li><a href="#">Domino's Pizza</a></li>
+                            <li><a href="#">Tata Steel</a></li>
+                        </ul>
+                    </marquee>
+                </div>
+              </div>
+              <div class="banner-trending-scroll">
+                <div class="like-dislike-tren-label">
+                    <i class="fa-solid fa-thumbs-down"></i> Down Trending :
+                </div>
+                <div class="like-dislike-company-scroll">
+                    <marquee behavior="scroll" direction="left" onmouseover="this.stop();" onmouseout="this.start();">
+                        <ul>
+                            <li><a href="#">Samsung</a></li>
+                            <li><a href="#">Domino's Pizza</a></li>
+                            <li><a href="#">Tata Steel</a></li>
+                        </ul>
+                    </marquee>
+                </div>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="custom-modal">
+    <div class="custom-modal-content">
+      <a href="#" class="custom-modal-close">
+        <i class="fa-solid fa-circle-xmark"></i>
+      </a>
+      <h3 id="dynamic-search-title"></h3>
+      <p id="dynamic-search-content"></p>
+      <a id="dynamic-search-link" href="" class="btn-default btn-warning">View More</a>
+    </div>
+  </div>
+<!-- ============== Banner End =============== -->
+
+<!-- ============== Section1 Start =============== -->
+<section class="main-content pt-md-0">
+    <div class="container">
+        <div class="default-content-area">
+            <h2 class="main-head text-center">Our Popular <span>Reviews</span></h2>
+            <div class="home-popular-review-area">
+             <!-- ================= box 1 start ======================= -->
+             <!-- for desktop show -->
+              <div class="home-popular-review-box-wrapper">
+                <!-- ================= Loop1 ======================= -->
+                <div class="home-popular-review-box home-popular-review-box1">
+                  <div class="home-popular-client">
+                    <div class="home-client-img">
+                      <img src="../front-end/images/user-img-new1.jpg" alt="img">
+                    </div>
+                    <h4>Ronald Richards</h4>
+                    <p>Level</p>
+                    <p><i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i class="fa-solid fa-star-half-stroke"></i></p>
+                  </div>
+                  <div class="home-popular-review-info">
+                    <h3>Company - product</h3>
+                    <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet. Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia</p>
+                  </div>
+                </div>
+                <div class="home-popular-review-box home-popular-review-box2">
+                  <div class="home-popular-client">
+                    <div class="home-client-img">
+                      <img src="../front-end/images/user-img-new1.jpg" alt="img">
+                    </div>
+                    <h4>Ronald Richards</h4>
+                    <p>Level</p>
+                    <p><i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i class="fa-solid fa-star-half-stroke"></i></p>
+                  </div>
+                  <div class="home-popular-review-info">
+                    <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet. Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia</p>
+                  </div>
+                </div>
+                <div class="home-popular-review-box home-popular-review-box3">
+                  <div class="home-popular-client">
+                    <div class="home-client-img">
+                      <img src="../front-end/images/user-img-new1.jpg" alt="img">
+                    </div>
+                    <h4>Ronald Richards</h4>
+                    <p>Level</p>
+                    <p><i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i class="fa-solid fa-star-half-stroke"></i></p>
+                  </div>
+                  <div class="home-popular-review-info">
+                    <p>Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet. Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia</p>
+                  </div>
+                </div>
+                <!-- ================= Loop2 ======================= -->
+                <div class="home-popular-review-box home-popular-review-box1">
+                  <div class="home-popular-client">
+                    <div class="home-client-img">
+                      <img src="../front-end/images/user-img-new1.jpg" alt="img">
+                    </div>
+                    <h4>John C</h4>
+                    <p>Level</p>
+                    <p><i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i class="fa-solid fa-star-half-stroke"></i></p>
+                  </div>
+                  <div class="home-popular-review-info">
+                    <h3>Company Name</h3>
+                    <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet. Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia</p>
+                  </div>
+                </div>
+                <div class="home-popular-review-box home-popular-review-box2">
+                  <div class="home-popular-client">
+                    <div class="home-client-img">
+                      <img src="../front-end/images/user-img-new1.jpg" alt="img">
+                    </div>
+                    <h4>CEchoes Technology</h4>
+                    <p>Level</p>
+                    <p><i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i class="fa-solid fa-star-half-stroke"></i></p>
+                  </div>
+                  <div class="home-popular-review-info">
+                    <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint.</p>
+                  </div>
+                </div>
+                <div class="home-popular-review-box home-popular-review-box3">
+                  <div class="home-popular-client">
+                    <div class="home-client-img">
+                      <img src="../front-end/images/user-img-new1.jpg" alt="img">
+                    </div>
+                    <h4>Mr. Ronald Richards</h4>
+                    <p>Level2</p>
+                    <p><i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i class="fa-solid fa-star-half-stroke"></i></p>
+                  </div>
+                  <div class="home-popular-review-info">
+                    <h3>Company</h3>
+                    <p>Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet. Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia</p>
+                  </div>
+                </div>
+                <!-- ================= Loop2 ======================= -->
+              </div>
+              <!-- for mbl show -->
+              <div class="home-popular-review-slider">
+                <div class="item">
+                  <div class="home-popular-review-box">
+                    <div class="home-popular-client">
+                      <div class="home-client-img">
+                        <img src="../front-end/images/user-img-new1.jpg" alt="img">
+                      </div>
+                      <h4>Ronald Richards</h4>
+                      <p>Level</p>
+                      <p><i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i class="fa-solid fa-star-half-stroke"></i></p>
+                    </div>
+                    <div class="home-popular-review-info">
+                      <h3>Company - product</h3>
+                      <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet. Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="item">
+                  <div class="home-popular-review-box">
+                    <div class="home-popular-client">
+                      <div class="home-client-img">
+                        <img src="../front-end/images/user-img-new1.jpg" alt="img">
+                      </div>
+                      <h4>Ronald Richards</h4>
+                      <p>Level</p>
+                      <p><i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i class="fa-solid fa-star-half-stroke"></i></p>
+                    </div>
+                    <div class="home-popular-review-info">
+                      <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet. Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="item">
+                  <div class="home-popular-review-box">
+                    <div class="home-popular-client">
+                      <div class="home-client-img">
+                        <img src="../front-end/images/user-img-new1.jpg" alt="img">
+                      </div>
+                      <h4>Ronald Richards</h4>
+                      <p>Level</p>
+                      <p><i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i class="fa-solid fa-star-half-stroke"></i></p>
+                    </div>
+                    <div class="home-popular-review-info">
+                      <p>Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet. Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="item">
+                  <div class="home-popular-review-box">
+                    <div class="home-popular-client">
+                      <div class="home-client-img">
+                        <img src="../front-end/images/user-img-new1.jpg" alt="img">
+                      </div>
+                      <h4>John C</h4>
+                      <p>Level</p>
+                      <p><i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i class="fa-solid fa-star-half-stroke"></i></p>
+                    </div>
+                    <div class="home-popular-review-info">
+                      <h3>Company Name</h3>
+                      <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet. Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="item">
+                  <div class="home-popular-review-box">
+                    <div class="home-popular-client">
+                      <div class="home-client-img">
+                        <img src="../front-end/images/user-img-new1.jpg" alt="img">
+                      </div>
+                      <h4>CEchoes Technology</h4>
+                      <p>Level</p>
+                      <p><i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i class="fa-solid fa-star-half-stroke"></i></p>
+                    </div>
+                    <div class="home-popular-review-info">
+                      <p>Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint.</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="item">
+                  <div class="home-popular-review-box">
+                    <div class="home-popular-client">
+                      <div class="home-client-img">
+                        <img src="../front-end/images/user-img-new1.jpg" alt="img">
+                      </div>
+                      <h4>Mr. Ronald Richards</h4>
+                      <p>Level2</p>
+                      <p><i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i class="fa-solid fa-star-half-stroke"></i></p>
+                    </div>
+                    <div class="home-popular-review-info">
+                      <h3>Company</h3>
+                      <p>Velit officia consequat duis enim velit mollit. Exercitation veniam consequat sunt nostrud amet. Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ============== Section1 End =============== -->
+
+<!-- ============== Section2 Start =============== -->
+<section class="main-content most-popular-categories-content">
+  <div class="container">
+      <div class="default-content-area">
+        <h4>Most Popular</h4>
+        <h2 class="main-head">Categories</h2>
+        <div class="row">
+          <div class="col-sm-3 col-6">
+            <div class="popular-category-part">
+              <a href="#">
+                <svg width="141" height="143" viewBox="0 0 141 143" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="85.507" cy="55.8038" r="54.9913" fill="#505050"/>
+                  <path d="M55.987 56.0716C54.962 56.134 53.9415 56.2142 52.9165 56.2498C47.747 56.4414 42.6221 56.9539 37.6085 58.2775C36.9222 58.4602 35.973 58.38 35.7279 59.2C35.4784 60.0423 36.3295 60.4567 36.8465 60.9425C39.048 63.0103 41.3163 65.0112 43.4732 67.128C47.3414 70.9116 51.6553 73.2156 57.3373 72.3956C62.9569 71.5845 68.5275 70.5328 74.0936 69.4409C85.2748 67.2484 96.1664 67.6539 106.684 71.5355L88.5682 21.8281H44.7879L32.0469 56.6554C40.3092 55.3942 48.108 55.1892 55.987 56.0716Z" fill="#FCCB06"/>
+                  <path d="M115.701 96.2794C112.612 101.248 107.269 105.705 98.0486 106.806L97.4336 106.877C95.9808 107.126 94.5324 107.416 93.0841 107.683C85.9938 108.994 78.8858 109.145 71.751 108.018C70.0442 107.746 69.1573 107.349 70.1199 105.344C71.1494 103.196 71.4881 100.834 71.1984 98.9132C70.931 93.9709 69.4158 90.0671 66.1358 86.9743C63.3327 84.3361 59.9815 83.4715 56.3138 84.648C52.5169 85.8646 50.4268 88.6366 49.8029 92.5582C49.3216 95.5975 49.5355 98.5967 50.311 101.547C50.7967 103.396 50.3332 103.846 48.4081 103.45C38.0824 101.315 28.0287 98.2135 17.9437 95.2098L0.492188 142.916H40.3419L46.3269 124.618H86.689L92.6741 142.916H132.693L115.701 96.2794ZM66.6483 105.397C64.3399 108.392 60.6098 109.011 57.4502 106.912C52.9091 103.895 50.6719 96.8676 52.6417 91.814C54.6827 86.5821 60.3915 85.4145 64.4379 89.3986C66.8088 91.7293 68.1769 94.8801 68.422 98.9087C68.3864 100.936 68.2304 103.343 66.6483 105.397Z" fill="#FCCB06"/>
+                  <path d="M15.6866 94.956C15.2811 95.6156 16.11 96.137 16.569 96.5559L17.1617 94.9605C16.6358 94.7154 16.0476 94.3678 15.6866 94.956Z" fill="#FCCB06"/>
+                  <path d="M65.2919 104.42C63.3801 106.6 60.2249 107.023 57.8318 105.374C54.8727 103.333 53.4912 100.414 53.157 96.225C53.0188 95.2534 53.4912 93.7204 54.1196 92.2498C55.4476 89.1303 58.8523 87.9315 61.9317 89.4333C67.1191 91.9646 68.9685 100.227 65.2919 104.42Z" fill="#FCCB06"/>
+                  <path d="M76.5091 81.0315C84.611 87.3908 93.6308 86.5798 102.825 84.4719C103.012 84.4273 103.159 84.1866 103.337 84.0218C102.802 83.3667 102.129 83.6875 101.541 83.643C99.0722 83.4513 96.5988 83.3265 94.1389 83.0904C93.2342 83.0012 92.1869 82.6536 92.9401 81.4236C94.2815 79.2311 92.949 78.8255 91.2065 78.5091C85.48 77.4708 79.5529 77.6178 73.9868 75.599C73.55 75.4386 72.9885 75.247 72.6988 75.7818C72.4537 76.2408 72.7612 76.7042 73.0331 77.1053C74.018 78.567 75.092 79.9218 76.5091 81.0315Z" fill="#FCCB06"/>
+                  <path d="M36.9533 61.6064C35.6966 60.6349 34.9479 60.8577 34.3908 62.364C33.5887 64.5387 32.6884 66.6778 31.7704 68.808C31.2401 70.0424 31.7615 70.604 32.9113 70.7733C36.2804 71.268 39.6539 71.7225 43.0274 72.1949C44.4 72.2484 44.8635 71.6869 44.1906 70.4703C42.3144 67.0789 40.0505 64.0039 36.9533 61.6064Z" fill="#FCCB06"/>
+                  <path d="M93.9558 100.369C93.6082 100.975 93.02 101.63 93.4834 102.343C94.0004 103.137 94.9051 102.86 95.5111 102.838C97.8107 102.468 99.9498 102.201 102.058 101.769C104.219 101.323 105.69 98.8808 105.253 96.7194C105.119 96.0599 104.923 95.5251 104.121 95.3869C101.666 94.9636 95.2839 98.0519 93.9558 100.369Z" fill="#FCCB06"/>
+                  <path d="M106.918 78.142C106.374 78.2846 105.804 78.4316 105.902 79.2605C106.664 80.4281 107.956 80.9317 109.164 81.4977C109.583 81.6937 110.055 81.9478 110.519 82.0503L108.905 77.625C108.246 77.7988 107.582 77.9681 106.918 78.142Z" fill="#FCCB06"/>
+                  <path d="M61.9227 89.4314C58.8388 87.9251 55.4385 89.1283 54.1105 92.2478C53.4822 93.7185 53.0142 95.2515 53.1479 96.223C53.4822 100.417 54.8637 103.336 57.8228 105.372C60.2159 107.025 63.371 106.598 65.2829 104.418C68.9639 100.225 67.1145 91.9626 61.9227 89.4314Z" fill="#FCCB06"/>
+                  </svg>
+              </a>
+            </div>
+            </div>
+            <div class="col-sm-3 col-6">
+            <div class="popular-category-part">
+              <a href="#">
+              <svg width="139" height="142" viewBox="0 0 139 142" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="83.4835" cy="55.671" r="54.9913" fill="#505050"/>
+              <path d="M64.0402 141.373C63.534 140.573 62.7883 139.974 62.218 139.226C60.4329 136.885 59.3721 134.31 59.6188 131.327C59.8027 129.1 60.5969 127.045 61.5408 125.037C62.9095 122.124 64.6219 119.386 65.9736 116.462C67.5177 113.12 68.5942 109.666 68.55 105.964C68.503 102.166 67.3951 98.6371 65.5829 95.2965C63.8349 92.0754 61.6748 89.1538 59.1925 86.4529C59.1026 86.3559 58.9686 86.2673 59.0371 86.1C59.134 86.0255 59.221 86.0719 59.2966 86.1239C64.0202 89.3028 68.5429 92.7151 72.076 97.2213C73.9281 99.5847 75.3269 102.176 75.7803 105.182C76.2764 108.468 75.5022 111.512 73.9196 114.385C72.548 116.877 70.7073 119.02 68.7325 121.058C68.6384 121.155 68.5514 121.258 68.4987 121.396C69.8347 120.397 71.0052 119.228 72.153 118.03C74.7337 115.337 76.7413 112.229 78.6718 109.088C81.8214 103.966 81.5847 98.7538 78.6775 93.6079C76.3777 89.5362 72.9771 86.4979 69.0205 84.0586C65.4589 81.8624 61.6106 80.1485 58.1687 77.7373C52.6195 73.8526 47.7148 69.3296 43.8223 63.8083C40.4061 58.9619 37.9694 53.6853 37.0269 47.8055C35.7566 39.8786 37.4575 32.5928 41.8875 25.8933C42.733 24.6153 43.6783 23.4146 44.6507 22.2308C44.9516 21.8652 45.2838 21.7148 45.7486 21.7176C50.9742 21.7457 56.2054 21.5826 61.4253 21.861C67.3153 22.1745 73.0755 23.1798 78.5477 25.4603C84.1397 27.79 88.8677 31.2332 92.3937 36.1457C94.8646 39.5875 96.3617 43.4554 96.9363 47.6283C97.5979 52.4255 97.5822 57.2143 96.135 61.8962C94.3129 67.7942 90.908 72.6139 85.865 76.2962C84.549 77.2564 83.1787 78.1281 81.6032 78.9788C82.7738 79.4765 83.8147 79.8955 84.837 80.3552C89.4608 82.4361 93.6441 85.1426 97.1972 88.7629C100.782 92.4157 102.711 96.8403 103.558 101.785C104.005 104.402 104.187 107.039 104.11 109.691C103.934 115.739 102.506 121.422 98.9296 126.444C96.463 129.909 93.3148 132.649 89.6319 134.813C84.0071 138.118 77.852 139.849 71.4415 140.83C69.3299 141.154 67.2069 141.389 65.0739 141.531C64.716 141.555 64.361 141.55 64.0374 141.362L64.0402 141.373Z" fill="#FCCB06"/>
+              <path d="M64.0347 141.363C63.8608 141.736 63.4958 141.621 63.2192 141.628C61.3214 141.682 59.4194 141.756 57.5231 141.758C39.0147 141.791 20.5049 141.778 1.9966 141.778C0.861664 141.778 0.828871 141.743 0.857387 140.639C0.865942 140.312 0.861664 139.983 0.861664 139.655C0.861664 100.832 0.860238 62.0101 0.860238 23.1869C0.860238 21.8372 0.860239 21.8372 2.20762 21.8372C15.7513 21.8386 29.2936 21.8386 42.8373 21.8428C43.1153 21.8428 43.4033 21.7823 43.7626 21.9482C43.2337 22.3546 42.6348 22.5008 42.093 22.744C37.6246 24.7546 33.7549 27.5398 30.497 31.1897C26.7414 35.3964 24.4516 40.3398 22.7335 45.5981C22.4711 46.3995 22.2544 47.215 21.9978 48.0178C21.7582 48.77 21.647 48.8136 20.9384 48.4818C19.7906 47.9461 18.7754 47.2192 17.8273 46.3939C17.6633 46.2505 17.5578 46.0002 17.2427 46.0424C17.267 46.4741 17.7346 46.7229 17.7489 47.2445C16.7294 46.7468 15.9866 45.9299 14.7889 45.6642C15.0912 46.138 15.4277 46.4122 15.7627 46.6807C17.4409 48.0277 19.1861 49.2846 21.0225 50.4094C21.6456 50.7904 21.7739 51.2487 21.5971 51.8885C21.3405 52.8108 20.8814 53.6164 20.2169 54.3124C17.9271 56.7166 15.0798 58.3686 12.2752 60.0853C11.1075 60.8009 9.93975 61.5321 8.94169 62.4797C8.08763 63.2895 8.07052 64.1823 8.85044 65.0821C9.77864 66.1535 11.012 66.8227 12.1868 67.5693C12.6659 67.873 13.1507 68.1753 13.5912 68.5282C14.9486 69.6164 14.9229 71.6874 13.5542 72.756C12.9753 73.2073 12.4321 73.6923 11.963 74.2561C11.3983 74.9338 11.4183 75.6227 12.0228 76.2709C12.482 76.763 13.0594 77.0864 13.6454 77.3985C14.0703 77.6248 14.0732 77.8203 13.6668 78.0902C13.135 78.4431 12.6374 78.841 12.2267 79.3373C11.4597 80.2625 11.4625 81.2579 12.3023 82.1113C12.8313 82.6498 13.4273 83.1096 14.1359 83.4217C15.0684 83.8308 15.1796 84.1134 14.8003 85.0737C14.5594 85.6839 14.3355 86.3096 14.0147 86.8804C12.4306 89.6965 13.9391 93.0118 16.3017 94.3644C18.9166 95.8603 21.7411 96.2287 24.6854 96.0516C26.3422 95.9517 27.9947 95.7661 29.6529 95.6874C32.9978 95.5285 36.3485 95.4146 39.6948 95.551C43.141 95.6916 46.5715 96.067 49.8437 97.2284C55.5441 99.2501 59.1171 103.177 60.4232 109.029C61.1631 112.35 60.667 115.588 59.5834 118.775C58.6765 121.439 57.7783 124.108 57.2621 126.883C56.2983 132.08 57.9594 136.336 61.9944 139.738C62.6602 140.299 63.356 140.826 64.039 141.369C64.0404 141.373 64.0347 141.363 64.0347 141.363Z" fill="#FCCB06"/>
+              </svg>
+              </a>
+            </div>
+           </div>
+           <div class="col-sm-3 col-6">
+            <div class="popular-category-part">
+              <a href="#">
+              <svg width="141" height="143" viewBox="0 0 141 143" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="86.9834" cy="54.1006" r="53.2881" fill="#505050"/>
+              <mask id="mask0_0_196" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="26" width="113" height="117">
+              <rect x="0.90625" y="26.7734" width="111.163" height="116.141" rx="20" fill="#FCCB06"/>
+              </mask>
+              <g mask="url(#mask0_0_196)">
+              <path d="M0.949206 107.04C0.949206 96.0878 1.00035 85.1313 0.906587 74.179C0.889539 72.0364 1.51605 71.3108 3.67687 71.3535C9.71184 71.473 15.7511 71.4132 21.786 71.3834C23.0859 71.3791 24.0278 71.584 24.6373 72.9968C28.2813 81.4948 35.1132 85.9977 43.9995 86.5355C56.0694 87.2654 66.8479 83.3045 75.7043 74.9559C81.5305 69.4627 81.4793 62.9921 75.781 57.3879C68.9363 50.6612 60.3527 47.46 51.0616 45.9405C44.1742 44.818 37.777 46.107 32.0105 50.1106C28.7288 52.3898 26.2057 55.3519 24.7183 59.0866C24.1855 60.4311 23.4226 60.9134 22.0119 60.9049C15.7638 60.8537 9.51152 60.8409 3.26346 60.9092C1.50753 60.9262 0.915111 60.2945 0.923635 58.5446C0.983302 48.6594 0.987564 38.7742 0.915111 28.8847C0.902325 27.0152 1.51605 26.4348 3.37001 26.439C22.5447 26.5073 41.7236 26.3153 60.8939 26.597C71.0417 26.7464 80.7803 29.0939 89.2063 35.1889C98.4974 41.9113 103.241 51.1776 103.897 62.5738C104.362 70.5809 103.475 78.3363 99.4947 85.5026C95.5609 92.5921 89.7476 97.6585 82.5192 101.107C80.7292 101.961 80.6227 102.61 81.718 104.193C89.9692 116.119 98.1394 128.095 106.31 140.076C106.761 140.738 107.737 141.395 107.234 142.274C106.757 143.102 105.675 142.731 104.856 142.735C95.693 142.752 86.534 142.727 77.3708 142.761C75.6873 142.769 74.8093 142.364 74.6772 140.413C73.8291 127.694 64.4527 117.314 51.9481 115.133C50.8527 114.941 50.0216 114.714 49.4292 113.558C48.3808 111.5 45.9941 111.453 44.8902 113.468C44.2893 114.561 43.5647 114.941 42.4311 115.133C29.8838 117.233 20.4051 127.724 19.5613 140.524C19.4505 142.176 18.8794 142.782 17.2598 142.765C12.5716 142.71 7.88345 142.697 3.19953 142.769C1.40098 142.795 0.910849 142.035 0.919373 140.332C0.974778 129.231 0.949206 118.133 0.949206 107.04Z" fill="#FCCB06"/>
+              </g>
+              </svg>
+              </a>
+            </div>
+           </div>
+           <div class="col-sm-3 col-6">
+            <div class="popular-category-part">
+              <a href="#">
+                <svg width="137" height="142" viewBox="0 0 137 142" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="81.7491" cy="55.8038" r="54.9913" fill="#505050"/>
+                  <path d="M85.8628 141.027C66.5908 141.271 47.3161 141.175 28.044 141.239C19.3736 141.268 10.7059 141.379 2.03816 141.444C0.28734 141.457 0.318745 141.442 0.329213 139.746C0.350149 135.643 0.371086 131.539 0.31351 127.436C0.297808 126.363 0.609239 126.142 1.66915 126.23C8.45521 126.801 15.2439 126.754 22.0378 126.217C26.9029 125.834 31.768 125.453 36.5861 124.654C43.9793 123.428 51.3123 121.914 58.5354 119.924C65.6722 117.956 72.7095 115.677 79.6866 113.217C80.5947 112.899 81.4583 112.492 82.2487 111.937C83.497 111.063 83.8739 109.803 83.3007 108.424C82.5523 106.628 81.2202 106.133 79.2443 106.9C71.8144 109.791 64.1961 112.136 56.5098 114.234C48.779 116.344 40.9252 117.956 32.9876 119.089C24.3016 120.328 15.5553 120.774 6.77767 120.439C5.08181 120.375 3.38857 120.222 1.69271 120.113C0.585686 120.04 0.111996 119.514 0.11723 118.363C0.156486 108.691 0.284723 99.0328 1.91777 89.4493C3.18967 81.9863 5.34613 74.8162 8.90534 68.1152C10.0961 65.8756 12.2787 64.875 14.8409 64.6754C18.421 64.398 21.729 65.4556 25.037 66.5781C26.1073 66.941 27.2222 67.1665 28.3057 67.4931C29.1379 67.742 29.4205 67.4102 29.4415 66.6221C29.4886 64.9838 29.6482 63.3429 29.6221 61.7073C29.5383 56.6032 29.9544 51.525 30.5223 46.4649C31.1216 41.1224 32.3778 35.9146 34.7777 31.0775C36.2092 28.1897 37.8972 25.4109 40.3389 23.1712C42.9612 20.763 46.811 20.6126 49.695 22.7305C52.2702 24.6202 54.1702 27.0777 55.9 29.6725C58.9908 34.3074 61.3514 39.3208 63.4843 44.443C64.5808 47.0741 65.714 49.6897 66.7635 52.3389C67.8286 55.0245 68.8205 57.7411 69.8333 60.4474C70.3934 61.9457 70.5504 61.9846 71.9715 61.3703C77.483 58.9906 83.0312 56.7043 88.8201 55.0374C89.8565 54.7393 90.1391 55.0012 90.1679 55.994C90.3537 62.1687 91.0734 68.2967 91.9266 74.4092C92.1098 75.7208 91.8298 76.4596 90.4558 77.0999C82.4999 80.7964 74.1907 83.5597 65.8318 86.1312C59.5142 88.0754 53.0815 89.6489 46.5362 90.7921C40.2159 91.8964 33.8853 92.7285 27.4813 93.0551C26.1492 93.1225 24.7962 93.2443 24.0477 94.7219C22.9328 96.9253 24.2021 99.2298 26.6779 99.1494C30.2475 99.0328 33.8041 98.675 37.3555 98.2732C42.553 97.6822 47.7138 96.8449 52.8093 95.6914C60.5427 93.939 68.1924 91.8808 75.6877 89.273C81.1155 87.3833 86.4648 85.3069 91.7774 83.1294C92.7588 82.7276 93.1147 82.992 93.2561 83.9719C94.6353 93.4958 96.1008 103.009 97.4093 112.543C98.307 119.084 99.0817 125.642 99.3826 132.244C99.4952 134.699 99.6941 137.151 99.8746 139.604C99.9505 140.661 99.5056 141.058 98.4248 141.048C94.2348 141.001 90.0475 141.027 85.8628 141.027ZM34.1888 60.2556C34.27 61.9302 34.058 64.8231 34.3773 67.7109C34.4715 68.5507 34.8117 68.9551 35.6282 69.0692C40.8388 69.795 46.0337 69.9609 51.2102 68.784C55.9785 67.6979 60.6369 66.267 65.0938 64.2787C68.5483 62.739 68.1924 63.7914 66.8865 60.2426C63.9606 52.2975 60.6343 44.5104 56.3318 37.1796C54.2303 33.5997 52.0477 30.0691 48.4806 27.6402C46.9078 26.5696 45.3297 25.6753 43.4009 26.4944C41.7051 27.2151 40.1715 28.3167 39.211 29.8462C37.0205 33.3327 35.9527 37.2859 35.1807 41.2623C34.0449 47.1286 34.0685 53.0907 34.1888 60.2556Z" fill="#FCCB06"/>
+                  </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="text-center">
+          <a href="http://localhost:5000/category-listing" class="view-more"><span class="position-relative"><i class="fa-solid fa-angle-right"></i>View More</span></a>
+        </div>
+      </div>
+  </div>
+</section>
+<!-- ============== Section2 End =============== -->
+
+<!-- ============== Featured Section Start =============== -->
+<section class="main-content featured-content text-center">
+  <div class="container">
+    <div class="featured-object-wrap position-relative">
+      <h2 class="main-head">Featured <span>Companies</span></h2>
+        <div class="featured-slider">
+          <div class="item">
+            <div class="feature-box">
+              <a href="company/444"><img src="../front-end/images/feature-logo1.png" alt="img" width="118"
+                  height="45" class="mx-auto"></a>
+              <h5>
+                Samsung
+              </h5>
+              <p class="m-0">
+                Amet minim mollit non deserunt ullamco est...
+              </p>
+            </div>
+          </div>
+          <div class="item">
+            <div class="feature-box">
+              <a href="company/2"><img src="../front-end/images/feature-logo2.png" alt="img" width="118"
+                  height="45" class="mx-auto"></a>
+              <h5>
+                Samsung
+              </h5>
+              <p class="m-0">
+                Amet minim mollit non deserunt ullamco est...
+              </p>
+            </div>
+          </div>
+          <div class="item">
+            <div class="feature-box">
+              <a href="company/4"><img src="../front-end/images/feature-logo2.png" alt="img" width="118"
+                  height="45" class="mx-auto"></a>
+              <h5>
+                Samsung
+              </h5>
+              <p class="m-0">
+                Amet minim mollit non deserunt ullamco est...
+              </p>
+            </div>
+          </div>
+          <div class="item">
+            <div class="feature-box">
+              <a href="company/14"><img src="../front-end/images/feature-logo2.png" alt="img" width="118"
+                  height="45" class="mx-auto"></a>
+              <h5>
+                Samsung
+              </h5>
+              <p class="m-0">
+                Amet minim mollit non deserunt ullamco est...
+              </p>
+            </div>
+          </div>
+          <div class="item">
+            <div class="feature-box">
+              <a href="company/16"><img src="../front-end/images/feature-logo2.png" alt="img" width="118"
+                  height="45" class="mx-auto"></a>
+              <h5>
+                Samsung
+              </h5>
+              <p class="m-0">
+                Amet minim mollit non deserunt ullamco est...
+              </p>
+            </div>
+          </div>
+          <div class="item">
+            <div class="feature-box">
+              <a href="company/12"><img src="../front-end/images/feature-logo2.png" alt="img" width="118"
+                  height="45" class="mx-auto"></a>
+              <h5>
+                Samsung
+              </h5>
+              <p class="m-0">
+                  Watches and Jewellary
+              </p>
+            </div>
+          </div>
+          <div class="item">
+            <div class="feature-box">
+              <a href="company/1"><img src="../front-end/images/feature-logo2.png" alt="img" width="118"
+                  height="45" class="mx-auto"></a>
+              <h5>
+                Samsung
+              </h5>
+              <p class="m-0">
+                Amet minim mollit non deserunt ullamco est...
+              </p>
+            </div>
+          </div>
+       </div>
+      <div class="feature-man1" data-aos="fade-down"><img src="/front-end/images/feature-man1.png" alt="img"
+          width="198" height="169"></div>
+      <div class="feature-man2" data-aos="fade-down" data-aos-delay="500"><img
+          src="/front-end/images/feature-man2.png" alt="img" width="202" height="145"></div>
+      <div class="feature-man3" data-aos="fade-right"><img src="/front-end/images/feature-man3.png" alt="img"
+          width="131" height="226"></div>
+      <div class="feature-man4" data-aos="fade-left" data-aos-delay="300"><img
+          src="/front-end/images/feature-man4.png" alt="img" width="253" height="235"></div>
+    </div>
+  </div>
+</section>
+<!-- ============== Featured Section End =============== -->
+
+<!-- ============== Review section Start =============== -->
+<section class="main-content review-content">
+  <div class="container">
+     <div class="row">
+        <div class="col-md-6">
+           <div class="review-left text-center" data-aos="fade-right">
+              <h2 class="main-head mb-md-5 mb-4">Submit Your <span>Review</span></h2>
+              <!-- <picture>
+                 <source media="(max-width:575px)" srcset="/front-end/images/review-img-mbl-screen.png" width="300" height="253">
+                 <source media="(max-width:767px)" srcset="/front-end/images/review-img-tab-screen.png" width="410" height="346">
+                 <img src="/front-end/images/review-img.png" alt="img" width="542" height="458" loading="lazy">
+                 </picture> -->
+              <div class="review-left-img">
+                 <div class="review-big-img">
+                    <div class="review-big-slider1">
+                       <div class="item">
+                          <img src="../front-end/images/review-slider-img1.png" alt="img" width="464" height="535" loading="lazy">
+                       </div>
+                       <div class="item">
+                          <img src="../front-end/images/review-slider-img2.png" alt="img" width="464" height="535" loading="lazy">
+                       </div>
+                    </div>
+                 </div>
+                 <div class="review-small-img">
+                    <div class="review-small-slider2">
+                       <div class="item">
+                          <img src="../front-end/images/review-small-slider1.png" alt="img" width="246" height="283" loading="lazy">
+                       </div>
+                       <div class="item">
+                          <img src="../front-end/images/review-small-slider2.png" alt="img" width="246" height="283" loading="lazy">
+                       </div>
+                    </div>
+                 </div>
+              </div>
+              <!--<h5><a href="#" data-bs-toggle="modal" data-bs-target="#reviewers_guidelines">Guidelines for Reviewers</a></h5>-->
+           </div>
+        </div>
+        <div class="col-md-6">
+           <div class="review-right mt-md-0 mt-5" data-aos="fade-left">
+              <form id="review_submit_frm" name="review_submit_frm" action="" method="post">
+                 <div class="row">
+                    <!--<div class="col-md-12">
+                       <div class="custom-form">
+                          <input type="text" class="form-control" id="autocomplete" name="address" placeholder="Business, Institute Establishment Name" required>
+                       </div>
+                       <div id="map"></div>
+                       </div>-->
+                    <div class="col-md-12">
+                       <div class="custom-form">
+                          <input type="text" class="form-control" id="search-input-review" name="company_name"
+                             placeholder="Business/Institute/Establishment Name" required autocomplete="off">
+                          <div class="autofield-dropdown-review">
+                          </div>
+                       </div>
+                    </div>
+                    <div class="col-md-12">
+                       <div class="custom-form">
+                          <input type="text" class="form-control" name="address" id="review-address" placeholder="Location"
+                             required>
+                          <!--<div class="under-input-text">India, Westbengal, Kolkata, 5330</div>-->
+                       </div>
+                    </div>
+                    <div class="col-md-12">
+                       <div class="custom-form">
+                          <input type="text" class="form-control" placeholder="Product/Division Name" name="review_title">
+                       </div>
+                    </div>
+                    <div class="col-md-12">
+                       <div class="rating-slider">
+                          <span class="emojisss"><img style="width:50px;" src="" id="selected-range-emojis" /></span>
+                          <label>Rating</label>
+                          <div id="rating-range" class="rating"></div>
+                          <input type="text" id="ratingRange" readonly>
+                          <input type="hidden" id="ratingvalue" name="rating" value="">
+                          <div id="slider-values" class="text-center">
+                             <span id="selected-range-text"></span>
+                          </div>
+                       </div>
+                    </div>
+                    <div class="col-md-12">
+                       <div class="tag-label">Tags</div>
+                       <div class="range-tag-wrap">
+                          <div class="tag-items-wrapper range-tag05 ">
+                             <div class="form-check custom-check position-relative">
+                                <input class="form-check-input" type="checkbox" name="tags" value="Dissatisfied" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Dissatisfied
+                                </label>
+                             </div>
+                             <div class="form-check custom-check position-relative">
+                                <input class="form-check-input" type="checkbox" name="tags" value="Broken" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Broken
+                                </label>
+                             </div>
+                             <div class="form-check custom-check position-relative">
+                                <input class="form-check-input" type="checkbox" name="tags" value="Rude Staff" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Rude Staff
+                                </label>
+                             </div>
+                             <div class="form-check custom-check position-relative">
+                                <input class="form-check-input" type="checkbox" name="tags" value="Unavailable Support" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Unavailable Support
+                                </label>
+                             </div>
+                             <div class="form-check custom-check position-relative">
+                                <input class="form-check-input" type="checkbox" name="tags" value="Service Non-Existent" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Service Non-Existent
+                                </label>
+                             </div>
+                          </div>
+                          <div class="tag-items-wrapper range-tag1 d-none">
+                             <div class="form-check custom-check position-relative">
+                                <input class="form-check-input" type="checkbox" name="tags" value="Disappointing" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Disappointing
+                                </label>
+                             </div>
+                             <div class="form-check custom-check position-relative">
+                                <input class="form-check-input" type="checkbox" name="tags" value="Lacklustre" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Lacklustre
+                                </label>
+                             </div>
+                             <div class="form-check custom-check position-relative">
+                                <input class="form-check-input" type="checkbox" name="tags" value="Bad Product" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Bad Product
+                                </label>
+                             </div>
+                             <div class="form-check custom-check position-relative">
+                                <input class="form-check-input" type="checkbox" name="tags" value="Bad Service" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Bad Service
+                                </label>
+                             </div>
+                             <div class="form-check custom-check position-relative">
+                                <input class="form-check-input" type="checkbox" name="tags" value="Poor Delivery" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Poor Delivery
+                                </label>
+                             </div>
+                             <div class="form-check custom-check position-relative">
+                                <input class="form-check-input" type="checkbox" name="tags" value="Rude Staff" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Rude Staff
+                                </label>
+                             </div>
+                          </div>
+                          <div class="tag-items-wrapper range-tag15 d-none">
+                             <div class="form-check custom-check position-relative">
+                                <input class="form-check-input" type="checkbox" name="tags" value="Subpar" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Subpar
+                                </label>
+                             </div>
+                             <div class="form-check custom-check position-relative">
+                                <input class="form-check-input" type="checkbox" name="tags" value="Unsatisfactory" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Unsatisfactory
+                                </label>
+                             </div>
+                             <div class="form-check custom-check position-relative">
+                                <input class="form-check-input" type="checkbox" name="tags" value="Poor Service" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Poor Service
+                                </label>
+                             </div>
+                             <div class="form-check custom-check position-relative">
+                                <input class="form-check-input" type="checkbox" name="tags" value="Un-friendly Staff" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Un-friendly Staff
+                                </label>
+                             </div>
+                             <div class="form-check custom-check position-relative">
+                                <input class="form-check-input" type="checkbox" name="tags" value="No Feedback" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                No Feedback
+                                </label>
+                             </div>
+                          </div>
+                          <div class="tag-items-wrapper range-tag2 d-none">
+                             <div class="form-check custom-check position-relative">
+                                <input class="form-check-input" type="checkbox" name="tags" value="Mediocre" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Mediocre
+                                </label>
+                             </div>
+                             <div class="form-check custom-check position-relative">
+                                <input class="form-check-input" type="checkbox" name="tags" value="Below Average" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Below Average
+                                </label>
+                             </div>
+                             <div class="form-check custom-check position-relative">
+                                <input class="form-check-input" type="checkbox" name="tags" value="Needs Improvement" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Needs Improvement
+                                </label>
+                             </div>
+                             <div class="form-check custom-check position-relative">
+                                <input class="form-check-input" type="checkbox" name="tags" value="Mixed reviews" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Mixed reviews
+                                </label>
+                             </div>
+                          </div>
+                          <div
+                             class="tag-items-wrapper range-tag25 d-none">
+                             <div class="form-check custom-check position-relative">
+                                <input class="form-check-input" type="checkbox" name="tags" value="Average" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Average
+                                </label>
+                             </div>
+                             <div class="form-check custom-check position-relative">
+                                <input class="form-check-input" type="checkbox" name="tags" value="Mediocre" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Mediocre
+                                </label>
+                             </div>
+                             <div class="form-check custom-check position-relative">
+                                <input class="form-check-input" type="checkbox" name="tags" value="Fair" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Fair
+                                </label>
+                             </div>
+                             <div class="form-check custom-check position-relative">
+                                <input class="form-check-input" type="checkbox" name="tags" value="Moderate" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Moderate
+                                </label>
+                             </div>
+                             <div class="form-check custom-check position-relative">
+                                <input class="form-check-input" type="checkbox" name="tags" value="Needs improvement" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Needs improvement
+                                </label>
+                             </div>
+                             <div class="form-check custom-check position-relative">
+                                <input class="form-check-input" type="checkbox" name="tags" value="Decent" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Decent
+                                </label>
+                             </div>
+                             <div class="form-check custom-check position-relative">
+                                <input class="form-check-input" type="checkbox" name="tags" value="Unspectacular" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Unspectacular
+                                </label>
+                             </div>
+                          </div>
+                          <div
+                             class="tag-items-wrapper range-tag3 d-none">
+                             <div class="form-check custom-check position-relative">
+                                <input class="form-check-input" type="checkbox" name="tags" value="Average" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Average
+                                </label>
+                             </div>
+                             <div class="form-check custom-check position-relative">
+                                <input class="form-check-input" type="checkbox" name="tags" value="Satisfactory" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Satisfactory
+                                </label>
+                             </div>
+                             <div class="form-check custom-check position-relative">
+                                <input class="form-check-input" type="checkbox" name="tags" value="Decent" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Decent
+                                </label>
+                             </div>
+                             <div class="form-check custom-check position-relative">
+                                <input class="form-check-input" type="checkbox" name="tags" value="Acceptable" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Acceptable
+                                </label>
+                             </div>
+                             <div class="form-check custom-check position-relative">
+                                <input class="form-check-input" type="checkbox" name="tags" value="Fair" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Fair
+                                </label>
+                             </div>
+                             <div class="form-check custom-check position-relative">
+                                <input class="form-check-input" type="checkbox" name="tags" value="Adequate" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Adequate
+                                </label>
+                             </div>
+                             <div class="form-check custom-check position-relative">
+                                <input class="form-check-input" type="checkbox" name="tags" value="Moderate" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Moderate
+                                </label>
+                             </div>
+                          </div>
+                          <div
+                             class="tag-items-wrapper range-tag35 d-none">
+                             <div class="form-check custom-check position-relative">
+                                <input class="form-check-input" type="checkbox" name="tags" value="Average" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Average
+                                </label>
+                             </div>
+                             <div class="form-check custom-check position-relative">
+                                <input class="form-check-input" type="checkbox" name="tags" value="Decent" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Decent
+                                </label>
+                             </div>
+                             <div class="form-check custom-check position-relative">
+                                <input class="form-check-input" type="checkbox" name="tags" value="Acceptable" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Acceptable
+                                </label>
+                             </div>
+                             <div class="form-check custom-check position-relative">
+                                <input class="form-check-input" type="checkbox" name="tags" value="Fair" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Fair
+                                </label>
+                             </div>
+                             <div class="form-check custom-check position-relative">
+                                <input class="form-check-input" type="checkbox" name="tags" value="Moderate" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Moderate
+                                </label>
+                             </div>
+                          </div>
+                          <div class="tag-items-wrapper range-tag4 d-none">
+                             <div class="form-check custom-check position-relative">
+                                <input class="form-check-input" type="checkbox" name="tags" value="Good" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Good
+                                </label>
+                             </div>
+                             <div class="form-check custom-check position-relative">
+                                <input class="form-check-input" type="checkbox" name="tags" value="Recommended" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Recommended
+                                </label>
+                             </div>
+                             <div class="form-check custom-check position-relative">
+                                <input class="form-check-input" type="checkbox" name="tags" value="Satisfying" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Satisfying
+                                </label>
+                             </div>
+                             <div class="form-check custom-check position-relative">
+                                <input class="form-check-input" type="checkbox" name="tags" value="Great" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Great
+                                </label>
+                             </div>
+                          </div>
+                          <div class="tag-items-wrapper range-tag45 d-none">
+                             <div class="form-check custom-check position-relative">
+                                <input class="form-check-input" type="checkbox" name="tags" value="Almost perfect" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Almost perfect
+                                </label>
+                             </div>
+                             <div class="form-check custom-check position-relative">
+                                <input class="form-check-input" type="checkbox" name="tags" value="Highly recommended" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Highly recommended
+                                </label>
+                             </div>
+                             <div class="form-check custom-check position-relative">
+                                <input class="form-check-input" type="checkbox" name="tags" value="Top-tier" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Top-tier
+                                </label>
+                             </div>
+                             <div class="form-check custom-check position-relative">
+                                <input class="form-check-input" type="checkbox" name="tags" value="Impressive" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Impressive
+                                </label>
+                             </div>
+                             <div class="form-check custom-check position-relative">
+                                <input class="form-check-input" type="checkbox" name="tags" value="Almost flawless" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Almost flawless
+                                </label>
+                             </div>
+                          </div>
+                          <div class="tag-items-wrapper range-tag5 d-none">
+                             <div class="form-check custom-check position-relative">
+                                <input class="form-check-input" type="checkbox" name="tags" value="Perfect" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Perfect
+                                </label>
+                             </div>
+                             <div class="form-check custom-check position-relative">
+                                <input class="form-check-input" type="checkbox" name="tags" value="Superb" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Superb
+                                </label>
+                             </div>
+                             <div class="form-check custom-check position-relative">
+                                <input class="form-check-input" type="checkbox" name="tags" value="Remarkable" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Remarkable
+                                </label>
+                             </div>
+                             <div class="form-check custom-check position-relative">
+                                <input class="form-check-input" type="checkbox" name="tags" value="Flawless" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Flawless
+                                </label>
+                             </div>
+                             <div class="form-check custom-check position-relative">
+                                <input class="form-check-input" type="checkbox" name="tags" value="Outstanding" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Outstanding
+                                </label>
+                             </div>
+                             <div class="form-check custom-check position-relative">
+                                <input class="form-check-input" type="checkbox" name="tags" value="Best-in-class" id="">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                Best-in-class
+                                </label>
+                             </div>
+                          </div>
+                       </div>
+                    </div>
+                    <div class="col-md-12">
+                       <div class="custom-form">
+                          <textarea name="review_content" rows="4" class="form-control" placeholder="Review/Feedback"
+                             required></textarea>
+                       </div>
+                    </div>
+                    <div class="col-md-12">
+                       <div class="custom-form">
+                          <span class="fw-bold d-inline-block me-2">Show your name?</span>
+                          <div class="form-check form-check-inline">
+                             <input class="form-check-input" type="radio" name="user_privacy" checked id="inlineRadio1"
+                                value="1">
+                             <label class="form-check-label" for="inlineRadio1">Yes</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                             <input class="form-check-input" type="radio" name="user_privacy" id="inlineRadio2" value="0">
+                             <label class="form-check-label" for="inlineRadio2">No</label>
+                          </div>
+                       </div>
+                    </div>
+                    <div class="col-md-12">
+                       <div class="review-submit d-flex justify-content-between align-items-center">
+                          <a href="#" class="btn-default btn-outline-warning login">Submit</a>
+                          <a href="/review" class="view-more mt-0" id="all-review-hidden-btn" style="display: none;">
+                          <span class="position-relative"><i class="fa-solid fa-angle-right"></i>View All Reviews</span>
+                          </a>
+                          <div class="submit-message"></div>
+                       </div>
+                    </div>
+                 </div>
+              </form>
+           </div>
+        </div>
+     </div>
+  </div>
+</section>
+
+<!-- The Modal -->
+<div class="modal fade pe-0" id="reviewers_guidelines">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title fw-bold">
+          Guidelines for Reviewers
+        </h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"><i
+            class="fa-solid fa-circle-xmark"></i></button>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        <p>
+          Ralph Nader, a leading American political activist and author is known as the father of the consumer movement.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</div>
+<!-- ============== Review section End =============== -->
+
+<!-- ============== Discussions section Start =============== -->
+<section class="main-content discussion-content">
+  <div class="container">
+    <h2 class="text-center main-head"><small>View Our</small> <br> Discussions</h2>
+    <div class="row">
+      <div class="col-md-8">
+        <div class="discussions-left">
+          <div class="discussion-view">
+            <a href="http://localhost:5000/discussion" class="view-more mt-0"><span class="position-relative"><i class="fa-solid fa-angle-right"></i>View All</span></a>
+          </div>  
+          <div id="horizontalTab">
+            <ul class="resp-tabs-list">
+              <li>Recent</li>
+              <li>Top</li>
+              <li>Newest</li>
+              <li>Eldest</li>
+              <li>Popular</li>
+            </ul>
+            <div class="resp-tabs-container">
+              <div class="tab-content-wrap">
+                <div class="discussion-review-panel">
+                  <div class="discussion-user-img">
+                    <img src="../front-end/images/user-img.jpg" alt="img" width="60" height="60">
+                  </div>
+                  <div class="discussion-user-info">
+                    <h4>Lorem Ipsum</h4>
+                    <p>Created 5 days ago by Lorem Ipsum</p>
+                  </div>
+                  <div class="dis-comment-views">
+                    <a href="#">29 Comments</a>
+                    <a href="#">100views</a>
+                  </div>
+                </div>
+                <div class="discussion-review-panel">
+                  <div class="discussion-user-img">
+                    <img src="../front-end/images/user-img.jpg" alt="img" width="60" height="60">
+                  </div>
+                  <div class="discussion-user-info">
+                    <h4>Lorem Ipsum</h4>
+                    <p>Created 5 days ago by Lorem Ipsum</p>
+                  </div>
+                  <div class="dis-comment-views">
+                    <a href="#">29 Comments</a>
+                    <a href="#">100views</a>
+                  </div>
+                </div>
+                <div class="discussion-review-panel">
+                  <div class="discussion-user-img">
+                    <img src="../front-end/images/user-img.jpg" alt="img" width="60" height="60">
+                  </div>
+                  <div class="discussion-user-info">
+                    <h4>Lorem Ipsum</h4>
+                    <p>Created 5 days ago by Lorem Ipsum</p>
+                  </div>
+                  <div class="dis-comment-views">
+                    <a href="#">29 Comments</a>
+                    <a href="#">100views</a>
+                  </div>
+                </div>
+                <div class="discussion-review-panel">
+                  <div class="discussion-user-img">
+                    <img src="../front-end/images/user-img.jpg" alt="img" width="60" height="60">
+                  </div>
+                  <div class="discussion-user-info">
+                    <h4>Lorem Ipsum</h4>
+                    <p>Created 5 days ago by Lorem Ipsum</p>
+                  </div>
+                  <div class="dis-comment-views">
+                    <a href="#">29 Comments</a>
+                    <a href="#">100views</a>
+                  </div>
+                </div>
+                <div class="discussion-review-panel">
+                  <div class="discussion-user-img">
+                    <img src="../front-end/images/user-img.jpg" alt="img" width="60" height="60">
+                  </div>
+                  <div class="discussion-user-info">
+                    <h4>Lorem Ipsum</h4>
+                    <p>Created 5 days ago by Lorem Ipsum</p>
+                  </div>
+                  <div class="dis-comment-views">
+                    <a href="#">29 Comments</a>
+                    <a href="#">100views</a>
+                  </div>
+                </div>
+                <div class="discussion-review-panel">
+                  <div class="discussion-user-img">
+                    <img src="../front-end/images/user-img.jpg" alt="img" width="60" height="60">
+                  </div>
+                  <div class="discussion-user-info">
+                    <h4>Lorem Ipsum</h4>
+                    <p>Created 5 days ago by Lorem Ipsum</p>
+                  </div>
+                  <div class="dis-comment-views">
+                    <a href="#">29 Comments</a>
+                    <a href="#">100views</a>
+                  </div>
+                </div>
+              </div>
+              <div class="tab-content-wrap">
+                <div class="discussion-review-panel">
+                  <div class="discussion-user-img">
+                    <img src="../front-end/images/user-img.jpg" alt="img" width="60" height="60">
+                  </div>
+                  <div class="discussion-user-info">
+                    <h4>Lorem Ipsum</h4>
+                    <p>Created 5 days ago by Lorem Ipsum</p>
+                  </div>
+                  <div class="dis-comment-views">
+                    <a href="#">29 Comments</a>
+                    <a href="#">100views</a>
+                  </div>
+                </div>
+                <div class="discussion-review-panel">
+                  <div class="discussion-user-img">
+                    <img src="../front-end/images/user-img.jpg" alt="img" width="60" height="60">
+                  </div>
+                  <div class="discussion-user-info">
+                    <h4>Lorem Ipsum</h4>
+                    <p>Created 5 days ago by Lorem Ipsum</p>
+                  </div>
+                  <div class="dis-comment-views">
+                    <a href="#">29 Comments</a>
+                    <a href="#">100views</a>
+                  </div>
+                </div>
+              </div>
+              <div class="tab-content-wrap">
+                <div class="discussion-review-panel">
+                  <div class="discussion-user-img">
+                    <img src="../front-end/images/user-img.jpg" alt="img" width="60" height="60">
+                  </div>
+                  <div class="discussion-user-info">
+                    <h4>Lorem Ipsum</h4>
+                    <p>Created 5 days ago by Lorem Ipsum</p>
+                  </div>
+                  <div class="dis-comment-views">
+                    <a href="#">29 Comments</a>
+                    <a href="#">100views</a>
+                  </div>
+                </div>
+                <div class="discussion-review-panel">
+                  <div class="discussion-user-img">
+                    <img src="../front-end/images/user-img.jpg" alt="img" width="60" height="60">
+                  </div>
+                  <div class="discussion-user-info">
+                    <h4>Lorem Ipsum</h4>
+                    <p>Created 5 days ago by Lorem Ipsum</p>
+                  </div>
+                  <div class="dis-comment-views">
+                    <a href="#">29 Comments</a>
+                    <a href="#">100views</a>
+                  </div>
+                </div>
+                <div class="discussion-review-panel">
+                  <div class="discussion-user-img">
+                    <img src="../front-end/images/user-img.jpg" alt="img" width="60" height="60">
+                  </div>
+                  <div class="discussion-user-info">
+                    <h4>Lorem Ipsum</h4>
+                    <p>Created 5 days ago by Lorem Ipsum</p>
+                  </div>
+                  <div class="dis-comment-views">
+                    <a href="#">29 Comments</a>
+                    <a href="#">100views</a>
+                  </div>
+                </div>
+              </div>
+              <div class="tab-content-wrap">
+                <div class="discussion-review-panel">
+                  <div class="discussion-user-img">
+                    <img src="../front-end/images/user-img.jpg" alt="img" width="60" height="60">
+                  </div>
+                  <div class="discussion-user-info">
+                    <h4>Lorem Ipsum</h4>
+                    <p>Created 5 days ago by Lorem Ipsum</p>
+                  </div>
+                  <div class="dis-comment-views">
+                    <a href="#">29 Comments</a>
+                    <a href="#">100views</a>
+                  </div>
+                </div>
+                <div class="discussion-review-panel">
+                  <div class="discussion-user-img">
+                    <img src="../front-end/images/user-img.jpg" alt="img" width="60" height="60">
+                  </div>
+                  <div class="discussion-user-info">
+                    <h4>Lorem Ipsum</h4>
+                    <p>Created 5 days ago by Lorem Ipsum</p>
+                  </div>
+                  <div class="dis-comment-views">
+                    <a href="#">29 Comments</a>
+                    <a href="#">100views</a>
+                  </div>
+                </div>
+                <div class="discussion-review-panel">
+                  <div class="discussion-user-img">
+                    <img src="../front-end/images/user-img.jpg" alt="img" width="60" height="60">
+                  </div>
+                  <div class="discussion-user-info">
+                    <h4>Lorem Ipsum</h4>
+                    <p>Created 5 days ago by Lorem Ipsum</p>
+                  </div>
+                  <div class="dis-comment-views">
+                    <a href="#">29 Comments</a>
+                    <a href="#">100views</a>
+                  </div>
+                </div>
+                <div class="discussion-review-panel">
+                  <div class="discussion-user-img">
+                    <img src="../front-end/images/user-img.jpg" alt="img" width="60" height="60">
+                  </div>
+                  <div class="discussion-user-info">
+                    <h4>Lorem Ipsum</h4>
+                    <p>Created 5 days ago by Lorem Ipsum</p>
+                  </div>
+                  <div class="dis-comment-views">
+                    <a href="#">29 Comments</a>
+                    <a href="#">100views</a>
+                  </div>
+                </div>
+                <div class="discussion-review-panel">
+                  <div class="discussion-user-img">
+                    <img src="../front-end/images/user-img.jpg" alt="img" width="60" height="60">
+                  </div>
+                  <div class="discussion-user-info">
+                    <h4>Lorem Ipsum</h4>
+                    <p>Created 5 days ago by Lorem Ipsum</p>
+                  </div>
+                  <div class="dis-comment-views">
+                    <a href="#">29 Comments</a>
+                    <a href="#">100views</a>
+                  </div>
+                </div>
+              </div>
+              <div class="tab-content-wrap">
+                <div class="discussion-review-panel">
+                  <div class="discussion-user-img">
+                    <img src="../front-end/images/user-img.jpg" alt="img" width="60" height="60">
+                  </div>
+                  <div class="discussion-user-info">
+                    <h4>Lorem Ipsum</h4>
+                    <p>Created 5 days ago by Lorem Ipsum</p>
+                  </div>
+                  <div class="dis-comment-views">
+                    <a href="#">29 Comments</a>
+                    <a href="#">100views</a>
+                  </div>
+                </div>
+                <div class="discussion-review-panel">
+                  <div class="discussion-user-img">
+                    <img src="../front-end/images/user-img.jpg" alt="img" width="60" height="60">
+                  </div>
+                  <div class="discussion-user-info">
+                    <h4>Lorem Ipsum</h4>
+                    <p>Created 5 days ago by Lorem Ipsum</p>
+                  </div>
+                  <div class="dis-comment-views">
+                    <a href="#">29 Comments</a>
+                    <a href="#">100views</a>
+                  </div>
+                </div>
+                <div class="discussion-review-panel">
+                  <div class="discussion-user-img">
+                    <img src="../front-end/images/user-img.jpg" alt="img" width="60" height="60">
+                  </div>
+                  <div class="discussion-user-info">
+                    <h4>Lorem Ipsum</h4>
+                    <p>Created 5 days ago by Lorem Ipsum</p>
+                  </div>
+                  <div class="dis-comment-views">
+                    <a href="#">29 Comments</a>
+                    <a href="#">100views</a>
+                  </div>
+                </div>
+                <div class="discussion-review-panel">
+                  <div class="discussion-user-img">
+                    <img src="../front-end/images/user-img.jpg" alt="img" width="60" height="60">
+                  </div>
+                  <div class="discussion-user-info">
+                    <h4>Lorem Ipsum</h4>
+                    <p>Created 5 days ago by Lorem Ipsum</p>
+                  </div>
+                  <div class="dis-comment-views">
+                    <a href="#">29 Comments</a>
+                    <a href="#">100views</a>
+                  </div>
+                </div>
+                <div class="discussion-review-panel">
+                  <div class="discussion-user-img">
+                    <img src="../front-end/images/user-img.jpg" alt="img" width="60" height="60">
+                  </div>
+                  <div class="discussion-user-info">
+                    <h4>Lorem Ipsum</h4>
+                    <p>Created 5 days ago by Lorem Ipsum</p>
+                  </div>
+                  <div class="dis-comment-views">
+                    <a href="#">29 Comments</a>
+                    <a href="#">100views</a>
+                  </div>
+                </div>
+                <div class="discussion-review-panel">
+                  <div class="discussion-user-img">
+                    <img src="../front-end/images/user-img.jpg" alt="img" width="60" height="60">
+                  </div>
+                  <div class="discussion-user-info">
+                    <h4>Lorem Ipsum</h4>
+                    <p>Created 5 days ago by Lorem Ipsum</p>
+                  </div>
+                  <div class="dis-comment-views">
+                    <a href="#">29 Comments</a>
+                    <a href="#">100views</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="discussions-right mt-md-0 mt-4">
+          <div class="discussions-right-panel">
+            <h4>Popular Discussions</h4>
+            <div class="dis-right-panel-item">
+              <div class="dis-r-panel-item-left">
+                <a href="#"><i class="fa-regular fa-arrow-right-long"></i>Lorem Ipsum</a> 
+              </div>
+              <div class="dis-r-panel-item-right">
+                78
+              </div>
+            </div>
+            <div class="dis-right-panel-item">
+              <div class="dis-r-panel-item-left">
+                <a href="#"><i class="fa-regular fa-arrow-right-long"></i>Lorem Ipsum</a> 
+              </div>
+              <div class="dis-r-panel-item-right">
+                50
+              </div>
+            </div>
+            <div class="dis-right-panel-item">
+              <div class="dis-r-panel-item-left">
+                <a href="#"><i class="fa-regular fa-arrow-right-long"></i>Lorem Ipsum</a> 
+              </div>
+              <div class="dis-r-panel-item-right">
+                33
+              </div>
+            </div>
+            <div class="dis-right-panel-item">
+              <div class="dis-r-panel-item-left">
+                <a href="#"><i class="fa-regular fa-arrow-right-long"></i>Lorem Ipsum</a> 
+              </div>
+              <div class="dis-r-panel-item-right">
+                42
+              </div>
+            </div>
+            <div class="dis-right-panel-item">
+              <div class="dis-r-panel-item-left">
+                <a href="#"><i class="fa-regular fa-arrow-right-long"></i>Lorem Ipsum</a> 
+              </div>
+              <div class="dis-r-panel-item-right">
+                12
+              </div>
+            </div>
+          </div>
+          <div class="discussions-right-panel">
+            <h4>Popular Showcase</h4>
+            <div class="dis-right-panel-item">
+              <div class="dis-r-panel-item-left">
+                <a href="#"><i class="fa-regular fa-arrow-right-long"></i>Lorem Ipsum</a> 
+              </div>
+              <div class="dis-r-panel-item-right">
+                78
+              </div>
+            </div>
+            <div class="dis-right-panel-item">
+              <div class="dis-r-panel-item-left">
+                <a href="#"><i class="fa-regular fa-arrow-right-long"></i>Lorem Ipsum</a> 
+              </div>
+              <div class="dis-r-panel-item-right">
+                50
+              </div>
+            </div>
+            <div class="dis-right-panel-item">
+              <div class="dis-r-panel-item-left">
+                <a href="#"><i class="fa-regular fa-arrow-right-long"></i>Lorem Ipsum</a> 
+              </div>
+              <div class="dis-r-panel-item-right">
+                33
+              </div>
+            </div>
+            <div class="dis-right-panel-item">
+              <div class="dis-r-panel-item-left">
+                <a href="#"><i class="fa-regular fa-arrow-right-long"></i>Lorem Ipsum</a> 
+              </div>
+              <div class="dis-r-panel-item-right">
+                42
+              </div>
+            </div>
+            <div class="dis-right-panel-item">
+              <div class="dis-r-panel-item-left">
+                <a href="#"><i class="fa-regular fa-arrow-right-long"></i>Lorem Ipsum</a> 
+              </div>
+              <div class="dis-r-panel-item-right">
+                12
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ============== Discussions section End =============== -->
+
+<!-- ============== Social Widgets Start =============== -->
+<section class="main-content social-widgets-content py-0">
+  <div class="social-widgets-wrapper">
+    <div class="video-slider-left">
+      <h4>Watch Us on</h4>
+      <div class="video-logo d-flex align-items-center">
+        <a href="">
+          <svg width="178" height="52" viewBox="0 0 178 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M56.4054 14.0144C55.7681 11.6693 53.9017 9.82038 51.5346 9.18902C47.2101 8.01651 29.912 8.01651 29.912 8.01651C29.912 8.01651 12.614 8.01651 8.28944 9.14393C5.96786 9.77528 4.05597 11.6693 3.41867 14.0144C2.28064 18.2985 2.28064 27.1826 2.28064 27.1826C2.28064 27.1826 2.28064 36.1117 3.41867 40.3508C4.05597 42.6958 5.92234 44.5448 8.28944 45.1761C12.6595 46.3486 29.912 46.3486 29.912 46.3486C29.912 46.3486 47.2101 46.3486 51.5346 45.2212C53.9017 44.5899 55.7681 42.7409 56.4054 40.3959C57.5434 36.1117 57.5434 27.2277 57.5434 27.2277C57.5434 27.2277 57.5889 18.2985 56.4054 14.0144Z"
+              fill="#FF0000" />
+            <path d="M24.4009 18.976V35.3912L38.7856 27.1836L24.4009 18.976Z" fill="white" />
+            <path
+              d="M82.5481 42.9197C81.4556 42.1981 80.6817 41.0707 80.2265 39.4923C79.7713 37.9591 79.5437 35.8846 79.5437 33.3592V29.8868C79.5437 27.3163 79.8168 25.2418 80.3176 23.6634C80.8638 22.085 81.6832 20.9576 82.7757 20.2361C83.9137 19.5145 85.3704 19.1538 87.1913 19.1538C88.9666 19.1538 90.4233 19.5145 91.5158 20.2361C92.6083 20.9576 93.3822 22.1301 93.8829 23.6634C94.3836 25.1967 94.6567 27.2712 94.6567 29.8868V33.3592C94.6567 35.9297 94.4291 37.9591 93.9284 39.5374C93.4277 41.0707 92.6538 42.2432 91.5613 42.9648C90.4688 43.6863 88.9666 44.0471 87.1002 44.0471C85.1883 44.002 83.6406 43.6412 82.5481 42.9197ZM88.6935 39.1316C89.0121 38.3649 89.1487 37.0571 89.1487 35.2984V27.8123C89.1487 26.0986 89.0121 24.8359 88.6935 24.0242C88.3748 23.2125 87.8741 22.8517 87.1002 22.8517C86.3719 22.8517 85.8256 23.2576 85.5525 24.0242C85.2339 24.8359 85.0973 26.0986 85.0973 27.8123V35.2984C85.0973 37.0571 85.2339 38.3649 85.5525 39.1316C85.8256 39.8982 86.3719 40.3041 87.1457 40.3041C87.8741 40.3041 88.3748 39.9433 88.6935 39.1316Z"
+              fill="white" />
+            <path
+              d="M166.574 33.4045V34.6221C166.574 36.1554 166.62 37.3279 166.711 38.0945C166.802 38.8612 166.984 39.4474 167.303 39.7631C167.576 40.1239 168.031 40.3043 168.668 40.3043C169.488 40.3043 170.034 39.9886 170.353 39.3572C170.671 38.7259 170.808 37.6887 170.853 36.2005L175.542 36.471C175.588 36.6965 175.588 36.9671 175.588 37.3279C175.588 39.5376 174.996 41.2062 173.767 42.2885C172.538 43.3708 170.808 43.912 168.577 43.912C165.892 43.912 164.025 43.0552 162.933 41.3866C161.84 39.718 161.294 37.1475 161.294 33.63V29.436C161.294 25.8282 161.84 23.2126 162.978 21.5441C164.116 19.8755 166.028 19.0637 168.714 19.0637C170.58 19.0637 172.037 19.4245 173.038 20.101C174.04 20.7774 174.723 21.8597 175.132 23.2577C175.542 24.7008 175.724 26.6851 175.724 29.2105V33.3143H166.574V33.4045ZM167.257 23.3028C166.984 23.6636 166.802 24.2048 166.711 24.9714C166.62 25.738 166.574 26.9106 166.574 28.4889V30.2026H170.58V28.4889C170.58 26.9557 170.535 25.7831 170.444 24.9714C170.353 24.1597 170.125 23.6185 169.852 23.3028C169.579 22.9872 169.124 22.8068 168.577 22.8068C167.94 22.7617 167.53 22.9421 167.257 23.3028Z"
+              fill="white" />
+            <path
+              d="M69.2511 32.9544L63.0602 10.7218H68.4772L70.6622 20.7783C71.2085 23.2586 71.6182 25.3782 71.8913 27.1369H72.0279C72.2099 25.8742 72.6196 23.7998 73.2569 20.8234L75.533 10.7218H80.95L74.6681 32.9544V43.5972H69.2966V32.9544H69.2511Z"
+              fill="white" />
+            <path
+              d="M112.268 19.6039V43.6404H107.989L107.534 40.7091H107.397C106.259 42.9188 104.484 44.0463 102.162 44.0463C100.569 44.0463 99.3854 43.5051 98.6115 42.4679C97.8377 41.4306 97.4735 39.8072 97.4735 37.5523V19.6039H102.936V37.2367C102.936 38.319 103.073 39.0856 103.3 39.5366C103.528 39.9876 103.938 40.213 104.484 40.213C104.939 40.213 105.394 40.0777 105.849 39.7621C106.305 39.4915 106.623 39.1307 106.805 38.6798V19.6039H112.268Z"
+              fill="white" />
+            <path
+              d="M140.266 19.6039V43.6404H135.987L135.532 40.7091H135.395C134.257 42.9188 132.482 44.0463 130.16 44.0463C128.567 44.0463 127.383 43.5051 126.609 42.4679C125.836 41.4306 125.471 39.8072 125.471 37.5523V19.6039H130.934V37.2367C130.934 38.319 131.071 39.0856 131.298 39.5366C131.526 39.9876 131.935 40.213 132.482 40.213C132.937 40.213 133.392 40.0777 133.847 39.7621C134.303 39.4915 134.621 39.1307 134.803 38.6798V19.6039H140.266Z"
+              fill="white" />
+            <path d="M127.113 15.0961H121.696V43.5972H116.37V15.0961H110.953V10.7218H127.113V15.0961Z" fill="white" />
+            <path
+              d="M158.344 23.4379C158.025 21.9046 157.479 20.8223 156.751 20.1458C156.022 19.4694 154.975 19.1086 153.701 19.1086C152.699 19.1086 151.743 19.3792 150.878 19.9654C150.014 20.5066 149.331 21.2732 148.876 22.1752H148.83V9.50302H143.55V43.5961H148.056L148.602 41.3412H148.739C149.149 42.153 149.786 42.7843 150.651 43.2804C151.516 43.7314 152.426 44.0019 153.473 44.0019C155.34 44.0019 156.66 43.1451 157.525 41.4765C158.389 39.808 158.845 37.1473 158.845 33.5846V29.7965C158.799 27.0456 158.663 24.9261 158.344 23.4379ZM153.337 33.2239C153.337 34.9826 153.246 36.3355 153.109 37.3276C152.972 38.3198 152.699 39.0413 152.381 39.4472C152.017 39.8531 151.561 40.0785 151.015 40.0785C150.56 40.0785 150.15 39.9883 149.786 39.7629C149.422 39.5374 149.103 39.2217 148.876 38.8158V25.1966C149.058 24.5653 149.376 24.0241 149.831 23.5732C150.287 23.1673 150.787 22.9418 151.288 22.9418C151.834 22.9418 152.29 23.1673 152.563 23.5732C152.881 24.0241 153.064 24.7457 153.2 25.7378C153.337 26.775 153.382 28.2181 153.382 30.0671V33.2239H153.337Z"
+              fill="white" />
+          </svg>
+        </a>
+        <a href="#">
+          <svg width="286" height="40" viewBox="0 0 286 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M75.8585 38.7678C76.3227 38.7678 76.82 38.7347 77.3505 38.6519C77.8809 38.5857 78.2954 38.5195 78.5772 38.4864C79.6049 38.3043 80.3675 37.907 80.8814 37.278C81.3787 36.649 81.6273 35.722 81.6273 34.464C81.6273 33.0404 81.4781 32.0969 81.1797 31.6334C80.8814 31.1699 80.4172 30.9381 79.8204 30.9381C79.5055 30.9713 79.2071 31.0209 78.9419 31.0706C78.6766 31.1202 78.4114 31.1533 78.1627 31.1533C77.3339 31.1533 76.6708 30.8554 76.1569 30.2429C75.643 29.6304 75.3778 28.6704 75.3778 27.3627V4.8172C75.3778 3.24465 74.9634 2.05282 74.118 1.24171C73.2891 0.430607 72.0956 0.016777 70.5705 0.016777C69.0785 0.016777 67.9182 0.430607 67.1059 1.24171C66.2936 2.05282 65.8792 3.2612 65.8792 4.8172V27.6937C65.8792 31.4016 66.6915 34.166 68.316 36.0034C69.9074 37.8408 72.4271 38.7678 75.8585 38.7678Z"
+              fill="#252525" />
+            <path
+              d="M46.1261 27.9416C47.4523 27.4616 48.8116 27.1802 50.2206 27.1305C50.4196 27.1305 50.6185 27.0643 50.6351 26.8491C50.6516 26.6008 50.4196 26.5842 50.2372 26.5677C50.0383 26.5511 49.8228 26.5677 49.6239 26.5677C48.3309 26.5677 47.1207 26.965 45.9106 27.3954C45.7117 27.4616 45.463 27.5443 45.5459 27.7926C45.6288 28.0906 45.9106 28.0244 46.1261 27.9416Z"
+              fill="#252525" />
+            <path
+              d="M49.1958 23.8856C49.3781 23.8856 49.5605 23.8856 49.7428 23.8525C49.892 23.8194 50.0081 23.7366 50.0246 23.5711C50.0246 23.389 49.8257 23.2566 49.4444 23.2566C48.0188 23.2566 46.6098 23.4221 45.3002 24.018C45.0681 24.1173 44.72 24.2167 44.8858 24.5477C45.0515 24.8457 45.3333 24.6305 45.5323 24.5477C46.6927 24.0677 47.9194 23.8359 49.1958 23.8856Z"
+              fill="#252525" />
+            <path
+              d="M46.3591 29.664C46.4585 29.6309 46.6409 29.5812 46.8066 29.515C47.6189 29.2336 48.4478 28.9853 49.3098 28.8694C49.7573 28.8032 50.2049 28.7867 50.6691 28.737C50.8514 28.7205 51.0669 28.6542 51.0338 28.4225C51.0006 28.1908 50.7851 28.1742 50.6028 28.1742C50.2049 28.2073 49.8236 28.2404 49.4424 28.2735C48.3483 28.3728 47.3039 28.7039 46.2762 29.0681C46.0938 29.1343 45.8617 29.2336 45.9281 29.4819C45.9612 29.664 46.127 29.6805 46.3591 29.664Z"
+              fill="#252525" />
+            <path
+              d="M45.7838 26.3034C45.9164 26.2537 46.049 26.204 46.1816 26.1378C47.226 25.724 48.3201 25.5585 49.4307 25.4757C49.7457 25.4591 50.2927 25.6743 50.2762 25.1943C50.2762 24.7308 49.7125 25.0122 49.4473 24.9129C48.6682 24.9294 47.9222 25.0288 47.2094 25.1943C46.6458 25.3267 46.1153 25.5419 45.5683 25.724C45.3528 25.8068 45.1207 25.9226 45.2367 26.204C45.3694 26.4854 45.5849 26.3696 45.7838 26.3034Z"
+              fill="#252525" />
+            <path
+              d="M47.3081 32.925C48.3856 32.5939 49.4631 32.2794 50.6069 32.1304C50.8556 32.0973 51.1042 32.0808 51.3529 32.0477C51.5352 32.0311 51.701 31.9649 51.701 31.7663C51.701 31.518 51.5021 31.5014 51.3032 31.4849C51.2037 31.4849 51.1042 31.4849 50.955 31.4849C49.6786 31.6007 48.4022 31.9318 47.1589 32.3291C46.9268 32.4119 46.5456 32.445 46.6782 32.8091C46.7776 33.1402 47.076 32.9912 47.3081 32.925Z"
+              fill="#252525" />
+            <path
+              d="M62.2916 25.0294C62.2916 22.1822 61.6948 19.7323 60.5013 17.6797C59.3077 15.6272 57.6169 14.0546 55.4453 12.9455C53.2737 11.8365 50.7209 11.2902 47.8033 11.2902C45.5986 11.2902 43.6093 11.6047 41.819 12.2337C40.0453 12.8628 38.5036 13.7732 37.2272 14.965C35.9508 16.1569 34.9727 17.597 34.2931 19.2854C33.6134 20.9738 33.2819 22.894 33.2819 25.0294C33.2819 27.8434 33.8786 30.2933 35.1053 32.3459C36.3155 34.415 38.0063 36.0041 40.1779 37.0966C42.2169 38.1395 44.5874 38.6692 47.2894 38.7354C47.1071 38.0733 46.7258 37.676 45.7478 37.676C44.5211 37.6595 43.7751 36.7987 43.3772 35.6896C43.2115 35.2096 43.3275 34.8454 43.7419 34.5971C44.1729 34.3323 44.6537 34.1336 45.1013 33.8853C45.2836 33.786 45.5323 33.7032 45.4162 33.4549C45.3002 33.2232 45.0515 33.2729 44.8692 33.3556C44.4713 33.5377 44.1066 33.7529 43.7088 33.935C43.4767 34.0509 43.2115 34.2329 43.0126 33.9184C42.8136 33.6039 42.8799 33.306 43.2115 33.0908C43.6756 32.7763 44.1729 32.5611 44.6703 32.3128C44.8858 32.2135 45.2173 32.1307 45.0681 31.8162C44.9189 31.5017 44.6371 31.6838 44.4216 31.7665C44.0238 31.9321 43.6425 32.1472 43.2612 32.3293C43.0623 32.4286 42.8634 32.6273 42.6644 32.3624C42.4655 32.1141 42.4655 31.7996 42.7307 31.601C43.112 31.3196 43.5264 31.0878 43.9243 30.8561C44.1066 30.7568 44.289 30.674 44.4713 30.5747C44.6537 30.4919 44.8029 30.3595 44.7034 30.1443C44.6039 29.9291 44.3884 29.9457 44.2227 30.045C43.7917 30.2436 43.3938 30.4754 42.9628 30.6906C42.7473 30.7899 42.5152 31.0878 42.2666 30.7568C42.0677 30.4754 42.1506 30.1609 42.4324 29.9622C42.7805 29.7139 43.1452 29.4987 43.5099 29.267C43.6425 29.1842 43.8083 29.118 43.9409 29.0352C44.1398 28.9194 44.4713 28.8366 44.289 28.5221C44.1232 28.2407 43.8414 28.4228 43.6259 28.5221C43.2281 28.7207 42.8302 28.9525 42.4489 29.1677C42.2832 29.2504 42.1174 29.3829 41.9351 29.2173C41.7693 29.0683 41.7693 28.8697 41.8522 28.6545C42.0014 28.3235 42.2997 28.1414 42.5981 27.9427C42.8965 27.7441 43.2281 27.562 43.5596 27.3799C43.7585 27.264 44.0901 27.1647 43.9409 26.8668C43.7751 26.5192 43.4601 26.7509 43.2446 26.8502C42.8634 27.0489 42.4987 27.2806 42.134 27.4958C41.9516 27.5951 41.7693 27.8434 41.5538 27.5786C41.3714 27.3634 41.4212 27.1151 41.5869 26.9164C41.9682 26.4529 42.5152 26.1881 42.996 25.857C43.2446 25.6915 43.7751 25.5922 43.5264 25.2115C43.2944 24.8638 42.9297 25.2115 42.6644 25.3604C42.2997 25.5591 41.9848 25.8074 41.6532 26.0391C41.3549 26.2543 41.2057 26.2046 41.1228 25.8239C40.7912 24.4831 41.3051 23.374 42.2003 22.414C43.2115 21.3711 44.5045 20.7421 45.8804 20.2786C46.6098 20.0303 47.4055 20.4607 47.7536 21.189C47.8696 21.4208 47.9359 21.6856 48.0022 21.9339C48.0685 22.1491 48.1183 22.414 48.4332 22.3146C48.715 22.2319 48.6819 21.9836 48.6322 21.7684C48.4995 21.2221 48.3669 20.6759 47.9193 20.2786C47.8365 20.1958 47.6707 20.1462 47.737 19.9972C47.8199 19.8317 47.9857 19.8979 48.1183 19.9144C49.1295 20.0138 49.8257 20.6759 50.1572 21.7353C50.2401 22.0001 50.1738 22.5464 50.6214 22.3974C50.9861 22.2981 50.7706 21.8512 50.6877 21.5532C50.5219 20.9407 50.1407 20.4607 49.5605 19.9806C50.3396 19.9144 50.8037 20.262 51.185 20.709C51.5497 21.1394 51.7486 21.636 51.8481 22.1822C51.8812 22.3312 51.9144 22.5464 52.1133 22.5298C52.3786 22.4967 52.3123 22.265 52.2791 22.0995C52.2459 21.8512 52.1631 21.6029 52.0968 21.3215C52.5941 21.5863 53.1743 22.7781 53.0748 23.2085C53.0085 23.4734 52.8096 23.4237 52.6272 23.4072C52.3454 23.374 52.0636 23.3244 51.7652 23.2913C51.5994 23.2747 51.4171 23.3244 51.3839 23.523C51.3508 23.7217 51.5166 23.8044 51.6823 23.8375C51.9641 23.8872 52.2459 23.9203 52.5278 23.9865C52.8096 24.0527 53.0914 24.1355 53.2737 24.3672C53.3898 24.5162 53.4726 24.6818 53.3898 24.8638C53.2903 25.0459 53.1079 24.9797 52.9422 24.9632C52.6769 24.93 52.4117 24.8969 52.1465 24.8804C51.9476 24.8638 51.7486 24.9135 51.7321 25.1452C51.7155 25.377 51.8978 25.4432 52.0968 25.4763C52.4283 25.526 52.7433 25.5591 53.0748 25.6087C53.3069 25.6584 53.5058 25.7577 53.655 25.9398C53.771 26.0888 53.8539 26.2543 53.7544 26.4364C53.655 26.6185 53.4726 26.5688 53.3069 26.5523C52.9919 26.5357 52.6935 26.5026 52.3786 26.5026C52.2294 26.5026 52.0802 26.5523 52.047 26.7178C52.0139 26.9164 52.1631 26.9992 52.3454 27.0323C52.6438 27.082 52.9588 27.1151 53.2737 27.1482C53.5058 27.1813 53.7213 27.2309 53.9036 27.3799C54.086 27.5289 54.2186 27.7275 54.1357 27.9593C54.0528 28.191 53.8042 28.1579 53.5887 28.1414C53.3069 28.1248 53.0085 28.0752 52.7267 28.0752C52.5443 28.0752 52.3951 28.1414 52.3786 28.34C52.3786 28.5055 52.5112 28.5883 52.6604 28.6214C52.9256 28.6711 53.1908 28.6876 53.4561 28.7042C53.7545 28.7207 54.0363 28.7538 54.2683 28.9359C54.4507 29.0849 54.5667 29.2835 54.4838 29.5153C54.401 29.7139 54.1855 29.7139 54.0031 29.7139C53.6881 29.7139 53.3898 29.6974 53.0748 29.7139C52.8924 29.7139 52.7267 29.7636 52.7267 29.9788C52.7267 30.1774 52.8924 30.2436 53.0748 30.2602C53.3234 30.2767 53.5721 30.2767 53.8208 30.2933C54.086 30.3098 54.3512 30.3429 54.5833 30.4919C54.7822 30.6243 54.9148 30.8064 54.8651 31.0547C54.8154 31.3196 54.5667 31.303 54.3678 31.303C54.0528 31.303 53.7544 31.303 53.4395 31.303C53.2571 31.303 53.1079 31.3858 53.1079 31.5844C53.1079 31.7996 53.2903 31.8327 53.4561 31.8493C53.5224 31.8493 53.5887 31.8493 53.6384 31.8658C54.1523 31.9486 54.8817 31.6175 55.1469 32.2466C55.5116 33.157 55.7934 34.1171 55.1635 35.0772C54.7491 35.6896 54.1357 36.0538 53.4726 36.3518C52.9256 36.5835 52.362 36.7821 51.7984 36.9477C51.4337 37.0635 51.3011 37.2456 51.3508 37.6098C51.3839 37.8415 51.4337 38.0898 51.4668 38.3216C52.2459 38.1726 53.0085 37.974 53.7379 37.7257C55.5282 37.0966 57.0698 36.2028 58.3297 34.9944C59.5896 33.8026 60.5676 32.3459 61.2473 30.6409C61.9601 29.0352 62.2916 27.1316 62.2916 25.0294Z"
+              fill="#252525" />
+            <path
+              d="M46.9206 31.2691C47.8158 31.0043 48.6778 30.7063 49.6061 30.5739C50.0868 30.5077 50.5841 30.458 51.0814 30.3918C51.2638 30.3753 51.413 30.2925 51.3798 30.0939C51.3633 29.9283 51.2306 29.8787 51.0649 29.8621C50.9488 29.8621 50.8162 29.8621 50.5676 29.8621C49.3243 29.9449 48.0147 30.2925 46.7383 30.7229C46.5062 30.7891 46.1912 30.8719 46.2907 31.1864C46.3902 31.4678 46.6885 31.3353 46.9206 31.2691Z"
+              fill="#252525" />
+            <path
+              d="M51.7217 35.7898C51.4399 36.0216 51.1084 36.1871 50.6939 36.4519C52.2853 36.2368 52.9318 35.4091 52.8158 33.8365C52.7826 33.5055 52.8987 32.893 52.4014 32.9427C51.9538 32.9923 52.2522 33.522 52.3019 33.82C52.4014 34.5649 52.3516 35.2601 51.7217 35.7898Z"
+              fill="#252525" />
+            <path
+              d="M48.7512 36.4334C48.602 36.4996 48.3202 36.5162 48.4031 36.7645C48.486 36.9631 48.7346 36.8803 48.9004 36.8638C50.0939 36.6817 50.8896 35.7713 50.8731 34.5794C50.8565 34.1656 50.8565 33.7352 50.7073 33.3379C50.6576 33.189 50.5581 33.0896 50.3757 33.1393C50.2431 33.1724 50.1768 33.2883 50.1768 33.4042C50.1768 33.5366 50.1768 33.6856 50.1934 33.818C50.4255 35.374 50.21 35.7547 48.7512 36.4334Z"
+              fill="#252525" />
+            <path
+              d="M96.2698 27.9416C97.5959 27.4616 98.9552 27.1802 100.364 27.1305C100.563 27.1305 100.762 27.0643 100.779 26.8491C100.795 26.6008 100.563 26.5842 100.381 26.5677C100.182 26.5511 99.9664 26.5677 99.7675 26.5677C98.4745 26.5677 97.2644 26.965 96.0543 27.3954C95.8553 27.4616 95.6067 27.5443 95.6896 27.7926C95.789 28.0906 96.0708 28.0244 96.2698 27.9416Z"
+              fill="#252525" />
+            <path
+              d="M99.3481 23.8856C99.5305 23.8856 99.7128 23.8856 99.8951 23.8525C100.044 23.8194 100.16 23.7366 100.16 23.5711C100.16 23.389 99.9615 23.2566 99.5802 23.2566C98.1546 23.2566 96.7455 23.4221 95.4359 24.018C95.2039 24.1173 94.8557 24.2167 95.0215 24.5477C95.1873 24.8457 95.4691 24.6305 95.668 24.5477C96.845 24.0677 98.0717 23.8359 99.3481 23.8856Z"
+              fill="#252525" />
+            <path
+              d="M96.5106 29.664C96.61 29.6309 96.7924 29.5812 96.9747 29.515C97.787 29.2336 98.6159 28.9853 99.4779 28.8694C99.9254 28.8032 100.373 28.7867 100.821 28.737C101.003 28.7205 101.218 28.6542 101.185 28.4225C101.152 28.1908 100.937 28.1742 100.754 28.1742C100.356 28.2073 99.9752 28.2404 99.5939 28.2735C98.4998 28.3728 97.4555 28.7039 96.4277 29.0681C96.2453 29.1343 96.0133 29.2336 96.0796 29.4819C96.1293 29.664 96.2785 29.6805 96.5106 29.664Z"
+              fill="#252525" />
+            <path
+              d="M95.9345 26.3034C96.0672 26.2537 96.1998 26.204 96.3324 26.1378C97.3767 25.724 98.4708 25.5585 99.5815 25.4757C99.8964 25.4591 100.443 25.6743 100.443 25.1943C100.443 24.7308 99.8799 25.0122 99.6146 24.9129C98.8355 24.9294 98.0895 25.0288 97.3767 25.1943C96.8131 25.3267 96.2827 25.5419 95.7356 25.724C95.5201 25.8068 95.288 25.9226 95.4041 26.204C95.5035 26.4854 95.7356 26.3696 95.9345 26.3034Z"
+              fill="#252525" />
+            <path
+              d="M97.4604 32.925C98.5379 32.5939 99.632 32.2794 100.759 32.1304C101.008 32.0973 101.257 32.0808 101.489 32.0477C101.671 32.0311 101.837 31.9649 101.837 31.7663C101.837 31.518 101.638 31.5014 101.439 31.4849C101.339 31.4849 101.24 31.4849 101.091 31.4849C99.8143 31.6007 98.5379 31.9318 97.2946 32.3291C97.0625 32.4119 96.6813 32.445 96.8139 32.8091C96.9299 33.1402 97.2283 32.9912 97.4604 32.925Z"
+              fill="#252525" />
+            <path
+              d="M89.8335 37.0953C91.8725 38.1381 94.243 38.6678 96.945 38.734C96.7627 38.0719 96.3814 37.6746 95.4034 37.6746C94.1767 37.6581 93.4307 36.7973 93.0329 35.6883C92.8671 35.2082 92.9831 34.844 93.3976 34.5958C93.8286 34.3309 94.3093 34.1323 94.7569 33.884C94.9392 33.7846 95.1879 33.7019 95.0718 33.4536C94.9558 33.2218 94.7072 33.2715 94.5248 33.3543C94.127 33.5363 93.7623 33.7515 93.3644 33.9336C93.1323 34.0495 92.8671 34.2316 92.6682 33.9171C92.4693 33.6026 92.5356 33.3046 92.8671 33.0894C93.3313 32.7749 93.8286 32.5597 94.3259 32.3114C94.5414 32.2121 94.8729 32.1293 94.7237 31.8148C94.5745 31.5003 94.2927 31.6824 94.0772 31.7652C93.6794 31.9307 93.2981 32.1459 92.9168 32.328C92.7179 32.4273 92.519 32.6259 92.3201 32.3611C92.1211 32.1128 92.1211 31.7983 92.3864 31.5996C92.7676 31.3182 93.1821 31.0865 93.5799 30.8547C93.7623 30.7554 93.9446 30.6726 94.127 30.5733C94.3093 30.4906 94.4585 30.3581 94.359 30.1429C94.2596 29.9278 94.0441 29.9443 93.8783 30.0436C93.4473 30.2423 93.0495 30.474 92.6185 30.6892C92.403 30.7885 92.1709 31.0865 91.9222 30.7554C91.7233 30.474 91.8062 30.1595 92.088 29.9609C92.4361 29.7126 92.8008 29.4974 93.1655 29.2656C93.2981 29.1829 93.4639 29.1166 93.5965 29.0339C93.7954 28.918 94.127 28.8352 93.9446 28.5207C93.7788 28.2393 93.497 28.4214 93.2815 28.5207C92.8837 28.7194 92.4858 28.9511 92.1046 29.1663C91.9388 29.2491 91.773 29.3815 91.6073 29.216C91.4415 29.067 91.4415 28.8683 91.5244 28.6532C91.6736 28.3221 91.9719 28.14 92.2703 27.9414C92.5687 27.7427 92.9003 27.5606 93.2318 27.3786C93.4307 27.2627 93.7623 27.1634 93.6131 26.8654C93.4473 26.5178 93.1323 26.7495 92.9168 26.8489C92.5356 27.0475 92.1709 27.2792 91.8062 27.4944C91.6238 27.5938 91.4415 27.842 91.226 27.5772C91.0436 27.362 91.0934 27.1137 91.2591 26.9151C91.6404 26.4516 92.1874 26.1867 92.6682 25.8557C92.9168 25.6901 93.4473 25.5908 93.1986 25.2101C92.9666 24.8625 92.6019 25.2101 92.3366 25.3591C91.9719 25.5577 91.657 25.806 91.3254 26.0377C91.0271 26.2529 90.8779 26.2033 90.795 25.8226C90.4634 24.4817 90.9773 23.3727 91.8725 22.4126C92.8837 21.3697 94.1767 20.7407 95.5526 20.2772C96.282 20.0289 97.0777 20.4593 97.4258 21.1877C97.5418 21.4194 97.6081 21.6843 97.6744 21.9326C97.7407 22.1477 97.7905 22.4126 98.1054 22.3133C98.3872 22.2305 98.3541 21.9822 98.3044 21.767C98.1717 21.2208 98.0391 20.6745 97.5916 20.2772C97.5087 20.1945 97.3429 20.1448 97.4092 19.9958C97.4921 19.8303 97.6579 19.8965 97.7905 19.9131C98.8017 20.0124 99.4979 20.6745 99.8294 21.7339C99.9123 21.9988 99.846 22.545 100.294 22.396C100.658 22.2967 100.443 21.8498 100.36 21.5518C100.194 20.9394 99.8129 20.4593 99.2327 19.9793C100.012 19.9131 100.476 20.2607 100.857 20.7076C101.222 21.138 101.421 21.6346 101.52 22.1809C101.553 22.3298 101.587 22.545 101.786 22.5285C102.051 22.4954 101.984 22.2636 101.951 22.0981C101.918 21.8498 101.835 21.6015 101.769 21.3201C102.266 21.5849 102.846 22.7768 102.747 23.2072C102.681 23.472 102.482 23.4223 102.299 23.4058C102.018 23.3727 101.736 23.323 101.437 23.2899C101.272 23.2734 101.089 23.323 101.056 23.5217C101.023 23.7203 101.189 23.8031 101.355 23.8362C101.636 23.8858 101.918 23.9189 102.2 23.9852C102.482 24.0514 102.764 24.1341 102.946 24.3659C103.062 24.5149 103.145 24.6804 103.062 24.8625C102.962 25.0446 102.78 24.9783 102.614 24.9618C102.349 24.9287 102.084 24.8956 101.819 24.879C101.62 24.8625 101.421 24.9121 101.404 25.1439C101.388 25.3756 101.57 25.4418 101.769 25.4749C102.1 25.5246 102.415 25.5577 102.747 25.6074C102.979 25.657 103.178 25.7563 103.327 25.9384C103.443 26.0874 103.526 26.2529 103.427 26.435C103.327 26.6171 103.145 26.5674 102.979 26.5509C102.664 26.5343 102.366 26.5012 102.051 26.5012C101.902 26.5012 101.752 26.5509 101.719 26.7164C101.686 26.9151 101.835 26.9978 102.018 27.0309C102.316 27.0806 102.631 27.1137 102.929 27.1468C103.161 27.1799 103.377 27.2296 103.559 27.3786C103.742 27.5275 103.874 27.7262 103.791 27.9579C103.708 28.1897 103.46 28.1566 103.244 28.14C102.962 28.1235 102.664 28.0738 102.382 28.0738C102.2 28.0738 102.051 28.14 102.034 28.3386C102.034 28.5042 102.167 28.5869 102.316 28.62C102.581 28.6697 102.846 28.6863 103.112 28.7028C103.41 28.7194 103.692 28.7525 103.924 28.9346C104.106 29.0835 104.222 29.2822 104.139 29.5139C104.057 29.7126 103.841 29.7126 103.659 29.7126C103.344 29.7126 103.045 29.696 102.73 29.7126C102.548 29.7126 102.382 29.7622 102.382 29.9774C102.382 30.176 102.548 30.2423 102.73 30.2588C102.979 30.2754 103.228 30.2754 103.476 30.2919C103.742 30.3085 104.007 30.3416 104.239 30.4906C104.438 30.623 104.57 30.8051 104.521 31.0534C104.471 31.3182 104.222 31.3017 104.023 31.3017C103.708 31.3017 103.41 31.3017 103.095 31.3017C102.913 31.3017 102.764 31.3844 102.764 31.5831C102.764 31.7983 102.946 31.8314 103.112 31.8479C103.178 31.8479 103.244 31.8479 103.294 31.8645C103.808 31.9472 104.537 31.6162 104.803 32.2452C105.167 33.1556 105.449 34.1157 104.819 35.0758C104.405 35.6883 103.791 36.0524 103.128 36.3504C102.581 36.5821 102.018 36.7808 101.454 36.9463C101.089 37.0622 100.957 37.2443 101.006 37.6084C101.04 37.8402 101.089 38.0885 101.122 38.3202C101.902 38.1712 102.664 37.9726 103.393 37.7243C105.184 37.0953 106.725 36.2014 107.985 34.993C109.245 33.8012 110.223 32.3445 110.903 30.6395C111.583 28.9346 111.914 27.0309 111.914 24.9287C111.914 22.0815 111.317 19.6317 110.124 17.5791C108.93 15.5265 107.239 13.9539 105.068 12.8448C102.896 11.7358 100.343 11.1895 97.4258 11.1895C95.221 11.1895 93.2318 11.504 91.4415 12.1331C89.6677 12.7621 88.1261 13.6725 86.8497 14.8643C85.5732 16.0562 84.5952 17.4963 83.9155 19.1847C83.2359 20.8732 82.9043 22.7933 82.9043 24.9287C82.9043 27.7427 83.5011 30.1926 84.7278 32.2452C85.9711 34.4137 87.6619 36.0028 89.8335 37.0953Z"
+              fill="#252525" />
+            <path
+              d="M97.0643 31.2691C97.9594 31.0043 98.8214 30.7063 99.7497 30.5739C100.23 30.5077 100.728 30.458 101.225 30.3918C101.407 30.3753 101.557 30.2925 101.523 30.0939C101.507 29.9283 101.374 29.8787 101.209 29.8621C101.092 29.8621 100.96 29.8621 100.711 29.8621C99.4679 29.9449 98.1583 30.2925 96.8819 30.7229C96.6498 30.7891 96.3349 30.8719 96.4343 31.1864C96.5338 31.4678 96.8322 31.3353 97.0643 31.2691Z"
+              fill="#252525" />
+            <path
+              d="M102.967 33.8365C102.933 33.5055 103.049 32.893 102.552 32.9427C102.105 32.9923 102.403 33.522 102.453 33.82C102.569 34.5814 102.519 35.2601 101.889 35.7898C101.607 36.0216 101.276 36.1871 100.861 36.4519C102.436 36.2533 103.083 35.4257 102.967 33.8365Z"
+              fill="#252525" />
+            <path
+              d="M99.0519 36.8638C100.245 36.6817 101.041 35.7713 101.025 34.5794C101.008 34.1656 101.008 33.7352 100.859 33.3379C100.809 33.189 100.71 33.0896 100.527 33.1393C100.395 33.1724 100.328 33.2883 100.328 33.4042C100.328 33.5366 100.328 33.6856 100.345 33.818C100.56 35.3905 100.345 35.7713 98.9027 36.4499C98.7536 36.5162 98.4717 36.5327 98.5546 36.781C98.6209 36.9631 98.8696 36.8803 99.0519 36.8638Z"
+              fill="#252525" />
+            <path
+              d="M150.555 21.0049C150.555 19.8734 150.252 18.9934 149.646 18.39C149.04 17.7865 148.181 17.4848 147.045 17.4848H139.824C138.713 17.4848 137.855 17.7614 137.274 18.2894C136.668 18.8174 136.365 19.5969 136.365 20.6026C136.365 21.6083 136.668 22.3878 137.274 22.9409C137.88 23.4941 138.738 23.7707 139.824 23.7707H143.233V29.2017C143.788 29.076 144.344 28.9251 144.899 28.7491L143.233 32.1183V29.2017C142.627 29.3525 142.021 29.4783 141.415 29.5788C140.253 29.78 139.193 29.8806 138.208 29.8806C135.027 29.8806 132.603 29.0257 130.987 27.3411C129.371 25.6564 128.538 23.1421 128.538 19.8483C128.538 17.6357 128.891 15.775 129.598 14.2413C130.305 12.7075 131.391 11.5761 132.855 10.7715C134.295 9.99203 136.112 9.61487 138.309 9.61487C139.572 9.61487 140.783 9.74059 141.92 9.99203C143.056 10.2435 144.116 10.5703 145.101 11.0481C146.035 11.4755 146.894 11.5761 147.626 11.3749C148.383 11.1486 148.964 10.7463 149.419 10.1177C149.848 9.48916 150.126 8.78514 150.252 8.03084C150.353 7.27653 150.277 6.54737 149.949 5.84335C149.646 5.13933 149.065 4.61132 148.207 4.20902C146.591 3.35414 144.924 2.80098 143.233 2.47412C141.541 2.1724 139.875 2.02154 138.259 2.02154C135.254 2.02154 132.578 2.42383 130.229 3.25357C127.881 4.0833 125.887 5.29019 124.245 6.84909C122.63 8.43313 121.367 10.3189 120.509 12.5064C119.65 14.6939 119.221 17.1579 119.221 19.8734C119.221 23.3935 119.928 26.4359 121.367 29.076C122.806 31.716 124.877 33.7527 127.629 35.211C130.381 36.6693 133.714 37.3985 137.653 37.3985C139.445 37.3985 141.238 37.2476 143.031 36.971C144.823 36.6944 146.49 36.267 148.005 35.7641C148.888 35.4624 149.52 34.9847 149.924 34.3058C150.328 33.6269 150.53 32.7972 150.53 31.8166V21.0049H150.555Z"
+              fill="white" />
+            <path d="M144.49 28.3015C144.153 28.5127 143.816 28.6938 143.479 28.8446V32.3446L144.49 28.3015Z"
+              fill="white" />
+            <path d="M164.706 19.2046V17.1831C164.227 17.8095 163.908 18.4643 163.695 19.2046H164.706Z"
+              fill="white" />
+            <path
+              d="M173.079 12.8443C172.605 12.3349 171.906 12.1057 170.982 12.1311C168.986 12.2076 167.314 12.7934 165.991 13.9651C165.092 14.7292 164.419 15.6971 163.994 16.8433V18.6517H163.52C163.62 18.015 163.795 17.4037 163.994 16.8433V16.6141C163.994 15.2131 163.645 14.1179 162.921 13.3538C162.222 12.5896 161.174 12.2076 159.826 12.2076C158.479 12.2076 157.431 12.5896 156.707 13.3538C155.983 14.1179 155.609 15.1877 155.609 16.6141V32.941C155.609 34.3929 155.983 35.4881 156.732 36.2523C157.48 37.0164 158.579 37.3985 159.976 37.3985C161.399 37.3985 162.472 37.0164 163.221 36.2523C163.969 35.4881 164.344 34.3929 164.344 32.941V24.8412C164.344 23.262 164.718 22.0649 165.492 21.2753C166.265 20.4602 167.513 19.9762 169.21 19.8234L170.333 19.7215C171.681 19.5942 172.605 19.1866 173.079 18.4989C173.553 17.8112 173.802 16.8688 173.802 15.6971C173.778 14.2962 173.528 13.3538 173.079 12.8443Z"
+              fill="white" />
+            <path d="M183.91 22.2369H182.899V26.28H183.91V22.2369Z" fill="white" />
+            <path
+              d="M194.21 23.0242C192.159 22.5925 189.441 22.3639 186.03 22.3639H184.158V26.5035H186.03C187.312 26.5035 188.389 26.6051 189.235 26.7828C190.082 26.9606 190.697 27.24 191.082 27.6209C191.492 28.0019 191.672 28.4844 191.672 29.0685C191.672 29.8304 191.389 30.4399 190.851 30.9478C190.312 31.4303 189.518 31.6843 188.492 31.6843C187.671 31.6843 186.928 31.5065 186.286 31.151C185.645 30.7954 185.133 30.2875 184.722 29.6526C184.312 29.0177 184.132 28.2558 184.132 27.4177V26.5289H183.286V22.3893H184.132V21.7036C184.132 20.5354 184.44 19.6973 185.056 19.1894C185.671 18.7068 186.722 18.4529 188.21 18.4529C189.005 18.4529 189.902 18.5545 190.877 18.7322C191.877 18.91 192.979 19.2402 194.21 19.6973C195.108 20.0275 195.851 20.0782 196.492 19.8497C197.134 19.6211 197.621 19.2148 197.954 18.6815C198.313 18.1227 198.467 17.5132 198.441 16.8529C198.416 16.1926 198.211 15.5831 197.8 14.9736C197.39 14.3895 196.749 13.9324 195.903 13.6022C194.313 13.0181 192.851 12.6118 191.518 12.434C190.184 12.2308 188.953 12.1292 187.825 12.1292C185.107 12.1292 182.876 12.5102 181.107 13.2975C179.337 14.0593 178.029 15.253 177.132 16.8275C176.26 18.4275 175.824 20.4592 175.824 22.948V32.8779C175.824 34.3255 176.183 35.4176 176.875 36.1794C177.568 36.9413 178.568 37.3223 179.901 37.3223C181.26 37.3223 182.286 36.9413 183.004 36.1794C183.62 35.5191 183.979 34.6049 184.055 33.4113C183.927 33.0557 183.825 32.6748 183.773 32.2938L184.081 31.6081V32.8779C184.081 33.0557 184.081 33.2335 184.055 33.4113C184.261 33.9954 184.543 34.5287 184.927 34.9858C185.517 35.7477 186.286 36.3318 187.261 36.7636C188.21 37.1953 189.312 37.3985 190.543 37.3985C192.441 37.3985 194.082 37.0429 195.518 36.3572C196.954 35.6715 198.082 34.7319 198.877 33.5382C199.698 32.3446 200.082 30.9732 200.082 29.424C200.082 27.6463 199.621 26.2495 198.698 25.2337C197.749 24.2178 196.262 23.4813 194.21 23.0242Z"
+              fill="white" />
+            <path
+              d="M248.599 31.3338V32.7575C248.599 32.9568 248.599 33.1561 248.684 33.3554C249.105 32.9568 249.357 32.5297 249.61 32.1026L248.599 31.3338Z"
+              fill="white" />
+            <path d="M249.61 22.2369H248.599V26.28H249.61V22.2369Z" fill="white" />
+            <path
+              d="M245.714 36.7863C246.624 36.3541 247.386 35.7695 247.952 35.0069C248.297 34.5493 248.592 34.0155 248.789 33.4309C248.789 33.2529 248.764 33.075 248.764 32.8971V31.6261L249.059 32.3124C249.01 32.7191 248.912 33.075 248.789 33.4309C248.863 34.6256 249.207 35.5407 249.797 36.2016C250.486 36.9642 251.47 37.3455 252.774 37.3455C254.053 37.3455 255.013 36.9642 255.677 36.2016C256.341 35.439 256.686 34.346 256.686 32.8971V22.958C256.686 20.4669 256.267 18.4333 255.431 16.8319C254.595 15.2304 253.315 14.0611 251.618 13.2985C249.92 12.5359 247.78 12.1292 245.172 12.1292C244.09 12.1292 242.909 12.2309 241.63 12.4343C240.351 12.6376 238.948 13.0189 237.423 13.6036C236.587 13.934 235.996 14.3916 235.603 14.9762C235.209 15.5609 234.988 16.1964 234.988 16.8573C234.963 17.5182 235.135 18.1283 235.455 18.6875C235.8 19.2467 236.267 19.628 236.857 19.8568C237.448 20.0856 238.186 20.0347 239.047 19.7043C240.228 19.2467 241.285 18.9163 242.245 18.7383C243.204 18.5604 244.041 18.4587 244.803 18.4587C246.23 18.4587 247.239 18.7129 247.829 19.1959C248.42 19.6789 248.715 20.5177 248.715 21.7124V22.3988H249.527V26.5422H248.715V27.4318C248.715 28.2961 248.518 29.0333 248.149 29.6688C247.78 30.3043 247.263 30.8127 246.648 31.1685C246.033 31.5244 245.32 31.7024 244.533 31.7024C243.549 31.7024 242.786 31.4482 242.27 30.9652C241.753 30.4822 241.482 29.8467 241.482 29.0841C241.482 28.4995 241.679 28.0165 242.048 27.6352C242.417 27.2539 243.032 26.9743 243.819 26.7964C244.631 26.6184 245.64 26.5167 246.894 26.5167H248.69V22.3733H246.894C243.623 22.3733 241.015 22.6021 239.047 23.0343C237.079 23.4664 235.652 24.2036 234.766 25.2203C233.881 26.2371 233.438 27.6352 233.438 29.4146C233.438 30.9652 233.831 32.3378 234.594 33.5326C235.381 34.7273 236.439 35.6678 237.817 36.3541C239.194 37.0405 240.793 37.3963 242.589 37.3963C243.746 37.4218 244.779 37.2184 245.714 36.7863Z"
+              fill="white" />
+            <path
+              d="M285.086 31.8472L279.111 24.3277L277.875 25.7912V22.7632L279.111 24.3277L284.305 18.1708C285.061 17.2876 285.414 16.4045 285.389 15.5213C285.363 14.6381 285.01 13.9064 284.355 13.326C283.699 12.7456 282.767 12.4428 281.582 12.4428C280.371 12.4428 279.439 12.6699 278.733 13.1494C278.027 13.6288 277.27 14.3353 276.463 15.3194L270.513 22.5614H270.412V6.43735C270.412 4.99906 270.034 3.91403 269.278 3.15703C268.522 2.40004 267.437 2.02154 266.026 2.02154C264.664 2.02154 263.605 2.40004 262.849 3.15703C262.092 3.91403 261.739 4.99906 261.739 6.43735V32.9827C261.739 34.4209 262.118 35.506 262.849 36.263C263.605 37.02 264.664 37.3985 266.026 37.3985C268.95 37.3985 270.412 35.9349 270.412 33.0079V26.9519H270.513L276.615 34.4714C277.396 35.4807 278.178 36.2125 278.959 36.6919C279.741 37.1714 280.775 37.3985 282.086 37.3985C283.17 37.3985 284.052 37.1461 284.733 36.6162C285.439 36.0863 285.842 35.405 285.969 34.5471C286.095 33.6387 285.817 32.7556 285.086 31.8472Z"
+              fill="white" />
+            <path d="M277.912 25.2692L278.922 23.8036L277.912 22.2369V25.2692Z" fill="white" />
+            <path d="M213.223 17.1831V16.1723C212.864 16.4755 212.505 16.8192 212.212 17.1831H213.223Z"
+              fill="white" />
+            <path
+              d="M229.369 22.7337C229.369 20.3903 229.06 18.4249 228.415 16.8879C227.77 15.3509 226.842 14.1918 225.553 13.4611C224.289 12.7304 222.665 12.3524 220.705 12.3524C218.797 12.3524 217.121 12.7556 215.626 13.5871C214.594 14.1666 213.718 14.9225 212.996 15.8548V17.1147H212.248C212.48 16.6611 212.764 16.258 213.047 15.8548V6.43106C213.047 4.99482 212.66 3.91133 211.861 3.15541C211.087 2.3995 209.979 2.02154 208.535 2.02154C207.142 2.02154 206.059 2.3995 205.286 3.15541C204.512 3.91133 204.126 4.99482 204.126 6.43106V32.9889C204.126 34.4252 204.512 35.5087 205.286 36.2646C206.059 37.0205 207.142 37.3985 208.535 37.3985C211.526 37.3985 213.021 35.937 213.047 32.9889V23.5904C213.047 22.1793 213.46 21.0707 214.259 20.2391C215.058 19.4076 216.116 19.0045 217.456 19.0045C218.462 19.0045 219.21 19.3068 219.725 19.9368C220.241 20.5667 220.499 21.5998 220.499 23.0612V32.9889C220.499 34.4252 220.886 35.5087 221.659 36.2646C222.433 37.0205 223.516 37.3985 224.96 37.3985C226.404 37.3985 227.487 37.0205 228.26 36.2646C229.034 35.5087 229.395 34.4252 229.395 32.9889V22.7337H229.369Z"
+              fill="white" />
+            <path
+              d="M19.0207 38.6684C26.961 36.8641 32.0336 29.0675 30.2599 21.3372C28.4032 13.2261 20.38 8.27669 12.2241 10.2796C11.0968 10.561 10.8482 10.2134 10.8813 9.17056C10.9311 7.82975 10.8979 6.5055 10.8813 5.16469C10.8316 2.25133 8.62688 -0.0164632 5.89167 9.00411e-05C3.15647 0.0166432 0.984882 2.31754 0.968305 5.24745C0.951728 8.55809 0.968305 11.8687 0.968305 15.1794C0.968305 18.2417 0.951728 21.2875 0.968305 24.3333C1.00146 33.7852 9.80384 40.7541 19.0207 38.6684ZM25.2702 27.8426C25.2205 27.9584 25.121 28.0081 24.8723 28.0412C24.3253 27.8426 23.6622 27.5943 23.0157 27.3294C22.8831 27.2798 22.8334 27.1308 22.8997 26.9818C22.9494 26.8494 23.0654 26.7335 23.2146 26.7666C23.8943 26.9156 24.5739 27.1308 25.1873 27.4784C25.3033 27.5446 25.3199 27.7101 25.2702 27.8426ZM25.9498 25.79C25.9996 26.0548 25.8172 26.1707 25.6017 26.2204C25.2205 26.2866 23.6125 26.4521 23.1815 26.4852C22.9826 26.5018 22.8168 26.4024 22.7836 26.1873C22.7505 25.9721 22.9162 25.8396 23.0986 25.8231C23.9109 25.7238 24.7066 25.6244 25.5188 25.5251C25.7178 25.5086 25.9167 25.5582 25.9498 25.79ZM22.8831 24.7306C23.4633 24.3333 24.0766 24.0022 24.7563 23.8036C24.8889 23.7539 25.0215 23.8533 25.0713 23.9857C25.1044 24.085 25.1044 24.1678 25.0215 24.3002C24.9718 24.3664 24.9055 24.4326 24.8392 24.4657C24.3419 24.6975 23.7451 24.9954 23.1483 25.2603C23.0157 25.3099 22.8665 25.2437 22.8002 25.0947C22.7671 24.9623 22.7671 24.8133 22.8831 24.7306ZM9.87015 18.1258C12.307 16.0567 15.2577 15.6429 18.3244 15.7422C18.9875 15.7587 19.3025 16.2057 19.3025 16.8347C19.3025 17.6789 19.5345 18.4238 19.9987 19.1356C20.3302 19.6487 20.5126 20.2612 20.3468 20.8902C20.2308 21.3041 20.3965 21.5855 20.6949 21.8503C21.242 22.3304 21.7724 22.827 22.3029 23.3235C22.7173 23.7208 22.7505 24.1015 22.1869 24.3995C21.9548 24.5319 21.7227 24.6975 21.8553 24.9789C22.1537 25.641 21.7227 25.8231 21.242 25.9886C21.0099 26.0714 20.7778 26.1541 20.3468 26.3197C20.9436 26.5018 21.358 26.6176 21.7559 26.7501C22.104 26.8659 22.2532 27.0811 21.9714 27.4122C21.6232 27.8095 21.673 28.2067 21.8222 28.6868C22.0211 29.3324 21.7559 29.6965 21.1094 29.8124C20.8607 29.8621 20.612 29.8621 20.3634 29.8786C18.888 29.9283 18.4902 30.309 18.3742 31.7822C18.3576 32.0636 18.3244 32.3285 18.3576 32.5933C18.457 33.1893 18.2084 33.3051 17.6779 33.1893C15.8047 32.8251 13.9315 32.4609 12.0417 32.1299C11.5113 32.0305 11.3124 31.8319 11.3621 31.2691C11.561 29.5807 11.0968 28.0909 10.0193 26.7666C9.43915 26.0548 9.07446 25.2106 8.74292 24.3664C7.7483 21.9496 8.11299 19.6156 9.87015 18.1258Z"
+              fill="#252525" />
+          </svg>
+        </a>
+      </div>
+      <div class="led-bg">
+        <div class="video-slider-part">
+          <div class="v-slider">
+            <div class="item">
+              <iframe width="100%" height="315" src="https://www.youtube.com/embed/GCoGtOEffL0" title="Customer Review" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            </div>
+            <div class="item">
+              <iframe width="100%" height="315" src="https://www.youtube.com/embed/GCoGtOEffL0" title="Customer Review" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            </div>
+            <div class="item">
+              <iframe width="100%" height="315" src="https://www.youtube.com/embed/GCoGtOEffL0" title="Customer Review" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            </div>
+            <div class="item">
+              <iframe width="100%" height="315" src="https://www.youtube.com/embed/GCoGtOEffL0" title="Customer Review" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            </div>
+            
+              <div class="item">
+                <iframe width="100%" height="315" src="https://www.youtube.com/embed/GCoGtOEffL0" title="Customer Review" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+              </div>
+            
+            
+              <div class="item">
+                <iframe width="100%" height="315" src="https://www.youtube.com/embed/GCoGtOEffL0" title="Customer Review" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+              </div>
+            
+            
+              <div class="item">
+                <iframe width="100%" height="315" src="https://www.youtube.com/embed/GCoGtOEffL0" title="Customer Review" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+              </div>
+            
+            
+              <div class="item">
+                <iframe width="100%" height="315" src="https://www.youtube.com/embed/GCoGtOEffL0" title="Customer Review" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+              </div>
+            
+            
+              <div class="item">
+                <iframe width="100%" height="315" src="https://www.youtube.com/embed/GCoGtOEffL0" title="Customer Review" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+              </div>
+            
+            
+              <div class="item">
+                <iframe width="100%" height="315" src="https://www.youtube.com/embed/GCoGtOEffL0" title="Customer Review" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+              </div>
+            
+          </div>
+        </div>
+        <div class="video-man1" data-aos="fade-right">
+          <img src="/front-end/images/youtube-man1.png" alt="img" width="208" height="152">
+        </div>
+        <div class="video-man2" data-aos="fade-up" data-aos-delay="500">
+          <img src="/front-end/images/youtube-man2.png" alt="img" width="127" height="155">
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="social-widgets-right">
+        <div class="row">
+          <!-- <div class="col-sm-6">
+            <div class="social-head">
+              <h3>Twitter</h3>
+            </div>
+            <div class="social-widgets">
+              <a style="height:500px;" class="twitter-timeline" href="https://twitter.com/GrahakBolo?ref_src=twsrc%5Etfw">Tweets by GrahakBolo</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+            </div>
+          </div> -->
+          <div class="col-sm-12 my-auto">
+            <!-- <div class="social-head mt-sm-0 mt-4">
+              <h3>Facebook</h3>
+            </div> -->
+            <div class="game-zone">
+              <h3>Game Zone</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ============== Social Widgets End =============== -->
+
+<%- include('common/footer') -%>   

@@ -1,0 +1,25 @@
+<!-- ============== Inner Heading Start =============== -->
+<section class="inner-page-heading">
+    <div class="container">
+       <div class="inner-page-heading-in">
+          <div class="left-inner-head">
+            <% if(menu_active_id == 'business' || menu_active_id == 'survey' || menu_active_id == 'register-complain' || menu_active_id == 'basic-complain-free' || menu_active_id == 'premium-register-complain' || menu_active_id == 'complain-profile'){ %> <a href="#" class="back-browser"><i class="fa-solid fa-angle-left"></i></a><% } %><h1 class="m-0"><%= page_title %></h1>
+          </div>
+          <div class="right-inner-head">
+             <div class="bread-crumb">
+                <ul>
+                   <li><a href="/">Home</a></li>
+                   <% if(menu_active_id == 'company-listing'){ %>
+                   <li><a href="/categories">Categories</a></li>
+                   <% } %>
+                   <% if( typeof ParentCategories !== 'undefined' && ParentCategories.length > 0 ){ %>
+                     <li><a href="/category/<%- ParentCategories[0].category_slug %>"><%- ParentCategories[0].category_name %></a></li>
+                   <% } %>
+                   <li><%= page_title %></li>
+                </ul>
+             </div>
+          </div>
+       </div>
+    </div>
+ </section>
+ <!-- ============== Inner Heading End =============== -->

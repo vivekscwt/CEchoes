@@ -1,0 +1,685 @@
+<%- include('common/header') -%>
+<link href="/front-end/css/discussion-style.css" rel="stylesheet" type="text/css">
+<link href="/front-end/css/company-profile-dashboard.css" rel="stylesheet" type="text/css">
+<script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
+<%- include('common/header-banner') -%>
+
+<!-- ============== Section1 Start =============== -->
+<section class="main-content bottom-main-content">
+  <div class="discussion-page-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+            <div class="discussions-left">
+                <div id="horizontalTab">
+                    <div class="survey-details-with-date">
+                        <h2><%- CompanySurveyDetails[0].title %></h2>
+                        <% if(company && company.membership_type_id>=3 ){ %>
+                        <div class="survet-update-form">
+                            <%
+                                var created_at = CompanySurveyDetails[0].created_at;
+                                var created_at_date = new Date(created_at);
+                                var formatted_created_at_Date = created_at_date.toISOString().split('T')[0];
+
+                                var expire_at = CompanySurveyDetails[0].expire_at;
+                                var expire_at_date = new Date(expire_at);
+                                var formatted_expire_at_Date = expire_at_date.toISOString().split('T')[0];
+                            %>
+                            <form method="post" action="" id="survey_update_form" name="survey_update_form">
+                                <div class="all-inputs">
+                                    <div class="custom-form">
+                                    <label><span style="background-color: #ffffff;">Started at:</span> </label>
+                                    <input type="date" class="form-control" name="created_at" value="<%- formatted_created_at_Date %>" readonly>
+                                    </div>
+                                    <div class="custom-form">
+                                    <label><span style="background-color: #ffffff;">Expire at:</span></label>
+                                    <input type="date" class="form-control" name="expire_at" value="<%- formatted_expire_at_Date %>">
+                                    </div>
+                                    <input type="hidden" name="survey_id" value="<%- CompanySurveyDetails[0].id %>">
+                                    <input type="submit" name="update_survey" class="btn-default btn-dark" value="Update">
+                                </div>
+                            </form>
+                            <p class="survey-update-message" style="display: none;"></p>
+                        </div>
+                        <% } %>
+                    </div>
+                    <div class="submissions-result-wrapper">
+                        <p>Total submissions: <%- companySurveySubmissions.length %></p>
+                        <% if(companySurveySubmissions.length > 0){ %>
+                            <div class="radio-questions">
+                            <% CompanySurveyDetails[0].questions.forEach((qun, index)=>{  %>
+                                <% if( qun.type == 'type_radio' ){ %>
+                                    <h5><%- qun.question %></h5>
+                                    <% var question_name = 'question_'+(index+1); %>
+                                    <ol>
+                                        <% qun.options.forEach((opt)=>{  
+                                            let opt_count = 0;
+                                            companySurveySubmissions.forEach(submission => {
+                                                if (submission.answer && submission.answer[question_name] && submission.answer[question_name] === opt) {
+                                                    opt_count++;
+                                                }
+                                            });
+                                            var opt_percentage = (opt_count / companySurveySubmissions.length) * 100;
+                                        %>
+                                        <li>
+                                            <span class="position-relative" style="z-index: 9;">
+                                                <%= opt %> : (<%- opt_count %>/<%- companySurveySubmissions.length %>)
+                                            </span> 
+                                            <span class="suvey-progress-value" style="width:<%- opt_percentage.toFixed(2) %>%"></span>
+                                        </li>
+                                        <% }) %>
+                                    </ol>
+                                <% } %>
+                                
+                                <% if( qun.type == 'type_checkbox' ){ %>
+                                    <h5><%- qun.question %></h5>
+                                    <%  %>
+                                    <ol>
+                                        <% qun.options.forEach((opt, option_index)=>{  %>
+                                            <%
+                                                var question_name = 'question_'+(index+1)+'_'+(option_index+1);
+                                                let opt_count = 0;
+                                                companySurveySubmissions.forEach(submission => {
+                                                    if (submission.answer && submission.answer[question_name]) {
+                                                        if ( submission.answer[question_name] === opt) {
+                                                            opt_count++;
+                                                        }
+                                                    }
+                                                });
+                                                var opt_percentage = (opt_count/companySurveySubmissions.length)*100;
+                                            %>
+                                            <li><span class="position-relative" style="z-index: 9;"><%- opt %> : (<%- opt_count %>/<%- companySurveySubmissions.length %>)</span> <span class="suvey-progress-value" style="width:<%- opt_percentage.toFixed(2) %>%"></span></li>
+                                        <% }) %>
+                                    </ol>
+                                <% } %>
+                                <% if( qun.type == 'type_ratings' ){ %>
+                                    <h5><%- qun.question %></h5>
+                                    <%  %>
+                                    <ol class="survey-rating-emoji-list">
+                                        <% 
+                                        let counter = 1;
+                                        let ratings = {};
+                                        let ratingsCount = {
+                                        '0-2': 0,
+                                        '2.5-3.5': 0,
+                                        '4-5': 0
+                                        };
+                                        for (let i = 0.5; i <= 5; i += 0.5) {  %>
+                                            <%
+                                                var question_name = 'question_'+(index+1);
+                                                let opt_count = 0;
+                                                companySurveySubmissions.forEach(submission => {
+                                                    if (submission.answer && submission.answer[question_name]) {
+                                                        if ( submission.answer[question_name] == i ) {
+                                                            opt_count++;
+                                                        }
+                                                    }
+                                                });
+                                                var opt_percentage = (opt_count/companySurveySubmissions.length)*100;
+                                                AllRatingTags.forEach(tag => {
+                                                    if (tag.review_rating_value == i) {
+                                                        rating_image = tag.rating_image;
+                                                    }
+                                                });
+                                                ratings[i] = opt_percentage;
+                                                if (i >= 0 && i <= 2) {
+                                                ratingsCount['0-2'] += opt_percentage;
+                                            } else if (i >= 2.5 && i <= 3.5) {
+                                                ratingsCount['2.5-3.5'] += opt_percentage;
+                                            } else if (i >= 4 && i <= 5) {
+                                                ratingsCount['4-5'] += opt_percentage;
+                                            }
+                                            %>
+                                            <li style="background-image: url(/<%- rating_image %>);"><span class="position-relative" style="z-index: 9;"><%- i %> : (<%- opt_count %>/<%- companySurveySubmissions.length %>)</span><span class="suvey-progress-value" style="width:<%- opt_percentage.toFixed(2) %>%"></span></li>
+                                        <% counter++; } %>
+
+                                        <% 
+                                        let overallOptCount = 0;
+                                        for (let rating in ratings) {
+                                            overallOptCount += ratings[rating];
+                                        }
+                                        let overallPercentage = (overallOptCount / (companySurveySubmissions.length * counter)) * 100;
+                                        console.log('Overall ratings percentage for question ' + (index + 1) + ':', overallPercentage.toFixed(2) + '%');
+                                        %>
+
+                                        <% console.log('Ratings for question ' + (index + 1) + ':', ratings); %>
+                                        <% console.log('Ratings percentage for question ' + (index + 1) + ':', ratingsCount); %>
+                                    </ol>
+                                    
+                                <% } %>
+                                <% if( qun.type == 'type_textarea' ){ %>
+                                    <h5><%- qun.question %></h5>
+                                    <% var question_name = 'question_'+(index+1); %>
+                                    
+                                    <ol>
+                                            <%
+                                                let opt_count = 0;
+                                                companySurveySubmissions.forEach((submission, key) => {
+                                                    if (submission.answer && submission.answer[question_name] && key < 10) {
+                                            %>
+                                            <li><span class="position-relative" style="z-index: 9;"> <%- submission.answer[question_name] %></span> <span class="" ></span></li>
+                                            <!-- <h1><%= question_name %>  <%= submission.answer[question_name] %></h1> -->
+                                                     
+                                            <%
+                                                    }
+                                                });
+                                            %>
+                                            
+                                    </ol>
+                                <% } %>
+                            <% }) %>
+                            </div>
+                        <% } %>
+                    </div>
+                    <!-- <div class="resp-tabs-container">
+                        <% if(companySurveySubmissions.length > 0){ %>
+                            <% companySurveySubmissions.forEach((submission)=>{  %>
+                                <% const dateString = submission.created_at; %>
+                                <% const date = new Date(dateString); %>
+                                <div class="tab-content-wrap" style="display: block;">
+                                    <div class="discussion-review-panel">
+                                        <%
+                                            const letters = '0123456789ABCDEF';
+                                            let color = '#';
+                                            for (let i = 0; i < 6; i++) {
+                                                color += letters[Math.floor(Math.random() * 16)];
+                                            }
+
+                                        %>
+                                        <% if(submission.customer_id == '0') { %>
+                                            <div class="discussion-user-img" style="padding: 5px 15px; border-radius: 100%; font-size: 28px; background-color: <%- color %>;">
+                                                <%- submission.invited_first_name[0] %>
+                                            </div>
+                                        <% } else { %>
+                                            <div class="discussion-user-img" style="padding: 5px 15px; border-radius: 100%; font-size: 28px; background-color: <%- color %>;">
+                                                <%= submission && submission.first_name[0] ? submission.first_name[0] : '' %>
+                                            </div>
+                                        <% } %>
+                                        
+                                        <div class="discussion-user-info">
+                                            <% if(submission.customer_id == '0') { %>
+                                                <a href="/survey-submission-details/<%- company.slug %>/<%- submission.survey_unique_id %>/<%- submission.ID %>"><h4><%- submission.invited_first_name +' '+ submission.invited_last_name %></h4></a>
+                                            
+                                            <% } else { %>
+                                                <a href="/survey-submission-details/<%- company.slug %>/<%- submission.survey_unique_id %>/<%- submission.ID %>"><h4><%- submission.first_name +' '+ submission.last_name %></h4></a>
+                                            
+                                            <% } %>
+                                            <a href="/survey-submission-details/<%- company.slug %>/<%- submission.survey_unique_id %>/<%- submission.ID %>"><h4><%- submission.first_name +' '+ submission.last_name %></h4></a>
+                                            <p>Submitted at <%= date.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) %></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            <% }) %>
+                        <% }else{ %>
+                            <p style="margin-top: 15px;
+                            font-size: 18px;
+                            font-weight: 600;
+                            color: #fca634;">No one has submitted this survey form yet.</p>
+                        <% } %>
+                    </div> -->
+                    <div class="submissions-result-wrapper">
+                        <div class="table-responsive">
+                        <div class="table_btn">
+                            <button onclick="exportToCSV()" class="export-button">CSV</button>
+                            <button onclick="exportToPDF()" class="export-button">PDF</button>
+                        </div>
+                            <h4>All survey submissions</h4>
+                           <table class="table custom-table">
+                            <thead>
+                            <tr>
+                                <th scope="col">Participants</th>
+                                <% CompanySurveyDetails[0].questions.forEach((qun, index) => { %>
+                                    <th scope="col">
+                                        Question <%= index + 1 %>: <%= qun.question %>
+                                        <% if (qun.options && qun.options.length > 0) { %>
+                                            <br>
+                                            Options: <%= qun.options.join(' | ') %>
+                                        <% } %>
+                                    </th>
+                                <% }) %>
+                            </tr>
+                            </thead>
+
+                              <tbody>    
+                                <% companySurveySubmissions.forEach(submission => {  %>   
+                                    <%=console.log("aaa",submission); %>
+                                    <tr>
+                                        <td>
+                                            <% if(submission.customer_id == '0') { %>
+
+                                                    <a href="/survey-submission-details/<%- company.slug %>/<%- submission.survey_unique_id %>/<%- submission.ID %>">
+                                                    <i class="fas fa-user-slash" style="color: #000;"></i>
+                                                    <%- submission.invited_first_name +' '+ submission.invited_last_name %></a>
+                                                <div class="email_submit">
+                                                    <i class="fas fa-envelope"></i>
+                                                   <%- submission.invitation_email %>
+                                                </div>
+
+                                               
+                                            <% } else { %>
+                                                <a href="/survey-submission-details/<%- company.slug %>/<%- submission.survey_unique_id %>/<%- submission.ID %>">
+                                                    <i class="fas fa-user-check" style="color: #000;"></i>
+                                                    <%- submission.alise_name %></a>
+                                                <div class="email_submit">
+                                                    <i class="fas fa-envelope"></i>
+                                                   <%- submission.email %>
+                                                </div>
+                                                <% if (submission.phone) { %>
+                                                <div class="email_submit">
+                                                    <i class="fas fa-phone"></i>
+                                                    <%- submission.phone %>
+                                                </div>
+                                            <% } %>
+                                            <% } %>
+                                        </td>
+                                        
+                                        <% CompanySurveyDetails[0].questions.forEach((qun, index) => { %>
+                                            <% if (qun.type == 'type_textarea') { %>
+                                                <% var question_name = 'question_' + (index + 1); %>
+                                                <%
+                                                    if (submission.answer && submission.answer[question_name]) {
+                                                %>
+                                                        <td><span class="position-relative" style="z-index: 9;"><%= submission.answer[question_name] %></span></td>
+                                                <%
+                                                    }
+                                                %>
+                                            <% }
+                                             else if (qun.type == 'type_radio') { %>
+                                                <% var question_name = 'question_' + (index + 1); %>
+                                                <td>
+                                                    <%
+                                                        if (submission.answer && submission.answer[question_name]) {
+                                                            var selectedAnswer = submission.answer[question_name];
+                                                            qun.options.forEach((opt) => {
+                                                                if (selectedAnswer === opt) {
+                                                    %>
+                                                                    <span class="position-relative"><%= opt %></span>
+                                                    <%
+                                                                }
+                                                            });
+                                                        }
+                                                    %>
+                                                </td>
+                                            <% }
+                                            else if (qun.type == 'type_checkbox') { %>
+                                                <td>
+                                                    <%
+                                                        var selectedOptions = [];
+                                                        qun.options.forEach((opt, option_index) => {
+                                                            var question_name = 'question_' + (index + 1) + '_' + (option_index + 1);
+                                                            if (submission.answer && submission.answer[question_name]) {
+                                                                selectedOptions.push(opt);
+                                                            }
+                                                        });
+                                                        var selectedOptionsString = selectedOptions.join(' - ');
+                                                    %>
+                                                    <span class="position-relative"><%= selectedOptionsString %></span>
+                                                </td>
+                                                <% } else if (qun.type == 'type_ratings') { %>
+                                                <td>
+                                                    <%
+                                                        var question_name = 'question_' + (index + 1);
+                                                        var rating_image = ''; 
+                                                        AllRatingTags.forEach(tag => {
+                                                            if (tag.review_rating_value == submission.answer[question_name]) {
+                                                                rating_image = tag.rating_image;
+                                                            }
+                                                        });
+                                                        var rating_number = submission.answer[question_name]; 
+                                                    %>
+                                                    <span class="position-relative" title="<%- rating_number %>/5">
+                                                        <img src="/<%- rating_image %>" width="20%;" />
+                                                        <input type="hidden" name="<%- question_name %>" value="<%- rating_number %>">
+                                                    </span>
+                                                    
+                                                </td>
+                                            <% } %>
+                                        <% }) %>
+                                    </tr>
+                                <% }) %> 
+                              </tbody>
+                           </table>
+                        </div>
+                     </div>
+                     <% let hasRatingTypeQuestion = false; %>
+                    <% CompanySurveyDetails[0].questions.forEach((qun, index)=>{ %>
+                        <% if(qun.type == 'type_ratings') { %>
+                            <% hasRatingTypeQuestion = true; %>
+                        <% } %>
+                    <% }) %>
+
+                    <% if(hasRatingTypeQuestion) { %>
+                        <div class="col-md-5">
+                            <div id="chartContainer" style="height: 370px; width: 100%;"></div>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+            </div>
+        </div>
+        </div>
+    </div>
+  </section>
+
+  <style>
+    .table-responsive h4{
+        color: #000000;
+        font-size: 24px;
+        line-height: 30px;
+        margin: 20px 0;
+    }
+    .table_btn {
+    padding: 20px 0px 20px;
+    border-bottom: 1px solid #F8A401;
+}
+
+.table_btn button{
+    display: inline-block;
+    border: 1px solid #F8A401;
+    background: none !important;
+    background-color: #F8A401 !important;
+    outline: none;
+    border-radius: 2px;
+    cursor: pointer;
+    padding: 10px 35px;
+    transition: 0.6 ease-in-out;
+}
+
+.table_btn button{
+    display: inline-block;
+    border: 1px solid #F8A401;
+    background: none !important;
+    background-color: #F8A401 !important;
+    outline: none;
+    border-radius: 2px;
+    cursor: pointer;
+    padding: 10px 35px;
+    transition: 0.6 ease-in-out;
+}
+
+.table_btn button:hover{
+    border: 1px solid #000000 !important;
+ background-color: #000 !important;
+ color: #fff !important;
+}
+.dt-container .dt-search input {
+    border: 1px solid #F8A401 !important;
+    border-radius: 3px;
+    padding: 10px 20px !important;
+    background-color: transparent;
+    color: inherit;
+    margin-left: 3px;
+    outline: none;
+}
+
+
+.sorting_1 a i{
+    color: #000000 !important;
+}
+.email_submit{
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+</style>
+
+
+<!-- ============== Section1 End =============== -->
+
+<%- include('common/footer') -%>   
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/css/dataTables.bootstrap4.min.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/1.0.4/css/dataTables.responsive.css" />
+
+<link rel="stylesheet" href="https://cdn.datatables.net/2.0.1/css/dataTables.dataTables.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.0.0/css/buttons.dataTables.css" />
+
+
+<script src="https://cdn.datatables.net/1.10.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/plug-ins/f2c75b7247b/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+<script src="https://cdn.datatables.net/responsive/1.0.4/js/dataTables.responsive.js"></script>
+
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/1.0.11/jquery.csv.min.js"></script>
+<script src="https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js"></script>
+// <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.10/jspdf.plugin.autotable.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<script src="https://www.amcharts.com/lib/4/core.js"></script>
+<script src="https://www.amcharts.com/lib/4/maps.js"></script>
+<script src="https://www.amcharts.com/lib/4/geodata/india2019High.js"></script>
+<script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>
+<script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+<script src="https://cdn.canvasjs.com/jquery.canvasjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+
+
+<script>
+    window.onload = function () {
+        let ratingsData = <%- JSON.stringify(getsurveyratingData) %>;
+        console.log("ratingsData",ratingsData);
+
+
+        let chartData = [];
+        for (let range in ratingsData) {
+            chartData.push({
+                label: range,
+                y: ratingsData[range]
+            });
+        }
+
+        var chart = new CanvasJS.Chart("chartContainer", {
+            title: {
+                text: "Ratings Distribution"
+            },
+            data: [{
+                type: "pie",
+                startAngle: 45,
+                showInLegend: true,
+                legendText: "{label}",
+                indexLabel: "({y}%)",
+                indexLabelPlacement: "inside",
+                indexLabelFontColor: "white",
+                indexLabelFontSize: 13,
+                indexLabelFontWeight: "bold",
+                dataPoints: chartData 
+            }]
+        });
+
+        // Render the chart
+        chart.render();
+    }
+
+    function exportToCSV() {
+    const table = document.querySelector('.custom-table');
+    const rows = table.querySelectorAll('tr');
+    let csvContent = '';
+
+    rows.forEach((row) => {
+        const rowData = [];
+        row.querySelectorAll('td, th').forEach((cell) => {
+            const hiddenField = cell.querySelector('input[type="hidden"]');
+            let value = hiddenField ? hiddenField.value : cell.innerText.trim().replace(/"/g, '""');
+            // Enclose the value in double quotes if it contains a comma, full stop, or anything that could cause issues
+            if (value.includes(',') || value.includes('.')) {
+                value = '"' + value + '"';
+            }
+            rowData.push(value);
+        });
+        csvContent += rowData.join(',') + '\n';
+    });
+
+    const encodedUri = encodeURI('data:text/csv;charset=utf-8,' + csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', 'table_data.csv');
+    document.body.appendChild(link);
+    link.click();
+}
+
+    
+function exportToPDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    const table = document.querySelector('.custom-table');
+    const headers = [];
+    table.querySelectorAll('thead th').forEach(header => {
+        headers.push({ title: header.innerText.trim(), styles: { fillColor: [192, 192, 192], textColor: [0, 0, 0] } });
+    });
+
+    const data = [];
+    table.querySelectorAll('tbody tr').forEach(row => {
+        const rowData = [];
+        row.querySelectorAll('td').forEach(cell => {
+            const hiddenField = cell.querySelector('input[type="hidden"]');
+            if (hiddenField) {
+                rowData.push(hiddenField.value); 
+            } else {
+                rowData.push(cell.innerText.trim());
+            }
+        });
+        data.push(rowData);
+    });
+
+    const chunkSize = 50; 
+    let startIndex = 0;
+
+    function addChunk() {
+        const chunk = data.slice(startIndex, startIndex + chunkSize);
+        if (chunk.length === 0) {
+            doc.save('table_data.pdf');
+            return; // All data processed, exit
+        }
+        doc.autoTable({
+            head: [headers],
+            body: chunk,
+            startY: doc.autoTable.previous.finalY + 10 || 10, 
+        });
+        startIndex += chunkSize;
+        setTimeout(addChunk, 0); 
+    }
+
+    addChunk();
+}
+
+</script>
+
+
+
+
+
+
+// <script>
+//     window.onload = function () {
+//         var demoDataPoints = [
+//             { label: "A", y: 10 },
+//             { label: "B", y: 20 },
+//             { label: "C", y: 30 },
+//             { label: "D", y: 40 },
+//             { label: "E", y: 50 }
+//         ];
+
+//         var chart = new CanvasJS.Chart("chartContainer", {
+//             exportEnabled: true,
+//             animationEnabled: true,
+//             legend: {
+//                 verticalAlign: "center",
+//                 horizontalAlign: "right",
+//                 fontSize: 15,
+//                 fontWeight: "normal",
+//             },
+//             data: [{
+//                 type: "doughnut",
+//                 innerRadius: 70,
+//                 showInLegend: true,
+//                 toolTipContent: "<b>{label}</b>: #percent%",
+//                 indexLabel: "#percent%",
+//                 indexLabelPlacement: "inside",
+//                 indexLabelFontColor: "black",
+//                 indexLabelFontSize: 13,
+//                 indexLabelFontWeight: "bold",
+//                 dataPoints: demoDataPoints 
+//             }]
+//         });
+
+//         chart.render();
+//     }
+// </script>
+
+
+
+
+
+
+// <script>
+//     function exportToCSV() {
+//     const table = document.querySelector('.custom-table');
+//     const rows = table.querySelectorAll('tr');
+//     let csvContent = '';
+
+//     rows.forEach((row) => {
+//         const rowData = [];
+//         row.querySelectorAll('td, th').forEach((cell) => {
+//             const hiddenField = cell.querySelector('input[type="hidden"]');
+//             if (hiddenField) {
+//                 rowData.push(hiddenField.value); 
+//             } else {
+//                 rowData.push(cell.innerText.trim().replace(/(\r\n|\n|\r)/gm, ''));
+//             }
+//         });
+//         csvContent += rowData.join(',') + '\n';
+//     });
+
+//     const encodedUri = encodeURI('data:text/csv;charset=utf-8,' + csvContent);
+//     const link = document.createElement('a');
+//     link.setAttribute('href', encodedUri);
+//     link.setAttribute('download', 'table_data.csv');
+//     document.body.appendChild(link);
+//     link.click();
+// }
+
+// function exportToPDF() {
+//     const { jsPDF } = window.jspdf;
+//     const doc = new jsPDF();
+//     const table = document.querySelector('.custom-table');
+//     const headers = [];
+//     table.querySelectorAll('thead th').forEach(header => {
+//         headers.push({ title: header.innerText.trim(), styles: { fillColor: [192, 192, 192], textColor: [0, 0, 0] } });
+//     });
+
+//     const data = [];
+//     table.querySelectorAll('tbody tr').forEach(row => {
+//         const rowData = [];
+//         row.querySelectorAll('td').forEach(cell => {
+//             const hiddenField = cell.querySelector('input[type="hidden"]');
+//             if (hiddenField) {
+//                 rowData.push(hiddenField.value); 
+//             } else {
+//                 rowData.push(cell.innerText.trim());
+//             }
+//         });
+//         data.push(rowData);
+//     });
+
+//     doc.autoTable({
+//         head: [headers],
+//         body: data,
+//     });
+
+//     doc.save('table_data.pdf');
+// }
+
+
+// </script>
+
+

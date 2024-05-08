@@ -1,0 +1,275 @@
+.survey-content {
+    background: url(../images/survey-background.svg) repeat-y;
+    background-size: 100%;
+}
+
+.survey-wrapper {
+    margin-top: 30px;
+    border-radius: 18px;
+    box-shadow: 0px 14px 34px 0px rgba(0, 0, 0, 0.12);
+    overflow: hidden;
+}
+
+.survey-head,
+.create-survey-head {
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 160%;
+    background: #FCCB06;
+    padding: 20px 18px;
+}
+
+.survey-body {
+    background: #252525  url(../images/survey-object.svg) no-repeat right top;
+    color: #ffffff;
+    padding: 25px 25px;
+}
+
+.survey-body .custom-form:last-child {
+    margin-bottom: 0;
+}
+
+.survey-body .custom-form .form-check label {
+    font-weight: 800;
+    font-size: 16px;
+}
+
+.survey-body .custom-form .form-control, 
+.survey-body .custom-form .form-select {
+    border: 1px solid #939393;
+    background-color: #1D1D1D;
+    color: #fff;
+}
+
+.survey-body .form-control::placeholder,
+.survey-body .form-select::placeholder {
+    color: rgba(255,255,255,0.8);
+}
+.survey-body .form-control:focus,
+.survey-body .form-select:focus {
+    background-color: transparent;
+    border-color: #fccb06;
+    color: #fff;
+}
+
+.survey-body .custom-form .form-check-input:checked[type=radio] + label,
+.survey-body .custom-form .form-check-input:checked[type=checkbox] + label {
+    color: #FCCB06;
+}
+
+.survey-body .custom-form ::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}
+
+
+.survey-rating {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 10px;
+}
+
+.survey-rating-part {
+    font-size: 18px;
+    font-weight: 900;
+}
+
+.survey-rating-part .rating_each_option span {
+    opacity: 0;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: -18px;
+    font-size: 14px;
+    background: #fbce40;
+    min-width: 34px;
+    border-radius: 5px;
+    color: #000;
+    transition: all ease-in-out 0.3s;
+}
+
+.survey-rating-part .rating_each_option:hover span {
+    opacity: 1;
+    transition: all ease-in-out 0.3s;
+}
+
+.survey-rating-part ul li {
+    display: inline-block;
+    margin: 0 20px;
+}
+
+.survey-rating-part ul {
+    padding: 0;
+    margin: 0;
+    line-height: 11px;
+}
+
+.survey-rating-part ul li a img {
+    width: 30px;
+    opacity: 0.3;
+    transition: all ease-in-out 0.5s;
+}
+
+.survey-rating-part ul li a:hover img,
+.survey-rating-part ul li.active a img {
+    opacity: 1;
+    transform: scale(1.1);
+    transition: all ease-in-out 0.5s;
+}
+
+.survey-content {
+    position: relative;
+}
+
+.survey-content:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 20px;
+    background: url(../images/overlay-object5.png) no-repeat left top;
+    width: 118px;
+    height: 315px;
+    z-index: -1;
+}
+
+.survey-content:after {
+    content: '';
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    background: url(../images/new-cat-shape1.png) no-repeat right bottom;
+    width: 100px;
+    height: 393px;
+    z-index: -1;
+}
+
+.create-survey-field {
+    border: 2px solid #FCCB06;
+    overflow: hidden;
+    margin-bottom: 22px;
+    border-radius: 18px;
+    font-family: var(--inter);
+    background: var(--neutral-100, #FFF);
+    box-shadow: 0px 5px 16px 0px rgba(8, 15, 52, 0.06);
+}
+
+.create-survey-field .custom-form label span {
+    background-color: #ffffff;
+}
+
+.create-survey-field input[type="date"] {
+    padding-right: 18px;
+}
+
+.create-survey-field .custom-form .form-control, 
+.create-survey-field .custom-form .form-select {
+    padding-right: 18px;
+}
+
+.create-survey-field .survey-body .custom-form label span {
+    background-color: #252525;
+}
+
+.survey-body .custom-form .form-check + .form-check,
+.create-survey-field-repater .custom-form .form-check + .form-check,
+.create-survey-field-repater2 .custom-form .form-check + .form-check {
+    margin-top: 30px;
+}
+
+.survey-body .custom-form .form-check.form-check-inline + .form-check.form-check-inline,
+.create-survey-field-repater .custom-form .form-check.form-check-inline + .form-check.form-check-inline,
+.create-survey-field-repater2 .custom-form .form-check.form-check-inline + .form-check.form-check-inline {
+    margin-top: 0;
+}
+
+.create-survey-field .custom-form label.form-check-label {
+    font-size: 15px;
+}
+
+.create-survey-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.create-survey-body {
+    padding: 35px 20px;
+}
+
+.survey-ex-date .custom-form .form-control, 
+.survey-ex-date .custom-form .form-select {
+    background-color: #ffffff;
+}
+
+/* .survey-ex-date .custom-form small {
+    font-weight: 400;
+    font-size: 13px;
+    position: absolute;
+    top: -12px;
+    left: 19px;
+} */
+
+.survey-ex-date .custom-form small {
+    font-weight: 400;
+    font-size: 13px;
+    position: absolute;
+    top: -7px;
+    left: 12px;
+    text-transform: capitalize;
+    background-color: #fff;
+    line-height: 0;
+    padding: 8px 7px;
+    border-radius: 4px 4px 0px 0px;
+}
+
+.remove-ans, .remove-question {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+/* .qst-repeat {
+    display: none;
+} */
+
+.qst-repeat + .qst-repeat {
+    margin-top: 30px;
+}
+
+/* .multiple-ans-repeat,
+.create-survey-field-repater,
+.create-survey-field-repater2 {
+    display: none;
+} */
+
+.create-survey-field-repater .multiple-ans-repeat:first-child,
+.create-survey-field-repater2 .multiple-ans-repeat:first-child {
+    display: block;
+}
+
+.survey-rating-part .form-check.custom-check .form-check-label img {
+    max-width: 30px;
+    transition: all ease-in-out 0.5s;
+}
+
+.survey-rating-part .form-check.custom-check .form-check-label {
+    min-width: auto;
+    padding: 0;
+    border: none;
+    opacity: 0.3;
+    background: none;
+    min-height: auto;
+    margin: 5px;
+}
+
+.survey-rating-part .form-check.custom-check .form-check-input:checked[type=radio] + .form-check-label {
+    opacity: 1;
+}
+
+.survey-rating-part .form-check.custom-check .form-check-input:checked[type=radio] + .form-check-label img {
+    transform: scale(1.1);
+    transition: all ease-in-out 0.5s;
+}

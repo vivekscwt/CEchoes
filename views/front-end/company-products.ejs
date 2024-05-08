@@ -1,0 +1,551 @@
+<%- include('common/header') -%>
+<link href="/front-end/css/company-profile-dashboard.css" rel="stylesheet" type="text/css">
+<%- include('common/header-banner') -%>
+
+<!-- ================ Section1 Start ======================= -->
+<section class="main-content premium_company_profile">
+    <div class="container">
+        <div class="main_box">
+            <%- include('common/premium-company-sidebar') -%>
+         </div>
+        <div class="send-review-invitation product_div ">
+            <div class="d-flex align-items-center justify-content-between">
+                <div class="text-end"></div>
+                <a href="/" class="btn-default btn-warning" id="add_product" >Add more product</a>
+            </div>
+            <br>
+
+            <% if(CompanyCategoryProducts.length > 0 && CompanyCategoryProducts[0].product_id != null ){ %>
+                <div class="company_product_listing">
+                    <h4>All Products</h4>
+                    <table id="productTable" class="display">
+                        <thead>
+                            <tr>
+                                <th>Image</th>
+                                <th>Title</th>
+                                <th>Category</th>
+                                <th>Action</th>                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% CompanyCategoryProducts.forEach(product => { %>
+                                <tr>
+                                    <td><img src="/<%= product.product_img %>" alt="img" width="50" height="50"></td>
+                                    <td><%= product.product_title %></td>
+                                    <td><%= product.category_name %></td>
+                                    <td>
+                                        <div class="d-inline-block">
+                                            <a href="#" class="btn btn-danger delete-product" data-bs-toggle="modal" data-bs-target="#surealertmodal" data-product-id="<%= product.product_id %>">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                    
+                                            <a href="#" class="btn btn-primary edit-product respond-link" 
+                                            data-product-id="<%= product.product_id %>"
+                                            data-product-title="<%= product.product_title %>"
+                                            data-product-desc="<%= product.product_desc %>"
+                                            data-product-img="<%= product.product_img %>"
+                                            data-product-category-id="<%= product.category_name %>"
+                                            data-bs-toggle="modal" data-bs-target="#editModal">
+                                            <i class="fas fa-edit"></i>
+                                         </a>
+                                         
+                                         
+                                        </div>
+                                    </td>
+                                    
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+                
+                    <div class="submit-loading" style="display: none;">Please wait..</div>
+                    <div class="submit-success" style="width: 100%; text-align: center; display: block; border: 2px solid #fccb06; padding: 6px; margin-top: 20px; border-radius: 5px; display: none;"></div>
+                    <div class="submit-error" style="width: 100%; text-align: center; display: block; border: 2px solid #fccb06; padding: 6px; margin-top: 20px; border-radius: 5px; display: none;"></div>
+            <% } else { %>
+                <h4 class="inner-main-head ">No Product Found </h4>
+            <% } %>
+            
+        </div>
+        <div class="d-none send-review-invitation" id="add-product-div">
+            <form id="create_category_form" enctype="multipart/form-data">
+                <input type="hidden" name="company_id" value="<%- company.ID -%>">
+
+                  
+                
+                <div class="each_box add_products">
+                    <div class="repeter_wrap">
+                        <div class="all_repeter">
+                            <div class="each_repeter">
+                                <div class="row align-items-center">
+                                    <div class="col-12">
+                                        <div class="custom-form mb-3">
+                                            <label class="form-label">Products Title<sup style="color: red;">*</sup></label>
+                                            <input type="text" class="form-control" placeholder="" name="product_title" value="" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="custom-form mb-3">
+                                            <label class="form-label">Products Description</label>
+                                            <textarea class="form-control" placeholder="" rows="3" name="product_desc"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="custom-form mb-0 col-sm-10">
+                                        <label class="form-label">Image<sup style="color: red;">*</sup></label>
+                                        <input class="form-control upload_in_repeter product_image" id="upload-company-coverimage" type="file" name="product_image" required>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <div class="display_image_box">
+                                                <img class="promotion_image_review" id="company_cover_image_preview" src="/front-end/images/no-image.png" alt="">
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="custom-form mb-3">
+                                            <label class="form-label">Category<sup style="color: red;">*</sup></label>
+                                            <select id="categoryDropdown" class="form-control" name="category_id" required>
+                                                <option value="">Select a category...</option> 
+                                                <% Companycategories.forEach(category => { %>
+                                                    <option value="<%= category.id %>" data-parentid="<%= category.parent_id %>"><%= category.category_name %></option>
+                                                <% }); %>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                    <input type="hidden" id="selectedCategoryNameInput" name="category_name" readonly>
+                                    
+                                    <div class="col-12">
+                                        <div class="custom-form mb-3">
+                                            <input type="hidden" id="parentCategoryField" name="parent_id" readonly>
+                                        </div>
+                                    </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="btn_flex">
+                                            <div class="text-right">
+                                                <button data-id="null" company-id = "<%= company.ID %>" data-type="product" type="button" class="btn btn-danger delete_item">Remove</button>
+                                            </div>
+                                        </div>
+                                    
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="add_btn_new">
+                            <div class="add_more_btn">
+                                <button type="button" class="btn btn-primary add_more_product">Add Product</button>
+                            </div>
+                            <input type="submit" value="Submit" class="btn-default btn-warning" id="submit_btn">
+
+                        </div>
+                       
+                       
+                    </div>
+                </div>
+            
+               
+            </form>
+            
+            <div class="submit-loading" style="display: none;">Please wait..</div>
+            <div class="submit-success" style="width: 100%; text-align: center; display: block; border: 2px solid #fccb06; padding: 6px; margin-top: 20px; border-radius: 5px; display: none;"></div>
+            <div class="submit-error" style="width: 100%; text-align: center; display: block; border: 2px solid #fccb06; padding: 6px; margin-top: 20px; border-radius: 5px; display: none;"></div>
+        </div>
+</section>
+
+<!-- The Modal -->
+<div class="modal" id="surealertmodal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+  
+        <!-- Modal Header -->
+        <div class="modal-header border-0">
+          <button type="button" class="btn-close" data-bs-dismiss="modal"><i class="fa-solid fa-circle-xmark"></i></button>
+        </div>
+        <div class="modal-body text-center">
+            <h5 class="mb-4">Want to delete this product ?</h5>
+            <div class="d_flex d-flex align-items-center">
+                <button class="btn-default btn-warning my-1" id="okButton">Yes Delete !</button>
+                <button class="btn-default btn-dark my-1" id="cancelButton">No Cancle !</button>
+            </div>
+         
+           
+        </div>
+  
+      </div>
+    </div>
+  </div>
+<!-- Modal edit -->
+
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Edit Product</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form id="product_edit_form" enctype="multipart/form-data">
+            <div class="modal-body">
+                <div class="each_repeter each_repeter1">
+                    <div class="row align-items-center">
+                        <div class="col-12">
+                            <div class="custom-form mb-3">
+                                <label class="form-label">Products Title<sup style="color: red;">*</sup></label>
+                                <input type="text" class="form-control" placeholder="" id="product-title" name="product_title" value="" required>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="custom-form mb-3">
+                                <label class="form-label">Products Description</label>
+                                <textarea class="form-control" placeholder="" rows="3" id="product-desc"  name="product_desc"></textarea>
+                            </div>
+                        </div>
+                        <div class="custom-form col-sm-9">
+                            <label class="form-label">Image<sup style="color: red;">*</sup></label>
+                            
+                            <input class="form-control  product_image" type="file" name="product_img" >
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="display_image_box">
+                                    <img class="promotion_image_review" id="product-img" src="" alt="">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="custom-form mb-3">
+                                <label class="form-label">Category<sup style="color: red;">*</sup></label>
+                                <select id="product-category-id" class="form-control" name="category_id" required>
+                                    <option value="">Select a category...</option> 
+                                    <% Companycategories.forEach(category => { %>
+                                        <option value="<%= category.id %>" data-parentid="<%= category.parent_id %>"><%= category.category_name %></option>
+                                    <% }); %>
+                                </select>                                
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="custom-form mb-3">
+                                <input type="hidden" id="parentCategoryFields" name="parent_id" readonly>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                <input type="hidden" id="product-id" name="product_Id" value="" />
+                <input type="hidden" id="" name="company_Id" value="<%= company.ID %>" />
+            
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" id="submit_btn" class="btn btn-primary">Update</button>
+                    <div class="submit-loading" style="display: none;">Please wait..</div>
+                    <div class="submit-success" style="width: 100%; text-align: center; display: block; border: 2px solid #fccb06; padding: 6px; margin-top: 20px; border-radius: 5px; display: none;"></div>
+                    <div class="submit-error" style="width: 100%; text-align: center; display: block; border: 2px solid #fccb06; padding: 6px; margin-top: 20px; border-radius: 5px; display: none;"></div>
+                </div>
+        </form>
+      </div>
+    
+    </div>
+  </div>
+<!-- ================ Section1 End ======================= -->
+
+<%- include('common/footer') -%>
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+
+
+<script>
+    $(document).ready(function () {
+        $('#productTable').DataTable();
+
+        $('#add_product').on('click', function(e){
+            e.preventDefault();
+            $('.product_div').hide();
+            $('#add-product-div').removeClass('d-none');
+        });
+    
+        $('#create_category_form').submit(function(e){
+                e.preventDefault();
+                $('#submit_btn').prop( "disabled", true );
+                $('.submit-success, .submit-error').hide();
+                $('.submit-loading').show();
+                // const formData = $('#create_category_form').serializeArray();
+                // const jsonData = {};
+                // $(formData).each(function (index, field) {
+                //     jsonData[field.name] = field.value;
+                // });
+                const formData = new FormData($('#create_category_form')[0])
+                    //const formData = $('#premium_company_profile_form').serialize();
+                    // $('.product_image').each(function(index, element) {
+                    //     const fileInput = element;
+                    //     // Check if the file input has a selected file
+                    //     if (fileInput.files.length === 0) {
+                    //         formData.set(`product_image[${index}]`, '');
+                    //     }else{
+                    //         formData.set(`product_image[${index}]`, 'file');
+                    //     }
+                    // });
+    
+                $.ajax({
+                  url: '/auth/add-company-product',
+                  method: 'POST',
+                  data: formData,
+                  processData: false,
+                  contentType: false,
+                //   data: jsonData,
+                //   ContentType: 'application/json',
+                  success: function (data) {
+                    if (data.status == 'ok') {
+                      $('.submit-loading').hide();
+                      $('#create_category_form')[0].reset();
+                      $('.submit-success').text(data.message);
+                      $('.submit-success').show();
+                      $('#submit_btn').prop( "disabled", false );
+                      setTimeout( function(){
+                        location.reload(true);
+                      }, 3000 );
+                    } else {
+                        $('.submit-loading').hide();
+                      $('.submit-error').text(data.message);
+                      $('.submit-error').show();
+                        $('#submit_btn').prop( "disabled", false );
+                    }
+                    //console.log(data);
+                  },
+                  error: function (error) {
+                    $('.submit-loading').hide();
+                    $('.submit-error').text(error);
+                    $('.submit-error').show();
+                    $('#submit_btn').prop( "disabled", false );
+                  }
+                });
+            })
+    
+        $('.add_more_product').click(function(e){
+            $(this).parents('.add_products').find('.all_repeter').append('<div class=each_repeter><div class="align-items-center row"><div class=col-12><div class=custom-form mb-3><label class=form-label>Title<sup style="color: red;">*</sup></label> <input class=form-control placeholder="" name="product_title" required></div></div><div class=col-12><div class=custom-form mb-3><label class=form-label>Description</label> <textarea class=form-control placeholder="" name="product_desc" rows=3></textarea></div></div><div class="custom-form mb-0 col-sm-10"><label class=form-label>Image<sup style="color: red;">*</sup></label> <input class="form-control upload_in_repeter product_image"type=file name="product_image" required ></div><div class=col-sm-2><div class=display_image_box><img alt=""class=promotion_image_review src=/front-end/images/no-image.png></div></div><div class=col-12><div class=text-right><button data-id="null" class="btn btn-danger delete_item"type=button>Remove</button></div></div></div></div>');
+        });
+    
+        $('body').on('change','.upload_in_repeter',function (event) {
+            var tmppath = URL.createObjectURL(event.target.files[0]);
+            $(this).parents('.each_repeter').find('.promotion_image_review').attr('src',tmppath);
+        });
+            
+        $('body').on('click','.delete_item',function(){
+            $(this).parents('.each_repeter').remove();
+        })
+    
+        $('.respond-link').on('click', function (e) {
+            e.preventDefault();
+            const productId = $(this).data('product-id');
+            const productTitle = $(this).data('product-title');
+            const productDesc = $(this).data('product-desc');
+            const productImg = $(this).data('product-img');
+            const productCategory = $(this).attr('data-product-category-id'); // Accessing using .attr()
+
+            console.log("productCategory",productCategory);
+    
+            $('#product-id').val(productId);
+            $('#product-title').val(productTitle);
+            $('#product-desc').val(productDesc);
+            $("#product-img").attr("src","/"+productImg);
+
+            $('#product-category-id option').each(function() {
+                const optionText = $(this).text();
+                const isSelected = optionText === productCategory;
+
+                //console.log(`Option text: ${optionText}, Is Selected: ${isSelected}`);
+
+                if (isSelected) {
+                    $(this).prop('selected', true);
+                } else {
+                    $(this).prop('selected', false);
+                }
+            });
+        });
+    
+
+        $('.edit-product').on('click', function (e) {
+            e.preventDefault();
+
+            // Retrieve product details from the clicked link
+            const productId = $(this).data('product-id');
+            const productTitle = $(this).data('product-title');
+            const productDesc = $(this).data('product-desc');
+            const productImg = $(this).data('product-img');
+            const productCategory = $(this).attr('data-product-category-id'); // Accessing using .attr()
+
+            $('#product-id').val(productId);
+            $('#product-title').val(productTitle);
+            $('#product-desc').val(productDesc);
+            $("#product-img").attr("src", "/" + productImg);
+
+            $('#product-category-id option').each(function() {
+                const optionText = $(this).text();
+                const isSelected = optionText === productCategory;
+
+                //console.log(`Option text: ${optionText}, Is Selected: ${isSelected}`);
+
+                if (isSelected) {
+                    $(this).prop('selected', true);
+                } else {
+                    $(this).prop('selected', false);
+                }
+            });
+            const selectedParentId = $('#product-category-id option:selected').data('parentid');
+            console.log("Selected Parent ID:", selectedParentId);
+
+            // Set the value of the parent_id input field
+            $('#parentCategoryField').val(selectedParentId);
+
+            // Show the edit modal
+            $('#editModal').modal('show');
+        });
+
+
+
+        $('#product_edit_form').submit(function(e){
+                event.preventDefault();
+                $('#submit_btn').prop( "disabled", true );
+                $('.submit-success, .submit-error').hide();
+                $('.submit-loading').show();
+    
+                const formData = new FormData($('#product_edit_form')[0])
+    
+                $.ajax({
+                  url: '/auth/update-company-product',
+                  method: 'POST',
+                  data: formData,
+                  processData: false,
+                  contentType: false,
+                //   data: jsonData,
+                //   ContentType: 'application/json',
+                  success: function (data) {
+                    if (data.status == 'ok') {
+                      $('.submit-loading').hide();
+                      $('#product_edit_form')[0].reset();
+                      $('.submit-success').text(data.message);
+                      $('.submit-success').show();
+                      $('#submit_btn').prop( "disabled", false );
+                      setTimeout( function(){
+                        location.reload(true);
+                      }, 3000 );
+                    } else {
+                        $('.submit-loading').hide();
+                      $('.submit-error').text(data.message);
+                      $('.submit-error').show();
+                        $('#submit_btn').prop( "disabled", false );
+                    }
+                    //console.log(data);
+                  },
+                  error: function (error) {
+                    $('.submit-loading').hide();
+                    $('.submit-error').text(error);
+                    $('.submit-error').show();
+                    $('#submit_btn').prop( "disabled", false );
+                  }
+                });
+            })
+    
+        $('.delete-product').click(function(e){
+            event.preventDefault();
+            var product_id = $(this).attr('data-product-id');
+            //alert(product_id);
+            $("#okButton").on("click", function(e) {
+                event.preventDefault();
+                // Replace this with your desired action
+                // For example, you can place your code here
+                console.log("User clicked 'Ok'");
+    
+                $.ajax({
+                    url: '/auth/delete-company-product',
+                    method: 'POST',
+                    data: {product_id:product_id},
+                    ContentType: 'application/json',
+                    success: function (data) {
+                        if (data.status == 'ok') {
+                        $('.submit-loading').hide();
+                        $('.submit-success').text(data.message);
+                        $('.submit-success').show();
+                        setTimeout( function(){
+                            location.reload(true);
+                        }, 3000 );
+                        } else {
+                            $('.submit-loading').hide();
+                        $('.submit-error').text(data.message);
+                        $('.submit-error').show();
+                        }
+                        //console.log(data);
+                    },
+                    error: function (error) {
+                        $('.submit-loading').hide();
+                        $('.submit-error').text(error);
+                        $('.submit-error').show();
+                    }
+                });
+                $("#surealertmodal").find('.btn-close').trigger('click');
+            });
+            $("#cancelButton").on("click", function() {
+                event.preventDefault();
+                $('.submit-loading').hide();
+                $('.submit-error').text('Product is not deleted.');
+                $('.submit-error').show();
+                setTimeout(function() { $(".submit-error").hide(); }, 3000);
+                // Close the modal
+                $("#surealertmodal").find('.btn-close').trigger('click');
+            });
+            
+            
+        })
+    
+    
+                //   $('#upload-company-logo').change(function () {
+                //     const file = this.files[0];
+                //     console.log(file);
+                //     if (file) {
+                //         let reader = new FileReader();
+                //         reader.onload = function (event) {
+                //             console.log(event.target.result);
+                //             $('#company_logo_preview').attr('src', event.target.result);
+                //         }
+                //         reader.readAsDataURL(file);
+                //     }
+                // });
+    
+                $('#upload-company-coverimage').change(function () {
+                    const file = this.files[0];
+                    console.log(file);
+                    if (file) {
+                        let reader = new FileReader();
+                        reader.onload = function (event) {
+                            console.log(event.target.result);
+                            $('#company_cover_image_preview').attr('src', event.target.result);
+                        }
+                        reader.readAsDataURL(file);
+                    }
+                });
+                $('#categoryDropdown').on('change', function () {
+                    const selectedCategoryId = $(this).val();
+                    console.log("Selected Category ID:", selectedCategoryId);
+                    const selectedParentId = $(this).find('option:selected').data('parentid');
+
+                    ///
+                    // Set the value of the parent category field
+                    $('#parentCategoryField').val(selectedParentId);
+
+
+                    const selectedCategoryName = $(this).find('option:selected').text();
+                    console.log("Selected Category Name:", selectedCategoryName);
+
+                    // Set the value of the hidden input field
+                    $('#selectedCategoryNameInput').val(selectedCategoryName);
+                });
+    
+            // Add event listener for the change event of the category dropdown
+            $('#product-category-id').on('change', function() {
+                const selectedCategoryId = $(this).val();
+                
+                const selectedParentId = $(this).find('option:selected').data('parentid');
+                console.log("selectedParentIds",selectedParentId);
+
+                $('#parentCategoryFields').val(selectedParentId);
+            });
+
+    });
+    </script>

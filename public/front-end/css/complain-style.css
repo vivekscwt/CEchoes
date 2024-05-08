@@ -1,0 +1,201 @@
+.about-left-slider {
+	max-width: 612px;
+	margin-left: -43px;
+	position: relative;
+	overflow: hidden;
+}
+
+.about-50-left {
+	width: 37%;
+	float: left;
+	padding-right: 8.5px;
+}
+
+.about-50-right {
+	width: 63%;
+	float: right;
+	padding-left: 8.5px;
+}
+
+.gr-slider1 img {
+	margin: 0 auto;
+}
+
+.gr-slider2 {
+	margin-top: 26px;
+}
+
+.gr-slider4 {
+	z-index: 1;
+	margin-top: -130px;
+	width: 68%;
+	float: right;
+}
+
+.about-overlay-object1 {
+    position: absolute;
+    left: 232px;
+    bottom: 12px;
+}
+
+.complain-overlay-object1 {
+    position: absolute;
+    top: 0;
+    left: 38%;
+    transform: translateX(-50%);
+}
+
+.complain-content {
+    position: relative;
+}
+
+.complain-content:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 20px;
+    background: url(../images/overlay-object5.png) no-repeat left top;
+    width: 118px;
+    height: 315px;
+    z-index: -1;
+}
+
+.complain-content:after {
+    content: '';
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    background: url(../images/new-cat-shape1.png) no-repeat right bottom;
+    width: 100px;
+    height: 393px;
+    z-index: -1;
+}
+
+.complain-register-form {
+	border-radius: 20px;
+    background: #252525;
+	padding: 45px 30px;
+}
+
+.complain-register-form .form-control, 
+.complain-register-form .form-select {
+    border: 1px solid #3F3F3F;
+    background-color: #1D1D1D;
+    height: 50px;
+    border-radius: 8px;
+    color: #fff; 
+}
+
+.complain-register-form .form-select option {
+	color: #000000;
+}
+
+.complain-register-form .form-control::placeholder,
+.complain-register-form .form-select::placeholder {
+    color: rgba(255,255,255,0.8);
+}
+.complain-register-form .form-control:focus,
+.complain-register-form .form-select:focus {
+    background-color: transparent;
+    border-color: #fccb06;
+    color: #fff;
+}
+
+.complain-register-form input::-webkit-outer-spin-button,
+.complain-register-form input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+.complain-register-form input[type=number] {
+	appearance: none;
+	-moz-appearance: textfield;
+}
+
+.tag-label {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 149.4%;
+    margin-bottom: 7px;
+    color: #ffffff;
+}
+
+.range-tag-wrap {
+    margin-bottom: 19px;
+}
+
+.complain-register-form .custom-form ::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}
+
+.complain-register-form .custom-form .form-control, 
+.complain-register-form .custom-form .form-select {
+    padding-right: 18px;
+}
+
+.c-overlay1 {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    z-index: -1;
+}
+
+.c-overlay2 {
+    position: absolute;
+    bottom: -40px;
+    left: 0;
+    z-index: -1;
+}
+
+#sendreviewtags {
+    border: 1px solid #3F3F3F;
+    background-color: #1D1D1D;
+    padding: 5px 9px;
+    border-radius: 6px;
+    margin-bottom: 30px;
+}
+
+#sendreviewtags > span {
+    cursor: pointer;
+    display: block;
+    float: left;
+    color: #fff;
+    background: #fccb06;
+    padding: 7px;
+    padding-right: 25px;
+    margin: 4px;
+    border-radius: 4px;
+}
+
+#sendreviewtags > span:hover{
+    opacity:0.7;
+}
+
+#sendreviewtags > span:after{
+    position:absolute;
+    content:"×";
+    border:1px solid;
+    padding:2px 5px;
+    margin-left:3px;
+    font-size:11px;
+}
+
+#sendreviewtags > input {
+    background: #f2f2f2;
+    border: 0;
+    margin: 4px;
+    padding: 7px;
+    width: auto;
+    border-radius: 4px;
+    outline: none;
+}
+
+.complain-register-form #sendreviewtags > input {
+    background: rgb(242 242 242 / 16%);
+    color: #fff;
+}
+
+@media only screen and (max-width: 575.98px) {
+#sendreviewtags {
+    margin-bottom: 20px;
+}
+}

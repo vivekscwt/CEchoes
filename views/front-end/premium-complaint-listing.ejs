@@ -1,0 +1,385 @@
+<%- include('common/header') -%>
+   <link href="/front-end/css/company-profile-dashboard.css" rel="stylesheet" type="text/css">
+   <%- include('common/header-banner') -%>
+
+      <!-- ============== Section1 start =============== -->
+      <section class="main-content premium_company_profile bottom-main-content">
+         <div class="container">
+            <div class="main_box">
+               <%- include('common/premium-company-sidebar') -%>
+            </div>
+            <% if(company && company.membership_type_id>=3 ){ %>
+            <div class="each_box update_basic_information all_review_listing_for_company">
+               <div class="table-responsive">
+                  <table class="table table-hover custom-table">
+                     <thead>
+                        <tr>
+                           <th scope="col">Date</th>
+                           <th scope="col">Token</th>
+                           <th scope="col">Category</th>
+                           <th scope="col">Sub-Category</th>
+                           <th scope="col">Product Name</th>
+                           <th scope="col">Status</th>
+                           <th scope="col">Messages</th>
+                           <th scope="col" style="width: 110px; text-align: center;">Action</th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        <% AllComplaintsByCompanyId.forEach( compnaint=> { %>
+                           <tr role="row" class="odd">
+                              <td>
+                                 <% const dateString=compnaint.created_at; %>
+                                    <% const date=new Date(dateString); %>
+                                       <%= date.toLocaleDateString('en-US', { day: 'numeric' , month: 'short' ,
+                                          year: 'numeric' }) %>
+                              </td>
+                              <td><strong>
+                                    <a href="/company-compnaint-details/<%= company.slug %>/<%= compnaint.id %>" ><%= compnaint.ticket_id %></a>
+                                 </strong></td>
+                              <td>
+                                 <% if(compnaint.category_id == '0'){ %>
+                                    General
+                                 <% } else { %>
+                                    <%= compnaint.category_name %>
+                                 <% } %>
+                              </td>
+                              <td>
+                                 <% if(compnaint.category_id == '0'){ %>
+                                    General
+                                 <% } else { %>
+                                    <%= compnaint.sub_category_name %>
+                                 <% } %>
+                              </td>
+                              <td>
+                                 <%= compnaint.model_desc %>
+                              </td>
+                              <td>
+                                 <% if(compnaint.status=='0' ) { %>
+                                    <span class="text-danger"><strong>Reopen</strong></span>
+                                    <% } else if(compnaint.status=='1' ) { %>
+                                       <span class="text-success"><strong>Resolved</strong></span>
+                                       <% } else { %>
+                                          <span class="text-yellow"><strong>Ongoing</strong></span>
+                                          <% } %>
+                              </td>
+                              <td style="text-align: center;" class="complaint-status" >
+                                 <% if(compnaint.notification_statuses.length > 0){ %>
+                                    <% let count = 0; %>
+                                    <% compnaint.notification_statuses.forEach((notification, index) => { %>
+                                       <% if( compnaint.company_query[index] == "" ){ %>
+                                          <% count ++ ; %>
+                                       <% } %>
+                                    <% })  %>
+                                    <% if(count > 0) { %>
+                                      <span class="bell_icon"><i class="fa-solid fa-message"></i> <span class="bell_icon1"><%= count %></span> </span>
+                                    <% } %>
+                                    
+                                 <% }  %>
+                              </td>
+                              <td style="text-align: center;">
+                                 <% if(compnaint.status != '1') { %>   
+                                 <span class="action-select">
+                                    <span class="action-change">Action</span> <a href="" class="action-arw"><i
+                                          class="fa-solid fa-angle-down"></i></a>   
+                                    <div class="action-dropdown">
+                                       <ul class="p-0 m-0">
+                                          <li><a href="#" data-bs-toggle="modal"
+                                                data-complaint-id="<%= compnaint.id %>" data-level-id="<%= compnaint.level_id %>" data-customer-id="<%= compnaint.user_id %>"
+                                                data-bs-target="#customerquerymodal" class="respond-link">Respond
+                                                to customer with query</a></li>
+
+                                          <li>
+                                             <a href="#" data-bs-toggle="modal"
+                                                data-complaint-id="<%= compnaint.id %>" data-level-id="<%= compnaint.level_id %>"  data-customer-id="<%= compnaint.user_id %>"
+                                                data-bs-target="#respondcustomermodal"
+                                                class="respond-link">Respond to customer & Close</a>
+                                          </li>
+                                          <% if(compnaint.level_id == 1 && company && company.membership_type_id==4 ){ %> 
+                                             <li>
+                                                <a href="#" class="escalate_next_level" data-complaint-id="<%= compnaint.id %>" data-level-id="<%= compnaint.level_id %>" data-customer-id="<%= compnaint.user_id %>" >Escalate to next level</a>
+                                             </li>
+                                          <% } %>
+                                       </ul>
+                                    </div>
+                                 </span>
+                                 <% } %>
+                              </td>
+                           </tr>
+                        <% }) %>
+                     </tbody>
+                  </table>
+               </div>
+            </div>
+            <% }else{ %>
+               <div class="container">
+                  <div class="each_box update_basic_information all_review_listing_for_company">
+                     <h5>You have no permission to access survey features</h5>
+                  </div>
+               </div>
+            <% } %>
+         </div>
+      </section>
+
+      <!-- The Modal -->
+      <div class="modal fade" id="customerquerymodal">
+         <div class="modal-dialog">
+            <div class="modal-content">
+
+               <!-- Modal Header -->
+               <div class="modal-header border-0">
+                  <button type="button" class="btn-close" data-bs-dismiss="modal"><i
+                        class="fa-solid fa-circle-xmark"></i></button>
+               </div>
+
+               <!-- Modal body -->
+               <div class="modal-body">
+                  <form id="company_query_form" class="message_form">
+                     <div class="custom-form">
+                        <label for=""><span>Enter Your Query</span></label>
+                        <textarea name="message" id="" class="form-control"></textarea>
+                     </div>
+                     <input type="hidden" name="user_id" id="customer-id-query" value="" />
+                     <input type="hidden" name="company_id" value="<%= company.ID %>" />
+                     <input type="hidden" name="company_slug" value="<%= company.slug %>" />
+                     <input type="hidden" id="complaint-id-input" name="complaint_id" value="">
+                     <input type="hidden" id="complaint-query-level" name="complaint_level" value="">
+                     <input type="hidden"  name="complaint_status" value="2">
+                     <input type="submit" class="btn-default btn-warning submit_btn"  value="Submit">
+                  </form>
+                  <div class="register-now frm-loading" style=" display: none; ">
+                     <span class="indicator-progress">Please wait...
+                        <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                     </span>
+                  </div>
+                  <div
+                     style=" width: 100%; text-align: center; display: block; border: 2px solid #fccb06; padding: 6px; margin-top: 20px; border-radius: 5px;  display: none;"
+                     class="response-message"></div>
+               </div>
+            </div>
+         </div>
+      </div>
+
+      <div class="modal fade" id="respondcustomermodal">
+         <div class="modal-dialog">
+            <div class="modal-content">
+
+               <!-- Modal Header -->
+               <div class="modal-header border-0">
+                  <button type="button" class="btn-close" data-bs-dismiss="modal"><i
+                        class="fa-solid fa-circle-xmark"></i></button>
+               </div>
+
+               <!-- Modal body -->
+               <div class="modal-body">
+                  <form id="resolved_message_form" class="message_form">
+                     <div class="custom-form">
+                        <label for=""><span>Resolved Message</span></label>
+                        <textarea name="message" id="" class="form-control"></textarea>
+                     </div>
+                     <input type="hidden" name="user_id" id="customer_id_resolve" value="" />
+                     <input type="hidden" name="company_id" value="<%= company.ID %>" />
+                     <input type="hidden" name="company_slug" value="<%= company.slug %>" />
+                     <input type="hidden" id="complaint-id-resolve" name="complaint_id" value="">
+                     <input type="hidden"  name="complaint_status" value="1">
+                     <input type="hidden" id="complaint-resolve-level" name="complaint_level" value="">
+                     <input type="submit" class="btn-default btn-warning submit_btn" id="" value="Resolved">
+                  </form>
+                  <div class="register-now frm-loading" style=" display: none; ">
+                     <span class="indicator-progress">Please wait...
+                        <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                     </span>
+                  </div>
+                  <div
+                     style=" width: 100%; text-align: center; display: block; border: 2px solid #fccb06; padding: 6px; margin-top: 20px; border-radius: 5px;  display: none;"
+                     class="response-message"></div>
+               </div>
+            </div>
+         </div>
+      </div>
+
+      <!--Escalate Modal -->
+      <div class="modal modal_body_edit fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+         <div class="modal-dialog" role="document">
+           <div class="modal-content">
+             <div class="modal-header" style="border-bottom: none;">
+               <h5 class="modal-title" id="successModalLabel">Success</h5>
+               <button type="button" class="btn-close btn_close_all" data-bs-dismiss="modal"><i
+                  class="fa-solid fa-circle-xmark"></i></button>
+
+             </div>
+             <div class="modal-body">
+               <!-- Display your success message here -->
+               <p id="successMessage"></p>
+             </div>
+             <div class="modal-footer" style="border-top: none;">
+               <button type="button" class="btn btn-secondary btn_close_all" data-bs-dismiss="modal">Close</button>
+               </div>
+           </div>
+         </div>
+       </div>
+
+       
+      <!-- ============== Section1 end =============== -->
+      <style>
+         .complaint-status {
+            position: relative;
+            left: 0px;
+            min-width: 96px;
+            font-size: 12px;
+         }
+         .bell_icon{
+            position: relative;
+         }
+         .bell_icon i {
+            font-size: 14px;
+            position: relative;
+         }
+         
+         .bell_icon .bell_icon1 {
+            position: absolute;
+            right: -6px;
+            background-color: #F8A401;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 15px;
+            height: 15px;
+            top: -11px;
+         }
+
+         .modal_body_edit #successMessage {
+    border: 1px solid #fccb06;
+    padding: 15px 10px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.modal_body_edit .modal-header{
+   margin-bottom: 0px;
+}
+
+.modal_body_edit .modal-body{
+    border: none !important;
+    margin: 0px !important;
+}
+         </style>
+
+      <%- include('common/footer') -%>
+
+         <link rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/css/dataTables.bootstrap4.min.css" />
+         <link rel="stylesheet" href="https://cdn.datatables.net/responsive/1.0.4/css/dataTables.responsive.css" />
+
+         <script src="https://cdn.datatables.net/1.10.5/js/jquery.dataTables.min.js"></script>
+         <script
+            src="https://cdn.datatables.net/plug-ins/f2c75b7247b/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+         <script src="https://cdn.datatables.net/responsive/1.0.4/js/dataTables.responsive.js"></script>
+         <script>
+            jQuery(function ($) {
+               $(document).ready(() => {
+                  $('.table').DataTable({
+                     "order": [[0, "desc"]]
+                  });
+               });
+            });
+
+            $(document).ready(function () {
+               $('.respond-link').on('click', function (e) {
+                  e.preventDefault();
+                  const complaintId = $(this).data('complaint-id');
+                  const customerId = $(this).data('customer-id');
+                  const levelId = $(this).data('level-id');
+                  $('#complaint-id-input').val(complaintId);
+                  $('#complaint-id-resolve').val(complaintId);
+                  $('#customer_id_resolve').val(customerId);
+                  $('#customer-id-query').val(customerId);
+                  $('#complaint-query-level').val(levelId);
+                  $('#complaint-resolve-level').val(levelId);
+               });
+
+               $('form.message_form').submit(function (e) {
+                  e.preventDefault();
+                  $('.response-message').hide();
+                  $('.response-message').text('');
+                  $('#query_submit_btn').prop('disabled', true);
+                  $('.frm-loading').show();
+                  //alert('aaaaaa')
+                  const transformedResponse = {};
+                  const formData = $(this).serializeArray();
+                  $(formData).each(function (index, field) {
+                     transformedResponse[field.name] = field.value;
+                  });
+                  console.log(transformedResponse);
+                  //return false;
+                  $.ajax({
+                     url: '/auth/company-query', // URL for your API endpoint
+                     method: 'POST',
+                     data: JSON.stringify(transformedResponse),
+                     //data: formData,
+                     processData: false,
+                     //contentType: false,
+                     contentType: 'application/json',
+                     success: function (data) {
+                        if (data.status == 'ok') {
+                           $('.response-message').text(data.message);
+                           $('.response-message').show();
+                           $('#query_submit_btn').prop('disabled', false);
+                           $('.frm-loading').hide();
+                           setTimeout(function () {
+                              window.location.reload();
+                           }, 2000);
+                        } else {
+                           $('.response-message').text(data.message);
+                           $('.response-message').show();
+                           $('#query_submit_btn').prop('disabled', false);
+                           $('.frm-loading').hide();
+                           console.log('Something went wrong');
+                        }
+                     },
+                     error: function (xhr, status, error) {
+                        // Handle any errors that occur during the request
+                        console.log(error);
+                     }
+                  });
+
+               });
+
+               $('.btn_close_all').on('click', function(e){
+                  location.reload(true);
+               })
+
+               $('.escalate_next_level').on('click', function (e) {
+                  const complaintId = $(this).data('complaint-id');
+                  const customerId = $(this).data('customer-id');
+                  const levelId = $(this).data('level-id');
+                  //console.log(complaintId, customerId, levelId)
+                  //alert('aaaaaaaa');
+                  $.ajax({
+                     url:'/auth/escalate-next-level',
+                     method:'POST',
+                     data:JSON.stringify({complaintId:complaintId, customerId:customerId, levelId:levelId }),
+                     contentType:'application/json',
+                     processData:false,
+                     success: function (data){
+                        // $('.response-message').text(data.message);
+                        // $('.response-message').show();
+
+                        // Display success message in the modal
+                        $('#successMessage').text(data.message);
+                        // Open the modal
+                        $('#successModal').modal('show');
+                        setTimeout(function() {
+                           location.reload(true);
+                        }, 3000);
+                     },
+                     error: function(error){
+                        console.log(error);
+                     }
+                  })
+                  //return false;
+               });
+
+            });
+
+         </script>

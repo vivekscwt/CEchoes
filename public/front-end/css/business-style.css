@@ -1,0 +1,452 @@
+.business-cur-head {
+    font-family: 'Edu SA Beginner', cursive;
+    font-size: 35px;
+    position: relative;
+    font-weight: 400;
+}
+
+.business-cur-head .fa-quote-left {
+    margin-right: 10px;
+}
+
+.business-cur-head .fa-quote-right {
+    margin-left: 10px;
+}
+
+.about-left-slider {
+    max-width: 612px;
+    margin-left: -43px;
+    position: relative;
+    overflow: hidden;
+    z-index: 9;
+}
+
+.about-content2 .about-left-slider {
+    margin-right: -43px;
+    margin-left: 0;
+}
+
+.about-50-left {
+    width: 37%;
+    float: left;
+    padding-right: 8.5px;
+}
+
+.about-50-right {
+    width: 63%;
+    float: right;
+    padding-left: 8.5px;
+}
+
+.about-content2 .about-50-left {
+    float: right;
+    padding-right: 0;
+    padding-left: 8.5px;
+}
+
+.about-content2 .about-50-right {
+    float: left;
+    padding-right: 8.5px;
+    padding-left: 0;
+}
+
+.gr-slider1 img {
+    margin: 0 auto;
+}
+
+.gr-slider2 {
+    margin-top: 26px;
+}
+
+.gr-slider4 {
+    z-index: 1;
+    margin-top: -130px;
+    width: 68%;
+    float: right;
+}
+
+.about-content2 .gr-slider3 img {
+    margin-left: auto;
+}
+
+.about-content2 .gr-slider4 {
+    float: left;
+}
+
+.about-overlay-object1 {
+    position: absolute;
+    left: 232px;
+    bottom: 12px;
+}
+
+.about-content2 .about-overlay-object1 {
+    transform: rotatey(180deg);
+    left: 215px;
+}
+
+.about-right {
+    position: relative;
+    z-index: 9;
+}
+
+
+.business-feature-content {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+.business-feature-content:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: url(../images/business-shape1.png) no-repeat left top;
+    width: 28px;
+    height: 309px;
+}
+
+.business-feature-content:after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    background: url(../images/business-shape2.png) no-repeat right center;
+    width: 111px;
+    height: 100%;
+}
+
+.business-feature-step {
+    border-radius: 18px;
+    padding: 15px 16px;
+    color: #1E1E1E;
+    font-size: 17px;
+    font-weight: 600;
+    min-height: 77px;
+    display: flex;
+    align-items: center;
+    line-height: 160%;
+    background: #FCCB06;
+    box-shadow: 0px 14px 34px 0px rgba(0, 0, 0, 0.12);
+    position: relative;
+    z-index: 9;
+}
+
+.business-feature-step:nth-child(odd) {
+    background: #FFF;
+}
+
+.business-feature-step + .business-feature-step {
+    margin-top: 13px;
+}
+
+.business-feature-icon svg {
+    width: 50px;
+    margin-right: 20px;
+}
+
+.advantage-list ul li {
+    font-size: 16px;
+    list-style-type: none;
+    background: url(../images/check-icon.png) no-repeat top 2px left;
+    padding-left: 35px;
+}
+
+.advantage-content:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: url(../images/overlay-object5.png) no-repeat left top;
+    width: 118px;
+    height: 315px;
+}
+
+.advantage-list ul li strong.zoom_animation {
+    color: #f1ae00;
+}
+
+.dont-forget-box {
+    border-radius: 27px;
+    background: #FFF;
+    box-shadow: 0px 14px 54px 0px rgba(0, 0, 0, 0.16);
+    border-left: 22px #FCCB06 solid;
+    padding: 50px 55px 50px 60px;
+    height: 100%;
+    position: relative;
+    z-index: 9;
+}
+
+.dont-forget-box h4 {
+    font-size: 18px;
+}
+
+.dont-forget-content:before {
+    content: '';
+    position: absolute;
+    left: 20px;
+    bottom: 8px;
+    background: url(../images/dont-forget-shape1.png) no-repeat left bottom;
+    width: 93px;
+    height: 208px;
+}
+
+.dont-forget-content:after {
+    content: '';
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+    background: url(../images/dont-forget-shape2.png) no-repeat left bottom;
+    width: 73px;
+    height: 163px;
+}
+
+.busi-did-right img {
+    border-radius: 27px;
+    width: 100%;
+}
+
+.busi-did-left-text {
+    border-radius: 27px;
+    background: #FFF;
+    box-shadow: 0px 14px 54px 0px rgba(0, 0, 0, 0.16);
+    position: relative;
+    padding: 20px 38px;
+    display: flex;
+    align-items: center;
+    border-left: 22px #FCCB06 solid;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 170.4%;
+    min-height: 172px;
+    width: 673px;
+    position: relative;
+    z-index: 9;
+}
+
+.busi-did-left-text + .busi-did-left-text  {
+    margin-top: 22px;
+}
+
+.busi-did-left-text:last-child {
+    width: 607px;
+    margin-left: 66px;
+}
+
+
+.busi-did-left-text p span {
+    color: #f1ae00;
+}
+
+.upcoming-feature-step {
+    border-radius: 20px;
+    padding: 28px 20px 28px 45px;
+    box-shadow: 0px 14px 34px 0px rgba(0, 0, 0, 0.12);
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 160%;
+    position: relative;
+    background-color: #fff;
+    margin-bottom: 17px;
+}
+
+.upcoming-feature-step span {
+    position: absolute;
+    left: 20px;
+    top: 14px;
+    color: #FFF0B5;
+    font-size: 47px;
+    font-weight: 900;
+    line-height: 160%;
+}
+
+.upcoming-feature-step p {
+    position: relative;
+    z-index: 9;
+}
+
+.business-bottom-tagline {
+    background: url(../images/business-tagline-bg.png) no-repeat bottom center #FCCB06;
+    border-radius: 20px;
+    padding: 34px 25px;
+    margin-top: 65px;
+    position: relative;
+    z-index: 9;
+}
+
+.business-bottom-tagline h3 {
+    margin-bottom: 0;
+    text-align: center;
+    font-size: 45px;
+    font-weight: 700;
+}
+
+.business-bottom-tagline:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -115px;
+    background: url(../images/upcoming-feature-shape1.png) no-repeat;
+    width: 200px;
+    height: 84px;
+}
+
+.upcoming-feature-content:before {
+    content: '';
+    position: absolute;
+    right: 32px;
+    bottom: 125px;
+    background: url(../images/upcoming-feature-shape2.png) no-repeat;
+    width: 116px;
+    height: 138px;
+}
+
+.choose-your-plan-box {
+    border-radius: 20px;
+    background: #252525;
+    text-align: center;
+    overflow: hidden;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+    position: relative;
+    z-index: 9;
+}
+
+.choose-your-plan-box-step {
+    padding: 64px 25px 45px;
+    position: relative;
+    text-align: center;
+    color: #ffffff;
+    transition: all ease-in-out 0.5s;
+}
+
+.choose-your-plan-box-step:hover {
+    background: #FCCB06;
+    color: #000000;
+    transition: all ease-in-out 0.5s;
+}
+
+.choose-your-plan-box-step ul {
+    padding: 0;
+    margin: 0;
+}
+
+.choose-your-plan-box-step h4 {
+    color: #FCCB06;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 110.4%;
+    transition: all ease-in-out 0.5s; 
+}
+
+.choose-your-plan-box-step:hover h4 {
+    color: #232323;
+    transition: all ease-in-out 0.5s;
+}
+
+.choose-your-plan-box-step .btn-default {
+    margin: 30px 0;
+}
+
+.choose-your-plan-box-step:hover .btn-warning {
+    border-color: #000000;
+}
+
+.choose-your-plan-box-step:hover .btn-warning:hover {
+    background-color: #000000;
+}
+
+.choose-your-plan-box-step ul li {
+    font-family: var(--inter);
+    font-size: 15px;
+    font-weight: 400;
+}
+
+.choose-your-plan-box-step ul li + li {
+    margin-top: 30px;
+}
+
+.best-value-tag {
+    position: absolute;
+    top: 0;
+    right: 10px;
+    color: #FFF;
+    text-align: center;
+    font-family: var(--inter);
+    font-size: 10px;
+    font-weight: 800;
+    line-height: 129.9%;
+    background: #252525;
+    border-radius: 10px;
+    min-width: 48px;
+    min-height: 64px;
+    display: flex;
+    justify-content: center;
+    padding: 12px 5px 0 5px;
+    overflow: hidden;
+    opacity: 0;
+    transition: all ease-in-out 0.5s;
+}
+
+.best-value-tag:after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: -37px;
+    transform: translateX(-50%) rotate(45deg);
+    width: 42px;
+    height: 42px;
+    background: #FCCB06;
+}
+
+.choose-your-plan-box-step:hover .best-value-tag {
+    opacity: 1;
+    transition: all ease-in-out 0.5s;
+}
+
+.business-choose-your-plan-content:after {
+    content: '';
+    position: absolute;
+    left: 13px;
+    bottom: 20px;
+    background: url(../images/did-you-shape1.png) no-repeat left bottom;
+    width: 46px;
+    height: 150px;
+}
+
+.business-choose-your-plan-content:before {
+    content: '';
+    position: absolute;
+    right: 13px;
+    bottom: 20px;
+    background: url(../images/choose-plan-shape.svg) no-repeat right bottom;
+    width: 122px;
+    height: 133px;
+
+}
+
+.choose-your-plan-box-step.overlay {
+    pointer-events: none;
+}
+
+.choose-your-plan-box-step.overlay:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-color: rgba(0, 0, 0, 70%);
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+}
+
+span.cm-sn {
+    display: inline-block;
+    font-size: 10px;
+    background: #f00;
+    padding: 1px 3px;
+    border-radius: 3px;
+    color: #ffffff;
+}

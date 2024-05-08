@@ -1,0 +1,101 @@
+<%- include('common/header') -%>
+<link href="/front-end/css/faq-style.css" rel="stylesheet" type="text/css">
+<%- include('common/header-banner') -%>
+
+<!-- ============== Section1 Start =============== -->
+<section class="main-content about-content2 py-3">
+   <div class="container">
+      <div class="row flex-md-row-reverse">
+         <div class="col-md-6 my-auto">
+            <div class="about-left-slider my-3" data-aos="fade-left">
+               <div class="about-50-right">
+                  <div class="gr-slider3">
+                     <div class="item">
+                        <img src="/<%= faqPageData.banner_img_1 %>" alt="img" width="298" height="434">
+                     </div>
+                     <div class="item">
+                        <img src="/<%= faqPageData.banner_img_2 %>" alt="img" width="298" height="434">
+                     </div>
+                  </div>
+                  <div class="gr-slider4">
+                     <div class="item">
+                        <img src="/<%= faqPageData.banner_img_3 %>" alt="img" width="252" height="250">
+                     </div>
+                     <div class="item">
+                        <img src="/<%= faqPageData.banner_img_4 %>" alt="img" width="252" height="250">
+                     </div>
+                  </div>
+               </div>
+               <div class="about-50-left">
+                  <div class="gr-slider1">
+                     <div class="item">
+                        <img src="/<%= faqPageData.banner_img_5 %>" alt="img" width="194" height="228">
+                     </div>
+                     <div class="item">
+                        <img src="/<%= faqPageData.banner_img_6 %>" alt="img" width="194" height="228">
+                     </div>
+                  </div>
+                  <div class="gr-slider2">
+                     <div class="item">
+                        <img src="/<%= faqPageData.banner_img_7 %>" alt="img" width="212" height="312">
+                     </div>
+                     <div class="item">
+                        <img src="/<%= faqPageData.banner_img_8 %>" alt="img" width="212" height="312">
+                     </div>
+                  </div>
+               </div>
+               <div class="about-overlay-object1"><img src="/front-end/images/overlay-object1.png" alt="img" width="151" height="158"></div>
+            </div>
+         </div>
+         <div class="col-md-6 my-auto">
+            <div class="about-right text-md-start text-center my-3" data-aos="fade-right">
+               <%- faqPageData.content %>
+            </div>
+         </div>
+      </div>
+   </div>
+</section>
+<!-- ============== Section1 End =============== -->
+
+<!-- ============== Section2 Start =============== -->
+<section class="main-content bottom-main-content faq-content">
+   <div class="container">
+      <div class="row">
+         <div class="col-lg-3 col-sm-4">
+            <div class="faq-categories mb-sm-0 mb-4 position-relative" data-aos="fade-right">
+               <div class="faq-cat-head"><h4 class="m-0">FAQ Categories</h4></div>
+               <div class="faq-cat-body">
+                  <ul class="p-0">
+                     <% faqCategoriesData.forEach( (category,index)=> { %>
+                     <li><a href=""><%= category.category %></a></li>
+                     <% }) %>
+                  </ul>
+               </div>
+            </div>
+         </div>
+         <div class="col-lg-9 col-sm-8">
+            <% faqCategoriesData.forEach( (category,index)=> { %>
+               <div class="custom-accordion position-relative">
+                  <% faqItemsData.forEach( (qus_ans, key)=> { %>
+                     <% if (qus_ans.category_id==category.id) { %>
+                        <div class="accordion-repeat">
+                           <div class="c_accordion_wrap">
+                              <div class="acc_heading"><%= qus_ans.question %></div>
+                              <div class="acc_contents">
+                                 <p><%= qus_ans.answer %></p>
+                              </div>
+                           </div>
+                        </div>
+                     <% } %>
+                  <% }) %>
+               </div>
+            <% }) %>
+            
+         </div>
+      </div>
+   </div>
+   <div class="overlay-object3"><img src="/front-end/images/overlay-object3.png" alt="img" width="70" height="215" loading="lazy"></div>
+   <div class="overlay-object4"><img src="/front-end/images/overlay-object4.png" alt="img" width="118" height="319" loading="lazy"></div>
+</section>
+<!-- ============== Section2 End =============== -->
+<%- include('common/footer') -%>

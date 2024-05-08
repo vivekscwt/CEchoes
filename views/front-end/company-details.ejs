@@ -1,0 +1,834 @@
+<%- include('common/header') -%>
+<link href="/front-end/css/category-profile-style.css" rel="stylesheet" type="text/css">
+<link href="/front-end/css/category-profile-premium-style.css" rel="stylesheet" type="text/css">
+<%- include('common/header-banner') -%>
+<!-- ============== Section1 Start =============== -->
+<section class="main-content bottom-main-content category-free">
+  <div class="container">
+    <div class="company-profile">
+      <div class="company-logo">
+        <% if(CompanyInfo.logo){ %>
+          <img src="/<%= CompanyInfo.logo %>" alt="img" loading="lazy" width="260" height="260">
+        <% }else{ %>
+          <img src="/front-end/images/company-placeholder-image.png" alt="img" loading="lazy" width="260" height="260">
+        <% } %>
+      </div>
+      <div class="company-info">
+        <h3>
+          <%= CompanyInfo.company_name %><br>
+          <small clas="tag-line"><%= CompanyInfo.heading %></small>
+          <% if(CompanyInfo.verified == 1){ %>
+          <span class="verified-tag">
+            <svg width="21" height="23" viewBox="0 0 21 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <g id="Group">
+                <path id="Vector" d="M20.6508 3.69775C20.752 3.72507 20.8403 3.7788 20.903 3.8512C20.9658 3.92361 20.9997 4.01095 21 4.10068V8.43734C21 20.1051 11.6828 22.1556 10.6018 22.3546C10.5347 22.3669 10.4653 22.3669 10.3982 22.3546C9.31715 22.1556 0 20.1051 0 8.43734V4.10068C0.000265467 4.01095 0.0342165 3.92361 0.0969704 3.8512C0.159724 3.7788 0.248048 3.72507 0.349239 3.69775C6.13839 2.10529 9.34637 0.535964 10.2398 0.0636245C10.3177 0.0220614 10.4079 0 10.5 0C10.5921 0 10.6823 0.0220614 10.7602 0.0636245C11.6536 0.534422 14.8616 2.10529 20.6508 3.69775Z" fill="#E8EDF4"/>
+                <path id="Vector_2" d="M10.7223 20.3267C10.5765 20.3676 10.4189 20.3676 10.2731 20.3267C8.2279 19.7618 2.28125 17.35 2.28125 8.43644V5.6078C2.28207 5.48298 2.32857 5.36144 2.41439 5.25983C2.50021 5.15821 2.62114 5.08151 2.7606 5.04022C5.3081 4.30068 7.7829 3.39331 10.1622 2.32648C10.2653 2.27886 10.3809 2.25391 10.4984 2.25391C10.6159 2.25391 10.7315 2.27886 10.8346 2.32648C13.2141 3.39335 15.689 4.30072 18.2367 5.04022C18.3761 5.08151 18.4971 5.15821 18.5829 5.25983C18.6687 5.36144 18.7152 5.48298 18.716 5.6078V8.43644C18.716 17.3461 12.7767 19.7591 10.7223 20.3267Z" fill="#39B54A"/>
+                <path id="Vector_3" d="M8.06551 14.4237L5.72675 12.3801C5.56468 12.2381 5.47488 12.0482 5.47659 11.851C5.47829 11.6538 5.57137 11.465 5.73588 11.3251L6.3499 10.8042C6.43358 10.7329 6.53344 10.6767 6.64349 10.6389C6.75355 10.6011 6.87152 10.5824 6.99032 10.5841C7.10911 10.5857 7.22629 10.6077 7.3348 10.6485C7.44332 10.6894 7.54093 10.7484 7.62177 10.8219L8.56449 11.6768L13.2667 6.82844C13.3402 6.7523 13.4309 6.68922 13.5335 6.64283C13.6361 6.59644 13.7486 6.56767 13.8644 6.55817C13.9802 6.54867 14.0971 6.55864 14.2083 6.58748C14.3196 6.61633 14.423 6.6635 14.5125 6.72626L15.1973 7.20361C15.3784 7.33086 15.4928 7.51339 15.5153 7.71148C15.5379 7.90957 15.4669 8.10717 15.3178 8.26126L9.38303 14.3782C9.30412 14.4595 9.20569 14.5259 9.09424 14.5729C8.98278 14.6198 8.86081 14.6463 8.73636 14.6506C8.61191 14.6549 8.48779 14.6369 8.37217 14.5978C8.25654 14.5587 8.15203 14.4993 8.06551 14.4237Z" fill="white"/>
+              </g>
+            </svg>
+            Verified Business
+          </span>
+          <% }else{ %>
+            <span class="verified-tag" style="color: #f4a835;">
+              <svg width="21" height="23" viewBox="0 0 21 23" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20.6508 3.69775C20.752 3.72507 20.8403 3.7788 20.903 3.8512C20.9658 3.92361 20.9997 4.01095 21 4.10068V8.43734C21 20.1051 11.6828 22.1556 10.6018 22.3546C10.5347 22.3669 10.4653 22.3669 10.3982 22.3546C9.31715 22.1556 0 20.1051 0 8.43734V4.10068C0.000265467 4.01095 0.0342165 3.92361 0.0969704 3.8512C0.159724 3.7788 0.248048 3.72507 0.349239 3.69775C6.13839 2.10529 9.34637 0.535964 10.2398 0.0636245C10.3177 0.0220614 10.4079 0 10.5 0C10.5921 0 10.6823 0.0220614 10.7602 0.0636245C11.6536 0.534422 14.8616 2.10529 20.6508 3.69775Z" fill="#E8EDF4"/>
+                <path d="M10.7223 20.3267C10.5765 20.3676 10.4189 20.3676 10.2731 20.3267C8.2279 19.7618 2.28125 17.35 2.28125 8.43644V5.6078C2.28207 5.48298 2.32857 5.36144 2.41439 5.25983C2.50021 5.15821 2.62114 5.08151 2.7606 5.04022C5.3081 4.30068 7.7829 3.39331 10.1622 2.32648C10.2653 2.27886 10.3809 2.25391 10.4984 2.25391C10.6159 2.25391 10.7315 2.27886 10.8346 2.32648C13.2141 3.39335 15.689 4.30072 18.2367 5.04022C18.3761 5.08151 18.4971 5.15821 18.5829 5.25983C18.6687 5.36144 18.7152 5.48298 18.716 5.6078V8.43644C18.716 17.3461 12.7767 19.7591 10.7223 20.3267Z" fill="#F4A835"/>
+                <path d="M10.1636 13.105C9.54335 13.105 9.02344 13.6249 9.02344 14.2451C9.02344 14.8654 9.54335 15.3853 10.1636 15.3853C10.761 15.3853 11.3038 14.8654 11.2764 14.2725C11.3038 13.6203 10.7884 13.105 10.1636 13.105Z" fill="black"/>
+                <path d="M9.87901 6.02808C9.33703 6.16334 9 6.59299 9 7.11414C9.02733 7.42842 9.0501 7.74667 9.07743 8.06095C9.15485 9.2584 9.23228 10.432 9.3097 11.6294C9.33703 12.0352 9.69683 12.3296 10.1614 12.3296C10.6259 12.3296 10.9903 12.0153 11.0131 11.6056C11.0131 11.3589 11.0131 11.1322 11.0404 10.8815C11.0905 10.1137 11.1451 9.34592 11.1952 8.57813C11.2226 8.08085 11.2727 7.58357 11.3 7.08629C11.3 6.90727 11.2727 6.74814 11.1952 6.58901C10.963 6.14345 10.421 5.91669 9.87901 6.02808Z" fill="black"/>
+                </svg>
+              Unverified Business
+            </span>
+          <% } %>
+        </h3>
+        <div class="company-rating-review">
+          <% var average = companyReviewNumbers.rewiew_count.total_review_average %>
+          <% if (average >= 1 && average <= 1.25) {
+            var avg = 1
+            } else if (average > 1.25 && average <= 1.9) {
+            var avg = 1.5
+            } else if (average >= 2 && average <= 2.25) {
+            var avg = 2
+            } else if (average > 2.25 && average <= 2.9) {
+            var avg = 2.5
+            } else if (average >= 3 && average <= 3.25) {
+            var avg = 3
+            } else if (average > 3.25 && average <= 3.9) {
+            var avg = 3.5
+            } else if (average >= 4 && average <= 4.25) {
+            var avg = 4
+            } else if (average > 4.25 && average <= 4.9) {
+            var avg = 4.5
+            } else if (average > 4.5) {
+            var avg = 5
+            } else {
+            var avg = 0
+            }
+          %>          
+          <% var company_total_review = companyReviewNumbers.rewiew_count.total_review_count %>
+          <% if(company_total_review>10){%>
+              <span class="rating-point">
+              <% if(avg!=0){%>
+              <%= avg %>                
+              <% } %>
+              </span>
+              <% allRatingTags.forEach( tag => { %>
+                <% if(tag.review_rating_value == avg){ %>
+                  <img style="display: inline-block;" src="/<%= tag.rating_image %>" width="55">
+                <% } %>
+              <% }) %>
+          <% } %>
+          <%= companyReviewNumbers.rewiew_count.total_review_count %> Review<% if(companyReviewNumbers.rewiew_count.total_review_count>1){ %>s<% } %>
+        </div>
+        <div class="company-contact-info">
+          <% if(CompanyInfo.comp_email){ %>
+          <span><i class="fa-solid fa-envelope"></i><a href="mailto:<%= CompanyInfo.comp_email %>"><%= CompanyInfo.comp_email %></a></span>
+          <% } %>
+          <% if(CompanyInfo.comp_phone){ %>
+          <span><i class="fa-solid fa-mobile"></i><a href="tel:<%= CompanyInfo.comp_phone %>"><%= CompanyInfo.comp_phone %></a></span>
+          <% } %>
+          <% if(CompanyInfo.tollfree_number){ %>
+          <span><i class="fa-regular fa-circle-phone"></i><a href="tel:<%= CompanyInfo.tollfree_number %>"><%= CompanyInfo.tollfree_number %></a></span>
+          <% } %>
+        </div>
+        <% if(company && company.operating_hours ) { %>
+          <div class="company-contact-info">
+            <span><i class="fa-solid fa-clock"></i><%=  company.operating_hours %></span>
+          </div>
+        <% } %>
+        <% if(CompanyInfo.main_address){ %>
+        <div class="company-contact-info">
+          <span><i class="fa-solid fa-location-dot"></i><a <% if(CompanyInfo.address_map_url){ %>href="<%= CompanyInfo.address_map_url %>"<% } %> target="_blank">
+            <%= CompanyInfo.main_address %><%= CompanyInfo && CompanyInfo.main_address_city ? ', '+CompanyInfo.main_address_city : '' %><%= CompanyInfo && CompanyInfo.main_address_state ? ', '+CompanyInfo.main_address_state : '' %><%= CompanyInfo && CompanyInfo.main_address_country ? ', '+CompanyInfo.main_address_country : '' %><%= CompanyInfo && CompanyInfo.main_address_pin_code ? ', '+CompanyInfo.main_address_pin_code : '' %>
+          </a></span>
+        </div>
+        <% } %>
+      </div>
+    </div>
+    <% if(CompanyInfo.about_company){ %>
+    <div class="company-content">
+      <p><%= CompanyInfo.about_company %></p>
+    </div>
+    <% } %>
+    <section class="main-content pt-0">
+      <div class="container">
+        <% if(company && company.membership_type_id>0 ){ %>
+          <% if(gallery_img != "") {%>
+            <div class="gallery-content">
+                <div class="gallery-head d-flex justify-content-between align-items-center">
+                    <h2 class="inner-main-head m-0">Gallery</h2>
+                    <!-- <a href="#" class="view-more mt-0"><span class="position-relative"><i class="fa-solid fa-angle-right"></i>View More</span></a> -->
+                </div>
+                <div class="gallery-wrapper">
+                    <% gallery_img.forEach( (image,index)=> {%>
+                        <div class="gallery-img">
+                            <a  href="/<%= image.gallery_images %>" data-fancybox="gallery">
+                                <img src="/<%= image.gallery_images %>" alt="img" loading="lazy" width="262" height="392">
+                            </a>
+                        </div>
+                    <% }) %>
+                </div>
+            </div>
+          <% } %>
+        <% } %>
+      </div>
+    </section> 
+    
+    <div class="rating-add-content">
+      <div class="row">
+        <div class="col-md-7">
+          <div class="rating-review-left">
+            <% if(company_total_review>0){%>
+            <div class="rating-review-box">
+              <div class="rating-review-head">
+                <h4>Ratings & Reviews</h4>
+              </div>
+              <div class="rating-review-content">
+                <div class="rating-progress">
+                  <div class="rating-prog-count">
+                    <% if(company_total_review>10){%>
+                    <h2>
+                      <%= avg %>
+                      <% allRatingTags.forEach( tag => { %>
+                        <% if(tag.review_rating_value == avg){ %>
+                        <img src="/<%= tag.rating_image %>" width="45">
+                        <% } %>
+                      <% }) %> 
+                    </h2>
+                    <% } %>
+                    <p><%= companyReviewNumbers.rewiew_count.total_review_count %> Review<% if(companyReviewNumbers.rewiew_count.total_review_count>1){ %>s<% } %></p>
+                  </div>
+                  <div class="rating-progress-bar">
+                    <table class="table">
+                      <tbody>
+                        <tr>
+                          <td>5</td>
+                          <td><i class="fa-solid fa-star"></i></td>
+                          <td>
+                           <% var total_review_count = companyReviewNumbers.rewiew_count.total_review_count %>
+                           <% var count = 0
+                              var progress_val = 0
+                           %>
+                           <% companyReviewNumbers.rewiew_rating_count.forEach(rating_count => { %>
+                             <% if (rating_count.rating == 5) { %>
+                               <% count = rating_count.cnt_rat %>
+                             <% } %>
+                           <% }) %>
+                           <% var progress_val = (count / total_review_count) * 100 %>
+                            <div class="progress">
+                              <div class="progress-bar" role="progressbar" style="width: <%= progress_val %>%" aria-valuenow="<%= progress_val %>" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                          </td>
+                          <td>
+                           <%= count %> 
+                          </td>
+                        </tr>
+                        <tr>
+                           <td>4.5</td>
+                           <td><i class="fa-solid fa-star"></i></td>
+                           <td>
+                            <% var total_review_count = companyReviewNumbers.rewiew_count.total_review_count %>
+                            <% var count = 0
+                               var progress_val = 0
+                            %>
+                            <% companyReviewNumbers.rewiew_rating_count.forEach(rating_count => { %>
+                              <% if (rating_count.rating == 4.5) { %>
+                                <% count = rating_count.cnt_rat %>
+                              <% } %>
+                            <% }) %>
+                            <% var progress_val = (count / total_review_count) * 100 %>
+                             <div class="progress">
+                               <div class="progress-bar" role="progressbar" style="width: <%= progress_val %>%" aria-valuenow="<%= progress_val %>" aria-valuemin="0" aria-valuemax="100"></div>
+                             </div>
+                           </td>
+                           <td>
+                            <%= count %> 
+                           </td>
+                         </tr>
+                         <tr>
+                           <td>4</td>
+                           <td><i class="fa-solid fa-star"></i></td>
+                           <td>
+                            <% var total_review_count = companyReviewNumbers.rewiew_count.total_review_count %>
+                            <% var count = 0
+                               var progress_val = 0
+                            %>
+                            <% companyReviewNumbers.rewiew_rating_count.forEach(rating_count => { %>
+                              <% if (rating_count.rating == 4) { %>
+                                <% count = rating_count.cnt_rat %>
+                              <% } %>
+                            <% }) %>
+                            <% var progress_val = (count / total_review_count) * 100 %>
+                             <div class="progress">
+                               <div class="progress-bar" role="progressbar" style="width: <%= progress_val %>%" aria-valuenow="<%= progress_val %>" aria-valuemin="0" aria-valuemax="100"></div>
+                             </div>
+                           </td>
+                           <td>
+                            <%= count %> 
+                           </td>
+                         </tr>
+                         <tr>
+                           <td>3.5</td>
+                           <td><i class="fa-solid fa-star"></i></td>
+                           <td>
+                            <% var total_review_count = companyReviewNumbers.rewiew_count.total_review_count %>
+                            <% var count = 0
+                               var progress_val = 0
+                            %>
+                            <% companyReviewNumbers.rewiew_rating_count.forEach(rating_count => { %>
+                              <% if (rating_count.rating == 3.5) { %>
+                                <% count = rating_count.cnt_rat %>
+                              <% } %>
+                            <% }) %>
+                            <% var progress_val = (count / total_review_count) * 100 %>
+                             <div class="progress">
+                               <div class="progress-bar" role="progressbar" style="width: <%= progress_val %>%" aria-valuenow="<%= progress_val %>" aria-valuemin="0" aria-valuemax="100"></div>
+                             </div>
+                           </td>
+                           <td>
+                            <%= count %> 
+                           </td>
+                         </tr>
+                         <tr>
+                           <td>3</td>
+                           <td><i class="fa-solid fa-star"></i></td>
+                           <td>
+                            <% var total_review_count = companyReviewNumbers.rewiew_count.total_review_count %>
+                            <% var count = 0
+                               var progress_val = 0
+                            %>
+                            <% companyReviewNumbers.rewiew_rating_count.forEach(rating_count => { %>
+                              <% if (rating_count.rating == 3) { %>
+                                <% count = rating_count.cnt_rat %>
+                              <% } %>
+                            <% }) %>
+                            <% var progress_val = (count / total_review_count) * 100 %>
+                             <div class="progress">
+                               <div class="progress-bar" role="progressbar" style="width: <%= progress_val %>%" aria-valuenow="<%= progress_val %>" aria-valuemin="0" aria-valuemax="100"></div>
+                             </div>
+                           </td>
+                           <td>
+                            <%= count %> 
+                           </td>
+                         </tr>
+                         <tr>
+                           <td>2.5</td>
+                           <td><i class="fa-solid fa-star"></i></td>
+                           <td>
+                            <% var total_review_count = companyReviewNumbers.rewiew_count.total_review_count %>
+                            <% var count = 0
+                               var progress_val = 0
+                            %>
+                            <% companyReviewNumbers.rewiew_rating_count.forEach(rating_count => { %>
+                              <% if (rating_count.rating == 2.5) { %>
+                                <% count = rating_count.cnt_rat %>
+                              <% } %>
+                            <% }) %>
+                            <% var progress_val = (count / total_review_count) * 100 %>
+                             <div class="progress">
+                               <div class="progress-bar" role="progressbar" style="width: <%= progress_val %>%" aria-valuenow="<%= progress_val %>" aria-valuemin="0" aria-valuemax="100"></div>
+                             </div>
+                           </td>
+                           <td>
+                            <%= count %> 
+                           </td>
+                         </tr>
+                         <tr>
+                           <td>2</td>
+                           <td><i class="fa-solid fa-star"></i></td>
+                           <td>
+                            <% var total_review_count = companyReviewNumbers.rewiew_count.total_review_count %>
+                            <% var count = 0
+                               var progress_val = 0
+                            %>
+                            <% companyReviewNumbers.rewiew_rating_count.forEach(rating_count => { %>
+                              <% if (rating_count.rating == 2) { %>
+                                <% count = rating_count.cnt_rat %>
+                              <% } %>
+                            <% }) %>
+                            <% var progress_val = (count / total_review_count) * 100 %>
+                             <div class="progress">
+                               <div class="progress-bar" role="progressbar" style="width: <%= progress_val %>%" aria-valuenow="<%= progress_val %>" aria-valuemin="0" aria-valuemax="100"></div>
+                             </div>
+                           </td>
+                           <td>
+                            <%= count %> 
+                           </td>
+                         </tr>
+                         <tr>
+                           <td>1.5</td>
+                           <td><i class="fa-solid fa-star"></i></td>
+                           <td>
+                            <% var total_review_count = companyReviewNumbers.rewiew_count.total_review_count %>
+                            <% var count = 0
+                               var progress_val = 0
+                            %>
+                            <% companyReviewNumbers.rewiew_rating_count.forEach(rating_count => { %>
+                              <% if (rating_count.rating == 1.5) { %>
+                                <% count = rating_count.cnt_rat %>
+                              <% } %>
+                            <% }) %>
+                            <% var progress_val = (count / total_review_count) * 100 %>
+                             <div class="progress">
+                               <div class="progress-bar" role="progressbar" style="width: <%= progress_val %>%" aria-valuenow="<%= progress_val %>" aria-valuemin="0" aria-valuemax="100"></div>
+                             </div>
+                           </td>
+                           <td>
+                            <%= count %> 
+                           </td>
+                         </tr>
+                         <tr>
+                           <td>1</td>
+                           <td><i class="fa-solid fa-star"></i></td>
+                           <td>
+                            <% var total_review_count = companyReviewNumbers.rewiew_count.total_review_count %>
+                            <% var count = 0
+                               var progress_val = 0
+                            %>
+                            <% companyReviewNumbers.rewiew_rating_count.forEach(rating_count => { %>
+                              <% if (rating_count.rating == 1) { %>
+                                <% count = rating_count.cnt_rat %>
+                              <% } %>
+                            <% }) %>
+                            <% var progress_val = (count / total_review_count) * 100 %>
+                             <div class="progress">
+                               <div class="progress-bar" role="progressbar" style="width: <%= progress_val %>%" aria-valuenow="<%= progress_val %>" aria-valuemin="0" aria-valuemax="100"></div>
+                             </div>
+                           </td>
+                           <td>
+                            <%= count %> 
+                           </td>
+                         </tr>
+                         <tr>
+                           <td>0.5</td>
+                           <td><i class="fa-solid fa-star"></i></td>
+                           <td>
+                            <% var total_review_count = companyReviewNumbers.rewiew_count.total_review_count %>
+                            <% var count = 0
+                               var progress_val = 0
+                            %>
+                            <% companyReviewNumbers.rewiew_rating_count.forEach(rating_count => { %>
+                              <% if (rating_count.rating == 0.5) { %>
+                                <% count = rating_count.cnt_rat %>
+                              <% } %>
+                            <% }) %>
+                            <% var progress_val = (count / total_review_count) * 100 %>
+                             <div class="progress">
+                               <div class="progress-bar" role="progressbar" style="width: <%= progress_val %>%" aria-valuenow="<%= progress_val %>" aria-valuemin="0" aria-valuemax="100"></div>
+                             </div>
+                           </td>
+                           <td>
+                            <%= count %> 
+                           </td>
+                         </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <div class="customer-review-content">
+                  <% getCompanyReviews.forEach( review => { %> 
+                  <div class="customer-review-wrap" id="review-reply-<%= review.id %>">
+                    <!--Main Review -->
+                    <div class="cutomer-comment">
+                      <span><%= review.rating %></span>
+                      <span>
+                      <% allRatingTags.forEach( tag => { %>
+                      <% if(tag.review_rating_value == review.rating){ %>
+                      <img src="/<%= tag.rating_image %>" width="28">
+                      <% } %>
+                      <% }) %>                                     
+                      </span>
+                      <span><%= review.review_title %></span>
+                      <p><%= review.review_content %></p>
+                    </div>
+                    <div class="customer-profile-info">
+                      <% const dateString = review.created_at; %>
+                      <% const review_date = new Date(dateString); %>
+                      <% if(review.user_privacy == 1) { %>
+                      <span>
+                        <% if(review.profile_pic) { %>
+                          <img class="user_img" src="/<%= review.profile_pic %>" alt="img" width="23" height="23">
+                        <% }else{ %>
+                          <img class="user_img" src="/assets/media/avatars/blank.png" alt="img" width="23" height="23">
+                        <% } %>
+                      </span>
+                      <span><%= review.alise_name %> <span class="c-comment-date"><%= review_date.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) %></span></span>
+                      <% }else{ %>
+                      <span><img class="user_img" src="/front-end/images/blur-img.png" alt="img"></span>
+                      <span><img src="/front-end/images/blur-name.png" alt="img"></span>
+                      <span class="c-comment-date"><%= review_date.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) %></span>
+                      <% } %>
+                    </div>
+                    <!--Main Review End -->
+                    <!--Review Replys -->
+                    <% if(review.review_reply.length>0){ %>
+                      <% review.review_reply.forEach( reply => { %>
+                        <% if(reply.status != '0') {%>
+                        <div class="review-reply">
+                          <div class="customer-profile-info">
+                            <% const replydateString = reply.created_at; %>
+                            <% const replydate = new Date(replydateString); %>
+                            <% if(reply.reply_by == review.customer_id ) { %>
+                              <!-- Customer Reply -->
+                              <% if(reply.status != '0'){%>
+                                <% if(review.user_privacy == 1 ) { %>
+                                  <span>
+                                    <% if(review.profile_pic) { %>
+                                      <img class="user_img" src="/<%= review.profile_pic %>" alt="img" width="23" height="23">
+                                    <% }else{ %>
+                                      <img class="user_img" src="/assets/media/avatars/blank.png" alt="img" width="23" height="23">
+                                    <% } %>
+                                  </span>
+                                  <span><%= review.alise_name %> <span class="c-comment-date"><%= replydate.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) %></span></span>
+                                <% }else{ %>
+                                  <span>
+                                    <img class="user_img" src="/front-end/images/blur-img.png" alt="img" width="23" height="23">
+                                  </span>
+                                  <span><img src="/front-end/images/blur-name.png" alt="img"> <span class="c-comment-date"><%= replydate.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) %></span></span>
+                                <% }%>  
+                              <% } %>
+                              <!-- Customer Reply End-->
+                            <% }else{ %>
+                              <!-- Company Owner Reply -->
+                              <% /* %>
+                              <span>
+                                <% if(CompanyInfo.logo) { %>
+                                <img class="user_img" src="/<%= CompanyInfo.logo %>" alt="img" width="23" height="23">
+                                <% }else{ %>
+                                <img class="user_img" src="/front-end/images/company-placeholder-image.png" alt="img" width="23" height="23">
+                                <% } %>
+                              </span>
+                              <% */ %>
+
+                              <span class="d-flex align-items-center justify-content-between">
+                                <div class="reply-company"><strong>Reply From:</strong> <%= CompanyInfo.company_name %></div>
+                                <span class="c-comment-date"><%= replydate.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) %></span>
+                              </span>
+                              <!-- Company Owner Reply End-->
+                            <% } %>
+                          </div>
+                          <% if(reply.status != '0') {%>
+                            <p><%= reply.comment %></p>
+                          <% } %>
+                        </div>
+                        <% } %>
+                        <% if(review.review_reply.length==1 && currentUserData!= null && review.customer_id == currentUserData.user_id){ %>
+                        <!--Review Replys Submit Form-->
+                          <form action="" class="review_reply_form">
+                            <input type="text" name="comment" placeholder="Add Reply.." required>
+                            <input type="hidden" name="review_id" value="<%- review.id -%>">
+                            <input type="hidden" name="reply_by" value="<%- currentUserData.user_id -%>">
+                            <input type="hidden" name="reply_to" value="<%- company.claimed_by -%>">
+                            <input type="hidden" name="company_id" value="<%- company.ID -%>">
+                            <button type="submit">Reply</button>
+                            <div class="submit-loading" style="display: none;">Please wait..</div>
+                          </form>
+                        <!--Review Replys Submit Form End--> 
+                        <% } %>
+                        
+                      <% }) %>
+                    <% } %>
+                    <!--Review Replys End-->
+                  </div>
+                  <% }) %>
+                  <!-- <% if(company_total_review>3){%> 
+                  <div class="btn-border-top"><a href="#" class="view-more mt-0 show-comment-slice"><span class="position-relative"><i class="fa-solid fa-angle-right"></i>Show More</span></a></div>
+                  <% } %> -->
+                </div>
+              </div>
+            </div>
+            <% } %>
+            <div class="submit-review-box">
+              <h2 class="inner-main-head text-center">Submit Your <span>Review</span></h2>
+              <div class="company-submit-review-form">
+                <form id="review_submit_frm" name="review_submit_frm" action="" method="post">
+                  <input type="hidden" name="review_lable" value="1" >
+                  <div class="custom-form">
+                    <input type="hidden" class="form-control" id="search-input-review" name="company_name" placeholder="Business/Institute/Establishment Name" required value="<%= CompanyInfo.company_name %>" readonly>
+                  </div>
+                  <div class="custom-form">
+                    <input type="text" class="form-control" name="address" placeholder="Location" value="<%= CompanyInfo.main_address %>" required <% if(CompanyInfo.main_address){ %>readonly<% }%>>
+                  </div>
+                  <!--
+                  <div class="custom-form">
+                    <input type="text" class="form-control" placeholder="Country" name="country" required>
+                  </div>
+                  <div class="custom-form">
+                    <input type="text" class="form-control" placeholder="State" name="state" required>
+                  </div>
+                  <div class="custom-form">
+                    <input type="text" class="form-control" placeholder="City" name="city" required>
+                  </div>
+                  <div class="custom-form">
+                    <input type="text" class="form-control" placeholder="Pin Code" name="zip" value="<%= CompanyInfo.main_address_pin_code %>" required>
+                  </div>
+                
+                  
+                  <div class="custom-form">
+                    <input type="text" class="form-control" placeholder="Product/Division Name" name="review_title">
+                  </div>
+                -->
+                  <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="custom-form dynamic_state_field_wrapper ">
+                                    <select id="select_category" name="category_id" class="form-select">
+                                        <option value="0" selected>Select Category </option>
+                                        <option value="0" >General</option>
+                                        <% if(CompanyCategory.length > 0){ %>
+                                            <% CompanyCategory.forEach(category =>{ %>
+                                              <option value="<%= category.id %>" ><%= category.category_name %></option>
+                                            <% }) %>
+                                        <% } %>
+                                    </select>
+                                    <!-- <input type="text" class="form-control" placeholder="Category Name" name="category"> -->
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="custom-form" id="dynamic_sub_category_field_wrapper">
+                                    <select id="select_sub_category" name="product_id" class="form-select">
+                                        <option value="0">Select Product</option>
+                                    </select>
+                                    <!-- <input type="text" class="form-control" placeholder="Sub-category Name" name="sub_category"> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+                  <div class="rating-slider position-relative pt-5">
+                    <span class="emojisss"><img style="width:50px;" src="" id="selected-range-emojis" /></span>
+                    <label>Rating</label>
+                    <div id="rating-range" class="rating"></div>
+                    <input type="text" id="ratingRange" readonly>
+                    <input  type="hidden" id="ratingvalue" name="rating" value="">
+                    <div id="slider-values" class="text-center">
+                      <span id="selected-range-text"></span>
+                    </div>
+                  </div>
+                  <div class="tag-label"><strong>Tags</strong></div>
+                  <div class="range-tag-wrap">
+                    <% allRatingTags.forEach( (rev_tag, index) => { %>
+                    <div class="tag-items-wrapper range-tag<%= rev_tag.review_rating_value.replace(/\./g, "") %> <% if(index!=9){ %>d-none<% } %>">
+                      <% const tag_items = rev_tag.rating_tags.split('|'); %>
+                      <% tag_items.forEach(function(tag) { %>
+                      <div class="form-check custom-check position-relative">
+                        <input class="form-check-input" type="checkbox" name="tags" value="<%= tag %>" id="">
+                        <label class="form-check-label" for="flexCheckDefault">
+                        <%= tag %>
+                        </label>
+                      </div>
+                      <% }); %> 
+                    </div>
+                    <% }) %>  
+                  </div>
+                  <div class="custom-form">
+                    <textarea name="review_content" rows="4" class="form-control" placeholder="Review/Feedback" required></textarea>
+                  </div>
+                  <div class="custom-form">
+                    <span class="fw-bold d-inline-block me-2" style="font-size: 14px;">Show your name?</span>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="user_privacy" checked id="inlineRadio1" value="1">
+                      <label class="form-check-label" for="inlineRadio1">Yes</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="user_privacy" id="inlineRadio2" value="0">
+                      <label class="form-check-label" for="inlineRadio2">No</label>
+                    </div>
+                  </div>
+                  <div class="custom-form">
+                    <span class="fw-bold d-inline-block me-2" style="font-size: 14px;">Do you want the organisation to contact you?</span>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="user_contact" checked id="inlineRadio3" value="1">
+                      <label class="form-check-label" for="inlineRadio3">Yes</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="user_contact" id="inlineRadio4" value="0">
+                      <label class="form-check-label" for="inlineRadio4">No</label>
+                    </div>
+                  </div>
+                  <div class="review-submit d-sm-flex align-items-center">
+                    
+                    <% if(currentUserData){ %>
+                      <input type="submit" class="btn-default btn-warning me-3 mb-sm-0 mb-1" value="Submit">
+                    <% } else { %>
+                      <a href="#" class="btn-default btn-outline-warning login">Submit</a>
+                    <% } %>
+                  </div>
+                  <div class="submit-message" style="color:black;"></div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-5">
+          <div class="addvertise-right">
+            <div class="companies-add">
+              <img src="/front-end/images/add-img-1.jpg" alt="img" width="457" height="575">
+            </div>
+            <div class="companies-add">
+              <img src="/front-end/images/add-img-2.jpg" alt="img" width="457" height="575">
+            </div>
+            <div class="companies-add">
+              <img src="/front-end/images/add-img-3.jpg" alt="img" width="457" height="575">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ============== Section1 end =============== -->
+<%- include('common/footer') -%>
+<script>
+  // Function to handle Google Maps API initialization
+  function initMap() {
+    // Your JavaScript code that interacts with the Maps API should be placed here,
+    // after the API has been initialized.
+    // For example, you can initialize the Autocomplete service and map here.
+    
+    // Initialize the Autocomplete service
+    const autocomplete = new google.maps.places.Autocomplete(
+      document.getElementById('autocomplete'),
+      { types: ['geocode'] }
+    );
+    
+    // Initialize the map (optional, just for illustration purposes)
+    const map = new google.maps.Map(document.getElementById('map'), {
+      center: { lat: -34.397, lng: 150.644 },
+      zoom: 8
+    });
+    
+    // Optional: Listen for the "place_changed" event to get the selected place details
+    autocomplete.addListener('place_changed', () => {
+      const place = autocomplete.getPlace();
+      console.log('Selected place:', place);
+    });
+  }
+  
+  // ////////////////////////////// Range Slider Start
+  
+  const rangeTexts = {
+    <% allRatingTags.forEach((rev_tag, index) => { %>
+      "<%= rev_tag.review_rating_value %>": "<%= rev_tag.review_rating_name %>",
+    <% }) %>
+  };
+  const rangeEmojis = {
+    <% allRatingTags.forEach((rev_tag, index) => { %>
+      "<%= rev_tag.review_rating_value %>": "<%= rev_tag.rating_image %>",
+    <% }) %>
+  };
+  
+
+  $("#rating-range").slider({
+    step: 0.5,
+    range: "min", 
+    min: 0.5, 
+    max: 5, 
+    value: 5, 
+    create: function( event, ui ) {
+      $("#ratingRange").val('5/5');
+      $("#ratingvalue").val(5);
+      $("#selected-range-text").text(rangeTexts[5]);
+        $("#selected-range-emojis").attr('src','/'+rangeEmojis[5]);
+    },
+    slide: function(event, ui){
+      console.log(ui.value);
+      $("#ratingRange").val(ui.value + " / " + "5");
+      $("#ratingvalue").val(ui.value);
+      // When slider values change, update the text
+        var numberAsString = ui.value.toString();
+        var classnumber = numberAsString.replace(".", "");
+        $("#selected-range-text").text(rangeTexts[ui.value]);
+        $("#selected-range-emojis").attr('src','/'+rangeEmojis[ui.value]);
+        $('.range-tag'+classnumber).removeClass('d-none');
+        $('.tag-items-wrapper:not(.range-tag'+classnumber+')').addClass("d-none");
+        $('input[type="checkbox"][name="tags"]').prop('checked', false);
+    }
+    });
+  
+  ////////////////////////////// Range Slider End
+  
+  //-------Review Form Submit-----------------//
+  $( "#review_submit_frm" ).on( "submit", function( event ) {
+    $('.submit-message').hide();
+    $('.submit-message').text('');
+    event.preventDefault();
+    const formData = $('#review_submit_frm').serializeArray();
+    const jsonData = {};
+    $(formData).each(function (index, field) {
+      if(field.name==='tags'){
+        if (!jsonData.tags) {
+          jsonData.tags = [];
+        }
+        jsonData.tags.push(field.value);;
+      }else{
+        jsonData[field.name] = field.value;
+      }
+    });
+    $.ajax({
+      url: '/auth/add-review',
+      method: 'POST',
+      data: jsonData,
+      ContentType: 'application/json',
+      success: function (data) {
+        if (data.status == 'ok') {
+          $('#review_submit_frm')[0].reset();
+          $('.submit-message').text(data.message);
+          $('.submit-message').show();
+        } else {
+          $('.submit-message').text(data.message);
+          $('.submit-message').show();
+        } 
+        //console.log(data);
+      },
+      error: function (error) {
+        console.log(error);
+      }
+    });
+  });
+
+//---Review reply submit-------//
+$('.review_reply_form').submit(function(e){
+  event.preventDefault();
+  const $form = $(this);
+
+  $form.prop( "disabled", true );
+  $form.find('.submit-loading').show();
+
+  const formData = $form.serializeArray();
+  const jsonData = {};
+  $(formData).each(function (index, field) {
+      jsonData[field.name] = field.value;
+  });
+  
+  $.ajax({
+    url: '/auth/add-review-reply',
+    method: 'POST',
+    data: jsonData,
+    ContentType: 'application/json',
+    success: function (data) {
+      if (data.status == 'ok') {
+        $form.find('.submit-loading').hide();
+        $form[0].reset();
+        $form.append('<p>'+data.message+'</p>');
+        setTimeout( function(){
+          location.reload(true);
+        }, 3000 );
+      } else {
+        $form.find('.submit-loading').hide();
+        $form.append('<p>'+data.message+'</p>');
+      }
+      //console.log(data);
+    },
+    error: function (error) {
+      $form.find('.submit-loading').hide();
+      $form.append('<p>'+error+'</p>');
+    }
+  });
+})
+
+$('#select_category').change(function() {
+      $('#select_sub_category').empty().append($('<option value="0">Select Product</option><option value="0">General</option>'));
+      //$("#select_state").prop('required',false);
+      //$('#dynamic_sub_category_field_wrapper').hide();
+      var category_id = $(this).val();
+      //alert(category_id);
+      //return false;
+      //$('#country_name').val(this.options[this.selectedIndex].text);
+      $.ajax({
+         url: '/api/company_product',
+         method: 'POST',
+         data: {category_id:category_id},
+         ContentType: 'application/json',
+         success: function (data) {
+            if (data.status == 'ok') {
+               $('#dynamic_sub_category_field_wrapper').show();
+               //$("#select_state").prop('required',true);
+               $.each(data.data, function (i, item) {
+                     $('#select_sub_category').append($('<option>', { 
+                        value: item.id,
+                        text : item.product_title 
+                     }));
+               });                
+            } else {
+               //$('#dynamic_sub_category_field_wrapper').hide();
+               $("#select_sub_category").prop('required',false);
+            }
+         },
+         error: function (error) {
+            // Handle any errors
+            Swal.fire({
+               text: error,
+               icon: "error",
+               buttonsStyling: false,
+               confirmButtonText: "Ok, got it!",
+               customClass: {
+                     confirmButton: "btn btn-primary"
+               }
+            });
+            submitButton.disabled = false;
+         }
+      });    
+   });
+
+</script>

@@ -1,0 +1,163 @@
+<%- include('common/header') -%>
+  <link href="/front-end/css/contact-style.css" rel="stylesheet" type="text/css">
+  <%- include('common/header-banner') -%>
+
+    <!-- ============== Section1 Start =============== -->
+    <section class="main-content contact-form-content">
+      <div class="container">
+        <div class="envelope-wrap">
+          <div class="envelope-inner-from">
+            <h3 class="text-center">QUESTION / FEEDBACK</h3>
+            <form id="feedback_form" action="/contact-feedback" method="post">
+              <div class="row">
+                <div class="col-sm-12">
+                  <!-- <div class="custom-form">
+                        <label><span>Name</span></label>
+                        <input type="text" class="form-control" placeholder="Tell me who are you" name="" required>
+                      </div>
+                      <div class="custom-form">
+                        <label><span>Email</span></label>
+                        <input type="email" class="form-control" placeholder="May I know your Email id." name="" required>
+                      </div> -->
+                  <div class="custom-form">
+                    <label><span>Phone Number</span></label>
+                    <input type="tel" class="form-control" name="phone_no" >
+                  </div>
+                </div>
+                <div class="col-sm-12">
+                  <div class="custom-form">
+                    <label><span>Message<sup style="color:red">*</sup></span></label>
+                    <textarea type="text" rows="5" class="form-control" name="message" required></textarea>
+                  </div>
+                  <div class="env-btn">
+                    <input type="submit" value="SEND" class="btn-default btn-warning w-100" id="feedback_submit_btn">
+                  </div>
+                </div>
+              </div>
+              <div class="register-now frm-loading-feedback" style="display: none;">
+                <span class="indicator-progress">Please wait...
+                  <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                </span>
+              </div>
+              <div class="submit-message" style="color: black; text-align: center;"></div>
+            </form>
+          </div>
+          <div class="envelope-inner-social-info text-center">
+            <div class="app-info">
+              <a href="#"><img src="/front-end/images/g-play.png" alt="img" width="183" height="56"></a>
+              <a href="#"><img src="/front-end/images/app-store.png" alt="img" width="178" height="56"></a>
+            </div>
+            <div class="social-icons">
+              <% if(socials && socials.facabook){ %>
+                <a href="<%= socials.facabook %>" target="_blank"><i class="fa-brands fa-facebook-f"></i></a>
+              <% } %>
+              <% if(socials && socials.twitter){ %>
+                <a href="<%= socials.twitter %>" target="_blank"><i class="fa-brands fa-twitter"></i></a>
+              <% } %>
+              <% if(socials && socials.linkedin){ %>
+                <a href="<%= socials.linkedin %>" target="_blank"><i class="fa-brands fa-linkedin-in"></i></a>
+              <% } %>
+              <% if(socials && socials.instagram){ %>
+                <a href="<%= socials.instagram %>" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+              <% } %>
+              <% if(socials && socials.youtube){ %>
+                <a href="<%= socials.youtube %>" target="_blank"><i class="fa-brands fa-youtube"></i></a>
+              <% } %>
+            </div>
+            <div class="env-contact-info">
+              <div class="row justify-content-center">
+                <div class="col-sm-4 my-auto">
+                  <div class="env-contact-info-in">
+                    <span><i class="fa-brands fa-whatsapp"></i></span>
+                    <a href="tel:<%= contacts.whatsapp_no %>">
+                      <%= contacts.whatsapp_no %>
+                    </a>
+                  </div>
+                </div>
+                <div class="col-sm-4 my-auto">
+                  <div class="env-contact-info-in">
+                    <span><i class="fa-solid fa-mobile-screen-button"></i></span>
+                    <a href="tel:<%= contacts.phone_no %>">
+                      <%= contacts.phone_no %>
+                    </a>
+                  </div>
+                </div>
+                <div class="col-sm-4 my-auto">
+                  <div class="env-contact-info-in">
+                    <span><i class="fa-solid fa-envelope"></i></span>
+                    <a href="mailto:<%= contacts.email %>">
+                      <%= contacts.email %>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="overlay-object5" style="top: 5px;"><img src="/front-end/images/overlay-object7.png" alt="img"
+          width="148" height="332" loading="lazy"></div>
+    </section>
+    <!-- ============== Section1 End =============== -->
+
+    <!-- ============== Section2 Start =============== -->
+    <section class="main-content bottom-main-content map-content">
+      <div class="container">
+        <picture>
+          <source media="(max-width:575px)" srcset="/front-end/images/map-image-new.png" width="535" height="323">
+          <source media="(max-width:767px)" srcset="/front-end/images/map-image-new.png" width="603" height="364">
+          <img src="/front-end/images/map-image-new.png" alt="image" loading="lazy" width="1215" height="734">
+        </picture>
+      </div>
+      <div class="overlay-object5"><img src="/front-end/images/overlay-object5.png" alt="img" width="118" height="315"
+          loading="lazy"></div>
+      <div class="overlay-object6"><img src="/front-end/images/overlay-object6.png" alt="img" width="81" height="215"
+          loading="lazy"></div>
+    </section>
+    <!-- ============== Section2 End =============== -->
+    <%- include('common/footer') -%>
+      <script>
+        $(document).ready(function () {
+          $('form#feedback_form').submit(function (e) {
+            e.preventDefault();
+            $('#feedback_submit_btn').prop('disabled', true);
+            $('.frm-loading-feedback').show();
+            $('.submit-message').hide();
+            $('.submit-message').text('');
+            const formData = $('#feedback_form').serializeArray();
+            const jsonData = {};
+            $(formData).each(function (index, field) {
+              jsonData[field.name] = field.value;
+            });
+            //console.log(jsonData);
+            $.ajax({
+              url: '/auth/contact-feedback', // URL for your API endpoint
+              method: 'POST',
+              data: jsonData,
+              //processData: false, // Prevent jQuery from processing the data
+              ContentType: 'application / json', // Let the browser set the content type
+              success: function (data) {
+                if (data.status == 'ok') {
+                  $('.submit-message').text(data.message);
+                  $('.submit-message').show();
+                  $('#feedback_submit_btn').prop('disabled', false);
+                  $('.frm-loading-feedback').hide();
+                  $('#feedback_form').trigger('reset');
+                  //window.location.href = "/contact-us";
+                } else {
+                  $('.submit-message').text(data.message);
+                  $('.submit-message').show();
+                  $('#feedback_submit_btn').prop('disabled', false);
+                  $('.frm-loading-feedback').hide();
+                  $('#feedback_form').trigger('reset');
+                  console.log('Some thting went wrong');
+                }
+              },
+              error: function (xhr, status, error) {
+                // Handle any errors that occur during the request
+                console.log(error);
+              }
+            })
+          });
+        });
+      </script>

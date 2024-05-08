@@ -1,0 +1,552 @@
+<%- include('common/header') -%>
+<link href="/front-end/css/discussion-style.css" rel="stylesheet" type="text/css">
+<%- include('common/header-banner') -%>
+
+<!-- ============== Section1 Start =============== -->
+<section class="main-content bottom-main-content">
+  <div class="discussion-page-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+            <div class="discussions-left">
+                <!-- <div class="text-end">
+                <span class="language-select">
+                    <span class="lang-change">Everything</span> <a href="" class="lang-arw"><i class="fa-solid fa-sort"></i></a>
+                    <div class="lang-dropdown">
+                        <ul class="p-0 m-0">
+                        <li><a href="">Everything</a></li>
+                        <li><a href="">Top</a></li>
+                        <li><a href="">New</a></li>
+                        </ul>
+                    </div>
+                </span>  
+                </div> -->
+                <div id="horizontalTab">
+                <ul class="resp-tabs-list">
+                    <li>Latest</li>
+                    <li>Popular</li>
+                    <li>All</li>
+                    <!-- <li>Eldest</li> -->
+                </ul>
+                <div class="resp-tabs-container">
+                    <div class="tab-content-wrap">
+                        <% if(AllLatestDiscussion && AllLatestDiscussion.length > 0) { %>
+                        <% AllLatestDiscussion.forEach((LatestDiscussion)=>{  %>
+                        <% const ExpireDate = new Date(LatestDiscussion.expired_at); %>
+                        <% const date2 = new Date(); %>
+                        <% const daysDiff = Math.round((ExpireDate - date2)/(1000 * 60 * 60 * 24)) %>
+                        <% if(daysDiff > -1){ %>
+                        <div class="discussion-review-panel">
+                            <a href="/discussion-details/<%= LatestDiscussion.id %>" title="<%= LatestDiscussion.topic %>" >
+                                <div class="discussion-user-img" title="">
+                                <!-- <img src="../front-end/images/user-img.jpg" alt="img" width="60" height="60"> -->
+                                <h4><%= LatestDiscussion.first_name.charAt(0).toUpperCase()  %></h4>
+                                </div>
+                                <div class="discussion-user-info">
+                                <h4>
+                                    <% if (LatestDiscussion.topic.length > 75) { %>
+                                    <%= LatestDiscussion.topic.substring(0, 75) + ' . . . ' %>
+                                    <% } else { %>
+                                        <%= LatestDiscussion.topic %>
+                                    <% } %> 
+                                </h4>
+                                <% const date = new Date(LatestDiscussion.created_at); %>
+                                <p>Created <%= date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) %></p>
+                            
+                                </div>
+                                <div class="dis-comment-views">
+                                <span><%= LatestDiscussion.total_comments %> Comments</span>
+                                <span><%= LatestDiscussion.total_views %> Views</span>
+                                </div>
+                            </a>
+                        </div>
+                        <% } %>
+                        <% }) %>
+                        <% } %>
+                        <!-- <div class="text-center mt-md-5 mt-4">
+                            <a href="#" class="btn-default btn-warning discussion-load-btn">Load More</a>
+                        </div> -->
+                    </div>
+                    <div class="tab-content-wrap">
+                        <% if(AllPopularDiscussion && AllPopularDiscussion.length > 0) { %>
+                            <% AllPopularDiscussion.forEach((PopularDiscussion)=>{  %>
+                                <% if(PopularDiscussion.total_comments > 0 || PopularDiscussion.total_views>0) { %>
+                                <% const ExpireDate = new Date(PopularDiscussion.expired_at); %>
+                                <% const date2 = new Date(); %>
+                                <% const daysDiff = Math.round((ExpireDate - date2)/(1000 * 60 * 60 * 24)) %>
+                                <% if(daysDiff > -1){ %>
+                                    <div class="discussion-review-panel">
+                                        <a href="/discussion-details/<%= PopularDiscussion.id %>" title="<%= PopularDiscussion.topic %>" >
+                                            <div class="discussion-user-img" title="">
+                                            <!-- <img src="../front-end/images/user-img.jpg" alt="img" width="60" height="60"> -->
+                                            <h4><%= PopularDiscussion.first_name.charAt(0).toUpperCase()  %></h4>
+                                            </div>
+                                            <div class="discussion-user-info">
+                                            <h4>
+                                                <% if (PopularDiscussion.topic.length > 75) { %>
+                                                <%= PopularDiscussion.topic.substring(0, 75) + ' . . . ' %>
+                                                <% } else { %>
+                                                    <%= PopularDiscussion.topic %>
+                                                <% } %>
+                                            </h4>
+                                            <% const date = new Date(PopularDiscussion.created_at); %>
+                                            <p>Created <%= date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) %></p>
+                                        
+                                            </div>
+                                            <div class="dis-comment-views">
+                                            <span><%= PopularDiscussion.total_comments %> Comments</span>
+                                            <span><%= PopularDiscussion.total_views %> Views</span>
+                                            </div>
+                                        </a>
+                                    </div>
+                                <% } %>
+                                <% } %>
+                            <% }) %>
+                        <% } %>
+                        <!-- <div class="text-center mt-md-5 mt-4">
+                            <a href="#" class="btn-default btn-warning discussion-load-btn">Load More</a>
+                        </div> -->
+                    </div>
+                    <div class="tab-content-wrap">
+                        <% if(AllDiscussions && AllDiscussions.length > 0) { %>
+                            <% AllDiscussions.forEach((AllDiscussion)=>{  %>
+                                <% const ExpireDate = new Date(AllDiscussion.expired_at); %>
+                                <% const date2 = new Date(); %>
+                                <% const daysDiff = Math.round((ExpireDate - date2)/(1000 * 60 * 60 * 24)) %>
+                                <% if(daysDiff > -1){ %>
+                                    <div class="discussion-review-panel">
+                                        <a href="/discussion-details/<%= AllDiscussion.id %>" title="<%= AllDiscussion.topic %>" >
+                                            <div class="discussion-user-img" >
+                                            <!-- <img src="../front-end/images/user-img.jpg" alt="img" width="60" height="60"> -->
+                                            <h4><%= AllDiscussion.first_name.charAt(0).toUpperCase()  %></h4>
+                                            </div>
+                                            <div class="discussion-user-info">
+                                            <h4>
+                                                <% if (AllDiscussion.topic.length > 75) { %>
+                                                <%= AllDiscussion.topic.substring(0, 75) + ' . . . ' %>
+                                                <% } else { %>
+                                                    <%= AllDiscussion.topic %>
+                                                <% } %>
+                                            </h4>
+                                            <% const date = new Date(AllDiscussion.created_at); %>
+                                            <p>Created <%= date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) %></p>
+                                        
+                                            </div>
+                                            <div class="dis-comment-views">
+                                            <span><%= AllDiscussion.total_comments %> Comments</span>
+                                            <span><%= AllDiscussion.total_views %> Views</span>
+                                            </div>
+                                        </a>
+                                    </div>
+                                <% } %>
+                            <% }) %>
+                        <% } %>
+                        <!-- <div class="text-center mt-md-5 mt-4">
+                            <a href="#" class="btn-default btn-warning discussion-load-btn">Load More</a>
+                        </div> -->
+                    </div>
+                    <!-- <div class="tab-content-wrap">
+                        <div class="discussion-review-panel">
+                            <div class="discussion-user-img">
+                            <img src="../front-end/images/user-img.jpg" alt="img" width="60" height="60">
+                            </div>
+                            <div class="discussion-user-info">
+                            <h4>Lorem Ipsum</h4>
+                            <p>Created 5 days ago by Lorem Ipsum</p>
+                            </div>
+                            <div class="dis-comment-views">
+                            <a href="#">29 Comments</a>
+                            <a href="#">100views</a>
+                            </div>
+                        </div>
+                        <div class="text-center mt-md-5 mt-4">
+                            <a href="#" class="btn-default btn-warning discussion-load-btn">Load More</a>
+                        </div>
+                    </div> -->
+                    
+                </div>
+                </div>
+            </div>
+            </div>
+            <div class="col-md-4">
+            <div class="discussions-right mt-md-0 mt-4">
+                <% if(currentUserData){ %>
+                    <div class="start-a-discussion-btn text-center">
+                        <a href="#" class="btn-default btn-dark" data-bs-toggle="modal" data-bs-target="#creatediscussion"><i class="fa-solid fa-pen-to-square"></i> Raise A Query</a>
+                    </div>
+                    <% } %>
+                <div class="search-area position-relative">
+                    <form>
+                        <input type="text" class="form-control" id="search-input"
+                                    placeholder="Search" required>
+                    </form>
+                    <input type="submit" value="Search">
+                    <div class="autofield-dropdown">
+                    </div>
+                </div>
+                <div class="discussions-right-panel">
+                    <h4>Popular Query</h4>
+                    <% if(AllPopularDiscussion && AllPopularDiscussion.length > 0) { %>
+                        <% let popular_count = 0; %>
+                    <% AllPopularDiscussion.forEach((PopularDiscussion, index)=>{  %>
+                        <% if(PopularDiscussion.total_comments > 0) { %>
+                            <% popular_count ++; %>
+                            <% if(popular_count < 6) { %>
+                        <% const ExpireDate = new Date(PopularDiscussion.expired_at); %>
+                            <% const date2 = new Date(); %>
+                            <% const daysDiff = Math.round((ExpireDate - date2)/(1000 * 60 * 60 * 24)) %>
+                            <% if(daysDiff > -1){ %>
+                                <div class="dis-right-panel-item">
+                                    <div class="dis-r-panel-item-left">
+                                    <a href="/discussion-details/<%= PopularDiscussion.id %>" title="<%= PopularDiscussion.topic %>" ><i class="fa-regular fa-arrow-right-long"></i>
+                                        <% if (PopularDiscussion.topic.length > 25) { %>
+                                        <%= PopularDiscussion.topic.substring(0, 25) + ' . . . ' %>
+                                        <% } else { %>
+                                            <%= PopularDiscussion.topic %>
+                                        <% } %>
+                                    </a> 
+                                    </div>
+                                    <div class="dis-r-panel-item-right">
+                                        <%= PopularDiscussion.total_comments %>
+                                    </div>
+                                </div>
+                            <% } %>
+                        <% } %>
+                        <% } %>
+                    <% }) %>
+                    <% } %>
+                </div>
+                <div class="discussions-right-panel">
+                    <h4>Newest Query</h4>
+                    <% if(AllLatestDiscussion && AllLatestDiscussion.length > 0) { %>
+                    <% AllLatestDiscussion.forEach((LatestDiscussion, index)=>{  %>
+                        <% if(index < 5) { %>
+                        <% const ExpireDate = new Date(LatestDiscussion.expired_at); %>
+                        <% const date2 = new Date(); %>
+                        <% const daysDiff = Math.round((ExpireDate - date2)/(1000 * 60 * 60 * 24)) %>
+                        <% if(daysDiff > -1){ %>
+                            <div class="dis-right-panel-item">
+                                <div class="dis-r-panel-item-left">
+                                <a href="/discussion-details/<%= LatestDiscussion.id %>" title="<%= LatestDiscussion.topic %>" ><i class="fa-regular fa-arrow-right-long"></i>
+                                    <% if (LatestDiscussion.topic.length > 25) { %>
+                                    <%= LatestDiscussion.topic.substring(0, 25) + ' . . . ' %>
+                                    <% } else { %>
+                                        <%= LatestDiscussion.topic %>
+                                    <% } %>
+                                </a> 
+                                </div>
+                                <div class="dis-r-panel-item-right">
+                                </div>
+                            </div>
+                        <% } %>
+                        <% } %>
+                    <% }) %>
+                    <% } %>
+                </div>
+                <div class="discussions-right-panel">
+                    <h4>Viewed Showcase</h4>
+                    <% if(AllViewedDiscussion && AllViewedDiscussion.length > 0) { %>
+                        <% let view_count = 0; %>
+                    <% AllViewedDiscussion.forEach((ViewedDiscussion, index)=>{  %>
+                        <% if(ViewedDiscussion.total_views > 0) { %>
+                            <% view_count ++ ; %>
+                        <% if(view_count < 6) { %>
+                        <% const ExpireDate = new Date(ViewedDiscussion.expired_at); %>
+                        <% const date2 = new Date(); %>
+                        <% const daysDiff = Math.round((ExpireDate - date2)/(1000 * 60 * 60 * 24)) %>
+                        <% if(daysDiff > -1){ %>
+                            <div class="dis-right-panel-item">
+                                <div class="dis-r-panel-item-left">
+                                    <a href="/discussion-details/<%= ViewedDiscussion.id %>" title="<%= ViewedDiscussion.topic %>" ><i class="fa-regular fa-arrow-right-long"></i>
+                                        <% if (ViewedDiscussion.topic.length > 25) { %>
+                                            <%= ViewedDiscussion.topic.substring(0, 25) + ' . . . ' %>
+                                            <% } else { %>
+                                                <%= ViewedDiscussion.topic %>
+                                            <% } %>
+                                    </a> 
+                                </div>
+                                <div class="dis-r-panel-item-right">
+                                    <%= ViewedDiscussion.total_views %>
+                                </div>
+                            </div>
+                        <% } %>
+                        <% } %>
+                        <% } %>
+                    <% }) %>
+                    <% } %>
+                </div>
+                <div class="discussions-right-panel">
+                    <h4>Popular Tags</h4>
+
+                    <% if (PopularTags.length > 0) { %>
+                        <% PopularTags.forEach((tag, index) => { %>
+                            <a href="/similar-discussions/<%= tag.tag %>" class="btn-default btn-warning dis-details-top-btn"><%= tag.tag %></a>
+                        <% }) %>
+                    <% } %>
+                </div>
+                
+            </div>
+            </div>
+        </div>
+        </div>
+    </div>
+  </section>
+
+  <!-- The Modal -->
+<div class="modal fade" id="creatediscussion">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+            <h2>Create Discussion</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <!-- Modal body -->
+        <div class="modal-body">
+          <form id="create_discussion_form">
+            <div id="sendreviewtags_discussion" class="custom-form">
+                <label style="background-color: #ffffff;">Tags</label>
+                <input type="text" name="tags" placeholder="Add tag" data-gtm-form-interact-field-id="0">
+             </div>
+             <div class="custom-form">
+                <label><span style="background-color: #ffffff;">Discussion Topic<span style="color: red;">*</span></span></label>
+                <textarea name="topic" id="search-topic" class="form-control mb-4" required></textarea>
+             </div>
+             <div class="autofield-dropdown">
+            </div>
+             <% const date = new Date(); %>
+            <%
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                const formattedDate = `${year}-${month}-${day}`;
+            %>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="custom-form">
+                        <label><span style="background-color: #ffffff;">From</span></label>
+                        <input type="date" class="form-control" name="from_data" value="<%= formattedDate %>" placeholder="" style="pointer-events: none;">
+                    </div>
+                </div>
+                <%
+                    const nextyear = date.getFullYear() + 1; // Add 1 to the current year
+                    const nextmonth = String(date.getMonth() + 1).padStart(2, '0');
+                    const nextday = String(date.getDate()).padStart(2, '0');
+                    const nextYearDate = `${nextyear}-${nextmonth}-${nextday}`;
+                %>
+                <div class="col-sm-6">
+                    <div class="custom-form">
+                        <label><span style="background-color: #ffffff;">To</span></label>
+                        <input type="date" class="form-control" name="expire_date" value="<%= nextYearDate%>" style="padding-right: 18px;">
+                    </div>
+                </div>
+            </div>
+            <% if(currentUserData){ %>
+            <div class="custom-form mb-sm-0">
+                <input type="hidden" name="user_id" value="<%= currentUserData.user_id %>" />
+                <input type="submit" class="btn-default btn-warning" value="Submit">
+            </div>
+            <% } %>
+          </form>
+        </div>
+        <div class="register-now frm-loading" style="display: none;">
+            <span class="indicator-progress">Please wait...
+               <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+            </span>
+         </div>
+         <div style=" width: 100%; text-align: center; display: block; border: 2px solid #fccb06; padding: 6px; margin-top: 20px; border-radius: 5px; display: none;" class="response-message"></div>
+      </div>
+    </div>
+  </div>
+
+<!-- ============== Section1 End =============== -->
+<style>
+    #sendreviewtags_discussion {
+       border: 2px solid #fccb06;
+       padding: 5px 9px;
+       border-radius: 6px;
+       margin-bottom: 32px;
+    }
+    #sendreviewtags_discussion > span {
+       cursor: pointer;
+       display: block;
+       float: left;
+       color: #fff;
+       background: #fccb06;
+       padding: 7px;
+       padding-right: 25px;
+       margin: 4px;
+       border-radius: 4px;
+   }
+   #sendreviewtags_discussion > span:after {
+    position: absolute;
+    content: "×";
+    border: 1px solid;
+    padding: 2px 5px;
+    margin-left: 3px;
+    font-size: 11px;
+ }
+ #sendreviewtags_discussion > input {
+    background: #f2f2f2;
+    border: 0;
+    margin: 4px;
+    padding: 7px;
+    width: auto;
+    border-radius: 4px;
+    outline: none;
+ }
+ </style>
+<%- include('common/footer') -%>   
+
+<script>
+    $(document).ready(function () {
+        $("#sendreviewtags_discussion input").on({
+            focusout : function() {
+               var txt = this.value.replace(/[^a-z0-9+\-.\@ ]/ig, ''); // allowed characters
+               if (txt) $("<span/>", { text: txt.toLowerCase().replace(/\s/g, ' '), insertBefore: this });
+               this.value = "";
+            },
+            keyup : function(ev) {
+              // if: comma|enter (delimit more keyCodes with | pipe)
+              if (/^(188|13)$/.test(ev.which)) $(this).focusout();
+            }
+          });
+          $('#sendreviewtags_discussion').on('click', 'span', function() {
+            if(confirm("Remove "+ $(this).text() +"?")) $(this).remove(); 
+          });
+        var timer;
+        $("#search-input").keyup(function () {
+          clearTimeout(timer);
+          var keyword = $(this).val();
+          if (keyword.length >= 3) {
+            timer = setTimeout(function () {
+              performSearch(keyword);
+            }, 500);
+          } else {
+            $('.autofield-dropdown').hide();
+            $('.autofield-dropdown').html(''); // Clear search results if less than three letters
+          }
+        })
+
+        $("#search-topic").keyup(function () {
+          clearTimeout(timer);
+          var keyword = $(this).val();
+          if (keyword.length >= 3) {
+            timer = setTimeout(function () {
+              performSearch(keyword);
+            }, 500);
+          } else {
+            $('.autofield-dropdown').hide();
+            $('.autofield-dropdown').html(''); // Clear search results if less than three letters
+          }
+        })
+
+        // Function to perform the AJAX search
+        function performSearch(keyword) {
+          $('.autofield-dropdown').css('height', "200px");
+          const data = {
+            keyword: keyword,
+          };
+          $.ajax({
+            url: 'api/search-discussion',
+            method: 'POST',
+            data: { keyword: keyword },
+            ContentType: 'application/json',
+            success: function (data) {
+              if (data.status == 'ok') {
+                if (data.data.length > 0) {
+                  let respData = data.data;
+                  let html = '<ul class="p-0 m-0">';
+                  respData.forEach(discussion => {
+                    html += '<li><a class="custom_link" href="/discussion-details/' + discussion.id + '" >' + discussion.topic + '</a></li>';
+                  });
+                  html += '</ul>';
+                  $('.autofield-dropdown').html(html);
+                  $('.autofield-dropdown').show();
+                  if(data.data.length < 4){
+                    var divlength = data.data.length*48;
+                    $('.autofield-dropdown').css('height', divlength + "px");
+                  }
+                } else {
+                  $('.autofield-dropdown').hide();
+                  $('.autofield-dropdown').html('');
+                }
+              } else {
+                $('.autofield-dropdown').hide();
+                $('.autofield-dropdown').html('');
+              }
+            },
+            error: function (error) {
+
+            }
+          });
+
+        }
+
+        
+      $("body").on('click', ".autofield-dropdown ul > li", function (e) {
+        e.preventDefault();
+        var resulttitle = $(this).find('a').attr('data-resulttitle');
+        var resultpermalink = $(this).find('a').attr('data-resultpermalink');
+        $('#dynamic-search-title').text(resulttitle);
+        $('#dynamic-search-content').text(resultexcerpt);
+        $('#dynamic-search-link').attr("href", resultpermalink);
+
+        $(".custom-modal").fadeIn();
+
+      });
+
+        var allTags = [];
+        var transformedResponse = {};
+        $('form#create_discussion_form').submit(function (e) {
+          e.preventDefault();
+          $('.response-message').hide();
+          $('.response-message').text('');
+          $('#invitation_email').prop('disabled', true);
+          $('.frm-loading').show(); 
+          //alert('aaaaaa')
+          $(this).find('#sendreviewtags_discussion').find('span').each(function(){
+             var enteredTag= $(this).text();
+             allTags.push(enteredTag);
+          });
+            const formData = $('#create_discussion_form').serializeArray();
+            $(formData).each(function (index, field) {
+                transformedResponse[field.name] = field.value;
+            });
+          transformedResponse['tags'] = allTags;
+          console.log(transformedResponse);
+            //return false;
+          
+            $.ajax({
+            url: '/auth/create-discussion', // URL for your API endpoint
+            method: 'POST',
+            data: JSON.stringify(transformedResponse),
+            processData: false,
+            contentType: 'application/json',
+            success: function (data) {
+                if (data.status == 'ok') {
+                    $('.response-message').text(data.message);
+                    $('.response-message').show();
+                    $('#invitation_email').prop('disabled', false);
+                    $('.frm-loading').hide();
+                    setTimeout(function() {
+                        window.location.reload();
+                    }, 2000);
+                } else {
+                    $('.response-message').text(data.message);
+                    $('.response-message').show();
+                    $('#invitation_email').prop('disabled', false);
+                    $('.frm-loading').hide();
+                    console.log('Something went wrong');
+                }
+            },
+            error: function (xhr, status, error) {
+                // Handle any errors that occur during the request
+                console.log(error);
+            }
+        });
+    
+          
+       });
+    });
+    </script>

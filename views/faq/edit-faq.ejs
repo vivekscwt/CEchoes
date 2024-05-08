@@ -1,0 +1,654 @@
+<%- include('../common/header') -%>
+    <!--begin::Content-->
+    <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+        <!--begin::Toolbar-->
+        <div class="toolbar" id="kt_toolbar">
+            <!--begin::Container-->
+            <div id="kt_toolbar_container" class="container-fluid d-flex flex-stack">
+                <!--begin::Page title-->
+                <div data-kt-swapper="true" data-kt-swapper-mode="prepend"
+                    data-kt-swapper-parent="{default: '#kt_content_container', 'lg' : '#kt_toolbar_container'}"
+                    class="page-title d-flex align-items-center flex-wrap me-3 mb-5 mb-lg-0">
+                    <!--begin::Title-->
+                    <h1 class="d-flex align-items-center text-dark fw-bolder fs-3 my-1">
+                        <%= page_title %>
+                            <!--end::Description-->
+                    </h1>
+                    <!--end::Title-->
+                </div>
+                <!--end::Page title-->
+            </div>
+            <!--end::Container-->
+        </div>
+        <!--end::Toolbar-->
+        <!--begin::Post-->
+        <div class="post d-flex flex-column-fluid" id="kt_post">
+            <!--begin::Container-->
+            <div id="kt_content_container" class="container-xxl">
+                <!--begin::Basic info-->
+                <div class="card mb-5 mb-xl-10">
+                    <div class="card-header border-0 cursor-pointer" role="button"
+                        data-bs-target="#kt_account_profile_details" aria-expanded="true"
+                        aria-controls="kt_account_profile_details">
+                        <!--begin::Card title-->
+                        <div class="card-title m-0">
+                            <h3 class="fw-bolder m-0">FAQ Banner Images</h3>
+                        </div>
+                        <!--end::Card title-->
+                    </div>
+                    <div id="kt_account_profile_details" class="collapse show">
+                        <form action="/auth/faq_images" method="POST" enctype="multipart/form-data">
+                            <div class="card-body border-top p-9">
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Banner Image 1</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-7 fv-row">
+                                        <input type="file" name="banner_img_1" id=""
+                                            class="form-control form-control-lg form-control-solid" placeholder=""
+                                            value="" />
+                                    </div>
+                                    <div class="col-lg-1 fv-row">
+                                        <img src="/<%= faqPageData.banner_img_1 %>" alt="img" width="50"
+                                            height="50" loading="">
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Banner Image 2</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-7 fv-row">
+                                        <input type="file" name="banner_img_2" id=""
+                                            class="form-control form-control-lg form-control-solid" placeholder=""
+                                            value="" />
+                                    </div>
+                                    <div class="col-lg-1 fv-row">
+                                        <img src="/<%= faqPageData.banner_img_2 %>" alt="img" width="50"
+                                            height="50" loading="">
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Banner Image 3</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-7 fv-row">
+                                        <input type="file" name="banner_img_3" id=""
+                                            class="form-control form-control-lg form-control-solid" placeholder=""
+                                            value="" />
+                                    </div>
+                                    <div class="col-lg-1 fv-row">
+                                        <img src="/<%= faqPageData.banner_img_3 %>" alt="img" width="50"
+                                            height="50" loading="">
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Banner Image 4</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-7 fv-row">
+                                        <input type="file" name="banner_img_4" id=""
+                                            class="form-control form-control-lg form-control-solid" placeholder=""
+                                            value="" />
+                                    </div>
+                                    <div class="col-lg-1 fv-row">
+                                        <img src="/<%= faqPageData.banner_img_4 %>" alt="img" width="50"
+                                            height="50" loading="">
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Banner Image 5</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-7 fv-row">
+                                        <input type="file" name="banner_img_5" id=""
+                                            class="form-control form-control-lg form-control-solid" placeholder=""
+                                            value="" />
+                                    </div>
+                                    <div class="col-lg-1 fv-row">
+                                        <img src="/<%= faqPageData.banner_img_5 %>" alt="img" width="50"
+                                            height="50" loading="">
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Banner Image 6</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-7 fv-row">
+                                        <input type="file" name="banner_img_6" id=""
+                                            class="form-control form-control-lg form-control-solid" placeholder=""
+                                            value="" />
+                                    </div>
+                                    <div class="col-lg-1 fv-row">
+                                        <img src="/<%= faqPageData.banner_img_6 %>" alt="img" width="50"
+                                            height="50" loading="">
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Banner Image 7</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-7 fv-row">
+                                        <input type="file" name="banner_img_7" id=""
+                                            class="form-control form-control-lg form-control-solid" placeholder=""
+                                            value="" />
+                                    </div>
+                                    <div class="col-lg-1 fv-row">
+                                        <img src="/<%= faqPageData.banner_img_7 %>" alt="img" width="50"
+                                            height="50" loading="">
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Banner Image 8</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-7 fv-row">
+                                        <input type="file" name="banner_img_8" id=""
+                                            class="form-control form-control-lg form-control-solid" placeholder=""
+                                            value="" />
+                                    </div>
+                                    <div class="col-lg-1 fv-row">
+                                        <img src="/<%= faqPageData.banner_img_8 %>" alt="img" width="50"
+                                            height="50" loading="">
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">App Banner Image </span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-7 fv-row">
+                                        <input type="file" name="app_banner_img" id=""
+                                            class="form-control form-control-lg form-control-solid" placeholder=""
+                                            value="" />
+                                    </div>
+                                    <div class="col-lg-1 fv-row">
+                                        <img src="/<%= faqPageData.app_banner_img %>" alt="img" width="50"
+                                            height="50" loading="">
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                            </div>
+                            <div class="card-footer d-flex justify-content-end py-6 px-9">
+                                <button type="reset"
+                                    class="btn btn-light btn-active-light-primary me-2">Discard</button>
+                                <button type="submit" class="btn btn-primary"
+                                    id="">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="card mb-5 mb-xl-10">
+                    <!--begin::Card header-->
+                    <div class="card-header border-0 cursor-pointer" role="button"
+                        data-bs-target="#kt_account_profile_details" aria-expanded="true"
+                        aria-controls="kt_account_profile_details">
+                        <!--begin::Card title-->
+                        <div class="card-title m-0">
+                            <h3 class="fw-bolder m-0">FAQ Details</h3>
+                        </div>
+                        <!--end::Card title-->
+                    </div>
+                    <!--begin::Card header-->
+                    <!--begin::Content-->
+                    <div id="kt_account_profile_details" class="collapse show">
+                        <!--begin::Form-->
+                        <form id="kt_account_profile_details_form" class="form" >
+                            <!--begin::Card body-->
+                            <div class="card-body border-top p-9">
+
+                                <!--begin::Input group-->
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="required">Title</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <input type="text" name="title" id="title"
+                                            class="form-control form-control-lg form-control-solid" placeholder="Title"
+                                            value="<%= faqPageData.title %>" />
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Content</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <textarea name="content" class="content"
+                                            id="content-editor"><%= faqPageData.content %></textarea>
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">App Content</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <textarea name="app_content" class="form-control form-control-lg form-control-solid"
+                                          placeholder="App Content"  id=""><%- faqPageData.app_banner_content %></textarea>
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <!--end::Input group-->
+                                <!--begin::Input group-->
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Meta Title</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <input type="longtext" name="meta_title" id="meta_title"
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Meta Title" value="<%= faqPageData.meta_title %>" />
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <!--end::Input group-->
+                                <!--begin::Input group-->
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Meta Description</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <input type="longtext" name="meta_desc" id="meta_desc"
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Meta Description" value="<%= faqPageData.meta_desc %>" />
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <!--end::Input group-->
+
+                                <!--begin::Input group-->
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Keyword</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <input type="text" name="keyword" id="keyword"
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Keyword" value="<%= faqPageData.keyword %>" />
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <!--end::Input group-->
+                            </div>
+                            <div class="card-header border-0 cursor-pointer" role="button"
+                                data-bs-target="#kt_account_profile_details" aria-expanded="true"
+                                aria-controls="kt_account_profile_details">
+                                <!--begin::Card title-->
+                                <div class="card-title m-0">
+                                    <h3 class="fw-bolder m-0">Category Details</h3>
+                                </div>
+                                <!--end::Card title-->
+                            </div>
+                            <div class="card-body border-top p-9 main-repeater" id="main-repeater">
+                                <% faqCategoriesData.forEach( (category,index)=> { %>
+                                    <div class="main_full_area" id="full_area_category_id<%= index %>">
+                                        <div class="category-repeter">
+                                            <div class="category_name">
+                                                <div class="row mb-6">
+                                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                                        <span class="required">Category Name</span>
+                                                    </label>
+                                                    <div class="col-lg-8 fv-row">
+                                                        <input type="text" name="category_name" id="category_name"
+                                                            class="form-control form-control-lg form-control-solid"
+                                                            placeholder="Category Name"
+                                                            value="<%= category.category %>" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <% var count=0; %>
+                                                <div class="main_question_answer">
+                                                    <% faqItemsData.forEach( (qus_ans, key)=> { %>
+                                                        <% if (qus_ans.category_id==category.id) { %>
+                                                            <% count++ %>
+                                                                <div class="add_question_answer">
+                                                                    <div class="each_question_answer">
+                                                                        <div class="add_question">
+                                                                            <div class="row mb-6">
+                                                                                <label
+                                                                                    class="col-lg-4 col-form-label fw-bold fs-6">
+                                                                                    <span class="">Question</span>
+                                                                                </label>
+                                                                                <div class="col-lg-8 fv-row">
+                                                                                    <input type="text" name="question"
+                                                                                        id="question"
+                                                                                        class="form-control form-control-lg form-control-solid"
+                                                                                        placeholder="Question"
+                                                                                        value="<%= qus_ans.question %>" />
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="add_answer">
+                                                                            <div class="row mb-6">
+                                                                                <label
+                                                                                    class="col-lg-4 col-form-label fw-bold fs-6">
+                                                                                    <span class="">Answer</span>
+                                                                                </label>
+                                                                                <div class="col-lg-8 fv-row">
+                                                                                    <textarea name="answer"
+                                                                                        class="form-control form-control-lg form-control-solid answer-editor"
+                                                                                        id=""><%= qus_ans.answer %></textarea>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <% if(count> 1) { %>
+                                                                            <button type="button"
+                                                                                class="btn btn-danger remove-QA"
+                                                                                class="" id="" style="float: right;"><i
+                                                                                    class="fa fa-minus"></i></button>
+                                                                            <% } %>
+                                                                    </div>
+                                                                </div>
+
+                                                                <% } %>
+                                                                    <% }) %>
+                                                                        <a href="#"
+                                                                            class="btn btn-primary add_question_answer_btn">Add
+                                                                            question
+                                                                            answer</a>
+                                                </div>
+                                                <% if(index !=0) { %>
+                                                    <button type="button" class="btn btn-danger remove-btn" id=""
+                                                        style="float: left;"><i
+                                                            class="fa fa-minus"></i>Category</button>
+                                                    <% } %>
+                                        </div>
+                                    </div>
+
+                                    <% }) %>
+
+                                        <a id="add_category_btn" class="btn btn-primary" href="#">Add
+                                            Category</a>
+                            </div>
+                            <!--begin::Actions-->
+                            <div class="card-footer d-flex justify-content-end py-6 px-9">
+                                <button type="reset"
+                                    class="btn btn-light btn-active-light-primary me-2">Discard</button>
+                                <button type="submit" class="btn btn-primary"
+                                    id="kt_account_profile_details_submit">Submit</button>
+                            </div>
+                            <!--end::Actions-->
+                        </form>
+                    </div>
+                    <!--end::Content-->
+                </div>
+                <!--end::Basic info-->
+
+                <!--end::Modals-->
+            </div>
+            <!--end::Container-->
+        </div>
+        <!--end::Post-->
+
+    </div>
+    <!--end::Content-->
+    <%- include('../common/footer') -%>
+        <script>
+/******/ (() => { // webpackBootstrap 
+/******/ 	"use strict";
+                var __webpack_exports__ = {};
+                /*!*********************************************************************************************!*\
+                  !*** ../../../themes/metronic/html/demo1/src/js/custom/account/settings/profile-details.js ***!
+                  \*********************************************************************************************/
+
+
+                // Class definition
+                var KTAccountSettingsProfileDetails = function () {
+                    // Private variables
+                    var form;
+                    var submitButton;
+                    var validation;
+
+                    var handleForm = function () {
+
+                        $("#kt_datepicker_1").flatpickr();
+                        validation = FormValidation.formValidation(
+                            form,
+                            {
+                                fields: {
+                                    'title': {
+                                        validators: {
+                                            notEmpty: {
+                                                message: 'Title is required'
+                                            }
+                                        }
+                                    }
+
+                                },
+                                plugins: {
+                                    trigger: new FormValidation.plugins.Trigger(),
+                                    submitButton: new FormValidation.plugins.SubmitButton(),
+                                    //defaultSubmit: new FormValidation.plugins.DefaultSubmit(), // Uncomment this line to enable normal button submit after form validation
+                                    bootstrap: new FormValidation.plugins.Bootstrap5({
+                                        rowSelector: '.fv-row',
+                                        eleInvalidClass: '',
+                                        eleValidClass: ''
+                                    })
+                                }
+                            }
+                        );
+
+                        // Handle form submit
+                        submitButton.addEventListener('click', function (e) {
+                            e.preventDefault();
+                            tinymce.get('content-editor').save();
+                            //alert("aaaaaaaa");
+                            validation.validate().then(function (status) {
+                                //alert("aaaaaaaa");
+                                //alert(CKEDITOR.instances['editor'].getData());
+                                if (status == 'Valid') {
+                                    const jsonResponse = $('#kt_account_profile_details_form').serializeArray();
+                                    //console.log(jsonResponse);
+
+                                    // Create an empty object to store the transformed result
+                                    const transformedResponse = {};
+
+                                    // Initialize variables to keep track of the current category and FAQ objects
+                                    let currentCategory = '';
+                                    let currentFAQ = [];
+
+                                    // Loop through the JSON response using forEach
+                                    jsonResponse.forEach(item => {
+                                        const { name, value } = item;
+
+                                        if (name === 'title' || name === 'content' || name === 'meta_title' || name === 'meta_desc' || name === 'keyword' || name === 'app_content') {
+                                            transformedResponse[name] = value;
+                                        } else if (name === 'category_name') {
+                                            // If a new category is encountered, reset the currentFAQ and start a new one
+                                            if (currentCategory !== value) {
+                                                currentCategory = value;
+                                                currentFAQ = [];
+                                                transformedResponse.FAQ = transformedResponse.FAQ || [];
+                                                transformedResponse.FAQ.push({ [currentCategory]: currentFAQ });
+                                            }
+                                        } else if (name === 'question' && currentCategory) {
+                                            // Add a new FAQ entry to the current category
+                                            currentFAQ.push({ Q: value });
+                                        } else if (name === 'answer' && currentCategory && currentFAQ.length > 0) {
+                                            // Add the answer to the last FAQ entry
+                                            currentFAQ[currentFAQ.length - 1].A = value;
+                                        }
+                                    });
+
+                                    //console.log(transformedResponse);
+
+                                    $.ajax({
+                                        url: '/auth/update-faq',
+                                        method: 'PUT',
+                                        data: JSON.stringify(transformedResponse),
+                                        contentType: 'application/json',
+                                        success: function (data) {
+                                            if (data.status == 'ok') {
+                                                Swal.fire({
+                                                    text: data.message,
+                                                    icon: "success",
+                                                    buttonsStyling: false,
+                                                    confirmButtonText: "Ok, got it!",
+                                                    customClass: {
+                                                        confirmButton: "btn btn-primary"
+                                                    }
+                                                }).then(function (result) {
+                                                    if (result.isConfirmed) {
+                                                        window.location.href = "/edit-faq";
+                                                    }
+                                                });
+                                            } else {
+                                                Swal.fire({
+                                                    text: data.message,
+                                                    icon: "error",
+                                                    buttonsStyling: false,
+                                                    confirmButtonText: "Ok, got it!",
+                                                    customClass: {
+                                                        confirmButton: "btn btn-primary"
+                                                    }
+                                                });
+                                            }
+                                        },
+                                        error: function (xhr, status, error) {
+                                            // Handle any errors that occur during the request
+                                            console.log(error);
+                                        }
+                                    });
+                                } else {
+                                    swal.fire({
+                                        text: "Sorry, looks like there are some errors detected, please try again.",
+                                        icon: "error",
+                                        buttonsStyling: false,
+                                        confirmButtonText: "Ok, got it!",
+                                        customClass: {
+                                            confirmButton: "btn fw-bold btn-light-primary"
+                                        }
+                                    });
+                                }
+                            });
+                        });
+
+                    }
+
+
+                    // Public methods
+                    return {
+                        init: function () {
+                            form = document.getElementById('kt_account_profile_details_form');
+                            submitButton = form.querySelector('#kt_account_profile_details_submit');
+
+                            handleForm();
+                        }
+                    }
+                }();
+
+                // On document ready
+                KTUtil.onDOMContentLoaded(function () {
+                    KTAccountSettingsProfileDetails.init();
+                });
+
+            })();
+            //# sourceMappingURL=profile-details.js.map    
+
+            $(document).ready(function () {
+
+                $(document).on('click', '#add_category_btn', function (e) {
+                    e.preventDefault();
+                    $(this).parent().append('<div class="category-repeter"> <div class="category_name"> <div class="row mb-6"> <label class="col-lg-4 col-form-label fw-bold fs-6"> <span class="required">Category Name</span> </label> <div class="col-lg-8 fv-row"> <input type="text" name="category_name" id="category_name" class="form-control form-control-lg form-control-solid" placeholder="Category Name" value=""/> </div></div></div><div class="main_question_answer"> <div class="add_question_answer"> <div class="add_question"> <div class="row mb-6"> <label class="col-lg-4 col-form-label fw-bold fs-6"> <span class="">Question</span> </label> <div class="col-lg-8 fv-row"> <input type="text" name="question" id="question" class="form-control form-control-lg form-control-solid" placeholder="Question" value=""/> </div></div></div><div class="add_answer"> <div class="row mb-6"> <label class="col-lg-4 col-form-label fw-bold fs-6"> <span class="">Answer</span> </label> <div class="col-lg-8 fv-row"> <textarea name="answer" class="form-control form-control-lg form-control-solid answer-editor" id=""></textarea> </div></div></div></div></div><a href="#" class="btn btn-primary add_question_answer_btn">Add question answer</a><button type="button" class="btn btn-danger remove-btn" id="" style="float: left;"><i class="fa fa-minus"></i>Category</button></div>');
+                    $(this).parent().append('<a id="add_category_btn" class="btn btn-primary" href="#">Add Category</a>');
+                    $(this).remove();
+                    //initializeCKEditor($(this).parents('.main-repeater'))
+                });
+                $(document).on('click', '.add_question_answer_btn', function (e) {
+                    e.preventDefault();
+                    $(this).parent().append('<div class="each_question_answer"> <div class="add_question"> <div class="row mb-6"> <label class="col-lg-4 col-form-label fw-bold fs-6"> <span class="">Question</span> </label> <div class="col-lg-8 fv-row"> <input type="text" name="question" id="question" class="form-control form-control-lg form-control-solid" placeholder="Question" value=""/> </div></div></div><div class="add_answer"> <div class="row mb-6"> <label class="col-lg-4 col-form-label fw-bold fs-6"> <span class="">Answer</span> </label> <div class="col-lg-8 fv-row"> <textarea name="answer" class="form-control form-control-lg form-control-solid answer-editor" id=""></textarea> </div></div></div><button type="button" class="btn btn-danger remove-QA" class="" id="" style="float: right;"><i class="fa fa-minus"></i></button></div>');
+                    $(this).parent().append(' <a href="#" class= "btn btn-primary add_question_answer_btn" >Add question answer</a >');
+                    $(this).remove();
+                    //initializeCKEditor($(this).parents('.category-repeter'))
+                });
+
+                // Remove Category
+                $('#main-repeater').on('click', '.remove-btn', function () {
+                    $(this).parent('.category-repeter').remove();
+                });
+
+                // Remove qus-ans
+                $('.main-repeater').on('click', '.remove-QA', function () {
+                    $(this).parent('.each_question_answer').remove();
+                });
+
+                // function initializeCKEditor($item) {
+                //     $item.find(".answer-editor").each(function () {
+                //         if (!$(this).hasClass("ckeditor-initialized")) {
+                //             CKEDITOR.replace(this);
+                //             $(this).addClass("ckeditor-initialized");
+                //         }
+                //     });
+                // }
+
+                // Initialize CKEditor for nested repeater textareas
+                // const initCKEditor = function () {
+                //     $(".answer-editor").each(function () {
+                //         CKEDITOR.replace(this);
+                //     });
+                // };
+                // initCKEditor();
+
+                //CKEDITOR.replace('content-editor');
+                tinymce.init({
+                    selector: "#content-editor",
+                    menubar: false,
+                    toolbar: ["styleselect fontselect fontsizeselect",
+                        "undo redo | cut copy paste | bold italic | link image | alignleft aligncenter alignright alignjustify",
+                        "bullist numlist | outdent indent | blockquote subscript superscript | advlist | autolink | lists charmap | print preview |  code"],
+                    plugins: "advlist autolink link image lists charmap print preview code"
+                });
+            });
+        </script>

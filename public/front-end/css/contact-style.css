@@ -1,0 +1,114 @@
+
+/*=============== Contact Form Start ==============*/
+
+.envelope-wrap {
+    max-width: 938px;
+    min-height: 852px;
+    background: url(../images/envelope-frame.png) no-repeat center;
+    background-size: cover;
+    margin: 0 auto;
+    position: relative;
+    z-index: 9;
+}
+
+.envelope-inner-from {
+    max-width: 618px;
+    margin: 0 auto;
+    padding-top: 98px;
+    min-height: 560px;
+}
+
+.envelope-inner-from h3 {
+    font-size: 28px;
+    font-weight: 500;
+    line-height: 110.4%;
+    margin-bottom: 30px;
+}
+
+.envelope-inner-social-info .app-info a img {
+    width: 150px;
+}
+
+.envelope-inner-social-info .social-icons a {
+    width: 40px;
+    height: 40px;
+    padding: 9px 0;
+}
+
+.envelope-inner-social-info .social-icons a:hover {
+    background: #000000;
+    color: #ffffff;
+}
+.envelope-inner-social-info .social-icons a i {
+    font-size: 16px;
+}
+
+.env-contact-info {
+    margin-top: 36px;
+    font-size: 20px;
+    padding: 0 50px;
+}
+
+.env-contact-info-in span {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.env-contact-info-in span i {
+    width: 38px;
+    height: 38px;
+    background: #FCC106;
+    display: inline-block;
+    padding: 9px 0;
+    position: relative;
+    z-index: 9;
+}
+
+.env-contact-info-in span:after {
+    background: url(../images/social-bg.png) no-repeat center;
+    background-size: 97%;
+    width: 48px;
+    height: 48px;
+    content: '';
+    position: absolute;
+    left: -5px;
+    top: -5px;
+}
+
+.env-contact-info a {
+    color: #000000;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 10px;
+    font-size: 15px;
+}
+
+.env-contact-info a:hover {
+    color: #F8A401;
+}
+
+.map-content {
+    background-color: #FCCB06;
+}
+
+.map-content picture {
+    position: relative;
+    z-index: 9;
+}
+
+.overlay-object5 {
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.overlay-object6 {
+    position: absolute;
+    right: 0;
+    bottom: 115px;
+}
+
+
+/*=============== Contact Form End ==============*/

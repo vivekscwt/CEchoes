@@ -1,0 +1,269 @@
+<%- include('common/header') -%>
+<link href="/front-end/css/discussion-style.css" rel="stylesheet" type="text/css">
+<%- include('common/header-banner') -%>
+
+<!-- ============== Section1 Start =============== -->
+<section class="main-content bottom-main-content">
+    <div class="discussion-page-content">
+       <div class="container">
+          <h2 class="inner-main-head"><%= AllCommentByDiscusId[0].topic.charAt(0).toUpperCase() + AllCommentByDiscusId[0].topic.slice(1)%></h2>
+          <%
+          let tags = []
+          if(AllCommentByDiscusId[0].tags != ''){
+             tags = JSON.parse(AllCommentByDiscusId[0].tags)
+          }
+           %>
+          <% tags.forEach((tag) =>{ %> 
+          <a href="#" class="btn-default btn-warning dis-details-top-btn my-1"><%= tag %></a>
+          <% }) %>
+          <div class="discussion-details-left">
+            <div class="contribute-discussion">
+               <a href="#" class="discussionscrollbtn"><i class="fa-solid fa-messages"></i> Contribute to this discussion?</a>
+            </div>
+            <div class="discussion-details-panel">
+               <%
+                  let comments = []
+                  if(AllCommentByDiscusId[0].commentData != ''){
+                     comments = JSON.parse(AllCommentByDiscusId[0].commentData)
+                  }
+                  %>
+              <div class="user-comment-control-wrapper">
+                <% comments.forEach((comment) =>{ %> 
+                <% if(comment.comment) { %>
+                  <div class="user-repeat-main">
+                    <div class="user-comment-repeat">
+                      <!-- <% if(comment.profile_pic){ %>
+                        <div  class="discussion-user-img" title="<%= comment && comment.comment_first_name ? comment.comment_first_name : '' %> <%= comment && comment.comment_first_name ? comment.comment_last_name : '' %>">
+                          <img src="/<%= comment.profile_pic %>" alt="img" width="60" height="60">
+                      </div>
+                      <% } else{ %>
+                          <div  class="discussion-user-img" title="<%= comment && comment.comment_first_name ? comment.comment_first_name : '' %> <%= comment && comment.comment_first_name ? comment.comment_last_name : '' %>">
+                             <img src="../front-end/images/user-img.jpg" alt="img" width="60" height="60">
+                            <h4><%= comment && comment.comment_first_name ? comment.comment_first_name.charAt(0).toUpperCase() : '' %></h4>
+                        </div>
+                      <% } %> -->
+                      <div  class="discussion-user-img" title="">
+                        <!-- <img src="../front-end/images/user-img.jpg" alt="img" width="60" height="60"> -->
+                        <h4><%= comment && comment.comment_first_name ? comment.comment_first_name.charAt(0).toUpperCase() : '' %></h4>
+                    </div>
+                      
+                      <% const date = new Date(comment.created_at); %>
+                      <div class="discussion-details-user-info">
+                          <h4>
+                            <!-- <small class="m-0" style="display: inline-block; vertical-align: middle;"> </small>  -->
+                          <small><%= date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) %> </small>
+                          <% if(AllCommentByDiscusId[0].user_id == comment.user_id ) { %>
+                            <small class="badge bg-warning text-dark">Author</small>
+                            <% } %>
+                        </h4>
+                      </div>
+                    </div>
+                    <p><%= comment.comment %></p>
+                    <% const likeCounts = getcommentvoting && getcommentvoting[0] ? getcommentvoting[0] : []; %>
+                    <% const dislikeCounts = getcommentvoting && getcommentvoting[1] ? getcommentvoting[1] : []; %>
+                    
+                    
+                    <% if (currentUserData && currentUserData.user_id) { %>
+                      <div class="like-dislike-buttons">
+                        <% const userLikedComment = userLikedComments.find(item => item.comment_id === comment.id); %>
+                        <i class="fa-solid fa-thumbs-up <%= userLikedComment && userLikedComment?.voting === '1' ? 'yellow' : '' %>" onclick="handleLike(<%= comment.id %>, <%= AllCommentByDiscusId[0].id %>, <%= currentUserData.user_id %>, 'like')"></i>
+                        <span id="likeCount_<%= comment.id %>">
+                            <% const commentLikeCount = likeCounts.find(like => like.comment_id === comment.id); %>
+                            <%= commentLikeCount ? '(' + commentLikeCount.like_count + ')' : '(0)' %>
+                        </span>
+                    
+                        <i class="fa-solid fa-thumbs-down <%= userLikedComment && userLikedComment?.voting === '0' ? 'yellow' : '' %>" onclick="handleLike(<%= comment.id %>, <%= AllCommentByDiscusId[0].id %>, <%= currentUserData.user_id %>, 'dislike')"></i>
+                        <span id="dislikeCount_<%= comment.id %>">
+                            <% const commentDislikeCount = dislikeCounts.find(dislike => dislike.comment_id === comment.id); %>
+                            <%= commentDislikeCount ? '(' + commentDislikeCount.dislike_count + ')' : '(0)' %>
+                        </span>
+                    </div>
+                    
+                    <% } %>
+                  </div>
+                <% } %>
+                <% }) %>
+              </div>
+               <div class="write-discussion-field">
+                  <form id="comment_form">
+                     <textarea rows="5" class="form-control" placeholder="Write a comment" id="discussiontext" name="comment" required></textarea>
+                     <input type="hidden" name="discussion_id" value="<%= AllCommentByDiscusId[0].id %>" />
+                     <input type="hidden" name="user_id" value="<%= currentUserData && currentUserData.user_id ? currentUserData.user_id : '0' %>" />
+                     
+                     <div class="text-center">
+                        <% if(currentUserData){ %>
+                           <input type="submit" class="btn-default btn-warning mt-3" id="comment_btn" value="Submit">
+                           
+                         <% } else { %>
+                           <a href="#" class="btn-default btn-outline-warning mt-3 login">Submit</a>
+                         <% } %>
+                     </div>
+                  </form>
+                  <div class="submit-loading" style="display: none;">Please wait..</div>
+                  <div class="submit-success" style="width: 100%; text-align: center; display: block; border: 2px solid #fccb06; padding: 6px; margin-top: 20px;
+                  border-radius: 5px; display: none;"></div>
+                  <div class="submit-error" style="width: 100%; text-align: center; display: block; border: 2px solid #fccb06; padding: 6px; margin-top: 20px;
+                  border-radius: 5px; display: none;"></div>
+               </div>
+            </div>
+            <div class="discussion-similar-thread">
+               
+               
+               <% if (AllDiscussions.length > 0) { %>
+                 <% let AllDiscussionTags = [] %>
+                 <% let headingDisplayed = false %>
+                 <% AllDiscussions.forEach((AllDiscussion,index) => { %>
+                   <%
+                   if (AllDiscussion.tags !== '') {
+                     AllDiscussionTags = JSON.parse(AllDiscussion.tags);
+                   }
+                   %>
+                   <% const matchingTags = tags.filter((tag,key) => AllDiscussionTags.includes(tag)); %>
+                   <% if (matchingTags.length > 0 && AllCommentByDiscusId[0].id != AllDiscussion.id ) { %>
+                     <% if (!headingDisplayed) { %>
+                        <h3>Similar threads</h3>
+                        <% headingDisplayed = true %>
+                      <% } %>
+                     <div class="discussion-review-panel">
+                       <a href="/discussion-details/<%= AllDiscussion.id %>" title="<%= AllDiscussion.topic %>" >
+                         <div class="discussion-user-img" title="">
+                           <h4><%= AllDiscussion.first_name.charAt(0).toUpperCase() %></h4>
+                         </div>
+                         <div class="discussion-user-info">
+                           <h4>
+                             <% if (AllDiscussion.topic.length > 75) { %>
+                               <%= AllDiscussion.topic.substring(0, 75) + ' . . . ' %>
+                             <% } else { %>
+                               <%= AllDiscussion.topic %>
+                             <% } %> 
+                           </h4>
+                           <% const date = new Date(AllDiscussion.created_at); %>
+                           <p>Created <%= date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) %></p>
+                         </div>
+                         <div class="dis-comment-views">
+                           <span><%= AllDiscussion.total_comments %> Comments</span>
+                           <span><%= AllDiscussion.total_views %> Views</span>
+                         </div>
+                       </a>
+                     </div>
+                     <% } %>
+                 <% }) %>
+               <% } %>
+             </div>
+             
+               
+            </div>
+         </div>
+       </div>
+    </div>
+ </section>
+<!-- ============== Section1 End =============== -->
+<style>
+.yellow {
+  color: #F8A401;
+}
+.like-dislike-buttons i:hover {
+        color: #F8A401;
+    }
+</style>
+
+
+<%- include('common/footer') -%>   
+<script>
+   jQuery(function ($) {
+
+       //---Review reply submit-------//
+       $('#comment_form').submit(function(e){
+           event.preventDefault();
+           $('#comment_btn').prop( "disabled", true );
+           $('.submit-success, .submit-error').hide();
+           $('.submit-loading').show();
+
+           const formData = $('#comment_form').serializeArray();
+           const jsonData = {};
+           $(formData).each(function (index, field) {
+               jsonData[field.name] = field.value;
+           });
+
+           $.ajax({
+             url: '/auth/add-comment',
+             method: 'POST',
+             data: jsonData,
+             ContentType: 'application/json',
+             success: function (data) {
+               if (data.status == 'ok') {
+                 $('.submit-loading').hide();
+                 $('#comment_btn').prop( "disabled", false );
+                 $('.submit-success').text(data.message);
+                 $('.submit-success').show();
+                 setTimeout( function(){
+                        window.location.reload();
+                 }, 3000 );
+               } else {
+                   $('.submit-loading').hide();
+                   $('.submit-error').text(data.message);
+                   $('.submit-error').show();
+                   $('#comment_btn').prop( "disabled", false );
+               }
+               //console.log(data);
+             },
+             error: function (error) {
+               $('.submit-loading').hide();
+               $('.submit-error').text(error);
+               $('.submit-error').show();
+             }
+           });
+       });
+
+
+   });
+
+   function handleLike(commentId, discussionId, userId, actionType) {
+    console.log("actionType",actionType);
+    if (userId) {
+      const votingValue = actionType === 'like' ? '1' : '0';
+
+      $.ajax({
+        url: '/auth/likeComment',
+        method: 'POST',
+        data: {
+          votingValue: votingValue,
+          commentId: commentId,
+          discussionId: discussionId,
+          userId: userId,
+        },
+        success: function (data) {
+          console.log(`${actionType} action successful:`, data);
+
+          updateCommentCounts(commentId, data.likeCounts, data.dislikeCounts, actionType);
+        },
+        error: function (error) {
+          console.error(`Error in ${actionType} action:`, error);
+        },
+      });
+    } else {
+      console.log('User is not logged in. Action not allowed.');
+    }
+  }
+
+  function updateCommentCounts(commentId, likeCounts, dislikeCounts, currentAction) {
+    const commentLikeCount = likeCounts.find(like => like.comment_id === commentId);
+    const commentDislikeCount = dislikeCounts.find(dislike => dislike.comment_id === commentId);
+
+    const likeIcon = $(`#likeCount_${commentId}`).prev();
+    const dislikeIcon = $(`#dislikeCount_${commentId}`).prev();
+
+    likeIcon.removeClass('yellow');
+    dislikeIcon.removeClass('yellow');
+
+    if (currentAction === 'like') {
+        likeIcon.addClass('yellow'); 
+    } else if (currentAction === 'dislike') {
+        dislikeIcon.addClass('yellow'); 
+    }
+
+    $(`#likeCount_${commentId}`).html(`${commentLikeCount ? '(' + commentLikeCount.like_count + ')' : '(0)'}`);
+    $(`#dislikeCount_${commentId}`).html(`${commentDislikeCount ? '(' + commentDislikeCount.dislike_count + ')' : '(0)'}`);
+}
+
+</script>

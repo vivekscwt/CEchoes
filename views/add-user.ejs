@@ -1,0 +1,749 @@
+<%- include('common/header') -%>
+    <!--begin::Content-->
+    <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+        <!--begin::Toolbar-->
+        <div class="toolbar" id="kt_toolbar">
+            <!--begin::Container-->
+            <div id="kt_toolbar_container" class="container-fluid d-flex flex-stack">
+                <!--begin::Page title-->
+                <div data-kt-swapper="true" data-kt-swapper-mode="prepend"
+                    data-kt-swapper-parent="{default: '#kt_content_container', 'lg' : '#kt_toolbar_container'}"
+                    class="page-title d-flex align-items-center flex-wrap me-3 mb-5 mb-lg-0">
+                    <!--begin::Title-->
+                    <h1 class="d-flex align-items-center text-dark fw-bolder fs-3 my-1">
+                        <%= page_title %>
+                            <!--end::Description-->
+                    </h1>
+                    <!--end::Title-->
+                </div>
+                <!--end::Page title-->
+            </div>
+            <!--end::Container-->
+        </div>
+        <!--end::Toolbar-->
+        <!--begin::Post-->
+        <div class="post d-flex flex-column-fluid" id="kt_post">
+            <!--begin::Container-->
+            <div id="kt_content_container" class="container-xxl">
+                <!--begin::Basic info-->
+                <div class="card mb-5 mb-xl-10">
+                    <!--begin::Card header-->
+                    <div class="card-header border-0 cursor-pointer" role="button"
+                        data-bs-target="#kt_account_profile_details" aria-expanded="true"
+                        aria-controls="kt_account_profile_details">
+                        <!--begin::Card title-->
+                        <div class="card-title m-0">
+                            <h3 class="fw-bolder m-0">Profile Details</h3>
+                        </div>
+                        <!--end::Card title-->
+                    </div>
+                    <!--begin::Card header-->
+                    <!--begin::Content-->
+                    <div id="kt_account_profile_details" class="collapse show">
+                        <!--begin::Form-->
+                        <form id="kt_account_profile_details_form" class="form" action="/auth/create-user" method="POST"
+                            enctype="multipart/form-data">
+                            <!--begin::Card body-->
+                            <div class="card-body border-top p-9">
+                                <!--begin::Input group-->
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">Avatar</label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8">
+                                        <!--begin::Image input-->
+                                        <div class="image-input image-input-outline" data-kt-image-input="true"
+                                            style="background-image: url(/assets/media/avatars/blank.png)">
+                                            <!--begin::Preview existing avatar-->
+                                            <div class="image-input-wrapper w-125px h-125px"
+                                                style="background-image: url(/assets/media/avatars/blank.png)"></div>
+                                            <!--end::Preview existing avatar-->
+                                            <!--begin::Label-->
+                                            <label
+                                                class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
+                                                data-kt-image-input-action="change" data-bs-toggle="tooltip"
+                                                title="Change avatar">
+                                                <i class="bi bi-pencil-fill fs-7"></i>
+                                                <!--begin::Inputs-->
+                                                <input type="file" name="profile_pic" accept=".png, .jpg, .jpeg" />
+                                                <input type="hidden" name="avatar_remove" />
+                                                <!--end::Inputs-->
+                                            </label>
+                                            <!--end::Label-->
+                                            <!--begin::Cancel-->
+                                            <span
+                                                class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
+                                                data-kt-image-input-action="cancel" data-bs-toggle="tooltip"
+                                                title="Cancel avatar">
+                                                <i class="bi bi-x fs-2"></i>
+                                            </span>
+                                            <!--end::Cancel-->
+                                            <!--begin::Remove-->
+                                            <span
+                                                class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
+                                                data-kt-image-input-action="remove" data-bs-toggle="tooltip"
+                                                title="Remove avatar">
+                                                <i class="bi bi-x fs-2"></i>
+                                            </span>
+                                            <!--end::Remove-->
+                                        </div>
+                                        <!--end::Image input-->
+                                        <!--begin::Hint-->
+                                        <div class="form-text">Allowed file types: png, jpg, jpeg.</div>
+                                        <!--end::Hint-->
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <!--end::Input group-->
+                                <!--begin::Input group-->
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label required fw-bold fs-6">Full Name</label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8">
+                                        <!--begin::Row-->
+                                        <div class="row">
+                                            <!--begin::Col-->
+                                            <div class="col-lg-6 fv-row">
+                                                <input type="text" name="first_name"
+                                                    class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
+                                                    placeholder="First name" value="" />
+                                            </div>
+                                            <!--end::Col-->
+                                            <!--begin::Col-->
+                                            <div class="col-lg-6 fv-row">
+                                                <input type="text" name="last_name"
+                                                    class="form-control form-control-lg form-control-solid"
+                                                    placeholder="Last name" value="" />
+                                            </div>
+                                            <!--end::Col-->
+                                        </div>
+                                        <!--end::Row-->
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <!--end::Input group-->
+                                <!--begin::Input group-->
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="required">Email</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <input type="email" name="email"
+                                            class="form-control form-control-lg form-control-solid" placeholder="Email"
+                                            value="" />
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <!--end::Input group-->
+                                <!--begin::Input group-->
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="required">Contact Phone</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <input type="tel" name="phone"
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Phone number" value="" />
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Alternate Number</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <input type="tel" name="alternate_phone"
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Alternate Number" value="" />
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <!--end::Input group-->
+                                <!--begin::Input group-->
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Occupation</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <input type="text" name="occupation"
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Occupation" value="" />
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <!--end::Input group-->
+                                <!--begin::Input group-->
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="required">Address</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <input type="text" name="address"
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Address" value="" />
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <!--end::Input group-->
+                                <!--begin::Input group-->
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="required">Country</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <select id="select_country" name="country" aria-label="Select a Country"
+                                            data-control="select2" data-placeholder="Select a country..."
+                                            class="form-select form-select-solid form-select-lg fw-bold">
+                                            <option value="">Select a Country...</option>
+                                            <% country_response.forEach( item=> { %>
+                                                <option
+                                                    data-kt-flag="/assets/media/flags/<%= item.name.toLowerCase().replace(/\s+/g, '-') %>.svg"
+                                                    value="<%= item.id %>">
+                                                    <%= item.name %>
+                                                </option>
+                                                <% }) %>
+                                        </select>
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <!--end::Input group-->
+                                <!--begin::Input group-->
+                                <div class="row mb-6" id="dynamic_state_field_wrapper" style="display: none;">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="required">State</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <select id="select_state" name="state" aria-label="Select a State"
+                                            data-control="select2" data-placeholder="Select a State..."
+                                            class="form-select form-select-solid form-select-lg fw-bold">
+                                            <option value="">Select a State...</option>
+                                        </select>
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <!--end::Input group-->
+                                <!--begin::Input group-->
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="required">City</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <input type="text" name="city"
+                                            class="form-control form-control-lg form-control-solid" placeholder="City"
+                                            value="" />
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <!--end::Input group-->
+                                <!--begin::Input group-->
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="required">Zip</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <input type="text" name="zip"
+                                            class="form-control form-control-lg form-control-solid" placeholder="Zip"
+                                            value="" />
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <!--end::Input group-->
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="required">Date Of Birth</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <!--<input type="text" name="date_of_birth" id="kt_daterangepicker_3" class="form-control form-control-lg form-control-solid" placeholder="Date Of Birth" value=""  />-->
+                                        <div class="position-relative d-flex align-items-center">
+                                            <!--begin::Svg Icon | path: icons/duotune/general/gen014.svg-->
+                                            <span class="svg-icon position-absolute ms-4 mb-1 svg-icon-2">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    viewBox="0 0 24 24" fill="none">
+                                                    <path opacity="0.3"
+                                                        d="M21 22H3C2.4 22 2 21.6 2 21V5C2 4.4 2.4 4 3 4H21C21.6 4 22 4.4 22 5V21C22 21.6 21.6 22 21 22Z"
+                                                        fill="black" />
+                                                    <path
+                                                        d="M6 6C5.4 6 5 5.6 5 5V3C5 2.4 5.4 2 6 2C6.6 2 7 2.4 7 3V5C7 5.6 6.6 6 6 6ZM11 5V3C11 2.4 10.6 2 10 2C9.4 2 9 2.4 9 3V5C9 5.6 9.4 6 10 6C10.6 6 11 5.6 11 5ZM15 5V3C15 2.4 14.6 2 14 2C13.4 2 13 2.4 13 3V5C13 5.6 13.4 6 14 6C14.6 6 15 5.6 15 5ZM19 5V3C19 2.4 18.6 2 18 2C17.4 2 17 2.4 17 3V5C17 5.6 17.4 6 18 6C18.6 6 19 5.6 19 5Z"
+                                                        fill="black" />
+                                                    <path
+                                                        d="M8.8 13.1C9.2 13.1 9.5 13 9.7 12.8C9.9 12.6 10.1 12.3 10.1 11.9C10.1 11.6 10 11.3 9.8 11.1C9.6 10.9 9.3 10.8 9 10.8C8.8 10.8 8.59999 10.8 8.39999 10.9C8.19999 11 8.1 11.1 8 11.2C7.9 11.3 7.8 11.4 7.7 11.6C7.6 11.8 7.5 11.9 7.5 12.1C7.5 12.2 7.4 12.2 7.3 12.3C7.2 12.4 7.09999 12.4 6.89999 12.4C6.69999 12.4 6.6 12.3 6.5 12.2C6.4 12.1 6.3 11.9 6.3 11.7C6.3 11.5 6.4 11.3 6.5 11.1C6.6 10.9 6.8 10.7 7 10.5C7.2 10.3 7.49999 10.1 7.89999 10C8.29999 9.90003 8.60001 9.80003 9.10001 9.80003C9.50001 9.80003 9.80001 9.90003 10.1 10C10.4 10.1 10.7 10.3 10.9 10.4C11.1 10.5 11.3 10.8 11.4 11.1C11.5 11.4 11.6 11.6 11.6 11.9C11.6 12.3 11.5 12.6 11.3 12.9C11.1 13.2 10.9 13.5 10.6 13.7C10.9 13.9 11.2 14.1 11.4 14.3C11.6 14.5 11.8 14.7 11.9 15C12 15.3 12.1 15.5 12.1 15.8C12.1 16.2 12 16.5 11.9 16.8C11.8 17.1 11.5 17.4 11.3 17.7C11.1 18 10.7 18.2 10.3 18.3C9.9 18.4 9.5 18.5 9 18.5C8.5 18.5 8.1 18.4 7.7 18.2C7.3 18 7 17.8 6.8 17.6C6.6 17.4 6.4 17.1 6.3 16.8C6.2 16.5 6.10001 16.3 6.10001 16.1C6.10001 15.9 6.2 15.7 6.3 15.6C6.4 15.5 6.6 15.4 6.8 15.4C6.9 15.4 7.00001 15.4 7.10001 15.5C7.20001 15.6 7.3 15.6 7.3 15.7C7.5 16.2 7.7 16.6 8 16.9C8.3 17.2 8.6 17.3 9 17.3C9.2 17.3 9.5 17.2 9.7 17.1C9.9 17 10.1 16.8 10.3 16.6C10.5 16.4 10.5 16.1 10.5 15.8C10.5 15.3 10.4 15 10.1 14.7C9.80001 14.4 9.50001 14.3 9.10001 14.3C9.00001 14.3 8.9 14.3 8.7 14.3C8.5 14.3 8.39999 14.3 8.39999 14.3C8.19999 14.3 7.99999 14.2 7.89999 14.1C7.79999 14 7.7 13.8 7.7 13.7C7.7 13.5 7.79999 13.4 7.89999 13.2C7.99999 13 8.2 13 8.5 13H8.8V13.1ZM15.3 17.5V12.2C14.3 13 13.6 13.3 13.3 13.3C13.1 13.3 13 13.2 12.9 13.1C12.8 13 12.7 12.8 12.7 12.6C12.7 12.4 12.8 12.3 12.9 12.2C13 12.1 13.2 12 13.6 11.8C14.1 11.6 14.5 11.3 14.7 11.1C14.9 10.9 15.2 10.6 15.5 10.3C15.8 10 15.9 9.80003 15.9 9.70003C15.9 9.60003 16.1 9.60004 16.3 9.60004C16.5 9.60004 16.7 9.70003 16.8 9.80003C16.9 9.90003 17 10.2 17 10.5V17.2C17 18 16.7 18.4 16.2 18.4C16 18.4 15.8 18.3 15.6 18.2C15.4 18.1 15.3 17.8 15.3 17.5Z"
+                                                        fill="black" />
+                                                </svg>
+                                            </span>
+                                            <!--end::Svg Icon-->
+                                            <input class="form-control form-control-solid ps-12" name="date_of_birth"
+                                                placeholder="Date Of Birth" id="kt_datepicker_1" value="" />
+                                        </div>
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <!--end::Input group-->
+
+                                <!--begin::Input group-->
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label required fw-bold fs-6">Gender</label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <!--begin::Options-->
+                                        <div class="d-flex align-items-center mt-3">
+                                            <!--begin::Option-->
+                                            <label class="form-check form-check-inline form-check-solid me-5">
+                                                <input class="form-check-input" name="gender" type="radio"
+                                                    value="male" />
+                                                <span class="fw-bold ps-2 fs-6">Male</span>
+                                            </label>
+                                            <!--end::Option-->
+                                            <!--begin::Option-->
+                                            <label class="form-check form-check-inline form-check-solid">
+                                                <input class="form-check-input" name="gender" type="radio"
+                                                    value="female" />
+                                                <span class="fw-bold ps-2 fs-6">Female</span>
+                                            </label>
+                                            <!--end::Option-->
+                                            <!--begin::Option-->
+                                            <label class="form-check form-check-inline form-check-solid">
+                                                <input class="form-check-input" name="gender" type="radio"
+                                                    value="unisex" />
+                                                <span class="fw-bold ps-2 fs-6">Unisex</span>
+                                            </label>
+                                            <!--end::Option-->
+                                        </div>
+                                        <!--end::Options-->
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label required fw-bold fs-6">Marital Status</label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <!--begin::Options-->
+                                        <div class="d-flex align-items-center mt-3">
+                                            <!--begin::Option-->
+                                            <label class="form-check form-check-inline form-check-solid me-5">
+                                                <input class="form-check-input" name="marital_status" type="radio"
+                                                    value="Married" />
+                                                <span class="fw-bold ps-2 fs-6">Married</span>
+                                            </label>
+                                            <!--end::Option-->
+                                            <!--begin::Option-->
+                                            <label class="form-check form-check-inline form-check-solid">
+                                                <input class="form-check-input" name="marital_status" type="radio"
+                                                    value="Unmarried" />
+                                                <span class="fw-bold ps-2 fs-6">Unmarried</span>
+                                            </label>
+                                        </div>
+                                        <!--end::Options-->
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">About Me</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <textarea name="about"
+                                        class="form-control form-control-lg form-control-solid" placeholder="Short description about you"></textarea>
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <!--end::Input group-->
+                                <!--begin::Input group-->
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="required">Select Role</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <select name="user_type_id" aria-label="Select a Role"
+                                            data-placeholder="Select a Role..."
+                                            class="form-select form-select-solid form-select-lg fw-bold">
+                                            <option value="">Select a Role</option>
+                                            <% accounts_response.forEach( item=> { %>
+                                                <option value="<%= item.ID %>">
+                                                    <%= item.role_name %>
+                                                </option>
+                                                <% }) %>
+                                        </select>
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <!--end::Input group-->
+                                <!--begin::Input group-->
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="required">Password</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <div class="mb-10 fv-row" data-kt-password-meter="true">
+                                            <!--begin::Wrapper-->
+                                            <div class="mb-1">
+                                                <!--begin::Input wrapper-->
+                                                <div class="position-relative mb-3">
+                                                    <input class="form-control form-control-lg form-control-solid"
+                                                        type="password" placeholder="" name="password"
+                                                        autocomplete="off" value="<%= auto_password %>" />
+                                                    <span
+                                                        class="btn btn-sm btn-icon position-absolute translate-middle top-50 end-0 me-n2"
+                                                        data-kt-password-meter-control="visibility">
+                                                        <i class="bi bi-eye-slash fs-2"></i>
+                                                        <i class="bi bi-eye fs-2 d-none"></i>
+                                                    </span>
+                                                </div>
+                                                <!--end::Input wrapper-->
+                                            </div>
+                                            <!--end::Wrapper-->
+                                            <!--begin::Hint-->
+                                            <div class="text-muted">Use 8 or more characters with a mix of letters,
+                                                numbers &amp;
+                                                symbols.</div>
+                                            <!--end::Hint-->
+                                        </div>
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <!--end::Input group-->
+                            </div>
+                            <!--end::Card body-->
+                            <!--begin::Actions-->
+                            <div class="card-footer d-flex justify-content-end py-6 px-9">
+                                <input type="hidden" name="country_name" value="" id="country_name">
+                                <input type="hidden" name="state_name" value="" id="state_name">
+                                <button type="reset"
+                                    class="btn btn-light btn-active-light-primary me-2">Discard</button>
+                                <button type="submit" class="btn btn-primary"
+                                    id="kt_account_profile_details_submit">Save Changes</button>
+                            </div>
+                            <!--end::Actions-->
+                        </form>
+                        <!--end::Form-->
+                    </div>
+                    <!--end::Content-->
+                </div>
+                <!--end::Basic info-->
+
+                <!--end::Modals-->
+            </div>
+            <!--end::Container-->
+        </div>
+        <!--end::Post-->
+    </div>
+    <!--end::Content-->
+    <%- include('common/footer') -%>
+        <script>
+            $('#select_country').change(function () {
+                $('#select_state').empty();
+                $("#select_state").prop('required', false);
+                $('#dynamic_state_field_wrapper').hide();
+                var country_id = $(this).val();
+                $('#country_name').val(this.options[this.selectedIndex].text);
+                $.ajax({
+                    url: '/api/states',
+                    method: 'POST',
+                    data: { country_id: country_id },
+                    ContentType: 'application/json',
+                    success: function (data) {
+                        if (data.status == 'ok') {
+                            $('#dynamic_state_field_wrapper').show();
+                            $("#select_state").prop('required', true);
+                            $.each(data.data, function (i, item) {
+                                $('#select_state').append($('<option>', {
+                                    value: item.id,
+                                    text: item.name
+                                }));
+                            });
+                        } else {
+                            $('#dynamic_state_field_wrapper').hide();
+                            $("#select_state").prop('required', false);
+                        }
+                    },
+                    error: function (error) {
+                        // Handle any errors
+                        Swal.fire({
+                            text: error,
+                            icon: "error",
+                            buttonsStyling: false,
+                            confirmButtonText: "Ok, got it!",
+                            customClass: {
+                                confirmButton: "btn btn-primary"
+                            }
+                        });
+                        submitButton.disabled = false;
+                    }
+                });
+            });
+            $('#select_state').change(function () {
+                $('#state_name').val(this.options[this.selectedIndex].text);
+            });
+/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+                var __webpack_exports__ = {};
+                /*!*********************************************************************************************!*\
+                  !*** ../../../themes/metronic/html/demo1/src/js/custom/account/settings/profile-details.js ***!
+                  \*********************************************************************************************/
+
+
+                // Class definition
+                var KTAccountSettingsProfileDetails = function () {
+                    // Private variables
+                    var form;
+                    var submitButton;
+                    var validation;
+                    var passwordMeter;
+
+                    var handleForm = function () {
+
+                        $("#kt_datepicker_1").flatpickr();
+                        validation = FormValidation.formValidation(
+                            form,
+                            {
+                                fields: {
+                                    first_name: {
+                                        validators: {
+                                            notEmpty: {
+                                                message: 'First name is required'
+                                            }
+                                        }
+                                    },
+                                    last_name: {
+                                        validators: {
+                                            notEmpty: {
+                                                message: 'Last name is required'
+                                            }
+                                        }
+                                    },
+                                    email: {
+                                        validators: {
+                                            notEmpty: {
+                                                message: 'Email address is required'
+                                            },
+                                            emailAddress: {
+                                                message: 'The value is not a valid email address'
+                                            }
+                                        }
+                                    },
+                                    phone: {
+                                        validators: {
+                                            notEmpty: {
+                                                message: 'Contact phone number is required'
+                                            },
+                                            regexp: {
+                                                regexp: /^\d{10}$/, // Regular expression pattern for a 10-digit phone number
+                                                message: 'The phone number is not valid'
+                                            }
+                                        }
+                                    },
+                                    alternate_phone: {
+                                        validators: {
+                                            regexp: {
+                                                regexp: /^\d{10}$/, // Regular expression pattern for a 10-digit phone number
+                                                message: 'The phone number is not valid'
+                                            }
+                                        }
+                                    },
+                                    address: {
+                                        validators: {
+                                            notEmpty: {
+                                                message: 'Address is required'
+                                            }
+                                        }
+                                    },
+                                    country: {
+                                        validators: {
+                                            notEmpty: {
+                                                message: 'Please select a country'
+                                            }
+                                        }
+                                    },
+                                    city: {
+                                        validators: {
+                                            notEmpty: {
+                                                message: 'City is required'
+                                            }
+                                        }
+                                    },
+                                    zip: {
+                                        validators: {
+                                            notEmpty: {
+                                                message: 'Zip is required'
+                                            }
+                                        }
+                                    },
+                                    date_of_birth: {
+                                        validators: {
+                                            notEmpty: {
+                                                message: 'Date of birth is required'
+                                            }
+                                        }
+                                    },
+                                    gender: {
+                                        validators: {
+                                            notEmpty: {
+                                                message: 'Gender is required'
+                                            }
+                                        }
+                                    },
+                                    marital_status: {
+                                        validators: {
+                                            notEmpty: {
+                                                message: 'Marital Status is required'
+                                            }
+                                        }
+                                    },
+                                    user_type_id: {
+                                        validators: {
+                                            notEmpty: {
+                                                message: 'User role is required'
+                                            }
+                                        }
+                                    },
+                                    'password': {
+                                        validators: {
+                                            notEmpty: {
+                                                message: 'The password is required'
+                                            }
+                                        }
+                                    },
+                                },
+                                plugins: {
+                                    trigger: new FormValidation.plugins.Trigger(),
+                                    submitButton: new FormValidation.plugins.SubmitButton(),
+                                    //defaultSubmit: new FormValidation.plugins.DefaultSubmit(), // Uncomment this line to enable normal button submit after form validation
+                                    bootstrap: new FormValidation.plugins.Bootstrap5({
+                                        rowSelector: '.fv-row',
+                                        eleInvalidClass: '',
+                                        eleValidClass: ''
+                                    })
+                                }
+                            }
+                        );
+
+                        // Handle form submit
+                        submitButton.addEventListener('click', function (e) {
+                            e.preventDefault();
+
+                            validation.validate().then(function (status) {
+                                if (status == 'Valid') {
+                                    //$('#kt_account_profile_details_form').submit();
+                                    var formElement = document.getElementById('kt_account_profile_details_form');
+                                    var formData = new FormData(formElement);
+                                    $.ajax({
+                                        url: '/auth/create-user', // URL for your API endpoint
+                                        type: 'POST',
+                                        data: formData,
+                                        processData: false, // Prevent jQuery from processing the data
+                                        contentType: false, // Let the browser set the content type
+                                        success: function (data) {
+                                            if (data.status == 'ok') {
+                                                Swal.fire({
+                                                    text: data.message,
+                                                    icon: "success",
+                                                    buttonsStyling: false,
+                                                    confirmButtonText: "Ok, got it!",
+                                                    customClass: {
+                                                        confirmButton: "btn btn-primary"
+                                                    }
+                                                }).then(function (result) {
+                                                    if (result.isConfirmed) {
+                                                        window.location.href = "/users";
+                                                    }
+                                                });
+                                            } else {
+                                                Swal.fire({
+                                                    text: data.message,
+                                                    icon: "error",
+                                                    buttonsStyling: false,
+                                                    confirmButtonText: "Ok, got it!",
+                                                    customClass: {
+                                                        confirmButton: "btn btn-primary"
+                                                    }
+                                                });
+                                            }
+                                        },
+                                        error: function (xhr, status, error) {
+                                            // Handle any errors that occur during the request
+                                            console.log(error);
+                                        }
+                                    });
+                                } else {
+                                    swal.fire({
+                                        text: "Sorry, looks like there are some errors detected, please try again.",
+                                        icon: "error",
+                                        buttonsStyling: false,
+                                        confirmButtonText: "Ok, got it!",
+                                        customClass: {
+                                            confirmButton: "btn fw-bold btn-light-primary"
+                                        }
+                                    });
+                                }
+                            });
+                        });
+
+                    }
+
+
+                    // Public methods
+                    return {
+                        init: function () {
+                            form = document.getElementById('kt_account_profile_details_form');
+                            submitButton = form.querySelector('#kt_account_profile_details_submit');
+
+                            handleForm();
+                        }
+                    }
+                }();
+
+                // On document ready
+                KTUtil.onDOMContentLoaded(function () {
+                    KTAccountSettingsProfileDetails.init();
+                });
+
+                /******/
+})()
+                ;
+//# sourceMappingURL=profile-details.js.map    
+        </script>

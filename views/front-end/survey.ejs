@@ -1,0 +1,232 @@
+<%- include('common/header') -%>
+<link href="/front-end/css/survey-style.css" rel="stylesheet" type="text/css">
+<%- include('common/header-banner') -%>
+<!-- ============== Section1 Start =============== -->
+<section class="main-content bottom-main-content">
+    <div class="survey-content">
+       <div class="container">
+         
+          <h2 class="inner-main-head"><%- companySurveyQuestions[0].title %></h2>
+          <% var questionJsonObject = JSON.parse(companySurveyQuestions[0].questions)
+             var jsonString = JSON.stringify(questionJsonObject, null, 2);
+          %>
+          <%- //jsonString %>
+          <% if(companySurveyAnswersByUser.length > 0 ){ %>
+            
+            <% var answerJsonObject = JSON.parse(companySurveyAnswersByUser[0].answer)
+               var jsonAnswerString = JSON.stringify(answerJsonObject, null, 2);
+            %>
+            <%- //jsonAnswerString %>
+            
+            <form method="post" name="survey_form" id="survey_form">
+               <% questionJsonObject.forEach(function(item, index) { %>
+               <div class="survey-wrapper">
+                  <div class="survey-head"><strong><%- index+1 %>.</strong> <%- item.question %></div>
+                  <% if(item.type=='type_textarea'){ %>
+                  <div class="survey-body">
+                     <div class="custom-form">
+                        <textarea type="text" placeholder="Express your views" rows="5" class="form-control" name="question_<%- index+1 %>" readonly><%- answerJsonObject['question_' + (index + 1)] %></textarea>
+                     </div>
+                  </div>
+                  <% }else if(item.type=='type_radio'){ %>
+                     <div class="survey-body">
+                        <div class="custom-form">
+                           <% item.options.forEach(function(option, index_inner) { %>
+                           <div class="form-check">
+                              <input type="radio" class="form-check-input" id="<%- item.name %><%- index_inner+1 %>" name="question_<%- index+1 %>" value="<%- option %>"
+                              <% if( answerJsonObject['question_' + (index + 1)] == option ){ %>
+                                 checked
+                              <% } %>
+                              >
+                              <label class="form-check-label" for="<%- item.name %><%- index_inner+1 %>"><%- option %></label>
+                           </div>
+                           <% }); %>
+                        </div>
+                     </div>
+                  <% }else if(item.type=='type_checkbox'){ %>
+                     <div class="survey-body">
+                        <div class="custom-form">
+                           <% item.options.forEach(function(option, index_inner) { %>
+                           <div class="form-check">
+                              <input type="checkbox" class="form-check-input" id="<%- item.name %><%- index_inner+1 %>" name="question_<%- index+1 %>_<%- index_inner+1 %>" value="<%- option %>"
+                              <% if( answerJsonObject['question_' + (index + 1) + '_' + (index_inner+1) ] == option ){ %>
+                                 checked
+                              <% } %>
+                              >
+                              <label class="form-check-label" for="<%- item.name %><%- index_inner+1 %>"><%- option %></label>
+                           </div>
+                           <% }); %>
+                        </div>
+                     </div>
+                  <% }else if(item.type=='type_ratings'){ %>
+                     <div class="survey-body">
+                        <div class="survey-rating">
+                           <div class="survey-rating-part">
+                              Disappointing
+                           </div>
+                           <div class="survey-rating-part text-center">
+                                 <% AllRatingTags.forEach(function(rating, index_inner) { %>
+                                       <div class="rating_each_option form-check position-relative custom-check">
+                                          <span><%- rating.review_rating_value %></span>
+                                          <input type="radio" class="form-check-input" id="<%- item.type %>_<%- index+1 %>_<%- index_inner+1 %>" name="question_<%- index+1 %>" value="<%- rating.review_rating_value %>"
+                                          <% if( answerJsonObject['question_' + (index + 1)] == rating.review_rating_value ){ %>
+                                             checked
+                                          <% } %>
+                                          >
+                                          <label class="form-check-label" for="<%- item.type %>_<%- index+1 %>_<%- index_inner+1 %>"><img src="/<%- rating.rating_image %>" alt="<%- rating.review_rating_name %>"></label>
+                                       </div>
+                                 <% }); %>
+                           </div>
+                           <div class="survey-rating-part">
+                              Excellent
+                           </div>
+                        </div>
+                     </div>
+                  <% }else{ %>
+                     <p>Answer type not define</p>
+                  <% } %>
+               </div>
+               <% }); %>
+            </form>
+          <% }else{ %>
+            <form method="post" name="survey_form" id="survey_form">
+               <% questionJsonObject.forEach(function(item, index) { %>
+               <div class="survey-wrapper">
+                  <div class="survey-head"><strong><%- index+1 %>.</strong> <%- item.question %></div>
+                  <% if(item.type=='type_textarea'){ %>
+                  <div class="survey-body">
+                     <div class="custom-form">
+                        <textarea type="text" rows="5" class="form-control" placeholder="Express your views" name="question_<%- index+1 %>" required=""></textarea>
+                     </div>
+                  </div>
+                  <% }else if(item.type=='type_radio'){ %>
+                     <div class="survey-body">
+                        <div class="custom-form">
+                           <% item.options.forEach(function(option, index_inner) { %>
+                           <div class="form-check">
+                              <input type="radio" class="form-check-input" id="<%- item.name %><%- index_inner+1 %>" name="question_<%- index+1 %>" value="<%- option %>" required>
+                              <label class="form-check-label" for="<%- item.name %><%- index_inner+1 %>"><%- option %></label>
+                           </div>
+                           <% }); %>
+                        </div>
+                     </div>
+                  <% }else if(item.type=='type_checkbox'){ %>
+                     <div class="survey-body">
+                        <div class="custom-form">
+                           <% item.options.forEach(function(option, index_inner) { %>
+                           <div class="form-check">
+                              <input type="checkbox" class="form-check-input" id="<%- item.name %><%- index_inner+1 %>" name="question_<%- index+1 %>_<%- index_inner+1 %>" value="<%- option %>">
+                              <label class="form-check-label" for="<%- item.name %><%- index_inner+1 %>"><%- option %></label>
+                           </div>
+                           <% }); %>
+                        </div>
+                     </div>
+                  <% }else if(item.type=='type_ratings'){ %>
+                     <div class="survey-body">
+                        <div class="survey-rating">
+                           <div class="survey-rating-part">
+                              Disappointing
+                           </div>
+                           <div class="survey-rating-part text-center">
+                                 <% AllRatingTags.forEach(function(rating, index_inner) { %>
+                                       <div class="rating_each_option form-check position-relative custom-check">
+                                          <span><%- rating.review_rating_value %></span>
+                                          <input type="radio" class="form-check-input" id="<%- item.type %>_<%- index+1 %>_<%- index_inner+1 %>" name="question_<%- index+1 %>" value="<%- rating.review_rating_value %>" required>
+                                          <label class="form-check-label" for="<%- item.type %>_<%- index+1 %>_<%- index_inner+1 %>"><img src="/<%- rating.rating_image %>" alt="<%- rating.review_rating_name %>"></label>
+                                       </div>
+                                 <% }); %>
+                           </div>
+                           <div class="survey-rating-part">
+                              Excellent
+                           </div>
+                        </div>
+                     </div>
+                  <% }else{ %>
+                     <p>Answer type not define</p>
+                  <% } %>
+               </div>
+               <% }); %>
+               <% if(company && company.membership_type_id>=3 ){ %>
+               <input type="hidden" name="company_id" value="<%- company.ID %>">
+               <input type="hidden" name="survey_unique_id" value="<%- companySurveyQuestions[0].unique_id %>">
+               <input type="hidden" name="customer_id" value="<%- currentUserData.user_id %>">
+               <div class="text-center mt-5 mb-3"><input type="submit" class="btn-default btn-warning btn-survey-default" value="Submit"></div>
+               <% }else{ %>
+                  <p style="text-align: center; margin-top: 25px; font-weight: 700; font-size: 19px; color: #fb4040;">You cannot submit any survey form for this company, due to membership permission</p>
+               <% } %>
+            </form>
+            <div class="register-now frm-loading" style="display: none;">
+               <span class="indicator-progress">Please wait...
+                  <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+               </span>
+            </div>
+            <div style="width: 85%; text-align: center; display: block; border: 2px solid #fccb06; padding: 6px; margin: 0 auto; border-radius: 5px; display: none;" class="poll-create-message"></div>
+          <% } %>
+          
+       </div>
+    </div>
+ </section>
+<!-- ============== Section1 End =============== -->
+
+<%- include('common/footer') -%>
+<script>
+//-- Form submit --//
+$('#survey_form').submit( function( event ) {
+   $('.btn-survey-default').prop("disabled", true);
+   $('.frm-loading').show();
+   event.preventDefault();
+   const serializedArray = $('#survey_form').serializeArray();
+   console.log(serializedArray);
+
+   function transformSerializedArray(serializedArray) {
+      const transformedData = {};
+      const answers = {};
+  
+      for (const item of serializedArray) {
+         if (item.name === 'company_id' || item.name === 'survey_unique_id' || item.name === 'customer_id') {
+            transformedData[item.name] = item.value;
+         } else {
+            answers[item.name] = item.value;
+            //answers.push(questionObj);
+         }
+      }
+  
+      transformedData.answers = answers;
+  
+      return [transformedData];
+   }
+   const transformedData = transformSerializedArray(serializedArray);
+   console.log(JSON.stringify(transformedData, null, 3));
+   //----Submit Survey Ajax-------------//
+   $.ajax({
+      url: '/auth/create-survey-answer',
+      method: 'POST',
+      data: JSON.stringify(transformedData),
+      processData: false,
+      ContentType: 'application/json',
+      success: function (data) {
+         if (data.status == 'ok') {
+            $('.frm-loading').hide();
+            $('.poll-create-message').text(data.message);
+            $('.poll-create-message').show();
+            $('.btn-survey-default').prop("disabled", false);
+            var company_url = '/company/<%- company.slug %>';
+            setTimeout( function() {
+               window.location.href = company_url;
+            }, 3000);
+         } else {
+            $('.frm-loading').hide();
+            $('.poll-create-message').text(data.message);
+            $('.poll-create-message').show();
+            $('.btn-survey-default').prop("disabled", false);
+         }
+      },
+      error: function (error) {
+         $('.frm-loading').hide();
+         $('.poll-create-message').text(error);
+         $('.poll-create-message').show();
+         $('.btn-survey-default').prop("disabled", false);
+      }
+   });
+});
+</script>

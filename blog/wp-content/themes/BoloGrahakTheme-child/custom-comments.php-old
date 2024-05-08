@@ -1,0 +1,101 @@
+<?php
+/**
+ * The template for displaying comments.
+ *
+ * @package WordPress
+ * @subpackage bolo-grahak
+ * @since CEchoes Technology 1.0
+ */
+
+if ( post_password_required() ) {
+    return;
+}
+?>
+
+<section class="main-content">
+	<div class="container">
+		<div class="comments-content">
+			<div class="comments-form">
+				<h2 class="main-head text-center">Your Comment</h2>
+
+    <?php if ( have_comments() ) : ?>
+        <h2 class="comments-title">
+            <?php
+            $comments_number = get_comments_number();
+            if ( '1' === $comments_number ) {
+                /* translators: %s: Post title. */
+                printf( _x( 'One thought on &ldquo;%s&rdquo;', 'comments title', 'twentytwenty' ), get_the_title() );
+            } else {
+                printf(
+                    /* translators: 1: Number of comments, 2: Post title. */
+                    _nx(
+                        '%1$s thought on &ldquo;%2$s&rdquo;',
+                        '%1$s thoughts on &ldquo;%2$s&rdquo;',
+                        $comments_number,
+                        'comments title',
+                        'twentytwenty'
+                    ),
+                    number_format_i18n( $comments_number ),
+                    get_the_title()
+                );
+            }
+            ?>
+        </h2><!-- .comments-title -->
+
+        <ol class="comment-list">
+            <?php
+            wp_list_comments(
+                array(
+                    'style'       => 'ol',
+                    'short_ping'  => true,
+                    'avatar_size' => 42,
+                )
+            );
+            ?>
+        </ol><!-- .comment-list -->
+
+        <?php
+        the_comments_pagination(
+            array(
+                'prev_text' => '<span class="screen-reader-text">' . __( 'Previous', 'twentytwenty' ) . '</span>',
+                'next_text' => '<span class="screen-reader-text">' . __( 'Next', 'twentytwenty' ) . '</span>',
+            )
+        );
+        ?>
+
+    <?php endif; // Check for have_comments(). ?>
+
+		    <?php
+		    $commenter = wp_get_current_commenter();
+
+		    $comment_form_args = array(
+		        'title_reply'         => __( '', 'twentytwenty' ),
+		        'comment_notes_before' => '',
+		        'fields'              => array(
+		            'author' => '<div class="row"><div class="col-sm-6"><div class="input-wrap">' .
+		                '<input id="author" class="form-control" placeholder="Name" name="author" type="text" value="' . esc_attr( $commenter['comment_author'] ) . '" required ' . $aria_req . ' /></div></div>',
+
+		            'email'  => '<div class="col-sm-6"><div class="input-wrap">' .
+		                '<input id="email" name="email" type="email" placeholder="Email" class="form-control" value="' . esc_attr( $commenter['comment_author_email'] ) . '" ' . $aria_req . ' required /></div></div>',
+
+		            // Additional fields
+		            'upload_image'    => '<div class="col-sm-6"><div class="input-wrap">' .
+		                '<input type="file" name="comment_upload_image" id="comment-upload-image" class="form-control"></div></div>',
+
+		            'designation'     => '<div class="col-sm-6"><div class="input-wrap">' .
+		                '<input type="text" class="form-control" placeholder="Designation" name="comment_designation" id="comment-designation"></div></div></div>',
+		        ),
+		        'comment_field'        => '<div class="row"><div class="col-sm-12"><div class="input-wrap"><textarea id="comment" name="comment" rows="4" class="form-control" placeholder="Comments" required></textarea></div></div></div>',
+		        'comment_notes_after'  => '',
+		        'label_submit'         => __( 'Send' ),
+				'submit_button'        => '<input name="%1$s" type="submit" id="%2$s" class="btn-default btn-warning" value="%4$s" />',
+				'submit_field'         => '<div class="col-sm-12"><div class="text-center">%1$s %2$s</div></div>',
+		    );
+
+		    comment_form( $comment_form_args );
+		    ?>
+
+			</div>
+		</div>
+	</div>
+</section><!-- #comments -->

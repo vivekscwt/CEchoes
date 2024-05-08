@@ -1,0 +1,384 @@
+@media only screen and (max-width:1440.98px) {
+	.nav_sec {
+	    width: 280px;
+	}
+	.main-banner:after {
+		width: 1440px;
+		height: 234px;
+		bottom: 0;
+		/* background: url(../images/banner-bottom-shape2.png) no-repeat center bottom; */
+		background: url(../images/banner-bottom-shape2-white.png) no-repeat center bottom;
+		background-size: cover;
+	}
+
+	.main-banner.home-banner:after {
+		background: url(../images/banner-bottom-shape2-white.png) no-repeat center bottom;
+	}
+}
+
+@media only screen and (max-width:1199.98px) {
+
+	.header-right-content span+span {
+		margin-left: 15px;
+	}
+
+	.main-banner {
+	    padding-top: 125px;
+	}
+
+	.main-banner h2 {
+		font-size: 33px;
+	}
+
+	.banner-mas-img2+.banner-mas-img2 .banner-counter-tag {
+		bottom: 8px;
+		right: 3px;
+	}
+
+	.banner-counter-tag {
+		font-size: 17px;
+		min-height: 68px;
+	}
+
+	.banner-counter-tag .counter-text {
+		font-size: 26px;
+		line-height: 120.4%;
+	}
+	
+	.banner-mas-img1 .banner-counter-tag {
+		bottom: -35px;
+	}
+
+}
+
+@media only screen and (max-width:991.98px) {
+
+	.header-right-content span+span {
+		margin-left: 6px;
+	}
+
+	.toggle-menu svg {
+		height: 25px;
+	}
+
+	.nav_sec .cls-btn {
+	    background-size: 74%;
+	}
+
+	.main-banner {
+		min-height: 650px;
+	}
+
+	.banner-right {
+		height: 462px;
+	}
+
+	.main-banner h1 {
+		font-size: 38px;
+		line-height: 28px;
+	}
+
+	.home-banner h1 {
+		line-height: 40px;
+	}
+
+	.like-dislike-tren-label {
+		font-size: 18px;
+		margin-bottom: 8px;
+	}
+
+	.like-dislike-company-scroll ul li a {
+		font-size: 17px;
+	}
+
+	.main-banner h2 {
+		font-size: 30px;
+		line-height: 34px;
+	}
+
+	span.user-log-profile {
+		margin-right: 12px;
+	}
+
+	.header-middle-menu-link.mbl-hide-link {
+		display: none;
+	}
+
+	.desk-991-show-link {
+		display: block !important;
+	} 
+
+	.banner-counter-tag .counter-text {
+		font-size: 19px;
+		padding: 18px 9px 9px;
+	}
+
+	.banner-counter-tag {
+		font-size: 15px;
+		min-height: 56px;
+	}
+}
+
+@media only screen and (max-width:767.98px) {
+	.logo svg {
+		width: auto;
+		height: 70px;
+	}
+
+	.fixed-top .logo svg {
+		width: auto;
+		height: 60px;
+	}
+
+	.nav_sec ul>li a {
+	    font-size: 18px;
+	    padding: 15px 15px;
+	}
+
+	.header-right-content span.language-select,
+	.header-right-content span.country-select {
+		font-size: 16px;
+	}
+
+	.header-right-content span.language-select i,
+	.header-right-content span.country-select i {
+		font-size: 14px;
+		margin-left: 4px;
+	}
+
+	.header-right-content .tab-hide-link {
+		display: none !important;
+	}
+
+	.tab-show-link {
+		display: block !important;
+		margin: 0 10px;
+	}
+
+	.nav_sec ul>li.tab-show-link a.btn-default {
+		padding: 12px 18px;
+		margin-top: 15px;
+		border-radius: 8px;
+	}
+
+	.main-banner {
+		min-height: auto;
+		padding-bottom: 40px;
+	}
+
+	.main-banner:after {
+		display: none;
+	}
+
+	.main-banner h1,
+	.main-banner h2,
+	.main-banner h3 {
+		text-align: center;
+	}
+
+	.main-banner h1 {
+		font-size: 32px;
+	}
+
+	.main-banner h2 {
+		font-size: 26px;
+	}
+
+	.main-banner h4 {
+	    font-size: 20px;
+	}
+
+	.main-banner h3 {
+		font-size: 18px;
+		line-height: 27px;
+	}
+
+	.main-banner h3 span {
+		padding: 9px 8px;
+	}
+
+	.like-dislike-tren-label {
+		text-align: center;
+	}
+
+	.banner-left {
+		margin-top: 25px;
+	}
+
+	.banner-right {
+		max-width: 400px;
+		height: auto;
+		margin: 0 auto;
+	}
+
+	.search-area {
+		margin: 22px auto 0;
+	}
+	.inner-page-heading-in h2,
+	.inner-page-heading-in h1 {
+	    font-size: 28px;
+	}
+
+	.banner-left p {
+		margin-left: auto;
+		margin-right: auto;
+		text-align: center;
+		font-size: 16px;
+	}
+	.autofield-dropdown{
+		height: auto;
+		overflow: visible;
+	}
+}
+
+@media only screen and (max-width:660.98px) {
+
+	
+    .custom-modal-content {
+	    margin: 1.75rem 2%;
+	    width: 96%;
+	}
+
+}
+
+@media only screen and (max-width:575.98px) {
+	.main-banner {
+		padding-top: 100px;
+	}
+	.main-banner h1 {
+		font-size: 26px;
+		line-height: 18px;
+	}
+
+	.home-banner h1 {
+		line-height: 30px;
+	}
+
+	.main-banner h2 {
+		font-size: 22px;
+	}
+
+	.main-banner h3 {
+		font-size: 16px;
+		line-height: 22px;
+		margin-top: 18px;
+	}
+
+	.mbl-show-link {
+	    display: block !important;
+	    margin: 0 10px;
+	}
+
+	.mbl-show-link a:before,
+	.mbl-show-link a:after {
+		display: none;
+	}
+
+	.mbl-hide-link {
+		display: none !important;
+	}
+
+	.nav_sec ul>li a.btn-default {
+	    font-size: 16px;
+	    padding: 12px 18px;
+	    margin-top: 15px;
+	    border-radius: 8px;
+	}
+
+	.nav_sec ul>li a.btn-default:hover {
+		color: #000000;
+	}
+
+	.search-area input[type="submit"] {
+		font-size: 0;
+		background-position: center left 15px;
+		min-width: 55px;
+	}
+
+	.search-area input.form-control {
+	    padding-right: 70px;
+	}
+
+	.inner-page-heading-in h2,
+	.inner-page-heading-in h1 {
+	    font-size: 24px;
+	}
+
+	.bread-crumb ul li {
+	    margin: 0 8px;
+	}
+
+	.bread-crumb ul li {
+	    font-size: 15px;
+	}
+
+	.bread-crumb ul li + li:after {
+	    font-size: 13px;
+	    left: -14px;
+	}
+
+	.custom-modal-content {
+	    padding: 30px 15px;
+	}
+
+	.custom-modal-content h3 {
+	    font-size: 18px;
+	}
+
+	.back-browser {
+		font-size: 16px;
+	}
+
+	.main-banner > .container > .row{
+		flex-direction: column-reverse !important;
+	}
+	.banner-left {
+		margin-bottom: 0;
+	}
+	.landing-banner .banner-right,
+	.home-banner .banner-right {
+		display: none;
+	}
+
+	.header-right-content span.mbl-hide-link.always{
+		display: inline-block !important;
+	}
+	
+	.header-right-content span.mbl-hide-link.always a {
+		padding: 8px 10px;
+		min-width: auto;
+		border-radius: 4px;
+		font-size: 15px;
+	}
+	
+
+}
+
+@media only screen and (max-width:480px){
+	.review-content .review-left-img{
+		display: none;
+	}
+	.review-content .review-right{
+		margin-top: 0px !important;
+	}
+	.logo svg {
+		width: 70px;
+	}
+	.logo img{
+		width: 80px;
+	}
+	.user-login-profile-icon {
+		width: 40px;
+		height: 40px;
+	}
+	.user-login-profile-icon:after {
+		width: 15px;
+		height: 15px;
+		bottom: 10px;
+		font-size: 10px;
+	}
+	.user-login-profile-icon img {
+		width: 40px;
+		height: 36px !important;
+	}	
+}

@@ -1,0 +1,699 @@
+<%- include('common/header') -%>
+<link href="/front-end/css/company-profile-dashboard.css" rel="stylesheet" type="text/css">
+<link href="/front-end/css/survey-style.css" rel="stylesheet" type="text/css">
+<%- include('common/header-banner') -%>
+
+<!-- ============== Section1 Start =============== -->
+<section class="main-content premium_company_profile">
+   <div class="container">
+      <div class="main_box">
+         <%- include('common/premium-company-sidebar') -%>
+
+         <div class="survey-content">
+            <div class="container">
+               <% if(company && company.membership_type_id>=3 ){ %>
+                  <% const date2 = new Date(CompanySurveyDetails_formatted[0].created_at); 
+                     date2.setHours(0, 0, 0, 0);
+                     
+                     const created_at_year = date2.getFullYear();
+                     const created_at_month = String(date2.getMonth() + 1).padStart(2, '0');
+                     const created_at_day = String(date2.getDate()).padStart(2, '0');
+                     const created_at_formattedDate = `${created_at_year}-${created_at_month}-${created_at_day}`;
+                     const created_at_formattedDate_display = `${created_at_day}/${created_at_month}/${created_at_year}`;
+                  %>
+
+                  <% if(CompanySurveyDetails_formatted.length>0){ %>
+                     <%//  %>
+                     <%
+                        const dateString = CompanySurveyDetails_formatted[0].expire_at; 
+                        const date = new Date(dateString);
+                        const year = date.getFullYear();
+                        const month = String(date.getMonth() + 1).padStart(2, '0');
+                        const day = String(date.getDate()).padStart(2, '0');
+                        const formattedDate = `${year}-${month}-${day}`;
+
+                     %>
+
+                     <% var questionJsonObject = JSON.parse(CompanySurveyDetails_formatted[0].questions)
+                        var jsonString = JSON.stringify(questionJsonObject, null, 2);
+                     %>
+
+                     <% const daysDiff = Math.round((date - date2)/(1000 * 60 * 60 * 24)) %>
+                     <% if( SurveyAnswerCount[0].total_ans > 0 ){ %>
+                        
+                              <div class="each_box update_basic_information all_review_listing_for_company">
+                                 <h5>Cannot update survey because participants have already participated.</h5>
+                              </div>
+                           <div style="width: 85%; text-align: center; display: block; border: 2px solid #fccb06; padding: 6px; margin: 0 auto; border-radius: 5px; display: none;" class="poll-create-message"></div>
+                       
+                    <% } else { %>
+                     <div class="create-survey-field">
+                        
+                     <%= //jsonString %>
+                        <form id="survey-form-submit" name="survey-form" method="post">
+                           <input type="hidden" name="unique_id" value="<%- CompanySurveyDetails_formatted[0].unique_id %>" />
+                           <div class="create-survey-head">
+                              <div class="survey-title">Survey</div>
+                              <div class="survey-ex-date">
+                                 <div class="row">
+                                    <div class="col-sm-6">
+                                       <div class="custom-form mb-sm-0 mb-2">
+                                          <input type="text" class="form-control" value="<%= created_at_formattedDate_display %>" readonly>
+                                          <input type="hidden" class="form-control" name="created_at" value="<%= created_at_formattedDate %>" readonly>
+                                          <small>from</small>
+                                       </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                       <div class="custom-form mb-sm-0 mb-2">
+                                          <input type="date" class="form-control" name="expire_at" required=""  value="<%= formattedDate %>" >
+                                          <small>to</small>
+                                       </div>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="create-survey-body">
+                           
+                              <div class="custom-form">
+                                 <label><span>Survey Title</span><span style="color: red;">*</span></label>
+                                 <textarea type="text" class="form-control" name="title" required="" ><%- CompanySurveyDetails_formatted[0].title %></textarea>
+                              </div>
+                              <!-- repeater1 start -->
+                              <% questionJsonObject.forEach((item,index)=>{ %> 
+                                 <% if(item.type=='type_textarea') { %>
+                                    <div class="qst-repeat dynamic-question-<%- index + 1 %>" data-questionid="<%- index + 1 %>">
+                                       <div class="custom-form">
+                                          <label><span>Q<%- index + 1 %></span></label>
+                                          <input type="text" class="form-control" name="question" required="" value="<%- item.question %>">
+                                       </div>
+            
+                                       <div class="custom-form">
+                                          <span class="fw-bold d-inline-block me-2">Select Type:</span>
+                                          <div class="form-check form-check-inline">
+                                             <input class="form-check-input" type="radio" name="question_type_<%- index + 1 %>" id="inlineRadio1<%- index + 1 %>" value="type_textarea" <% if(item.type.trim() ==='type_textarea'){ %> checked <% } %> >
+                                             <label class="form-check-label" for="inlineRadio1<%- index + 1 %>">Textarea</label>
+                                          </div>
+                                          <div class="form-check form-check-inline">
+                                             <input class="form-check-input select-radio" type="radio" name="question_type_<%- index + 1 %>" id="inlineRadio2<%- index + 1 %>" value="type_radio" <% if(item.type=='type_radio'){ %> checked <% } %> >
+                                             <label class="form-check-label" for="inlineRadio2<%- index + 1 %>">Radio</label>
+                                          </div>
+                                          <div class="form-check form-check-inline">
+                                             <input class="form-check-input" type="radio" name="question_type_<%- index + 1 %>" id="inlineRadio3<%- index + 1 %>" value="type_checkbox" <% if(item.type=='type_checkbox'){ %> checked <% } %> >
+                                             <label class="form-check-label" for="inlineRadio3<%- index + 1 %>">Checkbox</label>
+                                          </div>
+                                          <div class="form-check form-check-inline">
+                                             <input class="form-check-input" type="radio" name="question_type_<%- index + 1 %>" id="inlineRadio4<%- index + 1 %>" value="type_ratings" <% if(item.type=='type_ratings'){ %> checked <% } %>>
+                                             <label class="form-check-label" for="inlineRadio4<%- index + 1 %>">Rating</label>
+                                          </div>
+                                       </div>
+                                    </div>
+                                 <% }else if(item.type=='type_radio'){ %>
+                                    <div class="qst-repeat dynamic-question-<%- index + 1 %>" data-questionid="<%- index + 1 %>">
+                                       <div class="custom-form">
+                                          <label><span>Q<%- index + 1 %></span></label>
+                                          <input type="text" class="form-control" name="question" required="" value="<%- item.question %>">
+                                       </div>
+            
+                                       <div class="custom-form">
+                                          <span class="fw-bold d-inline-block me-2">Select Type:</span>
+                                          <div class="form-check form-check-inline">
+                                             <input class="form-check-input" type="radio" name="question_type_<%- index + 1 %>" id="inlineRadio1<%- index + 1 %>" value="type_textarea" <% if(item.type=='type_textarea'){ %> checked <% } %> >
+                                             <label class="form-check-label" for="inlineRadio1<%- index + 1 %>">Textarea</label>
+                                          </div>
+                                          <div class="form-check form-check-inline">
+                                             <input class="form-check-input select-radio" type="radio" name="question_type_<%- index + 1 %>" id="inlineRadio2<%- index + 1 %>" value="type_radio" <% if(item.type=='type_radio'){ %> checked <% } %> >
+                                             <label class="form-check-label" for="inlineRadio2<%- index + 1 %>">Radio</label>
+                                          </div>
+                                          <div class="form-check form-check-inline">
+                                             <input class="form-check-input" type="radio" name="question_type_<%- index + 1 %>" id="inlineRadio3<%- index + 1 %>" value="type_checkbox" <% if(item.type=='type_checkbox'){ %> checked <% } %> >
+                                             <label class="form-check-label" for="inlineRadio3<%- index + 1 %>">Checkbox</label>
+                                          </div>
+                                          <div class="form-check form-check-inline">
+                                             <input class="form-check-input" type="radio" name="question_type_<%- index + 1 %>" id="inlineRadio4<%- index + 1 %>" value="type_ratings" <% if(item.type=='type_ratings'){ %> checked <% } %>>
+                                             <label class="form-check-label" for="inlineRadio4<%- index + 1 %>">Rating</label>
+                                          </div>
+                                       </div>
+                                       <div class="create-survey-field-repater">
+                                          <div class="multiple-ans-repeat">
+                                             <% item.options.forEach(function(option, index_inner) { %>
+                                             <div class="custom-form">
+                                                <label><span>Option</span></label>
+                                                <input type="text" name="question_type_<%- index+1 %>_options" value="<%- option %>" class="form-control" placeholder="" required="">
+                                                <div class="remove-ans"><i class="fa-solid fa-circle-xmark"></i></div>
+                                             </div>
+                                             <% }) %>
+                                          </div>
+                                          <a href="#" class="btn-default btn-warning add-option mb-3">Add Option</a>
+                                       </div>
+                                    </div>
+                                 <% }else if(item.type=='type_checkbox'){ %>
+
+                                    <div class="qst-repeat dynamic-question-<%- index + 1 %>" data-questionid="<%- index + 1 %>">
+                                       <div class="custom-form">
+                                          <label><span>Q<%- index + 1 %></span></label>
+                                          <input type="text" class="form-control" name="question" required="" value="<%- item.question %>">
+                                       </div>
+            
+                                       <div class="custom-form">
+                                          <span class="fw-bold d-inline-block me-2">Select Type:</span>
+                                          <div class="form-check form-check-inline">
+                                             <input class="form-check-input" type="radio" name="question_type_<%- index + 1 %>" id="inlineRadio1<%- index + 1 %>" value="type_textarea" <% if(item.type=='type_textarea'){ %> checked <% } %> >
+                                             <label class="form-check-label" for="inlineRadio1<%- index + 1 %>">Textarea</label>
+                                          </div>
+                                          <div class="form-check form-check-inline">
+                                             <input class="form-check-input select-radio" type="radio" name="question_type_<%- index + 1 %>" id="inlineRadio2<%- index + 1 %>" value="type_radio" <% if(item.type=='type_radio'){ %> checked <% } %> >
+                                             <label class="form-check-label" for="inlineRadio2<%- index + 1 %>">Radio</label>
+                                          </div>
+                                          <div class="form-check form-check-inline">
+                                             <input class="form-check-input" type="radio" name="question_type_<%- index + 1 %>" id="inlineRadio3<%- index + 1 %>" value="type_checkbox" <% if(item.type=='type_checkbox'){ %> checked <% } %> >
+                                             <label class="form-check-label" for="inlineRadio3<%- index + 1 %>">Checkbox</label>
+                                          </div>
+                                          <div class="form-check form-check-inline">
+                                             <input class="form-check-input" type="radio" name="question_type_<%- index + 1 %>" id="inlineRadio4<%- index + 1 %>" value="type_ratings" <% if(item.type=='type_ratings'){ %> checked <% } %>>
+                                             <label class="form-check-label" for="inlineRadio4<%- index + 1 %>">Rating</label>
+                                          </div>
+                                       </div>
+                                       <div class="create-survey-field-repater">
+                                          <div class="multiple-ans-repeat">
+                                             <% item.options.forEach(function(option, index_inner) { %>
+                                             <div class="custom-form">
+                                                <label><span>Option</span></label>
+                                                <input type="text" name="question_type_<%- index+1 %>_options" value="<%- option %>" class="form-control" placeholder="" required="">
+                                                <div class="remove-ans"><i class="fa-solid fa-circle-xmark"></i></div>
+                                             </div>
+                                             <% }) %>
+                                          </div>
+                                          <a href="#" class="btn-default btn-warning add-option mb-3">Add Option</a>
+                                       </div>
+                                    </div>
+                                 <% }else if(item.type=='type_ratings'){ %>
+                                    <div class="qst-repeat dynamic-question-<%- index + 1 %>" data-questionid="<%- index + 1 %>">
+                                       <div class="custom-form">
+                                          <label><span>Q<%- index + 1 %></span></label>
+                                          <input type="text" class="form-control" name="question" required="" value="<%- item.question %>">
+                                       </div>
+            
+                                       <div class="custom-form">
+                                          <span class="fw-bold d-inline-block me-2">Select Type:</span>
+                                          <div class="form-check form-check-inline">
+                                             <input class="form-check-input" type="radio" name="question_type_<%- index + 1 %>" id="inlineRadio1<%- index + 1 %>" value="type_textarea" <% if(item.type.trim() =='type_textarea'){ %> checked <% } %> >
+                                             <label class="form-check-label" for="inlineRadio1<%- index + 1 %>">Textarea</label>
+                                          </div>
+                                          <div class="form-check form-check-inline">
+                                             <input class="form-check-input select-radio" type="radio" name="question_type_<%- index + 1 %>" id="inlineRadio2<%- index + 1 %>" value="type_radio" <% if(item.type.trim() =='type_radio'){ %> checked <% } %> >
+                                             <label class="form-check-label" for="inlineRadio2<%- index + 1 %>">Radio</label>
+                                          </div>
+                                          <div class="form-check form-check-inline">
+                                             <input class="form-check-input" type="radio" name="question_type_<%- index + 1 %>" id="inlineRadio3<%- index + 1 %>" value="type_checkbox" <% if(item.type.trim() =='type_checkbox'){ %> checked <% } %> >
+                                             <label class="form-check-label" for="inlineRadio3<%- index + 1 %>">Checkbox</label>
+                                          </div>
+                                          <div class="form-check form-check-inline">
+                                             <input class="form-check-input" type="radio" name="question_type_<%- index + 1 %>" id="inlineRadio4<%- index + 1 %>" value="type_ratings" <% if(item.type.trim() =='type_ratings'){ %> checked <% } %>>
+                                             <label class="form-check-label" for="inlineRadio4<%- index + 1 %>">Rating</label>
+                                          </div>
+                                       </div>
+                                    </div>
+                                 <% } %>
+                             <% }) %>
+                              
+                              <a href="#" class="btn-default btn-warning add-question my-1">Add Question</a><br><br>
+                              <!-- repeater1 end -->
+                              <div id="invitation_type">
+                                 <div class="custom-form">
+                                    <span class="fw-bold d-inline-block me-2">Invitation Type:</span>
+                                    <div class="form-check form-check-inline">
+                                       <input class="form-check-input" type="radio" name="invitation_type" id="invitationRadio1" value="Profile" <% if(CompanySurveyDetails_formatted[0].invitation_type=='Profile'){ %> checked <% } %>  required>
+                                       <label class="form-check-label" for="invitationRadio1">Only Profiles</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                       <input class="form-check-input select-radio" type="radio" name="invitation_type" id="invitationRadio2" value="Email" <% if(CompanySurveyDetails_formatted[0].invitation_type=='Email'){ %> checked <% } %> required>
+                                       <label class="form-check-label" for="invitationRadio2">Only Email</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                       <input class="form-check-input" type="radio" name="invitation_type" id="invitationRadio3" value="Both" <% if(CompanySurveyDetails_formatted[0].invitation_type=='Both'){ %> checked <% } %> required>
+                                       <label class="form-check-label" for="invitationRadio3">Both</label>
+                                    </div>
+                                 </div>
+                              </div>
+
+                              <div id="invitation_fields" class="send-review-invitation" >
+                                 <div style="margin: 10px; display: flex; justify-content: flex-end">
+                                    <button type="button" class="btn btn-warning" id="bulk-upload" data-bs-whatever="@fat">Bulk Upload</button>
+                                 </div>
+                                 <h4>Send Survey Invitation:</h4>
+                                 <div id="sendreviewtags_invitation" class="custom-form">
+                                    <label><small style="font-size: 18px; background-color: #ffffff; display: inline-block; padding: 0 7px 0 5px; position: relative;">Add Emails</small></label>
+                                    <input type="text" name="email" placeholder="Add an email" />
+                                 </div>
+                                 <div class="custom-form d-none" id="csv-field">
+                                    <label><span>Choose a CSV file:</span></label>
+                                    <input type="file" name="email_file" class="form-control" id="recipient-name">
+                                 </div>
+                                 <div class="custom-form">
+                                    <label><span>Message</span></label>
+                                    <textarea name="email_body" id="email_body" class="form-control mb-4">
+                                       We appreciate your feedback and would like to invite you to participate in our online survey.
+                                        
+                                    </textarea>
+                                 </div>
+                              </div>
+                              
+                              <input type="hidden" name="company_id" value="<%- company.ID %>">
+                              <input type="hidden" name="company_name" value="<%- company.company_name %>">
+                              <input type="hidden" name="company_slug" value="<%- company.slug %>">
+                              <input type="hidden" name="user_id" id="user_id" value="<%= currentUserData.user_id  %>" />
+                              <input type="submit" class="btn-survey-default btn-dark my-1" value="Update">
+                           </div>
+                        </form>
+                        <div class="register-now frm-loading" style="display: none;">
+                           <span class="indicator-progress">Please wait...
+                              <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                           </span>
+                        </div>
+                        <div style="width: 85%; text-align: center; display: block; border: 2px solid #fccb06; padding: 6px; margin: 0 auto; border-radius: 5px; display: none;" class="poll-create-message"></div>
+                     </div>
+                     <% } %>       
+                  <% } %>
+
+            <% }else{ %>
+               <div class="survey-content">
+                  <div class="container">
+                     <div class="each_box update_basic_information all_review_listing_for_company">
+                        <h5>You have no permission to access survey features</h5>
+                     </div>
+                  </div>
+                  <div style="width: 85%; text-align: center; display: block; border: 2px solid #fccb06; padding: 6px; margin: 0 auto; border-radius: 5px; display: none;" class="poll-create-message"></div>
+               </div>
+            <% } %>
+            </div>
+         </div>
+      </div>
+   </div>
+</section>
+
+<!-- ============= modal start ================= -->
+<!-- Modal -->
+<div class="modal  fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+     <div class="modal-content">
+       <div class="modal-header mb-0">
+         <h1 class="modal-title fs-5" id="exampleModalLabel">Bulk Emails Invitation</h1>
+         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+       </div>
+       <form id="bulk_invitation_form" enctype="multipart/form-data">
+          <div class="modal-body bulk_modals">
+             
+               <input type="hidden" name="company_id" id="company_id" value="<%= company.ID  %>" />
+               <input type="hidden" name="company_name" id="company_name" value="<%= company.company_name  %>" />
+               <input type="hidden" name="user_id" id="user_id" value="<%= currentUserData.user_id  %>" />
+               <input type="hidden" name="company_slug" id="company_slug" value="<%= company.slug  %>" />
+              
+               <div class="custom-form">
+                  <label><span>Choose a CSV file:</span></label>
+                  <input type="file" name="email_file" class="form-control" id="recipient-name">
+               </div>
+               <div class="custom-form">
+                  <label><span>Message</span></label>
+                  <textarea name="email_body" id="email_body" class="form-control mb-4">
+                  Hello Dear,&nbsp;
+                  <%= company.company_name  %> cordially invite you to participate our company survey, through the platform of CEchoesTechnology. 
+                  </textarea>
+               </div>
+          </div>
+          <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-warning" id="file_submit_btn">Send</button>
+          <div style=" width: 100%; text-align: center; display: block; border: 2px solid #fccb06; padding: 6px; margin-top: 20px; border-radius: 5px; display: none;" class="response-message"></div>
+          <div style=" width: 100%; text-align: center; display: block; border: 2px solid #fc0606; padding: 6px; margin-top: 20px; border-radius: 5px; display: none;" class="error-message"></div>
+          </div>
+       </form>
+       <div class="register-now frm-loading" style="display: none;">
+         <span class="indicator-progress">Please wait...
+            <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+         </span>
+      </div>
+   
+     </div>
+   </div>
+ </div>
+ <!-- =======================modal end ================= -->
+<style>
+   .btn-survey-default {
+      font-size: 18px;
+      font-weight: 600;
+      padding: 12px 23px;
+      min-width: 140px;
+      display: inline-block;
+      text-align: center;
+   }
+   .register-now {
+      color: #1F1F1F;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 36px;
+      text-align: center;
+      margin-top: 0;
+      margin-bottom: 20px;
+   }
+   .create-survey-field {
+      padding: 0 0 25px 0px;
+   }
+   #sendreviewtags_invitation {
+      border: 2px solid #fccb06;
+      padding: 5px 9px;
+      border-radius: 6px;
+      margin-bottom: 32px;
+   }   
+   #sendreviewtags_invitation > input {
+      background: #f2f2f2;
+      border: 0;
+      margin: 4px;
+      padding: 7px;
+      width: auto;
+      border-radius: 4px;
+      outline: none;
+   }
+   #sendreviewtags_invitation > span {
+      cursor: pointer;
+      display: block;
+      float: left;
+      color: #fff;
+      background: #fccb06;
+      padding: 7px;
+      padding-right: 25px;
+      margin: 4px;
+      border-radius: 4px;
+   }
+   #sendreviewtags_invitation > span:after {
+      position: absolute;
+      content: "×";
+      border: 1px solid;
+      padding: 2px 5px;
+      margin-left: 3px;
+      font-size: 11px;
+   }
+</style>
+<!-- ============== Section6 End =============== -->
+<%- include('common/footer') -%>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/css/dataTables.bootstrap4.min.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/1.0.4/css/dataTables.responsive.css" />
+
+<script src="https://cdn.datatables.net/1.10.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/plug-ins/f2c75b7247b/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+<script src="https://cdn.datatables.net/responsive/1.0.4/js/dataTables.responsive.js"></script>
+<script>
+// JavaScript code to disable previous dates
+// const datePicker = document.getElementById("todatePicker");
+// const today = new Date();
+// today.setDate(today.getDate() + 1); 
+// const minDate = today.toISOString().split('T')[0];
+// datePicker.setAttribute("min", minDate);
+
+$('body').on('click', '.add-question', function(e){
+   e.preventDefault();
+   var question_count = $('.qst-repeat').length;
+   console.log(question_count);
+   var next_question_count = question_count+1;
+   var question_html = `
+   <div class="qst-repeat dynamic-question-${next_question_count}" data-questionid="${next_question_count}">
+      <div class="custom-form">
+            <label><span>Q${next_question_count}</span></label>
+            <input type="text" class="form-control" name="question" required="">
+            <div class="remove-question"><i class="fa-solid fa-circle-xmark"></i></div>
+      </div>
+      <div class="custom-form">
+         <span class="fw-bold d-inline-block me-2">Select Type:</span>
+         <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="question_type_${next_question_count}" id="inlineRadio1${next_question_count}" value="type_textarea" checked>
+            <label class="form-check-label" for="inlineRadio1${next_question_count}">Textarea</label>
+         </div>
+         <div class="form-check form-check-inline">
+            <input class="form-check-input select-radio" type="radio" name="question_type_${next_question_count}" id="inlineRadio2${next_question_count}" value="type_radio">
+            <label class="form-check-label" for="inlineRadio2${next_question_count}">Radio</label>
+         </div>
+         <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="question_type_${next_question_count}" id="inlineRadio3${next_question_count}" value="type_checkbox">
+            <label class="form-check-label" for="inlineRadio3${next_question_count}">Checkbox</label>
+         </div>
+         <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="question_type_${next_question_count}" id="inlineRadio4${next_question_count}" value="type_ratings">
+            <label class="form-check-label" for="inlineRadio4${next_question_count}">Rating</label>
+         </div>
+      </div>
+   </div>
+   `;
+   $('.qst-repeat:last').after(question_html);
+});
+$('body').on('click', '.form-check-input', function(e){
+   if( $(this).is(':checked') ) {
+      $(this).parents(".qst-repeat").find('.create-survey-field-repater').remove();
+      var questionid = $(this).parents(".qst-repeat").attr('data-questionid');
+      var option_wrapper_html = `
+      <div class="create-survey-field-repater">
+         <div class="multiple-ans-repeat">
+            <div class="custom-form">
+               <label><span>Option</span></label>
+               <input type="text" name="question_type_${questionid}_options" class="form-control" placeholder="" required="">
+               <div class="remove-ans"><i class="fa-solid fa-circle-xmark"></i></div>
+            </div>
+         </div>
+         <a href="#" class="btn-default btn-warning add-option mb-3">Add Option</a>
+      </div>
+      `;
+
+      var selectedValue = $(this).val();
+      if( selectedValue == 'type_radio' || selectedValue == 'type_checkbox'){
+         $(this).parents(".qst-repeat").find('.custom-form:last').after(option_wrapper_html);    
+      }
+   }
+});
+$("body").on('click', '.remove-question', function(e){
+   e.preventDefault();
+   $(this).parents(".qst-repeat").remove();
+});
+$("body").on('click', '.remove-ans', function(e){
+   e.preventDefault();
+   $(this).parents(".custom-form").remove();
+});
+
+$("body").on('click', '.add-option', function(e){
+   e.preventDefault();
+   var questionid = $(this).parents(".qst-repeat").attr('data-questionid');
+   var option_html = `
+   <div class="custom-form">
+      <label><span>Option</span></label>
+      <input type="text" name="question_type_${questionid}_options" class="form-control" placeholder="">
+      <div class="remove-ans"><i class="fa-solid fa-circle-xmark"></i></div>
+   </div>
+   `;   
+   $(this).parent(".create-survey-field-repater").find(".multiple-ans-repeat").append(option_html);
+});
+
+$("body").on('click', '#bulk-upload', function(e){
+   $('#csv-field').toggleClass('d-none');
+   $('#sendreviewtags_invitation').toggleClass('d-none');
+
+    // Toggle button text
+    var buttonText = $(this).text();
+    var newText = buttonText === 'Bulk Upload' ? 'Manual Upload' : 'Bulk Upload';
+    $(this).text(newText);
+});
+
+$('input[name="invitation_type"]').change(function() {
+   if ($(this).val() === "Email" || $(this).val() === "Both") {
+      $('#invitation_fields').show();
+   } else {
+      $('#invitation_fields').hide();
+   }
+});
+
+if ($('input[name="invitation_type"]:checked').val() == "Profile") {
+   $('#invitation_fields').hide();
+}
+
+//-- Form submit --//
+$('#survey-form-submit').submit( function( event ) {
+   event.preventDefault();
+
+   // Disable the submit button and show loading indicator
+   $('.btn-survey-default').prop("disabled", true);
+   $('.frm-loading').show();
+
+   // Create FormData object
+   const formData = new FormData($('#survey-form-submit')[0]);
+
+   // Serialize other form data and append it to the FormData
+   const serializedArray = $('#survey-form-submit').serializeArray();
+   serializedArray.forEach(function (item) {
+      formData.append(item.name, item.value);
+   });
+
+   // Transform serialized data and prepare for submission
+   const questions = [];
+   $('#sendreviewtags_invitation span').each(function () {
+         // var enteredEmail = $(this).text();
+         // formData.append('emails[]', enteredEmail);
+      var enteredEmail = $(this).text().trim();
+      if (enteredEmail !== "") {
+         formData.append('email[]', enteredEmail);
+      }
+   });
+ 
+
+   for (const item of serializedArray) {
+      if (item.name === 'question') {
+         const questionObj = { question: item.value };
+         questions.push(questionObj);
+      } else if (item.name.startsWith('question_type')) {
+         const questionIndex = item.name.split('_')[2];
+         const question = questions[questionIndex - 1];
+         if (item.value === 'type_textarea' || item.value === 'type_checkbox' || item.value === 'type_radio' || item.value === 'type_ratings') {
+               question.type = item.value;
+         } else {
+               question.name = item.name;
+               if (!question.options) {
+                  question.options = [];
+               }
+               question.options.push(item.value);
+         }
+      }
+   }
+
+   formData.append('questions', JSON.stringify(questions));
+   $.ajax({
+      url: '/auth/update-survey-data',
+      method: 'POST',
+      data: formData,
+      contentType: false,
+      processData: false,
+      success: function (data) {
+         if (data.status == 'ok') {
+            $('.frm-loading').hide();
+            $('.poll-create-message').text(data.message);
+            $('.poll-create-message').show();
+            $('.btn-survey-default').prop("disabled", false);
+            setTimeout( function() {
+               location.reload(true);
+            }, 3000);
+         } else {
+            $('.frm-loading').hide();
+            $('.poll-create-message').text(data.message);
+            $('.poll-create-message').show();
+            $('.btn-survey-default').prop("disabled", false);
+         }
+      },
+      error: function (error) {
+      $('.frm-loading').hide();
+      $('.poll-create-message').text(error);
+      $('.poll-create-message').show();
+      $('.btn-survey-default').prop("disabled", false);
+      }
+   });
+})
+
+// $('#survey-form-submit').submit( function( event ) {
+//    $('.btn-survey-default').prop("disabled", true);
+//    $('.frm-loading').show();
+//    event.preventDefault();
+//    const serializedArray = $('#survey-form-submit').serializeArray();
+//    console.log(serializedArray);
+
+//    function transformSerializedArray(serializedArray) {
+//       const transformedData = {};
+//       const questions = [];
+//       var allEmails = [];
+//       $(this).find('#sendreviewtags_invitation').find('span').each(function(){
+//          var enteredEmail = $(this).text();
+//          allEmails.push(enteredEmail);
+//       });
+//       console.log(allEmails);
+//       for (const item of serializedArray) {
+//           if (item.name === 'created_at' || item.name === 'expire_at' || item.name === 'title' || item.name === 'company_id' || item.name === 'invitation_type' || item.name === 'email_body' || item.name === 'email_body' ) {
+//               transformedData[item.name] = item.value;
+//               transformedData['emails'] = allEmails;
+//           } else if (item.name === 'question') {
+//               const questionObj = { question: item.value };
+//               questions.push(questionObj);
+//           } else if (item.name.startsWith('question_type')) {
+//               const questionIndex = item.name.split('_')[2];
+//               const question = questions[questionIndex - 1];
+//               if (item.value === 'type_textarea' || item.value === 'type_checkbox' || item.value === 'type_radio' || item.value === 'type_ratings') {
+//                   question.type = item.value;
+//               } else {
+//                   question.name = item.name;
+//                   if (!question.options) {
+//                       question.options = [];
+//                   }
+//                   question.options.push(item.value);
+//               }
+//           }
+//       }
+  
+//       transformedData.questions = questions;
+  
+//       return [transformedData];
+//    }
+//    const transformedData = transformSerializedArray(serializedArray);
+//    console.log(JSON.stringify(transformedData, null, 3));
+//    //----Submit Survey Ajax-------------//
+//    $.ajax({
+//       url: '/auth/create-survey',
+//       method: 'POST',
+//       data: JSON.stringify(transformedData),
+//       processData: false,
+//       ContentType: 'application/json',
+//       success: function (data) {
+//          if (data.status == 'ok') {
+//             $('.frm-loading').hide();
+//             $('.poll-create-message').text(data.message);
+//             $('.poll-create-message').show();
+//             $('.btn-survey-default').prop("disabled", false);
+//             setTimeout( function() {
+//                location.reload(true);
+//             }, 3000);
+//          } else {
+//             $('.frm-loading').hide();
+//             $('.poll-create-message').text(data.message);
+//             $('.poll-create-message').show();
+//             $('.btn-survey-default').prop("disabled", false);
+//          }
+//       },
+//       error: function (error) {
+//          $('.frm-loading').hide();
+//          $('.poll-create-message').text(error);
+//          $('.poll-create-message').show();
+//          $('.btn-survey-default').prop("disabled", false);
+//       }
+//    });
+// });
+
+$("#sendreviewtags_invitation input").on({
+  focusout: function () {
+    var txt = this.value.trim(); // Trim whitespace from the input
+
+    // Check if the maximum limit is not reached
+    if ( isValidEmail(txt) ) {
+      $("<span/>", { text: txt.toLowerCase(), insertBefore: this });
+      this.value = "";
+    }else{
+      this.value = "";
+    }
+  },
+  keyup: function (ev) {
+    // if: comma|enter (delimit more keyCodes with | pipe)
+    if (/[,;]/.test(String.fromCharCode(ev.which))) $(this).focusout();
+  },
+});
+
+// Function to check if a string is a valid email
+function isValidEmail(email) {
+  // Use a regular expression for basic email validation
+  var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
+
+ $('#sendreviewtags_invitation').on('click', 'span', function() {
+   if(confirm("Remove "+ $(this).text() +"?")) $(this).remove();
+ });
+ /*=========================== Send survey request tags End =================*/
+</script>

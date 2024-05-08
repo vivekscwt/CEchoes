@@ -1,0 +1,342 @@
+<%- include('common/header') -%>
+    <link href="/front-end/css/company-profile-dashboard.css" rel="stylesheet" type="text/css">
+    <link href="/front-end/css/survey-style.css" rel="stylesheet" type="text/css">
+    <%- include('common/header-banner') -%>
+
+        <section class="main-content premium_company_profile bottom-main-content C_l_managment">
+            <div class="container">
+                <div class="main_box">
+                    <%- include('common/premium-company-sidebar') -%>
+                </div>
+                <div class="premium-complain-m-head">
+                    <h2 class="inner-main-head">Complaint Level Management </h2>
+                </div>
+                <div class="premium-complain-m-wrap">
+                    <div class="row g-2 align-items-center justify-content-arround mb-2">
+                        <div class="col-sm-6">
+                            <label for="" class="col-form-label"><strong>Complaint Status</strong></label>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="custom-form mb-0 text-end">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input inactive-level" type="radio" name="complaint_status"
+                                        id="inlineRadio1" value="0" checked=""><label class="form-check-label"
+                                        for="inlineRadio1">Inactive</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input active-level form-check-inline" type="radio"
+                                        name="complaint_status" id="inlineRadio2" value="1"
+                                        data-gtm-form-interact-field-id="0"><label class="form-check-label"
+                                        for="inlineRadio2">Active</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="premium-complain-m-content-body">
+                        <form class="level_form" data-gtm-form-interact-id="0">
+                            <input type="hidden" value="1" name="label_count" class="label_count">
+                            <input type="hidden" name="company_id" value="1" class="">
+
+                            <div class="toggle-emails" style="display: block;">
+                                <!-- head section start -->
+                                <div class="premium-complain-m-content-head">
+                                    <div class="premium-complain-m-content-part">
+                                        Level 1
+                                    </div>
+                                    <!-- <div class="premium-complain-m-content-part">
+                           Action
+                        </div> -->
+                                </div>
+
+                                <!-- edit email slide down start -->
+                                <div class="level_box mb-27">
+                                    <div class="edit-email" style="display: block;">
+
+                                        <div class="row g-2 align-items-center justify-content-around  eta_day">
+                                            <div class="col-sm-6">
+                                                <label for="" class="col-form-label"><strong>ETA Days</strong></label>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div><h5>1</h5></div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="category_list">
+                                        <div class="category_list_heading">
+                                            <h3>Category 1</h3>
+                                        </div>
+                                        <div class="category_list_edit_sec">
+                                            <div class="category_list_edit_row">
+                                                <div><h4>Sam William</h4></div>
+                                                <div><h5>example@email.com</h5></div>
+                                                <div><a href="#"><img src="/front-end/images/edit_icon.png" alt=""></a></div>
+                                            </div>
+                                        </div>
+                                        <div class="category_list_edit_sec">
+                                            <div class="category_list_edit_row">
+                                                <div><h4>Sam William</h4></div>
+                                                <div><h5>example@email.com</h5></div>
+                                                <div><a href="#"><img src="/front-end/images/edit_icon.png" alt=""></a></div>
+                                            </div>
+                                        </div>
+                                        <div class="category_list_edit_sec">
+                                            <div class="category_list_edit_row">
+                                                <div><h4>Sam William</h4></div>
+                                                <div><h5>example@email.com</h5></div>
+                                                <div><a href="#"><img src="/front-end/images/edit_icon.png" alt=""></a></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="category_list">
+                                        <div class="category_list_heading">
+                                            <h3>Category 2</h3>
+                                        </div>
+                                        <div class="category_list_edit_sec">
+                                            <div class="category_list_edit_row">
+                                                <div><h4>Sam William</h4></div>
+                                                <div><h5>example@email.com</h5></div>
+                                                <div><a href="#"><img src="/front-end/images/edit_icon.png" alt=""></a></div>
+                                            </div>
+                                        </div>
+                                        <div class="category_list_edit_sec">
+                                            <div class="category_list_edit_row">
+                                                <div><h4>Sam William</h4></div>
+                                                <div><h5>example@email.com</h5></div>
+                                                <div><a href="#"><img src="/front-end/images/edit_icon.png" alt=""></a></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="category_list">
+                                        <div class="category_list_heading">
+                                            <h3>Category 3</h3>
+                                        </div>
+                                        <div class="category_list_edit_sec">
+                                            <div class="category_list_edit_row">
+                                                <div><h4>Sam William</h4></div>
+                                                <div><h5>example@email.com</h5></div>
+                                                <div><a href="#"><img src="/front-end/images/edit_icon.png" alt=""></a></div>
+                                            </div>
+                                        </div>
+                                        <div class="category_list_edit_sec">
+                                            <div class="category_list_edit_row">
+                                                <div><h4>Sam William</h4></div>
+                                                <div><h5>example@email.com</h5></div>
+                                                <div><a href="#"><img src="/front-end/images/edit_icon.png" alt=""></a></div>
+                                            </div>
+                                        </div>
+                                        <div class="category_list_edit_sec">
+                                            <div class="category_list_edit_row">
+                                                <div><h4>Sam William</h4></div>
+                                                <div><h5>example@email.com</h5></div>
+                                                <div><a href="#"><img src="/front-end/images/edit_icon.png" alt=""></a></div>
+                                            </div>
+                                        </div>
+                                        <div class="category_list_edit_sec">
+                                            <div class="category_list_edit_row">
+                                                <div><h4>Sam William</h4></div>
+                                                <div><h5>example@email.com</h5></div>
+                                                <div><a href="#"><img src="/front-end/images/edit_icon.png" alt=""></a></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex justify-content-center align-items-center">
+                                        <button type="button" class="btn-default btn-warning each_form_submut add_new_user"
+                                            data-bs-toggle="modal" data-bs-target="#exampleModal" id="">Add
+                                            New user</button>
+
+                                    </div>
+
+
+                                </div>
+
+                            </div>
+                            <div class="toggle-emails" style="display: block;">
+                                <!-- head section start -->
+                                <div class="premium-complain-m-content-head">
+                                    <div class="premium-complain-m-content-part">
+                                        Level 2
+                                    </div>
+                                    <!-- <div class="premium-complain-m-content-part">
+                           Action
+                        </div> -->
+                                </div>
+
+                                <!-- edit email slide down start -->
+                                <div class="level_box mb-27">
+                                    <div class="edit-email" style="display: block;">
+
+                                        <div class="row g-2 align-items-center justify-content-around  eta_day">
+                                            <div class="col-sm-6">
+                                                <label for="" class="col-form-label"><strong>ETA Days</strong></label>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div><h5>1</h5></div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="category_list">
+                                        <div class="category_list_heading">
+                                            <h3>Category 1</h3>
+                                        </div>
+                                        <div class="category_list_edit_sec">
+                                            <div class="category_list_edit_row">
+                                                <div><h4>Sam William</h4></div>
+                                                <div><h5>example@email.com</h5></div>
+                                                <div><a href="#"><img src="/front-end/images/edit_icon.png" alt=""></a></div>
+                                            </div>
+                                        </div>
+                                        <div class="category_list_edit_sec">
+                                            <div class="category_list_edit_row">
+                                                <div><h4>Sam William</h4></div>
+                                                <div><h5>example@email.com</h5></div>
+                                                <div><a href="#"><img src="/front-end/images/edit_icon.png" alt=""></a></div>
+                                            </div>
+                                        </div>
+                                        <div class="category_list_edit_sec">
+                                            <div class="category_list_edit_row">
+                                                <div><h4>Sam William</h4></div>
+                                                <div><h5>example@email.com</h5></div>
+                                                <div><a href="#"><img src="/front-end/images/edit_icon.png" alt=""></a></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="category_list">
+                                        <div class="category_list_heading">
+                                            <h3>Category 2</h3>
+                                        </div>
+                                        <div class="category_list_edit_sec">
+                                            <div class="category_list_edit_row">
+                                                <div><h4>Sam William</h4></div>
+                                                <div><h5>example@email.com</h5></div>
+                                                <div><a href="#"><img src="/front-end/images/edit_icon.png" alt=""></a></div>
+                                            </div>
+                                        </div>
+                                        <div class="category_list_edit_sec">
+                                            
+                                            <div class="category_list_edit_row">
+                                                <div><h4>Sam William</h4></div>
+                                                <div><h5>example@email.com</h5></div>
+                                                <div><a href="#"><img src="/front-end/images/edit_icon.png" alt=""></a></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="category_list">
+                                        <div class="category_list_heading">
+                                            <h3>Category 3</h3>
+                                        </div>
+                                        <div class="category_list_edit_sec">
+                                            <div class="category_list_edit_row">
+                                                <div><h4>Sam William</h4></div>
+                                                <div><h5>example@email.com</h5></div>
+                                                <div><a href="#"><img src="/front-end/images/edit_icon.png" alt=""></a></div>
+                                            </div>
+                                        </div>
+                                        <div class="category_list_edit_sec">
+                                            <div class="category_list_edit_row">
+                                                <div><h4>Sam William</h4></div>
+                                                <div><h5>example@email.com</h5></div>
+                                                <div><a href="#"><img src="/front-end/images/edit_icon.png" alt=""></a></div>
+                                            </div>
+                                        </div>
+                                        <div class="category_list_edit_sec">
+                                            <div class="category_list_edit_row">
+                                                <div><h4>Sam William</h4></div>
+                                                <div><h5>example@email.com</h5></div>
+                                                <div><a href="#"><img src="/front-end/images/edit_icon.png" alt=""></a></div>
+                                            </div>
+                                        </div>
+                                        <div class="category_list_edit_sec">
+                                            <div class="category_list_edit_row">
+                                                <div><h4>Sam William</h4></div>
+                                                <div><h5>example@email.com</h5></div>
+                                                <div><a href="#"><img src="/front-end/images/edit_icon.png" alt=""></a></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex justify-content-center align-items-center">
+                                        <button type="button" class="btn-default btn-warning each_form_submut add_new_user"
+                                            data-bs-toggle="modal" data-bs-target="#exampleModal" id="">Add
+                                            New user</button>
+
+                                    </div>
+
+
+                                </div>
+                                 <!-- Modal -->
+                                    <div class="popup">
+                                        <div class="popup__content">
+                                            <div class="close">
+                                                <span></span>
+                                                <span></span>
+                                            </div>
+                                            <h4 class="add_user_heading">Add user details</h4>
+                                            <form action="">
+                                                <div class="add_user_input">
+                                                    <label for="">First Name</label>
+                                                    <input type="text" placeholder="Tell me who are you" required>
+                                                </div>
+                                                <div class="add_user_input">
+                                                    <label for="">Last Name</label>
+                                                    <input type="text" placeholder="Tell me who are you" required>
+                                                </div>
+                                                <div class="add_user_input">
+                                                    <label for="">Email</label>
+                                                    <input type="email" placeholder="May I know your Email id." required>
+                                                </div>
+                                                <div class="add_user_input">
+                                                    <label for="">Password</label>
+                                                    <input type="password" placeholder="Please! Keep it secret always" required>
+                                                </div>
+                                                <div class="add_user_input">
+                                                    <label for="category">Web Developer</label>
+                                                    <select name="category" id="cars">
+                                                        <option value="item-1">Item-1</option>
+                                                        <option value="item-2">Item-2</option>
+                                                        <option value="item-3">Item-3</option>
+                                                        <option value="item-4">Item-4</option>
+                                                    </select>
+                                                </div>
+                                                <div class="add_user_submit_btn">
+                                                    <input type="submit" value="Save">
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                <!-- modal-end -->
+
+                            </div>
+                            
+                            <div class="d-flex justify-content-end align-items-center">
+                                <button type="submit"
+                                    class="btn-default btn-warning each_form_submut save_btn">Save</button>
+                            </div>
+
+                        </form>
+                        <!-- edit email slide down end -->
+
+                    </div>
+                    
+                </div>
+            </div>
+            <div class="object_icon_1">
+                <img src="/front-end/images/object_2.png" alt="img" class="c-overlay2">
+            </div>
+            <div class="fish_icon">
+                <img src="/front-end/images/fish_icon.png" alt="">
+            </div>
+        </section>
+
+
+
+        <%- include('common/footer') -%>
+        <script>
+            $(".add_new_user").click(function () {
+                $(".popup").fadeIn(500);
+            });
+            $(".close").click(function () {
+                $(".popup").fadeOut(500);
+            });
+        </script>
+

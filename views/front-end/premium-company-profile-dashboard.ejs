@@ -1,0 +1,1192 @@
+<%- include('common/header') -%>
+   <link href="/front-end/css/company-profile-dashboard.css" rel="stylesheet" type="text/css">
+   <link href="/front-end/css/review-style.css" rel="stylesheet" type="text/css">
+   <script src="https://cdn.canvasjs.com/canvasjs.min.js"></script>
+ 
+   <%- include('common/header-banner') -%>
+
+      <!-- ============== Section1 Start =============== -->
+      <section class="main-content premium_company_profile">
+         <div class="container">
+            <div class="main_box">
+               <%- include('common/premium-company-sidebar') -%>
+               <div class="analytics_data analytics_data_row1">
+                  <div class="row">
+                     <% var company_total_review = companyReviewNumbers.rewiew_count.total_review_count %>
+                     <div class="col-lg-4">
+                        <div class="total_reviews">
+                           <p>Total Reviews</p>
+                           <div class="count"><%- company_total_review -%></div>
+                        </div>
+                     </div>
+                     <div class="col-lg-4">
+                        <div class="total_reviews total_replied">
+                           <p>Total Replied</p>
+                           <div class="count"><%= TotalReplied.totalReplied %></div>
+                        </div>
+                     </div>
+                     <% var positive_count = 0;
+                        var negative_count = 0;
+                        if (companyReviewNumbers && Array.isArray(companyReviewNumbers.rewiew_rating_count)) {
+                           companyReviewNumbers.rewiew_rating_count.forEach((item, index) => {
+                              if(parseFloat(item.rating)>=4){
+                                 positive_count += parseInt(item.cnt_rat);
+                              }
+                              if(parseFloat(item.rating)<=2){
+                                 negative_count += parseInt(item.cnt_rat);
+                              }
+                           })
+                        }
+                     %>
+                     <div class="col-lg-4">
+                        <div class="positive_reviews">
+                           <h4>positive reviews</h4>
+                           <div class="count"><%- positive_count -%></div>
+                        </div>
+                        <div class="negative_reviews">
+                           <h4>negative reviews</h4>
+                           <div class="count"><%- negative_count -%></div>
+                        </div>
+                     </div>
+                     
+                  </div>
+               </div>
+
+               <div class="heading_header">
+                  <h4>Visitors & Ratings</h4>
+               </div>
+               <div class="analytics_data analytics_data_row5">
+                  <div class="row">
+                     <div class="col-lg-5">
+                        <div class="user_viewed">
+                           <div>
+                              <div class="d-flex align-items-center justify-content-start mb-3">
+                                 <h4 class="mb-0">Total Visitors</h4><img style="margin-left: 5px;" src="/front-end/images/coming-soon.png" alt="image" />
+                              </div>
+                              <div class="count">1500</div>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="col-lg-7">
+                        <div class="all_ratings_progressbar">
+                           <h4>Ratings graph</h4>
+                           <div id="columnChart" style="height: 250px; width: 100%;"></div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+
+               <div class="analytics_data analytics_data_row2">
+                  <div class="row align-items-center">
+                        <% var chat_y = 0; 
+                           reviewReatingChartArray.forEach((item, index) => { %>
+                           <% if(item.y > 0){
+                              chat_y++;
+                           } %>
+                        <% }) %>
+                        <% if( chat_y > 0 ){ %>
+                        <div class="col-md-5">
+                           <div id="chartContainer" style="height: 250px; width: 100%;"></div>
+                        </div>
+                        <div class="col-md-7">
+                        <% }else{ %>
+                        <div class="col-md-12">
+                        <% } %>
+                        <div class="display_tags">
+                           <p>Tags you got</p>
+                           <div class="all_tags">
+                              <% if(reviewTagsCount && reviewTagsCount.length>0 ){ %>
+                              <div class="row">
+                                 <% reviewTagsCount.forEach((item, index) => { %>
+                                 <div class="col-md-4 col-6">
+                                    <div class="each_tag_info">
+                                       <!-- <div class="circale"></div> -->
+                                       <div class="tag_name"><%- item.tag_name -%></div>
+                                       <div class="tag_count"><%- item.count -%></div>
+                                    </div>
+                                 </div>
+                                 <% }) %>
+                              </div>
+                              <% }else{ %>
+                                 <p>No tags found</p>
+                              <% } %>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+
+               <div class="analytics_data analytics_data_row3">
+                  <div class="row">
+                     <div class="col-lg-6">
+                        <div class="d-flex align-items-center justify-content-start mb-3">
+                           <h4 class="sec_heading mb-0">Viewer use device</h4><img style="margin-left: 5px;" src="/front-end/images/coming-soon.png" alt="image" />
+                        </div>
+                        <div id="chartContainerByDevice" style="height: 370px; width: 100%;"></div>
+                     </div>
+                     <div class="col-lg-6">
+                        <div class="d-flex align-items-center justify-content-start mb-3">
+                           <h4 class="sec_heading mb-0">Visited by age category</h4><img style="margin-left: 5px;" src="/front-end/images/coming-soon.png" alt="image" />
+                        </div>
+                        <div id="ageChartContainer" style="width: 100%; height: 360px"></div>
+                     </div>
+                  </div>
+               </div>
+
+               <div class="analytics_data analytics_data_row3">
+                  <div class="row">
+                     <div class="col-lg-6">
+                        <div id="horizontalTab">
+                           <div class="survey-details-with-date">
+                              <div class="survet-update-form">
+                                 <form id="filterForm" method="post" action="">
+                                    <div class="all-inputs">
+                                       <div class="row">
+                                          <div class="col-12">
+                                             <div class="custom-form">
+                                                <label><span style="background-color: #ffffff;">From:</span> </label>
+                                                <input type="date" class="form-control" name="from" value="">
+                                             </div>
+                                          </div>
+                                          <div class="col-12">
+                                             <div class="custom-form">
+                                                <label><span style="background-color: #ffffff;">To:</span></label>
+                                                <input type="date" class="form-control" name="to" value="">
+                                             </div>
+                                          </div>
+                                          <input type="hidden" name="company_id" value="<%= company.ID %>">
+                                          <input type="hidden" name="company_name" value="<%= company.company_name %>">
+                                          
+                                          <div class="col-12 mb-5">
+                                             <input type="submit" name="update_survey" class="btn-default btn-dark" value="Filter">
+                                          </div>
+                                        </div>
+                                    </div>
+                                </form>
+                              </div>
+                           </div>
+                        </div>
+                        <h4 class="sec_heading mb-3">Customer Rating</h4>
+                        <div id="comparechrat" style="height: 300px; width: 100%;"></div>
+                        
+                     </div>
+                     <div class="col-lg-6" >
+                        <div id="">
+                           <div class="survey-details-with-date">
+                              <div class="survet-update-form">
+                                 <form id="historiaclGraphForm" method="post" action="">
+                                    <div class="all-inputs">
+                                       <div class="row">
+                                          <div class="col-6">
+                                             <div class="custom-form">
+                                                 <label><span style="background-color: #ffffff;">From:</span> </label>
+                                                 <input type="date" class="form-control" name="from" value="">
+                                             </div>
+                                          </div>
+                                          <div class="col-6">
+                                             <div class="custom-form">
+                                                <label><span style="background-color: #ffffff;">To:</span></label>
+                                                <input type="date" class="form-control" name="to" value="">
+                                             </div>
+                                          </div>
+                                          <div class="col-12">
+                                             <div class="custom-form">
+                                                <label><span style="background-color: #ffffff;">Filter:</span></label>
+                                                <select class="form-select" name="filter">
+                                                   <option value="daily" selected >Daily</option>
+                                                      <option value="weekly">Weekly</option>
+                                                      <option value="monthly" >Monthly</option>
+                                                      <!-- <option value="yearly" >Yearly</option> -->
+                                                </select>
+                                             </div>
+                                          </div>
+                                          <input type="hidden" name="company_id" value="<%= company.ID %>">
+                                          <input type="hidden" name="company_name" value="<%= company.company_name %>">
+                                          <div class="col-12 mb-5"> 
+                                             <input type="submit" name="update_survey" class="btn-default btn-dark" value="Filter">
+                                          </div>
+                                       </div>
+                                    </div>
+                                </form>
+                              </div>
+                           </div>
+                        </div>
+                        <h4 class="sec_heading mb-3">Historical Trends of Performance Rating</h4>
+                        <div id="historicalchrat" style="height: 300px; width: 100%;"></div>
+
+                     </div>
+                  </div>
+               </div>
+               <div class="analytics_data analytics_data_row3">
+                  <div class="row">
+                     <div class="col-lg-6">
+                        <!-- <button id="generatePdfButton">Generate PDF</button> -->
+                        <!-- <button id="exportButton">Export Chart</button> -->
+                        <h4 class="sec_heading mb-3">Review Comparison by Product</h4>
+                        <div id="productGraph" style="height: 300px; width: 100%;"></div>
+                     </div>
+                     <div class="col-lg-6" >
+                        <div class="survet-update-form">
+                           <h4 class="sec_heading mb-3">Choose your competitor:</h4>
+                           <form id="CompetitorCompanyForm" method="post" action="">
+                              <div class="all-inputs">
+                                  <div class="custom-form">
+                                      <select class="form-select js-example-basic-multiple" name="competitor" multiple="multiple">
+                                       <% if(getSimilarCompany[0] && getSimilarCompany[0].companiesIdArr.length > 0) { %>
+                                          <% getSimilarCompany[0].companiesIdArr.forEach((id,index)=>{  %>
+                                             <option value="<%= id %>" >Competitor <%= index+1 %> </option>
+                                          <% }) %>
+                                       <% } %>
+                                          <!-- <option value="yearly" >Yearly</option> -->
+                                      </select>
+                                  </div>
+                                  <input type="hidden" name="company_id" value="<%= company.ID %>">
+                                  <input type="hidden" name="company_name" value="<%= company.company_name %>">
+                                  <div class="mb-5">
+                                    <input type="submit" name="update_survey" class="btn-default btn-dark" value="Filter">
+                                 </div>
+                              </div>
+                          </form>
+                        </div>
+                        <div id="performanceChart" style="height: 300px; width: 100%;"></div>
+                     </div>
+                  </div>
+               </div>
+               <!-- <div class="analytics_data analytics_data_row4">
+                  <div class="select_box_and_btn">
+                     <div class="select_location">
+                        <label>Select locations</label>
+                        <div class="address_selectbox">
+                           <select name="" id="">
+                              <option value="">Select</option>
+                              <option value="">Scwebtech Saltlake</option>
+                              <option value="">Scwebtech Jadavpur</option>
+                              <option value="">Scwebtech Howrah</option>
+                              <option value="">Scwebtech Malda</option>
+                           </select>
+                        </div>
+                     </div>   
+                     <a href="#">View All Reviews</a>
+                  </div>
+                  <div class="data_by_locations">
+                     <div class="row">
+                        <div class="col-lg-4">
+                           <div class="total_reviews">
+                              <p>Total Reviews</p>
+                              <div class="count"><%- company_total_review -%></div>
+                           </div>
+                        </div>
+                        <div class="col-lg-4">
+                           <div class="total_reviews total_replied">
+                              <p>Total Replied</p>
+                              <div class="count">0</div>
+                           </div>
+                        </div>
+                        <div class="col-lg-4">
+                           <div class="positive_reviews">
+                              <h4>positive reviews</h4>
+                              <div class="count">00</div>
+                           </div>
+                           <div class="negative_reviews">
+                              <h4>negative reviews</h4>
+                              <div class="count">00</div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div> -->
+               <% if (finalCompanyallReviews && finalCompanyallReviews.length > 0) { %>
+               <div class="company_dashboard_all_reviews_slider">
+                  <div class="review-slider">   
+                     <% finalCompanyallReviews.forEach( review => { %>
+                     <div class="item">
+                        <div class="review-box">
+                           <div class="head_box d-flex align-items-center justify-content-between mb-2">
+                             <h3 style="margin:0"><a href="/company/<%= review.slug %>"><%= company && company.company_name ? company.company_name : '' %></a></h3>
+                             <% var avg = review.rating %>
+                             <div class="user-rating">
+                               <% allRatingTags.forEach( tag => { %>
+                                   <% if(tag.review_rating_value == avg){ %>
+                                     <span><img src="/<%= tag.rating_image %>" alt="" style="display: inline-block;" width="35"></span>
+                                   <% } %>
+                                   <% }) %> 
+                               <span><%= review.rating %>/5</span>
+                             </div>
+                           </div>
+                           <% if(review.address){ %>
+                           <div class="user-info-panel">
+                              <span><i class="fa-solid fa-location-dot"></i></span>
+                              <p class="m-0">
+                                 <strong>Location</strong><br>
+                                 <%- review.address -%> 
+                              </p>
+                           </div>
+                           <% } %>
+                           <% if(review && review.product_title){ %>
+                             <div class="user-info-panel">
+                               <span><i class="fa-solid fa-box"></i></span>
+                               <p class="m-0">
+                                  <strong>Product/division</strong><br>
+                                  <%= review.product_title %>
+                               </p>
+                            </div>
+                           <% } else { %>
+                              <% if(review.review_title){ %>
+                              <div class="user-info-panel">
+                                 <span><i class="fa-solid fa-box"></i></span>
+                                 <p class="m-0">
+                                    <strong>Product/division</strong><br>
+                                    <%- review.review_title -%> 
+                                 </p>
+                              </div>
+                              <% } %>
+                           <% } %>
+                           <div class="user-review-text">
+                              <% review.Tags.forEach(tag => { %>
+                              <span class="user-select-tag"><%= tag.tag_name %></span>
+                              <% }); %>
+                              <% var review_content = review.review_content
+                                 const review_content_words = review_content.split(' ');
+                              %>
+                              <div class="review-description-wrap">
+                                 <% if(review_content_words.length <= 35){%>
+                                 <%- review_content -%>
+                                 <% }else{
+                                    const firstPart = review_content_words.slice(0, 35).join(' ');
+                                    const secondPart = review_content_words.slice(35).join(' ');
+                                 %>
+                                    <%- firstPart -%> ...
+                                 <div class="review-full-description">
+                                    <%- secondPart -%>
+                                 </div>
+                                 <a href="" class="read-review">View More</a>
+                                 <% }%>
+                              </div>
+                           </div>
+                           <div class="user-bio_rating">
+                              <div class="user-profile-info">
+                                 <div class="user-name-show position-relative">
+                                 <% if(review.user_privacy == '1'){ %>
+                                    <% if(review.profile_pic != null){ %>
+                                    <span><img src="/<%- review.profile_pic -%>" alt="<%- review.first_name+' '+review.last_name -%>" width="20px"></span>
+                                    <% }else{ %>
+                                    <span><img src="/assets/media/avatars/blank.png" alt="<%- review.first_name+' '+review.last_name -%>" width="20px"></span>
+                                    <% } %>   
+                                    <span><%- review.first_name+' '+review.last_name -%> </span>
+                                 <% }else{ %>
+                                    <span><img src="/front-end/images/blur-img.png" alt="img" width="20px"></span>
+                                    <span><img src="/front-end/images/blur-name.png" alt="img"></span>
+                                 <% } %>
+                                 </div>
+                                 <% const dateString = review.created_at; %>
+                                 <% const date = new Date(dateString); %>
+                                 <div class="user-review-date"><%= date.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) %></div>
+                              </div>
+                              <!-- <div class="user-rating">
+                                 <span>
+                                    <% allRatingTags.forEach( tag => { %>
+                                       <% if(tag.review_rating_value == review.rating){ %>
+                                          <img src="/<%= tag.rating_image %>" alt="img-gif-<%- review.rating -%>" style="display: inline-block;" width="35">
+                                       <% } %>
+                                    <% }) %>
+                                 </span>
+                                 <span><%= review.rating %>/5</span>
+                              </div> -->
+                           </div>
+                           <!-- <div class="review-like-dislike">
+                              <span><a href=""><i class="fa-solid fa-thumbs-up"></i> 10</a></span>
+                              <span><a href=""><i class="fa-solid fa-thumbs-down"></i> 8</a></span>
+                              </div> -->
+                        </div>
+                     </div>
+                     <% }) %>
+                  </div>
+               </div>
+               <% } %>
+
+               <div class="analytics_data analytics_data_row6">
+                  <div class="row align-items-center">
+                     <div class="col-md-6">
+                        <div class="admin_map">
+                           <div id="chartdiv"></div> 
+                        </div>
+                     </div>
+                     <div class="col-md-6">
+                        <div class="map_content">
+                           <div class="d-flex align-items-center justify-content-start mb-3">
+                              <h4 class=" mb-0">State Wise Review Distribution</h4><img style="margin-left: 5px;" src="/front-end/images/coming-soon.png" alt="image" />
+                           </div>
+                           <!-- <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam sed aliquam nulla, condimentum interdum lacus. Nullam erat diam, fermentum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam sed aliquam nulla, condimentum interdum lacus. Nullam erat diam, fermentum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam sed aliquam nulla, condimentum interdum lacus. Nullam erat diam, fermentum.</p>
+                           <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam sed aliquam nulla, condimentum interdum lacus. Nullam erat diam, fermentum.</p> -->
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </section>
+      <!-- ============== Section6 End =============== -->
+      
+      <%- include('common/footer') -%>
+         <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+         <script src="https://www.amcharts.com/lib/4/core.js"></script>
+         <script src="https://www.amcharts.com/lib/4/maps.js"></script>
+         <script src="https://www.amcharts.com/lib/4/geodata/india2019High.js"></script>
+         <script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>
+         <script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+         <script src="https://cdn.canvasjs.com/jquery.canvasjs.min.js"></script>
+         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+         <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+         <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+
+<script>
+   window.onload = function () {
+
+               var dataPoints =  [
+                        { y: <%= reviewReatingChartArray[0].y %>, name: "<%= allRatingTags[0].review_rating_name %>", color: "red" },
+                        { y: <%= reviewReatingChartArray[1].y %>, name: "<%= allRatingTags[1].review_rating_name %>", color: "#fc3003" },
+                        { y: <%= reviewReatingChartArray[2].y %>, name: "<%= allRatingTags[2].review_rating_name %>", color: "#fc5603" },
+                        { y: <%= reviewReatingChartArray[3].y %>, name: "<%= allRatingTags[3].review_rating_name %>", color: "#fc9003" },
+                        { y: <%= reviewReatingChartArray[4].y %>, name: "<%= allRatingTags[4].review_rating_name %>", color: "#fcb503" },
+                        { y: <%= reviewReatingChartArray[5].y %>, name: "<%= allRatingTags[5].review_rating_name %>", color: "#e3fc03" },
+                        { y: <%= reviewReatingChartArray[6].y %>, name: "<%= allRatingTags[6].review_rating_name %>", color: "#bafc03" },
+                        { y: <%= reviewReatingChartArray[7].y %>, name: "<%= allRatingTags[7].review_rating_name %>", color: "#a1fc03" },
+                        { y: <%= reviewReatingChartArray[8].y %>, name: "<%= allRatingTags[8].review_rating_name %>", color: "#80fc03" },
+                        { y: <%= reviewReatingChartArray[9].y %>, name: "<%= allRatingTags[9].review_rating_name %>", color: "#03fc2c" },
+                     ];
+
+               var filteredDataPoints = dataPoints.filter(function(dataPoint) {
+                  return dataPoint.y !== 0;
+               });
+
+               var chart = new CanvasJS.Chart("chartContainer", {
+                  exportEnabled: true,
+                  animationEnabled: true,
+                  legend :{ 
+                     verticalAlign: "center", 
+                     horizontalAlign: "right",
+                     fontSize:15,
+                     fontWeight:"normal",
+                  }, 
+                  data: [{
+                     type: "doughnut",
+                     innerRadius: 70,
+                     showInLegend: true,
+                     toolTipContent: "<b>{name}</b>: #percent%",
+                     indexLabel: "#percent%",
+                     indexLabelPlacement: "inside",
+                     indexLabelFontColor: "black",
+                     indexLabelFontSize: 13,
+                     indexLabelFontWeight: "bold",
+                     dataPoints: filteredDataPoints
+                  }]
+               });
+               chart.render();
+
+               /*========================================*/
+
+               var columnChart = new CanvasJS.Chart("columnChart", {
+                  animationEnabled: true,
+                  exportEnabled: true,
+                  theme: "light1", // "light1", "light2", "dark1", "dark2"
+                  title: {
+                     //text: "Simple Column Chart with Index Labels"
+                  },
+                  axisY: {
+                     includeZero: true
+                  },
+                  dataPointWidth: 25,
+                  //backgroundColor: "#F5DEB3",
+                  data: [{
+                     type: "column",
+                     //indexLabel: "{y}", //Shows y value on all Data Points
+                     indexLabelFontColor: "#5A5757",
+                     indexLabelFontSize: 16,
+                     indexLabelPlacement: "outside",
+                     dataPoints: [
+                        <% reviewReatingChartArray.forEach((item, index) => { %>
+                        { x: <%= item.x %>, y: <%= item.y %>, color: '#F8A401' },
+                        <% }) %>
+                     ]
+                  }]
+               });
+               columnChart.render();
+
+               /*===================================================*/
+               
+               var ageChart = new CanvasJS.Chart("ageChartContainer", {  
+                  legend :{ 
+                     verticalAlign: "center", 
+                     horizontalAlign: "right",
+                     fontSize:15,
+                     fontWeight:"normal",
+                  }, 
+                  data: [ 
+                  { 
+                     type: "pie", 
+                     showInLegend: true, 
+                     toolTipContent: "<b>Age:</b> {label} <br/> <b>Visited:</b> {y} %", 
+                     indexLabel: "{y} %", 
+                     dataPoints: [ 
+                        { label: "<18",  y: 30.3, color:'#F87701', legendText: "< 18"}, 
+                        { label: "18-24",    y: 19.1, color:'#F8A401', legendText: "18 - 24"  }, 
+                        { label: "25-34",   y: 4.0, color:'#F4DD35',  legendText: "25 - 34" }, 
+                        { label: "35-44",       y: 3.8, color:'#FFF6B2',  legendText: "35 - 44"}, 
+                        { label: ">45",   y: 3.2, color:'#000',  legendText: "> 45" }, 
+                     ] 
+                  } 
+                  ] 
+               });
+               ageChart.render();
+
+               /*===================================================*/
+
+               var chartByDevice = new CanvasJS.Chart("chartContainerByDevice", {
+                  animationEnabled: true,
+                  exportEnabled: false,
+                  data: [{
+                     type: "pyramid",
+                     indexLabelFontSize: 18,
+                     valueRepresents: "area",
+                     showInLegend: true,
+                     legendText: "{indexLabel}",
+                     toolTipContent: "<b>{indexLabel}:</b> {y}%",
+                     dataPoints: [
+                        { y: 60, color:"#000000", indexLabel: "Computer" },
+                        { y: 10, color:"#F8A401", indexLabel: "Tablet" },
+                        { y: 30, color:"#F87701", indexLabel: "Mobile" },
+                     ]
+                  }]
+               });
+               chartByDevice.render();
+
+               /*============================== map js ==========================*/
+
+               // Themes begin
+               am4core.useTheme(am4themes_animated);
+               // Themes end
+
+               // Create map instance
+               var chart = am4core.create("chartdiv", am4maps.MapChart);
+
+               // Set map definition
+               chart.geodata = am4geodata_india2019High;
+
+               // Create map polygon series
+               var polygonSeries = chart.series.push(new am4maps.MapPolygonSeries());
+
+               //Set min/max fill color for each area
+               polygonSeries.heatRules.push({
+               property: "fill",
+               target: polygonSeries.mapPolygons.template,
+               min: chart.colors.getIndex(0).brighten(1),  
+               min: chart.colors.getIndex(1).brighten(0.3),
+               // logarithmic: true
+               // "min": am4core.color("#ffd7b1"), 
+               });
+
+               // Make map load polygon data (state shapes and names) from GeoJSON
+               polygonSeries.useGeodata = true;
+
+               // Set heatmap values for each state
+               polygonSeries.data = [
+               {
+                  id: "IN-JK",
+                  value: 10,
+               },
+               {
+                  id: "IN-MH",
+                  value: 12
+               },
+               {
+                  id: "IN-UP",
+                  value: 10
+               },
+               {
+                  id: "US-AR",
+                  value: 13
+               },
+               {
+                  id: "IN-RJ",
+                  value: 30
+               },
+               {
+                  id: "IN-AP",
+                  value: 40
+               },
+               {
+                  id: "IN-MP",
+                  value: 90
+               },
+               {
+                  id: "IN-TN",
+                  value: 40
+               },
+               {
+                  id: "IN-JH",
+                  value: 3
+               },
+               {
+                  id: "IN-WB",
+                  value: 0
+               },
+               {
+                  id: "IN-GJ",
+                  value: 0
+               },
+               {
+                  id: "IN-BR",
+                  value: 0
+               },
+               {
+                  id: "IN-TG",
+                  value: 0
+               },
+               {
+                  id: "IN-GA",
+                  value: 0
+               },
+               {
+                  id: "IN-DN",
+                  value: 0
+               },
+               {
+                  id: "IN-DL",
+                  value: 0
+               },
+               {
+                  id: "IN-DD",
+                  value: 0
+               },
+               {
+                  id: "IN-CH",
+                  value: 0
+               },
+               {
+                  id: "IN-CT",
+                  value: 0
+               },
+               {
+                  id: "IN-AS",
+                  value: 0
+               },
+               {
+                  id: "IN-AR",
+                  value: 0
+               },
+               {
+                  id: "IN-AN",
+                  value: 0
+               },
+               {
+                  id: "IN-KA",
+                  value: 0
+               },
+               {
+                  id: "IN-KL",
+                  value: 0
+               },
+               {
+                  id: "IN-OR",
+                  value: 0
+               },
+               {
+                  id: "IN-SK",
+                  value: 0
+               },
+               {
+                  id: "IN-HP",
+                  value:15
+               },
+               {
+                  id: "IN-PB",
+                  value: 14
+               },
+               {
+                  id: "IN-HR",
+                  value: 13
+               },
+               {
+                  id: "IN-UT",
+                  value: 12
+               },
+               {
+                  id: "IN-LK",
+                  value: 30
+               },
+               {
+                  id: "IN-MN",
+                  value: 5
+               },
+               {
+                  id: "IN-TR",
+                  value: 4
+               },
+               {
+                  id: "IN-MZ",
+                  value: 3
+               },
+               {
+                  id: "IN-NL",
+                  value: 2
+               },
+               {
+                  id: "IN-ML",
+                  value: 1
+               }
+               ];
+
+               // Configure series tooltip
+               var polygonTemplate = polygonSeries.mapPolygons.template;
+               polygonTemplate.tooltipText = "{name}: {value}";
+               polygonTemplate.nonScalingStroke = true;
+               polygonTemplate.strokeWidth = 0.5;
+
+               // Create hover state and set alternative fill color
+               var hs = polygonTemplate.states.create("hover");
+               hs.properties.fill = am4core.color("#FCCB06");
+
+// ============================== Compare chart =============================== 
+
+    var compareChart = new CanvasJS.Chart("comparechrat", {
+      animationEnabled: true,
+      exportEnabled: true,
+      title:{
+        text: ""
+      },  
+      axisY: {
+        title: "No of reviews",
+        titleFontColor: "#4F81BC",
+        lineColor: "#4F81BC",
+        labelFontColor: "#4F81BC",
+        tickColor: "#4F81BC"
+      },
+      axisY2: {
+        title: "Ratings",
+        titleFontColor: "#C0504E",
+        lineColor: "#C0504E",
+        labelFontColor: "#C0504E",
+        tickColor: "#C0504E"
+      },  
+      toolTip: {
+        shared: true
+      },
+      legend: {
+        cursor:"pointer",
+        itemclick: toggleDataSeries
+      },
+      data: [
+        {
+          type: "column",
+          color: "#FCCB06",
+          name: "Total No of Reviews",
+          legendText: "No of Reviews",
+          showInLegend: true, 
+          dataPoints:[
+            { label: "<%= company.company_name %>" , y: <%= CompanyReviewsBetween.total_review_count %>,  indexLabel: "<%= CompanyReviewsBetween.total_review_count %>"  } 
+          ]
+        },
+        {
+          type: "column", 
+          color: "#161616",
+          name: " Filtered Reviews",
+          legendText: "Filtered Reviews",
+          showInLegend: true,
+          dataPoints:[
+            {
+               label: "<%= company.company_name %>",
+               y: <%= CompanyReviewsBetween.filter_review_count %>,  indexLabel: "<%= CompanyReviewsBetween.filter_review_count %>"
+            }
+          ]
+        },
+        {
+          type: "line",
+          color: "#34db21",
+          name: "Overall Avg Rating",
+          axisYType: "secondary",
+          showInLegend: true,
+          dataPoints: [
+            { y: <%= CompanyReviewsBetween.total_review_average ? CompanyReviewsBetween.total_review_average.toFixed(1) : 0 %>,  indexLabel: "<%= CompanyReviewsBetween.total_review_average ? CompanyReviewsBetween.total_review_average.toFixed(1) : 0 %>" },
+          ]
+        },
+        {
+          type: "line",
+          color: "red",
+          name: "Filtered Avg Rating",
+          axisYType: "secondary",
+          showInLegend: true,
+          dataPoints: [
+            {
+               y: <%= CompanyReviewsBetween.filter_review_average ? CompanyReviewsBetween.filter_review_average.toFixed(1) : 0 %>,  indexLabel: "<%= CompanyReviewsBetween.filter_review_average ? CompanyReviewsBetween.filter_review_average.toFixed(1) : 0 %>"
+            }
+          ]
+        },
+      ]
+    });
+    compareChart.render();
+
+    $('#filterForm').submit(function (event) {
+            event.preventDefault(); // Prevent the form from submitting traditionally
+
+            // Get form data
+            var formData = $(this).serialize();
+
+            // Make an AJAX request to fetch updated data
+            $.ajax({
+                type: 'POST',
+                url: '/auth/compare-chart-filter', // Replace with the actual server endpoint
+                data: formData,
+                success: function (data) {
+                    // Update the chart with the new data
+                    updateChartWithData(
+                        data.data.total_review_count,
+                        data.data.filter_review_count,
+                        data.data.total_review_average,
+                        data.data.filter_review_average
+                     );
+                },
+                error: function (error) {
+                    console.error('Error fetching updated data:', error);
+                }
+            });
+      });
+
+      function updateChartWithData(totalReviewCount, filterReviewCount, totalReviewAverage, filterReviewAverage) {
+         compareChart.options.data.forEach(function (series) {
+            if (series.name === "Total No of Reviews") {
+                  series.dataPoints[0].y = totalReviewCount;
+                  series.dataPoints[0].indexLabel= `${totalReviewCount}`;
+            } else if (series.name === " Filtered Reviews") {
+                  series.dataPoints[0].y = filterReviewCount;
+                  series.dataPoints[0].indexLabel= `${filterReviewCount}`;
+            } else if (series.name === "Overall Avg Rating") {
+                  series.dataPoints[0].y = totalReviewAverage ? parseFloat(totalReviewAverage.toFixed(1)) : 0;
+                  series.dataPoints[0].indexLabel= `${totalReviewAverage ? parseFloat(totalReviewAverage.toFixed(1)) : 0}`;
+            } else if (series.name === "Filtered Avg Rating") {
+                  series.dataPoints[0].y = filterReviewAverage ? parseFloat(filterReviewAverage.toFixed(1)) : 0;
+                  series.dataPoints[0].indexLabel= `${filterReviewAverage ? parseFloat(filterReviewAverage.toFixed(1)) : 0}`;
+            }
+         });
+
+         compareChart.render();
+      }
+
+    function toggleDataSeries(e) {
+      if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+        e.dataSeries.visible = false;
+      }
+      else {
+        e.dataSeries.visible = true;
+      }
+      compareChart.render();
+    }
+
+// ============================== Compare chart end =============================== 
+//=============================== Historical chart start =============================
+
+   var historicalchrat = {
+        exportEnabled: true,
+        animationEnabled: true,
+        toolTip: {
+          shared: true
+        },
+        legend: {
+          cursor: "pointer",
+          itemclick: toggleDataSeries
+        },
+        data: [{
+          type: "spline",
+          name: "<%= company.company_name %>",
+          showInLegend: true,
+          xValueFormatString: "DD MMM YY",
+          yValueFormatString: "#,#0.0",
+          dataPoints: [
+          <% CompanyHistoricalReviewData.forEach((item, index) => { %>
+                        
+                        { x: new Date('<%= item.x %>'), y: <%= item.y %>,  indexLabel: "<%= item.y %>"  },
+                        <% }) %>
+         ],
+        }]
+
+      };
+      $("#historicalchrat").CanvasJSChart(historicalchrat);
+
+      function toggleDataSeries(e) {
+        if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+          e.dataSeries.visible = false;
+        } else {
+          e.dataSeries.visible = true;
+        }
+        e.chart.render();
+      }
+
+      $('#historiaclGraphForm').submit(function (event) {
+         event.preventDefault(); // Prevent the form from submitting traditionally
+
+         // Get form data
+         var formData = $(this).serialize();
+         console.log(formData)
+         //return false;
+         // Make an AJAX request to fetch updated data
+         $.ajax({
+               type: 'POST',
+               url: '/auth/historical-chart-filter', // Replace with the actual server endpoint
+               data: formData,
+               success: function (data) {
+                  console.log('aaaaaaaa',data.data)
+                  let xValueFormatString;
+                  if (data.filter === 'weekly') {
+                     console.log('weekly==',data.filter);
+                     xValueFormatString = "#,#0"; // Week number and year
+                     const weeklyData = data.data.map(entry => ({
+                        x: entry.date_group,
+                        y: entry.average_rating,  
+                        indexLabel: `${entry.average_rating}`
+                     }));
+                     historicalchrat.data[0].dataPoints = weeklyData;
+                     historicalchrat.data[0].xValueFormatString = xValueFormatString;
+                     if (!historicalchrat.axisX) {
+                        historicalchrat.axisX = {};
+                     }
+                     historicalchrat.axisX.valueFormatString = xValueFormatString;
+
+                  } else if (data.filter === 'monthly') {
+                     console.log(data.filter);
+                     // axisX:{  
+                     //    valueFormatString: "MMM"
+                     // }
+                     xValueFormatString = "MMM "; 
+                     let formattedData = data.data.map(entry => ({
+                        x:new Date(2023,entry.date_group) ,
+                        y: entry.average_rating,  
+                        indexLabel: `${entry.average_rating}`
+                     }));
+                     //historicalchrat.options.axisX.valueFormatString = "MMM";
+                     historicalchrat.data[0].dataPoints = formattedData;
+                     historicalchrat.data[0].xValueFormatString = xValueFormatString;
+                     if (!historicalchrat.axisX) {
+                        historicalchrat.axisX = {};
+                     }
+                     historicalchrat.axisX.valueFormatString = xValueFormatString;
+
+                  } else if (data.filter === 'yearly') {
+
+                     xValueFormatString = "YY"; // Month abbreviation and year
+                     let yearlyData = data.data.map(entry => ({
+                        x:new Date(2023,entry.date_group) ,
+                        y: entry.average_rating,  
+                        indexLabel: `${entry.average_rating}`
+                     }));
+                     historicalchrat.data[0].dataPoints = yearlyData;
+                     historicalchrat.data[0].xValueFormatString = xValueFormatString;
+                     if (!historicalchrat.axisX) {
+                        historicalchrat.axisX = {};
+                     }
+                     historicalchrat.axisX.valueFormatString = xValueFormatString;
+
+                  } else {
+                     console.log(data.filter);
+                     xValueFormatString = "DD MMM YYYY"; // Default format for daily
+                     const dailyData= data.data.map(entry => ({
+                        x: new Date(entry.created_at),
+                        y: entry.average_rating,  
+                        indexLabel: `${entry.average_rating}`
+                     }));
+                     console.log(dailyData);
+                     historicalchrat.data[0].dataPoints = dailyData;
+                     historicalchrat.data[0].xValueFormatString = xValueFormatString;
+                     if (!historicalchrat.axisX) {
+                        historicalchrat.axisX = {};
+                     }
+                     historicalchrat.axisX.valueFormatString = xValueFormatString;
+
+                  }
+                  //historicalchrat.options.axisX.valueFormatString = xValueFormatString;
+                  $("#historicalchrat").CanvasJSChart().render();
+               },
+               error: function (error) {
+                  console.error('Error fetching updated data:', error);
+               }
+         });
+
+      });
+
+      
+//=============================== Historical chart end =============================
+      
+      //=============================== Product chart Start =============================
+         
+      var productGraph = {
+        exportEnabled: true,
+        animationEnabled: true,
+        legend: {
+          horizontalAlign: "right",
+          verticalAlign: "center"
+        },
+        data: [{
+          type: "pie",
+          showInLegend: true,
+          toolTipContent: "<b>{name}</b>: {y} (#percent%)",
+          indexLabel: "{name}",
+          legendText: "{name} (#percent%)",
+          indexLabelPlacement: "inside",
+          dataPoints: [
+          <% productGraphArray.forEach((item, index) => { %>
+                        
+            { y: <%= item.count %>, name: "<%= item.name %>" },
+                        <% }) %>
+          ]
+        }]
+      };
+
+      
+      function generatePdf() {
+         // Your existing chart configuration
+         var chart = new CanvasJS.Chart("productGraph", productGraph);
+
+         // chart.renderCompleted = function () {
+         //    alert('aaaaaaaaaa')
+            // Generate PDF using html2pdf.js
+            html2pdf(chart.container, {
+               margin: 10,
+               filename: 'product_chart.pdf',
+               image: { type: 'jpeg', quality: 0.98 },
+               html2canvas: { scale: 2 },
+               jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            }).then(function (pdf) {
+               // Save the PDF using FileSaver.js
+               pdf.output('blob').then(function (blob) {
+                     saveAs(blob, 'product_chart.pdf');
+               });
+            });
+         //}
+         // Render the chart
+         chart.render();
+      }
+
+      $("#productGraph").CanvasJSChart(productGraph);
+
+      // Handle button click
+      // $("#generatePdfButton").on("click", function () {
+      //    generatePdf();
+      // });
+      // Export button click event
+   //  $("#exportButton").on("click", function () {
+   //      // Trigger chart export
+   //      $("#productGraph").CanvasJSChart().exportChart({ format: "pdf" }); // You can change the format to "png" or "jpeg"
+   //  });
+      //=============================== Product chart end =============================
+      
+      //=============================== Compare Performance chart Start =============================
+      var newChart = new CanvasJS.Chart("performanceChart", {
+        exportEnabled: true, // Enable export
+        animationEnabled: true,
+        axisX: {
+          title: ""
+        },
+        axisY: {
+          title: "",
+        },
+        axisY2: {
+          title: "",
+          lineThickness: 0,
+          tickLength: 5, // Adjust the length of tick marks as needed
+          interval: 1,  // Adjust the interval of tick marks as needed
+          valueFormatString: "#0.0", // Adjust formatting as needed
+        },
+        toolTip: {
+          shared: true, // Display values for both series in a single tooltip
+        },
+        data: [{
+          type: "column",
+          name: " Overall Rating",
+          showInLegend: true,
+          dataPoints: [
+            { label: "<%= company.company_name %>", y: <%= CompanyReviewsBetween.total_review_average ? CompanyReviewsBetween.total_review_average.toFixed(1) : 0 %>,  indexLabel: "<%= CompanyReviewsBetween.total_review_average ? CompanyReviewsBetween.total_review_average.toFixed(1) : 0 %>"  },
+            // { label: "Point 2", y: 2 },
+          ]
+        },
+        {
+          type: "line",
+          name: "Recent Rating",
+          axisYType: "secondary",
+          showInLegend: true,
+          dataPoints: [
+            { label: "<%= company.company_name %>", y: <%= CompanyReviewsBetween.filter_review_average ? CompanyReviewsBetween.filter_review_average.toFixed(1) : 0 %>,  indexLabel: "<%= CompanyReviewsBetween.filter_review_average ? CompanyReviewsBetween.filter_review_average.toFixed(1) : 0 %>" },
+            // { label: "Point 2", y: 2 },
+          ]
+        }]
+      });
+
+      newChart.render();
+
+         $('#CompetitorCompanyForm').submit(function (event) {
+            event.preventDefault(); // Prevent the form from submitting traditionally
+
+            // Get form data
+            var formData = $(this).serialize();
+            console.log(formData)
+            //return false;
+            // Make an AJAX request to fetch updated data
+            $.ajax({
+               type: 'POST',
+               url: '/auth/competitorCompany-chart',
+               data: formData,
+               success: function (data) {
+                  console.log(data);
+
+                  // Assuming data is an object with company_name and data properties
+                  const companyData = data.data;
+
+                  // Assuming newChart is already defined
+                  if (newChart) {
+                        // Separate own company data
+                        const ownCompany = companyData[0];
+                        const competitors = companyData.slice(1);
+
+                        // Update column data for competitors
+                        const columnDataPoints = competitors.map((item, index) => ({
+                           label: `Competitor ${index + 1}`,
+                           y: item.total_review_average ? parseInt(item.total_review_average.toFixed(1))  : 0,  indexLabel: `${item.total_review_average ? parseInt(item.total_review_average.toFixed(1))  : 0}`
+                        }));
+                        newChart.options.data[0].dataPoints = [
+                           { label: data.company_name, y: ownCompany.total_review_average ? parseInt(ownCompany.total_review_average.toFixed(1))  : 0,  indexLabel: `${ownCompany.total_review_average ? parseInt(ownCompany.total_review_average.toFixed(1))  : 0}` },
+                           ...columnDataPoints
+                        ];
+
+                        //console.log(columnDataPoints,'aaaaaaa');
+                        // Update line data for competitors
+                        const lineDataPoints = competitors.map((item, index) => ({
+                           label: `Competitor ${index + 1}`,
+                           y: item.filter_review_average ? parseInt(item.filter_review_average.toFixed(1))  : 0,  indexLabel: `${item.filter_review_average ? parseInt(item.filter_review_average.toFixed(1))  : 0}`
+                           //y:12
+                        }));
+                        newChart.options.data[1].dataPoints = [
+                           { 
+                              label: data.company_name, 
+                              y: ownCompany.filter_review_average ? parseInt(ownCompany.filter_review_average.toFixed(1))  : 0 ,  indexLabel: `${ownCompany.filter_review_average ? parseInt(ownCompany.filter_review_average.toFixed(1))  : 0}`
+                           },
+                           ...lineDataPoints
+                        ];
+
+                        // Render the updated chart
+                        newChart.render();
+                  }
+               },
+               error: function (error) {
+                  console.error('Error fetching updated data:', error);
+               }
+            });
+
+
+         });
+
+      //=============================== Compare Performance chart ens =============================
+
+      $(".js-example-basic-multiple").select2({
+         placeholder: "Select Competitor",
+      });
+   }
+</script>

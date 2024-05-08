@@ -1,0 +1,374 @@
+<%- include('common/header') -%>
+<link href="/front-end/css/profile-dashboard-style.css" rel="stylesheet" type="text/css">
+<link href="/front-end/css/company-profile-dashboard.css" rel="stylesheet" type="text/css">
+<%- include('common/header-banner') -%>
+
+<!-- ============== Section1 start =============== -->
+<section class="main-content my-profile-content">
+    <div class="container">
+      <div class="my-profile-wrapper">
+         <div class="row">
+            <%- include('common/profile-sidebar') -%>
+            <div class="col-md-8">
+               <div class="company-user-complain-wrapper p-0" style="box-shadow: none;">
+                  <div class="c-u-top-head">
+                      <div class="c-u-top-head-part">
+                         <strong>Token ID:</strong> <br><%= ComplaintsByComplaintId.ticket_id %>
+                      </div>
+                      <div class="c-u-top-head-part">
+                         <strong>Date:</strong> <br>
+                         <% const createdateString = ComplaintsByComplaintId.created_at; %>
+                         <% const createdate = new Date(createdateString); %>
+                         <%= createdate.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) %>
+                      </div>
+                      <div class="c-u-top-head-part">
+                         <strong>Status:</strong> <br>
+                           <% if(ComplaintsByComplaintId.status == '0') { %>
+                              <span class="text-danger"><strong>Reopen</strong></span>
+                           <% } else if(ComplaintsByComplaintId.status == '1') { %>
+                              <span class="text-success"><strong>Resolved</strong></span>
+                           <% } else { %>
+                              <span class="text-warning"><strong>Ongoing</strong></span>
+                           <% } %>
+                      </div>
+                   </div>
+                   <div class="all-complain-reg-info">
+                      <div class="row">
+                         <div class="col-lg-4">
+                            <div class="c-u-layer-part">
+                               <strong>Company Name:</strong> <%= ComplaintsByComplaintId.company_name %>
+                            </div>
+                         </div>
+                         <div class="col-lg-4">
+                            <div class="c-u-layer-part">
+                               <strong>Category:</strong> <%= ComplaintsByComplaintId.category_name %>
+                            </div>
+                         </div>
+                         <div class="col-lg-4">
+                            <div class="c-u-layer-part">
+                               <strong>Sub Category:</strong> <%= ComplaintsByComplaintId.sub_category_name %>
+                            </div>
+                         </div>
+                         <div class="col-lg-4">
+                            <div class="c-u-layer-part">
+                               <strong>Model Number:</strong> <%= ComplaintsByComplaintId.model_desc %>
+                            </div>
+                         </div>
+                         <div class="col-lg-4">
+                            <div class="c-u-layer-part">
+                               <strong>Date of Purchase:</strong> 
+                               <% const dateString = ComplaintsByComplaintId.purchase_date; %>
+                              <% const date = new Date(dateString); %>
+                              <%= date.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) %>
+                            </div>
+                         </div>
+                         <div class="col-md-4">
+                            <div class="c-u-layer-part">
+                               <strong>Place of Order:</strong> <%= ComplaintsByComplaintId.purchase_place %>
+                            </div>
+                         </div>
+                         <div class="col-lg-12">
+                            <div class="c-u-layer-part">
+                               <strong>Tags:</strong> <%= ComplaintsByComplaintId.tags ? JSON.parse(ComplaintsByComplaintId.tags) : ''  %>
+                            </div>
+                         </div>
+                         <div class="col-lg-12">
+                            <div class="c-u-layer-part">
+                               <strong>Message:</strong> <%= ComplaintsByComplaintId.message %>
+                            </div>
+                         </div>
+                      </div>
+                   </div>
+                   <% if(ComplaintsByComplaintId && ComplaintsByComplaintId.user_complaint_rating) { %>
+                     <div class="custom-text-label">
+                        My Rating
+                     </div>
+                     <div class="user-rating">
+                        <% if(ComplaintsByComplaintId.user_complaint_rating == '1'){ %>
+                           <span><img src="/1691876041063-2.Low.gif" alt="" style="display: inline-block;" width="35"></span>
+                           <span><%= ComplaintsByComplaintId.user_complaint_rating %>/5</span>
+                        <% } else if (ComplaintsByComplaintId.user_complaint_rating == '2') { %>
+                           <span><img src="/1691876024849-3.NotBad.gif" alt="" style="display: inline-block;" width="35"></span>
+                           <span><%= ComplaintsByComplaintId.user_complaint_rating %>/5</span>
+                        <% } else if (ComplaintsByComplaintId.user_complaint_rating == '3') { %>
+                           <span><img src="/1691875972021-6.Good.gif" alt="" style="display: inline-block;" width="35"></span>
+                           <span><%= ComplaintsByComplaintId.user_complaint_rating %>/5</span>
+                        <% } else if (ComplaintsByComplaintId.user_complaint_rating == '4') { %>
+                           <span><img src="/1691875935385-8.Awesome.gif" alt="" style="display: inline-block;" width="35"></span>
+                           <span><%= ComplaintsByComplaintId.user_complaint_rating %>/5</span>
+                        <% } else { %>
+                              <span><img src="/1691875890277-10.High.gif" alt="" style="display: inline-block;" width="35"></span>
+                              <span><%= ComplaintsByComplaintId.user_complaint_rating %>/5</span>
+                        <% } %>
+                     </div>
+                  <% } %>
+
+                   <% if(ComplaintsByComplaintId.queryResponseData.length > 0 ) { %>
+                     <% ComplaintsByComplaintId.queryResponseData.forEach((response,index)=>{ %>
+                        <% if(response.response == '') { %>
+                           <div class="custom-text-label">
+                              <% if(response.resolve_status == '1'){ %>
+                                 <%= ComplaintsByComplaintId.company_name %> (s) Resolve Response 
+                                 <% } else { %>
+                                    <%= ComplaintsByComplaintId.company_name %> (s) Query
+                                    <% } %>
+                                 <% const responsedateString = response.created_at; %>
+                                 <% const responsedate = new Date(responsedateString); %>
+                                 <strong class="badge bg-warning"><%= responsedate.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) %></strong>
+                           </div>
+                           <div class="custom-text-box" style="background-color: #FFF5CA;">
+                              <%= response.query %>
+                           </div>
+                           
+                           <% } else { %>
+                              <% if(response.resolve_status == '0'){ %>
+                                    <div class="custom-text-label">
+                                       Your Reopen Response 
+                                       <% const responsedateString = response.created_at; %>
+                                       <% const responsedate = new Date(responsedateString); %>
+                                       <strong class="badge bg-warning"><%= responsedate.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) %></strong>
+                                    </div>
+                                    <div class="custom-text-box" style="background-color: #FFF5CA;">
+                                       <%= response.response %>
+                                    </div>
+                                 <% } else { %>
+                                 <div class="custom-text-label">
+                                    Your Response 
+                                    <% const responsedateString = response.created_at; %>
+                                    <% const responsedate = new Date(responsedateString); %>
+                                    <strong class="badge bg-warning"><%= responsedate.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) %></strong>
+                                 </div>
+                                 <div class="custom-text-box" style="background-color: #FFF5CA;">
+                                    <%= response.response %>
+                                 </div>
+                                 <% } %>
+                              <% } %>
+                     <% }) %>
+                     
+                  <% } %>
+                     
+                     <% if(ComplaintsByComplaintId.queryResponseData.length > 0 && ComplaintsByComplaintId.status != '1' ) { %>
+                     <div class="custom-text-label">
+                        Your Response
+                       </div>
+                     <div class="custom-text-box">
+                        <form action="" id="complaint_response_form">
+                            <textarea class="form-control" name="message" placeholder="Type Here..." required></textarea>
+                            <input type="hidden" name="user_id"  value="<%= currentUserData.user_id %>" />
+                            <input type="hidden" name="company_id" value="<%= ComplaintsByComplaintId.company_id %>" />
+                            <input type="hidden" name="company_slug" value="<%= ComplaintsByComplaintId.slug %>" />
+                            <input type="hidden" name="complaint_id" value="<%= ComplaintsByComplaintId.id %>">
+                            <input type="hidden"  name="complaint_status" value="2">
+                            <input type="hidden" id="complaint-query-level" name="complaint_level" value="<%= ComplaintsByComplaintId.level_id %>">
+                            <button type="submit" class="btn-default btn-warning mt-4 submit_btn" id="">Submit</button>
+                        </form>
+                        <div class="register-now frm-loading" style=" display: none; ">
+                           <span class="indicator-progress">Please wait...
+                              <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                           </span>
+                        </div>
+                        <div
+                           style=" width: 100%; text-align: center; display: block; border: 2px solid #fccb06; padding: 6px; margin-top: 20px; border-radius: 5px;  display: none;"
+                           class="response-message"></div>
+                    </div>
+                    <% } %>
+                     <!-- <a href="#" class="btn-default btn-warning mt-4">Reopen your Complain</a> -->
+                     <% if(ComplaintsByComplaintId.status == '1'){ %>
+                     <a href="#" class="btn-default btn-warning respond-link" data-complaint-id="<%= ComplaintsByComplaintId.id %>" data-customer-id="<%= ComplaintsByComplaintId.user_id %>" data-bs-toggle="modal" data-bs-target="#giveratingmodal">Give your rating</a>
+                     <% } %>
+                 </div>
+            </div>
+         </div>
+      </div>
+       
+    </div>
+</section>
+
+<!-- The Modal -->
+<div class="modal fade" id="giveratingmodal">
+   <div class="modal-dialog">
+     <div class="modal-content">
+ 
+       <!-- Modal Header -->
+       <div class="modal-header border-0">
+         <button type="button" class="btn-close" data-bs-dismiss="modal"><i class="fa-solid fa-circle-xmark"></i></button>
+       </div>
+ 
+       <!-- Modal body -->
+       <div class="modal-body">
+         <form id="rating_form">
+            <div class="survey-wrapper mt-0">
+               <div class="survey-body">
+                  <div class="survey-rating">
+                     <div class="survey-rating-part">
+                        Disappointing
+                     </div>
+                     <div class="survey-rating-part">
+                        <div class="rating_each_option form-check position-relative custom-check">
+                           <span>1</span>
+                           <input class="form-check-input" type="radio" name="rating" id="inlineRadio1" value="1" checked>
+                           <label class="form-check-label" for="inlineRadio1"><img src="/1691876041063-2.Low.gif" alt="gif"></label>
+                        </div>
+                        <div class="rating_each_option form-check position-relative custom-check">
+                           <span>2</span>
+                           <input class="form-check-input" type="radio" name="rating" id="inlineRadio2" value="2">
+                           <label class="form-check-label" for="inlineRadio2"><img src="/1691876024849-3.NotBad.gif" alt="gif"></label>
+                        </div>
+                        <div class="rating_each_option form-check position-relative custom-check">
+                           <span>3</span>
+                           <input class="form-check-input" type="radio" name="rating" id="inlineRadio3" value="3">
+                           <label class="form-check-label" for="inlineRadio3"><img src="/1691875972021-6.Good.gif" alt="gif"></label>
+                        </div>
+                        <div class="rating_each_option form-check position-relative custom-check">
+                           <span>4</span>
+                           <input class="form-check-input" type="radio" name="rating" id="inlineRadio4" value="4">
+                           <label class="form-check-label" for="inlineRadio4"><img src="/1691875935385-8.Awesome.gif" alt="gif"></label>
+                        </div>
+                        <div class="rating_each_option form-check position-relative custom-check">
+                           <span>5</span>
+                           <input class="form-check-input" type="radio" name="rating" id="inlineRadio5" value="5">
+                           <label class="form-check-label" for="inlineRadio5"><img src="/1691875890277-10.High.gif" alt="gif"></label>
+                        </div>
+                        <!-- <ul>
+                           <li><a href="#"><img src="/1691875890277-10.High.gif" alt="gif"></a></li>
+                           <li class="active"><a href="#"><img src="/1691875890277-10.High.gif" alt="gif"></a></li>
+                           <li><a href="#"><img src="/1691875890277-10.High.gif" alt="gif"></a></li>
+                           <li><a href="#"><img src="/1691875890277-10.High.gif" alt="gif"></a></li>
+                           <li><a href="#"><img src="/1691875890277-10.High.gif" alt="gif"></a></li>
+                        </ul> -->
+                     </div>
+                     <div class="survey-rating-part">
+                        Excellent
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <input type="hidden" name="user_id" id="customer-id-query" value="" />
+            <input type="hidden" id="complaint-id-input" name="complaint_id" value="">
+            <input type="hidden" name="company_slug" value="<%= ComplaintsByComplaintId.slug %>" />
+            <input type="submit" class="btn-default btn-warning mt-3" value="Submit"> 
+         </form>
+         <div class="register-now frm-loading" style=" display: none; ">
+            <span class="indicator-progress">Please wait...
+               <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+            </span>
+         </div>
+         <div
+            style=" width: 100%; text-align: center; display: block; border: 2px solid #fccb06; padding: 6px; margin-top: 20px; border-radius: 5px;  display: none;"
+            class="response-message"></div>
+       </div>
+     </div>
+   </div>
+ </div>
+<!-- ============== Section1 end =============== -->
+
+
+<%- include('common/footer') -%>
+
+<script>
+   $(document).ready(function () {
+      $('form#complaint_response_form').submit(function (e) {
+         e.preventDefault();
+         $('.response-message').hide();
+         $('.response-message').text('');
+         $('.submit_btn').prop('disabled', true);
+         $('.frm-loading').show();
+         //alert('aaaaaa')
+         const transformedResponse = {};
+         const formData = $(this).serializeArray();
+         $(formData).each(function (index, field) {
+            transformedResponse[field.name] = field.value;
+         });
+         console.log(transformedResponse);
+         //return false;
+         $.ajax({
+            url: '/auth/user_complaint_response', // URL for your API endpoint
+            method: 'POST',
+            data: JSON.stringify(transformedResponse),
+            //data: formData,
+            processData: false,
+            //contentType: false,
+            contentType: 'application/json',
+            success: function (data) {
+               
+               $('#complaint_response_form')[0].reset();
+               if (data.status == 'ok') {
+                  $('.response-message').text(data.message);
+                  $('.response-message').show();
+                  $('.submit_btn').prop('disabled', false);
+                  $('.frm-loading').hide();
+                  setTimeout(function () {
+                     window.location.href = "/my-complaints";
+                  }, 2000);
+               } else {
+                  $('.response-message').text(data.message);
+                  $('.response-message').show();
+                  $('.submit_btn').prop('disabled', false);
+                  $('.frm-loading').hide();
+                  console.log('Something went wrong');
+               }
+            },
+            error: function (xhr, status, error) {
+               // Handle any errors that occur during the request
+               console.log(error);
+            }
+         });
+
+      });
+
+      $('.respond-link').on('click', function (e) {
+            e.preventDefault();
+            const complaintId = $(this).data('complaint-id');
+            const customerId = $(this).data('customer-id');
+            $('#complaint-id-input').val(complaintId);
+            $('#customer-id-query').val(customerId);
+         });
+
+         $('form#rating_form').submit(function (e) {
+            e.preventDefault();
+            $('.response-message').hide();
+            $('.response-message').text('');
+            $('.submit_btn').prop('disabled', true);
+            $('.frm-loading').show();
+            //alert('aaaaaa')
+            const transformedResponse = {};
+            const formData = $(this).serializeArray();
+            $(formData).each(function (index, field) {
+               transformedResponse[field.name] = field.value;
+            });
+            //console.log(transformedResponse);
+            //return false;
+            $.ajax({
+               url: '/auth/user-complaint-rating', // URL for your API endpoint
+               method: 'POST',
+               data: JSON.stringify(transformedResponse),
+               //data: formData,
+               processData: false,
+               //contentType: false,
+               contentType: 'application/json',
+               success: function (data) {
+                  if (data.status == 'ok') {
+                     $('.response-message').text(data.message);
+                     $('.response-message').show();
+                     $('.submit_btn').prop('disabled', false);
+                     $('.frm-loading').hide();
+                     setTimeout(function () {
+                        window.location.href = "/my-complaints";
+                     }, 2000);
+                  } else {
+                     $('.response-message').text(data.message);
+                     $('.response-message').show();
+                     $('.submit_btn').prop('disabled', false);
+                     $('.frm-loading').hide();
+                     console.log('Something went wrong');
+                  }
+               },
+               error: function (xhr, status, error) {
+                  // Handle any errors that occur during the request
+                  console.log(error);
+               }
+            });
+
+         });
+   })
+</script>

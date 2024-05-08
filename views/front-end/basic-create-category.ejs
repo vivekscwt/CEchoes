@@ -1,0 +1,287 @@
+<%- include('common/header') -%>
+<link href="/front-end/css/company-profile-dashboard.css" rel="stylesheet" type="text/css">
+<link href="/front-end/css/business-profile-manage-style.css" rel="stylesheet" type="text/css">
+<%- include('common/header-banner') -%>
+
+
+<section class="main-content basic-complain-content">
+    <div class="container">
+        <div class="company_profile_management">
+         <%- include('common/basic-company-sidebar') -%>
+            <div class="create-category-wrapper">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="sub-category-list">
+                            <h4>YOUR CATEGORIES</h4>
+                            <% if(CompanyCategories.length > 0 ) {  %>
+                                <% CompanyCategories.forEach((category)=>{ %>
+                                    <% if(category.parent_id == '0'){ %>
+                                        <ul class="ps-0">
+                                            <li><i class="fa-solid fa-hand-point-right"></i><%= category.category_name %>
+                                                <span><a class="edit_cat" data-cat-id="<%= category.id %>" data-cat-name="<%= category.category_name %>" data-parent-id="<%= category.parent_id %>" href="#"><i class="fa-solid fa-pen"></i></a> <a class="delete_cat" href="#" data-bs-toggle="modal" data-bs-target="#surealertmodal" data-cat-id="<%= category.id %>"><i class="fa-solid fa-trash"></i></a></span>
+                                                <ul>
+                                                    <% CompanyCategories.forEach((subCategory)=>{ %>
+                                                        <% if(subCategory.parent_id == category.id ) { %>
+                                                        <li><%= subCategory.category_name %> <span><a class="edit_cat" data-cat-id="<%= subCategory.id %>" data-cat-name="<%= subCategory.category_name %>" data-parent-id="<%= subCategory.parent_id %>" href="#"><i class="fa-solid fa-pen"></i></a> <a class="delete_cat" data-bs-toggle="modal" data-bs-target="#surealertmodal" href="#" data-cat-id="<%= subCategory.id %>" ><i class="fa-solid fa-trash"></i></a></span></li>
+                                                        <% } %>
+                                                    <% }) %>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    <% } %>
+                                <% }) %>
+                            <% } %>
+                        </div>
+                    </div>
+                    <div class="col-md-8" id="create_div">
+                        <div class="add-category-content ps-lg-5">
+                            <h4>ADD CATEGORY</h4>
+                            <form id="create_category_form">
+                                <div class="custom-form">
+                                    <label><span>Category Name<span style="color: red;">*</span></span></label>
+                                    <input type="text" class="form-control" name="category_name" required>
+                                </div>
+                                <div class="custom-form">
+                                    <label><span>Select Parent Category</span></label>
+                                    <Select class="form-select" name="parent_category">
+                                        <option value="0" selected>Select parent category</option>
+                                        <% if(CompanyCategories.length > 0 ) {  %>
+                                            <% CompanyCategories.forEach((category)=>{ %>
+                                                <% if(category.parent_id == '0'){ %>
+                                                    <option value="<%= category.id %>"><%= category.category_name %></option>
+                                                <% } %>
+                                            <% })  %>
+                                        <% } %>
+                                    </Select>
+                                </div>
+                                <input type="hidden" name="company_id" value="<%- company.ID -%>">
+                                <input type="submit" value="CREATE" class="btn-default btn-warning" id="submit_btn">
+                            </form>
+                            <div class="submit-loading" style="display: none;">Please wait..</div>
+                            <div class="submit-success" style="width: 100%; text-align: center; display: block; border: 2px solid #fccb06; padding: 6px; margin-top: 20px; border-radius: 5px; display: none;"></div>
+                            <div class="submit-error" style="width: 100%; text-align: center; display: block; border: 2px solid #fccb06; padding: 6px; margin-top: 20px; border-radius: 5px; display: none;"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-8 d-none" id="edit_div">
+                        <div class="add-category-content ps-lg-5">
+                            <h4>EDIT CATEGORY</h4>
+                            <form id="edit_category_form">
+                                <div class="custom-form">
+                                    <label><span>Category Name<span style="color: red;">*</span></span></label>
+                                    <input type="text" class="form-control" name="category_name" value="" required>
+                                </div>
+                                <div class="custom-form">
+                                    <label><span>Select Parent Category</span></label>
+                                    <Select class="form-select" name="parent_category">
+                                        <option value="0" selected>Set as parent category</option>
+                                        <% if(CompanyCategories.length > 0 ) {  %>
+                                            <% CompanyCategories.forEach((category)=>{ %>
+                                                <% if(category.parent_id == '0'){ %>
+                                                    <option value="<%= category.id %>"><%= category.category_name %></option>
+                                                <% } %>
+                                            <% })  %>
+                                        <% } %>
+                                    </Select>
+                                </div>
+                                <input type="hidden" name="company_id" value="<%- company.ID -%>">
+                                <input type="hidden" name="cat_id" value="">
+                                <input type="submit" value="UPDATE" class="btn-default btn-warning" id="submit_btn">
+                            </form>
+                            <div class="submit-loading" style="display: none;">Please wait..</div>
+                            <div class="submit-success" style="width: 100%; text-align: center; display: block; border: 2px solid #fccb06; padding: 6px; margin-top: 20px; border-radius: 5px; display: none;"></div>
+                            <div class="submit-error" style="width: 100%; text-align: center; display: block; border: 2px solid #fccb06; padding: 6px; margin-top: 20px; border-radius: 5px; display: none;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- The Modal -->
+<div class="modal" id="surealertmodal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+  
+        <!-- Modal Header -->
+        <div class="modal-header border-0">
+          <button type="button" class="btn-close" data-bs-dismiss="modal"><i class="fa-solid fa-circle-xmark"></i></button>
+        </div>
+        <div class="modal-body text-center">
+            <h5 class="mb-4">Want to delete this category ?</h5>
+            <button class="btn-default btn-warning my-1" id="okButton">Yes Delete !</button>
+            <button class="btn-default btn-dark my-1" id="cancelButton">No Cancle !</button>
+        </div>
+  
+      </div>
+    </div>
+  </div>
+
+<%- include('common/footer') -%>
+
+<script>
+    jQuery(function ($) {
+        //---Review reply submit-------//
+        $('#create_category_form').submit(function(e){
+            event.preventDefault();
+            $('#submit_btn').prop( "disabled", true );
+            $('.submit-success, .submit-error').hide();
+            $('.submit-loading').show();
+
+            const formData = $('#create_category_form').serializeArray();
+            const jsonData = {};
+            $(formData).each(function (index, field) {
+                jsonData[field.name] = field.value;
+            });
+
+            $.ajax({
+              url: '/auth/create-company-category',
+              method: 'POST',
+              data: jsonData,
+              ContentType: 'application/json',
+              success: function (data) {
+                if (data.status == 'ok') {
+                  $('.submit-loading').hide();
+                  $('#create_category_form')[0].reset();
+                  $('.submit-success').text(data.message);
+                  $('.submit-success').show();
+                  $('#submit_btn').prop( "disabled", false );
+                  setTimeout( function(){
+                    location.reload(true);
+                  }, 1000 );
+                } else {
+                    $('.submit-loading').hide();
+                  $('.submit-error').text(data.message);
+                  $('.submit-error').show();
+                    $('#submit_btn').prop( "disabled", false );
+                }
+                //console.log(data);
+              },
+              error: function (error) {
+                $('.submit-loading').hide();
+                $('.submit-error').text(error);
+                $('.submit-error').show();
+                $('#submit_btn').prop( "disabled", false );
+              }
+            });
+        })
+
+        $('.delete_cat').click(function(e){
+            event.preventDefault();
+            //alert('aaaaaaaaa');
+            var cat_id = $(this).attr('data-cat-id');
+            $("#okButton").on("click", function(e) {
+                event.preventDefault();
+                // Replace this with your desired action
+                // For example, you can place your code here
+                console.log("User clicked 'Ok'");
+
+                $.ajax({
+                    url: '/auth/delete-company-category',
+                    method: 'POST',
+                    data: {cat_id:cat_id},
+                    ContentType: 'application/json',
+                    success: function (data) {
+                        if (data.status == 'ok') {
+                        $('.submit-loading').hide();
+                        $('.submit-success').text(data.message);
+                        $('.submit-success').show();
+                        setTimeout( function(){
+                            location.reload(true);
+                        }, 3000 );
+                        } else {
+                            $('.submit-loading').hide();
+                        $('.submit-error').text(data.message);
+                        $('.submit-error').show();
+                        }
+                        //console.log(data);
+                    },
+                    error: function (error) {
+                        $('.submit-loading').hide();
+                        $('.submit-error').text(error);
+                        $('.submit-error').show();
+                    }
+                });
+                $("#surealertmodal").find('.btn-close').trigger('click');
+            });
+            $("#cancelButton").on("click", function() {
+                event.preventDefault();
+                $('.submit-loading').hide();
+                $('.submit-error').text('Category is not deleted.');
+                $('.submit-error').show();
+                setTimeout(function() { $(".submit-error").hide(); }, 3000);
+                // Close the modal
+                $("#surealertmodal").find('.btn-close').trigger('click');
+            });
+            // if(confirm('Are you sure?')) {
+                
+            // } else {
+            
+            // }
+            
+        })
+        $('.edit_cat').click(function(e){
+            
+            event.preventDefault();
+                var cat_id = $(this).attr('data-cat-id');
+                var cat_name = $(this).attr('data-cat-name');
+                var parent_id = $(this).attr('data-parent-id');
+                console.log(cat_id, cat_name, parent_id);
+                $('#create_div').addClass('d-none');
+                $('#edit_div').removeClass('d-none')
+
+                $('#edit_div').find('input[name="category_name"]').val(cat_name);
+                $('#edit_div').find('input[name="cat_id"]').val(cat_id);
+
+                // Find the option that matches both parent_id and category.id
+                $('#edit_div').find('select[name="parent_category"] option').each(function() {
+                    if ($(this).val() === parent_id ) {
+                        $(this).prop('selected', true);
+                    }
+                });
+            //alert(cat_id, cat_name, parent_id);
+        })
+
+        $('#edit_category_form').submit(function(e){
+            event.preventDefault();
+            $('#edit_submit_btn').prop( "disabled", true );
+            $('.submit-success, .submit-error').hide();
+            $('.submit-loading').show();
+
+            const formData = $('#edit_category_form').serializeArray();
+            const jsonData = {};
+            $(formData).each(function (index, field) {
+                jsonData[field.name] = field.value;
+            });
+
+            $.ajax({
+              url: '/auth/update-company-category',
+              method: 'POST',
+              data: jsonData,
+              ContentType: 'application/json',
+              success: function (data) {
+                if (data.status == 'ok') {
+                  $('.submit-loading').hide();
+                  $('#edit_category_form')[0].reset();
+                  $('.submit-success').text(data.message);
+                  $('.submit-success').show();
+                    $('#edit_submit_btn').prop( "disabled", false );
+                  setTimeout( function(){
+                    location.reload(true);
+                  }, 3000 );
+                } else {
+                    $('.submit-loading').hide();
+                  $('.submit-error').text(data.message);
+                  $('.submit-error').show();
+                     $('#edit_submit_btn').prop( "disabled", false );
+                }
+                //console.log(data);
+              },
+              error: function (error) {
+                $('.submit-loading').hide();
+                $('.submit-error').text(error);
+                $('.submit-error').show();
+              }
+            });
+        })
+    });
+</script>

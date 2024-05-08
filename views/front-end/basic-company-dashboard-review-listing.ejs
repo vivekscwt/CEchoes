@@ -1,0 +1,84 @@
+<%- include('common/header') -%>
+<link href="/front-end/css/company-profile-dashboard.css" rel="stylesheet" type="text/css">
+<link href="/front-end/css/business-profile-manage-style.css" rel="stylesheet" type="text/css">
+<%- include('common/header-banner') -%>
+
+<!-- ============== Section1 Start =============== -->
+<section class="main-content">
+    <div class="container">
+        <div class="company_profile_management">
+            <%- include('common/basic-company-sidebar') -%>
+            <div class="each_box update_basic_information all_review_listing_for_company">
+                <div class="table-responsive">
+                    <% if (finalallReviews.length === 0) { %>
+                        <p>No results found.</p>
+                    <% } else { %>
+                    <table class="table table-hover custom-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Date</th>
+                                <th scope="col" style="width: 450px;">Review</th>
+                                <th scope="col">Tags</th>
+                                <th scope="col">Rating</th>
+                                <th scope="col">Replied</th>
+                                <th scope="col">Acticon</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <% finalallReviews.forEach( review => { %>
+                            <tr>
+                                <td>
+                                    <% const dateString = review.created_at; %>
+                                    <% const date = new Date(dateString); %>
+                                    <%= date.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) %>
+                                </td>
+                                <td><%- review.review_content -%></td>
+                                <td>
+                                    <% review.Tags.forEach(tag => { %>
+                                        <span class="badge badge-secondary"><%= tag.tag_name %></span>
+                                    <% }); %>
+                                </td>
+                                <td>
+                                    <% if(review.rating>=3.5){ %>
+                                        <span class="badge badge-square badge-success"><%= review.rating %></span>
+                                    <% }else if(review.rating>=2){ %>
+                                        <span class="badge badge-square badge-warning"><%= review.rating %></span>
+                                    <% }else{%>
+                                        <span class="badge badge-square badge-danger"><%= review.rating %></span>
+                                    <% }%>
+                                </td>
+                                <td>
+                                    <% if(review.reply_count > 0 ){ %>
+                                        <span class="badge badge-square badge-success">Yes</span>
+                                    <% }else{ %>
+                                        <span class="badge badge-square badge-info">No</span>
+                                    <% } %>
+                                </td>
+                                <td><a class="rply_btn" href="/company-dashboard-review-replay/<%- company.slug -%>/<%- review.id -%>">Reply</a></td>
+                            </tr>
+                        <% }) %>
+                        </tbody>
+                    </table>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ============== Section6 End =============== -->
+<%- include('common/footer') -%>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/css/dataTables.bootstrap4.min.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/1.0.4/css/dataTables.responsive.css" />
+
+<script src="https://cdn.datatables.net/1.10.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/plug-ins/f2c75b7247b/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+<script src="https://cdn.datatables.net/responsive/1.0.4/js/dataTables.responsive.js"></script>
+<script>
+    jQuery(function ($) {
+        $(document).ready(() => {
+            $('.table').DataTable({
+                "order": [[ 4, "desc" ]]
+            });
+        });
+    });
+</script>

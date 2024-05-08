@@ -1,0 +1,221 @@
+<%- include('common/header') -%>
+<link href="/front-end/css/review-style.css" rel="stylesheet" type="text/css">
+<link href="/front-end/css/company-profile-dashboard.css" rel="stylesheet" type="text/css">
+<%- include('common/header-banner') -%>
+
+<!-- ============== Section1 Start =============== -->
+<section class="main-content premium_company_profile">
+    <div class="container">
+        <div class="main_box">
+            <%- include('common/premium-company-sidebar') -%>
+        </div>
+        <div class="company_profile_management">
+            <div class="company_review_replay">
+                <div class="review-box">
+                    <h3><%= company.company_name || '' %></h3>
+                    <% if(company && company.main_address){ %>
+                    <div class="user-info-panel">
+                        <span><i class="fa-solid fa-location-dot"></i></span>
+                        <p class="m-0">
+                            <strong>Location</strong><br>
+                            <%= company.main_address || '' %>
+                        </p>
+                    </div>
+                    <% } %>
+                    <% if(finalsingleReviewData[0].review_title){ %>
+                    <div class="user-info-panel">
+                        <span><i class="fa-solid fa-box"></i></span>
+                        <p class="m-0">
+                            <strong>Product/division</strong><br>
+                            <%= finalsingleReviewData[0].review_title %>
+                        </p>
+                    </div>
+                    <% } %>
+                    <div class="user-review-text">
+                        <% finalsingleReviewData[0].Tags.forEach(tag => { %>
+                        <span class="user-select-tag"><%= tag.tag_name %></span>
+                        <% }); %>
+                        <div class="review-description-wrap">
+                            <%- finalsingleReviewData[0].review_content -%>
+                        </div>
+                    </div>
+                    <div class="user-bio_rating">
+                        <div class="user-profile-info">
+                            <div class="user-name-show position-relative">
+                                <% if(finalsingleReviewData[0].user_privacy == '1'){ %>
+                                    <% if(finalsingleReviewData[0].profile_pic != null){ %>
+                                        <span><img src="/<%- finalsingleReviewData[0].profile_pic -%>" alt="<%- finalsingleReviewData[0].first_name+' '+finalsingleReviewData[0].last_name -%>" width="20px"></span>
+                                    <% }else{ %>
+                                        <span><img src="/assets/media/avatars/blank.png" alt="<%- finalsingleReviewData[0].first_name+' '+finalsingleReviewData[0].last_name -%>" width="20px"></span>
+                                    <% } %>   
+                                    <span><%- finalsingleReviewData[0].first_name+' '+finalsingleReviewData[0].last_name -%> </span>
+                                <% }else{ %>
+                                    <span><img src="/front-end/images/blur-img.png" alt="img" width="20px"></span>
+                                    <span><img src="/front-end/images/blur-name.png" alt="img"></span>
+                                <% } %>
+                            </div>
+                            <% const dateString = finalsingleReviewData[0].created_at; %>
+                            <% const date = new Date(dateString); %>
+                            <div class="user-review-date"><%= date.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) %></div>
+                        </div>
+                        <div class="user-rating">
+                            <span>
+                                <% allRatingTags.forEach( tag => { %>
+                                    <% if(tag.review_rating_value == finalsingleReviewData[0].rating){ %>
+                                       <img src="/<%= tag.rating_image %>" alt="img-gif-<%- finalsingleReviewData[0].rating -%>" style="display: inline-block;" width="35">
+                                    <% } %>
+                                 <% }) %>
+                            </span>
+                            <span><%= finalsingleReviewData[0].rating %>/5</span>
+                        </div>
+                    </div>
+                    <!-- <div class="review-like-dislike">
+                        <span><a href=""><i class="fa-solid fa-thumbs-up"></i> 10</a></span>
+                        <span><a href=""><i class="fa-solid fa-thumbs-down"></i> 8</a></span>
+                        </div> -->
+                </div>
+                <% var singulrReview = finalsingleReviewData[0]
+                    const privacy = singulrReview.user_privacy;
+                    const company_owner_name = currentUserData.first_name +' '+ currentUserData.last_name;
+                    const company_owner_image = currentUserData.profile_pic;
+                    const customer_image = singulrReview.profile_pic;
+                    const company_owner_id = company.claimed_by;
+                %>
+                <div class="chat_box_wrapper">
+                    <div class="chat_box">
+                        <div class="heading">
+                            <h4>Your Response</h4>
+                        </div>
+                        <div class="chat_area">
+                            <% if(singleReviewReplyData.length > 0){ %>
+                            <div id="content-1" class="content">
+                                <% singleReviewReplyData.forEach( reply => { %>
+                                    <% if(reply.reply_by == company_owner_id){ %>
+                                        <!--Owner Reply -->
+                                        <div class="d-flex flex-row justify-content-start ai-input">
+                                            <div>
+                                                <% if(company && company.logo) { %>
+                                                    <img class="user_img" src="/<%= company.logo %>" alt="<%= company && company.company_name ? company.company_name : '' %>">
+                                                <%} else {%>
+                                                    <img class="user_img" src="/front-end/images/company-placeholder-image.png" alt="<%= company && company.company_name ? company.company_name : '' %>" >
+                                                <% } %>
+                                                <small><%= company && company.company_name ? company.company_name : '' %></small>
+                                            </div>
+                                            <div>
+                                                <p class="text_box"><%- reply.comment -%></p>
+                                                <% const repdateString = reply.created_at; %>
+                                                <% const repdate = new Date(repdateString); %>
+                                                <p class="text-muted"><%= repdate.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true }) %></p>
+                                            </div>
+                                        </div>
+                                        <!--Owner Reply End-->
+                                    <% }else{ %>
+                                        <!--Customer Reply -->
+                                        <div class="d-flex flex-row justify-content-end user-input">
+                                            <div>
+                                                <p class="text_box"><%- reply.comment -%></p>
+                                                <% const repdateString = reply.created_at; %>
+                                                <% const repdate = new Date(repdateString); %>
+                                                <p class="text-muted"><%= repdate.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true }) %></p>
+                                            </div>
+                                            <div>
+                                                <% if(privacy == 1){ %>
+                                                    <% if(customer_image){ %>
+                                                        <img class="user_img" src="/<%- customer_image -%>" alt="avatar 1">
+                                                    <% }else{ %>
+                                                        <img class="user_img" src="/front-end/images/human-image.jpg" alt="avatar 1">
+                                                    <% } %>
+                                                    <small>Human</small>
+                                                <% }else{ %>
+                                                <img class="user_img" src="/front-end/images/blur-img.png" alt="img">
+                                                <span><img src="/front-end/images/blur-name.png" alt="img"></span>
+                                                <% } %>
+                                            </div>
+                                        </div>
+                                        <!--Customer Reply End-->
+                                    <% } %>
+                                <% }) %>
+                                
+                            </div>
+                            <% } %>
+                            <% if(singleReviewReplyData.length == 0){ %>
+                            <div class="msg_send_form">
+                                <form action="" id="review_reply_form">
+                                    <input type="text" name="comment" placeholder="Type Here..." required>
+                                    <input type="hidden" name="review_id" value="<%- singulrReview.id -%>">
+                                    <input type="hidden" name="reply_by" value="<%- currentUserData.user_id -%>">
+                                    <input type="hidden" name="reply_to" value="<%= finalsingleReviewData[0].customer_id %>">
+                                    <input type="hidden" name="company_id" value="<%- company.ID -%>">
+                                    <button type="submit" id="review_reply_btn"><img src="/front-end/images/send-icon.png" alt="icon"></button>
+                                </form>
+                                <div class="submit-loading" style="display: none;">Please wait..</div>
+                                <div class="submit-success" style="display: none;"></div>
+                                <div class="submit-error" style="display: none;"></div>
+                            </div>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ============== Section6 End =============== -->
+<%- include('common/footer') -%>
+<link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/css/dataTables.bootstrap4.min.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/1.0.4/css/dataTables.responsive.css" />
+
+<script src="https://cdn.datatables.net/1.10.5/js/jquery.dataTables.min.js"></script>
+<script
+    src="https://cdn.datatables.net/plug-ins/f2c75b7247b/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+<script src="https://cdn.datatables.net/responsive/1.0.4/js/dataTables.responsive.js"></script>
+<script>
+    jQuery(function ($) {
+        $(document).ready(() => {
+            $('.table').DataTable();
+        });
+
+        //---Review reply submit-------//
+        $('#review_reply_form').submit(function(e){
+            event.preventDefault();
+            $('#review_reply_btn').prop( "disabled", true );
+            $('.submit-success, .submit-error').hide();
+            $('.submit-loading').show();
+
+            const formData = $('#review_reply_form').serializeArray();
+            const jsonData = {};
+            $(formData).each(function (index, field) {
+                jsonData[field.name] = field.value;
+            });
+
+            $.ajax({
+              url: '/auth/add-review-reply',
+              method: 'POST',
+              data: jsonData,
+              ContentType: 'application/json',
+              success: function (data) {
+                if (data.status == 'ok') {
+                  $('.submit-loading').hide();
+                  $('#review_reply_form')[0].reset();
+                  $('.submit-success').text(data.message);
+                  $('.submit-success').show();
+                  setTimeout( function(){
+                    location.reload(true);
+                  }, 3000 );
+                } else {
+                    $('.submit-loading').hide();
+                  $('.submit-error').text(data.message);
+                  $('.submit-error').show();
+                }
+                //console.log(data);
+              },
+              error: function (error) {
+                $('.submit-loading').hide();
+                $('.submit-error').text(error);
+                $('.submit-error').show();
+              }
+            });
+        })
+    });
+</script>

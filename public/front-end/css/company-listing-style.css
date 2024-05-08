@@ -1,0 +1,422 @@
+.company-list-item-wrap {
+    margin-top: 55px;
+}
+
+.company-listing-left {
+    border-radius: 20px;
+    background: #252525;
+    color: #ffffff;
+    padding: 35px 20px;
+}
+
+.company-listing-left h4 {
+    font-size: 22px;
+    font-weight: 500;
+    border-bottom: 1px #484848 solid;
+    padding-bottom: 16px;
+    margin-bottom: 40px;
+}
+
+.company-listing-left ul {
+    padding: 0;
+    margin: 0;
+}
+
+.company-listing-left ul li+li {
+    margin-top: 35px;
+}
+
+.company-listing-left ul li a {
+    color: #BDBDBD;
+    font-size: 18px;
+    font-weight: 400;
+}
+
+.company-listing-left ul li a i {
+    margin-right: 10px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.company-listing-left ul li a:hover,
+.company-listing-left ul li.active a {
+    color: #FCCB06;
+}
+
+/*  */
+
+.company_listing_box h4 {
+    color: #000;
+    font-family: Inter;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    margin-top: 12px;
+}
+
+.company_listing_emoji {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 22px;
+}
+
+.company_listing_emoji .company_listing_span {
+    color: #000;
+    font-family: Nunito;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    text-transform: capitalize;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.company_listing_emoji .company_listing_span img {
+    width: 22px;
+    border: 2px solid #000;
+    border-radius: 50% !important;
+}
+
+.company_listing_emoji p {
+    color: #000;
+    font-family: Nunito;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 29px;
+    text-transform: capitalize;
+    margin: 0 17px 0 0px;
+}
+
+.company_listing_emoji p span {
+    color: #7C7C7C;
+    font-family: Nunito;
+    font-size: 10px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 29px;
+    letter-spacing: -0.05px;
+    text-transform: capitalize;
+}
+
+.company_listing_span1 {
+    color: #169641;
+    text-align: right;
+    font-family: Nunito;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 29px;
+    text-transform: capitalize;
+    display: block;
+}
+
+.company_listing_box .company_listing_p {
+    display: flex;
+    align-items: flex-start;
+    align-items: center;
+    gap: 8px;
+    color: #000;
+    font-family: Nunito;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 16px;
+    text-transform: capitalize;
+    margin-top: 23px;
+    margin-bottom: 14px;
+    text-align: left;
+}
+
+.treading_content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.treading_content p {
+    display: flex;
+    align-items: center;
+    color: #169641;
+    font-family: Nunito;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 16px;
+    text-transform: capitalize;
+    margin: 10px 0 0 0;
+    gap: 5px;
+}
+
+.treading_content .treading_content_text {
+    color: #FF2147;
+    text-align: right;
+    font-family: Nunito;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 16px;
+    text-transform: capitalize;
+}
+
+.company_listing_logo img {
+    height: 55px !important;
+    width: 55px;
+    object-fit: contain;
+}
+
+.company_listing_logo {
+    width: 95px;
+    height: 95px;
+    background-color: #fff;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: -40px;
+    z-index: 1;
+    position: relative;
+    box-shadow: 0 0 5px #ccc;
+    margin-left: auto;
+    margin-right: AUTO;
+}
+
+.company_listing_box img {
+    border-radius: 18px;
+}
+
+#premiumcompanymodal .company_listing_box {
+    box-shadow: none;
+}
+
+#premiumcompanymodal .company_listing_box img {
+    border-radius: 0;
+}
+
+.select_option {
+    margin-bottom: 33px;
+}
+
+.company-listing-btn {
+    margin-top: 40px;
+}
+
+.select_option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 265px;
+    margin-left: auto;
+}
+
+.select_option p {
+    color: #252525;
+    font-family: Inter;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 110.4%;
+    text-transform: capitalize;
+    margin: 0;
+}
+
+.select_option select {
+    border-radius: 8px;
+    background: #FCCB06;
+    border: navajowhite;
+    width: 170px;
+    padding: 16px 10px;
+    color: #000;
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+
+}
+
+.select_option select option {
+    color: #000;
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.form-select:focus {
+    border-color: #FCCB06 !important;
+    outline: 0;
+    box-shadow: none !important;
+}
+
+.form-select {
+    display: block;
+    width: 100%;
+    padding: .375rem 2.25rem .375rem .75rem;
+    -moz-padding-start: calc(0.75rem - 3px);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    background-color: #fff;
+    background-image: url("../images/select-arrow-icon.png") !important;
+    background-repeat: no-repeat !important;
+    background-position: right .75rem center !important;
+    background-size: 16px 12px;
+    border: 1px solid #ced4da;
+    border-radius: .375rem;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+.company_listing_box {
+    box-shadow: 0px 0 14px 0px rgba(0, 0, 0, 0.22);
+    border-radius: 20px;
+    height: 100%;
+    text-align: center;
+}
+
+.company_listing_all_info_wrapper {
+    padding: 20px 15px;
+}
+
+.company_listing_box .img-fluid {
+    width: 100%;
+    height: 235px !important;
+    object-fit: cover;
+    object-position: center;
+}
+
+.progress circle {
+    fill: #ccc;
+    stroke: #00d6d6;
+    stroke-width: 10;
+}
+
+#premiumcompanymodal .modal-dialog {
+    max-width: 645px;
+    margin-bottom: 70px;
+}
+
+.prem-modal-company-info {
+    position: relative;
+    min-height: 170px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-top: 45px;
+}
+
+.prem-modal-company-info .company_listing_logo {
+    width: 140px;
+    height: 140px;
+    box-shadow: 0px 14px 34px 0px rgba(0, 0, 0, 0.12);
+    position: absolute;
+    margin-top: 0;
+    margin-left: 0;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.prem-modal-company-info .company_listing_logo img {
+    width: 115px;
+    height: 115px !important;
+    object-fit: contain;
+}
+
+.prem-modal-company-info .company_listing_box h4 {
+    font-size: 28px;
+}
+
+.prem-modal-company-info-right {
+    padding-left: 165px;
+}
+
+.company-list-btm-part {
+    padding: 0 40px 60px;
+}
+
+#premiumcompanymodal .treading_content {
+    margin-bottom: 35px;
+    justify-content: start;
+    gap: 14px;
+}
+
+#premiumcompanymodal .company_listing_emoji .company_listing_span,
+#premiumcompanymodal .company_listing_emoji p,
+#premiumcompanymodal .company_listing_emoji .company_listing_span1 {
+    font-size: 17px;
+}
+
+#premiumcompanymodal .company_listing_box .company_listing_p {
+    font-size: 18px;
+    margin: 25px 0;
+    line-height: normal;
+}
+
+#premiumcompanymodal::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+#premiumcompanymodal::-webkit-scrollbar {
+    background-color: transparent;
+}
+
+#premiumcompanymodal .modal-header {
+    z-index: 9;
+}
+
+#premiumcompanymodal .btn-close svg {
+    width: 50px;
+    height: 50px;
+}
+
+#premiumcompanymodal .modal-content,
+#premiumcompanymodal .modal-body {
+    border-radius: 20px 20px;
+}
+
+#premiumcompanymodal .slider-progress {
+    border-radius: 20px 20px 0 0;
+}
+
+#premiumcompanymodal .progress {
+    --bs-progress-height: 10px;
+    --bs-progress-bg: #FCCB06;
+    border-radius: 20px 20px 0 0;
+}
+
+.modal-slide-in ul.slick-dots {
+    position: absolute;
+    bottom: -40px;
+    z-index: 99999999;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    width: 100%;
+}
+
+.modal-slide-in .slick-dots li {
+    display: inline-block;
+    margin: 0 10px;
+}
+
+.modal-slide-in .slick-dots li button {
+    font-size: 0;
+    width: 46px;
+    height: 17px;
+    border-radius: 900px;
+    border: 2px solid #FFF;
+    background-color: transparent;
+}
+.modal-slide-in .slick-dots li.slick-active button {
+    background: #FCCB06;
+    border-color: #FCCB06;
+}
