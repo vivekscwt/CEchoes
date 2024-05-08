@@ -304,7 +304,7 @@ class Miniorange_API_Authentication_Customer {
 		$apis               = '';
 		$version            = get_option( 'mo_api_authentication_current_plugin_version' );
 		wp_get_current_user();
-		$query = '[WP REST API Authentication] version ' . $version . ' - ' . $query;
+		$query = '[WordPress REST API Authentication plugin] version ' . $version . ' - ' . $query;
 		if ( ! empty( $last_requested_api ) ) {
 			foreach ( $last_requested_api as $api => $method ) {
 				$apis .= $method . ' ' . $api . '<br>';

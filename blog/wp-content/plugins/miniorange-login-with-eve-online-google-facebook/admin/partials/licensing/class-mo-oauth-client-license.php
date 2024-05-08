@@ -148,15 +148,6 @@ class MO_OAuth_Client_License {
 	<!--  -->
 		<!-- Important JSForms -->
 		<input type="hidden" value="<?php echo esc_attr( mooauth_is_customer_registered() ); ?>" id="mo_customer_registered">
-		<form style="display:none;" id="loginform"
-			action="<?php echo esc_attr( get_option( 'host_name' ) ) . '/moas/login'; ?>"
-			target="_blank" method="post">
-			<?php wp_nonce_field( 'mo_oauth_loginform_nonce', 'mo_oauth_loginform_field' ); ?>
-			<input type="email" name="username" value="<?php echo esc_attr( get_option( 'mo_oauth_admin_email' ) ); ?>"/>
-			<input type="text" name="redirectUrl"
-				value="<?php echo esc_attr( get_option( 'host_name' ) ) . '/moas/initializepayment'; ?>"/>
-			<input type="text" name="requestOrigin" id="requestOrigin"/>
-		</form>
 		<form style="display:none;" id="viewlicensekeys"
 			action="<?php echo esc_attr( get_option( 'host_name' ) ) . '/moas/login'; ?>"
 			target="_blank" method="post">
@@ -208,7 +199,7 @@ class MO_OAuth_Client_License {
 								createSelectOptions('pricing_standard');
 								</script>
 							</div>
-							<button class="btn btn-block mo-oauth-btn-block btn-info text-uppercase moc-lp-buy-btn"  onclick="upgradeform('wp_oauth_client_standard_plan')" ><?php esc_html_e( 'Upgrade Now', 'miniorange-login-with-eve-online-google-facebook' ); ?></button>
+							<button class="btn btn-block mo-oauth-btn-block btn-info text-uppercase moc-lp-buy-btn"  onclick="upgradeform('wp_oauth_client_standard_plan')" ><?php esc_html_e( 'Buy now', 'miniorange-login-with-eve-online-google-facebook' ); ?></button>
 							<div class="moc-licensing-plan-feature-list">
 								<ul>
 									<li>&#9989;&emsp;1 OAuth / OpenID Connect provider <br>Support</li>
@@ -244,7 +235,7 @@ class MO_OAuth_Client_License {
 								createSelectOptions('pricing_premium');
 								</script>
 							</div>
-							<button class="btn btn-block mo-oauth-btn-block-black btn-info text-uppercase moc-lp-buy-btn" onclick="upgradeform('wp_oauth_client_premium_plan')" ><?php esc_html_e( 'Upgrade Now', 'miniorange-login-with-eve-online-google-facebook' ); ?></button>
+							<button class="btn btn-block mo-oauth-btn-block-black btn-info text-uppercase moc-lp-buy-btn" onclick="upgradeform('wp_oauth_client_premium_plan')" ><?php esc_html_e( 'Buy now', 'miniorange-login-with-eve-online-google-facebook' ); ?></button>
 							<div class="moc-licensing-plan-feature-list">
 								<ul>
 									<li>&#9989;&emsp;1 OAuth / OpenID Connect provider <br>Support</li>
@@ -280,7 +271,7 @@ class MO_OAuth_Client_License {
 								createSelectOptions('pricing_enterprise');
 								</script>
 							</div>
-							<button class="btn btn-block mo-oauth-btn-block btn-info text-uppercase moc-lp-buy-btn" onclick="upgradeform('wp_oauth_client_enterprise_plan')"><?php esc_html_e( 'Upgrade Now', 'miniorange-login-with-eve-online-google-facebook' ); ?></button>
+							<button class="btn btn-block mo-oauth-btn-block btn-info text-uppercase moc-lp-buy-btn" onclick="upgradeform('wp_oauth_client_enterprise_plan')"><?php esc_html_e( 'Buy now', 'miniorange-login-with-eve-online-google-facebook' ); ?></button>
 							<div class="moc-licensing-plan-feature-list">
 								<ul>
 									<li>&#9989;&emsp;Unlimited OAuth / OpenID Connect <br>provider Support</li>
@@ -334,7 +325,7 @@ class MO_OAuth_Client_License {
 								createSelectOptions('pricing_all_inclusive');
 								</script>
 							</div>
-							<button class="btn btn-block mo-oauth-btn-block-black btn-info text-uppercase moc-lp-buy-btn" onclick="upgradeform('wp_oauth_client_all_inclusive_single_site_plan')" ><?php esc_html_e( 'Upgrade Now', 'miniorange-login-with-eve-online-google-facebook' ); ?></button>
+							<button class="btn btn-block mo-oauth-btn-block-black btn-info text-uppercase moc-lp-buy-btn" onclick="upgradeform('wp_oauth_client_all_inclusive_single_site_plan')" ><?php esc_html_e( 'Buy now', 'miniorange-login-with-eve-online-google-facebook' ); ?></button>
 							<div class="moc-licensing-plan-feature-list">
 								<ul>
 									<li>&#9989;&emsp;All Enterprise Plan Features</li>
@@ -380,7 +371,7 @@ class MO_OAuth_Client_License {
 								createSelectWithSubsitesOptions('mul_pricing_premium');
 								</script>
 							</div>
-							<button class="btn btn-block mo-oauth-btn-block btn-info text-uppercase moc-lp-buy-btn" onclick="upgradeform('wp_oauth_client_multisite_premium_plan')">Upgrade Now</button>
+							<button class="btn btn-block mo-oauth-btn-block btn-info text-uppercase moc-lp-buy-btn" onclick="upgradeform('wp_oauth_client_multisite_premium_plan')">Buy now</button>
 							<div class="moc-licensing-plan-feature-list">
 								<ul>
 									<li>&#9989;&emsp;1 OAuth / OpenID Connect provider <br>Support</li>
@@ -416,7 +407,7 @@ class MO_OAuth_Client_License {
 								createSelectWithSubsitesOptions('mul_pricing_enterprise');
 								</script>
 							</div>
-							<button class="btn btn-block mo-oauth-btn-block-black btn-info text-uppercase moc-lp-buy-btn" onclick="upgradeform('wp_oauth_client_multisite_enterprise_plan')" >Upgrade Now</button>
+							<button class="btn btn-block mo-oauth-btn-block-black btn-info text-uppercase moc-lp-buy-btn" onclick="upgradeform('wp_oauth_client_multisite_enterprise_plan')" >Buy now</button>
 							<div class="moc-licensing-plan-feature-list">
 								<ul>
 									<li>&#9989;&emsp;Unlimited OAuth / OpenID Connect <br>provider Support</li>
@@ -470,7 +461,7 @@ class MO_OAuth_Client_License {
 								createSelectWithSubsitesOptions('mul_pricing_all_inclusive');
 								</script>
 							</div>
-							<button class="btn btn-block mo-oauth-btn-block btn-info text-uppercase moc-lp-buy-btn" onclick="upgradeform('wp_oauth_client_all_inclusive_multisite_plan')">Upgrade Now</button>
+							<button class="btn btn-block mo-oauth-btn-block btn-info text-uppercase moc-lp-buy-btn" onclick="upgradeform('wp_oauth_client_all_inclusive_multisite_plan')">Buy now</button>
 							<div class="moc-licensing-plan-feature-list ">
 								<ul>
 									<li>&#9989;&emsp;All Enterprise Plan Features</li>
@@ -518,7 +509,7 @@ class MO_OAuth_Client_License {
 								<div class="works-step">
 									<div><b>1</b></div>
 									<p>
-										Click on <b><i>Upgrade Now</i></b> button for required premium plan and you will be redirected to miniOrange login console.
+										Click on <b><i>Buy Now</i></b> button for required premium plan and you will be redirected to miniOrange login console.
 									</p>
 								</div>
 								<div class="works-step">
@@ -587,7 +578,7 @@ class MO_OAuth_Client_License {
 		</div>
 						<div class="moc-licensing-notice" id="payment-method" style="height: 10%;padding-top: 10px;min-height: 400px;" onmouseenter="onMouseEnter('payment-section', '3px solid #093553')" onmouseleave="onMouseEnter('payment-section', 'none')">
 							<h2 class="mo-oauth-h2">ACCEPTED PAYMENT METHODS</h2>
-						<section class="payment-methods" style="height: 400px;" >
+						<section class="payment-methods">
 						<br>
 						<div class="row">
 							<div class="col span-1-of-3">
@@ -599,16 +590,6 @@ class MO_OAuth_Client_License {
 									</div>
 									<div>
 										If the payment is made through Credit Card/International Debit Card, the license will be created automatically once the payment is completed.
-									</div>
-								</div>
-							</div>
-							<div class="col span-1-of-3">
-								<div class="plan-box">
-									<div>
-										<img class="payment-images" src="<?php echo esc_attr( plugin_dir_url( __FILE__ ) ) . '/img/paypal.png'; ?>" alt="">
-									</div>
-									<div>
-										Use the following PayPal ID <i><b>info@xecurify.com</b></i> for making the payment via PayPal.<br><br>
 									</div>
 								</div>
 							</div>
@@ -634,7 +615,7 @@ class MO_OAuth_Client_License {
 					<div class="moc-licensing-notice" style="min-height:450px;  margin-bottom: 3%;">
 						<h2 id="moc_licensing_policy" class="mo-oauth-h2">LICENSING POLICY</h2>
 						<br>
-						<p style="font-size: 1em;"><span style="color: red;">*</span>The WordPress SSO plugin licenses are subscription and the license includes 12 months of maintenance (version updates). You need to renew the license after 12 months at 50% of the current license cost.<br></p>
+						<p style="font-size: 1em;"><span style="color: red;">*</span>The WordPress SSO plugin licenses are subscription-based, and each license includes 12 months of maintenance, which covers version updates.<br></p>
 
 						<p style="font-size: 1em;"><span style="color: red;">*</span>We provide deep discounts on bulk license purchases and pre-production environment licenses. As the no. of licenses increases, the discount percentage also increases. Contact us at <i><a href="mailto:oauthsupport@xecurify.com">oauthsupport@xecurify.com</a></i> for more information.</p>
 
@@ -835,12 +816,8 @@ class MO_OAuth_Client_License {
 					location.href = "https://wordpress.org/plugins/miniorange-login-with-eve-online-google-facebook/";
 					return;
 				} else {
-					jQuery('#requestOrigin').val(planType);
-					if(jQuery('#mo_customer_registered').val()==1)
-						jQuery('#loginform').submit();
-					else{
-						location.href = jQuery('#mobacktoaccountsetup').attr('href');
-					}
+					const url = `https://portal.miniorange.com/initializepayment?requestOrigin=${planType}`;
+					window.open(url, "_blank");
 				}
 
 			}

@@ -74,6 +74,9 @@
 	"laravel": {
 		"label":"Laravel", "type":"oauth", "image":"laravel.png", "scope": "", "domain": "", "discovery":"", "authorize": "http://your-laravel-site-url/oauth/authorize", "token": "http://your-laravel-site-url/oauth/token", "userinfo": "http://your-laravel-site-url/api/user/get", "guide":"https://plugins.miniorange.com/laravel-passport-single-sign-on-wordpress-sso-oauth-openid-connect", "logo_class":"fa fa-lock", "send_header":"1", "send_body":"0", "setup_notice":"Please enter the Laravel site url in the above endpoints in place of <b style='color:#15c !important'>your-laravel-site-url</b>."
 	},
+	"steam": {
+		"label":"steam", "type":"openidconnect", "image":"steam.png", "scope": "profile", "domain": "", "discovery":"", "authorize": "https://steamcommunity.com/openid/login", "token": "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=", "userinfo": "", "guide":"", "logo_class":"fa fa-lock", "send_header":"1", "send_body":"0", "setup_notice":""
+	},
 	"salesforce": {
 		"label":"Salesforce", "type":"oauth", "image":"salesforce.png", "scope": "openid email profile", "domain": "","avl_domain":"", "discovery":"", "authorize": "https://login.salesforce.com/services/oauth2/authorize", "token": "https://login.salesforce.com/services/oauth2/token", "userinfo": "https://login.salesforce.com/services/oauth2/userinfo", "guide":"https://plugins.miniorange.com/salesforce-single-sign-on-wordpress-sso-oauth-openid-connect", "logo_class":"fa fa-lock"
 	, "video":"https://youtu.be/jXImJNGPo0M", "send_header":"1", "send_body":"0"
@@ -113,7 +116,9 @@
 	"Shopify": {
 		"label":"Shopify", "type":"oauth", "image":"shopify.png", "scope": "openid email profile", "domain":"", "discovery":"", "authorize": "https://store.xecurify.com/moas/broker/login/oauth/<customer_id>", "token": "https://store.xecurify.com/moas/rest/oauth/token", "userinfo": "https://store.xecurify.com/moas/rest/oauth/getuserinfo", "guide":"", "logo_class":"fa fa-lock", "video":"", "send_header":"1", "send_body":"0", "setup_notice":"Please set up the endpoints mentioned above using <b><a href='https://plugins.miniorange.com/wordpress-single-sign-on-sso-using-shopify-store-as-idp#client-idsecret' style='color:#15c !important'>this step</a></b>."
 	},
-
+	"Battle.net": {
+		"label":"battle.net", "type":"oauth", "image":"battlenet.png", "scope": "openid", "domain":"", "discovery":"", "authorize": "https://oauth.battle.net/authorize", "token": "https://oauth.battle.net/token", "userinfo": "https://oauth.battle.net/userinfo", "guide":"", "logo_class":"fa fa-lock", "video":"", "send_header":"1", "send_body":"0"
+	},
 	"gapps": {
 		"label":"Google", "type":"openidconnect", "image":"google.png", "scope": "openid profile email", "domain":"", "avl_domain":"", "discovery":"", "authorize": "https://accounts.google.com/o/oauth2/auth", "token": "https://www.googleapis.com/oauth2/v4/token", "userinfo": "https://www.googleapis.com/oauth2/v1/userinfo", "guide":"https://plugins.miniorange.com/google-single-sign-on-wordpress-sso-oauth-openid-connect", "logo_class":"fa fa-google-plus"
 	, "video":"https://youtu.be/fpOewMgaQgc", "send_header":"1", "send_body":"0"

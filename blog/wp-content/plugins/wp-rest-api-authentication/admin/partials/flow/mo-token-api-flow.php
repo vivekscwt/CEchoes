@@ -72,6 +72,10 @@ function mo_api_auth_method_get_token( $request ) {
 			wp_set_current_user( $user->ID );
 
 			$valid_pass = wp_authenticate_username_password( null, $username, $password );
+			if ( is_wp_error( $valid_pass ) ) { // Using this flow to provide additional support for password verification of websites hosted on wordpress.org.
+				$valid_pass_emails = wp_authenticate_email_password( null, $username, $password );
+				$valid_pass        = null !== $valid_pass_emails && ! is_wp_error( $valid_pass_emails ) ? $valid_pass_emails : $valid_pass;
+			}
 
 			if ( is_wp_error( $valid_pass ) ) {
 				$valid_pass = false;
@@ -199,7 +203,11 @@ function mo_api_auth_is_valid_request() {
 	$headers  = mo_api_auth_getallheaders();
 	$headers  = array_change_key_case( $headers, CASE_UPPER );
 
-	if ( ! empty( $_SERVER['REQUEST_URI'] ) && stripos( explode( '?', sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ), 2 )[0], '/wp/v2' ) === false ) {
+	$url_and_params = ! empty( $_SERVER['REQUEST_URI'] ) ? explode( '?', sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ), 2 ) : array( '', '' );
+	if ( get_option( 'permalink_structure' ) === '' && isset( $url_and_params[1] ) ) {
+		$url_and_params[0] = $url_and_params[1];
+	}
+	if ( stripos( $url_and_params[0], '/wp/v2' ) === false ) {
 		if ( get_option( 'mo_rest_api_protect_migrate' ) ) {
 			$response = array(
 				'status'            => 'error',

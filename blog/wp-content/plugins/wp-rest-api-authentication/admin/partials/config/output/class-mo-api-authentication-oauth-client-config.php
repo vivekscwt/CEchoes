@@ -42,7 +42,7 @@ class Mo_API_Authentication_OAuth_Client_Config {
 			</div>	
 			<p class="mo_api_authentication_method_description">WordPress REST API OAuth 2.0 Authentication Method involves the REST APIs access on validation against the access token/JWT token (JSON Web Token) generated based on the user or client credentials using highly secure encryption algorithm. It follows the standards of OAuth 2.0 protocol.</p>
 			<br>
-			<div class="mo_api_auth_setup_guide">
+			<div class="mo_api_auth_setup_guide2">
 				<div class="mo_api_auth_setup_guide1"><img src="<?php echo esc_url( plugin_dir_url( dirname( dirname( dirname( __FILE__ ) ) ) ) ); ?>/images/user-guide.png" height="25px" width="25px"></div>
 				<a href="https://plugins.miniorange.com/wordpress-rest-api-oauth-2-0-authentication-method#step_1" target="_blank"><div class="mo_api_authentication_guide1"><p style="font-weight: 700;">Setup Guide</p></div></a>
 			</div>
@@ -51,12 +51,12 @@ class Mo_API_Authentication_OAuth_Client_Config {
 				<a href="https://developers.miniorange.com/docs/rest-api-authentication/wordpress/oauth-authentication" target="_blank"><div class="mo_api_authentication_guide1"><p style="font-weight: 700;">Developer Doc</b></p></div></a>
 			</div>
 			<br><br>
-			<div class="mo_api_authentication_support_layout" style="border-width: 0px;padding-left: 2px;">
+			<div class="mo_api_authentication_support_layout" style="border-width: 0px;padding-left: 2px; padding-right: 0;">
 				<br>
 				<h3 style="margin-top: 40px">Select OAuth 2.0 Grant Type -</h3>
 				<br>
 				<div class="mo_api_authentication_card_layout_internal" style="width: 100%">
-					<div class="mo_api_flex_child1" id="mo_api_config_bauth" style="cursor:no-drop;">
+					<div class="mo_api_flex_child mo_api_no_cursor" id="mo_api_config_bauth">
 
 						<div style="height: 30%">
 							<div class="mo_api_oauth_internal1">
@@ -68,7 +68,7 @@ class Mo_API_Authentication_OAuth_Client_Config {
 						</div>
 
 					</div>
-					<div class="mo_api_flex_child1" style="cursor:no-drop;">
+					<div class="mo_api_flex_child mo_api_no_cursor">
 						<div style="height: 30%">
 
 						<div class="mo_api_oauth_internal1">
@@ -78,7 +78,7 @@ class Mo_API_Authentication_OAuth_Client_Config {
 							<p class="mo_api_oauth_internal_text">Password Grant with JWT Token</p>
 						</div>
 					</div>
-					<div class="mo_api_flex_child1" style="cursor:no-drop;">
+					<div class="mo_api_flex_child mo_api_no_cursor">
 						<div style="height: 30%">
 						<div class="mo_api_oauth_internal1">
 						<img src="<?php echo esc_url( plugin_dir_url( dirname( dirname( dirname( __FILE__ ) ) ) ) ); ?>/images/secure.png" height="30px" width="30px"></div>

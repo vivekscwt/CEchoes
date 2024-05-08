@@ -119,7 +119,7 @@ class Mo_API_Authentication_ProtectedRestAPIs {
 
 				$route_for_display = ( '/' === $route ) ? '/' . esc_html__( 'REST API ROOT', 'disable-json-api' ) : esc_html( $route );
 
-				echo "<h2><label><input name='rest_routes[]' value='" . esc_attr( $route ) . "' type='checkbox' id='protectedrestapi_namespace_" . esc_attr( $loop_counter ) . "' onclick='protectedrestapi_namespace_click(\"" . esc_attr( $route ) . '",' . esc_attr( $loop_counter ) . '\')' . esc_attr( $checked_prop ) . ' ' . esc_attr( $route_disabled ) . ' >&nbsp;' . esc_html( $route_for_display ) . '</label></h2><ul>';
+				echo '<h2><label><input name="' . esc_attr( 'rest_routes[]' ) . '" value="' . esc_attr( $route ) . '" id="' . esc_attr( 'protectedrestapi_namespace_' . $loop_counter ) . '" type="checkbox" onclick="protectedrestapi_namespace_click(\'' . esc_attr( $current_namespace ) . '\', \'' . esc_attr( $loop_counter ) . '\')" ' . esc_attr( $checked_prop ) . ' ' . esc_attr( $route_disabled ) . '>&nbsp;' . esc_html( $route_for_display ) . '</label></h2>';
 
 				if ( '/' === $route ) {
 					/* translators: %s: rest api url */

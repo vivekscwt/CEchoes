@@ -41,7 +41,7 @@ class Mo_API_Authentication_Third_Party_Provider_Config {
 			</div>	
 			<p class="mo_api_authentication_method_description">WordPress REST API Third-party provider Authentication Method involves the REST APIs access on validation against the token provided by Third-party providers like OAuth 2.0, OpenIDConnect, SAML 2.0 etc. The plugin directly validates the token with these providers and based on the response, APIs are allowed to access.</p>
 			<br>
-			<div class="mo_api_auth_setup_guide">
+			<div class="mo_api_auth_setup_guide2">
 				<div class="mo_api_auth_setup_guide1"><img src="<?php echo esc_url( plugin_dir_url( dirname( dirname( dirname( __FILE__ ) ) ) ) ); ?>/images/user-guide.png" height="25px" width="25px"></div>
 				<a href="https://plugins.miniorange.com/wordpress-rest-api-authentication-using-third-party-provider#step_1" target="_blank"><div class="mo_api_authentication_guide1"><p style="font-weight: 700;">Setup Guide</p></div></a>
 			</div>
@@ -57,34 +57,153 @@ class Mo_API_Authentication_Third_Party_Provider_Config {
 				<br>
 				<div class="mo_api_authentication_card_layout_internal" style="width: 100%">
 
-					<div class="mo_api_flex_child1" style="cursor:no-drop;">
+					<div class="mo_api_flex_child mo_api_no_cursor mo_rest_third_party_provider">
 						<div class="mo_rest_tpp_auth_box">	
-							<img src="<?php echo esc_url( plugin_dir_url( dirname( dirname( dirname( __FILE__ ) ) ) ) ); ?>/images/oauth.png" height="40px" width="40px">
+							<img src="<?php echo esc_url( plugin_dir_url( dirname( dirname( dirname( __FILE__ ) ) ) ) . '/images/oauth.png' ); ?>" height="40px" width="40px">
 						</div>
 						<div class="mo_rest_tpp_auth_text">
 							<p class="mo_rest_tpp_auth_text_p">OAuth 2.0 Provider</p></div>
 					</div>
-					<div class="mo_api_flex_child1" style="cursor:no-drop;">
+					<div class="mo_api_flex_child mo_api_no_cursor mo_rest_third_party_provider">
 						<div class="mo_rest_tpp_auth_box">	
-							<img src="<?php echo esc_url( plugin_dir_url( dirname( dirname( dirname( __FILE__ ) ) ) ) ); ?>/images/oidc.png" height="40px" width="40px">
+							<img src="<?php echo esc_url( plugin_dir_url( dirname( dirname( dirname( __FILE__ ) ) ) ) . '/images/oidc.png' ); ?>" height="40px" width="40px">
 						</div>
 						<div class="mo_rest_tpp_auth_text">
 							<p class="mo_rest_tpp_auth_text_p">OpenID Connect Provider</p></div>
 					</div>
-
-					<div class="mo_api_flex_child1" style="cursor:no-drop;">
+					<div class="mo_api_flex_child mo_api_no_cursor mo_rest_third_party_provider">
 						<div class="mo_rest_tpp_auth_box">	
-							<img src="<?php echo esc_url( plugin_dir_url( dirname( dirname( dirname( __FILE__ ) ) ) ) ); ?>/images/saml.png" height="40px" width="40px">
+							<img src="<?php echo esc_url( plugin_dir_url( dirname( dirname( dirname( __FILE__ ) ) ) ) . '/images/saml.png' ); ?>" height="40px" width="40px">
 						</div>
 						<div class="mo_rest_tpp_auth_text">
 							<p class="mo_rest_tpp_auth_text_p">SAML 2.0 Provider</p></div>
 					</div>
-					<div class="mo_api_flex_child1" style="cursor:no-drop;">
+					<div class="mo_api_flex_child mo_api_no_cursor mo_rest_third_party_provider">
 						<div class="mo_rest_tpp_auth_box">	
-							<img src="<?php echo esc_url( plugin_dir_url( dirname( dirname( dirname( __FILE__ ) ) ) ) ); ?>/images/api.png" height="40px" width="40px">
+							<img src="<?php echo esc_url( plugin_dir_url( dirname( dirname( dirname( __FILE__ ) ) ) ) . '/images/api.png' ); ?>" height="40px" width="40px">
 						</div>
 						<div class="mo_rest_tpp_auth_text">
 							<p class="mo_rest_tpp_auth_text_p">Token via Custom API</p></div>
+					</div>
+					<div class="mo_api_flex_child mo_api_no_cursor mo_rest_third_party_provider">
+						<div class="mo_rest_tpp_auth_box">	
+							<img src="<?php echo esc_url( plugin_dir_url( dirname( dirname( dirname( __FILE__ ) ) ) ) . '/images/wordpress-logo.png' ); ?>" height="40px" width="40px">
+						</div>
+						<div class="mo_rest_tpp_auth_text">
+							<p class="mo_rest_tpp_auth_text_p">WordPress</p></div>
+					</div>
+				</div>
+				<div class="mo_api_authentication_card_layout_internal" style="width: 100%; margin-top: 2rem">
+					<div class="mo_api_flex_child mo_api_no_cursor mo_rest_third_party_provider">
+						<div class="mo_rest_tpp_auth_box">	
+							<img src="<?php echo esc_url( plugin_dir_url( dirname( dirname( dirname( __FILE__ ) ) ) ) . '/images/firebase.png' ); ?>" height="40px" width="40px">
+						</div>
+						<div class="mo_rest_tpp_auth_text">
+							<p class="mo_rest_tpp_auth_text_p">Firebase</p></div>
+					</div>
+					<div class="mo_api_flex_child mo_api_no_cursor mo_rest_third_party_provider">
+						<div class="mo_rest_tpp_auth_box">	
+							<img src="<?php echo esc_url( plugin_dir_url( dirname( dirname( dirname( __FILE__ ) ) ) ) . '/images/cognito.png' ); ?>" height="40px" width="40px">
+						</div>
+						<div class="mo_rest_tpp_auth_text">
+							<p class="mo_rest_tpp_auth_text_p">AWS Cognito</p></div>
+					</div>
+					<div class="mo_api_flex_child mo_api_no_cursor mo_rest_third_party_provider">
+						<div class="mo_rest_tpp_auth_box">	
+							<img src="<?php echo esc_url( plugin_dir_url( dirname( dirname( dirname( __FILE__ ) ) ) ) . '/images/azure.png' ); ?>" height="40px" width="40px">
+						</div>
+						<div class="mo_rest_tpp_auth_text">
+							<p class="mo_rest_tpp_auth_text_p">Azure AD</p></div>
+					</div>
+					<div class="mo_api_flex_child mo_api_no_cursor mo_rest_third_party_provider">
+						<div class="mo_rest_tpp_auth_box">	
+							<img src="<?php echo esc_url( plugin_dir_url( dirname( dirname( dirname( __FILE__ ) ) ) ) . '/images/azure.png' ); ?>" height="40px" width="40px">
+						</div>
+						<div class="mo_rest_tpp_auth_text">
+							<p class="mo_rest_tpp_auth_text_p">Azure B2C</p></div>
+					</div>
+					<div class="mo_api_flex_child mo_api_no_cursor mo_rest_third_party_provider">
+						<div class="mo_rest_tpp_auth_box">	
+							<img src="<?php echo esc_url( plugin_dir_url( dirname( dirname( dirname( __FILE__ ) ) ) ) . '/images/office365.png' ); ?>" height="40px" width="40px">
+						</div>
+						<div class="mo_rest_tpp_auth_text">
+							<p class="mo_rest_tpp_auth_text_p">Office 365</p></div>
+					</div>
+				</div>
+				<div class="mo_api_authentication_card_layout_internal" style="width: 100%; margin-top: 2rem">
+
+					<div class="mo_api_flex_child mo_api_no_cursor mo_rest_third_party_provider">
+						<div class="mo_rest_tpp_auth_box">	
+							<img src="<?php echo esc_url( plugin_dir_url( dirname( dirname( dirname( __FILE__ ) ) ) ) . '/images/google.png' ); ?>" height="40px" width="40px">
+						</div>
+						<div class="mo_rest_tpp_auth_text">
+							<p class="mo_rest_tpp_auth_text_p">Google</p></div>
+					</div>
+					<div class="mo_api_flex_child mo_api_no_cursor mo_rest_third_party_provider">
+						<div class="mo_rest_tpp_auth_box">	
+							<img src="<?php echo esc_url( plugin_dir_url( dirname( dirname( dirname( __FILE__ ) ) ) ) . '/images/facebook.png' ); ?>" height="40px" width="40px">
+						</div>
+						<div class="mo_rest_tpp_auth_text">
+							<p class="mo_rest_tpp_auth_text_p">Facebook</p></div>
+					</div>
+					<div class="mo_api_flex_child mo_api_no_cursor mo_rest_third_party_provider">
+						<div class="mo_rest_tpp_auth_box">	
+							<img src="<?php echo esc_url( plugin_dir_url( dirname( dirname( dirname( __FILE__ ) ) ) ) . '/images/apple.png' ); ?>" height="40px" width="40px">
+						</div>
+						<div class="mo_rest_tpp_auth_text">
+							<p class="mo_rest_tpp_auth_text_p">Apple</p></div>
+					</div>
+					<div class="mo_api_flex_child mo_api_no_cursor mo_rest_third_party_provider">
+						<div class="mo_rest_tpp_auth_box">	
+							<img src="<?php echo esc_url( plugin_dir_url( dirname( dirname( dirname( __FILE__ ) ) ) ) . '/images/linkedin.png' ); ?>" height="40px" width="40px">
+						</div>
+						<div class="mo_rest_tpp_auth_text">
+							<p class="mo_rest_tpp_auth_text_p">LinkedIn</p></div>
+					</div>
+					<div class="mo_api_flex_child mo_api_no_cursor mo_rest_third_party_provider">
+						<div class="mo_rest_tpp_auth_box">	
+							<img src="<?php echo esc_url( plugin_dir_url( dirname( dirname( dirname( __FILE__ ) ) ) ) . '/images/twitter.png' ); ?>" height="40px" width="40px">
+						</div>
+						<div class="mo_rest_tpp_auth_text">
+							<p class="mo_rest_tpp_auth_text_p">Twitter</p></div>
+					</div>
+				</div>
+				<div class="mo_api_authentication_card_layout_internal" style="width: 100%; margin-top: 2rem">
+
+					<div class="mo_api_flex_child mo_api_no_cursor mo_rest_third_party_provider">
+						<div class="mo_rest_tpp_auth_box">	
+							<img src="<?php echo esc_url( plugin_dir_url( dirname( dirname( dirname( __FILE__ ) ) ) ) . '/images/okta.png' ); ?>" height="40px" width="40px">
+						</div>
+						<div class="mo_rest_tpp_auth_text">
+							<p class="mo_rest_tpp_auth_text_p">Okta</p></div>
+					</div>
+					<div class="mo_api_flex_child mo_api_no_cursor mo_rest_third_party_provider">
+						<div class="mo_rest_tpp_auth_box">	
+							<img src="<?php echo esc_url( plugin_dir_url( dirname( dirname( dirname( __FILE__ ) ) ) ) . '/images/keycloak.png' ); ?>" height="40px" width="40px">
+						</div>
+						<div class="mo_rest_tpp_auth_text">
+							<p class="mo_rest_tpp_auth_text_p">Keycloak</p></div>
+					</div>
+					<div class="mo_api_flex_child mo_api_no_cursor mo_rest_third_party_provider">
+						<div class="mo_rest_tpp_auth_box">	
+							<img src="<?php echo esc_url( plugin_dir_url( dirname( dirname( dirname( __FILE__ ) ) ) ) . '/images/onelogin.png' ); ?>" height="40px" width="40px">
+						</div>
+						<div class="mo_rest_tpp_auth_text">
+							<p class="mo_rest_tpp_auth_text_p">OneLogin</p></div>
+					</div>
+					<div class="mo_api_flex_child mo_api_no_cursor mo_rest_third_party_provider">
+						<div class="mo_rest_tpp_auth_box">	
+							<img src="<?php echo esc_url( plugin_dir_url( dirname( dirname( dirname( __FILE__ ) ) ) ) . '/images/shopify.png' ); ?>" height="40px" width="40px">
+						</div>
+						<div class="mo_rest_tpp_auth_text">
+							<p class="mo_rest_tpp_auth_text_p">Shopify</p></div>
+					</div>
+					<div class="mo_api_flex_child mo_api_no_cursor mo_rest_third_party_provider">
+						<div class="mo_rest_tpp_auth_box">	
+							<img src="<?php echo esc_url( plugin_dir_url( dirname( dirname( dirname( __FILE__ ) ) ) ) . '/images/auth0.png' ); ?>" height="40px" width="40px">
+						</div>
+						<div class="mo_rest_tpp_auth_text">
+							<p class="mo_rest_tpp_auth_text_p">Auth0</p></div>
 					</div>
 				</div>
 				<br>

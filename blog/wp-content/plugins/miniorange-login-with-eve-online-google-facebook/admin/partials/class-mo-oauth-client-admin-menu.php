@@ -268,6 +268,15 @@ class MO_OAuth_Client_Admin_Menu {
 			">
 					<?php esc_html_e( 'Login Button Customization', 'miniorange-login-with-eve-online-google-facebook' ); ?>
 		</a>
+		<a id="tab-user-analytics" href="admin.php?page=mo_oauth_settings&tab=user-analytics"
+			class="nav-tab mo_oauth_nav-tab  
+			<?php
+			if ( 'user-analytics' === $currenttab ) {
+				echo 'nav-tab-active mo_oauth_nav-tab-active';}
+			?>
+			">
+					<?php esc_html_e( 'User Analytics', 'miniorange-login-with-eve-online-google-facebook' ); ?>
+		</a>
 		<a id="tab-requestdemo" href="admin.php?page=mo_oauth_settings&tab=requestfordemo"
 			class="nav-tab mo_oauth_nav-tab 
 			<?php
@@ -395,6 +404,8 @@ jQuery("#mo_oauth_client_mo_server").click(function() {
 			}
 		} elseif ( 'customization' === $currenttab ) {
 				MO_OAuth_Client_Apps::customization();
+		} elseif ( 'user-analytics' === $currenttab ) {
+			MO_OAuth_Client_Apps::user_analytics();
 		} elseif ( 'signinsettings' === $currenttab ) {
 			MO_OAuth_Client_Apps::sign_in_settings();
 		} elseif ( 'licensing' === $currenttab ) {

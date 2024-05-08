@@ -336,23 +336,26 @@ class Miniorange_API_Authentication_Admin {
 	 * @return void
 	 */
 	public function mo_rest_token_generation_callback( $request_body ) {
-				$json     = $request_body->get_params();
-				$username = isset( $json['username'] ) ? $json['username'] : false;
-				$password = isset( $json['password'] ) ? $json['password'] : false;
-				$json     = array(
-					'username' => $username,
-					'password' => $password,
-				);
-				mo_api_auth_token_endpoint_flow( $json );
+		$json     = $request_body->get_params();
+		$username = isset( $json['username'] ) ? sanitize_user( $json['username'] ) : false;
+		$password = isset( $json['password'] ) ? $json['password'] : false;
+		$json     = array(
+			'username' => $username,
+			'password' => $password,
+		);
+		mo_api_auth_token_endpoint_flow( $json );
 
 	}
 
 	/**
 	 * Initialize flow.
 	 *
-	 * @return void
+	 * @return mixed
 	 */
 	public function mo_api_auth_initialize_api_flow() {
+		if ( isset( $_SERVER['REQUEST_METHOD'] ) && 'OPTIONS' === $_SERVER['REQUEST_METHOD'] ) {
+			return true;
+		}
 		mo_api_auth_restrict_rest_api_for_invalid_users();
 	}
 
@@ -606,7 +609,7 @@ class Miniorange_API_Authentication_Admin {
 						update_option( 'mo_api_auth_message_flag', 2 );
 					} else {
 						update_option( 'mo_api_auth_message', 'Thanks for getting in touch! We shall get back to you shortly.' );
-						update_option( 'mo_api_auth_message_flag', 1 );
+						mo_api_auth_show_success_message();
 					}
 				} else {
 					update_option( 'message', 'Please Select one of the reasons ,if your reason is not mentioned please select Other Reasons' );

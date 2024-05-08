@@ -32,6 +32,10 @@ class Mo_API_Authentication_Demo {
 	 * @return void
 	 */
 	public static function demo_request() {
+		global $wp_version;
+
+		$wp_version_trim = substr( $wp_version, 0, 3 );
+
 		?>
 		<div id="mo_api_authentication_password_setting_layout" class="mo_api_authentication_support_layout">
 		<h2 style="font-size: 20px;font-weight: 700">Demo/Trial Request for Premium plans</h2>
@@ -144,11 +148,11 @@ class Mo_API_Authentication_Demo {
 				</td>
 				<td>
 					<p>
-						<p><input type="checkbox" name="mo_api_authentication_demo_basic_auth">Basic Authentication
-						<p><input type="checkbox" name="mo_api_authentication_demo_jwt_auth">JWT Authentication
-						<p><input type="checkbox" name="mo_api_authentication_demo_apikey_auth">API Key Authentication
-						<p><input type="checkbox" name="mo_api_authentication_demo_oauth_auth">OAuth 2.0 Authentication
-						<p><input type="checkbox" name="mo_api_authentication_demo_thirdparty_auth">Third Party Authentication
+						<p><input type="checkbox" class="mo_rest_api_demo_form_auth_methods_checkbox" name="mo_api_authentication_demo_basic_auth">Basic Authentication
+						<p><input type="checkbox" class="mo_rest_api_demo_form_auth_methods_checkbox" name="mo_api_authentication_demo_jwt_auth">JWT Authentication
+						<p><input type="checkbox" class="mo_rest_api_demo_form_auth_methods_checkbox" name="mo_api_authentication_demo_apikey_auth">API Key Authentication
+						<p><input type="checkbox" class="mo_rest_api_demo_form_auth_methods_checkbox" name="mo_api_authentication_demo_oauth_auth">OAuth 2.0 Authentication
+						<p><input type="checkbox" class="mo_rest_api_demo_form_auth_methods_checkbox" name="mo_api_authentication_demo_thirdparty_auth">Third Party Authentication
 					</p>
 				</td>
 			</tr>
@@ -159,15 +163,17 @@ class Mo_API_Authentication_Demo {
 				<td>
 					<p>
 						<br>
-						<p><input type="checkbox" name="mo_api_authentication_demo_endpoints_wp_rest_api">WP REST APIs
-						<p><input type="checkbox" name="mo_api_authentication_demo_endpoints_custom_api">WP Third Party/ Custom APIs
+						<p><input type="checkbox" class="mo_rest_api_demo_form_rest_endpoints_checkbox" name="mo_api_authentication_demo_endpoints_wp_rest_api">WP REST APIs
+						<p><input type="checkbox" class="mo_rest_api_demo_form_rest_endpoints_checkbox" name="mo_api_authentication_demo_endpoints_custom_api">WP Third Party/ Custom APIs
 					</p>
 					<br>
 				</td>
 			</tr>
 			<tr>
 				<td></td>
-				<td><input type="submit" name="submit" value="Submit Request" class="button button-primary button-large" style="width:120px;background: #473970" /></td>
+				<td>
+					<button id="mo_rest_api_auth_sandbox_btn" name="mo_rest_api_auth_sandbox_btn" class="button button-primary button-large" style="width:120px;background: #473970">Submit Request</button>
+				</td>
 			</tr>
 		</table>
 		<br>
@@ -179,6 +185,56 @@ class Mo_API_Authentication_Demo {
 	</form>
 
 		</div>
+	<script>
+		document.addEventListener("DOMContentLoaded", () => {
+			const mo_rest_api_auth_sandbox_btn = document.getElementById('mo_rest_api_auth_sandbox_btn');
+			mo_rest_api_auth_sandbox_btn.addEventListener('click', (e) => {
+				e.preventDefault();
+
+				const mo_rest_api_sandbox_email = document.querySelector('input[name="mo_api_authentication_demo_email"]').value;
+				const mo_rest_api_sandbox_usecase = document.querySelector('textarea[name="mo_api_authentication_demo_usecase"]').value;
+
+				// Get name of all the auth methods selected.
+				const mo_rest_api_sandbox_auth_methods = document.querySelectorAll('.mo_rest_api_demo_form_auth_methods_checkbox');
+				let mo_rest_api_sandbox_auth_methods_list = '';
+				mo_rest_api_sandbox_auth_methods.forEach((auth_method) => {
+					if (auth_method.checked) {
+						mo_rest_api_sandbox_auth_methods_list += auth_method.parentElement.innerText + ', ';
+					}
+				});
+
+				const mo_rest_api_sandbox_rest_endpoints = document.querySelectorAll('.mo_rest_api_demo_form_rest_endpoints_checkbox');
+				let mo_rest_api_sandbox_rest_endpoints_list = '';
+				mo_rest_api_sandbox_rest_endpoints.forEach((endpoints) => {
+					if (endpoints.checked) {
+						mo_rest_api_sandbox_rest_endpoints_list += endpoints.parentElement.innerText + ', ';
+					}
+				});
+
+			// Append the addons list to the usecase.
+			const mo_rest_api_sandbox_query_string = 'Usecase: \n'
+				+ mo_rest_api_sandbox_usecase 
+				+ '\n' 
+				+ 'Authentication Methods selected: \n' 
+				+ mo_rest_api_sandbox_auth_methods_list
+				+ '\n' 
+				+ 'REST API Endpoints selected: \n' 
+				+ mo_rest_api_sandbox_rest_endpoints_list;
+
+			// Href to the sandbox demo website.
+			const mo_rest_api_sandbox_href = 'https://sandbox.miniorange.com/?email=' + mo_rest_api_sandbox_email 
+				+ '&mo_plugin=mo_oauth_rest_api&wordpress_version=<?php echo esc_attr( $wp_version_trim ); ?>&usecase=' 
+				+ encodeURIComponent(mo_rest_api_sandbox_query_string)
+				+ '&referer=<?php echo esc_url( get_site_url() ); ?>';
+
+			// Open the sandbox demo website in a new tab.
+			window.open(mo_rest_api_sandbox_href, '_blank');
+
+		});
+
+	});
+
+	</script>
 			<?php
 		}
 	}

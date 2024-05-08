@@ -22,7 +22,6 @@ class MOOAuth {
 		add_action( 'plugins_loaded', array( $this, 'mo_load_plugin_textdomain' ) );
 		register_deactivation_hook( MO_OAUTH_PLUGIN_BASENAME, array( $this, 'mo_oauth_deactivate' ) );
 		register_activation_hook( MO_OAUTH_PLUGIN_BASENAME, array( $this, 'mo_oauth_set_cron_job' ) );
-		add_action( 'activated_plugin', array( $this, 'mo_oauth_redirect_after_activation' ), 10, 2 );
 		add_shortcode( 'mo_oauth_login', array( $this, 'mo_oauth_shortcode_login' ) );
 		add_action( 'admin_footer', array( $this, 'mo_oauth_client_feedback_request' ) );
 		add_action( 'check_if_wp_rest_apis_are_open', array( $this, 'mo_oauth_scheduled_task' ) );
@@ -171,23 +170,6 @@ class MOOAuth {
 	public function mo_oauth_set_cron_job() {
 		if ( ! wp_next_scheduled( 'check_if_wp_rest_apis_are_open' ) ) {
 			wp_schedule_event( time() + 604800, 'weekly', 'check_if_wp_rest_apis_are_open' ); // update timestamp and name according to interval.
-		}
-	}
-
-	/**
-	 * This function is responsible for redirecting the admin to the OAuth SSO plugin settings after the plugin is activated.
-	 *
-	 * @param string $plugin The activated plugin's name.
-	 * @param bool   $network_wide If the plugin was activated network wide or not.
-	 * @return void
-	 */
-	public function mo_oauth_redirect_after_activation( $plugin, $network_wide ) {
-		//phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Reading GET parameter from the URL for checking if multiple plugins were activated, doesn't require nonce verification. 
-		if ( ! isset( $_GET['activate-multi'] ) && MO_OAUTH_PLUGIN_BASENAME === $plugin && ! $network_wide ) {
-			$activate_time = new DateTime();
-			update_option( 'mo_oauth_activation_time', $activate_time );
-			wp_safe_redirect( admin_url( 'admin.php?page=mo_oauth_settings&tab=config' ) );
-			exit;
 		}
 	}
 
