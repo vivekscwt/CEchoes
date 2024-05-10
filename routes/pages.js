@@ -3941,9 +3941,13 @@ router.get('/add-company', checkLoggedIn, async (req, res) => {
         const currentUserData = JSON.parse(encodedUserData);
 
         // Fetch all the required data asynchronously
-        const [company_all_categories] = await Promise.all([
-            comFunction.getCompanyCategory()
+        const [company_all_categories,getCountries, getParentCompany] = await Promise.all([
+            comFunction.getCompanyCategory(),
+            comFunction.getCountries(),
+            comFunction.getParentCompany()
         ]);
+        console.log("getCountries",getCountries);
+        console.log("getParentCompany",getParentCompany);
 
         // Render the 'edit-user' EJS view and pass the data
         res.render('add-company', {
@@ -3951,6 +3955,8 @@ router.get('/add-company', checkLoggedIn, async (req, res) => {
             page_title: 'Add Organization',
             currentUserData,
             company_categories: company_all_categories,
+            getCountries: getCountries,
+            getParentCompany: getParentCompany
         });
     } catch (err) {
         console.error(err);
@@ -4017,10 +4023,11 @@ router.get('/edit-company/:id', checkLoggedIn, async (req, res) => {
         const companyId = req.params.id;
 
         // Fetch all the required data asynchronously
-        const [company, company_all_categories, users] = await Promise.all([
+        const [company, company_all_categories, users, getParentCompany] = await Promise.all([
             comFunction.getCompany(companyId),
             comFunction.getCompanyCategoryBuID(companyId),
-            comFunction.getUsersByRole(2)
+            comFunction.getUsersByRole(2),
+            comFunction.getParentCompany()
             //comFunction.getCompanyMeta(userId),
             //comFunction.getCountries(),
             //comFunction.getStatesByUserID(userId)
@@ -4043,7 +4050,8 @@ router.get('/edit-company/:id', checkLoggedIn, async (req, res) => {
             currentUserData,
             company: company,
             company_all_categories: company_all_categories,
-            Allusers: users
+            Allusers: users,
+            getParentCompany: getParentCompany
             //countries: countries,
             //states: states            
         });

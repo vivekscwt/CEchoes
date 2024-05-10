@@ -202,6 +202,42 @@ async function getCompanyCategory() {
   }
 }
 
+
+async function getParentCompany(country_shortname) {
+  try {
+    const parentcompanyquery = `SELECT * FROM company WHERE parent_id = '0' ORDER BY ID`;
+    constparentvalue = await query(parentcompanyquery,[country_shortname]);
+    if(constparentvalue.length>0){
+      return constparentvalue
+    }
+    else{
+      return []
+    }
+  } catch (error) {
+    throw new Error('Error fetching company categories');
+  }
+}
+
+
+async function getCountriesList() {
+  try {
+    const countryquery = `SELECT * FROM countries ORDER BY countries.id`;
+    const countryvalue = await query(countryquery);
+    console.log("countryvalue",countryvalue);
+
+    if(countryvalue.length>0){
+      //var countries = countryvalue.
+      return countryvalue;
+    } else{
+      return [];
+    }
+
+    
+  } catch (error) {
+    throw new Error('Error fetching countries');
+  }
+}
+
 function buildCategoryTree(categories, parentId = 0) {
   const categoryTree = [];
 
@@ -1353,6 +1389,8 @@ module.exports = {
     getAllCompany,
     getCompany,
     getCompanyCategory,
+    getParentCompany,
+    getCountriesList,
     renderCategoryTreeHTML,
     getCompanyCategoryBuID,
     saveUserGoogleLoginDataToDB,

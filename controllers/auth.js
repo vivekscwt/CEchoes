@@ -1643,8 +1643,98 @@ exports.restoreUser = (req, res) => {
 }
 
 //--- Create New Company ----//
+// exports.createCompany = async (req, res) => {
+//     //console.log(req.body);
+//     const encodedUserData = req.cookies.user;
+//     const currentUserData = JSON.parse(encodedUserData);
+
+//     const currentDate = new Date();
+
+//     const year = currentDate.getFullYear();
+//     const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+//     const day = String(currentDate.getDate()).padStart(2, '0');
+//     const hours = String(currentDate.getHours()).padStart(2, '0');
+//     const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+//     const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+
+//     const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+//     // const [companySlug] = await Promise.all( [
+//     //     comFunction2.generateUniqueSlug(req.body.company_name)
+//     // ]);
+//     comFunction2.generateUniqueSlug(req.body.company_name, (error, companySlug) => {
+//         if (error) {
+//             console.log('Err: ', error.message);
+//         } else {
+//             console.log('companySlug', companySlug);
+//             var insert_values = [];
+//             if (req.file) {
+//                 insert_values = [currentUserData.user_id, req.body.company_name, req.body.heading, req.file.filename, req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, req.body.status, req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.main_address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug];
+//             } else {
+//                 insert_values = [currentUserData.user_id, req.body.company_name, req.body.heading, '', req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, req.body.status, req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.main_address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug];
+//             }
+
+//             const insertQuery = 'INSERT INTO company (user_created_by, company_name, heading, logo, about_company, comp_phone, comp_email, comp_registration_id, status, trending, created_date, updated_date, tollfree_number, main_address, main_address_pin_code, address_map_url, main_address_country, main_address_state, main_address_city, verified, paid_status, slug) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+//             db.query(insertQuery, insert_values, (err, results, fields) => {
+//                 if (err) {
+//                     return res.send(
+//                         {
+//                             status: 'err',
+//                             data: '',
+//                             message: 'An error occurred while processing your request' + err
+//                         }
+//                     )
+//                 } else {
+//                     const companyId = results.insertId;
+//                     const categoryArray = Array.isArray(req.body.category) ? req.body.category : [req.body.category];
+
+//                     // Filter out undefined values from categoryArray
+//                     const validCategoryArray = categoryArray.filter(categoryID => categoryID !== undefined);
+
+//                     console.log('categoryArray:', categoryArray);
+//                     if (validCategoryArray.length > 0) {
+//                         const companyCategoryData = validCategoryArray.map((categoryID) => [companyId, categoryID]);
+//                         db.query('INSERT INTO company_cactgory_relation (company_id, category_id) VALUES ?', [companyCategoryData], function (error, results) {
+//                             if (error) {
+//                                 console.log(error);
+//                                 res.status(400).json({
+//                                     status: 'err',
+//                                     message: 'Error while creating company category'
+//                                 });
+//                             }
+//                             else {
+//                                 return res.send(
+//                                     {
+//                                         status: 'ok',
+//                                         data: companyId,
+//                                         message: 'New company created'
+//                                     }
+//                                 )
+//                             }
+//                         });
+//                     } else {
+//                         return res.send(
+//                             {
+//                                 status: 'ok',
+//                                 data: companyId,
+//                                 message: 'New company created without any category.'
+//                             }
+//                         )
+//                     }
+//                 }
+//             })
+
+//         }
+//     });
+
+
+
+
+// }
+
 exports.createCompany = async (req, res) => {
-    //console.log(req.body);
+    try{
+    console.log(req.body);
     const encodedUserData = req.cookies.user;
     const currentUserData = JSON.parse(encodedUserData);
 
@@ -1659,22 +1749,133 @@ exports.createCompany = async (req, res) => {
 
     const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 
-    // const [companySlug] = await Promise.all( [
-    //     comFunction2.generateUniqueSlug(req.body.company_name)
-    // ]);
+    if(req.body.parent_id == 0){
+        const companyquery = `SELECT * FROM company WHERE company_name = ? AND main_address_country =? `;
+        const companyvalue = await query(companyquery,[req.body.company_name,req.body.main_address_country]);
+    
+        console.log("companyvalue",companyvalue);
+    
+        if(companyvalue.length>0){
+            return res.send(
+                {
+                    status: 'err',
+                    data: '',
+                    message: 'Organization name already exist.'
+                }
+            )
+        }
+    }
+
+
+
+    if (!req.body.parent_id || req.body.parent_id === "Select Parent") {
+        req.body.parent_id = 0;
+    }
+
+    // const slugquery = `SELECT slug FROM company WHERE company_name = ?`;
+    // const slugvalue = await query(slugquery,[req.body.company_name]);
+
+    // if(slugquery.length>0){
+    //     console.log("aaaaaaa");
+    //     var companySlug = slugvalue[0].slug;
+    //     console.log("companySlug",companySlug);
+
+    //     // comFunction2.generateUniqueSlug(req.body.company_name, (error, companySlug) => {
+    //         // comFunction2.generateUniqueSlug(req.body.company_name, main_address_country, (err, companySlug) => {
+    //         // if (error) {
+    //         //     console.log('Err: ', error.message);
+    //         // } else {
+    //             console.log('companySlug', companySlug);
+    //             var insert_values = [];
+    //             if (req.file) {
+    //                 insert_values = [currentUserData.user_id, req.body.company_name, req.body.heading, req.file.filename, req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, req.body.status, req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.main_address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug, req.body.parent_id];
+    //             } else {
+    //                 insert_values = [currentUserData.user_id, req.body.company_name, req.body.heading, '', req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, req.body.status, req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.main_address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug, req.body.parent_id];
+    //             }
+    
+    //             const insertQuery = 'INSERT INTO company (user_created_by, company_name, heading, logo, about_company, comp_phone, comp_email, comp_registration_id, status, trending, created_date, updated_date, tollfree_number, main_address, main_address_pin_code, address_map_url, main_address_country, main_address_state, main_address_city, verified, paid_status, slug,parent_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)';
+    //             db.query(insertQuery, insert_values, (err, results, fields) => {
+    //                 if (err) {
+    //                     return res.send(
+    //                         {
+    //                             status: 'err',
+    //                             data: '',
+    //                             message: 'An error occurred while processing your request' + err
+    //                         }
+    //                     )
+    //                 } else {
+    //                     console.log("company results",results);
+    
+    //                     var companyId = results.insertId;
+    //                     const categoryArray = Array.isArray(req.body.category) ? req.body.category : [req.body.category];
+    
+    //                     // Filter out undefined values from categoryArray
+    //                     const validCategoryArray = categoryArray.filter(categoryID => categoryID !== undefined);
+    
+    //                     console.log('categoryArray:', categoryArray);
+    //                     if (validCategoryArray.length > 0) {
+    //                         const companyCategoryData = validCategoryArray.map((categoryID) => [companyId, categoryID]);
+    //                         db.query('INSERT INTO company_cactgory_relation (company_id, category_id) VALUES ?', [companyCategoryData], function (error, results) {
+    //                             if (error) {
+    //                                 console.log(error);
+    //                                 res.status(400).json({
+    //                                     status: 'err',
+    //                                     message: 'Error while creating company category'
+    //                                 });
+    //                             }
+    //                             else {
+    //                                 return res.send(
+    //                                     {
+    //                                         status: 'ok',
+    //                                         data: companyId,
+    //                                         message: 'New company created'
+    //                                     }
+    //                                 )
+    //                             }
+    //                         });
+    //                     } else {
+    //                         return res.send(
+    //                             {
+    //                                 status: 'ok',
+    //                                 data: companyId,
+    //                                 message: 'New company created without any category.'
+    //                             }
+    //                         )
+    //                     }
+    //                 }
+    //             })
+    
+    //         // }
+    //     // });
+
+
+
+    // }else{
+    //     ("bbbbbbb")
+    //     var [companySlug] = await Promise.all( [
+    //         comFunction2.generateUniqueSlug(req.body.company_name)
+    //     ]);
+    //     console.log("companySlugsss",companySlug);
+
+
+
+
+    // }
+
     comFunction2.generateUniqueSlug(req.body.company_name, (error, companySlug) => {
+        // comFunction2.generateUniqueSlug(req.body.company_name, main_address_country, (err, companySlug) => {
         if (error) {
             console.log('Err: ', error.message);
         } else {
             console.log('companySlug', companySlug);
             var insert_values = [];
             if (req.file) {
-                insert_values = [currentUserData.user_id, req.body.company_name, req.body.heading, req.file.filename, req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, req.body.status, req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.main_address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug];
+                insert_values = [currentUserData.user_id, req.body.company_name, req.body.heading, req.file.filename, req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, req.body.status, req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.main_address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug, req.body.parent_id];
             } else {
-                insert_values = [currentUserData.user_id, req.body.company_name, req.body.heading, '', req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, req.body.status, req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.main_address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug];
+                insert_values = [currentUserData.user_id, req.body.company_name, req.body.heading, '', req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, req.body.status, req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.main_address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug, req.body.parent_id];
             }
 
-            const insertQuery = 'INSERT INTO company (user_created_by, company_name, heading, logo, about_company, comp_phone, comp_email, comp_registration_id, status, trending, created_date, updated_date, tollfree_number, main_address, main_address_pin_code, address_map_url, main_address_country, main_address_state, main_address_city, verified, paid_status, slug) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+            const insertQuery = 'INSERT INTO company (user_created_by, company_name, heading, logo, about_company, comp_phone, comp_email, comp_registration_id, status, trending, created_date, updated_date, tollfree_number, main_address, main_address_pin_code, address_map_url, main_address_country, main_address_state, main_address_city, verified, paid_status, slug,parent_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)';
             db.query(insertQuery, insert_values, (err, results, fields) => {
                 if (err) {
                     return res.send(
@@ -1685,7 +1886,9 @@ exports.createCompany = async (req, res) => {
                         }
                     )
                 } else {
-                    const companyId = results.insertId;
+                    console.log("company results",results);
+
+                    var companyId = results.insertId;
                     const categoryArray = Array.isArray(req.body.category) ? req.body.category : [req.body.category];
 
                     // Filter out undefined values from categoryArray
@@ -1726,14 +1929,327 @@ exports.createCompany = async (req, res) => {
 
         }
     });
-
-
-
-
+    } catch(error){
+        console.error('Error:', error);
+        return res.send({
+            status: 'err',
+            //data: companyId,
+            message: error.message
+        });
+    }
 }
 
 //-- Company Edit --//
-exports.editCompany = (req, res) => {
+// exports.editCompany = (req, res) => {
+//     //console.log(req.body);
+//     //console.log('editCompany',req.files);
+//     //return false;
+//     const companyID = req.body.company_id;
+//     const currentDate = new Date();
+
+//     const year = currentDate.getFullYear();
+//     const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+//     const day = String(currentDate.getDate()).padStart(2, '0');
+//     const hours = String(currentDate.getHours()).padStart(2, '0');
+//     const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+//     const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+
+//     const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+//     db.query(`SELECT slug FROM company WHERE slug = '${req.body.company_slug}' AND ID != '${companyID}' `, async (slugErr, slugResult) => {
+//         if (slugErr) {
+//             return res.send({
+//                 status: 'err',
+//                 data: '',
+//                 message: 'An error occurred while updating the company details: ' + slugErr
+//             });
+//         }
+//         if (slugResult.length > 0) {
+//             return res.send({
+//                 status: 'err',
+//                 data: '',
+//                 message: 'Company slug already exist'
+//             });
+//         } else {
+//             // Update company details in the company table
+//             const updateQuery = 'UPDATE company SET company_name = ?, heading = ?, logo = ?, about_company = ?, comp_phone = ?, comp_email = ?, comp_registration_id = ?, status = ?, trending = ?, updated_date = ?, tollfree_number = ?, main_address = ?, main_address_pin_code = ?, address_map_url = ?, main_address_country = ?, main_address_state = ?, main_address_city = ?, verified = ?, paid_status = ?, slug = ?, membership_type_id = ?, complaint_status = ?, complaint_level = ? WHERE ID = ?';
+//             const updateValues = [
+//                 req.body.company_name,
+//                 req.body.heading,
+//                 '',
+//                 req.body.about_company,
+//                 req.body.comp_phone,
+//                 req.body.comp_email,
+//                 req.body.comp_registration_id,
+//                 req.body.status,
+//                 req.body.trending,
+//                 formattedDate,
+//                 req.body.tollfree_number,
+//                 req.body.main_address,
+//                 req.body.main_address_pin_code,
+//                 req.body.address_map_url,
+//                 req.body.main_address_country,
+//                 req.body.main_address_state,
+//                 req.body.main_address_city,
+//                 req.body.verified,
+//                 req.body.payment_status.trim(),
+//                 req.body.company_slug,
+//                 req.body.membership_type_id,
+//                 req.body.complaint_status,
+//                 req.body.complaint_level,
+//                 companyID
+//             ];
+
+//             if (req.files.logo) {
+//                 // Unlink (delete) the previous file
+//                 const unlinkcompanylogo = "uploads/" + req.body.previous_logo;
+//                 fs.unlink(unlinkcompanylogo, (err) => {
+//                     if (err) {
+//                         //console.error('Error deleting file:', err);
+//                     } else {
+//                         //console.log('Previous file deleted');
+//                     }
+//                 });
+
+//                 updateValues[2] = req.files.logo[0].filename;
+//             } else {
+//                 updateValues[2] = req.body.previous_logo;
+//             }
+//             if (req.files.cover_img) {
+//                 // Unlink (delete) the previous file
+//                 const unlinkcompanycover_img = "uploads/" + req.body.previous_cover_img;
+//                 fs.unlink(unlinkcompanycover_img, (err) => {
+//                     if (err) {
+//                         //console.error('Error deleting file:', err);
+//                     } else {
+//                         //console.log('Previous file deleted');
+//                     }
+//                 });
+
+//                 db.query(`SELECT * FROM premium_company_data WHERE company_id = '${companyID}' `, (coverErr, coverRes) => {
+//                     if (coverErr) {
+//                         console.log(coverErr)
+//                     }
+//                     if (coverRes.length > 0) {
+//                         db.query(`UPDATE premium_company_data SET cover_img = '${req.files.cover_img[0].filename}' WHERE company_id = ${companyID}`, (coverUpdateErr, coverUpdateRes) => {
+//                             if (coverUpdateErr) {
+//                                 console.log(coverUpdateErr)
+//                             }
+//                         })
+//                     } else {
+//                         db.query(`INSERT INTO premium_company_data( company_id, cover_img, gallery_img, promotions, products) VALUES ('${companyID}', '${req.files.cover_img[0].filename}', '[]', '[]','[]' )`, (coverInsertErr, coverInsertRes) => {
+//                             if (coverInsertErr) {
+//                                 console.log(coverInsertErr)
+//                             }
+//                         })
+//                     }
+//                 })
+
+//             }
+//             db.query(updateQuery, updateValues, (err, results) => {
+//                 if (err) {
+//                     // Handle the error
+//                     return res.send({
+//                         status: 'err',
+//                         data: '',
+//                         message: 'An error occurred while updating the company details: ' + err
+//                     });
+//                 }
+
+//                 // Update company categories in the company_cactgory_relation table
+//                 const deleteQuery = 'DELETE FROM company_cactgory_relation WHERE company_id = ?';
+//                 db.query(deleteQuery, [companyID], (err) => {
+//                     if (err) {
+//                         // Handle the error
+//                         return res.send({
+//                             status: 'err',
+//                             data: '',
+//                             message: 'An error occurred while deleting existing company categories: ' + err
+//                         });
+//                     }
+
+//                     if (req.body.category) {
+//                         // Create an array of arrays for bulk insert
+//                         const categoryArray = Array.isArray(req.body.category) ? req.body.category : [req.body.category];
+//                         const insertValues = categoryArray.map((categoryID) => [companyID, categoryID]);
+
+//                         const insertQuery = 'INSERT INTO company_cactgory_relation (company_id, category_id) VALUES ?';
+
+//                         db.query(insertQuery, [insertValues], (err) => {
+//                             if (err) {
+//                                 // Handle the error
+//                                 return res.send({
+//                                     status: 'err',
+//                                     data: '',
+//                                     message: 'An error occurred while updating company categories: ' + err
+//                                 });
+//                             }
+
+//                             // Insert claim request if req.body.claimed_by exists
+//                             if (req.body.claimed_by) {
+//                                 const checkClaimRequestQuery = 'SELECT * FROM company_claim_request WHERE company_id = ?';
+//                                 db.query(checkClaimRequestQuery, [companyID], async (err, claimRequestResults) => {
+//                                     if (err) {
+//                                         // Handle the error
+//                                         return res.send({
+//                                             status: 'err',
+//                                             data: '',
+//                                             message: 'An error occurred while checking company claim request: ' + err
+//                                         });
+//                                     }
+
+//                                     if (claimRequestResults.length > 0) {
+
+//                                         console.log('checkClaimRequestQuery', claimRequestResults)
+//                                         const ReviewReplyByQuery = 'UPDATE review_reply SET reply_by = ? WHERE company_id = ? AND reply_by = ?';
+//                                         const ReviewReplyByData = [req.body.claimed_by, companyID, claimRequestResults[0].claimed_by]
+//                                         db.query(ReviewReplyByQuery, ReviewReplyByData, (ReviewReplyByErr, ReviewReplyByResult) => {
+//                                             const ReviewReplyToQuery = 'UPDATE review_reply SET reply_to = ? WHERE company_id = ? AND reply_to = ?';
+//                                             const ReviewReplyToData = [req.body.claimed_by, companyID, claimRequestResults[0].claimed_by]
+//                                             db.query(ReviewReplyToQuery, ReviewReplyToData, (ReviewReplyToErr, ReviewReplyToResult) => {
+//                                                 // Claim request already exists, handle accordingly
+//                                                 const updateClaimRequestQuery = 'UPDATE company_claim_request SET claimed_by = ?, claimed_date = ? WHERE company_id = ?';
+//                                                 const updateClaimRequestValues = [req.body.claimed_by, formattedDate, companyID];
+
+//                                                 db.query(updateClaimRequestQuery, updateClaimRequestValues, (err) => {
+//                                                     if (err) {
+//                                                         // Handle the error
+//                                                         return res.send({
+//                                                             status: 'err',
+//                                                             data: '',
+//                                                             message: 'An error occurred while updating company claim request: ' + err
+//                                                         });
+//                                                     }
+
+//                                                     // Return success response
+//                                                     return res.send({
+//                                                         status: 'ok',
+//                                                         data: companyID,
+//                                                         message: 'Company details updated successfully'
+//                                                     });
+//                                                 });
+//                                             })
+//                                         })
+
+
+//                                     } else {
+//                                         const claimRequestQuery = 'INSERT INTO company_claim_request (company_id, claimed_by, status, claimed_date) VALUES (?, ?, ?, ?)';
+//                                         const claimRequestValues = [companyID, req.body.claimed_by, '1', formattedDate];
+
+//                                         db.query(claimRequestQuery, claimRequestValues, (err) => {
+//                                             if (err) {
+//                                                 // Handle the error
+//                                                 return res.send({
+//                                                     status: 'err',
+//                                                     data: '',
+//                                                     message: 'An error occurred while inserting company claim request: ' + err
+//                                                 });
+//                                             }
+
+//                                             // Return success response
+//                                             return res.send({
+//                                                 status: 'ok',
+//                                                 data: companyID,
+//                                                 message: 'Company details updated successfully'
+//                                             });
+//                                         });
+//                                     }
+//                                 });
+//                             } else {
+//                                 // Return success response
+//                                 return res.send({
+//                                     status: 'ok',
+//                                     data: companyID,
+//                                     message: 'Company details updated successfully'
+//                                 });
+//                             }
+//                         })
+//                     } else {
+//                         // Insert claim request if req.body.claimed_by exists
+//                         if (req.body.claimed_by) {
+//                             const checkClaimRequestQuery = 'SELECT * FROM company_claim_request WHERE company_id = ?';
+//                             db.query(checkClaimRequestQuery, [companyID], (err, claimRequestResults) => {
+//                                 if (err) {
+//                                     // Handle the error
+//                                     return res.send({
+//                                         status: 'err',
+//                                         data: '',
+//                                         message: 'An error occurred while checking company claim request: ' + err
+//                                     });
+//                                 }
+
+//                                 if (claimRequestResults.length > 0) {
+
+//                                     console.log('checkClaimRequestQuery', claimRequestResults)
+//                                     const ReviewReplyByQuery = 'UPDATE review_reply SET reply_by = ? WHERE company_id = ? AND reply_by = ?';
+//                                     const ReviewReplyByData = [req.body.claimed_by, companyID, claimRequestResults[0].claimed_by]
+//                                     db.query(ReviewReplyByQuery, ReviewReplyByData, (ReviewReplyByErr, ReviewReplyByResult) => {
+//                                         const ReviewReplyToQuery = 'UPDATE review_reply SET reply_to = ? WHERE company_id = ? AND reply_to = ?';
+//                                         const ReviewReplyToData = [req.body.claimed_by, companyID, claimRequestResults[0].claimed_by]
+//                                         db.query(ReviewReplyToQuery, ReviewReplyToData, (ReviewReplyToErr, ReviewReplyToResult) => {
+//                                             // Claim request already exists, handle accordingly
+//                                             const updateClaimRequestQuery = 'UPDATE company_claim_request SET claimed_by = ?, claimed_date = ? WHERE company_id = ?';
+//                                             const updateClaimRequestValues = [req.body.claimed_by, formattedDate, companyID];
+
+//                                             db.query(updateClaimRequestQuery, updateClaimRequestValues, (err) => {
+//                                                 if (err) {
+//                                                     // Handle the error
+//                                                     return res.send({
+//                                                         status: 'err',
+//                                                         data: '',
+//                                                         message: 'An error occurred while updating company claim request: ' + err
+//                                                     });
+//                                                 }
+
+//                                                 // Return success response
+//                                                 return res.send({
+//                                                     status: 'ok',
+//                                                     data: companyID,
+//                                                     message: 'Company details updated successfully'
+//                                                 });
+//                                             });
+//                                         })
+//                                     })
+
+//                                 } else {
+//                                     const claimRequestQuery = 'INSERT INTO company_claim_request (company_id, claimed_by, status, claimed_date) VALUES (?, ?, ?, ?)';
+//                                     const claimRequestValues = [companyID, req.body.claimed_by, '1', formattedDate];
+
+//                                     db.query(claimRequestQuery, claimRequestValues, (err) => {
+//                                         if (err) {
+//                                             // Handle the error
+//                                             return res.send({
+//                                                 status: 'err',
+//                                                 data: '',
+//                                                 message: 'An error occurred while inserting company claim request: ' + err
+//                                             });
+//                                         }
+
+//                                         // Return success response
+//                                         return res.send({
+//                                             status: 'ok',
+//                                             data: companyID,
+//                                             message: 'Company details updated successfully'
+//                                         });
+//                                     });
+//                                 }
+//                             });
+//                         } else {
+//                             // Return success response
+//                             return res.send({
+//                                 status: 'ok',
+//                                 data: companyID,
+//                                 message: 'Company details updated successfully'
+//                             });
+//                         }
+//                     }
+//                 })
+//             })
+//         }
+//     })
+// }
+
+exports.editCompany = async (req, res) => {
     //console.log(req.body);
     //console.log('editCompany',req.files);
     //return false;
@@ -1748,6 +2264,23 @@ exports.editCompany = (req, res) => {
     const seconds = String(currentDate.getSeconds()).padStart(2, '0');
 
     const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+    if(req.body.parent_id == 0){
+        const companyquery = `SELECT * FROM company WHERE company_name = ? AND main_address_country =? `;
+        const companyvalue = await query(companyquery,[req.body.company_name,req.body.main_address_country]);
+    
+        console.log("companyvalue",companyvalue);
+    
+        if(companyvalue.length>0){
+            return res.send(
+                {
+                    status: 'err',
+                    data: '',
+                    message: 'Organization name already exist.'
+                }
+            )
+        }
+    }
 
     db.query(`SELECT slug FROM company WHERE slug = '${req.body.company_slug}' AND ID != '${companyID}' `, async (slugErr, slugResult) => {
         if (slugErr) {
@@ -1765,7 +2298,7 @@ exports.editCompany = (req, res) => {
             });
         } else {
             // Update company details in the company table
-            const updateQuery = 'UPDATE company SET company_name = ?, heading = ?, logo = ?, about_company = ?, comp_phone = ?, comp_email = ?, comp_registration_id = ?, status = ?, trending = ?, updated_date = ?, tollfree_number = ?, main_address = ?, main_address_pin_code = ?, address_map_url = ?, main_address_country = ?, main_address_state = ?, main_address_city = ?, verified = ?, paid_status = ?, slug = ?, membership_type_id = ?, complaint_status = ?, complaint_level = ? WHERE ID = ?';
+            const updateQuery = 'UPDATE company SET company_name = ?, heading = ?, logo = ?, about_company = ?, comp_phone = ?, comp_email = ?, comp_registration_id = ?, status = ?, trending = ?, updated_date = ?, tollfree_number = ?, main_address = ?, main_address_pin_code = ?, address_map_url = ?, main_address_country = ?, main_address_state = ?, main_address_city = ?, verified = ?, paid_status = ?, slug = ?, membership_type_id = ?, complaint_status = ?, complaint_level = ?, parent_id = ? WHERE ID = ?';
             const updateValues = [
                 req.body.company_name,
                 req.body.heading,
@@ -1790,6 +2323,7 @@ exports.editCompany = (req, res) => {
                 req.body.membership_type_id,
                 req.body.complaint_status,
                 req.body.complaint_level,
+                req.body.parent_id,
                 companyID
             ];
 
@@ -2042,7 +2576,155 @@ exports.editCompany = (req, res) => {
     })
 }
 
+
 //--- Create Company Bulk Upload ----//
+// exports.companyBulkUpload = async (req, res) => {
+//     //console.log(req.body);
+//     if (!req.file) {
+//         return res.send(
+//             {
+//                 status: 'err',
+//                 data: '',
+//                 message: 'No file uploaded.'
+//             }
+//         )
+//     }
+//     const encodedUserData = req.cookies.user;
+//     const currentUserData = JSON.parse(encodedUserData);
+
+//     const csvFilePath = path.join(__dirname, '..', 'company-csv', req.file.filename);
+//     const currentDate = new Date();
+//     const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ');
+
+//     // Process the uploaded CSV file and insert data into the database
+//     try {
+//         const connection = await mysql.createConnection(dbConfig);
+
+//         const workbook = new ExcelJS.Workbook();
+//         await workbook.csv.readFile(csvFilePath);
+
+//         const worksheet = workbook.getWorksheet(1);
+//         const companies = await processCompanyCSVRows(worksheet, formattedDate, connection, currentUserData.user_id);
+//         //console.log('companies',companies);
+//         for (const company of companies) {
+//             //console.log('company:',company)
+//             try {
+
+//                 const companySlug = await new Promise((resolve, reject) => {
+//                     comFunction2.generateUniqueSlug(company[1], (error, generatedSlug) => {
+//                         if (error) {
+//                             console.log('Error:', error.message);
+//                             reject(error);
+//                         } else {
+//                             // console.log('Generated Company Slug:', generatedSlug);
+//                             resolve(generatedSlug);
+//                         }
+//                     });
+//                 });
+//                 await company.push(companySlug);
+//                 // Replace any undefined values with null
+//                 const cleanedCompany = company.map(value => (value !== undefined ? value : null));
+//                 //console.log(value);
+//                 //return false;
+
+//                 if (cleanedCompany[2] === null) {
+//                     cleanedCompany[2] = '';
+//                 }
+//                 if (cleanedCompany[3] === null) {
+//                     cleanedCompany[3] = '';
+//                 }
+//                 if (cleanedCompany[4] === null) {
+//                     cleanedCompany[4] = '';
+//                 }
+//                 if (cleanedCompany[5] === null) {
+//                     cleanedCompany[5] = '';
+//                 }
+//                 if (cleanedCompany[6] === null) {
+//                     cleanedCompany[6] = '';
+//                 }
+//                 if (cleanedCompany[7] === null) {
+//                     cleanedCompany[7] = '';
+//                 }
+//                 if (cleanedCompany[8] === null) {
+//                     cleanedCompany[8] = '';
+//                 }
+//                 if (cleanedCompany[9] === null) {
+//                     cleanedCompany[9] = '';
+//                 }
+//                 if (cleanedCompany[10] === null) {
+//                     cleanedCompany[10] = '';
+//                 }
+//                 if (cleanedCompany[11] === null) {
+//                     cleanedCompany[11] = '';
+//                 }
+//                 if (cleanedCompany[12] === null) {
+//                     cleanedCompany[12] = '';
+//                 }
+//                 if (cleanedCompany[13] === null) {
+//                     cleanedCompany[13] = '';
+//                 }
+
+//                 await connection.execute(
+//                     `
+//                     INSERT INTO company 
+//                         (user_created_by, company_name, heading, about_company, comp_email, comp_phone, tollfree_number, main_address, main_address_pin_code, address_map_url, comp_registration_id, status, trending, created_date, updated_date, main_address_country, main_address_state, main_address_city, verified, slug) 
+//                     VALUES 
+//                         (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) 
+//                     ON DUPLICATE KEY UPDATE
+//                         user_created_by = VALUES(user_created_by),
+//                         company_name = VALUES(company_name), 
+//                         heading = VALUES(heading), 
+//                         about_company = VALUES(about_company),
+//                         comp_email = VALUES(comp_email),
+//                         comp_phone = VALUES(comp_phone),
+//                         tollfree_number = VALUES(tollfree_number),
+//                         main_address = VALUES(main_address),
+//                         main_address_pin_code = VALUES(main_address_pin_code),
+//                         address_map_url = VALUES(address_map_url),
+//                         comp_registration_id = VALUES(comp_registration_id),
+//                         status = VALUES(status),
+//                         trending = VALUES(trending),
+//                         created_date = VALUES(created_date),
+//                         updated_date =  VALUES(updated_date),
+//                         main_address_country =  VALUES(main_address_country),
+//                         main_address_state =  VALUES(main_address_state),
+//                         main_address_city =  VALUES(main_address_city),
+//                         verified =  VALUES(verified),
+//                         slug =  VALUES(slug)
+//                     `,
+//                     cleanedCompany
+//                 );
+//             } catch (error) {
+//                 console.error('Error:', error);
+//                 return res.send({
+//                     status: 'err',
+//                     data: companies,
+//                     message: error.message
+//                 });
+//             }
+//         }
+//         await connection.end(); // Close the connectio
+//         return res.send(
+//             {
+//                 status: 'ok',
+//                 data: companies,
+//                 message: 'File uploaded.'
+//             }
+//         )
+
+//     } catch (error) {
+//         console.error('Error:', error);
+//         return res.send({
+//             status: 'err',
+//             data: [],
+//             message: error.message
+//         });
+//     } finally {
+//         // Delete the uploaded CSV file
+//         //fs.unlinkSync(csvFilePath);
+//     }
+// }
+
 exports.companyBulkUpload = async (req, res) => {
     //console.log(req.body);
     if (!req.file) {
@@ -2063,6 +2745,23 @@ exports.companyBulkUpload = async (req, res) => {
 
     // Process the uploaded CSV file and insert data into the database
     try {
+
+        if(req.body.parent_id == 0){
+            const companyquery = `SELECT * FROM company WHERE company_name = ? AND main_address_country =? `;
+            const companyvalue = await query(companyquery,[req.body.company_name,req.body.main_address_country]);
+        
+            console.log("companyvalue",companyvalue);
+        
+            if(companyvalue.length>0){
+                return res.send(
+                    {
+                        status: 'err',
+                        data: '',
+                        message: 'Organization name already exist.'
+                    }
+                )
+            }
+        }
         const connection = await mysql.createConnection(dbConfig);
 
         const workbook = new ExcelJS.Workbook();
@@ -2089,8 +2788,10 @@ exports.companyBulkUpload = async (req, res) => {
                 await company.push(companySlug);
                 // Replace any undefined values with null
                 const cleanedCompany = company.map(value => (value !== undefined ? value : null));
-                //console.log(value);
+                console.log("cleanedCompany",cleanedCompany);
                 //return false;
+
+
 
                 if (cleanedCompany[2] === null) {
                     cleanedCompany[2] = '';
@@ -2128,37 +2829,40 @@ exports.companyBulkUpload = async (req, res) => {
                 if (cleanedCompany[13] === null) {
                     cleanedCompany[13] = '';
                 }
-
+                if (cleanedCompany[14] === null) {
+                    cleanedCompany[14] = '';
+                }
                 await connection.execute(
-                    `
-                    INSERT INTO company 
-                        (user_created_by, company_name, heading, about_company, comp_email, comp_phone, tollfree_number, main_address, main_address_pin_code, address_map_url, comp_registration_id, status, trending, created_date, updated_date, main_address_country, main_address_state, main_address_city, verified, slug) 
-                    VALUES 
-                        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) 
-                    ON DUPLICATE KEY UPDATE
-                        user_created_by = VALUES(user_created_by),
-                        company_name = VALUES(company_name), 
-                        heading = VALUES(heading), 
-                        about_company = VALUES(about_company),
-                        comp_email = VALUES(comp_email),
-                        comp_phone = VALUES(comp_phone),
-                        tollfree_number = VALUES(tollfree_number),
-                        main_address = VALUES(main_address),
-                        main_address_pin_code = VALUES(main_address_pin_code),
-                        address_map_url = VALUES(address_map_url),
-                        comp_registration_id = VALUES(comp_registration_id),
-                        status = VALUES(status),
-                        trending = VALUES(trending),
-                        created_date = VALUES(created_date),
-                        updated_date =  VALUES(updated_date),
-                        main_address_country =  VALUES(main_address_country),
-                        main_address_state =  VALUES(main_address_state),
-                        main_address_city =  VALUES(main_address_city),
-                        verified =  VALUES(verified),
-                        slug =  VALUES(slug)
-                    `,
-                    cleanedCompany
-                );
+                                        `
+                                        INSERT INTO company 
+                                            (user_created_by, company_name, heading, about_company, comp_email, comp_phone, tollfree_number, main_address, main_address_pin_code, address_map_url, comp_registration_id, status, trending, created_date, updated_date, main_address_country, main_address_state, main_address_city, verified, slug,parent_id) 
+                                        VALUES 
+                                            (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?) 
+                                        ON DUPLICATE KEY UPDATE
+                                            user_created_by = VALUES(user_created_by),
+                                            company_name = VALUES(company_name), 
+                                            heading = VALUES(heading), 
+                                            about_company = VALUES(about_company),
+                                            comp_email = VALUES(comp_email),
+                                            comp_phone = VALUES(comp_phone),
+                                            tollfree_number = VALUES(tollfree_number),
+                                            main_address = VALUES(main_address),
+                                            main_address_pin_code = VALUES(main_address_pin_code),
+                                            address_map_url = VALUES(address_map_url),
+                                            comp_registration_id = VALUES(comp_registration_id),
+                                            status = VALUES(status),
+                                            trending = VALUES(trending),
+                                            created_date = VALUES(created_date),
+                                            updated_date =  VALUES(updated_date),
+                                            main_address_country =  VALUES(main_address_country),
+                                            main_address_state =  VALUES(main_address_state),
+                                            main_address_city =  VALUES(main_address_city),
+                                            verified =  VALUES(verified),
+                                            slug =  VALUES(slug),
+                                            parent_id = VALUES(parent_id)
+                                        `,
+                                        cleanedCompany
+                                    );
             } catch (error) {
                 console.error('Error:', error);
                 return res.send({
@@ -2298,6 +3002,26 @@ exports.restoreCompany = (req, res) => {
         }
     })
 }
+
+// Assuming Express.js
+exports.getparentcompany = (req, res) =>{
+    const country = req.query.country; 
+
+    db.query(
+        'SELECT id, company_name FROM company WHERE main_address_country = ? AND parent_id = 0',
+        [country],
+        (err, results) => {
+            if (err) {
+                return res.status(500).json({ error: 'Database error' });
+            }
+
+            res.status(200).json({
+                parentCategories: results,
+            });
+        }
+    );
+}
+
 
 exports.createRatingTags = (req, res) => {
     console.log(req.body);
@@ -5155,6 +5879,7 @@ exports.userPolling = async (req, res) => {
         }
     })
 }
+
 
 // Review Invitation
 exports.reviewInvitation = async (req, res) => {

@@ -503,6 +503,32 @@
                         </div>
                         <input type="hidden" name="previous_cover_img" value="<%= company.cover_img %>">
                         <!--end::Input group-->
+                        <div class="row mb-6">
+                            <!--begin::Label-->
+                            <label class="col-lg-4 col-form-label required fw-bold fs-6">
+                                <span>Parent Category</span>
+                            </label>
+                            <!--end::Label-->
+                        
+                            <!--begin::Col-->
+                            <div class="col-lg-8 fv-row">
+                                <select name="parent_id" class="form-control form-control-lg form-control-solid" required>
+                                    <% 
+                                    const selectedParentId = company.parent_id; 
+                                    %>
+                                    <option value="0">Select as parent category</option>
+                                    <% getParentCompany.forEach(function(company) { %>
+                                        <option value="<%= company.ID %>"
+                                                <%= company.ID === selectedParentId ? 'selected' : '' %>>
+                                            <%= company.company_name + " - " + company.main_address_country %>
+                                        </option>
+                                    <% }); %>
+                                </select>
+                            </div>
+
+                            <!--end::Col-->
+                        </div>
+                        
                     </div>
                     <!--end::Card body-->
                     <!--begin::Actions-->
@@ -579,6 +605,19 @@
 <!--end::Content-->
 <%- include('common/footer') -%>
 <script> 
+document.querySelector("select[name='parent_id']").addEventListener("change", function() {
+    const selectedValue = this.value;
+    console.log("Selected Value:", selectedValue);
+});
+
+$("#parent_id").change(function() {
+    const selectedValue = $(this).val();
+    $(".output").text(selectedValue); // Update another element with the selected value
+
+    console.log("Updated Output with Selected Value:", selectedValue);
+});
+
+
 //$("input[name='verified']").prop("disabled", true);
 $('#select_country').change(function() {
     $('#select_state').empty();
