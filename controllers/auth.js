@@ -2578,153 +2578,6 @@ exports.editCompany = async (req, res) => {
 
 
 //--- Create Company Bulk Upload ----//
-// exports.companyBulkUpload = async (req, res) => {
-//     //console.log(req.body);
-//     if (!req.file) {
-//         return res.send(
-//             {
-//                 status: 'err',
-//                 data: '',
-//                 message: 'No file uploaded.'
-//             }
-//         )
-//     }
-//     const encodedUserData = req.cookies.user;
-//     const currentUserData = JSON.parse(encodedUserData);
-
-//     const csvFilePath = path.join(__dirname, '..', 'company-csv', req.file.filename);
-//     const currentDate = new Date();
-//     const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ');
-
-//     // Process the uploaded CSV file and insert data into the database
-//     try {
-//         const connection = await mysql.createConnection(dbConfig);
-
-//         const workbook = new ExcelJS.Workbook();
-//         await workbook.csv.readFile(csvFilePath);
-
-//         const worksheet = workbook.getWorksheet(1);
-//         const companies = await processCompanyCSVRows(worksheet, formattedDate, connection, currentUserData.user_id);
-//         //console.log('companies',companies);
-//         for (const company of companies) {
-//             //console.log('company:',company)
-//             try {
-
-//                 const companySlug = await new Promise((resolve, reject) => {
-//                     comFunction2.generateUniqueSlug(company[1], (error, generatedSlug) => {
-//                         if (error) {
-//                             console.log('Error:', error.message);
-//                             reject(error);
-//                         } else {
-//                             // console.log('Generated Company Slug:', generatedSlug);
-//                             resolve(generatedSlug);
-//                         }
-//                     });
-//                 });
-//                 await company.push(companySlug);
-//                 // Replace any undefined values with null
-//                 const cleanedCompany = company.map(value => (value !== undefined ? value : null));
-//                 //console.log(value);
-//                 //return false;
-
-//                 if (cleanedCompany[2] === null) {
-//                     cleanedCompany[2] = '';
-//                 }
-//                 if (cleanedCompany[3] === null) {
-//                     cleanedCompany[3] = '';
-//                 }
-//                 if (cleanedCompany[4] === null) {
-//                     cleanedCompany[4] = '';
-//                 }
-//                 if (cleanedCompany[5] === null) {
-//                     cleanedCompany[5] = '';
-//                 }
-//                 if (cleanedCompany[6] === null) {
-//                     cleanedCompany[6] = '';
-//                 }
-//                 if (cleanedCompany[7] === null) {
-//                     cleanedCompany[7] = '';
-//                 }
-//                 if (cleanedCompany[8] === null) {
-//                     cleanedCompany[8] = '';
-//                 }
-//                 if (cleanedCompany[9] === null) {
-//                     cleanedCompany[9] = '';
-//                 }
-//                 if (cleanedCompany[10] === null) {
-//                     cleanedCompany[10] = '';
-//                 }
-//                 if (cleanedCompany[11] === null) {
-//                     cleanedCompany[11] = '';
-//                 }
-//                 if (cleanedCompany[12] === null) {
-//                     cleanedCompany[12] = '';
-//                 }
-//                 if (cleanedCompany[13] === null) {
-//                     cleanedCompany[13] = '';
-//                 }
-
-//                 await connection.execute(
-//                     `
-//                     INSERT INTO company 
-//                         (user_created_by, company_name, heading, about_company, comp_email, comp_phone, tollfree_number, main_address, main_address_pin_code, address_map_url, comp_registration_id, status, trending, created_date, updated_date, main_address_country, main_address_state, main_address_city, verified, slug) 
-//                     VALUES 
-//                         (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) 
-//                     ON DUPLICATE KEY UPDATE
-//                         user_created_by = VALUES(user_created_by),
-//                         company_name = VALUES(company_name), 
-//                         heading = VALUES(heading), 
-//                         about_company = VALUES(about_company),
-//                         comp_email = VALUES(comp_email),
-//                         comp_phone = VALUES(comp_phone),
-//                         tollfree_number = VALUES(tollfree_number),
-//                         main_address = VALUES(main_address),
-//                         main_address_pin_code = VALUES(main_address_pin_code),
-//                         address_map_url = VALUES(address_map_url),
-//                         comp_registration_id = VALUES(comp_registration_id),
-//                         status = VALUES(status),
-//                         trending = VALUES(trending),
-//                         created_date = VALUES(created_date),
-//                         updated_date =  VALUES(updated_date),
-//                         main_address_country =  VALUES(main_address_country),
-//                         main_address_state =  VALUES(main_address_state),
-//                         main_address_city =  VALUES(main_address_city),
-//                         verified =  VALUES(verified),
-//                         slug =  VALUES(slug)
-//                     `,
-//                     cleanedCompany
-//                 );
-//             } catch (error) {
-//                 console.error('Error:', error);
-//                 return res.send({
-//                     status: 'err',
-//                     data: companies,
-//                     message: error.message
-//                 });
-//             }
-//         }
-//         await connection.end(); // Close the connectio
-//         return res.send(
-//             {
-//                 status: 'ok',
-//                 data: companies,
-//                 message: 'File uploaded.'
-//             }
-//         )
-
-//     } catch (error) {
-//         console.error('Error:', error);
-//         return res.send({
-//             status: 'err',
-//             data: [],
-//             message: error.message
-//         });
-//     } finally {
-//         // Delete the uploaded CSV file
-//         //fs.unlinkSync(csvFilePath);
-//     }
-// }
-
 exports.companyBulkUpload = async (req, res) => {
     //console.log(req.body);
     if (!req.file) {
@@ -2745,23 +2598,6 @@ exports.companyBulkUpload = async (req, res) => {
 
     // Process the uploaded CSV file and insert data into the database
     try {
-
-        if(req.body.parent_id == 0){
-            const companyquery = `SELECT * FROM company WHERE company_name = ? AND main_address_country =? `;
-            const companyvalue = await query(companyquery,[req.body.company_name,req.body.main_address_country]);
-        
-            console.log("companyvalue",companyvalue);
-        
-            if(companyvalue.length>0){
-                return res.send(
-                    {
-                        status: 'err',
-                        data: '',
-                        message: 'Organization name already exist.'
-                    }
-                )
-            }
-        }
         const connection = await mysql.createConnection(dbConfig);
 
         const workbook = new ExcelJS.Workbook();
@@ -2788,10 +2624,17 @@ exports.companyBulkUpload = async (req, res) => {
                 await company.push(companySlug);
                 // Replace any undefined values with null
                 const cleanedCompany = company.map(value => (value !== undefined ? value : null));
-                console.log("cleanedCompany",cleanedCompany);
+                // console.log(value,"VALUE");
                 //return false;
 
+                const index = cleanedCompany.findIndex((value) => value === null);
 
+                console.log(index); 
+
+
+                // company.forEach(value => {
+                //     console.log(value, "VALUE");
+                // });
 
                 if (cleanedCompany[2] === null) {
                     cleanedCompany[2] = '';
@@ -2829,40 +2672,49 @@ exports.companyBulkUpload = async (req, res) => {
                 if (cleanedCompany[13] === null) {
                     cleanedCompany[13] = '';
                 }
-                if (cleanedCompany[14] === null) {
-                    cleanedCompany[14] = '';
+                if (cleanedCompany[20] === null) {
+                    cleanedCompany[20] = '';
                 }
-                await connection.execute(
-                                        `
-                                        INSERT INTO company 
-                                            (user_created_by, company_name, heading, about_company, comp_email, comp_phone, tollfree_number, main_address, main_address_pin_code, address_map_url, comp_registration_id, status, trending, created_date, updated_date, main_address_country, main_address_state, main_address_city, verified, slug,parent_id) 
-                                        VALUES 
-                                            (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?) 
-                                        ON DUPLICATE KEY UPDATE
-                                            user_created_by = VALUES(user_created_by),
-                                            company_name = VALUES(company_name), 
-                                            heading = VALUES(heading), 
-                                            about_company = VALUES(about_company),
-                                            comp_email = VALUES(comp_email),
-                                            comp_phone = VALUES(comp_phone),
-                                            tollfree_number = VALUES(tollfree_number),
-                                            main_address = VALUES(main_address),
-                                            main_address_pin_code = VALUES(main_address_pin_code),
-                                            address_map_url = VALUES(address_map_url),
-                                            comp_registration_id = VALUES(comp_registration_id),
-                                            status = VALUES(status),
-                                            trending = VALUES(trending),
-                                            created_date = VALUES(created_date),
-                                            updated_date =  VALUES(updated_date),
-                                            main_address_country =  VALUES(main_address_country),
-                                            main_address_state =  VALUES(main_address_state),
-                                            main_address_city =  VALUES(main_address_city),
-                                            verified =  VALUES(verified),
-                                            slug =  VALUES(slug),
-                                            parent_id = VALUES(parent_id)
-                                        `,
-                                        cleanedCompany
-                                    );
+
+    cleanedCompany[21] = 0; // Default value
+
+
+
+                    await connection.execute(
+ `
+                    INSERT INTO company 
+                        (user_created_by, company_name, heading, about_company, comp_email, comp_phone, tollfree_number, main_address, main_address_pin_code, address_map_url, comp_registration_id, status, trending, created_date, updated_date, main_address_country, main_address_state, main_address_city, verified, slug, parent_id) 
+                    VALUES 
+                        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) 
+                    ON DUPLICATE KEY UPDATE
+                        user_created_by = VALUES(user_created_by),
+                        company_name = VALUES(company_name), 
+                        heading = VALUES(heading), 
+                        about_company = VALUES(about_company),
+                        comp_email = VALUES(comp_email),
+                        comp_phone = VALUES(comp_phone),
+                        tollfree_number = VALUES(tollfree_number),
+                        main_address = VALUES(main_address),
+                        main_address_pin_code = VALUES(main_address_pin_code),
+                        address_map_url = VALUES(address_map_url),
+                        comp_registration_id = VALUES(comp_registration_id),
+                        status = VALUES(status),
+                        trending = VALUES(trending),
+                        created_date = VALUES(created_date),
+                        updated_date =  VALUES(updated_date),
+                        main_address_country =  VALUES(main_address_country),
+                        main_address_state =  VALUES(main_address_state),
+                        main_address_city =  VALUES(main_address_city),
+                        verified =  VALUES(verified),
+                        slug =  VALUES(slug),
+                        parent_id = VALUES(parent_id)
+                    `,
+                    cleanedCompany
+
+                )
+
+
+            
             } catch (error) {
                 console.error('Error:', error);
                 return res.send({
@@ -2893,6 +2745,206 @@ exports.companyBulkUpload = async (req, res) => {
         //fs.unlinkSync(csvFilePath);
     }
 }
+
+// exports.companyBulkUpload = async (req, res) => {
+//     //console.log(req.body);
+//     if (!req.file) {
+//         return res.send(
+//             {
+//                 status: 'err',
+//                 data: '',
+//                 message: 'No file uploaded.'
+//             }
+//         )
+//     }
+//     const encodedUserData = req.cookies.user;
+//     const currentUserData = JSON.parse(encodedUserData);
+
+//     const csvFilePath = path.join(__dirname, '..', 'company-csv', req.file.filename);
+//     const currentDate = new Date();
+//     const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ');
+
+//     // Process the uploaded CSV file and insert data into the database
+//     try {
+
+//         if(req.body.parent_id == 0){
+//             const companyquery = `SELECT * FROM company WHERE company_name = ? AND main_address_country =? `;
+//             const companyvalue = await query(companyquery,[req.body.company_name,req.body.main_address_country]);
+        
+//             console.log("companyvalue",companyvalue);
+        
+//             if(companyvalue.length>0){
+//                 return res.send(
+//                     {
+//                         status: 'err',
+//                         data: '',
+//                         message: 'Organization name already exist.'
+//                     }
+//                 )
+//             }
+//         }
+//         const connection = await mysql.createConnection(dbConfig);
+
+//         const workbook = new ExcelJS.Workbook();
+//         await workbook.csv.readFile(csvFilePath);
+
+//         const worksheet = workbook.getWorksheet(1);
+//         const companies = await processCompanyCSVRows(worksheet, formattedDate, connection, currentUserData.user_id);
+//         //console.log('companies',companies);
+//         for (const company of companies) {
+//             //console.log('company:',company)
+//             try {
+
+//                 const companySlug = await new Promise((resolve, reject) => {
+//                     comFunction2.generateUniqueSlug(company[1], (error, generatedSlug) => {
+//                         if (error) {
+//                             console.log('Error:', error.message);
+//                             reject(error);
+//                         } else {
+//                             // console.log('Generated Company Slug:', generatedSlug);
+//                             resolve(generatedSlug);
+//                         }
+//                     });
+//                 });
+//                 await company.push(companySlug);
+//                 // Replace any undefined values with null
+//                 const cleanedCompany = company.map(value => (value !== undefined ? value : null));
+//                 console.log("cleanedCompany",cleanedCompany);
+//                 //return false;
+
+
+//                 console.log("Updated cleanedCompany:", cleanedCompany); 
+
+
+//                 // Replace undefined or empty string values with null
+//                 const sanitizedCompany = cleanedCompany.map((value) => {
+//                     if (value === undefined || value === '') {
+//                     return null;
+//                     }
+//                     return value;
+//                 });
+                
+//                 console.log("Sanitized company data:", sanitizedCompany);
+  
+
+
+
+
+
+//                 // if (cleanedCompany[2] === null) {
+//                 //     cleanedCompany[2] = '';
+//                 // }
+//                 // if (cleanedCompany[3] === null) {
+//                 //     cleanedCompany[3] = '';
+//                 // }
+//                 // if (cleanedCompany[4] === null) {
+//                 //     cleanedCompany[4] = '';
+//                 // }
+//                 // if (cleanedCompany[5] === null) {
+//                 //     cleanedCompany[5] = '';
+//                 // }
+//                 // if (cleanedCompany[6] === null) {
+//                 //     cleanedCompany[6] = '';
+//                 // }
+//                 // if (cleanedCompany[7] === null) {
+//                 //     cleanedCompany[7] = '';
+//                 // }
+//                 // if (cleanedCompany[8] === null) {
+//                 //     cleanedCompany[8] = '';
+//                 // }
+//                 // if (cleanedCompany[9] === null) {
+//                 //     cleanedCompany[9] = '';
+//                 // }
+//                 // if (cleanedCompany[10] === null) {
+//                 //     cleanedCompany[10] = '';
+//                 // }
+//                 // if (cleanedCompany[11] === null) {
+//                 //     cleanedCompany[11] = '';
+//                 // }
+//                 // if (cleanedCompany[12] === null) {
+//                 //     cleanedCompany[12] = '';
+//                 // }
+//                 // if (cleanedCompany[13] === null) {
+//                 //     cleanedCompany[13] = '';
+//                 // }
+//                 // if (cleanedCompany[14] === null) {
+//                 //     cleanedCompany[14] = '';
+//                 // }
+
+
+
+
+//                 await connection.execute(
+//                     `
+//                     INSERT INTO company 
+//                     (user_created_by, company_name, heading, about_company, comp_email, comp_phone, tollfree_number, 
+//                      main_address, main_address_pin_code, address_map_url, comp_registration_id, status, trending, 
+//                      created_date, updated_date, main_address_country, main_address_state, main_address_city, 
+//                      verified, slug, operating_hours,membership_type_id,complaint_status,complaint_level,manger_email,help_desk_email,parent_id) 
+//                   VALUES 
+//                     (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?,?,?) 
+//                   ON DUPLICATE KEY UPDATE
+//                     user_created_by = VALUES(user_created_by),
+//                     company_name = VALUES(company_name),
+//                     heading = VALUES(heading),
+//                     about_company = VALUES(about_company),
+//                     comp_email = VALUES(comp_email),
+//                     comp_phone = VALUES(comp_phone),
+//                     tollfree_number = VALUES(tollfree_number),
+//                     main_address = VALUES(main_address),
+//                     main_address_pin_code = VALUES(main_address_pin_code),
+//                     address_map_url = VALUES(address_map_url),
+//                     comp_registration_id = VALUES(comp_registration_id),
+//                     status = VALUES(status),
+//                     trending = VALUES(trending),
+//                     created_date = VALUES(created_date),
+//                     updated_date = VALUES(updated_date),
+//                     main_address_country = VALUES(main_address_country),
+//                     main_address_state = VALUES(main_address_state),
+//                     main_address_city = VALUES(main_address_city),
+//                     verified = VALUES(verified),
+//                     slug = VALUES(slug),
+//                     operating_hours=VALUES(operating_hours),
+//                     membership_type_id=VALUES(membership_type_id),
+//                     complaint_status=VALUES(complaint_status),
+//                     complaint_level=VALUES(complaint_level),
+//                     manger_email=VALUES(manger_email),
+//                     help_desk_email=VALUES(help_desk_email),
+//                     parent_id = VALUES(parent_id)
+//                     `,
+//                     cleanedCompany // Ensure all nulls replaced with empty strings
+//                   );
+                  
+//             } catch (error) {
+//                 console.error('Error:', error);
+//                 return res.send({
+//                     status: 'err',
+//                     data: companies,
+//                     message: error.message
+//                 });
+//             }
+//         }
+//         await connection.end(); // Close the connectio
+//         return res.send(
+//             {
+//                 status: 'ok',
+//                 data: companies,
+//                 message: 'File uploaded.'
+//             }
+//         )
+
+//     } catch (error) {
+//         console.error('Error:', error);
+//         return res.send({
+//             status: 'err',
+//             data: [],
+//             message: error.message
+//         });
+//     } finally {
+//         // Delete the uploaded CSV file
+//         //fs.unlinkSync(csvFilePath);
+//     }
+// }
 
 // Define a promise-based function for processing rows
 function processCompanyCSVRows(worksheet, formattedDate, connection, user_id) {
