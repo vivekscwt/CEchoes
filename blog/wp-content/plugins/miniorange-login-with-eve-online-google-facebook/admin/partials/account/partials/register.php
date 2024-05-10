@@ -140,8 +140,9 @@ function mooauth_client_show_customer_info() {
 	</td>
 	</tr>
 	</table>
+	<br />
 
-				<br />
+	<blockquote class="mo_oauth_blackquote mo_oauth_paragraph_div" style="  margin-bottom: 0px;"><strong><?php esc_html_e( 'If you bought a paid license, please follow the steps in the guide to upgrade from the free plan. ', 'miniorange-login-with-eve-online-google-facebook' ); ?><a href="https://faq.miniorange.com/knowledgebase/how-do-i-activate-the-paid-plugin-for-wordpress-oauth-single-sign-on/" target="_blank">GUIDE LINK</a></stronge></blockquote>
 	</div>
 
 	<?php

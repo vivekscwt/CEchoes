@@ -290,6 +290,36 @@ function mooauth_login_validate() {
 					$authorization_url = $authorization_url . '&response_mode=form_post';
 				}
 
+				if ( 'steam' === $app['appId'] ) {
+					$return    = null;
+					$alt_realm = null;
+
+					$authorization_url = $app['authorizeurl'];
+
+					$use_https = ! empty( $_SERVER['HTTPS'] ) || ( ! empty( $_SERVER['HTTP_X_FORWARDED_PROTO'] ) && $sub_param2 === $_SERVER['HTTP_X_FORWARDED_PROTO'] );
+
+					$sub_param1 = null;
+					$sub_param2 = null;
+
+					if ( isset( $_SERVER['HTTP_HOST'] ) && isset( $_SERVER['SCRIPT_NAME'] ) ) {
+						$sub_param1 .= sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) );
+						$sub_param2 .= sanitize_text_field( wp_unslash( $_SERVER['SCRIPT_NAME'] ) );
+					}
+
+					$return = ( $use_https ? 'https' : 'http' ) . '://' . $sub_param1 . $sub_param2;
+
+					$params = array(
+						'openid.ns'         => 'http://specs.openid.net/auth/2.0',
+						'openid.mode'       => 'checkid_setup',
+						'openid.return_to'  => $return,
+						'openid.realm'      => null !== $alt_realm ? $alt_realm : ( ( $use_https ? 'https' : 'http' ) . '://' . $sub_param1 ),
+						'openid.identity'   => 'http://specs.openid.net/auth/2.0/identifier_select',
+						'openid.claimed_id' => 'http://specs.openid.net/auth/2.0/identifier_select',
+					);
+
+					$authorization_url = $authorization_url . '?' . http_build_query( $params );
+				}
+
 				if ( session_id() === '' || ! isset( $_SESSION ) ) {
 					session_start();
 				}
@@ -302,7 +332,6 @@ function mooauth_login_validate() {
 			} else {
 				$state             = null;
 				$authorization_url = $app['authorizeurl'];
-
 				if ( strpos( $authorization_url, '?' ) !== false ) {
 					$authorization_url = $authorization_url . '&client_id=' . $app['clientid'] . '&scope=' . $app['scope'] . '&redirect_uri=' . $app['redirecturi'] . '&response_type=code';
 				} else {
@@ -355,6 +384,7 @@ function mooauth_login_validate() {
 
 		if ( ! empty( $username_attr ) ) {
 			$username = mooauth_client_getnestedattribute( $resource_owner, $username_attr );
+			MOOAuth_Debug::mo_oauth_log( 'Username received.=>' . $username );
 		}
 
 		if ( empty( $username ) || '' === $username ) {
@@ -384,6 +414,7 @@ function mooauth_login_validate() {
 			wp_set_auth_cookie( $user->ID );
 			$user = get_user_by( 'ID', $user->ID );
 			do_action( 'wp_login', $user->user_login, $user );
+			MOOAuth_Debug::mo_oauth_log( 'User logged-in.' );
 
 			$redirect_to = get_option( 'mo_oauth_redirect_url' );
 
@@ -394,22 +425,15 @@ function mooauth_login_validate() {
 			wp_safe_redirect( $redirect_to );
 			exit;
 		}
-	} elseif ( strpos( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ), '/wp-json/moserver/token' ) === false && ! isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( strpos( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ), '/oauthcallback' ) !== false || isset( $_REQUEST['code'] ) ) ) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Ignoring nonce verification because we are fetching data from URL and not on form submission.
+	} elseif ( ( strpos( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ), '/wp-json/moserver/token' ) === false && ! isset( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && ( strpos( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ), '/oauthcallback' ) !== false || isset( $_REQUEST['code'] ) ) ) || ( ! empty( $_SERVER['REQUEST_URI'] ) && strpos( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ), 'openid.ns' ) !== false ) ) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Ignoring nonce verification because we are fetching data from URL and not on form submission.
 		if ( session_id() === '' || ! isset( $_SESSION ) ) {
 			session_start();
 		}
+		MOOAuth_Debug::mo_oauth_log( 'OAuth plugin catched the flow, $_REQUEST array=>' );
+		MOOAuth_Debug::mo_oauth_log( $_REQUEST ); //phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Ignoring nonce verification because we are fetching data from URL.
 
-		if ( ! isset( $_REQUEST['code'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Ignoring nonce verification because we are fetching data from URL and not on form submission.
-			if ( isset( $_REQUEST['error_description'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Ignoring nonce verification because we are fetching data from URL and not on form submission.
-				MOOAuth_Debug::mo_oauth_log( 'Authorization Response Recieved => ERROR : ' . sanitize_text_field( wp_unslash( $_REQUEST['error_description'] ) ) ); //phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Ignoring nonce verification because we are fetching data from URL and not on form submission.
-				exit( esc_attr( sanitize_text_field( wp_unslash( $_REQUEST['error_description'] ) ) ) ); //phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Ignoring nonce verification because we are fetching data from URL and not on form submission.
-			} elseif ( isset( $_REQUEST['error'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Ignoring nonce verification because we are fetching data from URL and not on form submission.
-				MOOAuth_Debug::mo_oauth_log( 'Authorization Response Recieved => ERROR : ' . sanitize_text_field( wp_unslash( $_REQUEST['error'] ) ) ); //phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Ignoring nonce verification because we are fetching data from URL and not on form submission.
-				exit( esc_attr( sanitize_text_field( wp_unslash( $_REQUEST['error'] ) ) ) ); //phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Ignoring nonce verification because we are fetching data from URL and not on form submission.
-			}
-			MOOAuth_Debug::mo_oauth_log( 'Authorization Response Recieved => ERROR : Invalid response' );
-			exit( 'Invalid response' );
-		} else {
+		// checking addiional condition for steam application.
+		if ( isset( $_REQUEST['code'] ) || isset( $_REQUEST['openid_ns'] ) ) {  //phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Ignoring nonce verification because we are fetching data from URL and not on form submission.
 			// exit from our control when user is already logged in. This it to prevent the issue with Ecwid Ecommerce plugin.
 			if ( is_user_logged_in() && ! isset( $_COOKIE['mo_oauth_test'] ) ) {
 				return;
@@ -429,7 +453,6 @@ function mooauth_login_validate() {
 					MOOAuth_Debug::mo_oauth_log( 'ERROR : No request found for this application.' );
 					return;
 				}
-
 				$appslist      = get_option( 'mo_oauth_apps_list' );
 				$username_attr = '';
 				$currentapp    = false;
@@ -455,39 +478,55 @@ function mooauth_login_validate() {
 				if ( isset( $currentapp['apptype'] ) && 'openidconnect' === $currentapp['apptype'] ) {
 					// OpenId connect.
 					MOOAuth_Debug::mo_oauth_log( 'OpenId Flow' );
-					$code = ! empty( $_GET['code'] ) ? sanitize_text_field( wp_unslash( $_GET['code'] ) ) : ''; //phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Ignoring nonce verification because we are fetching data from URL and not on form submission.
-					if ( isset( $_REQUEST['id_token'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Ignoring nonce verification because we are fetching data from URL and not on form submission.
-						$id_token = sanitize_text_field( wp_unslash( $_REQUEST['id_token'] ) ); //phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Ignoring nonce verification because we are fetching data from URL and not on form submission.
-					} else {
-						if ( ! isset( $currentapp['send_headers'] ) ) {
-							$currentapp['send_headers'] = false;
+
+					// If configured Steam application.
+					if ( isset( $_REQUEST['openid_op_endpoint'] ) && isset( $_REQUEST['openid_claimed_id'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Ignoring nonce verification because we are fetching data from URL and not on form submission.
+						MOOAuth_Debug::mo_oauth_log( 'Applciation selecetd: Steam' );
+						$str         = sanitize_text_field( wp_unslash( $_REQUEST['openid_claimed_id'] ) ); //phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Ignoring nonce verification because we are fetching data from URL and not on form submission.
+						$extract     = ( explode( '/', $str ) );
+						$mo_steam_id = $extract[5];
+
+						$access_token_url = $currentapp['accesstokenurl'];
+						$client_id        = $currentapp['clientid'];
+
+						$profile_url = $access_token_url . $client_id . '&steamids=' . $mo_steam_id;
+
+						$resource_owner = $mo_oauth_handler->get_resource_owner( $profile_url, '' );
+					} else { // Openid flow.
+						$code = ! empty( $_GET['code'] ) ? sanitize_text_field( wp_unslash( $_GET['code'] ) ) : ''; //phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Ignoring nonce verification because we are fetching data from URL and not on form submission.
+						if ( isset( $_REQUEST['id_token'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Ignoring nonce verification because we are fetching data from URL and not on form submission.
+							$id_token = sanitize_text_field( wp_unslash( $_REQUEST['id_token'] ) ); //phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Ignoring nonce verification because we are fetching data from URL and not on form submission.
+						} else {
+							if ( ! isset( $currentapp['send_headers'] ) ) {
+								$currentapp['send_headers'] = false;
+							}
+							if ( ! isset( $currentapp['send_body'] ) ) {
+								$currentapp['send_body'] = false;
+							}
+							$token_response = $mo_oauth_handler->get_id_token(
+								$currentapp['accesstokenurl'],
+								'authorization_code',
+								$currentapp['clientid'],
+								$currentapp['clientsecret'],
+								$code,
+								$currentapp['redirecturi'],
+								$currentapp['send_headers'],
+								$currentapp['send_body']
+							);
+
+							$id_token = isset( $token_response['id_token'] ) ? $token_response['id_token'] : $token_response['access_token'];
+
 						}
-						if ( ! isset( $currentapp['send_body'] ) ) {
-							$currentapp['send_body'] = false;
+
+						if ( ! $id_token ) {
+							MOOAuth_Debug::mo_oauth_log( 'Token Response Recieved => ERROR : Invalid token received.' );
+							exit( 'Invalid token received.' );
+						} else {
+							MOOAuth_Debug::mo_oauth_log( 'ID Token => ' );
+							MOOAuth_Debug::mo_oauth_log( $id_token );
+							$resource_owner = $mo_oauth_handler->get_resource_owner_from_id_token( $id_token );
+							MOOAuth_Debug::mo_oauth_log( 'Resource Owner Response => ' . wp_json_encode( $resource_owner ) );
 						}
-						$token_response = $mo_oauth_handler->get_id_token(
-							$currentapp['accesstokenurl'],
-							'authorization_code',
-							$currentapp['clientid'],
-							$currentapp['clientsecret'],
-							$code,
-							$currentapp['redirecturi'],
-							$currentapp['send_headers'],
-							$currentapp['send_body']
-						);
-
-						$id_token = isset( $token_response['id_token'] ) ? $token_response['id_token'] : $token_response['access_token'];
-
-					}
-
-					if ( ! $id_token ) {
-						MOOAuth_Debug::mo_oauth_log( 'Token Response Recieved => ERROR : Invalid token received.' );
-						exit( 'Invalid token received.' );
-					} else {
-						MOOAuth_Debug::mo_oauth_log( 'ID Token => ' );
-						MOOAuth_Debug::mo_oauth_log( $id_token );
-						$resource_owner = $mo_oauth_handler->get_resource_owner_from_id_token( $id_token );
-						MOOAuth_Debug::mo_oauth_log( 'Resource Owner Response => ' . wp_json_encode( $resource_owner ) );
 					}
 				} else {
 					MOOAuth_Debug::mo_oauth_log( 'OAuth Flow' );
@@ -539,6 +578,7 @@ function mooauth_login_validate() {
 
 				if ( ! empty( $username_attr ) ) {
 					$username = mooauth_client_getnestedattribute( $resource_owner, $username_attr );
+					MOOAuth_Debug::mo_oauth_log( 'Username received.=>' . $username );
 				}
 
 				if ( empty( $username ) || '' === $username ) {
@@ -561,6 +601,7 @@ function mooauth_login_validate() {
 				if ( $user ) {
 					wp_set_current_user( $user->ID );
 					wp_set_auth_cookie( $user->ID );
+
 					$redirect_to = get_option( 'mo_oauth_redirect_url' );
 					if ( has_action( 'mo_hack_login_session_redirect' ) ) {
 						$token    = mooauth_gen_rand_str();
@@ -574,6 +615,7 @@ function mooauth_login_validate() {
 					}
 					$user = get_user_by( 'ID', $user->ID );
 					do_action( 'wp_login', $user->user_login, $user );
+					MOOAuth_Debug::mo_oauth_log( 'User logged in, login cookie setted.' );
 
 					if ( false === $redirect_to ) {
 						$redirect_to = home_url();
@@ -590,6 +632,16 @@ function mooauth_login_validate() {
 				exit( esc_attr( $e->getMessage() ) );
 
 			}
+		} else { //phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Ignoring nonce verification because we are fetching data from URL and not on form submission.
+			if ( isset( $_REQUEST['error_description'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Ignoring nonce verification because we are fetching data from URL and not on form submission.
+				MOOAuth_Debug::mo_oauth_log( 'Authorization Response Recieved => ERROR : ' . sanitize_text_field( wp_unslash( $_REQUEST['error_description'] ) ) ); //phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Ignoring nonce verification because we are fetching data from URL and not on form submission.
+				exit( esc_attr( sanitize_text_field( wp_unslash( $_REQUEST['error_description'] ) ) ) ); //phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Ignoring nonce verification because we are fetching data from URL and not on form submission.
+			} elseif ( isset( $_REQUEST['error'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Ignoring nonce verification because we are fetching data from URL and not on form submission.
+				MOOAuth_Debug::mo_oauth_log( 'Authorization Response Recieved => ERROR : ' . sanitize_text_field( wp_unslash( $_REQUEST['error'] ) ) ); //phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Ignoring nonce verification because we are fetching data from URL and not on form submission.
+				exit( esc_attr( sanitize_text_field( wp_unslash( $_REQUEST['error'] ) ) ) ); //phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Ignoring nonce verification because we are fetching data from URL and not on form submission.
+			}
+			MOOAuth_Debug::mo_oauth_log( 'Authorization Response Recieved => ERROR : Invalid response' );
+			exit( 'Invalid response' );
 		}
 	}
 }
@@ -611,7 +663,7 @@ function mooauth_handle_user_registration( $username ) {
 		MOOAuth_Debug::mo_oauth_log( 'ERROR : The username received has a special character' );
 		wp_die( 'You are not allowed to login. Please contact your administrator' );
 	}
-	
+
 	$user_id = wp_create_user( $username, $random_password );
 	$user    = get_user_by( 'login', $username );
 	wp_update_user( array( 'ID' => $user_id ) );

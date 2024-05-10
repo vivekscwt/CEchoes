@@ -243,7 +243,30 @@ function mooauth_client_customization_ui() {
 				<td><input class="mo_oauth_textfield_css mo_oauth_input_disabled" style="border: 1px solid ; width: 350px;" type="text" placeholder="SSO with : "/></td>
 			   
 	</tr>
-</table><hr>
+</table>    
+<hr>
+<table class="mo_oauth_custom_settings_table" id="mo_custom_icon_table">
+<tr>
+			<h4 style="font-size: 1.2em">Upload Custom Icons :</h4>
+</tr>
+	<?php
+	$displayname = 'No App Configured';
+	foreach ( $appslist as $key => $val ) {
+		$displayname = $key;
+	}
+	?>
+<tr>
+	<td><strong> Application </strong></td>
+	<td><strong> Custom Image for Icon</strong></td>
+</tr>
+<tr id="mo_custom_icon" class="rows">
+	<td>
+	<select style="width: 55%;" name="<?php echo 'mo_custom_icon_file'; ?>" id="wp_icon_list" ><option value="">Select App from List</option><option value=""><?php echo esc_attr( $displayname ); ?></option></select></td>
+	<td><input  type="file" id="mo_custom_icon" name="custom_icon[]" class="mo_oauth_input_disabled"></td>
+	</tr>
+	<tr><td><h4><a class="mo_oauth_input_disabled" style="cursor:not-allowed" id="add_icon">Add More Icons</a></h4></td><td>&nbsp;</td></tr>
+</table>
+<hr>
 	<table class="mo_oauth_custom_settings_table">
 			<tr>
 				<h4 style="font-size: 1.2em"><?php esc_html_e( 'Customize Connect with text on WP Login page', 'miniorange-login-with-eve-online-google-facebook' ); ?></h4>

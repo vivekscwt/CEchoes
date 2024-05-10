@@ -25,7 +25,6 @@ class Mo_API_Authentication_Basic_OAuth {
 	 * @return bool
 	 */
 	public static function mo_api_auth_is_valid_request( $headers ) {
-
 		if ( ( isset( $headers['AUTHORIZATION'] ) && '' !== $headers['AUTHORIZATION'] ) || ( isset( $headers['AUTHORISATION'] ) && '' !== $headers['AUTHORISATION'] ) ) {
 			if ( isset( $headers['AUTHORIZATION'] ) && '' !== $headers['AUTHORIZATION'] ) {
 				$authorization_header = explode( ' ', $headers['AUTHORIZATION'] );
@@ -35,17 +34,21 @@ class Mo_API_Authentication_Basic_OAuth {
 
 			if ( isset( $authorization_header[0] ) && ( strcasecmp( $authorization_header[0], 'Basic' ) === 0 ) && isset( $authorization_header[1] ) && '' !== $authorization_header[1] ) {
 				$encoded_creds       = $authorization_header[1];
-				$decoded_cred_string = sanitize_text_field( base64_decode( $encoded_creds ) ); //phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode -- Using base64 for verifying standard basic authentication method
-				$creds               = explode( ':', $decoded_cred_string );
+				$decoded_cred_string = base64_decode( $encoded_creds ); //phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Using base64 for verifying standard basic authentication method and ignoring sanitization because we are not storing this in database.
+				$creds               = explode( ':', $decoded_cred_string, 2 );
 
 				if ( isset( $creds[0] ) && isset( $creds[1] ) ) {
 					if ( get_option( 'mo_api_authentication_authentication_key' ) === 'uname_pass' || ! empty( $_GET['mo_rest_api_test_config'] ) ) { //phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Ignoring nonce verification because we are getting data from URL and not form submission.
 						// username and password.
-						$uname = $creds[0];
+						$uname = sanitize_user( $creds[0] );
 						$pword = $creds[1];
 						$user  = get_user_by( 'login', $uname );
 						if ( $user ) {
 							$valid_pass = wp_authenticate_username_password( null, $uname, $pword );
+							if ( true !== $valid_pass ) { // Using this flow to provide additional support for password verification of websites hosted on wordpress.org.
+								$valid_pass_emails = wp_authenticate_email_password( null, $uname, $pword );
+								$valid_pass        = null !== $valid_pass_emails && ! is_wp_error( $valid_pass_emails ) ? $valid_pass_emails : $valid_pass;
+							}
 							if ( ! is_wp_error( $valid_pass ) ) {
 								wp_set_current_user( $user->ID );
 								return true;

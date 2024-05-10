@@ -52,18 +52,18 @@ class Mo_API_Authentication_Third_Party_Integrations {
 						<tr>
 							<td>
 								<div class="mo_rest_api_intg_cards">
-									<h4 class="mo_rest_api_intg_head">Convert WooCommerce To Mobile App</h4>
-									<p class="mo_rest_api_intg_para"> If you have a store on WooCommerce and a mobile app for the same and want to fetch/update the data of Woocommerce on mobile apps via REST API, then our plugin provides the functionalities to access the Woocommerce APIs securely rather than using the Woocommerce default authentication.</p>
+									<h4 class="mo_rest_api_intg_head">Import Products to WooCommerce from any supplier API Automatically</h4>
+									<p class="mo_rest_api_intg_para"> Import and sync product data from Inventories and suppliers into your WooCommerce stores using their API automatically by running the sync manually or scheduling it at your convenience. Also, send the order details back to your inventory in real-time whenever any order is placed in your WooCommerce store.</p>
 									<img src="<?php echo esc_url( plugin_dir_url( __FILE__ ) . '../../images/woocommerce_third_party_intg.png' ); ?>" class="mo_rest_api_intg_logo" alt=" Image">
 									<span class="mo_rest_api_intg_rect"></span>
 									<span class="mo_rest_api_intg_tri"></span>
-									<a class="mo_rest_api_intg_readmore" href="https://plugins.miniorange.com/woocommerce-to-mobile-app-with-woocommerce-rest-apis" target="_blank">Learn More</a>
+									<a class="mo_rest_api_intg_readmore" href="https://plugins.miniorange.com/woocommerce-api-product-sync-with-woocommerce-rest-apis" target="_blank">Learn More</a>
 								</div>
 								<div class="mo_rest_api_intg_cards">
 									<h4 class="mo_rest_api_intg_head">Access WP REST API securely from Mobile App</h4>
 									<p class="mo_rest_api_intg_para"> If you have a WordPress site and the mobile application for the same and want the ability to post, comment, fetch/update user profiles from the mobile application then you can do it securely using the plugin. Our plugin provides the feature to authenticate any kind of WordPress REST API very securely.</p>
 									<img src="<?php echo esc_url( plugin_dir_url( __FILE__ ) . '../../images/wordpress-logo.png' ); ?>" width='40px' height='40px' class="mo_rest_api_intg_logo" alt=" Image">
-									<span class="mo_rest_api_intg_rect"></span
+									<span class="mo_rest_api_intg_rect"></span>
 									<span class="mo_rest_api_intg_tri"></span>
 									<a class="mo_rest_api_intg_readmore" href="https://blog.miniorange.com/convert-wordpress-to-android-app" target="_blank">Learn More</a>
 								</div>
@@ -108,6 +108,18 @@ class Mo_API_Authentication_Third_Party_Integrations {
 									<a class="mo_rest_api_intg_readmore" href="https://plugins.miniorange.com/wp-rest-api-authentication-setup-guide" target="_blank">Learn More</a>
 								</div>
 							</td>
+						</tr>
+						<tr>
+							<td>
+						<div class="mo_rest_api_intg_cards">
+							<h4 class="mo_rest_api_intg_head">Convert WooCommerce To Mobile App</h4>
+							<p class="mo_rest_api_intg_para"> If you have a store on WooCommerce and a mobile app for the same and want to fetch/update the data of Woocommerce on mobile apps via REST API, then our plugin provides the functionalities to access the Woocommerce APIs securely rather than using the Woocommerce default authentication.</p>
+							<img src="<?php echo esc_url( plugin_dir_url( __FILE__ ) . '../../images/woocommerce_third_party_intg.png' ); ?>" class="mo_rest_api_intg_logo" alt=" Image">
+							<span class="mo_rest_api_intg_rect"></span>
+							<span class="mo_rest_api_intg_tri"></span>
+							<a class="mo_rest_api_intg_readmore" href="https://plugins.miniorange.com/woocommerce-to-mobile-app-with-woocommerce-rest-apis" target="_blank">Learn More</a>
+						</div>
+	</td>
 						</tr>
 					</table>
 					<br>

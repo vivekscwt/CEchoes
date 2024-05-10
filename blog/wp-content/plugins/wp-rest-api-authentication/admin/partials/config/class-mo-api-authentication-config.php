@@ -36,18 +36,38 @@ class Mo_API_Authentication_Config {
 		?>
 		<div id='mo_api_section_method'>
 		<div class="mo_api_authentication_support_layout">
-			<p style="font-size: 20px;font-weight: 900">API Authentication Methods Configuration</p>
-			<p style="font-size: 15px;font-weight: 500">Select any of the below authentication methods to get started - </p>
-			<br><br>
+			<span>
+				<p style="font-size: 20px;font-weight: 900">API Authentication Methods Configuration</p>
+				<?php
+				if ( get_option( 'mo_api_authentication_selected_authentication_method' ) ) {
+					?>
+						<button disabled><i class="fa fa-plus"></i> Add Application</button>
+					<?php
+				}
+				?>
+			</span>
+			<?php
+			if ( get_option( 'mo_api_authentication_selected_authentication_method' ) ) {
+				?>
+					<div id="mo_api_auth_add_app_message">
+						<p class="mo_api_auth_note"><strong><i>Note: </i></strong>You can only configure one authentication method at a time with the free version. Please <strong><a href="admin.php?page=mo_api_authentication_settings&tab=licensing">Upgrade to All-Inclusive Plan Package</a></strong> to configure multiple authentication applications.</p>
+					</div>
+				<?php
+			} else {
+				?>
+					<p style="font-size: 15px;font-weight: 500">Select any of the below authentication methods to get started - </p>
+				<?php
+			}
+			?>
 			<div class="mo_api_authentication_card_layout">
-				<div class="mo_api_flex_child1" id='mo_api_config_bauth' onclick="api_ajax_redir('basic auth')" style="<?php echo get_option( 'mo_api_authentication_selected_authentication_method' ) === 'basic_auth' ? 'box-shadow: 4px 4px 4px 2px rgba(0,0,0,0.1);border: 3px solid #473970' : ''; ?>" >
+				<div class="mo_api_flex_child" id='mo_api_config_bauth' onclick="api_ajax_redir('basic auth')" style="<?php echo get_option( 'mo_api_authentication_selected_authentication_method' ) === 'basic_auth' ? 'box-shadow: 4px 4px 4px 2px rgba(0,0,0,0.1);border: 3px solid #473970' : ''; ?>" >
 					<div class="mo_api_auth_method_img">
 					<img src="<?php echo esc_url( plugin_dir_url( dirname( dirname( __FILE__ ) ) ) ); ?>/images/basic-key.png" height="55em" width="55em"></div>
 					<div class="mo_api_auth_div_internal">
 					<p class="mo_api_auth_div_nested_internal">BASIC AUTHENTICATION</p></div>
 
 				</div>
-				<div class="mo_api_flex_child1" onclick="api_ajax_redir('jwt auth')" style="
+				<div class="mo_api_flex_child" onclick="api_ajax_redir('jwt auth')" style="
 				<?php
 				if ( get_option( 'mo_api_authentication_selected_authentication_method' ) === 'jwt_auth' ) {
 					echo 'box-shadow: 4px 4px 4px 2px rgba(0,0,0,0.1);border: 3px solid #473970';}
@@ -63,7 +83,7 @@ class Mo_API_Authentication_Config {
 			<br>
 			<div class="mo_api_authentication_card_layout">
 
-				<div class="mo_api_flex_child1" onclick="api_ajax_redir('apikey auth')" style="
+				<div class="mo_api_flex_child" onclick="api_ajax_redir('apikey auth')" style="
 				<?php
 				if ( get_option( 'mo_api_authentication_selected_authentication_method' ) === 'tokenapi' ) {
 					echo 'box-shadow: 4px 4px 4px 2px rgba(0,0,0,0.1);border: 3px solid #473970';}
@@ -81,7 +101,7 @@ class Mo_API_Authentication_Config {
 						</div>
 					</div>
 				</div>
-				<div class="mo_api_flex_child1" onclick="api_ajax_redir('oauth2 auth')">
+				<div class="mo_api_flex_child" onclick="api_ajax_redir('oauth2 auth')">
 					<div class="mo_api_auth_method_img">
 					<img src="<?php echo esc_url( plugin_dir_url( dirname( dirname( __FILE__ ) ) ) ); ?>/images/oauth_2.png" height="55em" width="55em"></div>
 					<div class="mo_api_auth_div_internal">
@@ -102,7 +122,7 @@ class Mo_API_Authentication_Config {
 			<br>
 			<div class="mo_api_authentication_card_layout" onclick="api_ajax_redir('thirdparty auth')">
 
-				<div class="mo_api_flex_child1">
+				<div class="mo_api_flex_child">
 					<div class="mo_api_auth_method_img">
 					<img src="<?php echo esc_url( plugin_dir_url( dirname( dirname( __FILE__ ) ) ) ); ?>/images/third_party.png" height="55em" width="55em"></div>
 					<div class="mo_api_auth_div_internal">
@@ -113,7 +133,7 @@ class Mo_API_Authentication_Config {
 						</div>
 					</div>
 				</div>
-				<div class="mo_api_flex_child1" style="border: 0px">
+				<div class="mo_api_flex_child" style="border: 0px">
 
 				</div>
 

@@ -35,35 +35,15 @@ class Mo_API_Authentication_License {
 		self::emit_css();
 		?>
 
-		<!-- Important JSForms -->
-		<input type="hidden" value="<?php echo esc_attr( mo_api_authentication_is_customer_registered() ); ?>" id="mo_customer_registered">
-		<form style="display:none;" id="loginform"
-			action="<?php echo esc_attr( get_option( 'host_name' ) ) . '/moas/login'; ?>"
-			target="_blank" method="post">
-			<?php wp_nonce_field( 'mo_api_authentication_goto_login_xecurify', 'mo_api_authentication_goto_login_fields_xecurify' ); ?>			
-			<input type="email" name="username" value="<?php echo esc_attr( get_option( 'mo_api_authentication_admin_email' ) ); ?>"/>
-			<input type="text" name="redirectUrl"
-				value="<?php echo esc_attr( get_option( 'host_name' ) ) . '/moas/initializepayment'; ?>"/>
-			<input type="text" name="requestOrigin" id="requestOrigin"/>
-		</form>
-		<form style="display:none;" id="viewlicensekeys"
-			action="<?php echo esc_attr( get_option( 'host_name' ) ) . '/moas/login'; ?>"
-			target="_blank" method="post">
-			<?php wp_nonce_field( 'mo_api_authentication_goto_license_keys', 'mo_api_authentication_goto_license_keys_fields_xecurify' ); ?>			
-			<input type="email" name="username" value="<?php echo esc_attr( get_option( 'mo_api_authentication_admin_email' ) ); ?>"/>
-			<input type="text" name="redirectUrl"
-				value="<?php echo esc_attr( get_option( 'host_name' ) ) . '/moas/viewlicensekeys'; ?>"/>
-		</form>
-		<!-- End Important JSForms -->
 		<script>
-		function mo_show_popup_feature(popup_id){
-			document.getElementById(popup_id).style.visibility = "visible";
-			document.getElementById(popup_id).style.opacity = "1";
-		}
-		function mo_hide_popup_feature(popup_id){
-			document.getElementById(popup_id).style.opacity = "0";
-			document.getElementById(popup_id).style.visibility = "hidden";
-		}
+			function mo_show_popup_feature(popup_id){
+				document.getElementById(popup_id).style.visibility = "visible";
+				document.getElementById(popup_id).style.opacity = "1";
+			}
+			function mo_hide_popup_feature(popup_id){
+				document.getElementById(popup_id).style.opacity = "0";
+				document.getElementById(popup_id).style.visibility = "hidden";
+			}
 		</script>
 		<div style="margin-left: 0px;margin-right: 30px;" class="row">
 			<div class="mo_api_authentication_support_layout" style="padding-left: 20px; padding-top: 15px;padding-bottom: 15px;">
@@ -122,6 +102,9 @@ class Mo_API_Authentication_License {
 					</li>
 					<li class="mo-api-license-li unsupported-item">
 						Authentication for custom built and 3rd-party plugin's REST API endpoints
+					</li>
+					<li class="mo-api-license-li unsupported-item">
+						Multiple Authentication Applications
 					</li>
 					</ul>
 				</div>
@@ -187,6 +170,9 @@ class Mo_API_Authentication_License {
 					<li class="mo-api-license-li unsupported-item">
 						Authentication for custom built and 3rd-party plugin's REST API endpoints
 					</li>
+					<li class="mo-api-license-li unsupported-item">
+						Multiple Authentication Applications
+					</li>
 					</ul>
 				</div>
 			</div>
@@ -248,6 +234,9 @@ class Mo_API_Authentication_License {
 					</li>
 					<li class="mo-api-license-li unsupported-item">
 						Authentication for custom built and 3rd-party plugin's REST API endpoints
+					</li>
+					<li class="mo-api-license-li unsupported-item">
+						Multiple Authentication Applications
 					</li>
 					</ul>
 				</div>
@@ -313,6 +302,9 @@ class Mo_API_Authentication_License {
 					<li class="mo-api-license-li unsupported-item">
 						Authentication for custom built and 3rd-party plugin's REST API endpoints
 					</li>
+					<li class="mo-api-license-li unsupported-item">
+						Multiple Authentication Applications
+					</li>
 					</ul>
 				</div>
 			</div>
@@ -329,6 +321,9 @@ class Mo_API_Authentication_License {
 					<ul>
 					<li class="mo-api-license-li feature-item">
 						Authentication from external OAuth 2.0 providers, OpenId Connect, JWT/JWKS <br>(Like Azure, Cognito, Firebase Access Token, Google, Facebook, Keycloak, ADFS etc.) [One at a time]
+					</li>
+					<li class="mo-api-license-li feature-item">
+						Unlimited API Authentications
 					</li>
 					<li class="mo-api-license-li feature-item">
 						Restrict Public Access to only default WP REST APIs
@@ -365,6 +360,9 @@ class Mo_API_Authentication_License {
 					</li>
 					<li class="mo-api-license-li unsupported-item">
 						Authentication for custom built and 3rd-party plugin's REST API endpoints
+					</li>
+					<li class="mo-api-license-li unsupported-item">
+						Multiple Authentication Applications
 					</li>
 					</ul>
 				</div>
@@ -424,6 +422,9 @@ class Mo_API_Authentication_License {
 					</li>
 					<li class="mo-api-license-li unsupported-item">
 						Authentication for custom built and 3rd-party plugin's REST API endpoints
+					</li>
+					<li class="mo-api-license-li unsupported-item">
+						Multiple Authentication Applications
 					</li>
 					</ul>
 				</div>
@@ -487,6 +488,9 @@ class Mo_API_Authentication_License {
 					<li class="mo-api-license-li unsupported-item">
 						Authentication from external OAuth 2.0 providers
 					</li>
+					<li class="mo-api-license-li unsupported-item">
+						Multiple Authentication Applications
+					</li>
 					</ul>
 				</div>
 			</div>
@@ -520,6 +524,9 @@ class Mo_API_Authentication_License {
 					</li>
 					<li class="mo-api-license-li feature-item">
 						Unlimited API Authentication
+					</li>
+					<li class="mo-api-license-li feature-item">
+						Multiple Authentication Applications
 					</li>
 					<li class="mo-api-license-li feature-item">
 						Restrict Public Access to all WP REST APIs
@@ -577,23 +584,6 @@ class Mo_API_Authentication_License {
 		<div class="mo_api_auth_container_customize">
 			<div style="margin-right:20px" class="row">
 
-				<!-- API Key  -->
-				<div class="col-xs-12 col-lg-3">
-				<div class="card text-xs-center">
-					<div class="card-header">
-					<h3 class="mo_api_auth_display_2"><span class="mo_api_auth_currency">$</span>149<sup style="color: #e0d8d7">*</sup></h3>
-					</div>
-					<div class="mo_api_auth_plan_line"></div>
-					<div class="card-block">
-					<h4 class="card-title"> 
-						API Key Authentication <br> Method
-					</h4>
-					<button onclick="upgradeform('wp_rest_api_authentication_custom_api_key_plan')" class="mo_api_auth_btn_upgrade">Upgrade now</button><br>
-					<button onclick="mo_show_popup_feature('api-key-authentication')" class="mo_api_auth_circle_wrapper"><i class="fa fa-plus fa-2x"></i></button>
-					</div>
-				</div>
-				</div>
-
 				<!-- Basic Auth  -->
 				<div class="col-xs-12 col-lg-3">
 				<div class="card text-xs-center">
@@ -607,6 +597,23 @@ class Mo_API_Authentication_License {
 					</h4>
 					<button onclick="upgradeform('wp_rest_api_authentication_custom_basic_auth_plan')" class="mo_api_auth_btn_upgrade">Upgrade now</button><br>
 					<button onclick="mo_show_popup_feature('basic-authentication')" class="mo_api_auth_circle_wrapper"><i class="fa fa-plus fa-2x"></i></button>
+					</div>
+				</div>
+				</div>
+
+				<!-- API Key  -->
+				<div class="col-xs-12 col-lg-3">
+				<div class="card text-xs-center">
+					<div class="card-header">
+					<h3 class="mo_api_auth_display_2"><span class="mo_api_auth_currency">$</span>199<sup style="color: #e0d8d7">*</sup></h3>
+					</div>
+					<div class="mo_api_auth_plan_line"></div>
+					<div class="card-block">
+					<h4 class="card-title"> 
+						API Key Authentication <br> Method
+					</h4>
+					<button onclick="upgradeform('wp_rest_api_authentication_custom_api_key_plan')" class="mo_api_auth_btn_upgrade">Upgrade now</button><br>
+					<button onclick="mo_show_popup_feature('api-key-authentication')" class="mo_api_auth_circle_wrapper"><i class="fa fa-plus fa-2x"></i></button>
 					</div>
 				</div>
 				</div>
@@ -719,8 +726,6 @@ class Mo_API_Authentication_License {
 				<h4 class="mo-oauth-h2" style="text-align: center;">LICENSING POLICY</h4>
 					<!--  <hr style="background-color:#17a2b8; width: 10%;height: 3px;border-width: 3px;"> -->
 
-						<p style="font-size: 0.9em;"><span style="color: red;">*</span>Cost applicable for one instance only. Licenses are perpetual and the Support Plan includes 12 months of maintenance (support and version updates). You can renew maintenance after 12 months at 50% of the current license cost.<br></p>
-
 						<p style="font-size: 0.9em;"><span style="color: red;">*</span>We provide deep discounts on bulk license purchases and pre-production environment licenses. As the no. of licenses increases, the discount percentage also increases. Contact us at <a href="mailto:apisupport@xecurify.com?subject=WP REST API Authentication Plugin - Enquiry">apisupport@xecurify.com</a> for more information.</p>
 
 						<p style="font-size: 0.9em;"><span style="color: red;">*</span><strong>MultiSite Network Support : </strong>
@@ -743,29 +748,17 @@ class Mo_API_Authentication_License {
 		<!-- JSForms Controllers -->
 		<script>
 
-			function customplanupgrade() {
-				planType = document.getElementById('wp-rest-api-custom-plan-select').value;
-				upgradeform(planType);
-			}
-
 			function upgradeform(planType) {
 				if(planType === "") {
 					location.href = "https://wordpress.org/plugins/wp-rest-api-authentication/";
 					return;
-				} else {
-					jQuery('#requestOrigin').val(planType);
-					if(jQuery('#mo_customer_registered').val()==1)
-						jQuery('#loginform').submit();
-					else{
-						location.href = jQuery('#mobacktoaccountsetup').attr('href');
-					}
+				} 
+				else {
+					const url = `https://portal.miniorange.com/initializepayment?requestOrigin=${planType}`;            
+					window.open(url, "_blank");					
 				}
-
 			}
 
-			function getlicensekeys() {
-				jQuery('#viewlicensekeys').submit();
-			}
 		</script>
 		<!-- End JSForms Controllers -->
 		<?php

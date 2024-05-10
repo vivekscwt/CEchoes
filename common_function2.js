@@ -1232,6 +1232,40 @@ function generateUniqueSlug(companyName, callback) {
   });
 }
 
+
+// function generateUniqueSlug(companyName, country, callback) {
+//   // Create a base slug from the company name
+//   const baseSlug = slugify(companyName, {
+//     replacement: '-',  // Replace spaces with hyphens
+//     lower: true,       // Convert to lowercase
+//     strict: true,      // Strip special characters
+//   });
+
+//   // Query to find existing slugs in the same country
+//   db.query(
+//     'SELECT slug FROM company WHERE main_address_country = ? AND slug LIKE ?',
+//     [country, `${baseSlug}%`],
+//     (err, existingSlugs) => {
+//       if (err) {
+//         return callback(err);
+//       }
+
+//       let slug = baseSlug;
+//       let count = 1;
+
+//       // Ensure the generated slug is unique within the same country
+//       const existingSlugsSet = new Set(existingSlugs.map((s) => s.slug));
+//       while (existingSlugsSet.has(slug)) {
+//         slug = `${baseSlug}-${count}`;
+//         count++;
+//       }
+
+//       callback(null, slug); // Return the unique slug
+//     }
+//   );
+// }
+
+
 // Function to generate a unique slug from a string
 function generateUniqueSlugCategory(catName, callback) {
   // Check if the generated slug already exists in the database

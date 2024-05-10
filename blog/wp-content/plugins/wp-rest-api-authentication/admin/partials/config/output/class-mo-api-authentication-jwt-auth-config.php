@@ -38,7 +38,7 @@ class Mo_API_Authentication_Jwt_Auth_Config {
 				<div class="mo_api_auth_setup_guide1"><img src="<?php echo esc_url( plugin_dir_url( dirname( dirname( dirname( __FILE__ ) ) ) ) ); ?>/images/youtube.png" height="25px" width="25px"></div>
 				<a href="https://www.youtube.com/watch?v=XlbSVHR7ohQ" target="_blank" rel="noopener noreferrer"><div class="mo_api_authentication_guide1"><p style="font-weight: 700;">Video guide</b></p></div></a>
 			</div>
-			<div class="mo_api_auth_setup_guide">
+			<div class="mo_api_auth_setup_guide2">
 				<div class="mo_api_auth_setup_guide1"><img src="<?php echo esc_url( plugin_dir_url( dirname( dirname( dirname( __FILE__ ) ) ) ) ); ?>/images/user-guide.png" height="25px" width="25px"></div>
 				<a href="https://plugins.miniorange.com/wordpress-rest-api-jwt-authentication-method#step_1" target="_blank"><div class="mo_api_authentication_guide1"><p style="font-weight: 700;">Setup Guide</p></div></a>
 			</div>
@@ -54,7 +54,7 @@ class Mo_API_Authentication_Jwt_Auth_Config {
 				<br>
 				<div class="mo_api_authentication_card_layout_internal">
 
-					<div class="mo_api_flex_child1" id=mo_api_config_bauth>
+					<div class="mo_api_flex_child" id=mo_api_config_bauth>
 
 						<div style="height: 30%">
 							<img src="<?php echo esc_url( plugin_dir_url( dirname( dirname( dirname( __FILE__ ) ) ) ) ); ?>/images/select-all.png" height="25px" width="25px" style="float: right;padding-top: 0px;padding-right: 5px;">
@@ -66,7 +66,7 @@ class Mo_API_Authentication_Jwt_Auth_Config {
 						</div>
 
 					</div>
-					<div class="mo_api_flex_child1" style="cursor:no-drop;">
+					<div class="mo_api_flex_child mo_api_no_cursor">
 						<div style="height: 30%">
 							<div class="mo_api_auth_premium_label_jwt">
 								<div class="mo_api_auth_premium_label_internal_jwt">
@@ -137,7 +137,7 @@ class Mo_API_Authentication_Jwt_Auth_Config {
 
 			<h2 style="font-size: 22px;">Test Configuration</h2>
 				<br>
-				<div class="mo_api_authentication_support_layout" style="width: 90%;">
+				<div id="mo_api_authentication_jwt_test_config" class="mo_api_authentication_support_layout" style="width: 90%;">
 					<table width="80%">
 						<tr>
 							<td>
@@ -147,10 +147,13 @@ class Mo_API_Authentication_Jwt_Auth_Config {
 						<tr>
 							<td>
 								<p>Username:</p>
-								<input type="text" id='rest_jwt_username' size="28" placeholder="Enter WordPress Username"  class='mo_test_config_input'>
+								<input type="text" id='mo_rest_api_jwt_username' size="28" placeholder="Enter WordPress Username"  class='mo_test_config_input'>
 
 								<p >Password:</p>
-								<input type="password" id='rest_jwt_password' size="28" placeholder="Enter WordPress Password"  class='mo_test_config_input'>
+								<span id="mo_api_auth_test_password">
+									<input type="password" id='mo_rest_api_jwt_password' size="28" placeholder="Enter WordPress Password"  class='mo_test_config_input'>
+									<i class="fa fa-fw fa-eye-slash" id="mo_api_jwt_eye_show_hide" aria-hidden="true" onclick="mo_rest_api_display_jwt_auth_password()"></i>
+								</span>
 							</td>
 						</tr>
 						<tr>
@@ -239,6 +242,10 @@ class Mo_API_Authentication_Jwt_Auth_Config {
 							</td>
 						</tr>
 					</table>
+					<br><br>
+					<div id="mo_api_jwt_auth_message">
+						<p class="mo_api_auth_note"><strong><i>Note: </i></strong>The Test has been done successfully. Please click on <strong>"Finish"</strong> button on the top right corner of the screen to save the authentication method.</p>
+					</div>
 					<br>
 					<h4 id='jwt_token_req_headers_text' style='display:none;'><b>Request Headers: </b></h4>
 					<pre id="jwt_token_request_headers" class='mo_request_header_jwt_auth'>
@@ -249,9 +256,7 @@ class Mo_API_Authentication_Jwt_Auth_Config {
 					</pre>
 					<h4 id='data_display_text' style='display:none;'><img class="mo_oauth_rest_troubleshoot" src="<?php echo esc_url( dirname( plugin_dir_url( __FILE__ ) ) ); ?>/images/trouble_2.png"><b style="margin-left:25px;"> TroubleShoot </b></h4>
 					<pre style='padding: 15px 10px 15px 25px;' id="data_display_troubleshoot" class='mo_test_config_response'>
-
 					</pre>
-					<!-- <div id="json_jwt" style='display:none;'> -->
 					<br>	
 					<br>
 				</div>
@@ -266,7 +271,19 @@ class Mo_API_Authentication_Jwt_Auth_Config {
 				var token_endpoint_obj = document.getElementById('rest_validate_endpoint');
 				token_endpoint_obj.style.width = ((token_endpoint_obj.value.length + 1) * 7) + 'px';
 				var token_endpoint_obj = document.getElementById('rest_endpoint_jwt_auth');
-				token_endpoint_obj.style.width = ((token_endpoint_obj.value.length + 1) * 7) + 'px';
+				token_endpoint_obj.style.width = ((token_endpoint_obj.value.length + 1) * 7) + 'px';			
+				function MO_RAO_append_params_jwt( endpoint, params ) {
+					regex             = /.+\?.+=.+/i;
+					regex1            = /.+\?/;
+					if ( true == regex.test( endpoint ) ) { // URL already contains params.
+						endpoint = endpoint + '&' + params;
+					} else if ( true == regex1.test( endpoint ) ) { // URL contains "?" but no params.
+						endpoint = endpoint + params;
+					} else { // URL doesn't contains "?" and params.
+						endpoint = endpoint + '?' + params;
+					}
+					return endpoint;
+				}
 
 				function moJWTAuthenticationMethodSave(action){
 					div = document.getElementById('mo_api_jwt_authentication_support_layout');
@@ -292,9 +309,8 @@ class Mo_API_Authentication_Jwt_Auth_Config {
 				function mo_JWT_test_config(event) {
 					if(event === 'token') {
 						var token_endpoint = document.getElementById("rest_token_endpoint").value;
-						var username = document.getElementById("rest_jwt_username").value;
-						var password = document.getElementById("rest_jwt_password").value;
-
+						var username = document.getElementById("mo_rest_api_jwt_username").value;
+						var password = document.getElementById("mo_rest_api_jwt_password").value;
 						var myHeaders = new Headers();
 
 						var formdata = new FormData();
@@ -331,7 +347,8 @@ class Mo_API_Authentication_Jwt_Auth_Config {
 							headers: myHeaders,
 							redirect: 'follow'
 						};
-						validate_endpoint=validate_endpoint+ "?mo_rest_api_test_config=jwt_auth";
+
+						validate_endpoint = MO_RAO_append_params_jwt( validate_endpoint, 'mo_rest_api_test_config=jwt_auth');
 
 						fetch(validate_endpoint, requestOptions)
 						.then(response => response.text())
@@ -353,8 +370,7 @@ class Mo_API_Authentication_Jwt_Auth_Config {
 							headers: myHeaders,
 							redirect: 'follow'
 						};
-
-						endpoint = endpoint + "?mo_rest_api_test_config=jwt_auth";
+						endpoint = MO_RAO_append_params_jwt( endpoint, 'mo_rest_api_test_config=jwt_auth' );
 
 						fetch(endpoint, requestOptions)
 						.then(response => response.text())
@@ -363,13 +379,18 @@ class Mo_API_Authentication_Jwt_Auth_Config {
 					}
 				}
 
+				var container = document.getElementById("mo_api_authentication_jwt_test_config");
+
 				function moJWTdisplay_jwt_data(result) {
 					var data = JSON.parse(result);
 					var json = JSON.stringify(data, undefined, 4);
 					moJWToutput(moJWTsyntaxHighlight(json), 'token');
 					document.getElementById("json_jwt_token").style.display = "block";
 					document.getElementById("jwt_token_response_text").style.display = "block";
-					document.getElementById("jwt_token_response_text").scrollIntoView({behavior: 'smooth' });
+					container.scrollTo({
+						top: document.getElementById("jwt_token_response_text").offsetTop - container.offsetTop,
+						behavior: "smooth"
+					});
 					if(data.error)
 						moJWTtroubleshootPrintJWT(data.error , 'token');
 					else
@@ -381,7 +402,10 @@ class Mo_API_Authentication_Jwt_Auth_Config {
 					moJWToutput(moJWTsyntaxHighlight(json), 'validate');
 					document.getElementById("json_jwt_token_validate").style.display = "block";
 					document.getElementById("jwt_token_validate_response_text").style.display = "block";
-					document.getElementById("jwt_token_validate_response_text").scrollIntoView({behavior: 'smooth' });
+					container.scrollTo({
+						top: document.getElementById("jwt_token_validate_response_text").offsetTop - container.offsetTop,
+						behavior: "smooth"
+					});
 					if(data.error)
 						moJWTtroubleshootPrintJWT(data.error , 'valid');
 					else
@@ -440,13 +464,13 @@ class Mo_API_Authentication_Jwt_Auth_Config {
 					{
 
 						if(place === "valid"){
-							document.getElementById("json_jwt_token_validate_troubleshoot").innerHTML = 'JWT token field is empty.';
+							document.getElementById("json_jwt_token_validate_troubleshoot").innerHTML = '<ul style="list-style: inside;"><li>Verify if you have added necessary headers.</li><li>Add below lines to your htaccess file(Apache server)</li><ul style="padding-inline-start: 19px;"><li>RewriteEngine On &NewLine;RewriteCond %{HTTP:Authorization} ^(.*) &NewLine;RewriteRule .* - [e=HTTP_AUTHORIZATION:%1]</li></ul><li>Add below lines to your config file(NGINX server)</li><ul style="padding-inline-start: 19px;"><li>add_header Access-Control-Allow-Headers "Authorization";</li></ul></ul>';
 							document.getElementById("json_jwt_token_validate_troubleshoot").style.display = "block";
 							document.getElementById("jwt_token_validate_text").style.display = "block";
 
 						}
 						else{
-							document.getElementById("data_display_troubleshoot").innerHTML = 'JWT token field is empty.';
+							document.getElementById("data_display_troubleshoot").innerHTML = '<ul style="list-style: inside;"><li>Verify if you have added necessary headers.</li><li>Add below lines to your htaccess file(Apache server)</li><ul style="padding-inline-start: 19px;"><li>RewriteEngine On &NewLine;RewriteCond %{HTTP:Authorization} ^(.*) &NewLine;RewriteRule .* - [e=HTTP_AUTHORIZATION:%1]</li></ul><li>Add below lines to your config file(NGINX server)</li><ul style="padding-inline-start: 19px;"><li>add_header Access-Control-Allow-Headers "Authorization";</li></ul></ul>';
 							document.getElementById("data_display_troubleshoot").style.display = "block";
 							document.getElementById("data_display_text").style.display = "block";
 
@@ -482,8 +506,8 @@ class Mo_API_Authentication_Jwt_Auth_Config {
 
 						}
 					}
-
-
+					document.querySelector("#mo_api_jwt_auth_message .mo_api_auth_note ").innerHTML = '<strong><i>Note: </i></strong>You are currently in the testing mode and this authentication method is not yet enabled on your site. Please click on <strong>"Finish"</strong> button on the top right corner of the screen to save the authentication method.';
+					document.querySelector("#mo_api_jwt_auth_message .mo_api_auth_note").style.display = "block";
 				}
 
 
@@ -527,13 +551,30 @@ class Mo_API_Authentication_Jwt_Auth_Config {
 					document.getElementById("jwt_token_req_headers_text").style.display = "block";
 					document.getElementById("jwt_token_request_headers").style.display = "block";
 					document.getElementById("jwt_token_api_response_text").style.display = "block";
-					document.getElementById("jwt_token_api_response_text").scrollIntoView({behavior: 'smooth' });
+					container.scrollTo({
+						top: document.getElementById("jwt_token_api_response_text").offsetTop - container.offsetTop,
+						behavior: "smooth"
+					});
+					document.querySelector("#mo_api_jwt_auth_message .mo_api_auth_note ").innerHTML = '<strong><i>Note: </i></strong>The Test has been done successfully. Please click on <strong>"Finish"</strong> button on the top right corner of the screen to save the authentication method.';
+					document.querySelector("#mo_api_jwt_auth_message .mo_api_auth_note").style.display = "block";
 					moJWToutput(moJWTsyntaxHighlight(json), 'wp_rest_api');
 					if(data.error)
 						moJWTtroubleshootPrintJWT(data.error , 'wp_rest_api');
 					else
 						moJWTtroubleshootHideJWT('wp_rest_api');
 
+				}
+
+				function mo_rest_api_display_jwt_auth_password() {
+					var field = document.getElementById("mo_rest_api_jwt_password");
+					var showButton = document.getElementById("mo_api_jwt_eye_show_hide");
+					if (field.type == "password") {
+						field.type = "text";
+						showButton.className = "fa fa-eye";
+					} else {
+						field.type = "password";
+						showButton.className = "fa fa-eye-slash";
+					}
 				}
 			</script>
 		<?php

@@ -81,6 +81,8 @@ router.post('/company-bulk-upload', csvupload.single('company_file'), authContro
 router.post('/delete-company', authController.deleteCompany);
 router.post('/trash-company', authController.trashCompany);
 router.post('/restore-company', authController.restoreCompany);
+router.get('/get-parent-categories',authController.getparentcompany);
+
 // Add FAQ
 router.post('/create-faq', authController.createFAQ);
 
