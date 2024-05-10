@@ -67,7 +67,7 @@
          <div class="header-wrapper">
             <div class="logo">
                <a href="<?php echo MAIN_URL_BG; ?>">
-               <img src="<?php echo MAIN_URL_BG; ?>/front-end/images/cechoes-logo.png" alt="logo">
+               <img src="<?php echo MAIN_URL_BG; ?>/front-end/images/cechoes-logo.png" alt="Cechoes">
                </a>
             </div>
             <div class="header-right-content">
