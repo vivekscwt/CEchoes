@@ -1,11 +1,10 @@
 === Post Views Counter ===
 Contributors: dfactory
-Donate link: http://www.dfactory.co/
-Tags: counter, hits, posts, postviews, post views, views, count, statistics, stats, analytics, pageviews, tracking
+Tags: counter, postviews, statistics, stats, analytics, pageviews, tracking
 Requires at least: 5.1
-Requires PHP: 5.4.0
-Tested up to: 6.2
-Stable tag: 1.3.13
+Requires PHP: 7.3.0
+Tested up to: 6.5.2
+Stable tag: 1.4.6
 License: MIT License
 License URI: http://opensource.org/licenses/MIT
 
@@ -13,9 +12,7 @@ Post Views Counter allows you to display how many times a post, page or custom p
 
 == Description ==
 
-[Post Views Counter](http://www.dfactory.co/products/post-views-counter/) allows you to display how many times a post, page or custom post type had been viewed with this simple, fast and easy to use plugin.
-
-For more information, check out plugin page at [dFactory](http://www.dfactory.co/) or plugin [support forum](http://www.dfactory.co/support/forum/post-views-counter/).
+[Post Views Counter](https://postviewscounter.com/) allows you to display how many times a post, page or custom post type had been viewed with this simple, fast and easy to use plugin.
 
 = Features include: =
 
@@ -24,7 +21,7 @@ For more information, check out plugin page at [dFactory](http://www.dfactory.co
 * Compatible with data privacy regulations
 * Possibility to manually set views count for each post
 * Dashboard post views stats widget
-* Full Data Privacy compliance
+* Full Privacy regulations compliance
 * Capability to query posts according to its views count
 * Custom REST API endpoints
 * Option to set counts interval
@@ -36,15 +33,8 @@ For more information, check out plugin page at [dFactory](http://www.dfactory.co
 * Sortable admin column
 * Post views display position, automatic or manual via shortcode
 * Multisite compatibile
-* W3 Cache/WP SuperCache compatible
-* Optional object cache support
 * WPML and Polylang compatible
 * .pot file for translations included
-
-= Get involved =
-
-Feel free to contribute to the source code on the [dFactory GitHub Repository](https://github.com/dfactoryplugins).
-
 
 == Installation ==
 
@@ -63,12 +53,54 @@ No questions yet.
 
 == Changelog ==
 
+= 1.4.6 =
+* Fix: Bulk posts selection
+* Fix: Additional SQL queries escaping
+* Tweak: Call to undefined function is_favicon()
+* Tweak: Enqueue main script in header instead of footer
+* Tweak: Better JS error handling
+* Tweak: Updated Chart.js to 4.4.2
+
+= 1.4.5 =
+* Fix: Post views bulk saving security
+* Tweak: Removed WP Rocket as bot in crawler detection
+
+= 1.4.4 =
+* New: Option to enter meta_key for importing the views
+* New: Revamped Reports for Views by Date, Views by Post and Views by Author (Pro)
+* New: REST API support for post, site, term and user views (Pro)
+* New: Views Period option to display views from a selected time period instead of total (Pro)
+* New: [site-views] shortcode for total site views display (Pro)
+* Tweak: Improved icon handling
+* Tweak: Updated crawler detection
+
+= 1.4.3 =
+* Tweak: Update languages file
+
+= 1.4.2 =
+* New: Option to select position of the plugin menu
+
+= 1.4.1 =
+* Fix: Frontpage views not recorded properly
+
+= 1.4 =
+* New: Introducing Post Views Counter Pro
+* New: Fast Ajax views counting mode (Pro)
+* New: Google AMP support (Pro)
+* New: Taxonomy term views (Pro)
+* New: Author archive views (Pro)
+* New: Cookies/Cookieless data storage option (Pro)
+* New: Dedicated Reports page (Pro)
+* New: Exporting views to CSV or XML files (Pro)
+* Tweak: Improved validation and sanitization
+* Tweak: Chart.js updated to 4.3.0
+
 = 1.3.13 =
 * New: Compatibility with WP 6.2 and PHP 8.2
 * Fix: Invalid year in seconds
 * Fix: Possible invalid cookie data in views storage
 * Fix: Default database prefix
-* Tweak: Switch from wp_localize_script to wp_add_inline_script 
+* Tweak: Switch from wp_localize_script to wp_add_inline_script
 * Tweak: Updated bot detection
 
 
@@ -259,5 +291,5 @@ Initial release
 
 == Upgrade Notice ==
 
-= 1.3.13 =
-* New: Compatibility with WP 6.2 and PHP 8.2
+= 1.4.6 =
+Fix: Bulk posts selection, Fix: Additional SQL queries escaping
