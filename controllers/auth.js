@@ -1734,7 +1734,7 @@ exports.restoreUser = (req, res) => {
 
 exports.createCompany = async (req, res) => {
     try{
-    console.log(req.body);
+    console.log("createCompany",req.body);
     const encodedUserData = req.cookies.user;
     const currentUserData = JSON.parse(encodedUserData);
 
@@ -2676,7 +2676,7 @@ exports.companyBulkUpload = async (req, res) => {
                     cleanedCompany[20] = '';
                 }
 
-    cleanedCompany[21] = 0; // Default value
+                cleanedCompany[21] = 0; // Default value
 
 
 
