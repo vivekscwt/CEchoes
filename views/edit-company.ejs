@@ -220,10 +220,18 @@
                             <!--end::Label-->
                             <!--begin::Col-->
                             <div class="col-lg-8 fv-row">
-                                <input type="text" name="main_address_country" class="form-control form-control-lg form-control-solid" placeholder="Country" value="<%= company.main_address_country %>" />
+                                <select name="main_address_country" class="form-select form-select-lg form-select-solid">
+                                    <% var selectedCountryId = company.main_address_country; %>
+                                    <% getCountries.forEach(function(country) { %>
+                                        <option value="<%= country.shortname %>" <%= country.shortname == selectedCountryId ? 'selected' : '' %> >
+                                            <%= country.name %>
+                                        </option>
+                                    <% }); %>
+                                </select>                                                            
                             </div>
                             <!--end::Col-->
                         </div>
+                        
                         <div class="row mb-6">
                             <!--begin::Label-->
                             <label class="col-lg-4 col-form-label fw-bold fs-6">

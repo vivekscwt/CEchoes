@@ -2648,7 +2648,7 @@ exports.companyBulkUpload = async (req, res) => {
                 if (cleanedCompany[5] === null) {
                     cleanedCompany[5] = '';
                 }
-                if (cleanedCompany[6] === null) {
+                if (cleanedCompany[6] === null) { 
                     cleanedCompany[6] = '';
                 }
                 if (cleanedCompany[7] === null) {

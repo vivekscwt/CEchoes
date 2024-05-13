@@ -4023,16 +4023,17 @@ router.get('/edit-company/:id', checkLoggedIn, async (req, res) => {
         const companyId = req.params.id;
 
         // Fetch all the required data asynchronously
-        const [company, company_all_categories, users, getParentCompany] = await Promise.all([
+        const [company, company_all_categories, users, getParentCompany, getCountries] = await Promise.all([
             comFunction.getCompany(companyId),
             comFunction.getCompanyCategoryBuID(companyId),
             comFunction.getUsersByRole(2),
-            comFunction.getParentCompany()
+            comFunction.getParentCompany(),
+            comFunction.getCountries(),
             //comFunction.getCompanyMeta(userId),
             //comFunction.getCountries(),
             //comFunction.getStatesByUserID(userId)
         ]);
-        //console.log(company);
+        console.log(company);
         // Render the 'edit-user' EJS view and pass the data
         // res.json({
         //     menu_active_id: 'company',
@@ -4051,7 +4052,8 @@ router.get('/edit-company/:id', checkLoggedIn, async (req, res) => {
             company: company,
             company_all_categories: company_all_categories,
             Allusers: users,
-            getParentCompany: getParentCompany
+            getParentCompany: getParentCompany,
+            getCountries: getCountries
             //countries: countries,
             //states: states            
         });
