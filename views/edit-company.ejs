@@ -527,7 +527,7 @@
                                     <option value="0">Select as parent category</option>
                                     <% getParentCompany.forEach(function(company) { %>
                                         <option value="<%= company.ID %>"
-                                                <%= company.ID === selectedParentId ? 'selected' : '' %>>
+                                                <%= company.ID == selectedParentId ? 'selected' : '' %>>
                                             <%= company.company_name + " - " + company.main_address_country %>
                                         </option>
                                     <% }); %>
