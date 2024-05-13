@@ -525,18 +525,21 @@
                         
                             <!--begin::Col-->
                             <div class="col-lg-8 fv-row">
-                                <select name="parent_id" class="form-control form-control-lg form-control-solid" required>
-                                    <% 
-                                    const selectedParentId = company.parent_id; 
-                                    %>
-                                    <option value="0">Select as parent category</option>
-                                    <% getParentCompany.forEach(function(company) { %>
-                                        <option value="<%= company.ID %>"
-                                                <%= company.ID == selectedParentId ? 'selected' : '' %>>
-                                            <%= company.company_name + " - " + company.main_address_country %>
-                                        </option>
-                                    <% }); %>
-                                </select>                               
+                                <div class="col-lg-8 fv-row">
+                                    <select name="parent_id" class="form-control form-control-lg form-control-solid" required>
+                                        <% const selectedParentId = company.parent_id; %>
+                                        <% const parentCompanies = getParentCompany; %>
+                                        <% if (selectedParentId == 0) { %>
+                                            <option value="0" selected>Select as parent category</option>
+                                        <% } %>
+                                        <% parentCompanies.forEach(function(company) { %>
+                                            <option value="<%= company.ID %>" <%= company.ID == selectedParentId ? 'selected' : '' %>>
+                                                <%= company.company_name + " - " + company.main_address_country %>
+                                            </option>
+                                        <% }); %>
+                                    </select>                               
+                                </div>
+                                                              
                             </div>
 
                             <!--end::Col-->
