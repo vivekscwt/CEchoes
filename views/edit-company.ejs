@@ -30,6 +30,7 @@
             <div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse" data-bs-target="#kt_account_profile_details" aria-expanded="true" aria-controls="kt_account_profile_details">
                 <!--begin::Card title-->
                 <div class="card-title m-0">
+                    
                     <h3 class="fw-bolder m-0">Edit Organization Details</h3>
                 </div>
                 <!--end::Card title-->
@@ -220,14 +221,18 @@
                             <!--end::Label-->
                             <!--begin::Col-->
                             <div class="col-lg-8 fv-row">
-                                <select name="main_address_country" class="form-select form-select-lg form-select-solid">
+                                <select name="main_address_country" id="countrySearchInput" class="form-select form-select-lg form-select-solid">
                                     <% var selectedCountryId = company.main_address_country; %>
+                                    <% if (selectedCountryId === '') { %>
+                                        <option value="" selected disabled>Select a country</option>
+                                    <% } %>
                                     <% getCountries.forEach(function(country) { %>
-                                        <option value="<%= country.shortname %>" <%= country.shortname == selectedCountryId ? 'selected' : '' %> >
+                                        <option value="<%= country.shortname %>" <%= country.shortname === selectedCountryId ? 'selected' : '' %> >
                                             <%= country.name %>
                                         </option>
                                     <% }); %>
-                                </select>                                                            
+                                </select>
+                                                                                          
                             </div>
                             <!--end::Col-->
                         </div>
@@ -521,17 +526,17 @@
                             <!--begin::Col-->
                             <div class="col-lg-8 fv-row">
                                 <select name="parent_id" class="form-control form-control-lg form-control-solid" required>
-                                    <% 
-                                    const selectedParentId = company.parent_id; 
-                                    %>
-                                    <option value="0">Select as parent category</option>
-                                    <% getParentCompany.forEach(function(company) { %>
-                                        <option value="<%= company.ID %>"
-                                                <%= company.ID == selectedParentId ? 'selected' : '' %>>
-                                            <%= company.company_name + " - " + company.main_address_country %>
+                                    <% const selectedParentId = company.parent_id; %>
+                                    <% const parentCompanies = getParentCompany; %>
+                                    <% if (selectedParentId == null) { %>
+                                        <option value="" selected disabled>Select a country</option>
+                                    <% } %>
+                                    <% parentCompanies.forEach(function(company) { %>
+                                        <option value="<%= company.ID %>" <%= company.ID == selectedParentId ? 'selected' : '' %>>
+                                            <%= company.company_name + (company.main_address_country ? " - " + company.main_address_country : "") %>
                                         </option>
                                     <% }); %>
-                                </select>
+                                </select>                                
                             </div>
 
                             <!--end::Col-->
@@ -866,5 +871,17 @@ $(document).ready(function() {
         var companySlug = generateSlug(companyName);
         $("#company_slug").val(companySlug);
     });
+    $("select[name='main_address_country']").select2({
+                placeholder: "Select a country",
+                allowClear: true,
+                width: '100%'
+            });
+    
 });
+$(document).ready(function () {
+                $("select[name='parent_id']").select2({
+                    placeholder: "Select Parent",
+                    allowClear: true
+                });
+            });
 </script>

@@ -4033,7 +4033,7 @@ router.get('/edit-company/:id', checkLoggedIn, async (req, res) => {
             //comFunction.getCountries(),
             //comFunction.getStatesByUserID(userId)
         ]);
-        console.log(company);
+        console.log("company",company);
         // Render the 'edit-user' EJS view and pass the data
         // res.json({
         //     menu_active_id: 'company',
