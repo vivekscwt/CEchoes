@@ -470,24 +470,30 @@
 
                <div class="col-md-12">
                     <div class="custom-form">
-                      <input type="text" class="form-control" id="country" name="main_address_country"
-                        placeholder="Country Name" required autocomplete="off">
+                      <select name="main_address_country" id="country"class="form-control" required>
+                          <option value="" disabled selected>Select a country</option>
+                              <% getCountries.forEach(function(country) { %>
+                              <option value="<%= country.shortname %>"><%= country.name %></option>
+                              <% }); %>
+                      </select>
                       <div class="autofield-dropdown-review">
                       </div>
                     </div>
                   </div>
                   <div class="col-md-12">
                     <div class="custom-form">
-                      <input type="text" class="form-control" id="state" name="main_address_state"
-                        placeholder="State Name" required autocomplete="off">
+                        <select class="form-control" id="state" name="main_address_state">
+                          <option value="" selected disabled>Select State</option>
+                          <!-- Options will be dynamically populated via JavaScript -->
+                      </select>
                       <div class="autofield-dropdown-review">
                       </div>
                     </div>
                   </div>
                   <div class="col-md-12">
                     <div class="custom-form">
-                      <input type="text" class="form-control" id="city" name="main_address_city"
-                        placeholder="City Name" required autocomplete="off">
+                      <input type="text" class="form-control" id="city" name="location"
+                        placeholder="City Name" autocomplete="off">
                       <div class="autofield-dropdown-review">
                       </div>
                     </div>
@@ -495,14 +501,14 @@
 
 
                <div class="col-md-12">
-    <div class="custom-form">
-        <select class="form-control" id="companyDropdown" name="company_name" required>
-            <option value="" selected disabled>Business/Institute/Establishment Name</option>
-            <!-- Options will be dynamically populated via JavaScript -->
-        </select>
-        <div class="autofield-dropdown-review"></div>
-    </div>
-</div>
+                  <div class="custom-form">
+                      <select class="form-control" id="companyDropdown" name="company_name" required>
+                          <option value="" selected disabled>Business/Institute/Establishment Name</option>
+                          <!-- Options will be dynamically populated via JavaScript -->
+                      </select>
+                      <div class="autofield-dropdown-review"></div>
+                  </div>
+              </div>
 
 
 
@@ -632,6 +638,24 @@
    </div>
  </section>
 <!-- ============== Section1 End =============== -->
+<style>
+  #companyDropdown option {
+    color: black;
+}
+#state option {
+    color: black;
+}
+#country option {
+    color: black;
+}
+
+
+</style>
+
+
+
+
+
 <%- include('common/footer') -%>
 
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
@@ -1088,110 +1112,78 @@
      });
    });
 
-   $(document).ready(function() {
+//    $(document).ready(function() {
 
-    $('#search-input-reviews').on('input', function() {
+//     $('#search-input-reviews').on('input', function() {
 
-        var country = $('[name="main_address_country"]').val();
-        var state = $('[name="main_address_state"]').val();
-        var city = $('[name="main_address_city"]').val();
-        var companyName = $('[name="company_name"]').val();
+//         var country = $('[name="main_address_country"]').val();
+//         var state = $('[name="main_address_state"]').val();
+//         var city = $('[name="main_address_city"]').val();
+//         var companyName = $('[name="company_name"]').val();
 
-        console.log("country",country);
-        console.log("state",state);
-        console.log("city",city);
-        console.log("companyName",companyName);
+//         console.log("country",country);
+//         console.log("state",state);
+//         console.log("city",city);
+//         console.log("companyName",companyName);
         
 
-        if (country.trim() !== '') {
+//         if (country.trim() !== '') {
 
-            $.ajax({
-                url: '/getcompaniesbyCountry', 
-                method: 'GET',
-                data: { country: country, state: state, city: city },
-                success: function(response) {
+//             $.ajax({
+//                 url: '/getcompaniesbyCountry', 
+//                 method: 'GET',
+//                 data: { country: country, state: state, city: city },
+//                 success: function(response) {
 
-                    console.log(response);
-                },
-                error: function(xhr, status, error) {
+//                     console.log(response);
+//                 },
+//                 error: function(xhr, status, error) {
 
-                    console.error(error);
-                }
-            });
-        }
-    });
-});
-
-$(document).ready(function() {
-        // Initialize Select2 for the company dropdown
-        $('#companyDropdown').select2({
-            placeholder: 'Select a Company',
-            allowClear: true, // Allow clearing the selection
-            // You can add more configuration options as needed
-        });
-
-        // Function to fetch companies and populate the dropdown
-        function fetchCompanies() {
-
-          var country = $('[name="main_address_country"]').val();
-          var state = $('[name="main_address_state"]').val();
-          var city = $('[name="main_address_city"]').val();
-          var companyName = $('[name="company_name"]').val();
-
-          console.log("country",country);
-          console.log("state",state);
-          console.log("city",city);
-          console.log("companyName",companyName);
+//                     console.error(error);
+//                 }
+//             });
+//         }
+//     });
+// });
 
 
-            // Perform AJAX request to fetch companies
-            $.ajax({
-                url: '/getcompaniesbyCountry', // Update the URL as per your backend route
-                method: 'GET',
-                data: { country: country, state: state, city: city },
-                success: function(response) {
-                    const companies = response.companies;
-                    console.log("companies",companies);
-                    const $companyDropdown = $('#companyDropdown');
 
-                    // Clear previous options
-                    $companyDropdown.empty();
-
-                    // Populate dropdown with fetched companies
-                    $.each(companies, function(index, company) {
-                        $companyDropdown.append($('<option></option>').val(company.id).text(company.name));
-                    });
-
-                    // Trigger change event to update Select2 dropdown
-                    $companyDropdown.trigger('change');
-                },
-                error: function(err) {
-                    console.error('Error fetching companies:', err);
-                }
-            });
-        }
-
-        // Call fetchCompanies function to populate the dropdown initially
-        fetchCompanies();
-    });
-
-
+    var countryId;
+    var country;
+    var state;
+    console.log("maincountryId",countryId);
     $(document).ready(function() {
-    // Attach change event listener to country input
     $('#country').on('change', function() {
-      var country = $(this).val(); // Get selected country
+      country = $(this).val(); 
+      console.log("country_IDcountry",country);
 
-      // Fetch companies based on selected country
       $.ajax({
-        url: '/getCompaniesByCountry', // Endpoint to fetch companies based on country
+        url: '/getCountryIdByShortName',
         method: 'GET',
-        data: { country: country }, // Pass selected country as query parameter
+        data: { countryShortName: country },
         success: function(response) {
-          // Populate dropdown with fetched companies
+            countryId = response.countryId; 
+            console.log("country_IDddd", countryId);
+            handleCountryChange();
+        },
+        error: function(err) {
+            console.error('Error fetching country ID:', err);
+        }
+    });
+
+      $.ajax({
+        url: '/getCompanies', 
+        method: 'GET',
+        data: { country: country }, 
+        success: function(response) {
+
+          console.log("getCompaniesByCountry",response);
+
+
           var $companyDropdown = $('#companyDropdown');
           $companyDropdown.empty(); // Clear existing options
 
-          // Add default option
+
           $companyDropdown.append($('<option>', {
             value: '',
             text: 'Business/Institute/Establishment Name',
@@ -1199,20 +1191,142 @@ $(document).ready(function() {
             selected: 'selected'
           }));
 
-          // Add options for each company
-          $.each(response.companies, function(index, company) {
-            $companyDropdown.append($('<option>', {
-              value: company.id, // Use unique identifier for company
-              text: company.name // Display company name
+          response.forEach(function(company) {
+          $companyDropdown.append($('<option>', {
+            value: company.ID,
+            text: company.company_name 
+          }));
+        });
+        },
+        error: function(err) {
+          console.error('Error fetching companies:', err);
+        }
+      });
+    
+      function handleCountryChange() {
+    // Access countryId here, it will be updated
+    console.log("countryIdSS", countryId);
+
+    $.ajax({
+        url: '/getstatebyCountry', 
+        method: 'GET',
+        data: { country_ID: countryId }, 
+        success: function(response) {
+            console.log("response", response);
+
+            // Populate dropdown with fetched states
+            var $state = $('#state');
+            $state.empty(); // Clear existing options
+
+            $state.append($('<option>', {
+                value: '',
+                text: 'Select State',
+                disabled: 'disabled',
+                selected: 'selected'
             }));
-          });
+
+            response.forEach(function(states) {
+                $state.append($('<option>', {
+                    value: states.id,
+                    text: states.name 
+                }));
+            });
+        },
+        error: function(err) {
+            console.error('Error fetching states:', err);
+        }
+    });
+}
+
+    });
+
+    $('#state').on('change', function() {
+      state = $(this).val(); 
+      console.log("state",state);
+      console.log("maincountryId",country);
+
+      $.ajax({
+        url: '/getCompanies', 
+        method: 'GET',
+        data: { country: country, state: state }, 
+        success: function(response) {
+
+          console.log("getCompaniesByCountrystate",response);
+
+          // Populate dropdown with fetched companies
+          var $companyDropdown = $('#companyDropdown');
+          $companyDropdown.empty(); 
+
+
+          $companyDropdown.append($('<option>', {
+            value: '',
+            text: 'Business/Institute/Establishment Name',
+            disabled: 'disabled',
+            selected: 'selected'
+          }));
+
+          response.forEach(function(company) {
+          $companyDropdown.append($('<option>', {
+            value: company.ID,
+            text: company.company_name 
+          }));
+        });
         },
         error: function(err) {
           console.error('Error fetching companies:', err);
         }
       });
     });
+
+$('#city').on('input', function() {
+    var city = $(this).val(); 
+    console.log("City:", city);
+    console.log("Country:", country);
+    console.log("State:", state);
+
+    // Perform AJAX request to fetch companies based on country, state, and city
+    $.ajax({
+        url: '/getCompanies', 
+        method: 'GET',
+        data: { country: country, state: state, city: city }, 
+        success: function(response) {
+            console.log("Companies:", response);
+
+            // Populate dropdown with fetched companies
+            var $companyDropdown = $('#companyDropdown');
+            $companyDropdown.empty(); 
+
+            $companyDropdown.append($('<option>', {
+                value: '',
+                text: 'Business/Institute/Establishment Name',
+                disabled: 'disabled',
+                selected: 'selected'
+            }));
+
+            response.forEach(function(company) {
+                $companyDropdown.append($('<option>', {
+                    value: company.ID,
+                    text: company.company_name 
+                }));
+            });
+        },
+        error: function(err) {
+            console.error('Error fetching companies:', err);
+        }
+    });
+});
+
+
+
   });
+
+  $(document).ready(function() {
+  $('#companyDropdown').select2({
+    placeholder: "Search for a company",
+    allowClear: true, 
+    width: '100%' // Optional, adjust the width of the select box
+  });
+});
 
 
  </script>
