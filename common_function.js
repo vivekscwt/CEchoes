@@ -579,14 +579,16 @@ async function insertIntoFaqItems(faqItemsArray, categoryId) {
 
 //-- Create New Company ----------//
 async function createCompany(comInfo, userId) {
-  //console.log(comInfo, userId);
+  console.log("comInfo, userId",comInfo, userId);
   let return_data = {};
   try {
     // Check if the company Name already exists in the "company" table
-    const company_name_checking_query = "SELECT ID FROM company WHERE company_name = ?";
+    //const company_name_checking_query = "SELECT ID FROM company WHERE company_name = ?";
+    const company_name_checking_query = "SELECT company_name FROM company WHERE ID = ?";
     const company_name_checking_results = await query(company_name_checking_query, [comInfo.company_name]);
     if (company_name_checking_results.length > 0) {
         //company exist
+        console.log("company exits");
         try{
           const company_address_exist_query = 'SELECT * FROM company_location WHERE company_id = ? AND address = ?';
           const company_address_exist_values = [company_name_checking_results[0].ID, comInfo.address];
@@ -597,10 +599,37 @@ async function createCompany(comInfo, userId) {
             return_data.companyLocationID = company_address_exist_results[0].ID;
             return return_data;
           }else{
+            //new
+            const country_name_query = `SELECT name,id FROM countries WHERE shortname = "${comInfo.main_address_country}"`;
+            const country_name_value = await query(country_name_query);
+            if(country_name_value.length>0){
+              var country_name = country_name_value[0].name;
+              console.log("country_name",country_name);
+              var country_id = country_name_value[0].id;
+              console.log("country_id",country_id);
+            }
+          
+            const state_name_query = `SELECT * FROM states WHERE id = "${comInfo.main_address_state}"`;
+            const state_name_value = await query(state_name_query);
+            if(state_name_value.length>0){
+              var state_name = state_name_value[0].name;
+              console.log("state_name",state_name);
+            }
+          
+            var city_value = comInfo['review-address'];
+            console.log("city_value",city_value);
+          
+            var concatenatedAddress = city_value + ', ' + state_name + ', ' + country_name;
+            console.log(concatenatedAddress);
+            
+
+
             //create new address for company
             try{
               const create_company_address_query = 'INSERT INTO company_location (company_id, address, country, state, city, zip, status) VALUES (?, ?, ?, ?, ?, ?, ?)';
-              const create_company_address_values = [company_name_checking_results[0].ID, comInfo.address, '', '', '', '', '2'];
+              //const create_company_address_values = [company_name_checking_results[0].ID, comInfo.address, '', '', '', '', '2'];
+              const create_company_address_values = [comInfo.company_name, concatenatedAddress, '', '', '', '', '2'];
+              
               const create_company_address_results = await query(create_company_address_query, create_company_address_values);
               if (create_company_address_results.insertId) {
                 return_data.companyID = company_name_checking_results[0].ID;
@@ -655,10 +684,36 @@ async function createCompany(comInfo, userId) {
         
         if (create_company_results.insertId) {
           //create new address for company
+
+                      //new
+                      const country_name_query = `SELECT name,id FROM countries WHERE shortname = "${comInfo.main_address_country}"`;
+                      const country_name_value = await query(country_name_query);
+                      if(country_name_value.length>0){
+                        var country_name = country_name_value[0].name;
+                        console.log("country_name",country_name);
+                        var country_id = country_name_value[0].id;
+                        console.log("country_id",country_id);
+                      }
+                    
+                      const state_name_query = `SELECT * FROM states WHERE id = "${comInfo.main_address_state}"`;
+                      const state_name_value = await query(state_name_query);
+                      if(state_name_value.length>0){
+                        var state_name = state_name_value[0].name;
+                        console.log("state_name",state_name);
+                      }
+                    
+                      var city_value = comInfo['review-address'];
+                      console.log("city_value",city_value);
+                    
+                      var concatenatedAddresses = city_value + ', ' + state_name + ', ' + country_name;
+                      console.log("concatenatedAddresses",concatenatedAddresses);
+                      
+
           try{
             const create_company_address_values = {
               company_id : create_company_results.insertId,
-              address: comInfo.address || null,
+              //address: comInfo.address || null,
+              address: concatenatedAddresses || null,
               status: '2',
             };
             const create_company_address_query = 'INSERT INTO company_location SET ?'
@@ -752,8 +807,8 @@ async function createCompany(comInfo, userId) {
 // }
 
 async function createReview(reviewIfo, userId, comInfo){
-  // console.log('Review Info', reviewIfo);
-  // console.log('Company Info', comInfo);
+  console.log('Review Info', reviewIfo);
+  console.log('Company Info', comInfo);
   // reviewIfo['tags[]'].forEach((tag) => {
   //   console.log(tag);
   // });
@@ -765,8 +820,41 @@ async function createReview(reviewIfo, userId, comInfo){
   // Format the date in 'YYYY-MM-DD HH:mm:ss' format (adjust the format as needed)
   const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ');
 
+
+  const country_name_query = `SELECT name,id FROM countries WHERE shortname = "${reviewIfo.main_address_country}"`;
+  const country_name_value = await query(country_name_query);
+  if(country_name_value.length>0){
+    var country_name = country_name_value[0].name;
+    console.log("country_name",country_name);
+    var country_id = country_name_value[0].id;
+    console.log("country_id",country_id);
+  }
+
+  const state_name_query = `SELECT * FROM states WHERE id = "${reviewIfo.main_address_state}"`;
+  const state_name_value = await query(state_name_query);
+  if(state_name_value.length>0){
+    var state_name = state_name_value[0].name;
+    console.log("state_name",state_name);
+  }
+
+  var city_value = reviewIfo['review-address'];
+  console.log("city_value",city_value);
+
+  var concatenatedAddress = city_value + ', ' + state_name + ', ' + country_name;
+  console.log(concatenatedAddress);
+
+
+
+  // const country_name_query = `SELECT name FROM countries WHERE shortname = "${reviewIfo.main_address_country}"`;
+  // const country_name_value = await query(country_name_query);
+  // if(country_name_value.length>0){
+  //   var country_name = country_name_value[0].name;
+  //   console.log("country_name",country_name);
+  // }
+
+
   const create_review_query = 'INSERT INTO reviews (company_id, customer_id, company_location, company_location_id, review_title, rating, review_content, user_privacy, review_status, created_at, updated_at, labels, user_contact, category_id, product_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-  const create_review_values = [comInfo.companyID, userId, reviewIfo.address, comInfo.companyLocationID, reviewIfo.review_title, reviewIfo.rating, reviewIfo.review_content, reviewIfo.user_privacy, '2', formattedDate, formattedDate, reviewIfo.review_lable, reviewIfo.user_contact, reviewIfo.category_id, reviewIfo.product_id  ];
+  const create_review_values = [reviewIfo.company_name, userId, concatenatedAddress, comInfo.companyLocationID, reviewIfo.review_title, reviewIfo.rating, reviewIfo.review_content, reviewIfo.user_privacy, '2', formattedDate, formattedDate, reviewIfo.review_lable, reviewIfo.user_contact, reviewIfo.category_id, reviewIfo.product_id  ];
               
   try {
     const create_review_results = await query(create_review_query, create_review_values);
