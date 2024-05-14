@@ -2265,22 +2265,22 @@ exports.editCompany = async (req, res) => {
 
     const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 
-    if(req.body.parent_id == 0){
-        const companyquery = `SELECT * FROM company WHERE company_name = ? AND main_address_country =? `;
-        const companyvalue = await query(companyquery,[req.body.company_name,req.body.main_address_country]);
+    // if(req.body.parent_id == 0){
+    //     const companyquery = `SELECT * FROM company WHERE company_name = ? AND main_address_country =? `;
+    //     const companyvalue = await query(companyquery,[req.body.company_name,req.body.main_address_country]);
     
-        console.log("companyvalue",companyvalue);
+    //     console.log("companyvalue",companyvalue);
     
-        if(companyvalue.length>0){
-            return res.send(
-                {
-                    status: 'err',
-                    data: '',
-                    message: 'Organization name already exist.'
-                }
-            )
-        }
-    }
+    //     if(companyvalue.length>0){
+    //         return res.send(
+    //             {
+    //                 status: 'err',
+    //                 data: '',
+    //                 message: 'Organization name already exist.'
+    //             }
+    //         )
+    //     }
+    // }
 
     db.query(`SELECT slug FROM company WHERE slug = '${req.body.company_slug}' AND ID != '${companyID}' `, async (slugErr, slugResult) => {
         if (slugErr) {
