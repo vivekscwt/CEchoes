@@ -467,21 +467,45 @@
                       </div>
                       <div id="map"></div>
                    </div>-->
+
                <div class="col-md-12">
-                 <div class="custom-form">
-                   <input type="text" class="form-control" id="search-input-review" name="company_name"
-                     placeholder="Business/Institute/Establishment Name" required autocomplete="off">
-                   <div class="autofield-dropdown-review">
-                   </div>
-                 </div>
-               </div>
+                    <div class="custom-form">
+                      <input type="text" class="form-control" id="country" name="main_address_country"
+                        placeholder="Country Name" required autocomplete="off">
+                      <div class="autofield-dropdown-review">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="custom-form">
+                      <input type="text" class="form-control" id="state" name="main_address_state"
+                        placeholder="State Name" required autocomplete="off">
+                      <div class="autofield-dropdown-review">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="custom-form">
+                      <input type="text" class="form-control" id="city" name="main_address_city"
+                        placeholder="City Name" required autocomplete="off">
+                      <div class="autofield-dropdown-review">
+                      </div>
+                    </div>
+                  </div>
+
+
                <div class="col-md-12">
-                 <div class="custom-form">
-                   <input type="text" class="form-control" name="address" id="review-address" placeholder="Location"
-                     required>
-                   <!--<div class="under-input-text">India, Westbengal, Kolkata, 5330</div>-->
-                 </div>
-               </div>
+    <div class="custom-form">
+        <select class="form-control" id="companyDropdown" name="company_name" required>
+            <option value="" selected disabled>Business/Institute/Establishment Name</option>
+            <!-- Options will be dynamically populated via JavaScript -->
+        </select>
+        <div class="autofield-dropdown-review"></div>
+    </div>
+</div>
+
+
+
                <%# <div class="col-sm-6">
                  <div class="custom-form">
                    <input type="text" class="form-control" placeholder="Country" id="review-country" name="country"
@@ -609,6 +633,9 @@
  </section>
 <!-- ============== Section1 End =============== -->
 <%- include('common/footer') -%>
+
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
    jQuery(document).ready(function ($) {
     /////////////// Like Dislike start ////////////
@@ -1060,4 +1087,132 @@
        }
      });
    });
+
+   $(document).ready(function() {
+
+    $('#search-input-reviews').on('input', function() {
+
+        var country = $('[name="main_address_country"]').val();
+        var state = $('[name="main_address_state"]').val();
+        var city = $('[name="main_address_city"]').val();
+        var companyName = $('[name="company_name"]').val();
+
+        console.log("country",country);
+        console.log("state",state);
+        console.log("city",city);
+        console.log("companyName",companyName);
+        
+
+        if (country.trim() !== '') {
+
+            $.ajax({
+                url: '/getcompaniesbyCountry', 
+                method: 'GET',
+                data: { country: country, state: state, city: city },
+                success: function(response) {
+
+                    console.log(response);
+                },
+                error: function(xhr, status, error) {
+
+                    console.error(error);
+                }
+            });
+        }
+    });
+});
+
+$(document).ready(function() {
+        // Initialize Select2 for the company dropdown
+        $('#companyDropdown').select2({
+            placeholder: 'Select a Company',
+            allowClear: true, // Allow clearing the selection
+            // You can add more configuration options as needed
+        });
+
+        // Function to fetch companies and populate the dropdown
+        function fetchCompanies() {
+
+          var country = $('[name="main_address_country"]').val();
+          var state = $('[name="main_address_state"]').val();
+          var city = $('[name="main_address_city"]').val();
+          var companyName = $('[name="company_name"]').val();
+
+          console.log("country",country);
+          console.log("state",state);
+          console.log("city",city);
+          console.log("companyName",companyName);
+
+
+            // Perform AJAX request to fetch companies
+            $.ajax({
+                url: '/getcompaniesbyCountry', // Update the URL as per your backend route
+                method: 'GET',
+                data: { country: country, state: state, city: city },
+                success: function(response) {
+                    const companies = response.companies;
+                    console.log("companies",companies);
+                    const $companyDropdown = $('#companyDropdown');
+
+                    // Clear previous options
+                    $companyDropdown.empty();
+
+                    // Populate dropdown with fetched companies
+                    $.each(companies, function(index, company) {
+                        $companyDropdown.append($('<option></option>').val(company.id).text(company.name));
+                    });
+
+                    // Trigger change event to update Select2 dropdown
+                    $companyDropdown.trigger('change');
+                },
+                error: function(err) {
+                    console.error('Error fetching companies:', err);
+                }
+            });
+        }
+
+        // Call fetchCompanies function to populate the dropdown initially
+        fetchCompanies();
+    });
+
+
+    $(document).ready(function() {
+    // Attach change event listener to country input
+    $('#country').on('change', function() {
+      var country = $(this).val(); // Get selected country
+
+      // Fetch companies based on selected country
+      $.ajax({
+        url: '/getCompaniesByCountry', // Endpoint to fetch companies based on country
+        method: 'GET',
+        data: { country: country }, // Pass selected country as query parameter
+        success: function(response) {
+          // Populate dropdown with fetched companies
+          var $companyDropdown = $('#companyDropdown');
+          $companyDropdown.empty(); // Clear existing options
+
+          // Add default option
+          $companyDropdown.append($('<option>', {
+            value: '',
+            text: 'Business/Institute/Establishment Name',
+            disabled: 'disabled',
+            selected: 'selected'
+          }));
+
+          // Add options for each company
+          $.each(response.companies, function(index, company) {
+            $companyDropdown.append($('<option>', {
+              value: company.id, // Use unique identifier for company
+              text: company.name // Display company name
+            }));
+          });
+        },
+        error: function(err) {
+          console.error('Error fetching companies:', err);
+        }
+      });
+    });
+  });
+
+
  </script>

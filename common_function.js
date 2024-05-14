@@ -694,6 +694,63 @@ async function createCompany(comInfo, userId) {
   }
 };
 
+// async function createReview(reviewIfo, userId, comInfo){
+//   // console.log('Review Info', reviewIfo);
+//   // console.log('Company Info', comInfo);
+//   // reviewIfo['tags[]'].forEach((tag) => {
+//   //   console.log(tag);
+//   // });
+//   if (typeof reviewIfo['tags[]'] === 'string') {
+//     // Convert it to an array containing a single element
+//     reviewIfo['tags[]'] = [reviewIfo['tags[]']];
+//   }
+//   const currentDate = new Date();
+//   // Format the date in 'YYYY-MM-DD HH:mm:ss' format (adjust the format as needed)
+//   const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ');
+
+//   const create_review_query = 'INSERT INTO reviews (company_id, customer_id, company_location, company_location_id, review_title, rating, review_content, user_privacy, review_status, created_at, updated_at, labels, user_contact, category_id, product_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+//   const create_review_values = [comInfo.companyID, userId, reviewIfo.address, comInfo.companyLocationID, reviewIfo.review_title, reviewIfo.rating, reviewIfo.review_content, reviewIfo.user_privacy, '2', formattedDate, formattedDate, reviewIfo.review_lable, reviewIfo.user_contact, reviewIfo.category_id, reviewIfo.product_id  ];
+              
+//   try {
+//     const create_review_results = await query(create_review_query, create_review_values);
+//     if(create_review_results.insertId){
+//       if (Array.isArray(reviewIfo['tags[]']) && reviewIfo['tags[]'].length > 0) {
+//         //insert review_tag_relation
+//         const review_tag_relation_query = 'INSERT INTO review_tag_relation (review_id, tag_name) VALUES (?, ?)';
+//         try{
+//           for (const tag of reviewIfo['tags[]']) {
+//             const review_tag_relation_values = [create_review_results.insertId, tag];
+//             const review_tag_relation_results = await query(review_tag_relation_query, review_tag_relation_values);
+//           }
+
+//           //-- user review count------//
+//           const update_review_count_query = 'UPDATE user_customer_meta SET review_count = review_count + 1 WHERE user_id = ?';
+//           try {
+//             const [update_review_count_result] = await db.promise().query(update_review_count_query, [userId]);
+//             return create_review_results.insertId;
+//           }catch (error) {
+//             console.error('Error during user update_review_count_query:', error);
+//           }
+          
+//         }catch(error){
+//           console.error('Error during user review_tag_relation_results:', error);
+//         }
+//       }else{
+//         //-- user review count------//
+//         const update_review_count_query = 'UPDATE user_customer_meta SET review_count = review_count + 1 WHERE user_id = ?';
+//         try {
+//           const [update_review_count_result] = await db.promise().query(update_review_count_query, [userId]);
+//           return create_review_results.insertId;
+//         }catch (error) {
+//           console.error('Error during user update_review_count_query:', error);
+//         }
+//       }
+//     }
+//   }catch (error) {
+//     console.error('Error during user create_review_results:', error);
+//   }
+// }
+
 async function createReview(reviewIfo, userId, comInfo){
   // console.log('Review Info', reviewIfo);
   // console.log('Company Info', comInfo);

@@ -5081,6 +5081,57 @@ router.get('/edit-survey/:id', checkLoggedIn, async (req, res)=> {
         res.status(500).send('An error occurred');
     }
 });
+
+
+router.get('/getcompaniesbyCountry', async (req, res)=> {
+    try {
+        // const country = req.params.country;
+        // const state = req.params.state;
+        // const city = req.params.city;
+
+        const country = req.query.country;
+        const state = req.query.state;
+        const city = req.query.city
+
+
+        if (!country) {
+            return res.status(400).json({ error: 'Country parameter is required' });
+        }
+    
+        let sqlQuery = 'SELECT * FROM company WHERE main_address_country = ?';
+        let queryParams = [country];
+    
+ 
+        if (state) {
+            sqlQuery += ' AND main_address_state = ?';
+            queryParams.push(state);
+        }
+        if (city) {
+            sqlQuery += ' AND main_address_city = ?';
+            queryParams.push(city);
+        }
+    
+
+    db.query(sqlQuery, queryParams, (err, results) => {
+        if (err) {
+            console.log("aaasssvvv")
+            console.error('Error executing SQL query:', err);
+            return res.status(500).json({ error: 'An error occurred while fetching companies' });
+        } else {
+            console.log("bbbbaaasssvvv");
+            //console.log("results",results);
+           return res.json(results);
+        }
+    });
+
+    } catch (error) {
+        return res.send({
+            status: 'not ok',
+            message: 'Something went wrong'
+        });
+    }
+})
+
 //-----------------------------------------------------------------//
 
 

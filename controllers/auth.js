@@ -1733,203 +1733,203 @@ exports.restoreUser = (req, res) => {
 // }
 
 exports.createCompany = async (req, res) => {
-    try{
-    console.log("createCompany",req.body);
-    const encodedUserData = req.cookies.user;
-    const currentUserData = JSON.parse(encodedUserData);
+    try {
+        console.log("createCompany", req.body);
+        const encodedUserData = req.cookies.user;
+        const currentUserData = JSON.parse(encodedUserData);
 
-    const currentDate = new Date();
+        const currentDate = new Date();
 
-    const year = currentDate.getFullYear();
-    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-    const day = String(currentDate.getDate()).padStart(2, '0');
-    const hours = String(currentDate.getHours()).padStart(2, '0');
-    const minutes = String(currentDate.getMinutes()).padStart(2, '0');
-    const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+        const year = currentDate.getFullYear();
+        const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+        const day = String(currentDate.getDate()).padStart(2, '0');
+        const hours = String(currentDate.getHours()).padStart(2, '0');
+        const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+        const seconds = String(currentDate.getSeconds()).padStart(2, '0');
 
-    const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 
-    if(req.body.parent_id == 0){
-        const companyquery = `SELECT * FROM company WHERE company_name = ? AND main_address_country =? `;
-        const companyvalue = await query(companyquery,[req.body.company_name,req.body.main_address_country]);
-    
-        console.log("companyvalue",companyvalue);
-    
-        if(companyvalue.length>0){
-            return res.send(
-                {
-                    status: 'err',
-                    data: '',
-                    message: 'Organization name already exist.'
-                }
-            )
-        }
-    }
+        if (req.body.parent_id == 0) {
+            const companyquery = `SELECT * FROM company WHERE company_name = ? AND main_address_country =? `;
+            const companyvalue = await query(companyquery, [req.body.company_name, req.body.main_address_country]);
 
+            console.log("companyvalue", companyvalue);
 
-
-    if (!req.body.parent_id || req.body.parent_id === "Select Parent") {
-        req.body.parent_id = 0;
-    }
-
-    // const slugquery = `SELECT slug FROM company WHERE company_name = ?`;
-    // const slugvalue = await query(slugquery,[req.body.company_name]);
-
-    // if(slugquery.length>0){
-    //     console.log("aaaaaaa");
-    //     var companySlug = slugvalue[0].slug;
-    //     console.log("companySlug",companySlug);
-
-    //     // comFunction2.generateUniqueSlug(req.body.company_name, (error, companySlug) => {
-    //         // comFunction2.generateUniqueSlug(req.body.company_name, main_address_country, (err, companySlug) => {
-    //         // if (error) {
-    //         //     console.log('Err: ', error.message);
-    //         // } else {
-    //             console.log('companySlug', companySlug);
-    //             var insert_values = [];
-    //             if (req.file) {
-    //                 insert_values = [currentUserData.user_id, req.body.company_name, req.body.heading, req.file.filename, req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, req.body.status, req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.main_address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug, req.body.parent_id];
-    //             } else {
-    //                 insert_values = [currentUserData.user_id, req.body.company_name, req.body.heading, '', req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, req.body.status, req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.main_address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug, req.body.parent_id];
-    //             }
-    
-    //             const insertQuery = 'INSERT INTO company (user_created_by, company_name, heading, logo, about_company, comp_phone, comp_email, comp_registration_id, status, trending, created_date, updated_date, tollfree_number, main_address, main_address_pin_code, address_map_url, main_address_country, main_address_state, main_address_city, verified, paid_status, slug,parent_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)';
-    //             db.query(insertQuery, insert_values, (err, results, fields) => {
-    //                 if (err) {
-    //                     return res.send(
-    //                         {
-    //                             status: 'err',
-    //                             data: '',
-    //                             message: 'An error occurred while processing your request' + err
-    //                         }
-    //                     )
-    //                 } else {
-    //                     console.log("company results",results);
-    
-    //                     var companyId = results.insertId;
-    //                     const categoryArray = Array.isArray(req.body.category) ? req.body.category : [req.body.category];
-    
-    //                     // Filter out undefined values from categoryArray
-    //                     const validCategoryArray = categoryArray.filter(categoryID => categoryID !== undefined);
-    
-    //                     console.log('categoryArray:', categoryArray);
-    //                     if (validCategoryArray.length > 0) {
-    //                         const companyCategoryData = validCategoryArray.map((categoryID) => [companyId, categoryID]);
-    //                         db.query('INSERT INTO company_cactgory_relation (company_id, category_id) VALUES ?', [companyCategoryData], function (error, results) {
-    //                             if (error) {
-    //                                 console.log(error);
-    //                                 res.status(400).json({
-    //                                     status: 'err',
-    //                                     message: 'Error while creating company category'
-    //                                 });
-    //                             }
-    //                             else {
-    //                                 return res.send(
-    //                                     {
-    //                                         status: 'ok',
-    //                                         data: companyId,
-    //                                         message: 'New company created'
-    //                                     }
-    //                                 )
-    //                             }
-    //                         });
-    //                     } else {
-    //                         return res.send(
-    //                             {
-    //                                 status: 'ok',
-    //                                 data: companyId,
-    //                                 message: 'New company created without any category.'
-    //                             }
-    //                         )
-    //                     }
-    //                 }
-    //             })
-    
-    //         // }
-    //     // });
-
-
-
-    // }else{
-    //     ("bbbbbbb")
-    //     var [companySlug] = await Promise.all( [
-    //         comFunction2.generateUniqueSlug(req.body.company_name)
-    //     ]);
-    //     console.log("companySlugsss",companySlug);
-
-
-
-
-    // }
-
-    comFunction2.generateUniqueSlug(req.body.company_name, (error, companySlug) => {
-        // comFunction2.generateUniqueSlug(req.body.company_name, main_address_country, (err, companySlug) => {
-        if (error) {
-            console.log('Err: ', error.message);
-        } else {
-            console.log('companySlug', companySlug);
-            var insert_values = [];
-            if (req.file) {
-                insert_values = [currentUserData.user_id, req.body.company_name, req.body.heading, req.file.filename, req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, req.body.status, req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.main_address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug, req.body.parent_id];
-            } else {
-                insert_values = [currentUserData.user_id, req.body.company_name, req.body.heading, '', req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, req.body.status, req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.main_address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug, req.body.parent_id];
+            if (companyvalue.length > 0) {
+                return res.send(
+                    {
+                        status: 'err',
+                        data: '',
+                        message: 'Organization name already exist.'
+                    }
+                )
             }
+        }
 
-            const insertQuery = 'INSERT INTO company (user_created_by, company_name, heading, logo, about_company, comp_phone, comp_email, comp_registration_id, status, trending, created_date, updated_date, tollfree_number, main_address, main_address_pin_code, address_map_url, main_address_country, main_address_state, main_address_city, verified, paid_status, slug,parent_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)';
-            db.query(insertQuery, insert_values, (err, results, fields) => {
-                if (err) {
-                    return res.send(
-                        {
-                            status: 'err',
-                            data: '',
-                            message: 'An error occurred while processing your request' + err
-                        }
-                    )
+
+
+        if (!req.body.parent_id || req.body.parent_id === "Select Parent") {
+            req.body.parent_id = 0;
+        }
+
+        // const slugquery = `SELECT slug FROM company WHERE company_name = ?`;
+        // const slugvalue = await query(slugquery,[req.body.company_name]);
+
+        // if(slugquery.length>0){
+        //     console.log("aaaaaaa");
+        //     var companySlug = slugvalue[0].slug;
+        //     console.log("companySlug",companySlug);
+
+        //     // comFunction2.generateUniqueSlug(req.body.company_name, (error, companySlug) => {
+        //         // comFunction2.generateUniqueSlug(req.body.company_name, main_address_country, (err, companySlug) => {
+        //         // if (error) {
+        //         //     console.log('Err: ', error.message);
+        //         // } else {
+        //             console.log('companySlug', companySlug);
+        //             var insert_values = [];
+        //             if (req.file) {
+        //                 insert_values = [currentUserData.user_id, req.body.company_name, req.body.heading, req.file.filename, req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, req.body.status, req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.main_address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug, req.body.parent_id];
+        //             } else {
+        //                 insert_values = [currentUserData.user_id, req.body.company_name, req.body.heading, '', req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, req.body.status, req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.main_address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug, req.body.parent_id];
+        //             }
+
+        //             const insertQuery = 'INSERT INTO company (user_created_by, company_name, heading, logo, about_company, comp_phone, comp_email, comp_registration_id, status, trending, created_date, updated_date, tollfree_number, main_address, main_address_pin_code, address_map_url, main_address_country, main_address_state, main_address_city, verified, paid_status, slug,parent_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)';
+        //             db.query(insertQuery, insert_values, (err, results, fields) => {
+        //                 if (err) {
+        //                     return res.send(
+        //                         {
+        //                             status: 'err',
+        //                             data: '',
+        //                             message: 'An error occurred while processing your request' + err
+        //                         }
+        //                     )
+        //                 } else {
+        //                     console.log("company results",results);
+
+        //                     var companyId = results.insertId;
+        //                     const categoryArray = Array.isArray(req.body.category) ? req.body.category : [req.body.category];
+
+        //                     // Filter out undefined values from categoryArray
+        //                     const validCategoryArray = categoryArray.filter(categoryID => categoryID !== undefined);
+
+        //                     console.log('categoryArray:', categoryArray);
+        //                     if (validCategoryArray.length > 0) {
+        //                         const companyCategoryData = validCategoryArray.map((categoryID) => [companyId, categoryID]);
+        //                         db.query('INSERT INTO company_cactgory_relation (company_id, category_id) VALUES ?', [companyCategoryData], function (error, results) {
+        //                             if (error) {
+        //                                 console.log(error);
+        //                                 res.status(400).json({
+        //                                     status: 'err',
+        //                                     message: 'Error while creating company category'
+        //                                 });
+        //                             }
+        //                             else {
+        //                                 return res.send(
+        //                                     {
+        //                                         status: 'ok',
+        //                                         data: companyId,
+        //                                         message: 'New company created'
+        //                                     }
+        //                                 )
+        //                             }
+        //                         });
+        //                     } else {
+        //                         return res.send(
+        //                             {
+        //                                 status: 'ok',
+        //                                 data: companyId,
+        //                                 message: 'New company created without any category.'
+        //                             }
+        //                         )
+        //                     }
+        //                 }
+        //             })
+
+        //         // }
+        //     // });
+
+
+
+        // }else{
+        //     ("bbbbbbb")
+        //     var [companySlug] = await Promise.all( [
+        //         comFunction2.generateUniqueSlug(req.body.company_name)
+        //     ]);
+        //     console.log("companySlugsss",companySlug);
+
+
+
+
+        // }
+
+        comFunction2.generateUniqueSlug(req.body.company_name, (error, companySlug) => {
+            // comFunction2.generateUniqueSlug(req.body.company_name, main_address_country, (err, companySlug) => {
+            if (error) {
+                console.log('Err: ', error.message);
+            } else {
+                console.log('companySlug', companySlug);
+                var insert_values = [];
+                if (req.file) {
+                    insert_values = [currentUserData.user_id, req.body.company_name, req.body.heading, req.file.filename, req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, req.body.status, req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.main_address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug, req.body.parent_id];
                 } else {
-                    console.log("company results",results);
+                    insert_values = [currentUserData.user_id, req.body.company_name, req.body.heading, '', req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, req.body.status, req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.main_address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug, req.body.parent_id];
+                }
 
-                    var companyId = results.insertId;
-                    const categoryArray = Array.isArray(req.body.category) ? req.body.category : [req.body.category];
-
-                    // Filter out undefined values from categoryArray
-                    const validCategoryArray = categoryArray.filter(categoryID => categoryID !== undefined);
-
-                    console.log('categoryArray:', categoryArray);
-                    if (validCategoryArray.length > 0) {
-                        const companyCategoryData = validCategoryArray.map((categoryID) => [companyId, categoryID]);
-                        db.query('INSERT INTO company_cactgory_relation (company_id, category_id) VALUES ?', [companyCategoryData], function (error, results) {
-                            if (error) {
-                                console.log(error);
-                                res.status(400).json({
-                                    status: 'err',
-                                    message: 'Error while creating company category'
-                                });
-                            }
-                            else {
-                                return res.send(
-                                    {
-                                        status: 'ok',
-                                        data: companyId,
-                                        message: 'New company created'
-                                    }
-                                )
-                            }
-                        });
-                    } else {
+                const insertQuery = 'INSERT INTO company (user_created_by, company_name, heading, logo, about_company, comp_phone, comp_email, comp_registration_id, status, trending, created_date, updated_date, tollfree_number, main_address, main_address_pin_code, address_map_url, main_address_country, main_address_state, main_address_city, verified, paid_status, slug,parent_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)';
+                db.query(insertQuery, insert_values, (err, results, fields) => {
+                    if (err) {
                         return res.send(
                             {
-                                status: 'ok',
-                                data: companyId,
-                                message: 'New company created without any category.'
+                                status: 'err',
+                                data: '',
+                                message: 'An error occurred while processing your request' + err
                             }
                         )
-                    }
-                }
-            })
+                    } else {
+                        console.log("company results", results);
 
-        }
-    });
-    } catch(error){
+                        var companyId = results.insertId;
+                        const categoryArray = Array.isArray(req.body.category) ? req.body.category : [req.body.category];
+
+                        // Filter out undefined values from categoryArray
+                        const validCategoryArray = categoryArray.filter(categoryID => categoryID !== undefined);
+
+                        console.log('categoryArray:', categoryArray);
+                        if (validCategoryArray.length > 0) {
+                            const companyCategoryData = validCategoryArray.map((categoryID) => [companyId, categoryID]);
+                            db.query('INSERT INTO company_cactgory_relation (company_id, category_id) VALUES ?', [companyCategoryData], function (error, results) {
+                                if (error) {
+                                    console.log(error);
+                                    res.status(400).json({
+                                        status: 'err',
+                                        message: 'Error while creating company category'
+                                    });
+                                }
+                                else {
+                                    return res.send(
+                                        {
+                                            status: 'ok',
+                                            data: companyId,
+                                            message: 'New company created'
+                                        }
+                                    )
+                                }
+                            });
+                        } else {
+                            return res.send(
+                                {
+                                    status: 'ok',
+                                    data: companyId,
+                                    message: 'New company created without any category.'
+                                }
+                            )
+                        }
+                    }
+                })
+
+            }
+        });
+    } catch (error) {
         console.error('Error:', error);
         return res.send({
             status: 'err',
@@ -2265,13 +2265,13 @@ exports.editCompany = async (req, res) => {
 
     const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 
-    if(req.body.parent_id == 0){
+    if (req.body.parent_id == 0) {
         const companyquery = `SELECT * FROM company WHERE company_name = ? AND main_address_country =? `;
-        const companyvalue = await query(companyquery,[req.body.company_name,req.body.main_address_country]);
-    
-        console.log("companyvalue",companyvalue);
-    
-        if(companyvalue.length>0){
+        const companyvalue = await query(companyquery, [req.body.company_name, req.body.main_address_country]);
+
+        console.log("companyvalue", companyvalue);
+
+        if (companyvalue.length > 0) {
             return res.send(
                 {
                     status: 'err',
@@ -2629,7 +2629,7 @@ exports.companyBulkUpload = async (req, res) => {
 
                 const index = cleanedCompany.findIndex((value) => value === null);
 
-                console.log(index); 
+                console.log(index);
 
 
                 // company.forEach(value => {
@@ -2648,7 +2648,7 @@ exports.companyBulkUpload = async (req, res) => {
                 if (cleanedCompany[5] === null) {
                     cleanedCompany[5] = '';
                 }
-                if (cleanedCompany[6] === null) { 
+                if (cleanedCompany[6] === null) {
                     cleanedCompany[6] = '';
                 }
                 if (cleanedCompany[7] === null) {
@@ -2680,8 +2680,8 @@ exports.companyBulkUpload = async (req, res) => {
 
 
 
-                    await connection.execute(
- `
+                await connection.execute(
+                    `
                     INSERT INTO company 
                         (user_created_by, company_name, heading, about_company, comp_email, comp_phone, tollfree_number, main_address, main_address_pin_code, address_map_url, comp_registration_id, status, trending, created_date, updated_date, main_address_country, main_address_state, main_address_city, verified, slug, parent_id) 
                     VALUES 
@@ -2714,7 +2714,7 @@ exports.companyBulkUpload = async (req, res) => {
                 )
 
 
-            
+
             } catch (error) {
                 console.error('Error:', error);
                 return res.send({
@@ -2770,9 +2770,9 @@ exports.companyBulkUpload = async (req, res) => {
 //         if(req.body.parent_id == 0){
 //             const companyquery = `SELECT * FROM company WHERE company_name = ? AND main_address_country =? `;
 //             const companyvalue = await query(companyquery,[req.body.company_name,req.body.main_address_country]);
-        
+
 //             console.log("companyvalue",companyvalue);
-        
+
 //             if(companyvalue.length>0){
 //                 return res.send(
 //                     {
@@ -2823,9 +2823,9 @@ exports.companyBulkUpload = async (req, res) => {
 //                     }
 //                     return value;
 //                 });
-                
+
 //                 console.log("Sanitized company data:", sanitizedCompany);
-  
+
 
 
 
@@ -2914,7 +2914,7 @@ exports.companyBulkUpload = async (req, res) => {
 //                     `,
 //                     cleanedCompany // Ensure all nulls replaced with empty strings
 //                   );
-                  
+
 //             } catch (error) {
 //                 console.error('Error:', error);
 //                 return res.send({
@@ -3056,8 +3056,8 @@ exports.restoreCompany = (req, res) => {
 }
 
 // Assuming Express.js
-exports.getparentcompany = (req, res) =>{
-    const country = req.query.country; 
+exports.getparentcompany = (req, res) => {
+    const country = req.query.country;
 
     db.query(
         'SELECT id, company_name FROM company WHERE main_address_country = ? AND parent_id = 0',
@@ -6108,7 +6108,7 @@ exports.createDiscussion = async (req, res) => {
     //return false;
     const { user_id, tags, topic, from_data, expire_date } = req.body;
     const strTags = JSON.stringify(tags);
-    console.log("strTagssss",strTags);
+    console.log("strTagssss", strTags);
     const sql = `INSERT INTO discussions ( user_id, topic, tags, created_at, expired_at, query_alert_status,discussion_status) VALUES (?, ?, ?, ?, ?, ?, ?)`;
     const data = [user_id, topic, strTags, from_data, expire_date, '0', '0'];
     db.query(sql, data, (err, result) => {
@@ -6260,7 +6260,7 @@ exports.updateDiscussion = async (req, res) => {
         const { discussion_id, topic, tags, expire_date } = req.body;
 
         //console.log("tags",tags);
-        
+
         // const tagsArray = tags.split(',').map(tag => ({ value: tag.trim() }));
         // const strTags = JSON.stringify(tagsArray);
         // console.log("tagsArray", tagsArray); 
@@ -6279,7 +6279,7 @@ exports.updateDiscussion = async (req, res) => {
         const sql = `UPDATE discussions SET topic = ?, tags = ?, expired_at = ? WHERE id = ?`;
         const data = [topic, strTags, expire_date, discussion_id];
 
-        
+
         db.query(sql, data, (err, result) => {
             if (err) {
                 console.error(err);
@@ -6288,7 +6288,7 @@ exports.updateDiscussion = async (req, res) => {
                     message: 'Failed to update discussion.'
                 });
             } else {
-                console.log("result",result[0]);
+                console.log("result", result[0]);
                 return res.status(200).json({
                     status: 'ok',
                     message: 'Discussion updated successfully.'
@@ -6308,17 +6308,17 @@ exports.updateDiscussion = async (req, res) => {
 //     try {
 //         const { discussion_id, topic, tags, expire_date } = req.body;
 //         console.log("req.body",req.body);;
-        
+
 //         const allTags = tags ? JSON.parse(tags).map(item => item.value) : [];
 //         console.log("allTags", allTags);
 
 //         const Tags = JSON.stringify(allTags);
 //         console.log("Tags",Tags);
 
-    
+
 //         const sqlUpdate = `UPDATE discussions SET topic = ?, tags = ?, expired_at = ? WHERE id = ?`;
 //         const dataUpdate = [topic, Tags, expire_date, discussion_id];
-        
+
 //         db.query(sqlUpdate, dataUpdate, (err, updateResult) => {
 //             if (err) {
 //                 console.error(err);
@@ -6354,13 +6354,13 @@ exports.updateDiscussion = async (req, res) => {
 //             message: 'An error occurred while processing your request.'
 //         });
 //     }
-    
+
 //  };
 
 
 exports.getDiscussions = async (req, res) => {
     try {
-        const id  = req.params.id;
+        const id = req.params.id;
         const sql = `SELECT * discussions WHERE id = ?`;
         const data = [id];
         db.query(sql, data, (err, result) => {
@@ -6431,7 +6431,7 @@ exports.getDiscussions = async (req, res) => {
 //                         <td id="header_wrapper" style="padding: 36px 48px; display: block;">
 //                             <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Discussion approval email</h1>
 //                         </td>
-    
+
 //                         </tr>
 //                       </tbody>
 //                     </table>
@@ -6451,7 +6451,7 @@ exports.getDiscussions = async (req, res) => {
 //                             <tr>
 //                               <td style="padding: 48px;" valign="top">
 //                                 <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
-                                
+
 //                                 <table border="0" cellpadding="4" cellspacing="0" width="90%">
 //                                 <tr>
 //                                   <td colspan="2">
@@ -6534,7 +6534,7 @@ exports.addComment = async (req, res) => {
 
     const encodedUserData = req.cookies.user;
     const currentUserData = JSON.parse(encodedUserData);
-    
+
     const Insertdata = {
         discussion_id: discussion_id,
         user_id: user_id,
@@ -6543,7 +6543,7 @@ exports.addComment = async (req, res) => {
         created_at: formattedDate,
         comment_status: "0"
     };
-    
+
     const insertQuery = 'INSERT INTO discussions_user_response SET ?';
     db.query(insertQuery, Insertdata, async (insertErr, insertResult) => {
         if (insertErr) {
@@ -6649,10 +6649,10 @@ exports.addComment = async (req, res) => {
                       </tbody>
                     </table>
                     </div>`;
-            
+
             const mailOptions = {
                 from: process.env.MAIL_USER,
-                to: "dev2.scwt@gmail.com", 
+                to: "dev2.scwt@gmail.com",
                 subject: 'Discussion comment approval',
                 html: html
             };
@@ -8940,7 +8940,7 @@ exports.editDiscussion = (req, res) => {
             tags: JSON.stringify(allTags),
             discussion_status
         };
-        console.log("discussionData",discussionData);
+        console.log("discussionData", discussionData);
 
         db.query(discussionQuery, [discussionData, discussion_id], (err, results) => {
             if (err) {
@@ -8970,8 +8970,8 @@ exports.editDiscussion = (req, res) => {
                         return;
                     }
 
-                    const  user_id  = commentResults[0].user_id;
-                    console.log("user_id",user_id);
+                    const user_id = commentResults[0].user_id;
+                    console.log("user_id", user_id);
 
                     const user_query = 'SELECT email,first_name,last_name FROM users WHERE user_id = ?';
                     db.query(user_query, [user_id], (error, results) => {
@@ -8979,14 +8979,14 @@ exports.editDiscussion = (req, res) => {
                             console.error('Error fetching user details:', error);
                             return;
                         }
-                    
+
                         if (results.length > 0) {
                             var userEmail = results[0].email;
                             // console.log("User email:", userEmail);
                             // console.log("User first_name:", results[0].first_name);
                             // console.log("User last_name:", results[0].last_name);
                             const full_name = `${results[0].first_name} ${results[0].last_name}`;
-                            console.log("full_name",full_name);
+                            console.log("full_name", full_name);
 
                             const mailOptions = {
                                 from: process.env.MAIL_USER,
@@ -9087,24 +9087,24 @@ exports.editDiscussion = (req, res) => {
                             };
                             mdlconfig.transporter.sendMail(mailOptions, function (err, info) {
                                 if (err) {
-                                  console.log(err);
-                                  return res.send({
-                                    status: 'not ok',
-                                    message: 'Something went wrong'
-                                  });
+                                    console.log(err);
+                                    return res.send({
+                                        status: 'not ok',
+                                        message: 'Something went wrong'
+                                    });
                                 } else {
-                                  console.log('Mail Send: ', info.response);
-                                  return res.send({
-                                    status: 'ok',
-                                    message: 'discussion Approve'
-                                  });
+                                    console.log('Mail Send: ', info.response);
+                                    return res.send({
+                                        status: 'ok',
+                                        message: 'discussion Approve'
+                                    });
                                 }
-                              })
+                            })
                         } else {
                             console.log("User not found or has no email");
                         }
                     });
-                    
+
                 })
 
                 const authorQuery = 'SELECT user_id FROM discussions WHERE id = ?';
@@ -9114,7 +9114,7 @@ exports.editDiscussion = (req, res) => {
                         return;
                     }
 
-                    const  user_id  = commentResults[0].user_id;
+                    const user_id = commentResults[0].user_id;
                     //console.log("user_id",user_id);
 
                     const user_query = 'SELECT email,first_name,last_name FROM users WHERE user_id = ?';
@@ -9123,7 +9123,7 @@ exports.editDiscussion = (req, res) => {
                             console.error('Error fetching user details:', error);
                             return;
                         }
-                    
+
                         if (results.length > 0) {
                             var userEmail = results[0].email;
                             // console.log("author email:", userEmail);
@@ -9132,7 +9132,7 @@ exports.editDiscussion = (req, res) => {
                             const full_name = `${results[0].first_name} ${results[0].last_name}`;
                             //console.log("full_name",full_name);
 
-                        
+
                             const authormailOptions = {
                                 from: process.env.MAIL_USER,
                                 to: userEmail,
@@ -9232,28 +9232,28 @@ exports.editDiscussion = (req, res) => {
                             };
                             mdlconfig.transporter.sendMail(authormailOptions, function (err, info) {
                                 if (err) {
-                                  console.log(err);
-                                  return res.send({
-                                    status: 'not ok',
-                                    message: 'Something went wrong'
-                                  });
+                                    console.log(err);
+                                    return res.send({
+                                        status: 'not ok',
+                                        message: 'Something went wrong'
+                                    });
                                 } else {
-                                  console.log('Mail Send: ', info.response);
-                                  return res.send({
-                                    status: 'ok',
-                                    message: 'Review Approve'
-                                  });
+                                    console.log('Mail Send: ', info.response);
+                                    return res.send({
+                                        status: 'ok',
+                                        message: 'Review Approve'
+                                    });
                                 }
-                              })
+                            })
                         } else {
                             console.log("User not found or has no email");
                         }
                     });
-                    
+
                 })
             }
 
-        
+
 
             const commentQuery = `UPDATE discussions_user_response SET ? WHERE id = ${extractedCommentId} `;
             return new Promise((resolve, reject) => {
@@ -9282,7 +9282,7 @@ exports.editDiscussion = (req, res) => {
                 });
             });
     }
-    else{
+    else {
         console.log('commentStatuses is empty');
         const allTags = tags ? JSON.parse(tags).map(item => item.value) : [];
 
@@ -9291,8 +9291,8 @@ exports.editDiscussion = (req, res) => {
             tags: JSON.stringify(allTags),
             discussion_status
         };
-        console.log("discussionData",discussionData);
-    
+        console.log("discussionData", discussionData);
+
         const discussionQuery = `UPDATE discussions SET ? WHERE id = ${discussion_id} `;
         db.query(discussionQuery, discussionData, async (err, result) => {
             if (err) {
@@ -9302,25 +9302,25 @@ exports.editDiscussion = (req, res) => {
                 });
             } else {
                 const discussion_status = discussionData.discussion_status
-                console.log("discussion_status",discussion_status);
-                if(discussion_status == 1){
+                console.log("discussion_status", discussion_status);
+                if (discussion_status == 1) {
                     const disuser_query = `SELECT discussions.user_id,users.first_name,users.last_name,users.email FROM discussions LEFT JOIN users ON discussions.user_id = users.user_id WHERE discussions.id = ${discussion_id}`;
-                const disuser_value = await query(disuser_query);
-                console.log("disuser_value",disuser_value);
-    
-                const full_name = `${disuser_value[0].first_name} ${disuser_value[0].last_name}`;
-                //console.log("full_name",full_name);
-                var email = disuser_value[0].email;
-                //console.log("email",email);
-    
-    
-    
-                const mailOptions = {
-                    from: process.env.MAIL_USER,
-                    to: email,
-                    //to: "dev2.scwt@gmail.com",
-                    subject: 'Discussion approval mail',
-                    html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+                    const disuser_value = await query(disuser_query);
+                    console.log("disuser_value", disuser_value);
+
+                    const full_name = `${disuser_value[0].first_name} ${disuser_value[0].last_name}`;
+                    //console.log("full_name",full_name);
+                    var email = disuser_value[0].email;
+                    //console.log("email",email);
+
+
+
+                    const mailOptions = {
+                        from: process.env.MAIL_USER,
+                        to: email,
+                        //to: "dev2.scwt@gmail.com",
+                        subject: 'Discussion approval mail',
+                        html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
                     <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
                     <tbody>
                     <tr>
@@ -9411,45 +9411,45 @@ exports.editDiscussion = (req, res) => {
                     </tbody>
                     </table>
                 </div>`
-                };
-                mdlconfig.transporter.sendMail(mailOptions, function (err, info) {
-                    if (err) {
-                    console.log(err);
-                    return res.send({
-                        status: 'not ok',
-                        message: 'Something went wrong'
-                    });
-                    } else {
-                    console.log('Mail Send: ', info.response);
-                    return res.send({
-                        status: 'ok',
-                        message: 'Discussion details updated successfully.'
-                    });
-                    }
-                })
+                    };
+                    mdlconfig.transporter.sendMail(mailOptions, function (err, info) {
+                        if (err) {
+                            console.log(err);
+                            return res.send({
+                                status: 'not ok',
+                                message: 'Something went wrong'
+                            });
+                        } else {
+                            console.log('Mail Send: ', info.response);
+                            return res.send({
+                                status: 'ok',
+                                message: 'Discussion details updated successfully.'
+                            });
+                        }
+                    })
                 } else {
                     return res.send({
                         status: 'ok',
                         message: 'Discussion details updated successfully!'
                     });
                 }
-    
+
                 function sendEmail(to, subject, text) {
                     const transporter = nodemailer.createTransport({
                         service: 'gmail',
                         auth: {
-                            user: 'your_email@gmail.com', 
-                            pass: 'your_password', 
+                            user: 'your_email@gmail.com',
+                            pass: 'your_password',
                         },
                     });
-    
+
                     const mailOptions = {
-                        from: 'your_email@gmail.com', 
+                        from: 'your_email@gmail.com',
                         to: to,
                         subject: subject,
                         text: text,
                     };
-    
+
                     transporter.sendMail(mailOptions, (error, info) => {
                         if (error) {
                             console.error('Error sending email:', error);
@@ -9464,7 +9464,7 @@ exports.editDiscussion = (req, res) => {
     }
 
 
-    }
+}
 
 exports.likeComment = (req, res) => {
     const encodedUserData = req.cookies.user;
@@ -9534,6 +9534,65 @@ exports.likeComment = (req, res) => {
         });
     }
 };
+
+
+exports.getcompaniesbyCountry = async (req, res) => {
+    try {
+        const country = req.params.country;
+        const state = req.params.state;
+        const city = req.params.city;
+
+
+    if (!country) {
+        return res.status(400).json({ error: 'Country parameter is required' });
+    }
+
+    let sqlQuery = 'SELECT * FROM company WHERE 1=1';
+    if (country) {
+        sqlQuery += ` AND main_address_country = '${country}'`;
+    }
+    if (state) {
+        sqlQuery += ` AND main_address_state = '${state}'`;
+    }
+    if (city) {
+        sqlQuery += ` AND main_address_city = '${city}'`;
+    }
+
+
+    db.query(sqlQuery, queryParams, (err, results) => {
+        if (err) {
+            console.error('Error executing SQL query:', err);
+            res.status(500).json({ error: 'An error occurred while fetching companies' });
+        } else {
+            res.json(results);
+        }
+    });
+
+        // const get_company_query = `
+        //     SELECT *
+        //     FROM company
+        //     WHERE main_address_country = ${country_shortname};
+        // `;
+
+        // const get_company_result = await query(get_company_query);
+        // if (get_company_result.length > 0) {
+        //     var getcompanies = get_company_result;
+        // }
+        // else{
+        //     var getcompanies = get_company_result; 
+        // }
+        // return res.send({
+        //     status: 'ok',
+        //     message: 'company fetched successfully!',
+        //     getcompanies: getcompanies
+        // });
+    } catch (error) {
+        return res.send({
+            status: 'not ok',
+            message: 'Something went wrong'
+        });
+    }
+}
 
 
 // Express route to retrieve likes for a comment

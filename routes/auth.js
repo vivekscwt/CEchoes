@@ -445,4 +445,8 @@ router.post('/likeComment',authController.likeComment);
 // router.post('/dislikeComment',authController.dislikeComment);
 
 
+//getcompaniesbyCountry
+router.get('/getcompaniesbyCountry/:country/:state/:city',authController.getcompaniesbyCountry);
+
+
 module.exports = router;
