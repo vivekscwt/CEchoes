@@ -5187,12 +5187,19 @@ router.get('/getcomplaintcompanies', async (req, res) => {
             return res.status(400).json({ error: 'Country is required' });
         }
 
+        // let sqlQuery =`SELECT c.*, GROUP_CONCAT(cat.category_name) AS categories
+        // FROM company c
+        // LEFT JOIN company_cactgory_relation cr ON c.ID = cr.company_id
+        // LEFT JOIN category cat ON cr.category_id = cat.ID
+        // WHERE c.status != '3' AND c.membership_type_id >=3 AND c.complaint_status = '1' AND c.main_address_country = ?`;
+        
         let sqlQuery =`SELECT c.*, GROUP_CONCAT(cat.category_name) AS categories
         FROM company c
         LEFT JOIN company_cactgory_relation cr ON c.ID = cr.company_id
         LEFT JOIN category cat ON cr.category_id = cat.ID
-        WHERE c.status != '3' AND c.membership_type_id >=3 AND c.complaint_status = '1' AND c.main_address_country = ?
-        GROUP BY c.ID`;
+        WHERE c.status != '3' AND c.membership_type_id >=3 AND c.complaint_status = '1' AND main_address_country=?
+        `;
+
         let queryParams = [country];
 
 
@@ -5205,6 +5212,8 @@ router.get('/getcomplaintcompanies', async (req, res) => {
             sqlQuery += ' AND c.main_address_city = ?';
             queryParams.push(city);
         }
+        sqlQuery += ' GROUP BY c.ID';
+        
         console.log("SQL Query:", sqlQuery);
         console.log("Query Params:", queryParams);
 

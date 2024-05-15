@@ -7361,8 +7361,8 @@ exports.deleteCompanyComplaintLevel = async (req, res) => {
 }
 
 //Complaint Register
-exports.complaintRegister = (req, res) => {
-    //console.log('complaintRegister',req.body ); 
+exports.complaintRegister = async (req, res) => {
+    console.log('complaintRegister',req.body ); 
     // const authenticatedUserId = parseInt(req.user.user_id);
     // const ApiuserId = parseInt(req.body.user_id);
     // if (isNaN(ApiuserId)) {
@@ -7385,6 +7385,30 @@ exports.complaintRegister = (req, res) => {
     const currentDate = new Date();
     const ticket_no = randomNo + currentDate.getTime();
     const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ');
+
+    const country_name_query = `SELECT name,id FROM countries WHERE shortname = "${req.body.main_address_country}"`;
+    const country_name_value = await query(country_name_query);
+    if(country_name_value.length>0){
+      var country_name = country_name_value[0].name;
+      console.log("country_name",country_name);
+      var country_id = country_name_value[0].id;
+      console.log("country_id",country_id);
+    }
+  
+    const state_name_query = `SELECT * FROM states WHERE id = "${req.body.main_address_state}"`;
+    const state_name_value = await query(state_name_query);
+    if(state_name_value.length>0){
+      var state_name = state_name_value[0].name;
+      console.log("state_name",state_name);
+    }
+  
+    var city_value = req.body['review-address'];
+    console.log("city_value",city_value);
+  
+    var concatenatedAddress = city_value + ', ' + state_name + ', ' + country_name;
+    console.log(concatenatedAddress);
+
+
     const data = {
         user_id: user_id,
         company_id: company_id,
@@ -7393,7 +7417,7 @@ exports.complaintRegister = (req, res) => {
         sub_cat_id: sub_category_id && sub_category_id !== undefined ? sub_category_id : 0,
         model_desc: model_no,
         purchase_date: transaction_date,
-        purchase_place: location,
+        purchase_place: concatenatedAddress,
         message: message,
         tags: JSON.stringify(allTags),
         level_id: '1',
@@ -7414,8 +7438,10 @@ exports.complaintRegister = (req, res) => {
         } else {
             //console.log(company_id[0],user_id[0], uuid, result.insertId)
             const [complaintEmailToCompany, complaintSuccessEmailToUser] = await Promise.all([
-                comFunction2.complaintEmailToCompany(company_id[0], ticket_no, result.insertId),
-                comFunction2.complaintSuccessEmailToUser(user_id[0], ticket_no, result.insertId)
+                // comFunction2.complaintEmailToCompany(company_id[0], ticket_no, result.insertId),
+                // comFunction2.complaintSuccessEmailToUser(user_id[0], ticket_no, result.insertId)
+                comFunction2.complaintEmailToCompany(company_id, ticket_no, result.insertId),
+                comFunction2.complaintSuccessEmailToUser(user_id, ticket_no, result.insertId)
             ]);
             return res.send({
                 status: 'ok',

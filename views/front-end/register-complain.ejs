@@ -53,7 +53,6 @@
                <div class="complain-register-form my-3">
                   <form id="complain_register_form">
                      <div class="row">
-
                         <div class="col-md-12">
                            <div class="custom-form">
                              <select name="main_address_country" id="country"class="form-control" required>
@@ -88,7 +87,7 @@
        
                       <div class="col-md-12">
                          <div class="custom-form">
-                             <select class="form-control" id="companyDropdown" name="company_name" required>
+                             <select class="form-control" id="companyDropdown" name="company_id" required>
                                  <option value="" selected disabled>Business/Institute/Establishment Name</option>
                                  <!-- Options will be dynamically populated via JavaScript -->
                              </select>
@@ -96,22 +95,6 @@
                          </div>
                      </div>
 
-
-
-
-                        <div class="col-sm-12">
-                           <div class="custom-form">
-                              <div class="select-container">
-                                 <!-- <input type="text" class="form-control" id="search-input" placeholder="Search companies"> -->
-                                 <select class="form-select" id="select_company" name="company_id" required>
-                                    <option value="">Select the Company</option>
-                                    <% AllCompany.forEach(company => { %>
-                                    <option value="<%- company.ID %>" data-address="<%- company.main_address %>"><%- company.company_name %></option>
-                                    <% }) %>
-                                 </select>
-                              </div>
-                           </div>
-                        </div>
                         <div class="col-sm-6">
                            <div class="custom-form">
                               <div class="custom-form m-0 dynamic_state_field_wrapper" >
@@ -141,14 +124,9 @@
                            <input type="text" name="tags" placeholder="Add Tags" data-gtm-form-interact-field-id="0">
                         </div>
                         </div>
-                        <div class="col-sm-6">
+                        <div class="col-sm-12">
                            <div class="custom-form">
                               <input type="text" onfocus="(this.type='date')" onblur="(this.type='text')" name="transaction_date" class="form-control" placeholder="Date of Transactions" required >
-                           </div>
-                        </div>
-                        <div class="col-sm-6">
-                           <div class="custom-form">
-                              <input type="text" class="form-control" name="location" placeholder="Place of Order">
                            </div>
                         </div>
                         <div class="col-sm-12">
@@ -192,6 +170,9 @@
 
 
 <%- include('common/footer') -%>  
+
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <script>
 $(document).ready(function () {
@@ -510,14 +491,68 @@ $('#city').on('input', function() {
 
 
 
+$('#companyDropdown').on('change', function() {
+        var companyId = $(this).val(); // Get the selected value of the company dropdown
+        console.log("Selected Company ID:", companyId);
+        
+        $.ajax({
+         url: '/api/complain_category',
+         method: 'POST',
+         data: {company_id:companyId},
+         ContentType: 'application/json',
+         success: function (data) {
+            if (data.status == 'ok') {
+               $('#dynamic_state_field_wrapper').show();
+               //$("#select_state").prop('required',true);
+               //$('#select_category').empty().append($('<option value="">Select Category</option>'));
+               $.each(data.data, function (i, item) {
+                     $('#select_category').append($('<option>', { 
+                        value: item.id,
+                        text : item.category_name 
+                     }));
+               });                
+            } else {
+               $('#dynamic_state_field_wrapper').hide();
+               $("#select_category").prop('required',false);
+            }
+         },
+         error: function (error) {
+            // Handle any errors
+            Swal.fire({
+               text: error,
+               icon: "error",
+               buttonsStyling: false,
+               confirmButtonText: "Ok, got it!",
+               customClass: {
+                     confirmButton: "btn btn-primary"
+               }
+            });
+            submitButton.disabled = false;
+         }
+      });   
+    });
+
   });
 
   $(document).ready(function() {
   $('#companyDropdown').select2({
-    placeholder: "Search for a company",
+    placeholder: "Select a for a company",
     allowClear: true, 
-    width: '100%' // Optional, adjust the width of the select box
+    width: '100%' 
   });
+  $('#state').select2({
+    placeholder: "Select a state",
+    allowClear: true, 
+   //  width: '100%'
+  });
+  $('#country').select2({
+    placeholder: "Select a country",
+    allowClear: true, 
+   //  width: '100%'
+  });
+
+  
+  
 });
 
 
