@@ -764,6 +764,24 @@ var KTAccountSettingsProfileDetails = function () {
             e.preventDefault();
             validation.validate().then(function (status) {
                 if (status == 'Valid') {
+
+            var membershipType = $('input[name="membership_type_id"]:checked').val();
+            var complaintStatus = $('input[name="complaint_status"]:checked').val();
+            var complaintLevel = $('input[name="complaint_level"]').val();
+
+            console.log("membershipType,complaintStatus,complaintLevel",membershipType,complaintStatus,complaintLevel);
+
+            if (membershipType >= 4 && complaintLevel == '') {
+                swal.fire({
+                    text: "Please fill in the Complaint Level No.",
+                    icon: "error",
+                    buttonsStyling: false,
+                    confirmButtonText: "Ok, got it!",
+                    customClass: {
+                        confirmButton: "btn fw-bold btn-light-primary"
+                    }
+                });
+            } else{
                     //$('#kt_account_profile_details_form').submit();
                     var formElement = document.getElementById('kt_account_profile_details_form');
                     var formData = new FormData(formElement);
@@ -802,7 +820,8 @@ var KTAccountSettingsProfileDetails = function () {
                       .catch(error => {
                         // Handle any errors that occurred during the AJAX request
                         console.error(error);
-                      });                    
+                      });
+                    }                    
                 } else {
                     swal.fire({
                         text: "Sorry, looks like there are some errors detected, please try again.",
@@ -876,6 +895,18 @@ $(document).ready(function() {
                 allowClear: true,
                 width: '100%'
             });
+
+            $('input[name="complaint_status"]').change(function() {
+        if ($(this).val() === '1') {
+            console.log("aaaaa");
+            // If complaint status is active, enable the complaint level input
+            $('input[name="complaint_level"]').prop('disabled', false);
+        } else {
+            console.log("bbbb");
+            // If complaint status is inactive, disable the complaint level input
+            $('input[name="complaint_level"]').prop('disabled', true);
+        }
+    });
     
 });
 $(document).ready(function () {

@@ -93,7 +93,7 @@ router.get('', checkCookieValue, async (req, res) => {
         userId = currentUserData.user_id;
     }
 
-    const [allRatingTags, globalPageMeta, latestReviews, AllReviewTags, AllReviewVoting, PopularCategories, ReviewCount, UserCount, PositiveReviewsCompany, NegativeReviewsCompany, HomeMeta, VisitorCheck, getAllLatestDiscussion, getAllPopularDiscussion, getAllDiscussions] = await Promise.all([
+    const [allRatingTags, globalPageMeta, latestReviews, AllReviewTags, AllReviewVoting, PopularCategories, ReviewCount, UserCount, PositiveReviewsCompany, NegativeReviewsCompany, HomeMeta, VisitorCheck, getAllLatestDiscussion, getAllPopularDiscussion, getAllDiscussions, getCountries] = await Promise.all([
         comFunction.getAllRatingTags(),
         comFunction2.getPageMetaValues('global'),
         comFunction2.getlatestReviews(18),
@@ -109,6 +109,7 @@ router.get('', checkCookieValue, async (req, res) => {
         comFunction2.getAllLatestDiscussion(20),
         comFunction2.getAllPopularDiscussion(),
         comFunction2.getAllDiscussions(),
+        comFunction.getCountries()
     ]);
     const rangeTexts = {};
 
@@ -194,6 +195,7 @@ router.get('', checkCookieValue, async (req, res) => {
                         AllLatestDiscussion: getAllLatestDiscussion,
                         AllPopularDiscussion: getAllPopularDiscussion,
                         AllDiscussions: getAllDiscussions,
+                        getCountries: getCountries
                     });
                 })
 
@@ -248,6 +250,7 @@ router.get('', checkCookieValue, async (req, res) => {
                         AllLatestDiscussion: getAllLatestDiscussion,
                         AllPopularDiscussion: getAllPopularDiscussion,
                         AllDiscussions: getAllDiscussions,
+                        getCountries: getCountries
                     });
                 })
 
@@ -5170,6 +5173,63 @@ router.get('/getstatebyCountry', async (req, res) => {
     }
 })
 
+router.get('/getcomplaintcompanies', async (req, res) => {
+    try {
+
+        const country = req.query.country;
+        const state = req.query.state;
+        const city = req.query.city
+
+        console.log("country,state,city",country,state,city);
+
+
+        if (!country) {
+            return res.status(400).json({ error: 'Country is required' });
+        }
+
+        let sqlQuery =`SELECT c.*, GROUP_CONCAT(cat.category_name) AS categories
+        FROM company c
+        LEFT JOIN company_cactgory_relation cr ON c.ID = cr.company_id
+        LEFT JOIN category cat ON cr.category_id = cat.ID
+        WHERE c.status != '3' AND c.membership_type_id >=3 AND c.complaint_status = '1' AND c.main_address_country = ?
+        GROUP BY c.ID`;
+        let queryParams = [country];
+
+
+        if (state) {
+            console.log("sdfdfs");
+            sqlQuery += ' AND c.main_address_state = ?';
+            queryParams.push(state);
+        }
+        if (city) {
+            sqlQuery += ' AND c.main_address_city = ?';
+            queryParams.push(city);
+        }
+        console.log("SQL Query:", sqlQuery);
+        console.log("Query Params:", queryParams);
+
+
+        db.query(sqlQuery, queryParams, (err, results) => {
+            if (err) {
+                console.log("aaasssvvv");
+                console.error('Error executing SQL query:', err);
+                return res.status(500).json({ error: 'An error occurred while fetching companies' });
+            } else {
+                console.log("bbbbaaasssvvv");
+                console.log("getcomplaintcompaniesresults",results);
+                return res.json(results);
+            }
+        });
+
+    } catch (error) {
+        return res.send({
+            status: 'not ok',
+            message: 'Something went wrong'
+        });
+    }
+})
+
+
 //-----------------------------------------------------------------//
 
 
@@ -5537,10 +5597,11 @@ router.get('/update-discussion/:discussion_id', checkFrontEndLoggedIn, async (re
 router.get('/register-complaint', checkFrontEndLoggedIn, async (req, res) => {
     const encodedUserData = req.cookies.user;
     const currentUserData = JSON.parse(encodedUserData);
-    const [globalPageMeta, PageMetaValues, getAllPremiumCompany] = await Promise.all([
+    const [globalPageMeta, PageMetaValues, getAllPremiumCompany, getCountries] = await Promise.all([
         comFunction2.getPageMetaValues('global'),
         comFunction2.getPageMetaValues('complaint'),
-        comFunction2.getAllPremiumCompany()
+        comFunction2.getAllPremiumCompany(),
+        comFunction.getCountries()
     ]);
     try {
 
@@ -5550,7 +5611,8 @@ router.get('/register-complaint', checkFrontEndLoggedIn, async (req, res) => {
             currentUserData,
             globalPageMeta: globalPageMeta,
             meta_values_array: PageMetaValues,
-            AllCompany: getAllPremiumCompany
+            AllCompany: getAllPremiumCompany,
+            getCountries: getCountries
         });
     } catch (err) {
         console.error(err);

@@ -53,6 +53,52 @@
                <div class="complain-register-form my-3">
                   <form id="complain_register_form">
                      <div class="row">
+
+                        <div class="col-md-12">
+                           <div class="custom-form">
+                             <select name="main_address_country" id="country"class="form-control" required>
+                                 <option value="" disabled selected>Select a country</option>
+                                     <% getCountries.forEach(function(country) { %>
+                                     <option value="<%= country.shortname %>"><%= country.name %></option>
+                                     <% }); %>
+                             </select>
+                             <div class="autofield-dropdown-review">
+                             </div>
+                           </div>
+                         </div>
+                         <div class="col-md-12">
+                           <div class="custom-form">
+                               <select class="form-control" id="state" name="main_address_state">
+                                 <option value="" selected disabled>Select State</option>
+                                 <!-- Options will be dynamically populated via JavaScript -->
+                             </select>
+                             <div class="autofield-dropdown-review">
+                             </div>
+                           </div>
+                         </div>
+                         <div class="col-md-12">
+                           <div class="custom-form">
+                             <input type="text" class="form-control" id="city" name="review-address"
+                               placeholder="City Name" autocomplete="off">
+                             <div class="autofield-dropdown-review">
+                             </div>
+                           </div>
+                         </div>
+       
+       
+                      <div class="col-md-12">
+                         <div class="custom-form">
+                             <select class="form-control" id="companyDropdown" name="company_name" required>
+                                 <option value="" selected disabled>Business/Institute/Establishment Name</option>
+                                 <!-- Options will be dynamically populated via JavaScript -->
+                             </select>
+                             <div class="autofield-dropdown-review"></div>
+                         </div>
+                     </div>
+
+
+
+
                         <div class="col-sm-12">
                            <div class="custom-form">
                               <div class="select-container">
@@ -129,6 +175,21 @@
        <img src="/front-end/images/complain-overlay-object2.svg" alt="img" class="c-overlay2">
     </div>
  </section>
+
+ <style>
+   #companyDropdown option {
+     color: black;
+ }
+ #state option {
+     color: black;
+ }
+ #country option {
+     color: black;
+ }
+ 
+ 
+ </style>
+
 
 <%- include('common/footer') -%>  
 
@@ -278,4 +339,186 @@ $(document).ready(function () {
       
    });
 })
+
+var countryId;
+    var country;
+    var state;
+    console.log("maincountryId",countryId);
+    $(document).ready(function() {
+    $('#country').on('change', function() {
+      country = $(this).val(); 
+      console.log("country_IDcountry",country);
+
+      $.ajax({
+        url: '/getCountryIdByShortName',
+        method: 'GET',
+        data: { countryShortName: country },
+        success: function(response) {
+            countryId = response.countryId; 
+            console.log("country_IDddd", countryId);
+            handleCountryChange();
+        },
+        error: function(err) {
+            console.error('Error fetching country ID:', err);
+        }
+    });
+
+      $.ajax({
+        url: '/getcomplaintcompanies', 
+        method: 'GET',
+        data: { country: country }, 
+        success: function(response) {
+
+          console.log("getCompaniesByCountry",response);
+
+
+          var $companyDropdown = $('#companyDropdown');
+          $companyDropdown.empty(); // Clear existing options
+
+
+          $companyDropdown.append($('<option>', {
+            value: '',
+            text: 'Business/Institute/Establishment Name',
+            disabled: 'disabled',
+            selected: 'selected'
+          }));
+
+          response.forEach(function(company) {
+          $companyDropdown.append($('<option>', {
+            value: company.ID,
+            text: company.company_name 
+          }));
+        });
+        },
+        error: function(err) {
+          console.error('Error fetching companies:', err);
+        }
+      });
+    
+      function handleCountryChange() {
+    // Access countryId here, it will be updated
+    console.log("countryIdSS", countryId);
+
+    $.ajax({
+        url: '/getstatebyCountry', 
+        method: 'GET',
+        data: { country_ID: countryId }, 
+        success: function(response) {
+            console.log("response", response);
+
+            // Populate dropdown with fetched states
+            var $state = $('#state');
+            $state.empty(); // Clear existing options
+
+            $state.append($('<option>', {
+                value: '',
+                text: 'Select State',
+                disabled: 'disabled',
+                selected: 'selected'
+            }));
+
+            response.forEach(function(states) {
+                $state.append($('<option>', {
+                    value: states.id,
+                    text: states.name 
+                }));
+            });
+        },
+        error: function(err) {
+            console.error('Error fetching states:', err);
+        }
+    });
+}
+
+    });
+
+    $('#state').on('change', function() {
+      state = $(this).val(); 
+      console.log("state",state);
+      console.log("maincountryId",country);
+
+      $.ajax({
+        url: '/getcomplaintcompanies', 
+        method: 'GET',
+        data: { country: country, state: state }, 
+        success: function(response) {
+
+          console.log("getCompaniesByCountrystate",response);
+
+          // Populate dropdown with fetched companies
+          var $companyDropdown = $('#companyDropdown');
+          $companyDropdown.empty(); 
+
+
+          $companyDropdown.append($('<option>', {
+            value: '',
+            text: 'Business/Institute/Establishment Name',
+            disabled: 'disabled',
+            selected: 'selected'
+          }));
+
+          response.forEach(function(company) {
+          $companyDropdown.append($('<option>', {
+            value: company.ID,
+            text: company.company_name 
+          }));
+        });
+        },
+        error: function(err) {
+          console.error('Error fetching companies:', err);
+        }
+      });
+    });
+
+$('#city').on('input', function() {
+    var city = $(this).val(); 
+    console.log("City:", city);
+    console.log("Country:", country);
+    console.log("State:", state);
+
+    // Perform AJAX request to fetch companies based on country, state, and city
+    $.ajax({
+        url: '/getcomplaintcompanies', 
+        method: 'GET',
+        data: { country: country, state: state, city: city }, 
+        success: function(response) {
+            console.log("Companies:", response);
+
+            // Populate dropdown with fetched companies
+            var $companyDropdown = $('#companyDropdown');
+            $companyDropdown.empty(); 
+
+            $companyDropdown.append($('<option>', {
+                value: '',
+                text: 'Business/Institute/Establishment Name',
+                disabled: 'disabled',
+                selected: 'selected'
+            }));
+
+            response.forEach(function(company) {
+                $companyDropdown.append($('<option>', {
+                    value: company.ID,
+                    text: company.company_name 
+                }));
+            });
+        },
+        error: function(err) {
+            console.error('Error fetching companies:', err);
+        }
+    });
+});
+
+
+
+  });
+
+  $(document).ready(function() {
+  $('#companyDropdown').select2({
+    placeholder: "Search for a company",
+    allowClear: true, 
+    width: '100%' // Optional, adjust the width of the select box
+  });
+});
+
+
 </script>
