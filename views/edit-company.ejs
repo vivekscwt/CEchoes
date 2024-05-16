@@ -221,7 +221,7 @@
                             <!--end::Label-->
                             <!--begin::Col-->
                             <div class="col-lg-8 fv-row">
-                                <select name="main_address_country" id="countrySearchInput" class="form-select form-select-lg form-select-solid">
+                                <select name="main_address_country" id="main_address_country" class="form-select form-select-lg form-select-solid">
                                     <% var selectedCountryId = company.main_address_country; %>
                                     <% if (selectedCountryId === '') { %>
                                         <option value="" selected disabled>Select a country</option>
@@ -245,8 +245,13 @@
                             <!--end::Label-->
                             <!--begin::Col-->
                             <div class="col-lg-8 fv-row">
-                                <input type="text" name="main_address_state" class="form-control form-control-lg form-control-solid" placeholder="State" value="<%= company.main_address_state %>" />
+                                <select class="form-control form-control-lg form-control-solid" id="state" name="main_address_state">
+                                    <% getStatesByCountryID.forEach(function(state) { %>
+                                        <option value="<%= state.id %>" <%= state.id == company.main_address_state ? 'selected' : '' %>><%= state.name %></option>
+                                    <% }); %>
+                                </select>
                             </div>
+                            
                             <!--end::Col-->
                         </div>
                         <div class="row mb-6">
@@ -909,9 +914,67 @@ $(document).ready(function() {
     });
     
 });
+let country;
+$(document).ready(function() {
+    // When country selection changes
+    $('#main_address_country').on('change', function() {
+        country = $(this).val();
+        console.log("Selected Country:", country);
+        
+        $.ajax({
+            url: '/getCountryIdByShortName',
+            method: 'GET',
+            data: { countryShortName: country },
+            success: function(response) {
+                var countryId = response.countryId; 
+                fetchStatesByCountry(countryId); 
+            },
+            error: function(err) {
+                console.error('Error fetching country ID:', err);
+            }
+        });
+    });
+
+
+
+    function fetchStatesByCountry(countryId) {
+        $.ajax({
+            url: '/getstatebyCountry', 
+            method: 'GET',
+            data: { country_ID: countryId }, 
+            success: function(response) {
+                populateStatesDropdown(response);
+            },
+            error: function(err) {
+                console.error('Error fetching states:', err);
+            }
+        });
+    }
+    
+    function populateStatesDropdown(states) {
+        var $stateDropdown = $('#state');
+        $stateDropdown.empty().append($('<option>', {
+            value: '',
+            text: 'Select a state'
+        }));
+        states.forEach(function(state) {
+            $stateDropdown.append($('<option>', {
+                value: state.id, 
+                text: state.name 
+            }));
+        });
+    }
+
+    });
+
+
 $(document).ready(function () {
                 $("select[name='parent_id']").select2({
                     placeholder: "Select Parent",
+                    allowClear: true
+                });
+                $("select[name='main_address_state']").select2({
+                    placeholder: "Select state",
                     allowClear: true
                 });
             });

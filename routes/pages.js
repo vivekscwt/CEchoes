@@ -4030,18 +4030,46 @@ router.get('/edit-company/:id', checkLoggedIn, async (req, res) => {
         const currentUserData = JSON.parse(encodedUserData);
         const companyId = req.params.id;
 
+        const getcompanyquery =`SELECT *
+        FROM company 
+        WHERE company.ID = ?`;
+        const getcompanyvalue = await query(getcompanyquery,[companyId]);
+        if(getcompanyvalue.length>0){
+            var comp_state_id = getcompanyvalue[0].main_address_state;
+            console.log("comp_state_id",comp_state_id);
+            var comp_country_shortname = getcompanyvalue[0].main_address_country;
+            console.log("comp_country_shortname",comp_country_shortname);
+        }
+        const getcountryidquery = `SELECT * FROM countries WHERE shortname=?`;
+        const getcountryidvalue = await query(getcountryidquery,[comp_country_shortname]);
+        if(getcountryidvalue.length>0){
+            var comp_country_id= getcountryidvalue[0].id;
+            console.log("comp_country_id",comp_country_id);
+        }
+
+        const getstatequery= `SELECT * FROM states WHERE country_id=?`;
+        const getstatevalue = await query(getstatequery,[comp_country_id]);
+
+        if(getstatevalue.length>0){
+            var statevalue = getstatevalue[0].name;
+            console.log("statevalue",statevalue);
+        }
+
+
         // Fetch all the required data asynchronously
-        const [company, company_all_categories, users, getParentCompany, getCountries] = await Promise.all([
+        const [company, company_all_categories, users, getParentCompany, getCountries, getStatesByCountryID] = await Promise.all([
             comFunction.getCompany(companyId),
             comFunction.getCompanyCategoryBuID(companyId),
             comFunction.getUsersByRole(2),
             comFunction.getParentCompany(),
             comFunction.getCountries(),
+            comFunction.getStatesByCountryID(comp_country_id)
             //comFunction.getCompanyMeta(userId),
             //comFunction.getCountries(),
             //comFunction.getStatesByUserID(userId)
         ]);
         console.log("company", company);
+        console.log("getStatesByCountryID",getStatesByCountryID);
         // Render the 'edit-user' EJS view and pass the data
         // res.json({
         //     menu_active_id: 'company',
@@ -4061,7 +4089,9 @@ router.get('/edit-company/:id', checkLoggedIn, async (req, res) => {
             company_all_categories: company_all_categories,
             Allusers: users,
             getParentCompany: getParentCompany,
-            getCountries: getCountries
+            getCountries: getCountries,
+            statevalue: statevalue,
+            getStatesByCountryID: getStatesByCountryID
             //countries: countries,
             //states: states            
         });

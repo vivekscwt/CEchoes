@@ -812,18 +812,28 @@ $(document).ready(function() {
     }
 
     function populateStatesDropdown(states) {
-        var $stateDropdown = $('#state');
-        $stateDropdown.empty().append($('<option>', {
-            value: '',
-            text: 'Select a state'
+    var $stateDropdown = $('#state');
+
+    // Clear existing options from the state dropdown
+    $stateDropdown.empty();
+
+    // Add a default option
+    $stateDropdown.append($('<option>', {
+        value: '',
+        text: 'Select State',
+        disabled: 'disabled',
+        selected: 'selected'
+    }));
+
+    // Populate the state dropdown with fetched states
+    states.forEach(function(state) {
+        $stateDropdown.append($('<option>', {
+            value: state.id,
+            text: state.name
         }));
-        states.forEach(function(state) {
-            $stateDropdown.append($('<option>', {
-                value: state.id, 
-                text: state.name 
-            }));
-        });
-    }
+    });
+}
+
 });
 
 
