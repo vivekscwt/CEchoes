@@ -1284,7 +1284,7 @@ $('#city').on('input', function() {
     console.log("Country:", country);
     console.log("State:", state);
 
-    // Perform AJAX request to fetch companies based on country, state, and city
+
     $.ajax({
         url: '/getCompanies', 
         method: 'GET',
@@ -1292,7 +1292,6 @@ $('#city').on('input', function() {
         success: function(response) {
             console.log("Companies:", response);
 
-            // Populate dropdown with fetched companies
             var $companyDropdown = $('#companyDropdown');
             $companyDropdown.empty(); 
 
@@ -1324,8 +1323,21 @@ $('#city').on('input', function() {
   $('#companyDropdown').select2({
     placeholder: "Search for a company",
     allowClear: true, 
-    width: '100%' // Optional, adjust the width of the select box
+    width: '100%'
   });
+
+  $('#country').select2({
+        placeholder: "Select a country",
+        allowClear: true, 
+        width: '100%'
+    });
+    $('#state').select2({
+        placeholder: "Select a state",
+        allowClear: true, 
+        width: '100%'
+
+    });
+
 });
 
 

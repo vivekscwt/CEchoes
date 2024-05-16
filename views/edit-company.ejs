@@ -245,7 +245,7 @@
                             <!--end::Label-->
                             <!--begin::Col-->
                             <div class="col-lg-8 fv-row">
-                                <select class="form-control form-control-lg form-control-solid" id="state" name="main_address_state">
+                                    <select id="state" name="main_address_state" aria-label="Select state" data-control="select2" data-placeholder="Select state..." class="form-select">
                                     <% getStatesByCountryID.forEach(function(state) { %>
                                         <option value="<%= state.id %>" <%= state.id == company.main_address_state ? 'selected' : '' %>><%= state.name %></option>
                                     <% }); %>
@@ -530,7 +530,7 @@
                         
                             <!--begin::Col-->
                             <div class="col-lg-8 fv-row">
-                                <select name="parent_id" class="form-control form-control-lg form-control-solid" required>
+                                <select name="parent_id" aria-label="Select as parent category" data-control="select2" data-placeholder="Select a User..." class="form-select">
                                     <% 
                                     const selectedParentId = company.parent_id; 
                                     %>

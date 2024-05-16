@@ -1565,9 +1565,12 @@
 #country option {
     color: black;
 }
-// #categoryDropdown {
-//   color: black
-// }
+
+.select2-container--default .select2-selection--single {
+    height: 50px;
+    line-height: 50px; 
+}
+
  </style>
 
  
@@ -1747,8 +1750,21 @@
         placeholder: "Search for a company",
         allowClear: true, 
         width: '100%'
+    });
+    $('#country').select2({
+        placeholder: "Select a country",
+        allowClear: true, 
+        width: '100%'
+    });
+    $('#state').select2({
+        placeholder: "Select a state",
+        allowClear: true, 
+        width: '100%'
 
-        });
+    });
+
+    
+        
 
 
     $('#companyDropdown').on('change', function() {
@@ -1807,13 +1823,17 @@
                 $productDropdown.empty(); 
 
                 $productDropdown.append($('<option>', {
-                    value: '',
+                    value: '0',
                     text: 'Select Product',
                     disabled: 'disabled',
                     selected: 'selected'
                 }));
 
-                // Add options for each category
+                $productDropdown.append($('<option>', {
+                    value: '0',
+                    text: 'General'
+                }));
+
                 products.forEach(function(category) {
                     $productDropdown.append($('<option>', {
                         value: category.id,
@@ -1821,6 +1841,14 @@
                     }));
                 });
             } else {
+                var $productDropdown = $('#productDropdown');
+                $productDropdown.empty(); 
+                $productDropdown.append($('<option>', {
+                    value: '0',
+                    text: 'Select Product',
+                    disabled: 'disabled',
+                    selected: 'selected'
+                }));
                 console.error('Error: ' + response.message);
             }
         },
