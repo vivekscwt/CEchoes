@@ -505,21 +505,51 @@
                        </div>
                        <div id="map"></div>
                     </div>-->
-                <div class="col-md-12">
-                  <div class="custom-form">
-                    <input type="text" class="form-control" id="search-input-review" name="company_name"
-                      placeholder="Business/Institute/Establishment Name" required autocomplete="off">
-                    <div class="autofield-dropdown-review">
+
+                    <div class="col-md-12">
+                    <div class="custom-form">
+                      <select name="main_address_country" id="country"class="form-control" required>
+                          <option value="" disabled selected>Select a country</option>
+                          <% getCountries.forEach(function(country) { %>
+                              <option value="<%= country.shortname %>"><%= country.name %></option>
+                              <% }); %>
+                      </select>
+                      <div class="autofield-dropdown-review">
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div class="col-md-12">
-                  <div class="custom-form">
-                    <input type="text" class="form-control" name="address" id="review-address" placeholder="Location"
-                      required>
-                    <!--<div class="under-input-text">India, Westbengal, Kolkata, 5330</div>-->
+                  <div class="col-md-12">
+                    <div class="custom-form">
+                        <select class="form-control" id="state" name="main_address_state">
+                          <option value="" selected disabled>Select State</option>
+                          <!-- Options will be dynamically populated via JavaScript -->
+                      </select>
+                      <div class="autofield-dropdown-review">
+                      </div>
+                    </div>
                   </div>
-                </div>
+                  <div class="col-md-12">
+                    <div class="custom-form">
+                      <input type="text" class="form-control" id="city" name="review-address"
+                        placeholder="City Name" autocomplete="off">
+                      <div class="autofield-dropdown-review">
+                      </div>
+                    </div>
+                  </div>
+
+
+               <div class="col-md-12">
+                  <div class="custom-form">
+                      <select class="form-control" id="companyDropdown" name="company_name" required>
+                          <option value="" selected disabled>Business/Institute/Establishment Name</option>
+                          <!-- Options will be dynamically populated via JavaScript -->
+                      </select>
+                      <div class="autofield-dropdown-review"></div>
+                  </div>
+              </div>
+
+
+
                 <%# <div class="col-sm-6">
                   <div class="custom-form">
                     <input type="text" class="form-control" placeholder="Country" id="review-country" name="country"
@@ -1524,6 +1554,16 @@
   margin-bottom: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
+}
+
+  #companyDropdown option {
+    color: black;
+}
+#state option {
+    color: black;
+}
+#country option {
+    color: black;
 }
  </style>
 <script>
