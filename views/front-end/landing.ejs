@@ -1566,6 +1566,189 @@
     color: black;
 }
  </style>
+
+ 
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+   <script>
+    var countryId;
+    var country;
+    var state;
+    console.log("maincountryId",countryId);
+    $(document).ready(function() {
+      $('#country').on('change', function() {
+      country = $(this).val(); 
+      console.log("country_IDcountry",country);
+
+      $.ajax({
+        url: '/getCountryIdByShortName',
+        method: 'GET',
+        data: { countryShortName: country },
+        success: function(response) {
+            countryId = response.countryId; 
+            console.log("country_IDddd", countryId);
+            handleCountryChange();
+        },
+        error: function(err) {
+            console.error('Error fetching country ID:', err);
+        }
+    });
+
+      $.ajax({
+        url: '/getCompanies', 
+        method: 'GET',
+        data: { country: country }, 
+        success: function(response) {
+
+          console.log("getCompaniesByCountry",response);
+
+
+          var $companyDropdown = $('#companyDropdown');
+          $companyDropdown.empty(); // Clear existing options
+
+
+          $companyDropdown.append($('<option>', {
+            value: '',
+            text: 'Business/Institute/Establishment Name',
+            disabled: 'disabled',
+            selected: 'selected'
+          }));
+
+          response.forEach(function(company) {
+          $companyDropdown.append($('<option>', {
+            value: company.ID,
+            text: company.company_name 
+          }));
+        });
+        },
+        error: function(err) {
+          console.error('Error fetching companies:', err);
+        }
+      });
+    
+      function handleCountryChange() {
+    // Access countryId here, it will be updated
+    console.log("countryIdSS", countryId);
+
+    $.ajax({
+        url: '/getstatebyCountry', 
+        method: 'GET',
+        data: { country_ID: countryId }, 
+        success: function(response) {
+            console.log("response", response);
+
+            // Populate dropdown with fetched states
+            var $state = $('#state');
+            $state.empty(); // Clear existing options
+
+            $state.append($('<option>', {
+                value: '',
+                text: 'Select State',
+                disabled: 'disabled',
+                selected: 'selected'
+            }));
+
+            response.forEach(function(states) {
+                $state.append($('<option>', {
+                    value: states.id,
+                    text: states.name 
+                }));
+            });
+        },
+        error: function(err) {
+            console.error('Error fetching states:', err);
+        }
+    });
+}
+
+    });
+
+    $('#state').on('change', function() {
+      state = $(this).val(); 
+      console.log("state",state);
+      console.log("maincountryId",country);
+
+      $.ajax({
+        url: '/getCompanies', 
+        method: 'GET',
+        data: { country: country, state: state }, 
+        success: function(response) {
+
+          console.log("getCompaniesByCountrystate",response);
+
+          // Populate dropdown with fetched companies
+          var $companyDropdown = $('#companyDropdown');
+          $companyDropdown.empty(); 
+
+
+          $companyDropdown.append($('<option>', {
+            value: '',
+            text: 'Business/Institute/Establishment Name',
+            disabled: 'disabled',
+            selected: 'selected'
+          }));
+
+          response.forEach(function(company) {
+          $companyDropdown.append($('<option>', {
+            value: company.ID,
+            text: company.company_name 
+          }));
+        });
+        },
+        error: function(err) {
+          console.error('Error fetching companies:', err);
+        }
+      });
+    });
+
+    $('#city').on('input', function() {
+        var city = $(this).val(); 
+        console.log("City:", city);
+        console.log("Country:", country);
+        console.log("State:", state);
+
+        // Perform AJAX request to fetch companies based on country, state, and city
+        $.ajax({
+            url: '/getCompanies', 
+            method: 'GET',
+            data: { country: country, state: state, city: city }, 
+            success: function(response) {
+                console.log("Companies:", response);
+
+                // Populate dropdown with fetched companies
+                var $companyDropdown = $('#companyDropdown');
+                $companyDropdown.empty(); 
+
+                $companyDropdown.append($('<option>', {
+                    value: '',
+                    text: 'Business/Institute/Establishment Name',
+                    disabled: 'disabled',
+                    selected: 'selected'
+                }));
+
+                response.forEach(function(company) {
+                    $companyDropdown.append($('<option>', {
+                        value: company.ID,
+                        text: company.company_name 
+                    }));
+                });
+            },
+            error: function(err) {
+                console.error('Error fetching companies:', err);
+            }
+        });
+    });
+
+    $('#companyDropdown').select2({
+        placeholder: "Search for a company",
+        allowClear: true, 
+        width: '100%'
+
+        });
+});
+</script>
+
 <script>
 jQuery(document).ready(function ($) {
    
@@ -1951,6 +2134,9 @@ jQuery(document).ready(function ($) {
    });    
    });
    
+
+
+
 });
 </script>
 
@@ -2116,6 +2302,9 @@ jQuery(document).ready(function ($) {
              $('.login').trigger('click');
          }
        });
+
+
+
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=<%= AddressapiKey %>&libraries=places&callback=initMap"
    async defer></script>
