@@ -80,7 +80,7 @@ exports.states = (req, res) => {
 
 //--Company Category --//
 exports.complainCategory = (req, res) => {
-    //console.log('complainCategory',req.body);
+    console.log('complainCategory',req.body);
     //return false;
     db.query('SELECT * FROM complaint_category WHERE company_id = ? AND parent_id = 0 ', [req.body.company_id], async (err, results) => {
         if (err) {

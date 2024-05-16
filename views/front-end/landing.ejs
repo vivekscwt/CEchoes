@@ -580,7 +580,7 @@
               #%>
               <div class="col-md-6">
                 <div class="custom-form dynamic_state_field_wrapper ">
-                    <select id="select_category" name="category_id" class="form-select">
+                    <select id="categoryDropdown" name="category_id" class="form-select">
                         <option value="0" selected>Select Category </option>
                     </select>
                     <!-- <input type="text" class="form-control" placeholder="Category Name" name="category"> -->
@@ -1565,6 +1565,9 @@
 #country option {
     color: black;
 }
+#categoryDropdown {
+  color: black
+}
  </style>
 
  
@@ -1746,6 +1749,48 @@
         width: '100%'
 
         });
+
+    // Assuming you have jQuery included
+
+    $('#companyDropdown').on('change', function() {
+        var companyId = $(this).val();
+        console.log("companyDropdowncompanyId",companyId);
+
+        $.ajax({
+            url: '/api/complain_category', 
+            method: 'POST',
+            data: { company_id: companyId },
+            success: function(response) {
+            console.log(response); 
+            if (response.status == 'ok') {
+              console.log("sadfsdfdfs");
+                var categories = response.data; 
+                var $categoryDropdown = $('#categoryDropdown');
+                $categoryDropdown.empty(); 
+
+                $categoryDropdown.append($('<option>', {
+                    value: '',
+                    text: 'Select Category',
+                    disabled: 'disabled',
+                    selected: 'selected'
+                }));
+
+                // Add options for each category
+                categories.forEach(function(category) {
+                    $categoryDropdown.append($('<option>', {
+                        value: category.id,
+                        text: category.category_name
+                    }));
+                });
+            } else {
+                console.error('Error: ' + response.message);
+            }
+        },
+
+        });
+    });
+
+
 });
 </script>
 
