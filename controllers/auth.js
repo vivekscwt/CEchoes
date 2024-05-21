@@ -2972,26 +2972,195 @@ function processCompanyCSVRows(worksheet, formattedDate, connection, user_id) {
 //     });
 
 //--- Delete Company ----//
+// exports.deleteCompany = (req, res) => {
+//     //console.log(req.body.companyid);
+//     console.log("companyid",req.body.companyid);
+//     console.log("ggggg");
+    
+//     // sql = `DELETE FROM company WHERE ID = ?`;
+//     // const data = [req.body.companyid];
+//     // db.query(sql, data, (err, result) => {
+//     //     if (err) {
+//     //         return res.send({
+//     //             status: 'error',
+//     //             message: 'Something went wrong'
+//     //         });
+//     //     } else {
+//     //         return res.send({
+//     //             status: 'ok',
+//     //             message: 'Company successfully deleted'
+//     //         });
+//     //     }
+
+//     // })
+
+//     const { companyid } = req.body;
+
+//     if (!companyid || !Array.isArray(companyid)) {
+//         return res.status(400).json({ success: false, message: 'Invalid data' });
+//     }
+
+//     try {
+//         const placeholders = companyid.map(() => '?').join(',');
+//         const query = `DELETE FROM company WHERE ID IN (${placeholders})`;
+
+//         db.query(query, companyid, (error, result) => {
+//             if (error) {
+//                 console.error('Error updating companies:', error);
+//                 return res.status(500).json({ success: false, message: 'Server error' });
+//             }
+
+//             if (result.affectedRows > 0) {
+//                 res.json({ success: true });
+//             } else {
+//                 res.json({ success: false, message: 'No companies were updated' });
+//             }
+//         });
+//     } 
+//     catch (error) {
+//         console.error('Error updating companies:', error);
+//         return res.status(500).json({ success: false, message: 'Server error' });
+//     }
+
+
+
+// }
+// exports.deleteCompanies = (req, res) => {
+//     //console.log(req.body.companyid);
+//     console.log("companyid",req.body.companyid);
+//     console.log("ggggg");
+    
+//     sql = `DELETE FROM company WHERE ID = ?`;
+//     const data = [req.body.companyid];
+//     db.query(sql, data, (err, result) => {
+//         if (err) {
+//             return res.send({
+//                 status: 'error',
+//                 message: 'Something went wrong'
+//             });
+//         } else {
+//             return res.send({
+//                 status: 'ok',
+//                 message: 'Company successfully deleted'
+//             });
+//         }
+
+//     })
+
+   
+// }
+
+
 exports.deleteCompany = (req, res) => {
-    //console.log(req.body.companyid);
-    sql = `DELETE FROM company WHERE ID = ?`;
-    const data = [req.body.companyid];
-    db.query(sql, data, (err, result) => {
-        if (err) {
-            return res.send({
-                status: 'error',
-                message: 'Something went wrong'
-            });
-        } else {
-            return res.send({
-                status: 'ok',
-                message: 'Company successfully deleted'
-            });
-        }
+    console.log("companyid", req.body.companyid);
 
-    })
+    const { companyid } = req.body;
 
+    if (!companyid || !Array.isArray(companyid)) {
+        return res.status(400).json({ success: false, message: 'Invalid data' });
+    }
+
+    try {
+        const placeholders = companyid.map(() => '?').join(',');
+        const query = `DELETE FROM company WHERE ID IN (${placeholders})`;
+        const query1 = `DELETE FROM reviews WHERE company_id IN (${placeholders})`;
+        const query2 = `DELETE FROM survey WHERE company_id IN (${placeholders})`;
+        const query3 = `DELETE FROM poll_company WHERE company_id IN (${placeholders})`;
+        const query4 = `DELETE FROM complaint WHERE company_id IN (${placeholders})`;
+
+        db.query(query, companyid, (error, result) => {
+            if (error) {
+                console.error('Error deleting companies:', error);
+                return res.status(500).json({ success: false, message: 'Server error' });
+            }
+        });
+
+        db.query(query1, companyid, (error, result) => {
+            if (error) {
+                console.error('Error deleting reviews:', error);
+                return res.status(500).json({ success: false, message: 'Server error' });
+            }
+        });
+
+        db.query(query2, companyid, (error, result) => {
+            if (error) {
+                console.error('Error deleting surveys:', error);
+                return res.status(500).json({ success: false, message: 'Server error' });
+            }
+        });
+
+        db.query(query3, companyid, (error, result) => {
+            if (error) {
+                console.error('Error deleting poll companies:', error);
+                return res.status(500).json({ success: false, message: 'Server error' });
+            }
+        });
+
+        db.query(query4, companyid, (error, result) => {
+            if (error) {
+                console.error('Error deleting complaints:', error);
+                return res.status(500).json({ success: false, message: 'Server error' });
+            }
+
+            // If all queries are successful, send the response
+            return res.json({ success: true,message: 'Companies deleted successfully.' });
+        });
+    } catch (error) {
+        console.error('Error deleting companies:', error);
+        return res.status(500).json({ success: false, message: 'Server error' });
+    }
 }
+
+exports.deleteCompanies = (req, res) => {
+    //console.log(req.body.companyid);
+    console.log("companyid",req.body.companyid);
+    console.log("ggggg");
+    
+    const query = `DELETE FROM company WHERE ID = ?`;
+    const query1 = `DELETE FROM reviews WHERE company_id = ?`;
+    const query2 = `DELETE FROM survey WHERE company_id = ?`;
+    const query3 = `DELETE FROM poll_company WHERE company_id = ?`;
+    const query4 = `DELETE FROM complaint WHERE company_id = ?`;
+
+    db.query(query, req.body.companyid, (error, result) => {
+        if (error) {
+            console.error('Error deleting companies:', error);
+            return res.status(500).json({ success: false, message: 'Server error' });
+        }
+    });
+
+    db.query(query1, req.body.companyid, (error, result) => {
+        if (error) {
+            console.error('Error deleting reviews:', error);
+            return res.status(500).json({ success: false, message: 'Server error' });
+        }
+    });
+
+    db.query(query2, req.body.companyid, (error, result) => {
+        if (error) {
+            console.error('Error deleting surveys:', error);
+            return res.status(500).json({ success: false, message: 'Server error' });
+        }
+    });
+
+    db.query(query3, req.body.companyid, (error, result) => {
+        if (error) {
+            console.error('Error deleting poll companies:', error);
+            return res.status(500).json({ success: false, message: 'Server error' });
+        }
+    });
+
+    db.query(query4, req.body.companyid, (error, result) => {
+        if (error) {
+            console.error('Error deleting complaints:', error);
+            return res.status(500).json({ success: false, message: 'Server error' });
+        }
+        return res.json({ success: true,message: 'Company deleted successfully.' });
+    });
+
+   
+}
+
 
 //--- Delete Company ----//
 exports.deletePayment = (req, res) => {
@@ -3016,12 +3185,61 @@ exports.deletePayment = (req, res) => {
 }
 
 //--- Trash Company ----//
-exports.trashCompany = (req, res) => {
-    //console.log(req.body.companyid);
+exports.trashCompany = async (req, res) => {
+    console.log("companyid",req.body.companyid);
+    console.log("aaaaa");
+    // sql = `UPDATE company SET status = '3' WHERE ID = ?`;
+    // const data = [req.body.companyid];
+    // db.query(sql, data, (err, result) => {
+    //     if (err) {
+    //         console.log("error",err);
+    //         return res.send({
+    //             status: 'error',
+    //             message: 'Something went wrong'
+    //         });
+    //     } else {
+    //         return res.send({
+    //             status: 'ok',
+    //             message: 'Company successfully move to trash'
+    //         });
+    //     }
+    // })
+    const { companyid } = req.body;
+
+    if (!companyid || !Array.isArray(companyid)) {
+        return res.status(400).json({ success: false, message: 'Invalid data' });
+    }
+
+    try {
+        const placeholders = companyid.map(() => '?').join(',');
+        const query = `UPDATE company SET status = '3' WHERE ID IN (${placeholders})`;
+
+        db.query(query, companyid, (error, result) => {
+            if (error) {
+                console.error('Error updating companies:', error);
+                return res.status(500).json({ success: false, message: 'Server error' });
+            }
+
+            if (result.affectedRows > 0) {
+                res.json({ success: true });
+            } else {
+                res.json({ success: false, message: 'No companies were updated' });
+            }
+        });
+    } 
+    catch (error) {
+        console.error('Error updating companies:', error);
+        return res.status(500).json({ success: false, message: 'Server error' });
+    }
+}
+exports.trashCompanies = async (req, res) => {
+    console.log("companyid",req.body.companyid);
+    console.log("aaaaa");
     sql = `UPDATE company SET status = '3' WHERE ID = ?`;
     const data = [req.body.companyid];
     db.query(sql, data, (err, result) => {
         if (err) {
+            console.log("error",err);
             return res.send({
                 status: 'error',
                 message: 'Something went wrong'
