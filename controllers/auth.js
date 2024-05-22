@@ -3111,55 +3111,36 @@ exports.deleteCompany = (req, res) => {
     }
 }
 
-exports.deleteCompanies = (req, res) => {
-    //console.log(req.body.companyid);
-    console.log("companyid",req.body.companyid);
-    console.log("ggggg");
-    
-    const query = `DELETE FROM company WHERE ID = ?`;
-    const query1 = `DELETE FROM reviews WHERE company_id = ?`;
-    const query2 = `DELETE FROM survey WHERE company_id = ?`;
-    const query3 = `DELETE FROM poll_company WHERE company_id = ?`;
-    const query4 = `DELETE FROM complaint WHERE company_id = ?`;
 
-    db.query(query, req.body.companyid, (error, result) => {
-        if (error) {
-            console.error('Error deleting companies:', error);
-            return res.status(500).json({ success: false, message: 'Server error' });
+
+exports.deleteCompanies = async (req, res) => {
+    const companyId = req.body.companyid;
+
+    const queries = [
+        { query: 'DELETE FROM company WHERE ID = ?', errorMsg: 'Error deleting companies:' },
+        { query: 'DELETE FROM reviews WHERE company_id = ?', errorMsg: 'Error deleting reviews:' },
+        { query: 'DELETE FROM survey WHERE company_id = ?', errorMsg: 'Error deleting surveys:' },
+        { query: 'DELETE FROM poll_company WHERE company_id = ?', errorMsg: 'Error deleting poll companies:' },
+        { query: 'DELETE FROM complaint WHERE company_id = ?', errorMsg: 'Error deleting complaints:' },
+    ];
+
+    try {
+        for (const { query, errorMsg } of queries) {
+            await new Promise((resolve, reject) => {
+                db.query(query, companyId, (error, result) => {
+                    if (error) {
+                        console.error(errorMsg, error);
+                        return reject(error);
+                    }
+                    resolve(result);
+                });
+            });
         }
-    });
-
-    db.query(query1, req.body.companyid, (error, result) => {
-        if (error) {
-            console.error('Error deleting reviews:', error);
-            return res.status(500).json({ success: false, message: 'Server error' });
-        }
-    });
-
-    db.query(query2, req.body.companyid, (error, result) => {
-        if (error) {
-            console.error('Error deleting surveys:', error);
-            return res.status(500).json({ success: false, message: 'Server error' });
-        }
-    });
-
-    db.query(query3, req.body.companyid, (error, result) => {
-        if (error) {
-            console.error('Error deleting poll companies:', error);
-            return res.status(500).json({ success: false, message: 'Server error' });
-        }
-    });
-
-    db.query(query4, req.body.companyid, (error, result) => {
-        if (error) {
-            console.error('Error deleting complaints:', error);
-            return res.status(500).json({ success: false, message: 'Server error' });
-        }
-        return res.json({ success: true,message: 'Company deleted successfully.' });
-    });
-
-   
-}
+        return res.json({ success: true, message: 'Company deleted successfully.' });
+    } catch (error) {
+        return res.status(500).json({ success: false, message: 'Server error' });
+    }
+};
 
 
 //--- Delete Company ----//
