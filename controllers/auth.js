@@ -3109,6 +3109,7 @@ exports.deleteCompany = (req, res) => {
         console.error('Error deleting companies:', error);
         return res.status(500).json({ success: false, message: 'Server error' });
     }
+    
 }
 
 
