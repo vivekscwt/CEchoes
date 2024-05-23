@@ -79,7 +79,12 @@ router.put('/edit-company-data',upload.fields([
 ]), authController.editCompany);
 router.post('/company-bulk-upload', csvupload.single('company_file'), authController.companyBulkUpload);
 router.post('/delete-company', authController.deleteCompany);
+router.post('/deleteCompanies', authController.deleteCompanies);
+
+
 router.post('/trash-company', authController.trashCompany);
+router.post('/trashCompanies', authController.trashCompanies);
+
 router.post('/restore-company', authController.restoreCompany);
 router.get('/get-parent-categories',authController.getparentcompany);
 
@@ -443,6 +448,10 @@ router.post('/edit-payment', authController.editPayment);
 router.post('/likeComment',authController.likeComment);
 //dislikeComment
 // router.post('/dislikeComment',authController.dislikeComment);
+
+
+//getcompaniesbyCountry
+router.get('/getcompaniesbyCountry/:country/:state/:city',authController.getcompaniesbyCountry);
 
 
 module.exports = router;

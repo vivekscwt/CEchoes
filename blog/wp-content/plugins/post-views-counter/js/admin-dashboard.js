@@ -70,7 +70,6 @@
 		// update colors
 		$.each( config.data.datasets, function( i, dataset ) {
 			dataset.fill = args.design.fill;
-			dataset.tension = 0.4;
 			dataset.borderColor = args.design.borderColor;
 			dataset.backgroundColor = args.design.backgroundColor;
 			dataset.borderWidth = args.design.borderWidth;
@@ -137,7 +136,7 @@
 					var config = {
 						type: 'line',
 						options: {
-							maintainAspectRatio: false,
+							maintainAspectRatio: true,
 							responsive: true,
 							plugins: {
 								legend: {
@@ -262,18 +261,17 @@
 
 		var prev = months[0].getElementsByClassName( 'prev' )[0];
 		var next = months[0].getElementsByClassName( 'next' )[0];
-		var id = $( container ).closest( '.pvc-accordion-item' ).attr( 'id' );
 
-		if ( id === 'pvc-post-most-viewed' )
+		if ( $( container ).closest( '.pvc-accordion-item' ).attr( 'id' ) === 'pvc-post-most-viewed' )
 			prev.addEventListener( 'click', loadPostMostViewedData );
-		else if ( id === 'pvc-post-views' )
+		else
 			prev.addEventListener( 'click', loadPostViewsData );
 
 		// skip span
 		if ( next.tagName === 'A' ) {
-			if ( id === 'pvc-post-most-viewed' )
+			if ( $( container ).closest( '.pvc-accordion-item' ).attr( 'id' ) === 'pvc-post-most-viewed' )
 				next.addEventListener( 'click', loadPostMostViewedData );
-			else if ( id === 'pvc-post-views' )
+			else
 				next.addEventListener( 'click', loadPostViewsData );
 		}
 	}

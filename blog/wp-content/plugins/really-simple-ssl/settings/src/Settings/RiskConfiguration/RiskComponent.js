@@ -1,5 +1,6 @@
 import React, {useEffect,useState} from 'react';
 import UseRiskData from "./RiskData";
+import {__} from "@wordpress/i18n";
 import useFields from "../FieldsData";
 
 const RiskComponent = (props) => {
@@ -61,13 +62,13 @@ const RiskComponent = (props) => {
     });
 
     //and we add the select control to the data
-    let data = Array.isArray(riskData) ? [...riskData] : [];
+    let data = [...riskData];
     data = data.length===0 ? [...dummyRiskData] : data;
     let disabled = !vulnerabilityDetectionEnabled || !measuresEnabled;
     for (const key in data) {
         let dataItem = {...data[key]}
         dataItem.riskSelection = <select disabled={processing || disabled} value={dataItem.value} onChange={(e) => onChangeHandler(e.target.value, dataItem)}>
-            {options.map((option,i) => <option key={'risk-'+i} value={option.value} disabled={ dataItem.disabledRiskLevels &&  dataItem.disabledRiskLevels.includes(option.value)} >{option.label}</option>) }
+            {options.map((option,i) => <option key={i} value={option.value} disabled={ dataItem.disabledRiskLevels &&  dataItem.disabledRiskLevels.includes(option.value)} >{option.label}</option>) }
         </select>
         data[key] = dataItem;
     }

@@ -24,10 +24,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
 
 document.addEventListener('click', e => {
     if ( e.target.closest('#ssl-labs-check-button') ) {
-		document.querySelector('.rsssl-ssllabs').classList.add('rsssl-block-highlight');
-		setTimeout(function(){
-			document.querySelector('.rsssl-ssllabs').classList.remove('rsssl-block-highlight');
-		}, 6000);
+        document.querySelector('.rsssl-ssllabs').classList.add('rsssl-block-highlight');
     }
 });
 

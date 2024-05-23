@@ -21,7 +21,7 @@ class Post_Views_Counter_Update {
 	}
 
 	/**
-	 * Check whether update is required.
+	 * Check if there's a database update required.
 	 *
 	 * @return void
 	 */
@@ -37,7 +37,6 @@ class Post_Views_Counter_Update {
 
 		// update 1.2.4+
 		if ( version_compare( $current_db_version, '1.2.4', '<=' ) ) {
-			// get general options
 			$general = $pvc->options['general'];
 
 			if ( $general['reset_counts']['number'] > 0 ) {
@@ -71,53 +70,6 @@ class Post_Views_Counter_Update {
 			}
 		}
 
-		// update 1.3.13+
-		if ( version_compare( $current_db_version, '1.3.13', '<=' ) ) {
-			// get general options
-			$general = $pvc->options['general'];
-
-			// disable strict counts
-			$general['strict_counts'] = false;
-
-			// get default other options
-			$other_options = $pvc->defaults['other'];
-
-			// set current options
-			$other_options['deactivation_delete'] = isset( $general['deactivation_delete'] ) ? (bool) $general['deactivation_delete'] : false;
-
-			// add other options
-			add_option( 'post_views_counter_settings_other', $other_options, null, false );
-
-			// update other options
-			$pvc->options['other'] = $other_options;
-
-			// remove old setting
-			unset( $general['deactivation_delete'] );
-
-			// flush cache enabled?
-			if ( $general['flush_interval']['number'] > 0 ) {
-				if ( $pvc->counter->using_object_cache( true ) ) {
-					// flush data from cache
-					$pvc->counter->flush_cache_to_db();
-				}
-
-				// unschedule cron event
-				wp_clear_scheduled_hook( 'pvc_flush_cached_counts' );
-
-				// disable cache
-				$general['flush_interval'] = [
-					'number'	=> 0,
-					'type'		=> 'minutes'
-				];
-			}
-
-			// update general options
-			$pvc->options['general'] = $general;
-
-			// update general options
-			update_option( 'post_views_counter_settings_general', $general );
-		}
-
 		if ( isset( $_POST['post_view_counter_update'], $_POST['post_view_counter_number'] ) ) {
 			if ( $_POST['post_view_counter_number'] === 'update_1' ) {
 				$this->update_1();
@@ -127,22 +79,22 @@ class Post_Views_Counter_Update {
 			}
 		}
 
+		$update_1_html = '
+		<form action="" method="post">
+			<input type="hidden" name="post_view_counter_number" value="update_1"/>
+			<p>' . __( '<strong>Post Views Counter</strong> - this version requires a database update. Make sure to back up your database first.', 'post-views-counter' ) . '</p>
+			<p><input type="submit" class="button button-primary" name="post_view_counter_update" value="' . __( 'Run the Update', 'post-views-counter' ) . '"/></p>
+		</form>';
+
 		// get current database version
 		$current_db_version = get_option( 'post_views_counter_version', '1.0.0' );
 
 		// new version?
 		if ( version_compare( $current_db_version, $pvc->defaults['version'], '<' ) ) {
 			// is update 1 required?
-			if ( version_compare( $current_db_version, '1.2.4', '<=' ) ) {
-				$update_1_html = '
-				<form action="" method="post">
-					<input type="hidden" name="post_view_counter_number" value="update_1"/>
-					<p>' . __( '<strong>Post Views Counter</strong> - this version requires a database update. Make sure to back up your database first.', 'post-views-counter' ) . '</p>
-					<p><input type="submit" class="button button-primary" name="post_view_counter_update" value="' . __( 'Run the Update', 'post-views-counter' ) . '"/></p>
-				</form>';
-
+			if ( version_compare( $current_db_version, '1.2.4', '<=' ) )
 				$pvc->add_notice( $update_1_html, 'notice notice-info', false );
-			} else
+			else
 				// update plugin version
 				update_option( 'post_views_counter_version', $pvc->defaults['version'], false );
 		}
@@ -163,7 +115,7 @@ class Post_Views_Counter_Update {
 
 		// check whether index already exists
 		if ( $old_index > 0 ) {
-			// drop unwanted index which prevented saving views with identical weeks and months
+			// drop unwanted index which prevented saving views with indentical weeks and months
 			$wpdb->query( "ALTER TABLE `" . $wpdb->prefix . "post_views` DROP INDEX id_period" );
 		}
 
@@ -172,7 +124,7 @@ class Post_Views_Counter_Update {
 
 		// check whether index already exists
 		if ( $new_index === 0 ) {
-			// create new index for better performance of sql queries
+			// create new index for better performance of SQL queries
 			$wpdb->query( 'ALTER TABLE `' . $wpdb->prefix . 'post_views` ADD UNIQUE INDEX `id_type_period_count` (`id`, `type`, `period`, `count`) USING BTREE' );
 		}
 

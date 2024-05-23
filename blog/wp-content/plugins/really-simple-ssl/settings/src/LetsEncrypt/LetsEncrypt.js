@@ -10,7 +10,6 @@ import { __ } from '@wordpress/i18n';
 import Icon from "../utils/Icon";
 import useFields from "../Settings/FieldsData";
 import useLetsEncryptData from "./letsEncryptData";
-import DOMPurify from "dompurify";
 
 const LetsEncrypt = (props) => {
     const {handleNextButtonDisabled, getFieldValue} = useFields();
@@ -41,11 +40,11 @@ const LetsEncrypt = (props) => {
             setActionIndex(0);
             runTest(0, 0);
         }
-        return () => {
-            // Perform any cleanup logic here if needed
-            // For example, you can cancel any ongoing asynchronous tasks or subscriptions
-        };
     }, [actionsList])
+
+    useEffect(() => {
+        // startInterval();
+    }, [])
 
     const startInterval = () => {
         intervalId.current = setInterval(() => {
@@ -101,6 +100,8 @@ const LetsEncrypt = (props) => {
     };
 
     const reset = () => {
+        // clearInterval(intervalId.current);
+        // startInterval();
         handleNextButtonDisabled(true);
         setActionsList(getActions());
         setProgress(0);
@@ -276,7 +277,7 @@ const LetsEncrypt = (props) => {
                                   <Icon name = {getStatusIcon(action)} color = {getStatusColor(action)} />
                                         {action.do==='retry' && attemptCount >=1 && <>{__("Attempt %s.", "really-simple-ssl").replace('%s', attemptCount)} </>}
                                         &nbsp;
-                                        <span dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(action.description) }}></span> {/* nosemgrep: react-dangerouslysetinnerhtml */}
+                                        <span dangerouslySetInnerHTML={{__html:action.description}}></span>
                                     </li>
 
                             )

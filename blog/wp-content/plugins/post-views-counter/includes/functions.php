@@ -18,17 +18,11 @@ if ( ! defined( 'ABSPATH' ) )
  * @global object $wpdb
  *
  * @param int|array $post_id
- * @param string $period
  * @return int
  */
 if ( ! function_exists( 'pvc_get_post_views' ) ) {
 
-	function pvc_get_post_views( $post_id = 0, $period = 'total' ) {
-		global $wpdb;
-
-		// sanitize period
-		$period = sanitize_key( $period );
-
+	function pvc_get_post_views( $post_id = 0 ) {
 		if ( empty( $post_id ) )
 			$post_id = get_the_ID();
 
@@ -37,15 +31,11 @@ if ( ! function_exists( 'pvc_get_post_views' ) ) {
 		else
 			$post_id = (int) $post_id;
 
-		// set where clause
-		$where = [ 'type' => 'type = 4' ];
-
-		// update where clause
-		$where = apply_filters( 'pvc_get_post_views_period_where', $where, $period, $post_id );
+		global $wpdb;
 
 		$query = "SELECT SUM(count) AS views
 		FROM " . $wpdb->prefix . "post_views
-		WHERE id IN (" . $post_id . ") AND " . implode( ' AND ', $where );
+		WHERE id IN (" . $post_id . ") AND type = 4";
 
 		// calculate query hash
 		$query_hash = md5( $query );
@@ -65,7 +55,7 @@ if ( ! function_exists( 'pvc_get_post_views' ) ) {
 			wp_cache_add( $query_hash, $post_views, 'pvc-get_post_views', $expire );
 		}
 
-		return (int) apply_filters( 'pvc_get_post_views', $post_views, $post_id, $period );
+		return (int) apply_filters( 'pvc_get_post_views', $post_views, $post_id );
 	}
 
 }
@@ -113,7 +103,7 @@ if ( ! function_exists( 'pvc_get_views' ) ) {
 		if ( is_array( $args['post_type'] ) && ! empty( $args['post_type'] ) ) {
 			$post_types = [];
 
-			foreach ( $args['post_type'] as $post_type ) {
+			foreach( $args['post_type'] as $post_type ) {
 				$post_types[] = "'" . $post_type . "'";
 			}
 
@@ -369,7 +359,7 @@ if ( ! function_exists( 'pvc_get_views' ) ) {
 				$results = $wpdb->get_results( $query );
 
 				if ( ! empty( $results ) ) {
-					foreach ( $results as $row ) {
+					foreach( $results as $row ) {
 						$range[$row->period] = (int) $row->post_views;
 					}
 				}
@@ -405,11 +395,8 @@ if ( ! function_exists( 'pvc_post_views' ) ) {
 		// get display options
 		$options = Post_Views_Counter()->options['display'];
 
-		// get post views
-		$views = pvc_get_post_views( $post_id, $options['display_period'] );
-
-		// use number format?
-		$views = $options['use_format'] ? number_format_i18n( $views ) : $views;
+		// get term views
+		$views = pvc_get_post_views( $post_id );
 
 		// container class
 		$class = apply_filters( 'pvc_post_views_class', 'post-views content-post post-' . $post_id . ' entry-meta', $post_id );
@@ -417,21 +404,21 @@ if ( ! function_exists( 'pvc_post_views' ) ) {
 		// prepare display
 		$label = apply_filters( 'pvc_post_views_label', ( function_exists( 'icl_t' ) ? icl_t( 'Post Views Counter', 'Post Views Label', $options['label'] ) : $options['label'] ), $post_id );
 
+		// get icon class
+		$icon_class = ( $options['icon_class'] !== '' ? esc_attr( $options['icon_class'] ) : '' );
+
 		// add dashicons class if needed
-		$icon_class = strpos( $options['icon_class'], 'dashicons' ) === false ? $options['icon_class'] : 'dashicons ' . $options['icon_class'];
+		$icon_class = strpos( $icon_class, 'dashicons ' ) === 0 ? $icon_class : 'dashicons ' . $icon_class;
 
 		// prepare icon output
-		$icon = apply_filters( 'pvc_post_views_icon', '<span class="post-views-icon ' . esc_attr( $icon_class ) . '"></span> ', $post_id );
-
-		// final views
-		$views = apply_filters( 'pvc_post_views_number_format', $views, $post_id );
+		$icon = apply_filters( 'pvc_post_views_icon', '<span class="post-views-icon ' . $icon_class . '"></span> ', $post_id );
 
 		$html = apply_filters(
 			'pvc_post_views_html',
 			'<div class="' . esc_attr( $class ) . '">
-				' . ( $options['display_style']['icon'] ? $icon : '' )
-				. ( $options['display_style']['text'] ? '<span class="post-views-label">' . esc_html( $label ) . '</span> ' : '' )
-				. '<span class="post-views-count">' . $views . '</span>
+				' . ( $options['display_style']['icon'] && $icon_class !== '' ? $icon : '' )
+				. ( $options['display_style']['text'] && $label !== '' ? '<span class="post-views-label">' . esc_html( $label ) . '</span> ' : '' )
+				. '<span class="post-views-count">' . number_format_i18n( $views ) . '</span>
 			</div>',
 			$post_id,
 			$views,

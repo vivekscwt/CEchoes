@@ -247,9 +247,10 @@
                                     <!--end::Label-->
                                     <!--begin::Col-->
                                     <div class="col-lg-8 fv-row">
-                                        <input type="text" name="main_address_state"
-                                            class="form-control form-control-lg form-control-solid" placeholder="State"
-                                            value="" />
+                                            <select class="form-control form-control-lg form-control-solid" id="state" name="main_address_state">
+                                                <option value="" selected disabled>Select State</option>
+                                                <!-- Options will be dynamically populated via JavaScript -->
+                                            </select>
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -704,6 +705,11 @@
                 allowClear: true,
                 width: '100%'
             });
+            $("select[name='main_address_state']").select2({
+                placeholder: "Select a state",
+                allowClear: true,
+                width: '100%'
+            });
 
             function validateForm() {
                 const parentSelect = document.querySelector("select[name='parent_id']");
@@ -772,6 +778,63 @@ function ensureParentId() {
         selectElement.value = 0; // Resetting to default if no selection is made
     }
 }
+var countryId;
+$(document).ready(function() {
+    $('#main_address_country').on('change', function() {
+        var country = $(this).val(); 
+
+        $.ajax({
+            url: '/getCountryIdByShortName',
+            method: 'GET',
+            data: { countryShortName: country },
+            success: function(response) {
+                var countryId = response.countryId; 
+                fetchStatesByCountry(countryId); // Fetch states when country is selected
+            },
+            error: function(err) {
+                console.error('Error fetching country ID:', err);
+            }
+        });
+    });
+
+    function fetchStatesByCountry(countryId) {
+        $.ajax({
+            url: '/getstatebyCountry', 
+            method: 'GET',
+            data: { country_ID: countryId }, 
+            success: function(response) {
+                populateStatesDropdown(response);
+            },
+            error: function(err) {
+                console.error('Error fetching states:', err);
+            }
+        });
+    }
+
+    function populateStatesDropdown(states) {
+    var $stateDropdown = $('#state');
+
+    // Clear existing options from the state dropdown
+    $stateDropdown.empty();
+
+    // Add a default option
+    $stateDropdown.append($('<option>', {
+        value: '',
+        text: 'Select State',
+        disabled: 'disabled',
+        selected: 'selected'
+    }));
+
+    // Populate the state dropdown with fetched states
+    states.forEach(function(state) {
+        $stateDropdown.append($('<option>', {
+            value: state.id,
+            text: state.name
+        }));
+    });
+}
+
+});
 
 
             //# sourceMappingURL=profile-details.js.map    

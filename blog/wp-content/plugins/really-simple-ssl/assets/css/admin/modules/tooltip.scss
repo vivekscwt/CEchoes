@@ -1,10 +1,8 @@
 .rsssl div[class^=rsssl-wizard-] {
-  .rsssl-tooltip-icon .react-tooltip {
-    max-width:300px;
-    white-space: pre-wrap;
-  }
   .rsssl-field-wrap {
-
+    .MuiTooltip-popper {
+      background-color:#000;
+    }
     label {
       display: flex;
 
@@ -15,6 +13,7 @@
 
     .rsssl-icon {
       cursor: pointer;
+
     }
   }
 }

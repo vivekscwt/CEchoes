@@ -1,0 +1,66 @@
+.rsssl-modal {
+  /* spinner for React Icons */
+}
+.rsssl-modal .rsssl-modal-header, .rsssl-modal .components-modal__header {
+  background-color: var(--rsp-yellow-faded);
+  padding: var(--rsp-spacing-m) var(--rsp-spacing-m) !important;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom: 0;
+}
+.rsssl-modal .components-modal__content {
+  padding: 0;
+}
+.rsssl-modal .components-modal__content:before {
+  margin-bottom: initial;
+}
+.rsssl-modal .rsssl-header-extension {
+  background-color: var(--rsp-yellow-faded);
+  margin: 0;
+  padding: 0 var(--rsp-spacing-m);
+}
+.rsssl-modal .rsssl-header-extension p {
+  margin: 0;
+  padding: var(--rsp-spacing-m) 0;
+  padding-top: 0;
+}
+.rsssl-modal .rsssl-intro-logo {
+  width: 7em;
+  position: absolute;
+  right: 1.6em;
+  height: auto;
+  bottom: 0.15em;
+  margin: 0;
+  padding: 0;
+}
+@media (max-width: 768px) {
+  .rsssl-modal .rsssl-intro-logo {
+    display: none;
+  }
+}
+.rsssl-modal .rsssl-ssl-intro-container .rsssl-details {
+  padding: var(--rsp-spacing-m) 0;
+}
+.rsssl-modal .rsssl-ssl-intro-container .rsssl-details > div {
+  float: left;
+}
+.rsssl-modal .rsssl-ssl-intro-container .rsssl-details .rsssl-detail-icon {
+  width: 10%;
+}
+.rsssl-modal .rsssl-ssl-intro-container .rsssl-details .rsssl-detail {
+  width: 90%;
+}
+.rsssl-modal .rsssl-modal-footer {
+  padding: var(--rsp-spacing-m) var(--rsp-spacing-m);
+}
+.rsssl-modal .icon-spin {
+  animation: spin 2s linear infinite;
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}/*# sourceMappingURL=introcontainer.css.map */
