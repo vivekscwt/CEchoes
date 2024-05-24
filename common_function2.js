@@ -5121,6 +5121,27 @@ async function getsurveyratingData(survey_unique_id) {
 }
 
 
+async function getcompaniesbyCountry(country_shortname){
+  const get_company_query = `
+      SELECT *
+      FROM company
+      WHERE main_address_country = ${country_shortname};
+  `;
+  try {
+      const get_company_result = await query(get_company_query);
+    if(get_company_result.length>0){
+      return get_company_result;
+    }
+    else{
+      return []
+    }
+      
+  } catch (error) {
+      return 'Error during user getcompaniesbyCountry:' + error;
+  }
+}
+
+
 module.exports = {
   getFaqPage,
   getFaqCategories,
@@ -5231,5 +5252,6 @@ module.exports = {
   getsubcategories,//
   getUserLikedComments,
   getCompanySurveyDetailsByID,
-  getsurveyratingData
+  getsurveyratingData,
+  getcompaniesbyCountry
 };

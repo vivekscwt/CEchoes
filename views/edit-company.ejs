@@ -221,7 +221,7 @@
                             <!--end::Label-->
                             <!--begin::Col-->
                             <div class="col-lg-8 fv-row">
-                                <select name="main_address_country" id="countrySearchInput" class="form-select form-select-lg form-select-solid">
+                                <select name="main_address_country" id="main_address_country" class="form-select form-select-lg form-select-solid">
                                     <% var selectedCountryId = company.main_address_country; %>
                                     <% if (selectedCountryId === '') { %>
                                         <option value="" selected disabled>Select a country</option>
@@ -245,8 +245,13 @@
                             <!--end::Label-->
                             <!--begin::Col-->
                             <div class="col-lg-8 fv-row">
-                                <input type="text" name="main_address_state" class="form-control form-control-lg form-control-solid" placeholder="State" value="<%= company.main_address_state %>" />
+                                    <select id="state" name="main_address_state" aria-label="Select state" data-control="select2" data-placeholder="Select state..." class="form-select">
+                                    <% getStatesByCountryID.forEach(function(state) { %>
+                                        <option value="<%= state.id %>" <%= state.id == company.main_address_state ? 'selected' : '' %>><%= state.name %></option>
+                                    <% }); %>
+                                </select>
                             </div>
+                            
                             <!--end::Col-->
                         </div>
                         <div class="row mb-6">
@@ -525,7 +530,7 @@
                         
                             <!--begin::Col-->
                             <div class="col-lg-8 fv-row">
-                                <select name="parent_id" class="form-control form-control-lg form-control-solid" required>
+                                <select name="parent_id" aria-label="Select as parent category" data-control="select2" data-placeholder="Select a User..." class="form-select">
                                     <% 
                                     const selectedParentId = company.parent_id; 
                                     %>
@@ -764,6 +769,24 @@ var KTAccountSettingsProfileDetails = function () {
             e.preventDefault();
             validation.validate().then(function (status) {
                 if (status == 'Valid') {
+
+            var membershipType = $('input[name="membership_type_id"]:checked').val();
+            var complaintStatus = $('input[name="complaint_status"]:checked').val();
+            var complaintLevel = $('input[name="complaint_level"]').val();
+
+            console.log("membershipType,complaintStatus,complaintLevel",membershipType,complaintStatus,complaintLevel);
+
+            if (membershipType >= 4 && complaintLevel == '') {
+                swal.fire({
+                    text: "Please fill in the Complaint Level No.",
+                    icon: "error",
+                    buttonsStyling: false,
+                    confirmButtonText: "Ok, got it!",
+                    customClass: {
+                        confirmButton: "btn fw-bold btn-light-primary"
+                    }
+                });
+            } else{
                     //$('#kt_account_profile_details_form').submit();
                     var formElement = document.getElementById('kt_account_profile_details_form');
                     var formData = new FormData(formElement);
@@ -802,7 +825,8 @@ var KTAccountSettingsProfileDetails = function () {
                       .catch(error => {
                         // Handle any errors that occurred during the AJAX request
                         console.error(error);
-                      });                    
+                      });
+                    }                    
                 } else {
                     swal.fire({
                         text: "Sorry, looks like there are some errors detected, please try again.",
@@ -876,11 +900,81 @@ $(document).ready(function() {
                 allowClear: true,
                 width: '100%'
             });
+
+            $('input[name="complaint_status"]').change(function() {
+        if ($(this).val() === '1') {
+            console.log("aaaaa");
+            // If complaint status is active, enable the complaint level input
+            $('input[name="complaint_level"]').prop('disabled', false);
+        } else {
+            console.log("bbbb");
+            // If complaint status is inactive, disable the complaint level input
+            $('input[name="complaint_level"]').prop('disabled', true);
+        }
+    });
     
 });
+let country;
+$(document).ready(function() {
+    // When country selection changes
+    $('#main_address_country').on('change', function() {
+        country = $(this).val();
+        console.log("Selected Country:", country);
+        
+        $.ajax({
+            url: '/getCountryIdByShortName',
+            method: 'GET',
+            data: { countryShortName: country },
+            success: function(response) {
+                var countryId = response.countryId; 
+                fetchStatesByCountry(countryId); 
+            },
+            error: function(err) {
+                console.error('Error fetching country ID:', err);
+            }
+        });
+    });
+
+
+
+    function fetchStatesByCountry(countryId) {
+        $.ajax({
+            url: '/getstatebyCountry', 
+            method: 'GET',
+            data: { country_ID: countryId }, 
+            success: function(response) {
+                populateStatesDropdown(response);
+            },
+            error: function(err) {
+                console.error('Error fetching states:', err);
+            }
+        });
+    }
+    
+    function populateStatesDropdown(states) {
+        var $stateDropdown = $('#state');
+        $stateDropdown.empty().append($('<option>', {
+            value: '',
+            text: 'Select a state'
+        }));
+        states.forEach(function(state) {
+            $stateDropdown.append($('<option>', {
+                value: state.id, 
+                text: state.name 
+            }));
+        });
+    }
+
+    });
+
+
 $(document).ready(function () {
                 $("select[name='parent_id']").select2({
                     placeholder: "Select Parent",
+                    allowClear: true
+                });
+                $("select[name='main_address_state']").select2({
+                    placeholder: "Select state",
                     allowClear: true
                 });
             });
