@@ -500,7 +500,7 @@
                   </div>
 
 
-               <div class="col-md-12">
+                  <div class="col-md-12">
                   <div class="custom-form">
                       <select class="form-control" id="companyDropdown" name="company_name" required>
                           <option value="" selected disabled>Business/Institute/Establishment Name</option>
@@ -509,7 +509,6 @@
                       <div class="autofield-dropdown-review"></div>
                   </div>
               </div>
-
 
 
                <%# <div class="col-sm-6">
@@ -540,21 +539,21 @@
              </div>
              #%>
              <div class="col-md-6">
+                <div class="custom-form dynamic_state_field_wrapper ">
+                    <select id="categoryDropdown" name="category_id" class="form-select">
+                        <option value="0" selected>Select Category </option>
+                    </select>
+                    <!-- <input type="text" class="form-control" placeholder="Category Name" name="category"> -->
+                </div>
+            </div>
+            <div class="col-md-6">
               <div class="custom-form dynamic_state_field_wrapper ">
-                  <select id="select_category" name="category_id" class="form-select">
-                      <option value="0" selected>Select Category </option>
+                  <select id="productDropdown" name="product_id" class="form-select">
+                      <option value="0">Select Product</option>
                   </select>
-                  <!-- <input type="text" class="form-control" placeholder="Category Name" name="category"> -->
+                  <!-- <input type="text" class="form-control" placeholder="Sub-category Name" name="sub_category"> -->
               </div>
           </div>
-          <div class="col-md-6">
-            <div class="custom-form" id="dynamic_sub_category_field_wrapper">
-                <select id="select_sub_category" name="product_id" class="form-select">
-                    <option value="0">Select Product</option>
-                </select>
-                <!-- <input type="text" class="form-control" placeholder="Sub-category Name" name="sub_category"> -->
-            </div>
-        </div>
              <div class="col-md-12">
                <div class="rating-slider">
                  <span class="emojisss"><img style="width:50px;" src="" id="selected-range-emojis" /></span>
@@ -660,6 +659,291 @@
 
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+    var countryId;
+    var country;
+    var state;
+    console.log("maincountryId",countryId);
+    $(document).ready(function() {
+      $('#country').on('change', function() {
+      country = $(this).val(); 
+      console.log("country_IDcountry",country);
+
+      $.ajax({
+        url: '/getCountryIdByShortName',
+        method: 'GET',
+        data: { countryShortName: country },
+        success: function(response) {
+            countryId = response.countryId; 
+            console.log("country_IDddd", countryId);
+            handleCountryChange();
+        },
+        error: function(err) {
+            console.error('Error fetching country ID:', err);
+        }
+    });
+
+      $.ajax({
+        url: '/getCompanies', 
+        method: 'GET',
+        data: { country: country }, 
+        success: function(response) {
+
+          console.log("getCompaniesByCountry",response);
+
+
+          var $companyDropdown = $('#companyDropdown');
+          $companyDropdown.empty(); // Clear existing options
+
+
+          $companyDropdown.append($('<option>', {
+            value: '',
+            text: 'Business/Institute/Establishment Name',
+            disabled: 'disabled',
+            selected: 'selected'
+          }));
+
+          response.forEach(function(company) {
+          $companyDropdown.append($('<option>', {
+            value: company.ID,
+            text: company.company_name 
+          }));
+        });
+        },
+        error: function(err) {
+          console.error('Error fetching companies:', err);
+        }
+      });
+    
+      function handleCountryChange() {
+    // Access countryId here, it will be updated
+    console.log("countryIdSS", countryId);
+
+    $.ajax({
+        url: '/getstatebyCountry', 
+        method: 'GET',
+        data: { country_ID: countryId }, 
+        success: function(response) {
+            console.log("response", response);
+
+            // Populate dropdown with fetched states
+            var $state = $('#state');
+            $state.empty(); // Clear existing options
+
+            $state.append($('<option>', {
+                value: '',
+                text: 'Select State',
+                disabled: 'disabled',
+                selected: 'selected'
+            }));
+
+            response.forEach(function(states) {
+                $state.append($('<option>', {
+                    value: states.id,
+                    text: states.name 
+                }));
+            });
+        },
+        error: function(err) {
+            console.error('Error fetching states:', err);
+        }
+    });
+}
+
+    });
+
+    $('#state').on('change', function() {
+      state = $(this).val(); 
+      console.log("state",state);
+      console.log("maincountryId",country);
+
+      $.ajax({
+        url: '/getCompanies', 
+        method: 'GET',
+        data: { country: country, state: state }, 
+        success: function(response) {
+
+          console.log("getCompaniesByCountrystate",response);
+
+          // Populate dropdown with fetched companies
+          var $companyDropdown = $('#companyDropdown');
+          $companyDropdown.empty(); 
+
+
+          $companyDropdown.append($('<option>', {
+            value: '',
+            text: 'Business/Institute/Establishment Name',
+            disabled: 'disabled',
+            selected: 'selected'
+          }));
+
+          response.forEach(function(company) {
+          $companyDropdown.append($('<option>', {
+            value: company.ID,
+            text: company.company_name 
+          }));
+        });
+        },
+        error: function(err) {
+          console.error('Error fetching companies:', err);
+        }
+      });
+    });
+
+    $('#city').on('input', function() {
+        var city = $(this).val(); 
+        console.log("City:", city);
+        console.log("Country:", country);
+        console.log("State:", state);
+
+        // Perform AJAX request to fetch companies based on country, state, and city
+        $.ajax({
+            url: '/getCompanies', 
+            method: 'GET',
+            data: { country: country, state: state, city: city }, 
+            success: function(response) {
+                console.log("Companies:", response);
+
+                // Populate dropdown with fetched companies
+                var $companyDropdown = $('#companyDropdown');
+                $companyDropdown.empty(); 
+
+                $companyDropdown.append($('<option>', {
+                    value: '',
+                    text: 'Business/Institute/Establishment Name',
+                    disabled: 'disabled',
+                    selected: 'selected'
+                }));
+
+                response.forEach(function(company) {
+                    $companyDropdown.append($('<option>', {
+                        value: company.ID,
+                        text: company.company_name 
+                    }));
+                });
+            },
+            error: function(err) {
+                console.error('Error fetching companies:', err);
+            }
+        });
+    });
+
+    $('#companyDropdown').select2({
+        placeholder: "Search for a company",
+        allowClear: true, 
+        width: '100%'
+    });
+    $('#country').select2({
+        placeholder: "Select a country",
+        allowClear: true, 
+        width: '100%'
+    });
+    $('#state').select2({
+        placeholder: "Select a state",
+        allowClear: true, 
+        width: '100%'
+
+    });
+
+    
+        
+
+
+    $('#companyDropdown').on('change', function() {
+        var companyId = $(this).val();
+        console.log("companyDropdowncompanyId",companyId);
+
+        $.ajax({
+            url: '/api/complain_category', 
+            method: 'POST',
+            data: { company_id: companyId },
+            success: function(response) {
+            console.log(response); 
+            if (response.status == 'ok') {
+              console.log("sadfsdfdfs");
+                var categories = response.data; 
+                var $categoryDropdown = $('#categoryDropdown');
+                $categoryDropdown.empty(); 
+
+                $categoryDropdown.append($('<option>', {
+                    value: '',
+                    text: 'Select Category',
+                    disabled: 'disabled',
+                    selected: 'selected'
+                }));
+
+                // Add options for each category
+                categories.forEach(function(category) {
+                    $categoryDropdown.append($('<option>', {
+                        value: category.id,
+                        text: category.category_name
+                    }));
+                });
+            } else {
+                console.error('Error: ' + response.message);
+            }
+        },
+
+        });
+    });
+
+    $('#categoryDropdown').on('change', function() {
+        var categoryId = $(this).val();
+        console.log("categoryDropdowncompanyId",categoryId);
+
+        $.ajax({
+            url: '/api/company_product', 
+            method: 'POST',
+            data: { category_id: categoryId },
+            success: function(response) {
+            console.log(response); 
+            if (response.status == 'ok') {
+              console.log("sadfsdfdfs");
+                var products = response.data; 
+                console.log("products",products);
+                var $productDropdown= $('#productDropdown');
+                $productDropdown.empty(); 
+
+                $productDropdown.append($('<option>', {
+                    value: '0',
+                    text: 'Select Product',
+                    disabled: 'disabled',
+                    selected: 'selected'
+                }));
+
+                $productDropdown.append($('<option>', {
+                    value: '0',
+                    text: 'General'
+                }));
+
+                products.forEach(function(category) {
+                    $productDropdown.append($('<option>', {
+                        value: category.id,
+                        text: category.product_title
+                    }));
+                });
+            } else {
+                var $productDropdown = $('#productDropdown');
+                $productDropdown.empty(); 
+                $productDropdown.append($('<option>', {
+                    value: '0',
+                    text: 'Select Product',
+                    disabled: 'disabled',
+                    selected: 'selected'
+                }));
+                console.error('Error: ' + response.message);
+            }
+        },
+
+        });
+    });
+
+
+
+});
+</script>
+
 <script>
    jQuery(document).ready(function ($) {
     /////////////// Like Dislike start ////////////
