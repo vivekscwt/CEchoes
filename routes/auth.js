@@ -58,6 +58,9 @@ router.post('/frontend-user-register-otp', authController.frontendUserRegisterOT
 
 router.post('/frontend-user-login', authController.frontendUserLogin);
 
+// company_user_register
+router.post('/user-company-register', authController.userCompanyRegistration);
+
 //Create New category--------//
 router.post('/create-category', upload.single('cat_image'), authController.createCategory);
 
@@ -452,6 +455,8 @@ router.post('/likeComment',authController.likeComment);
 
 //getcompaniesbyCountry
 router.get('/getcompaniesbyCountry/:country/:state/:city',authController.getcompaniesbyCountry);
+
+
 
 
 module.exports = router;

@@ -86,6 +86,31 @@ const checkCookieValue = (req, res, next) => {
     next();
 };
 
+router.get('/user-company-register', async (req, res) => {
+    let currentUserData = '';
+    try {
+        res.locals.globalData = {
+            BLOG_URL: process.env.BLOG_URL,
+            MAIN_URL: process.env.MAIN_URL,
+        };
+        
+
+    const [globalPageMeta,countries] = await Promise.all([
+        comFunction2.getPageMetaValues('global'),
+        comFunction.getCountries(),
+    ]);
+        res.render('front-end/company_user_register', {
+            menu_active_id: 'User Register',
+            page_title: 'User Register',
+            currentUserData,
+            globalPageMeta: globalPageMeta,
+            countries: countries
+        });
+    } catch (error) {
+        console.error('Error fetching blog posts:', error);
+    }
+});
+
 router.get('', checkCookieValue, async (req, res) => {
     let currentUserData = JSON.parse(req.userData);
     let userId = '';

@@ -1,0 +1,470 @@
+<%- include('common/header') -%>
+    <link href="/front-end/css/myprofile-style.css" rel="stylesheet" type="text/css">
+    <%- include('common/header-banner') -%>
+
+        <!-- ============== Section1 Start =============== -->
+        <section class="main-content my-profile-content">
+            <div class="container">
+                <div class="my-profile-wrapper">
+                    <form id="user-signups" name="user-signup-frms" method="post" enctype="multipart/form-data">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="profile-right-content">
+                                    <div class="profile-info-table">
+                                        <table class="table">
+                                            <tbody>
+                                                <tr>
+                                                    <td>First Name<sup style="color: #f20e0efd;">*</sup></td>
+                                                    <td>:</td>
+                                                    <td colspan="2">
+                                                        <div class="custom-form m-0">
+                                                            <input type="text" name="first_name" placeholder=""
+                                                                class="form-control" required />
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Last Name<sup style="color: #f20e0efd;">*</sup></td>
+                                                    <td>:</td>
+                                                    <td colspan="2">
+                                                        <div class="custom-form m-0">
+                                                            <input type="text" name="last_name" placeholder=""
+                                                                class="form-control" required />
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Email<sup style="color: #f20e0efd;">*</sup></td>
+                                                    <td>:</td>
+                                                    <td colspan="2">
+                                                        <div class="custom-form m-0">
+                                                            <input type="email" name="email" placeholder=""
+                                                                class="form-control" required />
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Password<sup style="color: #f20e0efd;">*</sup></td>
+                                                    <td>:</td>
+                                                    <td colspan="2">
+                                                        <div class="custom-form m-0">
+                                                            <input type="password" name="register_password"
+                                                                placeholder="" class="form-control" required />
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Confirm Password</td>
+                                                    <td>:</td>
+                                                    <td colspan="2">
+                                                        <div class="custom-form m-0">
+                                                            <input type="password" name="register_confirm_password"
+                                                                placeholder="" class="form-control" />
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Organization Name<sup style="color: #f20e0efd;">*</sup></td>
+                                                    <td>:</td>
+                                                    <td colspan="2">
+                                                        <div class="custom-form m-0">
+                                                            <input type="text" name="company_name" placeholder=""
+                                                                class="form-control" required />
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Organization State<sup style="color: #f20e0efd;">*</sup></td>
+                                                    <td>:</td>
+                                                    <td colspan="2">
+                                                        <div class="custom-form m-0">
+                                                            <input type="text" name="main_address_state" placeholder=""
+                                                                class="form-control" required />
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Organization Country<sup style="color: #f20e0efd;">*</sup></td>
+                                                    <td>:</td>
+                                                    <td colspan="2">
+                                                        <div class="custom-form m-0">
+                                                            <select id="select_country" name="main_address_country"
+                                                                class="form-select" required>
+                                                                <option value="">Select a Country...</option>
+                                                                <% countries.forEach(item=> { %>
+                                                                    <option value="<%= item.id %>">
+                                                                        <%= item.name %>
+                                                                    </option>
+                                                                    <% }) %>
+                                                            </select>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Organization Pin Code<sup style="color: #f20e0efd;">*</sup></td>
+                                                    <td>:</td>
+                                                    <td colspan="2">
+                                                        <div class="custom-form m-0">
+                                                            <input type="text" name="main_address_pin_code"
+                                                                placeholder="" id="numericInputPin" class="form-control"
+                                                                required />
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Membership Type<sup style="color: #f20e0efd;">*</sup></td>
+                                                    <td>:</td>
+                                                    <td colspan="2">
+                                                        <input type="hidden" value="true" name="payment_status"
+                                                            id="payment_status">
+                                                        <div class="d-flex align-items-center mt-3">
+                                                            <label
+                                                                class="form-check form-check-inline form-check-solid me-5">
+                                                                <input class="form-check-input mt-1"
+                                                                    name="membership_type_id" type="radio" value="1"
+                                                                    checked />
+                                                                <span
+                                                                    class="fw-bold fs-6 badge badge-light fw-bolder px-4 py-3">Basic</span>
+                                                            </label>
+                                                            <label
+                                                                class="form-check form-check-inline form-check-solid me-5">
+                                                                <input class="form-check-input mt-1"
+                                                                    name="membership_type_id" type="radio" value="2" />
+                                                                <span
+                                                                    class="fw-bold fs-6 badge badge-light fw-bolder px-4 py-3">Standard</span>
+                                                            </label>
+                                                            <label
+                                                                class="form-check form-check-inline form-check-solid me-5">
+                                                                <input class="form-check-input mt-1"
+                                                                    name="membership_type_id" type="radio" value="3" />
+                                                                <span
+                                                                    class="fw-bold fs-6 badge badge-light fw-bolder px-4 py-3">Advanced</span>
+                                                            </label>
+                                                            <label
+                                                                class="form-check form-check-inline form-check-solid me-5">
+                                                                <input class="form-check-input mt-1"
+                                                                    name="membership_type_id" type="radio" value="4" />
+                                                                <span
+                                                                    class="fw-bold fs-6 badge badge-light fw-bolder px-4 py-3">Premium</span>
+                                                            </label>
+                                                            <label
+                                                                class="form-check form-check-inline form-check-solid me-5">
+                                                                <input class="form-check-input mt-1"
+                                                                    name="membership_type_id" type="radio" value="0" />
+                                                                <span
+                                                                    class="fw-bold fs-6 badge badge-light fw-bolder px-4 py-3">Free</span>
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr id="signup_otp_hide" class="custom-form d-none">
+                                                    <td>OTP<sup style="color: #f20e0efd;">*</sup></td>
+                                                    <td>:</td>
+                                                    <td colspan="2">                
+                                                            <input type="number" class="form-control password"
+                                                            name="signup_otp" autocomplete="off" min="0000" max="9999"
+                                                            pattern="\d{4}" title="Please enter a 4-digit number">
+
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="4" class="text-center">
+                                                        <input type="submit" value="Sign Up" id="kt_sign_up_submit"
+                                                            class="btn-default btn-warning w-100">
+                                                    </td>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="register-now frm-loading-register" style="display: none;">
+                        <span class="indicator-progress">Please wait...
+                                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                        </span>
+                      </div>
+                      <div class="register-now frm-error-message-register" style="display: none;"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============== Section1 End =============== -->
+
+        <%- include('common/footer') -%>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <script>
+                $(document).ready(function () {
+                    $('input[type=radio][name=membership_type_id]').change(function () {
+                        if (this.value == '0') {
+                            $("#payment_status").val('free');
+                        } else {
+                            $("#payment_status").val('paid');
+                        }
+                    });
+
+                    $("#user-signups").submit(function (e) {
+                        e.preventDefault(); 
+                        console.log("Form submission intercepted.");
+
+                        console.log("Serialized form data:", $(this).serialize());
+
+                        $('.frm-loading-register').show();
+                        $('#kt_sign_up_submit').prop('disabled', true);
+
+                        $('.frm-error-message-register').text('').hide();
+                        var error_message = '';
+
+                        var form = $("#user-signups");
+
+                        var password = form.find("input[name='register_password']").val();
+                        var confirmPassword = form.find("input[name='register_confirm_password']").val();
+                        var signupOtp = form.find("input[name='signup_otp']").val();
+                        console.log("password:", password);
+                        console.log("confirmPassword:", confirmPassword);
+                        console.log("signupOtp:", signupOtp);
+
+                        // Password strength validation
+                        var passwordStrength = checkPasswordStrength(password);
+                        console.log("passwordStrength",passwordStrength);
+                        if (passwordStrength == 'weak') {
+    error_message = "Password is weak. It should be at least 8 characters long and contain a combination of letters, numbers, and special characters.";
+    Swal.fire({
+        icon: 'error',
+        title: 'Password Weak',
+        text: error_message
+    });
+} else if (password !== confirmPassword) {
+    error_message = "Password and Confirm Password do not match.";
+    Swal.fire({
+        icon: 'error',
+        title: 'Password Mismatch',
+        text: error_message
+    });
+} else if (signupOtp == undefined || signupOtp == '') {
+
+    // $('#signup_otp_hide').removeClass('d-none');
+    // $('input[name="signup_otp"]').prop('required', true);
+
+    $.ajax({
+        url: '/auth/frontend-user-register-otp',
+        method: 'POST',
+        data: form.serialize(), 
+        success: function (data) {
+            if (data.status == 'ok') {
+                console.log("------->aaaaa",  $('#signup_otp'));
+                $('.frm-loading-register').hide();
+                $('.frm-error-message-register').text(data.message).show();
+                $('#signup_otp_hide').removeClass('d-none');
+                $('input[name="signup_otp"]').prop('required', true);
+                $('#kt_sign_up_submit').prop('disabled', false);
+            } else {
+                $('.frm-loading-register').hide();
+                $('.frm-error-message-register').text(data.message).show();
+                $('#kt_sign_up_submit').prop('disabled', false);
+            }
+        },
+        error: function (error) {
+            $('.frm-loading-register').hide();
+            $('.frm-error-message-register').text(error.responseText).show();
+            $('#kt_sign_up_submit').prop('disabled', false);
+            // Display error message using SweetAlert
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'An error occurred while sending OTP. Please try again later.'
+            });
+        }
+    });
+    return;
+} else {
+    $.ajax({
+        url: '/auth/user-company-register',
+        method: 'POST',
+        data: form.serialize(), 
+        success: function (data) {
+            if (data.status == 'ok') {
+                $('.frm-loading-register').hide();
+                $('.frm-error-message-register').text(data.message).show();
+                $('#user-signups').trigger('reset');
+                setTimeout(function () {
+                    if (data.wp_user) {
+                        window.location.href = "<%= globalData.BLOG_URL %>?login_check=" + data.wp_user + "&currentUrlPath=" + data.currentUrlPath;
+                    } else {
+                        window.location.reload();
+                    }
+                }, 2000);
+            } else {
+                $('.frm-loading-register').hide();
+                $('.frm-error-message-register').text(data.message).show();
+                $('#kt_sign_up_submit').prop('disabled', false);
+            }
+        },
+        error: function (error) {
+            $('.frm-loading-register').hide();
+            $('.frm-error-message-register').text(error.responseText).show();
+            $('#kt_sign_up_submit').prop('disabled', false);
+            // Display error message using SweetAlert
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'An error occurred while submitting the form. Please try again later.'
+            });
+        }
+    });
+}
+
+                        // Display error message if any
+                        if (error_message) {
+                            $('.frm-loading-register').hide();
+                            $('.frm-error-message-register').text(error_message).show();
+                            $('#kt_sign_up_submit').prop('disabled', false);
+                        }
+                    });
+
+                    // Function to check password strength
+                    function checkPasswordStrength(password) {
+                        // Implement your own password strength check logic
+                        if (password.length >= 8) {
+                            return 'strong';
+                        } else {
+                            return 'weak';
+                        }
+                    }
+                });
+
+
+            </script>
+
+
+
+
+
+
+            <!-- <script>
+                $(document).ready(function () {
+                    $('input[type=radio][name=membership_type_id]').change(function () {
+                        if (this.value == '0') {
+                            $("#payment_status").val('free');
+                        } else {
+                            $("#payment_status").val('paid');
+                        }
+                    });
+
+                    $("#user-signup").submit(function (e) {
+                        e.preventDefault();
+                        console.log("Form submission intercepted.");
+
+                        $('.frm-loading-register').show();
+                        $('#kt_sign_up_submit').prop('disabled', true);
+                        $('.frm-error-message-register').text('').hide();
+                        var error_message = '';
+                        var password = $("input[name='register_password']").val();
+                        var confirmPassword = $("input[name='register_confirm_password']").val();
+                        var signup_otp = $("input[name='signup_otp']").val();
+
+                        console.log("password", password);
+                        console.log("confirmPassword", confirmPassword);
+                        console.log("signup_otp", signup_otp);
+
+
+                        var passwordStrength = checkPasswordStrength(password);
+                        if (passwordStrength === 'weak') {
+                            error_message = "Password is weak. It should be at least 8 characters long and contain a combination of letters, numbers, and special characters.";
+                        } else {
+                            if (password !== confirmPassword) {
+                                error_message = "Password and Confirm Password do not match.";
+                            } else if (signup_otp == '') {
+
+                                const formData = $('#user-signup').serializeArray();
+                                const jsonData = {};
+                                $(formData).each(function (index, field) {
+                                    jsonData[field.name] = field.value;
+                                });
+                                jsonData['currentUrlPath'] = window.location.pathname;
+
+                                $.ajax({
+                                    url: '/auth/frontend-user-register-otp',
+                                    method: 'POST',
+                                    data: jsonData,
+                                    ContentType: 'application/json',
+                                    success: function (data) {
+                                        if (data.status == 'ok') {
+                                            $('.frm-loading-register').hide();
+                                            $('.frm-error-message-register').text(data.message).show();
+                                            $('#signup_otp').removeClass('d-none');
+                                            $('input[name="signup_otp"]').prop('required', true);
+                                            $('#kt_sign_up_submit').prop('disabled', false);
+                                        } else {
+                                            $('.frm-loading-register').hide();
+                                            $('.frm-error-message-register').text(data.message).show();
+                                            $('#kt_sign_up_submit').prop('disabled', false);
+                                        }
+                                    },
+                                    error: function (error) {
+                                        $('.frm-loading-register').hide();
+                                        $('.frm-error-message-register').text(error.responseText).show();
+                                        $('#kt_sign_up_submit').prop('disabled', false);
+                                    }
+                                });
+                            } else {
+                                // Call ajax..
+                                const formData = $('#user-signup').serializeArray();
+                                const jsonData = {};
+                                $(formData).each(function (index, field) {
+                                    jsonData[field.name] = field.value;
+                                });
+                                jsonData['currentUrlPath'] = window.location.pathname;
+                                console.log("jsonData", jsonData);
+                                $.ajax({
+                                    url: '/auth/user-company-registration',
+                                    method: 'POST',
+                                    data: jsonData,
+                                    ContentType: 'application/json',
+                                    success: function (data) {
+                                        if (data.status == 'ok') {
+                                            $('.frm-loading-register').hide();
+                                            $('.frm-error-message-register').text(data.message).show();
+                                            $('#user-signup').trigger('reset');
+                                            setTimeout(function () {
+                                                if (data.wp_user) {
+                                                    window.location.href = "<%= globalData.BLOG_URL %>?login_check=" + data.wp_user + "&currentUrlPath=" + data.currentUrlPath;
+                                                } else {
+                                                    window.location.reload();
+                                                }
+                                            }, 2000);
+                                        } else {
+                                            $('.frm-loading-register').hide();
+                                            $('.frm-error-message-register').text(data.message).show();
+                                            $('#kt_sign_up_submit').prop('disabled', false);
+                                        }
+                                    },
+                                    error: function (error) {
+                                        $('.frm-loading-register').hide();
+                                        $('.frm-error-message-register').text(error.responseText).show();
+                                        $('#kt_sign_up_submit').prop('disabled', false);
+                                    }
+                                });
+                            }
+                        }
+
+                        if (error_message) {
+                            $('.frm-loading-register').hide();
+                            $('.frm-error-message-register').text(error_message).show();
+                            $('#kt_sign_up_submit').prop('disabled', false);
+                        }
+                    });
+                });
+
+                function checkPasswordStrength(password) {
+                    // Implement your own password strength check logic
+                    if (password.length >= 8) {
+                        return 'strong';
+                    } else {
+                        return 'weak';
+                    }
+                }
+
+            </script> -->

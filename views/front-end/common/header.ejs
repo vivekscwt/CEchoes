@@ -177,12 +177,13 @@
               </div>
             </span>
             <% } %>
+            
             <% if(menu_active_id != 'discussion'){ %>
               <span class="tab-hide-link"><a href="/discussion" class="single-link">All Queries</a></span>
             <% } %>
             <span class="mbl-hide-link always"><a href="/review" class="btn-default btn-outline-warning">All Reviews</a></span>
             <% if(menu_active_id!='business'){%>
-            <span class="tab-hide-link"><a href="/business" class="btn-default btn-outline-warning">For Business</a></span>
+            <span class="tab-hide-link"><a href="/business" class="btn-default btn-outline-warning">For Business</a></span>      
             <% } %>
             <% if(currentUserData){ %>
             <span class="user-log-profile">
@@ -206,6 +207,7 @@
             </span>
             <% } else { %>
             <span class="mbl-hide-link"><a href="#" class="btn-default btn-outline-warning login">Log in</a></span>
+            <span class="mbl-hide-link"><a href="/user-company-register" class="btn-default btn-outline-warning registration">Company Register</a></span>
             <% } %>
             <span class="toggle-menu">
               <div class="menu-circles">
