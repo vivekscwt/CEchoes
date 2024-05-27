@@ -8,6 +8,11 @@
       <!-- ============== Section1 Start =============== -->
       <section class="main-content premium_company_profile">
          <div class="container">
+            <% if (company.verified == 0 && company.status == 2) { %>
+               <div class="alert alert-warning" role="alert">
+                  This company is not verified.
+               </div>
+            <% } else { %>
             <div class="main_box">
                <%- include('common/premium-company-sidebar') -%>
                <div class="analytics_data analytics_data_row1">
@@ -424,6 +429,7 @@
                </div>
             </div>
          </div>
+         <% } %>
       </section>
       <!-- ============== Section6 End =============== -->
       

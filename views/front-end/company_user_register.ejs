@@ -73,16 +73,7 @@
                                                         </div>
                                                     </td>
                                                 </tr>
-                                                <tr>
-                                                    <td>Organization State<sup style="color: #f20e0efd;">*</sup></td>
-                                                    <td>:</td>
-                                                    <td colspan="2">
-                                                        <div class="custom-form m-0">
-                                                            <input type="text" name="main_address_state" placeholder=""
-                                                                class="form-control" required />
-                                                        </div>
-                                                    </td>
-                                                </tr>
+
                                                 <tr>
                                                     <td>Organization Country<sup style="color: #f20e0efd;">*</sup></td>
                                                     <td>:</td>
@@ -96,6 +87,17 @@
                                                                         <%= item.name %>
                                                                     </option>
                                                                     <% }) %>
+                                                            </select>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Organization State<sup style="color: #f20e0efd;">*</sup></td>
+                                                    <td>:</td>
+                                                    <td colspan="2">
+                                                        <div class="custom-form m-0">
+                                                            <select id="state" name="main_address_state" class="form-control" required>
+                                                                <option value="">Select a State...</option>
                                                             </select>
                                                         </div>
                                                     </td>
@@ -195,6 +197,8 @@
 
         <%- include('common/footer') -%>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
             <script>
                 $(document).ready(function () {
                     $('input[type=radio][name=membership_type_id]').change(function () {
@@ -285,21 +289,26 @@
         method: 'POST',
         data: form.serialize(), 
         success: function (data) {
+            var successMessage = 'Registration successful. Redirecting...';
+            var errorMessage = 'Registration failed. Please try again.';
             if (data.status == 'ok') {
                 $('.frm-loading-register').hide();
-                $('.frm-error-message-register').text(data.message).show();
+                $('.frm-error-message-register').text(successMessage).show();
                 $('#user-signups').trigger('reset');
                 setTimeout(function () {
                     if (data.wp_user) {
                         window.location.href = "<%= globalData.BLOG_URL %>?login_check=" + data.wp_user + "&currentUrlPath=" + data.currentUrlPath;
                     } else {
-                        window.location.reload();
+                        // window.location.reload();
+                        window.location.href="/";
                     }
                 }, 2000);
             } else {
                 $('.frm-loading-register').hide();
-                $('.frm-error-message-register').text(data.message).show();
+                $('.frm-error-message-register').text(errorMessage).show();
                 $('#kt_sign_up_submit').prop('disabled', false);
+
+                window.location.href="/";
             }
         },
         error: function (error) {
@@ -333,7 +342,58 @@
                             return 'weak';
                         }
                     }
-                });
+    //                 var countryId = document.getElementById('select_country').value;
+    // console.log("countryId",countryId);
+       
+    $("#select_country").change(function () {
+            handleCountryChange();
+        });
+
+        function handleCountryChange() {
+            var countryId = $('#select_country').val();
+            console.log("Selected countryId:", countryId);
+
+            $.ajax({
+                url: '/getstatebyCountry',
+                method: 'GET',
+                data: { country_ID: countryId },
+                success: function (response) {
+                    var $state = $('#state');
+                    $state.empty(); 
+
+                    $state.append($('<option>', {
+                        value: '',
+                        text: 'Select State',
+                        disabled: true,
+                        selected: true
+                    }));
+
+                    response.forEach(function (state) {
+                        $state.append($('<option>', {
+                            value: state.id,
+                            text: state.name
+                        }));
+                    });
+                },
+                error: function (err) {
+                    console.error('Error fetching states:', err);
+                }
+            });
+        }
+                
+        $('#state').select2({
+        placeholder: "Select a state",
+        allowClear: true, 
+        width: '100%'
+        });
+        $('#select_country').select2({
+        placeholder: "Select a country",
+        allowClear: true, 
+        width: '100%'
+        });
+
+    
+    });
 
 
             </script>
