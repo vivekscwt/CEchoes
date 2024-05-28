@@ -190,6 +190,7 @@ router.post('/update-about', upload.fields([
 ]), authController.updateAbout);
 
 router.post('/add-review', authController.submitReview);
+router.post('/addreview', authController.submitreview);
 router.post('/edit-user-review', authController.editUserReview);
 router.post('/delete-review', authController.deleteReview);
 router.post('/add-review-reply', authController.submitReviewReply);

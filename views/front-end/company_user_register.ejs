@@ -5,7 +5,6 @@
         <!-- ============== Section1 Start =============== -->
         <section class="main-content my-profile-content">
             <div class="container">
-                <div class="my-profile-wrapper">
                     <form id="user-signups" name="user-signup-frms" method="post" enctype="multipart/form-data">
                         <div class="row">
                             <div class="col-md-8">
@@ -96,7 +95,8 @@
                                                     <td>:</td>
                                                     <td colspan="2">
                                                         <div class="custom-form m-0">
-                                                            <select id="state" name="main_address_state" class="form-control" required>
+                                                            <select id="state" name="main_address_state"
+                                                                class="form-control" required>
                                                                 <option value="">Select a State...</option>
                                                             </select>
                                                         </div>
@@ -162,8 +162,8 @@
                                                 <tr id="signup_otp_hide" class="custom-form d-none">
                                                     <td>OTP<sup style="color: #f20e0efd;">*</sup></td>
                                                     <td>:</td>
-                                                    <td colspan="2">                
-                                                            <input type="number" class="form-control password"
+                                                    <td colspan="2">
+                                                        <input type="number" class="form-control password"
                                                             name="signup_otp" autocomplete="off" min="0000" max="9999"
                                                             pattern="\d{4}" title="Please enter a 4-digit number">
 
@@ -185,20 +185,19 @@
                     </form>
                     <div class="register-now frm-loading-register" style="display: none;">
                         <span class="indicator-progress">Please wait...
-                                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                            <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
                         </span>
-                      </div>
-                      <div class="register-now frm-error-message-register" style="display: none;"></div>
-                </div>
+                    </div>
+                    <div class="register-now frm-error-message-register" style="display: none;"></div>
             </div>
         </section>
 
         <!-- ============== Section1 End =============== -->
 
         <%- include('common/footer') -%>
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+            <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
             <script>
                 $(document).ready(function () {
                     $('input[type=radio][name=membership_type_id]').change(function () {
@@ -210,7 +209,7 @@
                     });
 
                     $("#user-signups").submit(function (e) {
-                        e.preventDefault(); 
+                        e.preventDefault();
                         console.log("Form submission intercepted.");
 
                         console.log("Serialized form data:", $(this).serialize());
@@ -232,98 +231,100 @@
 
                         // Password strength validation
                         var passwordStrength = checkPasswordStrength(password);
-                        console.log("passwordStrength",passwordStrength);
+                        console.log("passwordStrength", passwordStrength);
                         if (passwordStrength == 'weak') {
-    error_message = "Password is weak. It should be at least 8 characters long and contain a combination of letters, numbers, and special characters.";
-    Swal.fire({
-        icon: 'error',
-        title: 'Password Weak',
-        text: error_message
-    });
-} else if (password !== confirmPassword) {
-    error_message = "Password and Confirm Password do not match.";
-    Swal.fire({
-        icon: 'error',
-        title: 'Password Mismatch',
-        text: error_message
-    });
-} else if (signupOtp == undefined || signupOtp == '') {
+                            error_message = "Password is weak. It should be at least 8 characters long and contain a combination of letters, numbers, and special characters.";
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Password Weak',
+                                text: error_message
+                            });
+                        } else if (password !== confirmPassword) {
+                            error_message = "Password and Confirm Password do not match.";
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Password Mismatch',
+                                text: error_message
+                            });
+                        } else if (signupOtp == undefined || signupOtp == '') {
 
-    // $('#signup_otp_hide').removeClass('d-none');
-    // $('input[name="signup_otp"]').prop('required', true);
+                            // $('#signup_otp_hide').removeClass('d-none');
+                            // $('input[name="signup_otp"]').prop('required', true);
 
-    $.ajax({
-        url: '/auth/frontend-user-register-otp',
-        method: 'POST',
-        data: form.serialize(), 
-        success: function (data) {
-            if (data.status == 'ok') {
-                console.log("------->aaaaa",  $('#signup_otp'));
-                $('.frm-loading-register').hide();
-                $('.frm-error-message-register').text(data.message).show();
-                $('#signup_otp_hide').removeClass('d-none');
-                $('input[name="signup_otp"]').prop('required', true);
-                $('#kt_sign_up_submit').prop('disabled', false);
-            } else {
-                $('.frm-loading-register').hide();
-                $('.frm-error-message-register').text(data.message).show();
-                $('#kt_sign_up_submit').prop('disabled', false);
-            }
-        },
-        error: function (error) {
-            $('.frm-loading-register').hide();
-            $('.frm-error-message-register').text(error.responseText).show();
-            $('#kt_sign_up_submit').prop('disabled', false);
-            // Display error message using SweetAlert
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'An error occurred while sending OTP. Please try again later.'
-            });
-        }
-    });
-    return;
-} else {
-    $.ajax({
-        url: '/auth/user-company-register',
-        method: 'POST',
-        data: form.serialize(), 
-        success: function (data) {
-            var successMessage = 'Registration successful. Redirecting...';
-            var errorMessage = 'Registration failed. Please try again.';
-            if (data.status == 'ok') {
-                $('.frm-loading-register').hide();
-                $('.frm-error-message-register').text(successMessage).show();
-                $('#user-signups').trigger('reset');
-                setTimeout(function () {
-                    if (data.wp_user) {
-                        window.location.href = "<%= globalData.BLOG_URL %>?login_check=" + data.wp_user + "&currentUrlPath=" + data.currentUrlPath;
-                    } else {
-                        // window.location.reload();
-                        window.location.href="/";
-                    }
-                }, 2000);
-            } else {
-                $('.frm-loading-register').hide();
-                $('.frm-error-message-register').text(errorMessage).show();
-                $('#kt_sign_up_submit').prop('disabled', false);
+                            $.ajax({
+                                url: '/auth/frontend-user-register-otp',
+                                method: 'POST',
+                                data: form.serialize(),
+                                success: function (data) {
+                                    if (data.status == 'ok') {
+                                        console.log("------->aaaaa", $('#signup_otp'));
+                                        $('.frm-loading-register').hide();
+                                        $('.frm-error-message-register').text(data.message).show();
+                                        $('#signup_otp_hide').removeClass('d-none');
+                                        $('input[name="signup_otp"]').prop('required', true);
+                                        $('#kt_sign_up_submit').prop('disabled', false);
+                                    } else {
+                                        $('.frm-loading-register').hide();
+                                        $('.frm-error-message-register').text(data.message).show();
+                                        $('#kt_sign_up_submit').prop('disabled', false);
+                                    }
+                                },
+                                error: function (error) {
+                                    $('.frm-loading-register').hide();
+                                    $('.frm-error-message-register').text(error.responseText).show();
+                                    $('#kt_sign_up_submit').prop('disabled', false);
+                                    // Display error message using SweetAlert
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: 'An error occurred while sending OTP. Please try again later.'
+                                    });
+                                }
+                            });
+                            return;
+                        } else {
+                            $.ajax({
+                                url: '/auth/user-company-register',
+                                method: 'POST',
+                                data: form.serialize(),
+                                success: function (data) {
+                                    var successMessage = 'Registration successful. Redirecting...';
+                                    var errorMessage = 'Registration failed. Please try again.';
+                                    if (data.status == 'ok') {
+                                        $('.frm-loading-register').hide();
+                                        $('.frm-error-message-register').text(successMessage).show();
+                                        $('#user-signups').trigger('reset');
+                                        setTimeout(function () {
+                                            if (data.wp_user) {
+                                                console.log("aaaaa")
+                                                window.location.href = "<%= globalData.BLOG_URL %>?login_check=" + data.wp_user + "&currentUrlPath=" + data.currentUrlPath;
+                                            } else {
+                                                console.log("bbbb")
+                                                // window.location.reload();
+                                                window.location.href = "/";
+                                            }
+                                        }, 2000);
+                                    } else {
+                                        $('.frm-loading-register').hide();
+                                        $('.frm-error-message-register').text(errorMessage).show();
+                                        $('#kt_sign_up_submit').prop('disabled', false);
 
-                window.location.href="/";
-            }
-        },
-        error: function (error) {
-            $('.frm-loading-register').hide();
-            $('.frm-error-message-register').text(error.responseText).show();
-            $('#kt_sign_up_submit').prop('disabled', false);
-            // Display error message using SweetAlert
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'An error occurred while submitting the form. Please try again later.'
-            });
-        }
-    });
-}
+                                        window.location.href = "/";
+                                    }
+                                },
+                                error: function (error) {
+                                    $('.frm-loading-register').hide();
+                                    $('.frm-error-message-register').text(error.responseText).show();
+                                    $('#kt_sign_up_submit').prop('disabled', false);
+                                    // Display error message using SweetAlert
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: 'An error occurred while submitting the form. Please try again later.'
+                                    });
+                                }
+                            });
+                        }
 
                         // Display error message if any
                         if (error_message) {
@@ -333,67 +334,64 @@
                         }
                     });
 
-                    // Function to check password strength
+
                     function checkPasswordStrength(password) {
-                        // Implement your own password strength check logic
                         if (password.length >= 8) {
                             return 'strong';
                         } else {
                             return 'weak';
                         }
                     }
-    //                 var countryId = document.getElementById('select_country').value;
-    // console.log("countryId",countryId);
-       
-    $("#select_country").change(function () {
-            handleCountryChange();
-        });
 
-        function handleCountryChange() {
-            var countryId = $('#select_country').val();
-            console.log("Selected countryId:", countryId);
-
-            $.ajax({
-                url: '/getstatebyCountry',
-                method: 'GET',
-                data: { country_ID: countryId },
-                success: function (response) {
-                    var $state = $('#state');
-                    $state.empty(); 
-
-                    $state.append($('<option>', {
-                        value: '',
-                        text: 'Select State',
-                        disabled: true,
-                        selected: true
-                    }));
-
-                    response.forEach(function (state) {
-                        $state.append($('<option>', {
-                            value: state.id,
-                            text: state.name
-                        }));
+                    $("#select_country").change(function () {
+                        handleCountryChange();
                     });
-                },
-                error: function (err) {
-                    console.error('Error fetching states:', err);
-                }
-            });
-        }
-                
-        $('#state').select2({
-        placeholder: "Select a state",
-        allowClear: true, 
-        width: '100%'
-        });
-        $('#select_country').select2({
-        placeholder: "Select a country",
-        allowClear: true, 
-        width: '100%'
-        });
 
-    
-    });
+                    function handleCountryChange() {
+                        var countryId = $('#select_country').val();
+                        console.log("Selected countryId:", countryId);
+
+                        $.ajax({
+                            url: '/getstatebyCountry',
+                            method: 'GET',
+                            data: { country_ID: countryId },
+                            success: function (response) {
+                                var $state = $('#state');
+                                $state.empty();
+
+                                $state.append($('<option>', {
+                                    value: '',
+                                    text: 'Select State',
+                                    disabled: true,
+                                    selected: true
+                                }));
+
+                                response.forEach(function (state) {
+                                    $state.append($('<option>', {
+                                        value: state.id,
+                                        text: state.name
+                                    }));
+                                });
+                            },
+                            error: function (err) {
+                                console.error('Error fetching states:', err);
+                            }
+                        });
+                    }
+
+                    $('#state').select2({
+                        placeholder: "Select a state",
+                        allowClear: true,
+                        width: '100%'
+                    });
+                    $('#select_country').select2({
+                        placeholder: "Select a country",
+                        allowClear: true,
+                        width: '100%'
+                    });
+
+
+                });
 
 
             </script>
@@ -403,128 +401,4 @@
 
 
 
-            <!-- <script>
-                $(document).ready(function () {
-                    $('input[type=radio][name=membership_type_id]').change(function () {
-                        if (this.value == '0') {
-                            $("#payment_status").val('free');
-                        } else {
-                            $("#payment_status").val('paid');
-                        }
-                    });
-
-                    $("#user-signup").submit(function (e) {
-                        e.preventDefault();
-                        console.log("Form submission intercepted.");
-
-                        $('.frm-loading-register').show();
-                        $('#kt_sign_up_submit').prop('disabled', true);
-                        $('.frm-error-message-register').text('').hide();
-                        var error_message = '';
-                        var password = $("input[name='register_password']").val();
-                        var confirmPassword = $("input[name='register_confirm_password']").val();
-                        var signup_otp = $("input[name='signup_otp']").val();
-
-                        console.log("password", password);
-                        console.log("confirmPassword", confirmPassword);
-                        console.log("signup_otp", signup_otp);
-
-
-                        var passwordStrength = checkPasswordStrength(password);
-                        if (passwordStrength === 'weak') {
-                            error_message = "Password is weak. It should be at least 8 characters long and contain a combination of letters, numbers, and special characters.";
-                        } else {
-                            if (password !== confirmPassword) {
-                                error_message = "Password and Confirm Password do not match.";
-                            } else if (signup_otp == '') {
-
-                                const formData = $('#user-signup').serializeArray();
-                                const jsonData = {};
-                                $(formData).each(function (index, field) {
-                                    jsonData[field.name] = field.value;
-                                });
-                                jsonData['currentUrlPath'] = window.location.pathname;
-
-                                $.ajax({
-                                    url: '/auth/frontend-user-register-otp',
-                                    method: 'POST',
-                                    data: jsonData,
-                                    ContentType: 'application/json',
-                                    success: function (data) {
-                                        if (data.status == 'ok') {
-                                            $('.frm-loading-register').hide();
-                                            $('.frm-error-message-register').text(data.message).show();
-                                            $('#signup_otp').removeClass('d-none');
-                                            $('input[name="signup_otp"]').prop('required', true);
-                                            $('#kt_sign_up_submit').prop('disabled', false);
-                                        } else {
-                                            $('.frm-loading-register').hide();
-                                            $('.frm-error-message-register').text(data.message).show();
-                                            $('#kt_sign_up_submit').prop('disabled', false);
-                                        }
-                                    },
-                                    error: function (error) {
-                                        $('.frm-loading-register').hide();
-                                        $('.frm-error-message-register').text(error.responseText).show();
-                                        $('#kt_sign_up_submit').prop('disabled', false);
-                                    }
-                                });
-                            } else {
-                                // Call ajax..
-                                const formData = $('#user-signup').serializeArray();
-                                const jsonData = {};
-                                $(formData).each(function (index, field) {
-                                    jsonData[field.name] = field.value;
-                                });
-                                jsonData['currentUrlPath'] = window.location.pathname;
-                                console.log("jsonData", jsonData);
-                                $.ajax({
-                                    url: '/auth/user-company-registration',
-                                    method: 'POST',
-                                    data: jsonData,
-                                    ContentType: 'application/json',
-                                    success: function (data) {
-                                        if (data.status == 'ok') {
-                                            $('.frm-loading-register').hide();
-                                            $('.frm-error-message-register').text(data.message).show();
-                                            $('#user-signup').trigger('reset');
-                                            setTimeout(function () {
-                                                if (data.wp_user) {
-                                                    window.location.href = "<%= globalData.BLOG_URL %>?login_check=" + data.wp_user + "&currentUrlPath=" + data.currentUrlPath;
-                                                } else {
-                                                    window.location.reload();
-                                                }
-                                            }, 2000);
-                                        } else {
-                                            $('.frm-loading-register').hide();
-                                            $('.frm-error-message-register').text(data.message).show();
-                                            $('#kt_sign_up_submit').prop('disabled', false);
-                                        }
-                                    },
-                                    error: function (error) {
-                                        $('.frm-loading-register').hide();
-                                        $('.frm-error-message-register').text(error.responseText).show();
-                                        $('#kt_sign_up_submit').prop('disabled', false);
-                                    }
-                                });
-                            }
-                        }
-
-                        if (error_message) {
-                            $('.frm-loading-register').hide();
-                            $('.frm-error-message-register').text(error_message).show();
-                            $('#kt_sign_up_submit').prop('disabled', false);
-                        }
-                    });
-                });
-
-                function checkPasswordStrength(password) {
-                    // Implement your own password strength check logic
-                    if (password.length >= 8) {
-                        return 'strong';
-                    } else {
-                        return 'weak';
-                    }
-                }
-
-            </script> -->
+        

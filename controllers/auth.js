@@ -4009,6 +4009,174 @@ exports.submitReview = async (req, res) => {
 }
 //--Submit Review----//
 
+exports.submitreview = async (req, res) => {
+    const encodedUserData = req.cookies.user;
+    console.log('submitReview', req.body);
+    //return false;
+
+    const getcompanyquery = `SELECT ID FROM company WHERE company_name = ?`;
+    const getcompanyvalue = await query(getcompanyquery,[req.body.company_name]);
+    console.log("getcompanyvalue",getcompanyvalue);
+    if(getcompanyvalue.length>0){
+        var CompanyID = getcompanyvalue[0].ID;
+        console.log("CompanyID",CompanyID);
+    }
+
+    try {
+        if (encodedUserData) {
+            const currentUserData = JSON.parse(encodedUserData);
+            //console.log(currentUserData);
+            const userId = currentUserData.user_id;
+            const company = await comFunction.createcompany(req.body, userId);
+            console.log('companyInfo', company)
+            const review = await comFunction.createreview(req.body, userId, company);
+            // Render the 'edit-user' EJS view and pass the data
+            if (company && review) {
+                console.log('submit review:', review)
+                const template = `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+                <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
+                 <tbody>
+                  <tr>
+                   <td align="center" valign="top">
+                     <div id="template_header_image"><p style="margin-top: 0;"></p></div>
+                     <table id="template_container" style="box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important; background-color: #fdfdfd; border: 1px solid #dcdcdc; border-radius: 3px !important;" border="0" cellpadding="0" cellspacing="0" width="600">
+                      <tbody>
+                        <tr>
+                         <td align="center" valign="top">
+                           <!-- Header -->
+                           <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
+                             <tbody>
+                               <tr>
+                               <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/email-template-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+                                <td id="header_wrapper" style="padding: 36px 48px; display: block;">
+                                   <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">New Review</h1>
+                                </td>
+          
+                               </tr>
+                             </tbody>
+                           </table>
+                     <!-- End Header -->
+                     </td>
+                        </tr>
+                        <tr>
+                         <td align="center" valign="top">
+                           <!-- Body -->
+                           <table id="template_body" border="0" cellpadding="0" cellspacing="0" width="600">
+                             <tbody>
+                               <tr>
+                                <td id="body_content" style="background-color: #fdfdfd;" valign="top">
+                                  <!-- Content -->
+                                  <table border="0" cellpadding="20" cellspacing="0" width="100%">
+                                   <tbody>
+                                    <tr>
+                                     <td style="padding: 48px;" valign="top">
+                                       <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
+                                        
+                                        <table border="0" cellpadding="4" cellspacing="0" width="90%">
+                                          <tr>
+                                            <td colspan="2">
+                                            <strong>Hello,</strong>
+                                            <p style="font-size:15px; line-height:20px">A new review submitted. <a class="btn btn-primary" href="${process.env.MAIN_URL}edit-review/${review}">Click here </a>to check this review.</p>
+                                            </td>
+                                          </tr>
+                                        </table>
+                                        
+                                       </div>
+                                     </td>
+                                    </tr>
+                                   </tbody>
+                                  </table>
+                                <!-- End Content -->
+                                </td>
+                               </tr>
+                             </tbody>
+                           </table>
+                         <!-- End Body -->
+                         </td>
+                        </tr>
+                        <tr>
+                         <td align="center" valign="top">
+                           <!-- Footer -->
+                           <table id="template_footer" border="0" cellpadding="10" cellspacing="0" width="600">
+                            <tbody>
+                             <tr>
+                              <td style="padding: 0; -webkit-border-radius: 6px;" valign="top">
+                               <table border="0" cellpadding="10" cellspacing="0" width="100%">
+                                 <tbody>
+                                   <tr>
+                                    <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
+                                         <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology</a></p>
+                                    </td>
+                                   </tr>
+                                 </tbody>
+                               </table>
+                              </td>
+                             </tr>
+                            </tbody>
+                           </table>
+                         <!-- End Footer -->
+                         </td>
+                        </tr>
+                      </tbody>
+                     </table>
+                   </td>
+                  </tr>
+                 </tbody>
+                </table>
+               </div>`;
+                var mailOptions = {
+                    from: process.env.MAIL_USER,
+                    //to: 'pranab@scwebtech.com',
+                    to: process.env.MAIL_USER,
+                    subject: 'New review added',
+                    html: template
+                }
+
+                mdlconfig.transporter.sendMail(mailOptions, function (err, info) {
+                    if (err) {
+                        console.log(err);
+                        return res.send({
+                            status: 'not ok',
+                            message: 'Something went wrong'
+                        });
+                    } else {
+                        console.log('Mail Send: ', info.response);
+                        return res.send(
+                            {
+                                status: 'ok',
+                                data: '',
+                                message: 'Review Mail send successfully'
+                            }
+                        )
+                    }
+                })
+                return res.send(
+                    {
+                        status: 'ok',
+                        data: '',
+                        company,
+                        message: 'Review successfully posted, please wait for admin approval'
+                    }
+                );
+            } else {
+                return res.send(
+                    {
+                        status: 'error',
+                        data: { company, review },
+                        message: 'Error occurred please try again'
+                    }
+                );
+            }
+        } else {
+            //res.redirect('sign-in');
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('An error occurred');
+    }
+}
+
+
 exports.editUserReview = async (req, res) => {
     const encodedUserData = req.cookies.user;
     console.log(req.body);

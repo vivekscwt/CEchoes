@@ -488,14 +488,14 @@
                             <!--end::Col-->
                         </div>
 
-                        <div class="row mb-6">
+                        <div class="row mb-6" id="complaint-level-div">
                             <!--begin::Label-->
                             <label class="col-lg-4 col-form-label fw-bold fs-6">
                                 <span class="">Complaint Level No</span>
                             </label>
                             <!--end::Label-->
                             <!--begin::Col-->
-                            <div class="col-lg-8 fv-row">
+                            <div class="col-lg-8 fv-row" >
                                 <input type="tel" name="complaint_level" class="form-control form-control-lg form-control-solid" placeholder=" No Of Complaint Level" value="<%= company.complaint_level %>" />
                             </div>
                             <!--end::Col-->
@@ -623,6 +623,33 @@
 <!--end::Content-->
 <%- include('common/footer') -%>
 <script> 
+    var complaintStatus = $('input[name="complaint_status"]:checked').val();
+    var memebership = $('input[name="membership_type_id"]:checked').val();
+    console.log("memebership",memebership);
+
+    if (complaintStatus == 0) {
+        $('#complaint-level-div').hide();
+    }
+    
+
+    $('input[name="complaint_status"]').change(function() {
+        var newComplaintStatus = $('input[name="complaint_status"]:checked').val();
+        if (newComplaintStatus == 0 && memebership<=3) {
+            $('#complaint-level-div').hide();
+        } else {
+            $('#complaint-level-div').show();
+        }
+    });
+    // $('input[name="membership_type_id"]').change(function() {
+    //     var memebership = $('input[name="complaint_status"]:checked').val();
+    //     if (memebership<=3) {
+    //         $('#complaint-level-div').hide();
+    //     } else {
+    //         $('#complaint-level-div').show();
+    //     }
+    // });
+
+
 document.querySelector("select[name='parent_id']").addEventListener("change", function() {
     const selectedValue = this.value;
     console.log("Selected Value:", selectedValue);
@@ -776,7 +803,7 @@ var KTAccountSettingsProfileDetails = function () {
 
             console.log("membershipType,complaintStatus,complaintLevel",membershipType,complaintStatus,complaintLevel);
 
-            if (membershipType >= 4 && complaintLevel == '') {
+            if (membershipType >= 4 && complaintLevel == '' && complaintStatus == 1) {
                 swal.fire({
                     text: "Please fill in the Complaint Level No.",
                     icon: "error",

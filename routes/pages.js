@@ -5163,7 +5163,7 @@ router.get('/getcompanies', async (req, res) => {
             return res.status(400).json({ error: 'Country is required' });
         }
 
-        let sqlQuery = 'SELECT * FROM company WHERE main_address_country = ?';
+        let sqlQuery = `SELECT * FROM company WHERE main_address_country = ? AND status = '1' AND verified = '1'`;
         let queryParams = [country];
 
 
