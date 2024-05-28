@@ -5241,6 +5241,39 @@ router.get('/getstatebyCountry', async (req, res) => {
     }
 })
 
+router.get('/getstatebyCountries', async (req, res) => {
+    try {
+        const country_ID = req.query.country_ID;
+        console.log("country_ID",country_ID);
+
+        // let statequery = `SELECT id FROM countries WHERE shortname = ?`;
+        // let sttatevalue = await query(statequery,[country_ID]);
+        // if(sttatevalue.length >0){
+        //     var state_id = sttatevalue[0].id;
+        //     console.log("state_id",state_id);
+        // }
+
+        let sqlQuery = 'SELECT * FROM states WHERE country_id = ?';
+        let queryParams = [country_ID];
+
+        db.query(sqlQuery, queryParams, (err, results) => {
+            if (err) {
+                console.log("aaasssvvv")
+                console.error('Error executing SQL query:', err);
+                return res.status(500).json({ error: 'An error occurred while fetching companies' });
+            } else {
+                console.log("results",results);
+                return res.json(results);
+            }
+        });
+
+    } catch (error) {
+        return res.send({
+            status: 'not ok',
+            message: 'Something went wrong'
+        });
+    }
+})
 router.get('/getcomplaintcompanies', async (req, res) => {
     try {
 
@@ -5807,7 +5840,7 @@ router.get('/user-compnaint-details/:complainId', checkFrontEndLoggedIn, async (
 router.get('/getCountryIdByShortName', async (req, res) => {
     try {
         const countryShortName = req.query.countryShortName;
-
+        console.log(countryShortName,"countryShortName");
         const countryIdquery = `SELECT * FROM countries WHERE shortname=
         "${countryShortName}"`;
         const countryIdS = await query(countryIdquery);
