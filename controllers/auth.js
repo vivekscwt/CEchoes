@@ -3852,7 +3852,7 @@ exports.updateHome = async (req, res) => {
 
 exports.submitReview = async (req, res) => {
     const encodedUserData = req.cookies.user;
-    console.log('submitReview', req.body);
+    console.log('submitReviewy', req.body);
     //return false;
     try {
         if (encodedUserData) {
@@ -4011,7 +4011,7 @@ exports.submitReview = async (req, res) => {
 
 exports.submitreview = async (req, res) => {
     const encodedUserData = req.cookies.user;
-    console.log('submitReview', req.body);
+    console.log('submitReviewssss', req.body);
     //return false;
 
     const getcompanyquery = `SELECT ID FROM company WHERE company_name = ?`;

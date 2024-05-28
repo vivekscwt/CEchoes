@@ -53,12 +53,12 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td>Confirm Password</td>
+                                                    <td>Confirm Password<sup style="color: #f20e0efd;">*</sup></td>
                                                     <td>:</td>
                                                     <td colspan="2">
                                                         <div class="custom-form m-0">
                                                             <input type="password" name="register_confirm_password"
-                                                                placeholder="" class="form-control" />
+                                                                placeholder="" class="form-control" required/>
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -82,7 +82,7 @@
                                                                 class="form-select" required>
                                                                 <option value="">Select a Country...</option>
                                                                 <% countries.forEach(item=> { %>
-                                                                    <option value="<%= item.id %>">
+                                                                    <option value="<%= item.shortname %>">
                                                                         <%= item.name %>
                                                                     </option>
                                                                     <% }) %>
@@ -169,15 +169,10 @@
 
                                                     </td>
                                                 </tr>
-                                                <tr>
-                                                    <td colspan="4" class="text-center">
-                                                        <input type="submit" value="Sign Up" id="kt_sign_up_submit"
-                                                            class="btn-default btn-warning w-100">
-                                                    </td>
-                                                </tr>
 
                                             </tbody>
                                         </table>
+                                        <input type="submit" value="Register" id="kt_sign_up_submits" class="btn-default btn-warning custom-submit-btn">
                                     </div>
                                 </div>
                             </div>
@@ -193,6 +188,14 @@
         </section>
 
         <!-- ============== Section1 End =============== -->
+        <style>
+            #kt_sign_up_submits {
+                width: 200px; 
+                display: block;
+                margin: 0 auto;
+            }
+
+        </style>
 
         <%- include('common/footer') -%>
             <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -215,7 +218,7 @@
                         console.log("Serialized form data:", $(this).serialize());
 
                         $('.frm-loading-register').show();
-                        $('#kt_sign_up_submit').prop('disabled', true);
+                        $('#kt_sign_up_submits').prop('disabled', true);
 
                         $('.frm-error-message-register').text('').hide();
                         var error_message = '';
@@ -262,17 +265,17 @@
                                         $('.frm-error-message-register').text(data.message).show();
                                         $('#signup_otp_hide').removeClass('d-none');
                                         $('input[name="signup_otp"]').prop('required', true);
-                                        $('#kt_sign_up_submit').prop('disabled', false);
+                                        $('#kt_sign_up_submits').prop('disabled', false);
                                     } else {
                                         $('.frm-loading-register').hide();
                                         $('.frm-error-message-register').text(data.message).show();
-                                        $('#kt_sign_up_submit').prop('disabled', false);
+                                        $('#kt_sign_up_submits').prop('disabled', false);
                                     }
                                 },
                                 error: function (error) {
                                     $('.frm-loading-register').hide();
                                     $('.frm-error-message-register').text(error.responseText).show();
-                                    $('#kt_sign_up_submit').prop('disabled', false);
+                                    $('#kt_sign_up_submits').prop('disabled', false);
                                     // Display error message using SweetAlert
                                     Swal.fire({
                                         icon: 'error',
@@ -301,21 +304,23 @@
                                             } else {
                                                 console.log("bbbb")
                                                 // window.location.reload();
+                                               // window.location.href = url;
                                                 window.location.href = "/";
                                             }
                                         }, 2000);
                                     } else {
                                         $('.frm-loading-register').hide();
                                         $('.frm-error-message-register').text(errorMessage).show();
-                                        $('#kt_sign_up_submit').prop('disabled', false);
+                                        $('#kt_sign_up_submits').prop('disabled', false);
 
+                                        //window.location.href = url;
                                         window.location.href = "/";
                                     }
                                 },
                                 error: function (error) {
                                     $('.frm-loading-register').hide();
                                     $('.frm-error-message-register').text(error.responseText).show();
-                                    $('#kt_sign_up_submit').prop('disabled', false);
+                                    $('#kt_sign_up_submits').prop('disabled', false);
                                     // Display error message using SweetAlert
                                     Swal.fire({
                                         icon: 'error',
@@ -330,7 +335,7 @@
                         if (error_message) {
                             $('.frm-loading-register').hide();
                             $('.frm-error-message-register').text(error_message).show();
-                            $('#kt_sign_up_submit').prop('disabled', false);
+                            $('#kt_sign_up_submits').prop('disabled', false);
                         }
                     });
 

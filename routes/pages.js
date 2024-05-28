@@ -93,7 +93,8 @@ router.get('/user-company-register', async (req, res) => {
             BLOG_URL: process.env.BLOG_URL,
             MAIN_URL: process.env.MAIN_URL,
         };
-        
+        var url = process.env.MAIN_URL 
+        console.log("url",url);
 
     const [globalPageMeta,countries] = await Promise.all([
         comFunction2.getPageMetaValues('global'),
@@ -104,7 +105,8 @@ router.get('/user-company-register', async (req, res) => {
             page_title: 'User Register',
             currentUserData,
             globalPageMeta: globalPageMeta,
-            countries: countries
+            countries: countries,
+            url: url
         });
     } catch (error) {
         console.error('Error fetching blog posts:', error);
@@ -606,7 +608,7 @@ router.get('/company/:slug', checkCookieValue, async (req, res) => {
     } else {
         console.log('comp_res', comp_res);
         const companyID = comp_res.ID;
-        // console.log(comp_res);
+        console.log("fggfgh");
         // console.log(companyID);
         // countInvitationLabels 1=No Labels,2=Invitation
         const [allRatingTags, CompanyInfo, companyReviewNumbers, getCompanyReviews, globalPageMeta, PremiumCompanyData, CompanyPollDetails, countInvitationLabels, CompanySurveyDetails, CompanySurveySubmitionsCount, getCompanyCategory] = await Promise.all([
@@ -623,9 +625,10 @@ router.get('/company/:slug', checkCookieValue, async (req, res) => {
             comFunction2.getCompanyCategory(companyID),
         ]);
 
-        //console.log(get_company_id.ID)
-        // console.log(slug)
+        console.log(get_company_id.ID)
+        console.log(slug)
         // return false;
+        console.log("CompanyInfo",CompanyInfo);
 
 
         let cover_img = '';
@@ -656,8 +659,10 @@ router.get('/company/:slug', checkCookieValue, async (req, res) => {
         }
 
         if (CompanyInfo) {
-            // console.log(CompanyInfo);
-            if (CompanyInfo.paid_status.trim() == 'paid' && CompanyInfo.membership_type_id) {
+            console.log("CompanyInfo",CompanyInfo);
+            //if (CompanyInfo.paid_status.trim() == 'paid' && CompanyInfo.membership_type_id) {
+            if (CompanyInfo.paid_status && CompanyInfo.paid_status.trim() === 'paid' && CompanyInfo.membership_type_id) {
+                console.log("bbbbbbbbbb");
                 const PollDetails = CompanyPollDetails.map((row) => ({
                     poll_id: row.id,
                     company_id: row.company_id,
@@ -681,7 +686,7 @@ router.get('/company/:slug', checkCookieValue, async (req, res) => {
                     ...detail,
                     ...(submitionsCountMap[detail.unique_id] || {}) // Add submitionsCount if it exists
                 }));
-
+                
                 // res.json(
                 // {
                 //     menu_active_id: 'company',
@@ -739,6 +744,7 @@ router.get('/company/:slug', checkCookieValue, async (req, res) => {
                         CompanyCategory: getCompanyCategory
                     });
             } else {
+                console.log("aaaaa");
                 // res.json(
                 // {
                 //     menu_active_id: 'company',
@@ -5163,7 +5169,7 @@ router.get('/getcompanies', async (req, res) => {
             return res.status(400).json({ error: 'Country is required' });
         }
 
-        let sqlQuery = `SELECT * FROM company WHERE main_address_country = ? AND status = '1' AND verified = '1'`;
+        let sqlQuery = `SELECT * FROM company WHERE main_address_country = ? AND status = '1'`;
         let queryParams = [country];
 
 
@@ -5206,8 +5212,15 @@ router.get('/getstatebyCountry', async (req, res) => {
         const country_ID = req.query.country_ID;
         console.log("country_ID",country_ID);
 
+        let statequery = `SELECT id FROM countries WHERE shortname = ?`;
+        let sttatevalue = await query(statequery,[country_ID]);
+        if(sttatevalue.length >0){
+            var state_id = sttatevalue[0].id;
+            console.log("state_id",state_id);
+        }
+
         let sqlQuery = 'SELECT * FROM states WHERE country_id = ?';
-        let queryParams = [country_ID];
+        let queryParams = [state_id];
 
         db.query(sqlQuery, queryParams, (err, results) => {
             if (err) {
@@ -5252,7 +5265,7 @@ router.get('/getcomplaintcompanies', async (req, res) => {
         FROM company c
         LEFT JOIN company_cactgory_relation cr ON c.ID = cr.company_id
         LEFT JOIN category cat ON cr.category_id = cat.ID
-        WHERE c.status != '3' AND c.membership_type_id >=3 AND c.complaint_status = '1' AND main_address_country=?
+        WHERE c.status = '1' AND c.membership_type_id >=3 AND c.complaint_status = '1' AND main_address_country=?
         `;
 
         let queryParams = [country];

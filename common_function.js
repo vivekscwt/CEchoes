@@ -790,12 +790,15 @@ async function createCompany(comInfo, userId) {
 
 async function createcompany(comInfo, userId) {
   console.log("comInfo, userId", comInfo, userId);
+  console.log("createcompany");
   let return_data = {};
   try {
     // Check if the company Name already exists in the "company" table
     //const company_name_checking_query = "SELECT ID FROM company WHERE company_name = ?";
     const company_name_checking_query = "SELECT ID FROM company WHERE company_name = ?";
     const company_name_checking_results = await query(company_name_checking_query, [comInfo.company_name]);
+    console.log("iiiiiiiiiiiii");
+
     if (company_name_checking_results.length > 0) {
       //company exist
       console.log("company exits");
