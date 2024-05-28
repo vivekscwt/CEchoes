@@ -525,6 +525,7 @@ exports.frontendUserRegisterOTP = async (req, res) => {
                 if (results.length > 0) {
                     var register_from = results[0].register_from;
                     if (register_from == 'web') {
+                        console.log("aaaa");
                         var message = 'Email ID already exists, Please login with your email-ID and password';
                     } else {
                         if (register_from == 'gmail') {
@@ -4007,6 +4008,174 @@ exports.submitReview = async (req, res) => {
     }
 }
 //--Submit Review----//
+
+exports.submitreview = async (req, res) => {
+    const encodedUserData = req.cookies.user;
+    console.log('submitReview', req.body);
+    //return false;
+
+    const getcompanyquery = `SELECT ID FROM company WHERE company_name = ?`;
+    const getcompanyvalue = await query(getcompanyquery,[req.body.company_name]);
+    console.log("getcompanyvalue",getcompanyvalue);
+    if(getcompanyvalue.length>0){
+        var CompanyID = getcompanyvalue[0].ID;
+        console.log("CompanyID",CompanyID);
+    }
+
+    try {
+        if (encodedUserData) {
+            const currentUserData = JSON.parse(encodedUserData);
+            //console.log(currentUserData);
+            const userId = currentUserData.user_id;
+            const company = await comFunction.createcompany(req.body, userId);
+            console.log('companyInfo', company)
+            const review = await comFunction.createreview(req.body, userId, company);
+            // Render the 'edit-user' EJS view and pass the data
+            if (company && review) {
+                console.log('submit review:', review)
+                const template = `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+                <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
+                 <tbody>
+                  <tr>
+                   <td align="center" valign="top">
+                     <div id="template_header_image"><p style="margin-top: 0;"></p></div>
+                     <table id="template_container" style="box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important; background-color: #fdfdfd; border: 1px solid #dcdcdc; border-radius: 3px !important;" border="0" cellpadding="0" cellspacing="0" width="600">
+                      <tbody>
+                        <tr>
+                         <td align="center" valign="top">
+                           <!-- Header -->
+                           <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
+                             <tbody>
+                               <tr>
+                               <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/email-template-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+                                <td id="header_wrapper" style="padding: 36px 48px; display: block;">
+                                   <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">New Review</h1>
+                                </td>
+          
+                               </tr>
+                             </tbody>
+                           </table>
+                     <!-- End Header -->
+                     </td>
+                        </tr>
+                        <tr>
+                         <td align="center" valign="top">
+                           <!-- Body -->
+                           <table id="template_body" border="0" cellpadding="0" cellspacing="0" width="600">
+                             <tbody>
+                               <tr>
+                                <td id="body_content" style="background-color: #fdfdfd;" valign="top">
+                                  <!-- Content -->
+                                  <table border="0" cellpadding="20" cellspacing="0" width="100%">
+                                   <tbody>
+                                    <tr>
+                                     <td style="padding: 48px;" valign="top">
+                                       <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
+                                        
+                                        <table border="0" cellpadding="4" cellspacing="0" width="90%">
+                                          <tr>
+                                            <td colspan="2">
+                                            <strong>Hello,</strong>
+                                            <p style="font-size:15px; line-height:20px">A new review submitted. <a class="btn btn-primary" href="${process.env.MAIN_URL}edit-review/${review}">Click here </a>to check this review.</p>
+                                            </td>
+                                          </tr>
+                                        </table>
+                                        
+                                       </div>
+                                     </td>
+                                    </tr>
+                                   </tbody>
+                                  </table>
+                                <!-- End Content -->
+                                </td>
+                               </tr>
+                             </tbody>
+                           </table>
+                         <!-- End Body -->
+                         </td>
+                        </tr>
+                        <tr>
+                         <td align="center" valign="top">
+                           <!-- Footer -->
+                           <table id="template_footer" border="0" cellpadding="10" cellspacing="0" width="600">
+                            <tbody>
+                             <tr>
+                              <td style="padding: 0; -webkit-border-radius: 6px;" valign="top">
+                               <table border="0" cellpadding="10" cellspacing="0" width="100%">
+                                 <tbody>
+                                   <tr>
+                                    <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
+                                         <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology</a></p>
+                                    </td>
+                                   </tr>
+                                 </tbody>
+                               </table>
+                              </td>
+                             </tr>
+                            </tbody>
+                           </table>
+                         <!-- End Footer -->
+                         </td>
+                        </tr>
+                      </tbody>
+                     </table>
+                   </td>
+                  </tr>
+                 </tbody>
+                </table>
+               </div>`;
+                var mailOptions = {
+                    from: process.env.MAIL_USER,
+                    //to: 'pranab@scwebtech.com',
+                    to: process.env.MAIL_USER,
+                    subject: 'New review added',
+                    html: template
+                }
+
+                mdlconfig.transporter.sendMail(mailOptions, function (err, info) {
+                    if (err) {
+                        console.log(err);
+                        return res.send({
+                            status: 'not ok',
+                            message: 'Something went wrong'
+                        });
+                    } else {
+                        console.log('Mail Send: ', info.response);
+                        return res.send(
+                            {
+                                status: 'ok',
+                                data: '',
+                                message: 'Review Mail send successfully'
+                            }
+                        )
+                    }
+                })
+                return res.send(
+                    {
+                        status: 'ok',
+                        data: '',
+                        company,
+                        message: 'Review successfully posted, please wait for admin approval'
+                    }
+                );
+            } else {
+                return res.send(
+                    {
+                        status: 'error',
+                        data: { company, review },
+                        message: 'Error occurred please try again'
+                    }
+                );
+            }
+        } else {
+            //res.redirect('sign-in');
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('An error occurred');
+    }
+}
+
 
 exports.editUserReview = async (req, res) => {
     const encodedUserData = req.cookies.user;
@@ -9819,6 +9988,1223 @@ exports.getcompaniesbyCountry = async (req, res) => {
         });
     }
 }
+
+
+// userCompanyRegistration
+// exports.userCompanyRegistration = async (req, res) => {
+//     try {
+
+//         console.log("userCompanyRegistration",req.body);
+
+//         const { first_name, last_name, email, register_password, register_confirm_password, signup_otp, company_name,comp_email,comp_registration_id,main_address,main_address_pin_code,main_address_country,main_address_state,main_address_city, membership_type_id,payment_status } = req.body;
+    
+//         if (register_password !== register_confirm_password) {
+//             return res.status(400).json({ status: 'err', message: 'Passwords does not match.' });
+//         }
+
+//         const emailExists = await new Promise((resolve, reject) => {
+//             db.query('SELECT email, register_from FROM users WHERE email = ?', [email], (err, results) => {
+//                 if (err) reject(err);
+
+//                 if (results.length > 0) {
+//                     var register_from = results[0].register_from;
+//                     if (register_from == 'web') {
+//                         var message = 'Email ID already exists, Please login with your email-ID and password';
+//                     } else {
+//                         if (register_from == 'gmail') {
+//                             register_from = 'google';
+//                         }
+//                         var message = 'Email ID already exists, login with ' + register_from;
+//                     }
+//                     return res.send(
+//                         {
+//                             status: 'err',
+//                             data: '',
+//                             message: message
+//                         }
+//                     )
+//                 }
+
+//                 resolve(results.length > 0);
+//             });
+//         });
+
+//         const verifyOTP = await new Promise((resolve, reject) => {
+//             db.query('SELECT * FROM signup_otp_veryfy WHERE email = ? AND otp = ? ', [email, signup_otp], (OTPerr, OTPresults) => {
+//                 if (OTPerr) reject(OTPerr);
+
+//                 if (OTPresults.length > 0) {
+
+//                     const currentTime = new Date();
+//                     if (currentTime < new Date(OTPresults[0].expire_at)) {
+//                         // OTP is valid
+//                         console.log('OTP is valid');
+//                         //resolve(true);
+//                     } else {
+//                         // OTP has expired
+//                         console.log('OTP has expired');
+//                         return res.send({
+//                             status: 'err',
+//                             data: '',
+//                             message: 'OTP has expired'
+//                         });
+//                     }
+
+//                 } else {
+//                     return res.send(
+//                         {
+//                             status: 'err',
+//                             data: '',
+//                             message: 'OTP is not valid'
+//                         }
+//                     )
+//                 }
+
+//                 resolve(OTPresults.length > 0);
+//             });
+//         });
+
+//         const hashedPassword = await bcrypt.hash(register_password, 8);
+//         const currentDate = new Date();
+
+//         const year = currentDate.getFullYear();
+//         const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+//         const day = String(currentDate.getDate()).padStart(2, '0');
+//         const hours = String(currentDate.getHours()).padStart(2, '0');
+//         const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+//         const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+
+//         const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+//         const userInsertQuery = 'INSERT INTO users (first_name, last_name, email, password, register_from, user_registered, user_status, user_type_id, alise_name) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+//         db.query(userInsertQuery, [first_name, last_name, email, hashedPassword, 'web', formattedDate, 1, 2, first_name + last_name], async (err, userResults) => {
+//             if (err) {
+//                 console.error('Error inserting user into "users" table:', err);
+//                 return res.send(
+//                     {
+//                         status: 'err',
+//                         data: '',
+//                         message: 'An error occurred while processing your request' + err
+//                     }
+//                 )
+//             }
+
+//             const user_new_id = userResults.insertId;
+//             console.log("user_new_id",user_new_id);
+
+
+//             var mailOptions = {
+//                 from: process.env.MAIL_USER,
+//                 //to: 'pranab@scwebtech.com',
+//                 to: email,
+//                 subject: 'Welcome Email',
+//                 html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+//                 <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
+//                  <tbody>
+//                   <tr>
+//                    <td align="center" valign="top">
+//                      <div id="template_header_image"><p style="margin-top: 0;"></p></div>
+//                      <table id="template_container" style="box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important; background-color: #fdfdfd; border: 1px solid #dcdcdc; border-radius: 3px !important;" border="0" cellpadding="0" cellspacing="0" width="600">
+//                       <tbody>
+//                         <tr>
+//                          <td align="center" valign="top">
+//                            <!-- Header -->
+//                            <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
+//                              <tbody>
+//                                <tr>
+//                                <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/email-template-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+//                                 <td id="header_wrapper" style="padding: 36px 48px; display: block;">
+//                                    <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Welcome Email</h1>
+//                                 </td>
+          
+//                                </tr>
+//                              </tbody>
+//                            </table>
+//                      <!-- End Header -->
+//                      </td>
+//                         </tr>
+//                         <tr>
+//                          <td align="center" valign="top">
+//                            <!-- Body -->
+//                            <table id="template_body" border="0" cellpadding="0" cellspacing="0" width="600">
+//                              <tbody>
+//                                <tr>
+//                                 <td id="body_content" style="background-color: #fdfdfd;" valign="top">
+//                                   <!-- Content -->
+//                                   <table border="0" cellpadding="20" cellspacing="0" width="100%">
+//                                    <tbody>
+//                                     <tr>
+//                                      <td style="padding: 48px;" valign="top">
+//                                        <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
+                                        
+//                                         <table border="0" cellpadding="4" cellspacing="0" width="90%">
+//                                           <tr>
+//                                             <td colspan="2">
+//                                                 <strong>Hello ${first_name},</strong>
+//                                                 <p style="font-size:15px; line-height:20px">Warm greetings from the CEchoes Technology team!
+//                                                 You have joined a community dedicated to empowering all Grahaks (Customers) and ensuring their voices are heard <b>LOUD</b> and <b>C L E A R</b>.</p>
+//                                                 <p style="font-size:15px; line-height:20px"> Keep sharing your Customer experiences (positive or negative), read about others' experience and get to know Customer centric information.</p>
+//                                                 <p style="font-size:15px; line-height:20px">Share this platform with all your friends and family.
+//                                                 Together, we can make Organisations listen and improve because <b>#CustomersHavePower</b>.</p><p style="font-size:15px; line-height:20px">Let's usher in this Customer Revolution coz <b>#CustomerRightsMatter</b>.</p><p style="font-size:15px; line-height:20px">Welcome Onboard!</p><br><p style="font-size:15px; line-height:20px">Kind Regards,</p><p style="font-size:15px; line-height:20px">CEchoes Technology Team</p><br>
+//                                             </td>
+//                                           </tr>
+//                                         </table>
+//                                         <p style="font-size:15px; line-height:20px">Download the app from Google Playstore or visit  <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology.com </a>.</p>
+//                                        </div>
+//                                      </td>
+//                                     </tr>
+//                                    </tbody>
+//                                   </table>
+//                                 <!-- End Content -->
+//                                 </td>
+//                                </tr>
+//                              </tbody>
+//                            </table>
+//                          <!-- End Body -->
+//                          </td>
+//                         </tr>
+//                         <tr>
+//                          <td align="center" valign="top">
+//                            <!-- Footer -->
+//                            <table id="template_footer" border="0" cellpadding="10" cellspacing="0" width="600">
+//                             <tbody>
+//                              <tr>
+//                               <td style="padding: 0; -webkit-border-radius: 6px;" valign="top">
+//                                <table border="0" cellpadding="10" cellspacing="0" width="100%">
+//                                  <tbody>
+//                                    <tr>
+//                                     <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
+//                                          <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology</a></p>
+//                                     </td>
+//                                    </tr>
+//                                  </tbody>
+//                                </table>
+//                               </td>
+//                              </tr>
+//                             </tbody>
+//                            </table>
+//                          <!-- End Footer -->
+//                          </td>
+//                         </tr>
+//                       </tbody>
+//                      </table>
+//                    </td>
+//                   </tr>
+//                  </tbody>
+//                 </table>
+//                </div>`
+//             }
+//             await mdlconfig.transporter.sendMail(mailOptions, function (err, info) {
+//                 if (err) {
+//                     console.log(err);
+//                     return res.send({
+//                         status: 'not ok',
+//                         message: 'Something went wrong'
+//                     });
+//                 } else {
+//                     console.log('Mail Send: ', info.response);
+//                     return res.send({
+//                         status: 'ok',
+//                         message: ''
+//                     });
+
+//                 }
+//             })
+//             // Insert the user into the "user_customer_meta" table
+//             const userMetaInsertQuery = 'INSERT INTO user_customer_meta (user_id, review_count) VALUES (?, ?)';
+//             db.query(userMetaInsertQuery, [userResults.insertId, 0], (err, metaResults) => {
+//                 if (err) {
+//                     return res.send(
+//                         {
+//                             status: 'err',
+//                             data: '',
+//                             message: 'An error occurred while processing your request' + err
+//                         }
+//                     )
+//                 }
+
+
+//             // const companyquery = `INSERT INTO `
+
+//             comFunction2.generateUniqueSlug(req.body.company_name, (error, companySlug) => {
+//                 // comFunction2.generateUniqueSlug(req.body.company_name, main_address_country, (err, companySlug) => {
+//                 if (error) {
+//                     console.log('Err: ', error.message);
+//                 } else {
+//                     console.log('companySlug', companySlug);
+//                     var insert_values = [];
+//                         insert_values = [user_new_id, company_name, comp_email, comp_registration_id, '2', formattedDate, formattedDate, main_address, main_address_pin_code, main_address_country, main_address_state, main_address_city, '0', companySlug,membership_type_id,payment_status];
+                
+    
+//                     const insertQuery = 'INSERT INTO company (user_created_by, company_name, comp_email, comp_registration_id, status, created_date, updated_date, main_address, main_address_pin_code, main_address_country, main_address_state, main_address_city, verified, slug, membership_type_id,paid_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)';
+//                     db.query(insertQuery, insert_values, (err, results, fields) => {
+//                         if (err) {
+//                             return res.send(
+//                                 {
+//                                     status: 'err',
+//                                     data: '',
+//                                     message: 'An error occurred while processing your request' + err
+//                                 }
+//                             )
+//                         } else {
+//                             console.log("company results", results);
+    
+//                             var companyId = results.insertId;
+//                             // const categoryArray = Array.isArray(req.body.category) ? req.body.category : [req.body.category];
+    
+//                             // // Filter out undefined values from categoryArray
+//                             // const validCategoryArray = categoryArray.filter(categoryID => categoryID !== undefined);
+    
+//                             // console.log('categoryArray:', categoryArray);
+//                             // if (validCategoryArray.length > 0) {
+//                             //     const companyCategoryData = validCategoryArray.map((categoryID) => [companyId, categoryID]);
+//                             //     db.query('INSERT INTO company_cactgory_relation (company_id, category_id) VALUES ?', [companyCategoryData], function (error, results) {
+//                             //         if (error) {
+//                             //             console.log(error);
+//                             //             res.status(400).json({
+//                             //                 status: 'err',
+//                             //                 message: 'Error while creating company category'
+//                             //             });
+//                             //         }
+//                             //         else {
+//                             //             return res.send(
+//                             //                 {
+//                             //                     status: 'ok',
+//                             //                     data: companyId,
+//                             //                     message: 'New company created'
+//                             //                 }
+//                             //             )
+//                             //         }
+//                             //     });
+//                             // } else {
+//                                 return res.send(
+//                                     {
+//                                         status: 'ok',
+//                                         data: companyId,
+//                                         message: 'New company created.'
+//                                     }
+//                                 )
+//                             // }
+//                         }
+//                     })
+    
+//                 }
+//             });
+
+//             const claimRequestQuery = 'INSERT INTO company_claim_request (company_id, claimed_by, status, claimed_date) VALUES (?, ?, ?, ?)';
+//             const claimRequestValues = [companyId, user_new_id, '1', formattedDate];
+
+//             db.query(claimRequestQuery, claimRequestValues, (err) => {
+//                 if (err) {
+//                     // Handle the error
+//                     return res.send({
+//                         status: 'err',
+//                         data: '',
+//                         message: 'An error occurred while inserting company claim request: ' + err
+//                     });
+//                 }
+//             });
+//             //
+
+
+//                 const userRegistrationData = {
+//                     username: email,
+//                     email: email,
+//                     password: register_password,
+//                     first_name: first_name,
+//                     last_name: last_name,
+//                 };
+//                 axios.post(process.env.BLOG_API_ENDPOINT + '/register', userRegistrationData)
+//                     .then((response) => {
+//                         //console.log('User registration successful. User ID:', response.data.user_id);
+
+//                         //-------User Auto Login --------------//
+//                         const userAgent = req.headers['user-agent'];
+//                         const agent = useragent.parse(userAgent);
+
+//                         // Set a cookie
+//                         const userData = {
+//                             user_id: userResults.insertId,
+//                             first_name: first_name,
+//                             last_name: last_name,
+//                             email: email,
+//                             user_type_id: 2
+//                         };
+//                         const encodedUserData = JSON.stringify(userData);
+//                         res.cookie('user', encodedUserData);
+
+//                         (async () => {
+//                             //---- Login to Wordpress Blog-----//
+//                             //let wp_user_data;
+//                             try {
+//                                 const userLoginData = {
+//                                     email: email,
+//                                     password: register_password,
+//                                 };
+//                                 const response = await axios.post(process.env.BLOG_API_ENDPOINT + '/login', userLoginData);
+//                                 const wp_user_data = response.data.data;
+
+
+
+//                                 //-- check last Login Info-----//
+//                                 const device_query = "SELECT * FROM user_device_info WHERE user_id = ?";
+//                                 db.query(device_query, [userResults.insertId], async (err, device_query_results) => {
+//                                     const currentDate = new Date();
+//                                     const year = currentDate.getFullYear();
+//                                     const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+//                                     const day = String(currentDate.getDate()).padStart(2, '0');
+//                                     const hours = String(currentDate.getHours()).padStart(2, '0');
+//                                     const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+//                                     const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+//                                     const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+//                                     if (device_query_results.length > 0) {
+//                                         // User exist update info
+//                                         const device_update_query = 'UPDATE user_device_info SET device_id = ?, IP_address = ?, last_logged_in = ? WHERE user_id = ?';
+//                                         const values = [agent.toAgent() + ' ' + agent.os.toString(), requestIp.getClientIp(req), formattedDate, userResults.insertId];
+//                                         db.query(device_update_query, values, (err, device_update_query_results) => {
+
+//                                             const OTPdelQuery = `DELETE FROM signup_otp_veryfy WHERE email = '${email}' `;
+//                                             db.query(OTPdelQuery, (OTPdelErr, TOPdelRes) => {
+//                                                 if (OTPdelErr) {
+//                                                     console.log(OTPdelErr);
+//                                                     return res.send({
+//                                                         status: 'not ok',
+//                                                         message: 'Something went wrong'
+//                                                     });
+//                                                 } else {
+//                                                     console.log('otp deleted');
+//                                                     return res.send(
+//                                                         {
+//                                                             status: 'ok',
+//                                                             data: userData,
+//                                                             wp_user: wp_user_data,
+//                                                             currentUrlPath: req.body.currentUrlPath,
+//                                                             message: 'Registration successful you are automatically login to your dashboard'
+//                                                         }
+//                                                     )
+//                                                 }
+
+//                                             })
+
+
+//                                         })
+//                                     } else {
+//                                         // User doesnot exist Insert New Row.
+
+//                                         const device_insert_query = 'INSERT INTO user_device_info (user_id, device_id, device_token, imei_no, model_name, make_name, IP_address, last_logged_in, created_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+//                                         const values = [userResults.insertId, agent.toAgent() + ' ' + agent.os.toString(), '', '', '', '', requestIp.getClientIp(req), formattedDate, formattedDate];
+
+//                                         db.query(device_insert_query, values, (err, device_insert_query_results) => {
+//                                             const OTPdelQuery = `DELETE FROM signup_otp_veryfy WHERE email = '${email}' `;
+//                                             db.query(OTPdelQuery, (OTPdelErr, TOPdelRes) => {
+//                                                 if (OTPdelErr) {
+//                                                     console.log(OTPdelErr);
+//                                                     return res.send({
+//                                                         status: 'not ok',
+//                                                         message: 'Something went wrong'
+//                                                     });
+//                                                 } else {
+//                                                     console.log('otp deleted')
+//                                                     return res.send(
+//                                                         {
+//                                                             status: 'ok',
+//                                                             data: userData,
+//                                                             wp_user: wp_user_data,
+//                                                             currentUrlPath: req.body.currentUrlPath,
+//                                                             message: 'Registration successful you are automatically login to your dashboard'
+//                                                         }
+//                                                     )
+//                                                 }
+
+//                                             })
+
+//                                         })
+
+//                                     }
+//                                 })
+//                             } catch (error) {
+//                                 console.error('User login failed. Error:', error);
+//                                 if (error.response && error.response.data) {
+//                                     console.log('Error response data:', error.response.data);
+//                                 }
+//                             }
+//                         })();
+//                     })
+//                     .catch((error) => {
+//                         console.error('User registration failed:',error );
+//                         return res.send(
+//                             {
+//                                 status: 'err',
+//                                 data: '',
+//                                 message: error.response.data
+//                             }
+//                         )
+//                     });
+//             })
+//         })
+//     }
+//     catch (error) {
+//         console.error('Error during user registration:', error);
+//         return res.status(500).json({ status: 'err', message: 'An error occurred while processing your request.' });
+//     }
+// }
+
+// exports.userCompanyRegistration = async (req, res) => {
+//     try {
+//         console.log("userCompanyRegistration", req.body);
+
+//         const { first_name, last_name, email, register_password, register_confirm_password, signup_otp, company_name, comp_email, comp_registration_id, main_address, main_address_pin_code, main_address_country, main_address_state, main_address_city, membership_type_id, payment_status } = req.body;
+
+//         if (register_password !== register_confirm_password) {
+//             return res.status(400).json({ status: 'err', message: 'Passwords do not match.' });
+//         }
+
+//         const emailExists = await new Promise((resolve, reject) => {
+//             db.query('SELECT email, register_from FROM users WHERE email = ?', [email], (err, results) => {
+//                 if (err) return reject(err);
+//                 if (results.length > 0) {
+//                     const register_from = results[0].register_from === 'web' ? 'web' : results[0].register_from === 'gmail' ? 'google' : results[0].register_from;
+//                     const message = `Email ID already exists, login with ${register_from}`;
+//                     return resolve({ exists: true, message });
+//                 }
+//                 resolve({ exists: false });
+//             });
+//         });
+
+//         if (emailExists.exists) {
+//             return res.status(400).json({ status: 'err', message: emailExists.message });
+//         }
+
+//         const otpValid = await new Promise((resolve, reject) => {
+//             db.query('SELECT * FROM signup_otp_veryfy WHERE email = ? AND otp = ?', [email, signup_otp], (err, results) => {
+//                 if (err) return reject(err);
+//                 if (results.length === 0) {
+//                     return resolve({ valid: false, message: 'OTP is not valid' });
+//                 }
+//                 const currentTime = new Date();
+//                 if (currentTime > new Date(results[0].expire_at)) {
+//                     return resolve({ valid: false, message: 'OTP has expired' });
+//                 }
+//                 resolve({ valid: true });
+//             });
+//         });
+
+//         if (!otpValid.valid) {
+//             return res.status(400).json({ status: 'err', message: otpValid.message });
+//         }
+
+//         const hashedPassword = await bcrypt.hash(register_password, 8);
+//         const currentDate = new Date();
+//         const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ');
+
+//         const userInsertQuery = 'INSERT INTO users (first_name, last_name, email, password, register_from, user_registered, user_status, user_type_id, alise_name) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+//         const userResults = await new Promise((resolve, reject) => {
+//             db.query(userInsertQuery, [first_name, last_name, email, hashedPassword, 'web', formattedDate, 1, 2, first_name + last_name], (err, results) => {
+//                 if (err) return reject(err);
+//                 resolve(results);
+//             });
+//         });
+
+//         const user_new_id = userResults.insertId;
+
+//         const mailOptions = {
+//             from: process.env.MAIL_USER,
+//             to: email,
+//             subject: 'Welcome Email',
+//             html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+//             <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
+//              <tbody>
+//               <tr>
+//                <td align="center" valign="top">
+//                  <div id="template_header_image"><p style="margin-top: 0;"></p></div>
+//                  <table id="template_container" style="box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important; background-color: #fdfdfd; border: 1px solid #dcdcdc; border-radius: 3px !important;" border="0" cellpadding="0" cellspacing="0" width="600">
+//                   <tbody>
+//                     <tr>
+//                      <td align="center" valign="top">
+//                        <!-- Header -->
+//                        <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
+//                          <tbody>
+//                            <tr>
+//                            <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/email-template-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+//                             <td id="header_wrapper" style="padding: 36px 48px; display: block;">
+//                                <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Welcome Email</h1>
+//                             </td>
+      
+//                            </tr>
+//                          </tbody>
+//                        </table>
+//                  <!-- End Header -->
+//                  </td>
+//                     </tr>
+//                     <tr>
+//                      <td align="center" valign="top">
+//                        <!-- Body -->
+//                        <table id="template_body" border="0" cellpadding="0" cellspacing="0" width="600">
+//                          <tbody>
+//                            <tr>
+//                             <td id="body_content" style="background-color: #fdfdfd;" valign="top">
+//                               <!-- Content -->
+//                               <table border="0" cellpadding="20" cellspacing="0" width="100%">
+//                                <tbody>
+//                                 <tr>
+//                                  <td style="padding: 48px;" valign="top">
+//                                    <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
+                                    
+//                                     <table border="0" cellpadding="4" cellspacing="0" width="90%">
+//                                       <tr>
+//                                         <td colspan="2">
+//                                             <strong>Hello ${first_name},</strong>
+//                                             <p style="font-size:15px; line-height:20px">Warm greetings from the CEchoes Technology team!
+//                                             You have joined a community dedicated to empowering all Grahaks (Customers) and ensuring their voices are heard <b>LOUD</b> and <b>C L E A R</b>.</p>
+//                                             <p style="font-size:15px; line-height:20px"> Keep sharing your Customer experiences (positive or negative), read about others' experience and get to know Customer centric information.</p>
+//                                             <p style="font-size:15px; line-height:20px">Share this platform with all your friends and family.
+//                                             Together, we can make Organisations listen and improve because <b>#CustomersHavePower</b>.</p><p style="font-size:15px; line-height:20px">Let's usher in this Customer Revolution coz <b>#CustomerRightsMatter</b>.</p><p style="font-size:15px; line-height:20px">Welcome Onboard!</p><br><p style="font-size:15px; line-height:20px">Kind Regards,</p><p style="font-size:15px; line-height:20px">CEchoes Technology Team</p><br>
+//                                         </td>
+//                                       </tr>
+//                                     </table>
+//                                     <p style="font-size:15px; line-height:20px">Download the app from Google Playstore or visit  <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology.com </a>.</p>
+//                                    </div>
+//                                  </td>
+//                                 </tr>
+//                                </tbody>
+//                               </table>
+//                             <!-- End Content -->
+//                             </td>
+//                            </tr>
+//                          </tbody>
+//                        </table>
+//                      <!-- End Body -->
+//                      </td>
+//                     </tr>
+//                     <tr>
+//                      <td align="center" valign="top">
+//                        <!-- Footer -->
+//                        <table id="template_footer" border="0" cellpadding="10" cellspacing="0" width="600">
+//                         <tbody>
+//                          <tr>
+//                           <td style="padding: 0; -webkit-border-radius: 6px;" valign="top">
+//                            <table border="0" cellpadding="10" cellspacing="0" width="100%">
+//                              <tbody>
+//                                <tr>
+//                                 <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
+//                                      <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology</a></p>
+//                                 </td>
+//                                </tr>
+//                              </tbody>
+//                            </table>
+//                           </td>
+//                          </tr>
+//                         </tbody>
+//                        </table>
+//                      <!-- End Footer -->
+//                      </td>
+//                     </tr>
+//                   </tbody>
+//                  </table>
+//                </td>
+//               </tr>
+//              </tbody>
+//             </table>
+//            </div>`
+//         };
+//         await new Promise((resolve, reject) => {
+//             mdlconfig.transporter.sendMail(mailOptions, (err, info) => {
+//                 if (err) return reject(err);
+//                 console.log('Mail Send:', info.response);
+//                 resolve(info.response);
+//             });
+//         });
+
+//         const userMetaInsertQuery = 'INSERT INTO user_customer_meta (user_id, review_count) VALUES (?, ?)';
+//         await new Promise((resolve, reject) => {
+//             db.query(userMetaInsertQuery, [user_new_id, 0], (err, results) => {
+//                 if (err) return reject(err);
+//                 resolve(results);
+//             });
+//         });
+
+//         const companySlug = await new Promise((resolve, reject) => {
+//             comFunction2.generateUniqueSlug(company_name, (err, slug) => {
+//                 if (err) return reject(err);
+//                 resolve(slug);
+//             });
+//         });
+
+//         const insert_values = [user_new_id, company_name, comp_email, comp_registration_id, '2', formattedDate, formattedDate, main_address, main_address_pin_code, main_address_country, main_address_state, main_address_city, '0', companySlug, membership_type_id, payment_status];
+//         const companyResults = await new Promise((resolve, reject) => {
+//             const insertQuery = 'INSERT INTO company (user_created_by, company_name, comp_email, comp_registration_id, status, created_date, updated_date, main_address, main_address_pin_code, main_address_country, main_address_state, main_address_city, verified, slug, membership_type_id, paid_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+//             db.query(insertQuery, insert_values, (err, results) => {
+//                 if (err) return reject(err);
+
+//                 const companyId = results.insertId;
+//                 const claimRequestQuery = 'INSERT INTO company_claim_request (company_id, claimed_by, status, claimed_date) VALUES (?, ?, ?, ?)';
+//                 const claimRequestValues = [companyId, user_new_id, '1', formattedDate];
+        
+//                 db.query(claimRequestQuery, claimRequestValues, (claimErr) => {
+//                     if (claimErr) {
+//                         return reject(claimErr);
+//                     }
+//                     resolve({ results, companyId });
+//                 });
+//             });
+//         });
+
+//         const userRegistrationData = {
+//             username: email,
+//             email: email,
+//             password: register_password,
+//             first_name: first_name,
+//             last_name: last_name,
+//         };
+//         axios.post(process.env.BLOG_API_ENDPOINT + '/register', userRegistrationData)
+//             .then((response) => {
+//                 //console.log('User registration successful. User ID:', response.data.user_id);
+
+//                 //-------User Auto Login --------------//
+//                 const userAgent = req.headers['user-agent'];
+//                 const agent = useragent.parse(userAgent);
+
+//                 // Set a cookie
+//                 const userData = {
+//                     user_id: userResults.insertId,
+//                     first_name: first_name,
+//                     last_name: last_name,
+//                     email: email,
+//                     user_type_id: 2
+//                 };
+//                 const encodedUserData = JSON.stringify(userData);
+//                 res.cookie('user', encodedUserData);
+
+//                 (async () => {
+//                     //---- Login to Wordpress Blog-----//
+//                     //let wp_user_data;
+//                     try {
+//                         const userLoginData = {
+//                             email: email,
+//                             password: register_password,
+//                         };
+//                         const response = await axios.post(process.env.BLOG_API_ENDPOINT + '/login', userLoginData);
+//                         const wp_user_data = response.data.data;
+//                         console.log("wp_user_data",wp_user_data);
+
+
+
+//                         //-- check last Login Info-----//
+//                         const device_query = "SELECT * FROM user_device_info WHERE user_id = ?";
+//                         db.query(device_query, [userResults.insertId], async (err, device_query_results) => {
+//                             const currentDate = new Date();
+//                             const year = currentDate.getFullYear();
+//                             const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+//                             const day = String(currentDate.getDate()).padStart(2, '0');
+//                             const hours = String(currentDate.getHours()).padStart(2, '0');
+//                             const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+//                             const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+//                             const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+//                             if (device_query_results.length > 0) {
+//                                 // User exist update info
+//                                 const device_update_query = 'UPDATE user_device_info SET device_id = ?, IP_address = ?, last_logged_in = ? WHERE user_id = ?';
+//                                 const values = [agent.toAgent() + ' ' + agent.os.toString(), requestIp.getClientIp(req), formattedDate, userResults.insertId];
+//                                 db.query(device_update_query, values, (err, device_update_query_results) => {
+
+//                                     const OTPdelQuery = `DELETE FROM signup_otp_veryfy WHERE email = '${email}' `;
+//                                     db.query(OTPdelQuery, (OTPdelErr, TOPdelRes) => {
+//                                         if (OTPdelErr) {
+//                                             console.log(OTPdelErr);
+//                                             return res.send({
+//                                                 status: 'not ok',
+//                                                 message: 'Something went wrong'
+//                                             });
+//                                         } else {
+//                                             console.log('otp deleted');
+//                                             // return res.send(
+//                                             //     {
+//                                             //         status: 'ok',
+//                                             //         data: userData,
+//                                             //         wp_user: wp_user_data,
+//                                             //         currentUrlPath: req.body.currentUrlPath,
+//                                             //         message: 'Registration successful you are automatically login to your dashboard'
+//                                             //     }
+//                                             // )
+//                                         }
+
+//                                     })
+
+
+//                                 })
+//                             } else {
+//                                 // User doesnot exist Insert New Row.
+
+//                                 const device_insert_query = 'INSERT INTO user_device_info (user_id, device_id, device_token, imei_no, model_name, make_name, IP_address, last_logged_in, created_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+//                                 const values = [userResults.insertId, agent.toAgent() + ' ' + agent.os.toString(), '', '', '', '', requestIp.getClientIp(req), formattedDate, formattedDate];
+
+//                                 db.query(device_insert_query, values, (err, device_insert_query_results) => {
+//                                     const OTPdelQuery = `DELETE FROM signup_otp_veryfy WHERE email = '${email}' `;
+//                                     db.query(OTPdelQuery, (OTPdelErr, TOPdelRes) => {
+//                                         if (OTPdelErr) {
+//                                             console.log(OTPdelErr);
+//                                             return res.send({
+//                                                 status: 'not ok',
+//                                                 message: 'Something went wrong'
+//                                             });
+//                                         } else {
+//                                             console.log('otp deleted')
+//                                             // return res.send(
+//                                             //     {
+//                                             //         status: 'ok',
+//                                             //         data: userData,
+//                                             //         wp_user: wp_user_data,
+//                                             //         currentUrlPath: req.body.currentUrlPath,
+//                                             //         message: 'Registration successful you are automatically login to your dashboard'
+//                                             //     }
+//                                             // )
+//                                         }
+
+//                                     })
+
+//                                 })
+
+//                             }
+//                         })
+//                     } catch (error) {
+//                         console.error('User login failed. Error:', error);
+//                         if (error.response && error.response.data) {
+//                             console.log('Error response data:', error.response.data);
+//                         }
+//                     }
+//                 })();
+//             })
+//             .catch((error) => {
+//                 console.error('User registration failed:', );
+//                 return res.send(
+//                     {
+//                         status: 'err',
+//                         data: '',
+//                         message: error.response.data.data
+//                     }
+//                 )
+//             });
+
+//         return res.status(200).json({
+//             status: 'ok',
+//             // data: userData,
+//             // wp_user: wp_user_data,
+//             // currentUrlPath: req.body.currentUrlPath,
+//             message: 'Registration successful you are automatically logged in to your dashboard'
+//         });
+//     } catch (error) {
+//         console.error('Error during user registration:', error);
+//         return res.status(500).json({ status: 'err', message: 'An error occurred while processing your request.' });
+//     }
+// };
+
+exports.userCompanyRegistration = async (req, res) => {
+    console.log(req.body);
+
+    //const { first_name, last_name, email, register_password, register_confirm_password, signup_otp } = req.body;
+const { first_name, last_name, email, register_password, register_confirm_password, signup_otp, company_name, comp_email, comp_registration_id, main_address, main_address_pin_code, main_address_country, main_address_state, main_address_city, membership_type_id, payment_status } = req.body;
+
+    // Validation: Check if passwords match
+    if (register_password !== register_confirm_password) {
+        return res.status(400).json({ status: 'err', message: 'Passwords does not match.' });
+    }
+
+    try {
+        // Check if the email already exists in the "users" table
+        const emailExists = await new Promise((resolve, reject) => {
+            db.query('SELECT email, register_from FROM users WHERE email = ?', [email], (err, results) => {
+                if (err) reject(err);
+
+                if (results.length > 0) {
+                    var register_from = results[0].register_from;
+                    if (register_from == 'web') {
+                        var message = 'Email ID already exists, Please login with your email-ID and password';
+                    } else {
+                        if (register_from == 'gmail') {
+                            register_from = 'google';
+                        }
+                        var message = 'Email ID already exists, login with ' + register_from;
+                    }
+                    return res.send(
+                        {
+                            status: 'err',
+                            data: '',
+                            message: message
+                        }
+                    )
+                }
+
+                resolve(results.length > 0);
+            });
+        });
+
+        // Check if the otp exists in the "signup_otp_veryfy" table
+        const verifyOTP = await new Promise((resolve, reject) => {
+            db.query('SELECT * FROM signup_otp_veryfy WHERE email = ? AND otp = ? ', [email, signup_otp], (OTPerr, OTPresults) => {
+                if (OTPerr) reject(OTPerr);
+
+                if (OTPresults.length > 0) {
+
+                    const currentTime = new Date();
+                    if (currentTime < new Date(OTPresults[0].expire_at)) {
+                        // OTP is valid
+                        console.log('OTP is valid');
+                        //resolve(true);
+                    } else {
+                        // OTP has expired
+                        console.log('OTP has expired');
+                        return res.send({
+                            status: 'err',
+                            data: '',
+                            message: 'OTP has expired'
+                        });
+                    }
+
+                } else {
+                    return res.send(
+                        {
+                            status: 'err',
+                            data: '',
+                            message: 'OTP is not valid'
+                        }
+                    )
+                }
+
+                resolve(OTPresults.length > 0);
+            });
+        });
+
+        // Hash the password asynchronously
+        const hashedPassword = await bcrypt.hash(register_password, 8);
+        const currentDate = new Date();
+
+        const year = currentDate.getFullYear();
+        const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+        const day = String(currentDate.getDate()).padStart(2, '0');
+        const hours = String(currentDate.getHours()).padStart(2, '0');
+        const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+        const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+
+        const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+        const userInsertQuery = 'INSERT INTO users (first_name, last_name, email, password, register_from, user_registered, user_status, user_type_id, alise_name) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+        db.query(userInsertQuery, [first_name, last_name, email, hashedPassword, 'web', formattedDate, 1, 2, first_name + last_name], async (err, userResults) => {
+            if (err) {
+                console.error('Error inserting user into "users" table:', err);
+                return res.send(
+                    {
+                        status: 'err',
+                        data: '',
+                        message: 'An error occurred while processing your request' + err
+                    }
+                )
+            }
+            var user_new_id= userResults.insertId;
+            console.log("user_new_id",user_new_id);
+
+		const companySlug = await new Promise((resolve, reject) => {
+            comFunction2.generateUniqueSlug(company_name, (err, slug) => {
+                if (err) return reject(err);
+                resolve(slug);
+            });
+        });
+
+        const insert_values = [user_new_id, company_name, comp_email, comp_registration_id, '2', formattedDate, formattedDate, main_address, main_address_pin_code, main_address_country, main_address_state, main_address_city, '0', companySlug, membership_type_id, payment_status];
+        const companyResults = await new Promise((resolve, reject) => {
+            const insertQuery = 'INSERT INTO company (user_created_by, company_name, comp_email, comp_registration_id, status, created_date, updated_date, main_address, main_address_pin_code, main_address_country, main_address_state, main_address_city, verified, slug, membership_type_id, paid_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+            db.query(insertQuery, insert_values, (err, results) => {
+                if (err) return reject(err);
+
+                const companyId = results.insertId;
+                const claimRequestQuery = 'INSERT INTO company_claim_request (company_id, claimed_by, status, claimed_date) VALUES (?, ?, ?, ?)';
+                const claimRequestValues = [companyId, user_new_id, '1', formattedDate];
+        
+                db.query(claimRequestQuery, claimRequestValues, (claimErr) => {
+                    if (claimErr) {
+                        return reject(claimErr);
+                    }
+                    resolve({ results, companyId });
+                });
+            });
+        });
+
+
+
+            var mailOptions = {
+                from: process.env.MAIL_USER,
+                //to: 'pranab@scwebtech.com',
+                to: email,
+                subject: 'Welcome Email',
+                html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+                <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
+                 <tbody>
+                  <tr>
+                   <td align="center" valign="top">
+                     <div id="template_header_image"><p style="margin-top: 0;"></p></div>
+                     <table id="template_container" style="box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important; background-color: #fdfdfd; border: 1px solid #dcdcdc; border-radius: 3px !important;" border="0" cellpadding="0" cellspacing="0" width="600">
+                      <tbody>
+                        <tr>
+                         <td align="center" valign="top">
+                           <!-- Header -->
+                           <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
+                             <tbody>
+                               <tr>
+                               <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/email-template-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+                                <td id="header_wrapper" style="padding: 36px 48px; display: block;">
+                                   <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Welcome Email</h1>
+                                </td>
+          
+                               </tr>
+                             </tbody>
+                           </table>
+                     <!-- End Header -->
+                     </td>
+                        </tr>
+                        <tr>
+                         <td align="center" valign="top">
+                           <!-- Body -->
+                           <table id="template_body" border="0" cellpadding="0" cellspacing="0" width="600">
+                             <tbody>
+                               <tr>
+                                <td id="body_content" style="background-color: #fdfdfd;" valign="top">
+                                  <!-- Content -->
+                                  <table border="0" cellpadding="20" cellspacing="0" width="100%">
+                                   <tbody>
+                                    <tr>
+                                     <td style="padding: 48px;" valign="top">
+                                       <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
+                                        
+                                        <table border="0" cellpadding="4" cellspacing="0" width="90%">
+                                          <tr>
+                                            <td colspan="2">
+                                                <strong>Hello ${first_name},</strong>
+                                                <p style="font-size:15px; line-height:20px">Warm greetings from the CEchoes Technology team!
+                                                You have joined a community dedicated to empowering all Grahaks (Customers) and ensuring their voices are heard <b>LOUD</b> and <b>C L E A R</b>.</p>
+                                                <p style="font-size:15px; line-height:20px"> Keep sharing your Customer experiences (positive or negative), read about others' experience and get to know Customer centric information.</p>
+                                                <p style="font-size:15px; line-height:20px">Share this platform with all your friends and family.
+                                                Together, we can make Organisations listen and improve because <b>#CustomersHavePower</b>.</p><p style="font-size:15px; line-height:20px">Let's usher in this Customer Revolution coz <b>#CustomerRightsMatter</b>.</p><p style="font-size:15px; line-height:20px">Welcome Onboard!</p><br><p style="font-size:15px; line-height:20px">Kind Regards,</p><p style="font-size:15px; line-height:20px">CEchoes Technology Team</p><br>
+                                            </td>
+                                          </tr>
+                                        </table>
+                                        <p style="font-size:15px; line-height:20px">Download the app from Google Playstore or visit  <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology.com </a>.</p>
+                                       </div>
+                                     </td>
+                                    </tr>
+                                   </tbody>
+                                  </table>
+                                <!-- End Content -->
+                                </td>
+                               </tr>
+                             </tbody>
+                           </table>
+                         <!-- End Body -->
+                         </td>
+                        </tr>
+                        <tr>
+                         <td align="center" valign="top">
+                           <!-- Footer -->
+                           <table id="template_footer" border="0" cellpadding="10" cellspacing="0" width="600">
+                            <tbody>
+                             <tr>
+                              <td style="padding: 0; -webkit-border-radius: 6px;" valign="top">
+                               <table border="0" cellpadding="10" cellspacing="0" width="100%">
+                                 <tbody>
+                                   <tr>
+                                    <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
+                                         <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology</a></p>
+                                    </td>
+                                   </tr>
+                                 </tbody>
+                               </table>
+                              </td>
+                             </tr>
+                            </tbody>
+                           </table>
+                         <!-- End Footer -->
+                         </td>
+                        </tr>
+                      </tbody>
+                     </table>
+                   </td>
+                  </tr>
+                 </tbody>
+                </table>
+               </div>`
+            }
+            await mdlconfig.transporter.sendMail(mailOptions, function (err, info) {
+                if (err) {
+                    console.log(err);
+                    return res.send({
+                        status: 'not ok',
+                        message: 'Something went wrong'
+                    });
+                } else {
+                    console.log('Mail Send: ', info.response);
+                    return res.send({
+                        status: 'ok',
+                        message: ''
+                    });
+
+                }
+            })
+            // Insert the user into the "user_customer_meta" table
+            const userMetaInsertQuery = 'INSERT INTO user_customer_meta (user_id, review_count) VALUES (?, ?)';
+            db.query(userMetaInsertQuery, [userResults.insertId, 0], (err, metaResults) => {
+                if (err) {
+                    return res.send(
+                        {
+                            status: 'err',
+                            data: '',
+                            message: 'An error occurred while processing your request' + err
+                        }
+                    )
+                }
+
+                const userRegistrationData = {
+                    username: email,
+                    email: email,
+                    password: register_password,
+                    first_name: first_name,
+                    last_name: last_name,
+                };
+                axios.post(process.env.BLOG_API_ENDPOINT + '/register', userRegistrationData)
+                    .then((response) => {
+                        //console.log('User registration successful. User ID:', response.data.user_id);
+
+                        //-------User Auto Login --------------//
+                        const userAgent = req.headers['user-agent'];
+                        const agent = useragent.parse(userAgent);
+
+                        // Set a cookie
+                        const userData = {
+                            user_id: userResults.insertId,
+                            first_name: first_name,
+                            last_name: last_name,
+                            email: email,
+                            user_type_id: 2
+                        };
+                        const encodedUserData = JSON.stringify(userData);
+                        res.cookie('user', encodedUserData);
+
+                        (async () => {
+                            //---- Login to Wordpress Blog-----//
+                            //let wp_user_data;
+                            try {
+                                const userLoginData = {
+                                    email: email,
+                                    password: register_password,
+                                };
+                                const response = await axios.post(process.env.BLOG_API_ENDPOINT + '/login', userLoginData);
+                                const wp_user_data = response.data.data;
+
+
+
+                                //-- check last Login Info-----//
+                                const device_query = "SELECT * FROM user_device_info WHERE user_id = ?";
+                                db.query(device_query, [userResults.insertId], async (err, device_query_results) => {
+                                    const currentDate = new Date();
+                                    const year = currentDate.getFullYear();
+                                    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+                                    const day = String(currentDate.getDate()).padStart(2, '0');
+                                    const hours = String(currentDate.getHours()).padStart(2, '0');
+                                    const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+                                    const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+                                    const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+                                    if (device_query_results.length > 0) {
+                                        // User exist update info
+                                        const device_update_query = 'UPDATE user_device_info SET device_id = ?, IP_address = ?, last_logged_in = ? WHERE user_id = ?';
+                                        const values = [agent.toAgent() + ' ' + agent.os.toString(), requestIp.getClientIp(req), formattedDate, userResults.insertId];
+                                        db.query(device_update_query, values, (err, device_update_query_results) => {
+
+                                            const OTPdelQuery = `DELETE FROM signup_otp_veryfy WHERE email = '${email}' `;
+                                            db.query(OTPdelQuery, (OTPdelErr, TOPdelRes) => {
+                                                if (OTPdelErr) {
+                                                    console.log(OTPdelErr);
+                                                    return res.send({
+                                                        status: 'not ok',
+                                                        message: 'Something went wrong'
+                                                    });
+                                                } else {
+                                                    console.log('otp deleted');
+                                                    return res.send(
+                                                        {
+                                                            status: 'ok',
+                                                            data: userData,
+                                                            wp_user: wp_user_data,
+                                                            currentUrlPath: req.body.currentUrlPath,
+                                                            message: 'Registration successful you are automatically login to your dashboard'
+                                                        }
+                                                    )
+                                                }
+
+                                            })
+
+
+                                        })
+                                    } else {
+                                        // User doesnot exist Insert New Row.
+
+                                        const device_insert_query = 'INSERT INTO user_device_info (user_id, device_id, device_token, imei_no, model_name, make_name, IP_address, last_logged_in, created_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+                                        const values = [userResults.insertId, agent.toAgent() + ' ' + agent.os.toString(), '', '', '', '', requestIp.getClientIp(req), formattedDate, formattedDate];
+
+                                        db.query(device_insert_query, values, (err, device_insert_query_results) => {
+                                            const OTPdelQuery = `DELETE FROM signup_otp_veryfy WHERE email = '${email}' `;
+                                            db.query(OTPdelQuery, (OTPdelErr, TOPdelRes) => {
+                                                if (OTPdelErr) {
+                                                    console.log(OTPdelErr);
+                                                    return res.send({
+                                                        status: 'not ok',
+                                                        message: 'Something went wrong'
+                                                    });
+                                                } else {
+                                                    console.log('otp deleted')
+                                                    return res.send(
+                                                        {
+                                                            status: 'ok',
+                                                            data: userData,
+                                                            wp_user: wp_user_data,
+                                                            currentUrlPath: req.body.currentUrlPath,
+                                                            message: 'Registration successful you are automatically login to your dashboard'
+                                                        }
+                                                    )
+                                                }
+
+                                            })
+
+                                        })
+
+                                    }
+                                })
+                            } catch (error) {
+                                console.error('User login failed. Error:', error);
+                                if (error.response && error.response.data) {
+                                    console.log('Error response data:', error.response.data);
+                                }
+                            }
+                        })();
+                    })
+                    .catch((error) => {
+                        console.error('User registration failed:', );
+                        return res.send(
+                            {
+                                status: 'err',
+                                data: '',
+                                message: error.response.data
+                            }
+                        )
+                    });
+            })
+        })
+    }
+    catch (error) {
+        console.error('Error during user registration:', error);
+        return res.status(500).json({ status: 'err', message: 'An error occurred while processing your request.' });
+    }
+}
+
+
 
 
 // Express route to retrieve likes for a comment

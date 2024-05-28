@@ -58,6 +58,9 @@ router.post('/frontend-user-register-otp', authController.frontendUserRegisterOT
 
 router.post('/frontend-user-login', authController.frontendUserLogin);
 
+// company_user_register
+router.post('/user-company-register', authController.userCompanyRegistration);
+
 //Create New category--------//
 router.post('/create-category', upload.single('cat_image'), authController.createCategory);
 
@@ -187,6 +190,7 @@ router.post('/update-about', upload.fields([
 ]), authController.updateAbout);
 
 router.post('/add-review', authController.submitReview);
+router.post('/addreview', authController.submitreview);
 router.post('/edit-user-review', authController.editUserReview);
 router.post('/delete-review', authController.deleteReview);
 router.post('/add-review-reply', authController.submitReviewReply);
@@ -452,6 +456,8 @@ router.post('/likeComment',authController.likeComment);
 
 //getcompaniesbyCountry
 router.get('/getcompaniesbyCountry/:country/:state/:city',authController.getcompaniesbyCountry);
+
+
 
 
 module.exports = router;

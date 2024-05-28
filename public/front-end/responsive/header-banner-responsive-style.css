@@ -335,10 +335,10 @@
 	.banner-left {
 		margin-bottom: 0;
 	}
-	.landing-banner .banner-right,
+	/* .landing-banner .banner-right,
 	.home-banner .banner-right {
 		display: none;
-	}
+	} */
 
 	.header-right-content span.mbl-hide-link.always{
 		display: inline-block !important;
