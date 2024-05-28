@@ -187,7 +187,27 @@ function getAllCompaniesReviews(userId) {
     });
   });
 }
-
+function getCompaniesReviewsbyuserId(userId) {
+  return new Promise((resolve, reject) => {
+    const reviewed_companies_query = `
+            SELECT r.*, c.company_name as company_name, c.logo as logo, c.slug, COUNT(review_reply.id) as review_reply_count, cp.product_title  
+            FROM  reviews r
+            JOIN company c ON r.company_id = c.ID
+            LEFT JOIN review_reply ON review_reply.review_id = r.id
+            LEFT JOIN company_products cp ON r.product_id = cp.id 
+            WHERE r.customer_id = ?
+            GROUP BY r.id
+            ORDER BY updated_at DESC
+        `;
+    db.query(reviewed_companies_query, [userId], (err, result) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(result);
+      }
+    });
+  });
+}
 // Function to fetch user All Companies Reviews tags from the  review_tag_relation table
 function getAllReviewTags() {
   return new Promise((resolve, reject) => {
@@ -5154,6 +5174,7 @@ module.exports = {
   getUpcomingBusinessFeature,
   getReviewedCompanies,
   getAllCompaniesReviews,
+  getCompaniesReviewsbyuserId,//
   getAllReviewTags,
   getlatestReviews,
   getAllTrendingReviews,

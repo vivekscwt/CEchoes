@@ -625,10 +625,10 @@ router.get('/company/:slug', checkCookieValue, async (req, res) => {
             comFunction2.getCompanyCategory(companyID),
         ]);
 
-        console.log(get_company_id.ID)
-        console.log(slug)
+        // console.log(get_company_id.ID)
+        // console.log(slug)
         // return false;
-        console.log("CompanyInfo",CompanyInfo);
+        // console.log("CompanyInfo",CompanyInfo);
 
 
         let cover_img = '';
@@ -659,7 +659,7 @@ router.get('/company/:slug', checkCookieValue, async (req, res) => {
         }
 
         if (CompanyInfo) {
-            console.log("CompanyInfo",CompanyInfo);
+            //console.log("CompanyInfo",CompanyInfo);
             //if (CompanyInfo.paid_status.trim() == 'paid' && CompanyInfo.membership_type_id) {
             if (CompanyInfo.paid_status && CompanyInfo.paid_status.trim() === 'paid' && CompanyInfo.membership_type_id) {
                 console.log("bbbbbbbbbb");
@@ -5462,7 +5462,7 @@ router.get('/my-reviews', checkFrontEndLoggedIn, async (req, res) => {
 
         // Fetch all the required data asynchronously
         const [AllCompaniesReviews, AllReviewTags, allRatingTags, globalPageMeta, AllReviewVoting] = await Promise.all([
-            comFunction2.getAllCompaniesReviews(userId),
+            comFunction2.getCompaniesReviewsbyuserId(userId),
             comFunction2.getAllReviewTags(),
             comFunction.getAllRatingTags(),
             comFunction2.getPageMetaValues('global'),
