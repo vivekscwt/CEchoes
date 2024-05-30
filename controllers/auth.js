@@ -228,13 +228,17 @@ exports.frontendUserRegister = async (req, res) => {
             }
 
 
-
             var mailOptions = {
                 from: process.env.MAIL_USER,
                 //to: 'pranab@scwebtech.com',
                 to: email,
-                subject: 'Welcome Email',
+                subject: 'Welcome e-mail',
                 html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+                <style>
+                body, table, td, p, a, h1, h2, h3, h4, h5, h6, div {
+                    font-family: Calibri, 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif !important;
+                }
+                </style>
                 <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
                  <tbody>
                   <tr>
@@ -250,7 +254,7 @@ exports.frontendUserRegister = async (req, res) => {
                                <tr>
                                <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/email-template-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
                                 <td id="header_wrapper" style="padding: 36px 48px; display: block;">
-                                   <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Welcome Email</h1>
+                                   <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Welcome</h1>
                                 </td>
           
                                </tr>
@@ -277,15 +281,12 @@ exports.frontendUserRegister = async (req, res) => {
                                           <tr>
                                             <td colspan="2">
                                                 <strong>Hello ${first_name},</strong>
-                                                <p style="font-size:15px; line-height:20px">Warm greetings from the CEchoes Technology team!
-                                                You have joined a community dedicated to empowering all Grahaks (Customers) and ensuring their voices are heard <b>LOUD</b> and <b>C L E A R</b>.</p>
-                                                <p style="font-size:15px; line-height:20px"> Keep sharing your Customer experiences (positive or negative), read about others' experience and get to know Customer centric information.</p>
-                                                <p style="font-size:15px; line-height:20px">Share this platform with all your friends and family.
-                                                Together, we can make Organisations listen and improve because <b>#CustomersHavePower</b>.</p><p style="font-size:15px; line-height:20px">Let's usher in this Customer Revolution coz <b>#CustomerRightsMatter</b>.</p><p style="font-size:15px; line-height:20px">Welcome Onboard!</p><br><p style="font-size:15px; line-height:20px">Kind Regards,</p><p style="font-size:15px; line-height:20px">CEchoes Technology Team</p><br>
+                                                <p style="font-size:15px; line-height:20px">Warm greetings from the CEchoes Technology team! You have joined a community dedicated to empowering all Customers and ensuring their voices are heard <b>LOUD </b> and <b>CLEAR</b>.</p>
+                                                <p style="font-size:15px; line-height:20px"> Keep sharing your Customer experiences (positive or negative), read about others' experience, post your queries on Products/Services, participate in Surveys, Lodge Complaints and get to know Customer-centric information.</p>
+                                                <p style="font-size:15px; line-height:20px">Share this platform with all your friends and family. Together, we can make Organisations Listen and improve because  <b>#CustomersHave Power</b>.</p><p style="font-size:15px; line-height:20px">Let's usher in this Customer Revolution coz <b> #CustomerRights Matter</b>.</p><p style="font-size:15px; line-height:20px">Welcome Onboard!</p><br><p style="font-size:15px; line-height:20px">Kind Regards,</p><p style="font-size:15px; line-height:20px">CEchoes Technology Team</p><br>
                                             </td>
                                           </tr>
                                         </table>
-                                        <p style="font-size:15px; line-height:20px">Download the app from Google Playstore or visit  <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology.com </a>.</p>
                                        </div>
                                      </td>
                                     </tr>
@@ -577,6 +578,11 @@ exports.frontendUserRegisterOTP = async (req, res) => {
                 to: email,
                 subject: 'Your One Time Password (OTP)',
                 html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+                <style>
+                body, table, td, p, a, h1, h2, h3, h4, h5, h6, div {
+                    font-family: Calibri, 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif !important;
+                }
+                </style>
                 <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
                  <tbody>
                   <tr>
@@ -590,9 +596,9 @@ exports.frontendUserRegisterOTP = async (req, res) => {
                            <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
                              <tbody>
                                <tr>
-                               <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/email-template-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+                               <td><img alt="Logo" src="${process.env.MAIN_URL}front-end/images/cechoes-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
                                 <td id="header_wrapper" style="padding: 36px 48px; display: block;">
-                                   <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Welcome Email</h1>
+                                   <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Welcome</h1>
                                 </td>
           
                                </tr>
@@ -2977,7 +2983,7 @@ function processCompanyCSVRows(worksheet, formattedDate, connection, user_id) {
 //     //console.log(req.body.companyid);
 //     console.log("companyid",req.body.companyid);
 //     console.log("ggggg");
-    
+
 //     // sql = `DELETE FROM company WHERE ID = ?`;
 //     // const data = [req.body.companyid];
 //     // db.query(sql, data, (err, result) => {
@@ -3030,7 +3036,7 @@ function processCompanyCSVRows(worksheet, formattedDate, connection, user_id) {
 //     //console.log(req.body.companyid);
 //     console.log("companyid",req.body.companyid);
 //     console.log("ggggg");
-    
+
 //     sql = `DELETE FROM company WHERE ID = ?`;
 //     const data = [req.body.companyid];
 //     db.query(sql, data, (err, result) => {
@@ -3048,7 +3054,7 @@ function processCompanyCSVRows(worksheet, formattedDate, connection, user_id) {
 
 //     })
 
-   
+
 // }
 
 
@@ -3104,13 +3110,13 @@ exports.deleteCompany = (req, res) => {
             }
 
             // If all queries are successful, send the response
-            return res.json({ success: true,message: 'Companies deleted successfully.' });
+            return res.json({ success: true, message: 'Companies deleted successfully.' });
         });
     } catch (error) {
         console.error('Error deleting companies:', error);
         return res.status(500).json({ success: false, message: 'Server error' });
     }
-    
+
 }
 
 
@@ -3169,7 +3175,7 @@ exports.deletePayment = (req, res) => {
 
 //--- Trash Company ----//
 exports.trashCompany = async (req, res) => {
-    console.log("companyid",req.body.companyid);
+    console.log("companyid", req.body.companyid);
     console.log("aaaaa");
     // sql = `UPDATE company SET status = '3' WHERE ID = ?`;
     // const data = [req.body.companyid];
@@ -3209,20 +3215,20 @@ exports.trashCompany = async (req, res) => {
                 res.json({ success: false, message: 'No companies were updated' });
             }
         });
-    } 
+    }
     catch (error) {
         console.error('Error updating companies:', error);
         return res.status(500).json({ success: false, message: 'Server error' });
     }
 }
 exports.trashCompanies = async (req, res) => {
-    console.log("companyid",req.body.companyid);
+    console.log("companyid", req.body.companyid);
     console.log("aaaaa");
     sql = `UPDATE company SET status = '3' WHERE ID = ?`;
     const data = [req.body.companyid];
     db.query(sql, data, (err, result) => {
         if (err) {
-            console.log("error",err);
+            console.log("error", err);
             return res.send({
                 status: 'error',
                 message: 'Something went wrong'
@@ -3478,6 +3484,11 @@ exports.contactFeedback = (req, res) => {
         subject: 'Feedback Mail From Contact',
         //html: ejs.renderFile(path.join(process.env.BASE_URL, '/views/email-template/', 'feedback.ejs'), { phone: phone, message: message })
         html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+        <style>
+        body, table, td, p, a, h1, h2, h3, h4, h5, h6, div {
+            font-family: Calibri, 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif !important;
+        }
+        </style>
         <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
          <tbody>
           <tr>
@@ -3866,6 +3877,11 @@ exports.submitReview = async (req, res) => {
             if (company && review) {
                 console.log('submit review:', review)
                 const template = `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+                <style>
+                body, table, td, p, a, h1, h2, h3, h4, h5, h6, div {
+                    font-family: Calibri, 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif !important;
+                }
+                </style>
                 <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
                  <tbody>
                   <tr>
@@ -3879,7 +3895,7 @@ exports.submitReview = async (req, res) => {
                            <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
                              <tbody>
                                <tr>
-                               <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/email-template-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+                               <td><img alt="Logo" src="${process.env.MAIN_URL}front-end/images/cechoes-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
                                 <td id="header_wrapper" style="padding: 36px 48px; display: block;">
                                    <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">New Review</h1>
                                 </td>
@@ -4015,11 +4031,11 @@ exports.submitreview = async (req, res) => {
     //return false;
 
     const getcompanyquery = `SELECT ID FROM company WHERE company_name = ?`;
-    const getcompanyvalue = await query(getcompanyquery,[req.body.company_name]);
-    console.log("getcompanyvalue",getcompanyvalue);
-    if(getcompanyvalue.length>0){
+    const getcompanyvalue = await query(getcompanyquery, [req.body.company_name]);
+    console.log("getcompanyvalue", getcompanyvalue);
+    if (getcompanyvalue.length > 0) {
         var CompanyID = getcompanyvalue[0].ID;
-        console.log("CompanyID",CompanyID);
+        console.log("CompanyID", CompanyID);
     }
 
     try {
@@ -4047,7 +4063,7 @@ exports.submitreview = async (req, res) => {
                            <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
                              <tbody>
                                <tr>
-                               <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/email-template-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+                               <td><img alt="Logo" src="${process.env.MAIN_URL}front-end/images/cechoes-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
                                 <td id="header_wrapper" style="padding: 36px 48px; display: block;">
                                    <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">New Review</h1>
                                 </td>
@@ -4188,6 +4204,11 @@ exports.editUserReview = async (req, res) => {
             const review = await comFunction2.updateReview(req.body);
 
             const template = `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+            <style>
+            body, table, td, p, a, h1, h2, h3, h4, h5, h6, div {
+                font-family: Calibri, 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif !important;
+            }
+            </style>
             <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
              <tbody>
               <tr>
@@ -5779,6 +5800,11 @@ exports.forgotPassword = (req, res) => {
                     //console.log('Encrypted:', encrypted);
 
                     const template = `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+                    <style>
+                    body, table, td, p, a, h1, h2, h3, h4, h5, h6, div {
+                        font-family: Calibri, 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif !important;
+                    }
+                    </style>
                     <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
                     <tbody>
                     <tr>
@@ -6510,6 +6536,11 @@ exports.createDiscussion = async (req, res) => {
                         //to: "dev2.scwt@gmail.com",
                         subject: 'Discussion approval',
                         html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+                        <style>
+                        body, table, td, p, a, h1, h2, h3, h4, h5, h6, div {
+                            font-family: Calibri, 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif !important;
+                        }
+                        </style>
                 <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
                   <tbody>
                   <tr>
@@ -6523,7 +6554,7 @@ exports.createDiscussion = async (req, res) => {
                             <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
                               <tbody>
                                 <tr>
-                                <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/email-template-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+                                <td><img alt="Logo" src="${process.env.MAIN_URL}front-end/images/cechoes-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
                                 <td id="header_wrapper" style="padding: 36px 48px; display: block;">
                                     <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Discussion approval email</h1>
                                 </td>
@@ -6924,6 +6955,11 @@ exports.addComment = async (req, res) => {
             const url = encodedUserData ? `${process.env.MAIN_URL}edit-discussion/${discussion_id}` : `${process.env.MAIN_URL}admin-login`;
 
             const html = `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+                    <style>
+                    body, table, td, p, a, h1, h2, h3, h4, h5, h6, div {
+                        font-family: Calibri, 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif !important;
+                    }
+                    </style>
                     <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
                       <tbody>
                       <tr>
@@ -6937,7 +6973,7 @@ exports.addComment = async (req, res) => {
                                 <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
                                   <tbody>
                                     <tr>
-                                    <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/email-template-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+                                    <td><img alt="Logo" src="${process.env.MAIN_URL}front-end/images/cechoes-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
                                     <td id="header_wrapper" style="padding: 36px 48px; display: block;">
                                         <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Discussion approval email</h1>
                                     </td>
@@ -7731,7 +7767,7 @@ exports.deleteCompanyComplaintLevel = async (req, res) => {
 
 //Complaint Register
 exports.complaintRegister = async (req, res) => {
-    console.log('complaintRegister',req.body ); 
+    console.log('complaintRegister', req.body);
     // const authenticatedUserId = parseInt(req.user.user_id);
     // const ApiuserId = parseInt(req.body.user_id);
     // if (isNaN(ApiuserId)) {
@@ -7757,23 +7793,23 @@ exports.complaintRegister = async (req, res) => {
 
     const country_name_query = `SELECT name,id FROM countries WHERE shortname = "${req.body.main_address_country}"`;
     const country_name_value = await query(country_name_query);
-    if(country_name_value.length>0){
-      var country_name = country_name_value[0].name;
-      console.log("country_name",country_name);
-      var country_id = country_name_value[0].id;
-      console.log("country_id",country_id);
+    if (country_name_value.length > 0) {
+        var country_name = country_name_value[0].name;
+        console.log("country_name", country_name);
+        var country_id = country_name_value[0].id;
+        console.log("country_id", country_id);
     }
-  
+
     const state_name_query = `SELECT * FROM states WHERE id = "${req.body.main_address_state}"`;
     const state_name_value = await query(state_name_query);
-    if(state_name_value.length>0){
-      var state_name = state_name_value[0].name;
-      console.log("state_name",state_name);
+    if (state_name_value.length > 0) {
+        var state_name = state_name_value[0].name;
+        console.log("state_name", state_name);
     }
-  
+
     var city_value = req.body['review-address'];
-    console.log("city_value",city_value);
-  
+    console.log("city_value", city_value);
+
     var concatenatedAddress = city_value + ', ' + state_name + ', ' + country_name;
     console.log(concatenatedAddress);
 
@@ -8715,6 +8751,11 @@ exports.escalateNextLevel = async (req, res) => {
         cc: emails,
         subject: 'Escalate to next level email',
         html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+        <style>
+        body, table, td, p, a, h1, h2, h3, h4, h5, h6, div {
+            font-family: Calibri, 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif !important;
+        }
+        </style>
         <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
           <tbody>
           <tr>
@@ -8728,7 +8769,7 @@ exports.escalateNextLevel = async (req, res) => {
                     <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
                       <tbody>
                         <tr>
-                        <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/email-template-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+                        <td><img alt="Logo" src="${process.env.MAIN_URL}front-end/images/cechoes-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
                         <td id="header_wrapper" style="padding: 36px 48px; display: block;">
                             <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Escalate to next level email</h1>
                         </td>
@@ -9389,6 +9430,11 @@ exports.editDiscussion = (req, res) => {
                                 //to: "dev2.scwt@gmail.com",
                                 subject: 'Comment approval mail',
                                 html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+                                <style>
+                                body, table, td, p, a, h1, h2, h3, h4, h5, h6, div {
+                                    font-family: Calibri, 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif !important;
+                                }
+                                </style>
                                 <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
                                  <tbody>
                                   <tr>
@@ -9402,7 +9448,7 @@ exports.editDiscussion = (req, res) => {
                                            <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
                                              <tbody>
                                                <tr>
-                                               <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/email-template-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+                                               <td><img alt="Logo" src="${process.env.MAIN_URL}front-end/images/cechoes-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
                                                 <td id="header_wrapper" style="padding: 36px 48px; display: block;">
                                                    <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;"> Comment on ${content} has been approved.</h1>
                                                 </td>
@@ -9534,6 +9580,11 @@ exports.editDiscussion = (req, res) => {
                                 //to: "dev2.scwt@gmail.com",
                                 subject: 'Comment Approval',
                                 html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+                                <style>
+                                body, table, td, p, a, h1, h2, h3, h4, h5, h6, div {
+                                    font-family: Calibri, 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif !important;
+                                }
+                                </style>
                                 <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
                                  <tbody>
                                   <tr>
@@ -9547,7 +9598,7 @@ exports.editDiscussion = (req, res) => {
                                            <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
                                              <tbody>
                                                <tr>
-                                               <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/email-template-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+                                               <td><img alt="Logo" src="${process.env.MAIN_URL}front-end/images/cechoes-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
                                                 <td id="header_wrapper" style="padding: 36px 48px; display: block;">
                                                    <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Comment on ${content} has been approved.</h1>
                                                 </td>
@@ -9716,6 +9767,11 @@ exports.editDiscussion = (req, res) => {
                         //to: "dev2.scwt@gmail.com",
                         subject: 'Discussion approval mail',
                         html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+                        <style>
+                                body, table, td, p, a, h1, h2, h3, h4, h5, h6, div {
+                                    font-family: Calibri, 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif !important;
+                                }
+                        </style>
                     <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
                     <tbody>
                     <tr>
@@ -9729,7 +9785,7 @@ exports.editDiscussion = (req, res) => {
                             <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
                                 <tbody>
                                 <tr>
-                                <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/email-template-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+                                <td><img alt="Logo" src="${process.env.MAIN_URL}front-end/images/cechoes-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
                                     <td id="header_wrapper" style="padding: 36px 48px; display: block;">
                                     <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;"> Your discussion ${content} has been approved.</h1>
                                     </td>
@@ -9938,30 +9994,30 @@ exports.getcompaniesbyCountry = async (req, res) => {
         const city = req.params.city;
 
 
-    if (!country) {
-        return res.status(400).json({ error: 'Country parameter is required' });
-    }
-
-    let sqlQuery = 'SELECT * FROM company WHERE 1=1';
-    if (country) {
-        sqlQuery += ` AND main_address_country = '${country}'`;
-    }
-    if (state) {
-        sqlQuery += ` AND main_address_state = '${state}'`;
-    }
-    if (city) {
-        sqlQuery += ` AND main_address_city = '${city}'`;
-    }
-
-
-    db.query(sqlQuery, queryParams, (err, results) => {
-        if (err) {
-            console.error('Error executing SQL query:', err);
-            res.status(500).json({ error: 'An error occurred while fetching companies' });
-        } else {
-            res.json(results);
+        if (!country) {
+            return res.status(400).json({ error: 'Country parameter is required' });
         }
-    });
+
+        let sqlQuery = 'SELECT * FROM company WHERE 1=1';
+        if (country) {
+            sqlQuery += ` AND main_address_country = '${country}'`;
+        }
+        if (state) {
+            sqlQuery += ` AND main_address_state = '${state}'`;
+        }
+        if (city) {
+            sqlQuery += ` AND main_address_city = '${city}'`;
+        }
+
+
+        db.query(sqlQuery, queryParams, (err, results) => {
+            if (err) {
+                console.error('Error executing SQL query:', err);
+                res.status(500).json({ error: 'An error occurred while fetching companies' });
+            } else {
+                res.json(results);
+            }
+        });
 
         // const get_company_query = `
         //     SELECT *
@@ -9997,7 +10053,7 @@ exports.getcompaniesbyCountry = async (req, res) => {
 //         console.log("userCompanyRegistration",req.body);
 
 //         const { first_name, last_name, email, register_password, register_confirm_password, signup_otp, company_name,comp_email,comp_registration_id,main_address,main_address_pin_code,main_address_country,main_address_state,main_address_city, membership_type_id,payment_status } = req.body;
-    
+
 //         if (register_password !== register_confirm_password) {
 //             return res.status(400).json({ status: 'err', message: 'Passwords does not match.' });
 //         }
@@ -10116,7 +10172,7 @@ exports.getcompaniesbyCountry = async (req, res) => {
 //                                 <td id="header_wrapper" style="padding: 36px 48px; display: block;">
 //                                    <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Welcome Email</h1>
 //                                 </td>
-          
+
 //                                </tr>
 //                              </tbody>
 //                            </table>
@@ -10136,7 +10192,7 @@ exports.getcompaniesbyCountry = async (req, res) => {
 //                                     <tr>
 //                                      <td style="padding: 48px;" valign="top">
 //                                        <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
-                                        
+
 //                                         <table border="0" cellpadding="4" cellspacing="0" width="90%">
 //                                           <tr>
 //                                             <td colspan="2">
@@ -10234,8 +10290,8 @@ exports.getcompaniesbyCountry = async (req, res) => {
 //                     console.log('companySlug', companySlug);
 //                     var insert_values = [];
 //                         insert_values = [user_new_id, company_name, comp_email, comp_registration_id, '2', formattedDate, formattedDate, main_address, main_address_pin_code, main_address_country, main_address_state, main_address_city, '0', companySlug,membership_type_id,payment_status];
-                
-    
+
+
 //                     const insertQuery = 'INSERT INTO company (user_created_by, company_name, comp_email, comp_registration_id, status, created_date, updated_date, main_address, main_address_pin_code, main_address_country, main_address_state, main_address_city, verified, slug, membership_type_id,paid_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)';
 //                     db.query(insertQuery, insert_values, (err, results, fields) => {
 //                         if (err) {
@@ -10248,13 +10304,13 @@ exports.getcompaniesbyCountry = async (req, res) => {
 //                             )
 //                         } else {
 //                             console.log("company results", results);
-    
+
 //                             var companyId = results.insertId;
 //                             // const categoryArray = Array.isArray(req.body.category) ? req.body.category : [req.body.category];
-    
+
 //                             // // Filter out undefined values from categoryArray
 //                             // const validCategoryArray = categoryArray.filter(categoryID => categoryID !== undefined);
-    
+
 //                             // console.log('categoryArray:', categoryArray);
 //                             // if (validCategoryArray.length > 0) {
 //                             //     const companyCategoryData = validCategoryArray.map((categoryID) => [companyId, categoryID]);
@@ -10287,7 +10343,7 @@ exports.getcompaniesbyCountry = async (req, res) => {
 //                             // }
 //                         }
 //                     })
-    
+
 //                 }
 //             });
 
@@ -10530,7 +10586,7 @@ exports.getcompaniesbyCountry = async (req, res) => {
 //                             <td id="header_wrapper" style="padding: 36px 48px; display: block;">
 //                                <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Welcome Email</h1>
 //                             </td>
-      
+
 //                            </tr>
 //                          </tbody>
 //                        </table>
@@ -10550,7 +10606,7 @@ exports.getcompaniesbyCountry = async (req, res) => {
 //                                 <tr>
 //                                  <td style="padding: 48px;" valign="top">
 //                                    <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
-                                    
+
 //                                     <table border="0" cellpadding="4" cellspacing="0" width="90%">
 //                                       <tr>
 //                                         <td colspan="2">
@@ -10640,7 +10696,7 @@ exports.getcompaniesbyCountry = async (req, res) => {
 //                 const companyId = results.insertId;
 //                 const claimRequestQuery = 'INSERT INTO company_claim_request (company_id, claimed_by, status, claimed_date) VALUES (?, ?, ?, ?)';
 //                 const claimRequestValues = [companyId, user_new_id, '1', formattedDate];
-        
+
 //                 db.query(claimRequestQuery, claimRequestValues, (claimErr) => {
 //                     if (claimErr) {
 //                         return reject(claimErr);
@@ -10803,7 +10859,7 @@ exports.userCompanyRegistration = async (req, res) => {
     console.log(req.body);
 
     //const { first_name, last_name, email, register_password, register_confirm_password, signup_otp } = req.body;
-const { first_name, last_name, email, register_password, register_confirm_password, signup_otp, company_name, comp_email, comp_registration_id, main_address, main_address_pin_code, main_address_country, main_address_state, main_address_city, membership_type_id, payment_status } = req.body;
+    const { first_name, last_name, email, register_password, register_confirm_password, signup_otp, company_name, comp_email, comp_registration_id, main_address, main_address_pin_code, main_address_country, main_address_state, main_address_city, membership_type_id, payment_status } = req.body;
 
     // Validation: Check if passwords match
     if (register_password !== register_confirm_password) {
@@ -10900,34 +10956,34 @@ const { first_name, last_name, email, register_password, register_confirm_passwo
                     }
                 )
             }
-            var user_new_id= userResults.insertId;
-            console.log("user_new_id",user_new_id);
+            var user_new_id = userResults.insertId;
+            console.log("user_new_id", user_new_id);
 
-		const companySlug = await new Promise((resolve, reject) => {
-            comFunction2.generateUniqueSlug(company_name, (err, slug) => {
-                if (err) return reject(err);
-                resolve(slug);
-            });
-        });
-
-        const insert_values = [user_new_id, company_name, comp_email, comp_registration_id, '2', formattedDate, formattedDate, main_address, main_address_pin_code, main_address_country, main_address_state, main_address_city, '0', companySlug, membership_type_id, payment_status];
-        const companyResults = await new Promise((resolve, reject) => {
-            const insertQuery = 'INSERT INTO company (user_created_by, company_name, comp_email, comp_registration_id, status, created_date, updated_date, main_address, main_address_pin_code, main_address_country, main_address_state, main_address_city, verified, slug, membership_type_id, paid_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-            db.query(insertQuery, insert_values, (err, results) => {
-                if (err) return reject(err);
-
-                const companyId = results.insertId;
-                const claimRequestQuery = 'INSERT INTO company_claim_request (company_id, claimed_by, status, claimed_date) VALUES (?, ?, ?, ?)';
-                const claimRequestValues = [companyId, user_new_id, '1', formattedDate];
-        
-                db.query(claimRequestQuery, claimRequestValues, (claimErr) => {
-                    if (claimErr) {
-                        return reject(claimErr);
-                    }
-                    resolve({ results, companyId });
+            const companySlug = await new Promise((resolve, reject) => {
+                comFunction2.generateUniqueSlug(company_name, (err, slug) => {
+                    if (err) return reject(err);
+                    resolve(slug);
                 });
             });
-        });
+
+            const insert_values = [user_new_id, company_name, comp_email, comp_registration_id, '2', formattedDate, formattedDate, main_address, main_address_pin_code, main_address_country, main_address_state, main_address_city, '0', companySlug, membership_type_id, payment_status];
+            const companyResults = await new Promise((resolve, reject) => {
+                const insertQuery = 'INSERT INTO company (user_created_by, company_name, comp_email, comp_registration_id, status, created_date, updated_date, main_address, main_address_pin_code, main_address_country, main_address_state, main_address_city, verified, slug, membership_type_id, paid_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+                db.query(insertQuery, insert_values, (err, results) => {
+                    if (err) return reject(err);
+
+                    const companyId = results.insertId;
+                    const claimRequestQuery = 'INSERT INTO company_claim_request (company_id, claimed_by, status, claimed_date) VALUES (?, ?, ?, ?)';
+                    const claimRequestValues = [companyId, user_new_id, '1', formattedDate];
+
+                    db.query(claimRequestQuery, claimRequestValues, (claimErr) => {
+                        if (claimErr) {
+                            return reject(claimErr);
+                        }
+                        resolve({ results, companyId });
+                    });
+                });
+            });
 
 
 
@@ -10935,8 +10991,13 @@ const { first_name, last_name, email, register_password, register_confirm_passwo
                 from: process.env.MAIL_USER,
                 //to: 'pranab@scwebtech.com',
                 to: email,
-                subject: 'Welcome Email',
+                subject: 'Welcome e-mail',
                 html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+                <style>
+                                body, table, td, p, a, h1, h2, h3, h4, h5, h6, div {
+                                    font-family: Calibri, 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif !important;
+                                }
+                                </style>
                 <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
                  <tbody>
                   <tr>
@@ -10950,9 +11011,9 @@ const { first_name, last_name, email, register_password, register_confirm_passwo
                            <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
                              <tbody>
                                <tr>
-                               <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/email-template-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+                               <td><img alt="Logo" src="${process.env.MAIN_URL}front-end/images/cechoes-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
                                 <td id="header_wrapper" style="padding: 36px 48px; display: block;">
-                                   <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Welcome Email</h1>
+                                   <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Welcome</h1>
                                 </td>
           
                                </tr>
@@ -10979,15 +11040,12 @@ const { first_name, last_name, email, register_password, register_confirm_passwo
                                           <tr>
                                             <td colspan="2">
                                                 <strong>Hello ${first_name},</strong>
-                                                <p style="font-size:15px; line-height:20px">Warm greetings from the CEchoes Technology team!
-                                                You have joined a community dedicated to empowering all Grahaks (Customers) and ensuring their voices are heard <b>LOUD</b> and <b>C L E A R</b>.</p>
-                                                <p style="font-size:15px; line-height:20px"> Keep sharing your Customer experiences (positive or negative), read about others' experience and get to know Customer centric information.</p>
-                                                <p style="font-size:15px; line-height:20px">Share this platform with all your friends and family.
-                                                Together, we can make Organisations listen and improve because <b>#CustomersHavePower</b>.</p><p style="font-size:15px; line-height:20px">Let's usher in this Customer Revolution coz <b>#CustomerRightsMatter</b>.</p><p style="font-size:15px; line-height:20px">Welcome Onboard!</p><br><p style="font-size:15px; line-height:20px">Kind Regards,</p><p style="font-size:15px; line-height:20px">CEchoes Technology Team</p><br>
+                                                <p style="font-size:15px; line-height:20px">Warm greetings from the CEchoes Technology team! You have joined a community dedicated to empowering all Customers and ensuring their voices are heard <b>LOUD </b> and <b>CLEAR</b>.</p>
+                                                <p style="font-size:15px; line-height:20px"> Keep sharing your Customer experiences (positive or negative), read about others' experience, post your queries on Products/Services, participate in Surveys, Lodge Complaints and get to know Customer-centric information.</p>
+                                                <p style="font-size:15px; line-height:20px">Share this platform with all your friends and family. Together, we can make Organisations Listen and improve because  <b>#CustomersHave Power</b>.</p><p style="font-size:15px; line-height:20px">Let's usher in this Customer Revolution coz <b> #CustomerRights Matter</b>.</p><p style="font-size:15px; line-height:20px">Welcome Onboard!</p><br><p style="font-size:15px; line-height:20px">Kind Regards,</p><p style="font-size:15px; line-height:20px">CEchoes Technology Team</p><br>
                                             </td>
                                           </tr>
                                         </table>
-                                        <p style="font-size:15px; line-height:20px">Download the app from Google Playstore or visit  <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology.com </a>.</p>
                                        </div>
                                      </td>
                                     </tr>
@@ -11186,7 +11244,7 @@ const { first_name, last_name, email, register_password, register_confirm_passwo
                         })();
                     })
                     .catch((error) => {
-                        console.error('User registration failed:', );
+                        console.error('User registration failed:',);
                         return res.send(
                             {
                                 status: 'err',
