@@ -657,6 +657,7 @@ router.get('/company/:slug', checkCookieValue, async (req, res) => {
             support_data = { support_email: PremiumCompanyData.support_email, escalation_one: PremiumCompanyData.escalation_one, escalation_two: PremiumCompanyData.escalation_two, escalation_three: PremiumCompanyData.escalation_three }
 
         }
+        console.log("products",products);
 
         if (CompanyInfo) {
             //console.log("CompanyInfo",CompanyInfo);

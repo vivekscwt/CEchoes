@@ -592,8 +592,13 @@ exports.socialLogin = async (req, res) => {
               from: process.env.MAIL_USER,
               //to: 'pranab@scwebtech.com',
               to: userEmail,
-              subject: 'Welcome Email',
+              subject: 'Welcome e-mail',
               html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+              <style>
+              body, table, td, p, a, h1, h2, h3, h4, h5, h6, div {
+                  font-family: Calibri, 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif !important;
+              }
+              </style>
                       <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
                       <tbody>
                       <tr>
@@ -607,9 +612,9 @@ exports.socialLogin = async (req, res) => {
                               <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
                                   <tbody>
                                   <tr>
-                                  <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/email-template-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+                                  <td><img alt="Logo" src="${process.env.MAIN_URL}front-end/images/cechoes-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
                                       <td id="header_wrapper" style="padding: 36px 48px; display: block;">
-                                      <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Welcome Email</h1>
+                                      <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Welcome</h1>
                                       </td>
               
                                   </tr>
