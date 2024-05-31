@@ -626,14 +626,14 @@ exports.frontendUserRegisterOTP = async (req, res) => {
                                             <td colspan="2">
                                                 <strong>Hello ${first_name},</strong>
                                                 <p style="font-size:15px; line-height:20px">Your One Time Password (OTP) is: ${otp}</p>
-                                                <p style="font-size:15px; line-height:20px"> Please use this OTP to complete your action on our platform. Do not share this OTP with anyone for security reasons.</p>
+                                                <p style="font-size:15px; line-height:20px"> Please use this OTP to complete your Registration on the Cechoes platform. Do not share this OTP with anyone for security reasons</p>
                                                 <p style="font-size:15px; line-height:20px">This OTP is valid for the next 5 minutes.</p><br>
                                                 <p style="font-size:15px; line-height:20px">Thank you,</p>
                                                 <p style="font-size:15px; line-height:20px">CEchoesTechnology</p>
                                             </td>
                                           </tr>
                                         </table>
-                                        <p style="font-size:15px; line-height:20px">Download the app from Google Playstore or visit  <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology.com </a>.</p>
+                                        <p style="font-size:15px; line-height:20px">Download the app from Google Playstore or visit  <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology.com </a></p>
                                        </div>
                                      </td>
                                     </tr>
