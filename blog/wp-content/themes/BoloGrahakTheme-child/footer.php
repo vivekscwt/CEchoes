@@ -24,8 +24,8 @@
                      <img src="<?php echo MAIN_URL_BG; ?>/front-end/images/footer-logo.png" alt="Cechoes">
                      </a>
                      <h4>Contact Info</h4>
-                     <div class="c-email"><span>Sales:</span> <a href="mailto:sales@CEchoesTechnology.com">Sales@CEchoesTechnology.com</a></div>
-                     <div class="c-email"><span>Support:</span> <a href="mailto:support@CEchoesTechnology.com">Support@CEchoesTechnology.com</a></div>
+                     <div class="c-email"><span>Sales:</span> <a href="mailto:sales@cechoes.com">Sales@cechoes.comm</a></div>
+                     <div class="c-email"><span>Support:</span> <a href="mailto:support@cechoes.com">Support@cechoes.com</a></div>
                      <a href="<?php echo MAIN_URL_BG; ?>contact-us" class="c-link"><u>Contact Us</u></a>
                   </div>
                </div>
@@ -50,10 +50,10 @@
             </div>
             <div class="footer-bottom">
                <div class="footer-b-left">
-                  <span>Copyright</span> <?php echo date('Y'); ?> <a href="#">CEchoes Technology Pvt Ltd</a>
+                  <span>Copyright</span> <?php echo date('Y'); ?> <a href="https://cechoes.com/">CEchoes Technology Pvt Ltd</a>
                </div>
                <div class="footer-b-right">
-                  <!--<a href="#">Disclaimer</a> |--> <a href="<?php echo MAIN_URL_BG; ?>privacy-policy">Privacy Policy</a> <!--| <a href="">Terms of Service</a>-->
+                  <!--<a href="#">Disclaimer</a> |--> <a href="<?php echo MAIN_URL_BG; ?>privacy-policy">Privacy Policy</a> | <a href="https://cechoes.com/terms-of-service">Terms of Service</a>
                </div>
             </div>
          </div>
