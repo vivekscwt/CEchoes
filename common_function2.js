@@ -5260,7 +5260,56 @@ async function getcompaniesbyCountry(country_shortname){
       return 'Error during user getcompaniesbyCountry:' + error;
   }
 }
+async function getCountryName(shortname) {
+  var company_country_query = `SELECT name FROM countries WHERE shortname= ?`;
+  var company_country_value = await query(company_country_query, [shortname]);
+  
+  if (company_country_value.length > 0) {
+      return company_country_value[0].name;
+  } else {
+      return null;
+  }
+}
+function getAllParentCompany() {
+  return new Promise((resolve, reject) => {
+    db.query(
+      `SELECT c.*, GROUP_CONCAT(cat.category_name) AS categories
+      FROM company c
+      LEFT JOIN company_cactgory_relation cr ON c.ID = cr.company_id
+      LEFT JOIN category cat ON cr.category_id = cat.ID
+      WHERE c.status != '3' AND c.parent_id = '0'
+      GROUP BY c.ID`,
+      async (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result);
+        }
+      });
+  });
+}
+function getChildCompany(companyId) {
+  return new Promise((resolve, reject) => {
+    db.query(
+      `SELECT c.*, GROUP_CONCAT(cat.category_name) AS categories, CONCAT(users.first_name, ' ', users.last_name) AS claimed_by_user_name, users.email AS claimed_by_user
+      FROM company c
+      LEFT JOIN company_cactgory_relation cr ON c.ID = cr.company_id
+      LEFT JOIN category cat ON cr.category_id = cat.ID
+      LEFT JOIN company_claim_request ccr ON ccr.company_id = c.ID
+      LEFT JOIN users ON ccr.claimed_by = users.user_id
+      WHERE c.status != '3' AND c.parent_id = "${companyId}"
+      GROUP BY c.ID`,
+      async (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          console.log("result",result);
+          resolve(result);
+        }
+      });
+  });
 
+}
 
 module.exports = {
   getFaqPage,
@@ -5374,5 +5423,8 @@ module.exports = {
   getUserLikedComments,
   getCompanySurveyDetailsByID,
   getsurveyratingData,
-  getcompaniesbyCountry
+  getcompaniesbyCountry,
+  getCountryName,
+  getAllParentCompany,
+  getChildCompany
 };

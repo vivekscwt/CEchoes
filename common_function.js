@@ -1968,5 +1968,5 @@ module.exports = {
   getCompanyReviewsBetween,
   getCompanyReviewInvitationNumbers,
   createcompany,
-  createreview
+  createreview,
 };

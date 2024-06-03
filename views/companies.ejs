@@ -47,7 +47,7 @@
                                 <!--end::Svg Icon-->
                                 <input type="text" data-kt-user-table-filter="search"
                                     class="form-control form-control-solid w-250px ps-14"
-                                    placeholder="Search Company" />
+                                    placeholder="Search Organization" />
                             </div>
                             <!--end::Search-->
                         </div>
@@ -243,7 +243,7 @@
                                                     fill="#C4C4C4" />
                                             </svg>
                                         </span>
-                                        <span class="button-label">Company Bulk Upload</span>
+                                        <span class="button-label">Organization Bulk Upload</span>
                                     </button>
                                     <!--begin::Add user-->
                                     <a href="/add-company" class="btn btn-primary">
@@ -257,7 +257,7 @@
                                                     fill="black" />
                                             </svg>
                                         </span>
-                                        <!--end::Svg Icon-->Add Company</a>
+                                        <!--end::Svg Icon-->Add Organization</a>
                                     <!--end::Add user-->
                             </div>
                             <!--end::Toolbar-->
@@ -357,6 +357,7 @@
                                         </div>
                                     </th>
                                     <th class="min-w-125px">Organization</th>
+                                    <th class="min-w-125px">Country</th>
                                     <th class="min-w-125px">Phone</th>
                                     <th class="min-w-125px">Category</th>
                                     <th class="min-w-125px">Status</th>
@@ -462,6 +463,7 @@
                                                 </span>
                                             </div>
                                         </td>
+                                        <td><%= company.country_name || '' %></td>
                                         <td>
                                             <a href="tel:<%= company.comp_phone %>">
                                                 <%= company.comp_phone %>

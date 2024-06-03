@@ -4004,30 +4004,83 @@ router.get('/add-company', checkLoggedIn, async (req, res) => {
     }
 });
 
+
+// router.get('/companies', checkLoggedIn, async (req, res) => {
+//     try {
+//         const encodedUserData = req.cookies.user;
+//         const currentUserData = JSON.parse(encodedUserData);
+    
+//         const [allcompany] = await Promise.all([
+//             comFunction.getAllCompany(),
+//         ]);
+    
+//         let countries = [];
+//         await Promise.all(allcompany.map(async company => {
+//             if (company.main_address_country && !countries.includes(company.main_address_country)) {
+//                 countries.push(company.main_address_country);
+                
+//                 var company_country_query = `SELECT name FROM countries WHERE shortname= ?`;
+//                 var company_country_value = await query(company_country_query, [company.main_address_country]);
+    
+//                 if (company_country_value.length > 0) {
+//                     company.country_name = company_country_value[0].name;
+//                 } else {
+//                     company.country_name = null;
+//                 }
+//             }
+//         }));
+
+//         res.render('companies', {
+//             menu_active_id: 'company',
+//             page_title: 'Organizations',
+//             currentUserData,
+//             allcompany: allcompany,
+//             countries: countries
+//         });
+//     } catch (error) {
+//         console.error("Error:", error);
+//         res.status(500).send("Internal Server Error");
+//     }
+    
+// });
+
 router.get('/companies', checkLoggedIn, async (req, res) => {
     try {
         const encodedUserData = req.cookies.user;
         const currentUserData = JSON.parse(encodedUserData);
-
-        // Fetch all the required data asynchronously
+    
         const [allcompany] = await Promise.all([
-            comFunction.getAllCompany(),
+            comFunction2.getAllParentCompany(),
         ]);
+    
+        let countries = [];
+        await Promise.all(allcompany.map(async company => {
+            if (company.main_address_country && !countries.includes(company.main_address_country)) {
+                countries.push(company.main_address_country);
+                
+                var company_country_query = `SELECT name FROM countries WHERE shortname= ?`;
+                var company_country_value = await query(company_country_query, [company.main_address_country]);
+    
+                if (company_country_value.length > 0) {
+                    company.country_name = company_country_value[0].name;
+                } else {
+                    company.country_name = null;
+                }
+            }
+        }));
 
-        // Render the 'edit-user' EJS view and pass the data
-        // res.json({
-        //     allcompany: allcompany
-        // });
         res.render('companies', {
             menu_active_id: 'company',
-            page_title: 'Companies',
+            page_title: 'Organizations',
             currentUserData,
-            allcompany: allcompany
+            allcompany: allcompany,
+            countries: countries
         });
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('An error occurred');
+    } catch (error) {
+        console.error("Error:", error);
+        res.status(500).send("Internal Server Error");
     }
+    
 });
 
 router.get('/trashed-companies', checkLoggedIn, async (req, res) => {
@@ -4068,15 +4121,15 @@ router.get('/edit-company/:id', checkLoggedIn, async (req, res) => {
         const getcompanyvalue = await query(getcompanyquery,[companyId]);
         if(getcompanyvalue.length>0){
             var comp_state_id = getcompanyvalue[0].main_address_state;
-            console.log("comp_state_id",comp_state_id);
+            //console.log("comp_state_id",comp_state_id);
             var comp_country_shortname = getcompanyvalue[0].main_address_country;
-            console.log("comp_country_shortname",comp_country_shortname);
+            //console.log("comp_country_shortname",comp_country_shortname);
         }
         const getcountryidquery = `SELECT * FROM countries WHERE shortname=?`;
         const getcountryidvalue = await query(getcountryidquery,[comp_country_shortname]);
         if(getcountryidvalue.length>0){
             var comp_country_id= getcountryidvalue[0].id;
-            console.log("comp_country_id",comp_country_id);
+            //console.log("comp_country_id",comp_country_id);
         }
 
         const getstatequery= `SELECT * FROM states WHERE country_id=?`;
@@ -4084,24 +4137,48 @@ router.get('/edit-company/:id', checkLoggedIn, async (req, res) => {
 
         if(getstatevalue.length>0){
             var statevalue = getstatevalue[0].name;
-            console.log("statevalue",statevalue);
+            //console.log("statevalue",statevalue);
         }
 
 
+
         // Fetch all the required data asynchronously
-        const [company, company_all_categories, users, getParentCompany, getCountries, getStatesByCountryID] = await Promise.all([
+        const [company, company_all_categories, users, getParentCompany, getCountries, getStatesByCountryID,getChildCompany] = await Promise.all([
             comFunction.getCompany(companyId),
             comFunction.getCompanyCategoryBuID(companyId),
             comFunction.getUsersByRole(2),
             comFunction.getParentCompany(),
             comFunction.getCountries(),
-            comFunction.getStatesByCountryID(comp_country_id)
+            comFunction.getStatesByCountryID(comp_country_id),
+            comFunction2.getChildCompany(companyId)
             //comFunction.getCompanyMeta(userId),
             //comFunction.getCountries(),
             //comFunction.getStatesByUserID(userId)
         ]);
-        console.log("company", company);
-        console.log("getStatesByCountryID",getStatesByCountryID);
+        // console.log("company", company);
+        // console.log("getStatesByCountryID",getStatesByCountryID);
+        console.log("getChildCompany",getChildCompany);
+
+        let countries = [];
+        await Promise.all(getChildCompany.map(async company => {
+            if (company.main_address_country && !countries.includes(company.main_address_country)) {
+                countries.push(company.main_address_country);
+                
+                var company_country_query = `SELECT name FROM countries WHERE shortname= ?`;
+                var company_country_value = await query(company_country_query, [company.main_address_country]);
+    
+                if (company_country_value.length > 0) {
+                    company.country_name = company_country_value[0].name;
+                } else {
+                    company.country_name = null;
+                }
+            }
+        }));
+
+
+
+
+
         // Render the 'edit-user' EJS view and pass the data
         // res.json({
         //     menu_active_id: 'company',
@@ -4123,7 +4200,9 @@ router.get('/edit-company/:id', checkLoggedIn, async (req, res) => {
             getParentCompany: getParentCompany,
             getCountries: getCountries,
             statevalue: statevalue,
-            getStatesByCountryID: getStatesByCountryID
+            getStatesByCountryID: getStatesByCountryID,
+            getChildCompany: getChildCompany,
+            countries: countries
             //countries: countries,
             //states: states            
         });
@@ -5016,7 +5095,7 @@ router.get('/push-notification', checkLoggedIn, (req, res) => {
         const encodedUserData = req.cookies.user;
         const currentUserData = JSON.parse(encodedUserData);
         res.render('pages/push-notification', {
-            menu_active_id: 'pages',
+            menu_active_id: 'miscellaneous',
             page_title: 'Push Notification',
             currentUserData,
         });
@@ -5068,7 +5147,7 @@ router.get('/payments', checkLoggedIn, async (req, res) => {
         //     allcompany: allcompany
         // });
         res.render('payments', {
-            menu_active_id: 'company',
+            menu_active_id: 'miscellaneous',
             page_title: 'Payments',
             currentUserData,
             allPayments: getAllPayments

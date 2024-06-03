@@ -1469,6 +1469,7 @@ exports.updateCategory = (req, res) => {
 //-- User Profile Edit --//
 exports.editUserData = (req, res) => {
     console.log(req.body);
+    return false
     const userId = req.body.user_id;
 
     // Update the user's data
@@ -4962,8 +4963,8 @@ exports.updateComplaint = async (req, res) => {
 }
 // Frontend Update Myprofile page
 exports.updateMyProfile = (req, res) => {
-    // console.log('edit profile', req.body)
-    // console.log('profile pic', req.file)
+    console.log('edit profile', req.body)
+    console.log('profile pic', req.file)
     const userId = req.body.user_id;
     //const checkQuery = 'SELECT user_id FROM users WHERE phone = ? AND user_id <> ?';
     // Update the user's data

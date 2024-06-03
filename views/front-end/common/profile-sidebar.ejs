@@ -40,7 +40,7 @@
           <span>Gold Level</span>
        </div>
        <% if(userMeta && userMeta.claimed_comp_id) { %>
-         <% if(userMeta.payment_status.trim() == "paid" && userMeta.plan_name) { %>
+         <% if(userMeta.payment_status && userMeta.payment_status.trim() == "paid" && userMeta.plan_name) { %>
          <div class="text-center mt-4">
             <p>Organization Plan: <b><%= userMeta.plan_name %></b></p>
          </div>
