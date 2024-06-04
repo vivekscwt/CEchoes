@@ -6505,8 +6505,22 @@ exports.createDiscussion = async (req, res) => {
     const { user_id, tags, topic, from_data, expire_date } = req.body;
     const strTags = JSON.stringify(tags);
     console.log("strTagssss", strTags);
-    const sql = `INSERT INTO discussions ( user_id, topic, tags, created_at, expired_at, query_alert_status,discussion_status) VALUES (?, ?, ?, ?, ?, ?, ?)`;
-    const data = [user_id, topic, strTags, from_data, expire_date, '0', '0'];
+
+    const user_location = `SELECT * FROM user_customer_meta WHERE user_id =?`;
+    const user_location_data = await query(user_location,[user_id]);
+
+    if(user_location_data.length>0){
+        //var user_locations = user_location_data[0].address;
+        var user_locations = user_location_data[0].country;
+        console.log("user_locations",user_locations);
+
+        var userData = `SELECT name FROM countries WHERE id=?`;
+        var user_val = await query(userData,[user_locations]);
+        console.log("user_val",user_val[0].name);
+    }
+
+    const sql = `INSERT INTO discussions ( user_id, topic, tags, created_at, expired_at, query_alert_status,discussion_status, location) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+    const data = [user_id, topic, strTags, from_data, expire_date, '0', '0',user_val[0].name];
     db.query(sql, data, (err, result) => {
         if (err) {
             return res.send({

@@ -644,7 +644,7 @@ async function createCompany(comInfo, userId) {
           try {
             const create_company_address_query = 'INSERT INTO company_location (company_id, address, country, state, city, zip, status) VALUES (?, ?, ?, ?, ?, ?, ?)';
             //const create_company_address_values = [company_name_checking_results[0].ID, comInfo.address, '', '', '', '', '2'];
-            const create_company_address_values = [comInfo.company_name, concatenatedAddress, '', '', '', '', '2'];
+            const create_company_address_values = [comInfo.company_name, concatenatedAddress, country_name, '', '', '', '2'];
 
             const create_company_address_results = await query(create_company_address_query, create_company_address_values);
             if (create_company_address_results.insertId) {
@@ -841,7 +841,7 @@ async function createcompany(comInfo, userId) {
           //create new address for company
           try {
             const create_company_address_query = 'INSERT INTO company_location (company_id, address, country, state, city, zip, status) VALUES (?, ?, ?, ?, ?, ?, ?)';
-            const create_company_address_values = [company_name_checking_results[0].ID, comInfo.address, '', '', '', '', '2'];
+            const create_company_address_values = [company_name_checking_results[0].ID, comInfo.address, country_name, '', '', '', '2'];
             //const create_company_address_values = [comInfo.company_name, concatenatedAddress, '', '', '', '', '2'];
 
             const create_company_address_results = await query(create_company_address_query, create_company_address_values);

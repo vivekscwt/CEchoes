@@ -228,7 +228,37 @@ function getAllReviewTags() {
 
 
 //Function to fetch latest Reviews from the  reviews,company,company_location,users,user_customer_meta table
-async function getlatestReviews(reviewCount) {
+// async function getlatestReviews(reviewCount,country) {
+//   const get_latest_review_query = `
+//     SELECT r.*, c.company_name, c.logo, c.slug, cl.address, cl.country, cl.state, cl.city, cl.zip, u.first_name, 
+//     u.last_name,u.alise_name, u.user_id, u.user_status, ucm.profile_pic, COUNT(review_reply.id) as review_reply_count, cc.category_name, cp.product_title 
+//       FROM reviews r
+//       LEFT JOIN company c ON r.company_id = c.ID 
+//       LEFT JOIN company_location cl ON r.company_location_id = cl.ID 
+//       LEFT JOIN users u ON r.customer_id = u.user_id 
+//       LEFT JOIN user_customer_meta ucm ON ucm.user_id = u.user_id 
+//       LEFT JOIN review_reply ON review_reply.review_id = r.id
+//       LEFT JOIN complaint_category cc ON r.category_id = cc.id 
+//       LEFT JOIN company_products cp ON r.product_id = cp.id 
+//       WHERE r.review_status = "1" AND c.status = "1" AND (r.flag_status != '0' OR r.flag_status IS NULL)
+//       GROUP BY r.id
+//       ORDER BY r.created_at DESC
+//       LIMIT ${reviewCount};
+//   `;
+//   try {
+//     const get_latest_review_results = await query(get_latest_review_query);
+//     if (get_latest_review_results.length > 0) {
+//       //console.log(get_latest_review_results);
+//       return get_latest_review_results;
+//     } else {
+//       return [];
+//     }
+//   } catch (error) {
+//     console.error('Error during user get_latest_review_query:', error);
+//   }
+
+// }
+async function getlatestReviews(reviewCount,country) {
   const get_latest_review_query = `
     SELECT r.*, c.company_name, c.logo, c.slug, cl.address, cl.country, cl.state, cl.city, cl.zip, u.first_name, 
     u.last_name,u.alise_name, u.user_id, u.user_status, ucm.profile_pic, COUNT(review_reply.id) as review_reply_count, cc.category_name, cp.product_title 
@@ -240,13 +270,13 @@ async function getlatestReviews(reviewCount) {
       LEFT JOIN review_reply ON review_reply.review_id = r.id
       LEFT JOIN complaint_category cc ON r.category_id = cc.id 
       LEFT JOIN company_products cp ON r.product_id = cp.id 
-      WHERE r.review_status = "1" AND c.status = "1" AND (r.flag_status != '0' OR r.flag_status IS NULL)
+      WHERE r.review_status = "1" AND c.status = "1" AND (r.flag_status != '0' OR r.flag_status IS NULL) AND cl.country =?
       GROUP BY r.id
       ORDER BY r.created_at DESC
       LIMIT ${reviewCount};
   `;
   try {
-    const get_latest_review_results = await query(get_latest_review_query);
+    const get_latest_review_results = await query(get_latest_review_query,[country]);
     if (get_latest_review_results.length > 0) {
       //console.log(get_latest_review_results);
       return get_latest_review_results;
@@ -260,7 +290,7 @@ async function getlatestReviews(reviewCount) {
 }
 
 //Function to fetch All Trending Reviews from the  reviews,company,company_location,users,user_customer_meta table
-async function getAllTrendingReviews() {
+async function getAllTrendingReviews(country) {
   const get_latest_review_query = `
     SELECT r.*, c.company_name, c.logo, c.slug, cl.address, cl.country, cl.state, cl.city, cl.zip, u.first_name, 
     u.last_name, u.alise_name, u.user_id, u.user_status, ucm.profile_pic, COUNT(review_reply.id) as review_reply_count, cc.category_name, cp.product_title
@@ -272,12 +302,12 @@ async function getAllTrendingReviews() {
       LEFT JOIN review_reply ON review_reply.review_id = r.id
       LEFT JOIN complaint_category cc ON r.category_id = cc.id 
       LEFT JOIN company_products cp ON r.product_id = cp.id 
-      WHERE r.review_status = "1" AND c.status = "1" AND c.trending = "1" AND (r.flag_status != '0' OR r.flag_status IS NULL)
+      WHERE r.review_status = "1" AND c.status = "1" AND c.trending = "1" AND (r.flag_status != '0' OR r.flag_status IS NULL) AND cl.country =?
       GROUP BY r.id
       ORDER BY r.created_at DESC
   `;
   try {
-    const get_latest_review_results = await query(get_latest_review_query);
+    const get_latest_review_results = await query(get_latest_review_query,[country]);
     if (get_latest_review_results.length > 0) {
       //console.log(get_latest_review_results);
       return get_latest_review_results;
@@ -291,7 +321,37 @@ async function getAllTrendingReviews() {
 }
 
 //Function to fetch All  Reviews from the  reviews,company,company_location,users,user_customer_meta table
-async function getAllReviews() {
+// async function getAllReviews() {
+//   const get_latest_review_query = `
+//     SELECT r.*, c.company_name, c.logo, c.slug, cl.address, cl.country, cl.state, cl.city, cl.zip, u.first_name, 
+//     u.last_name, u.alise_name, u.user_id, u.user_status, ucm.profile_pic, COUNT(review_reply.id) as review_reply_count, cc.category_name, cp.product_title
+//       FROM reviews r
+//       LEFT JOIN company c ON r.company_id = c.ID 
+//       LEFT JOIN company_location cl ON r.company_location_id = cl.ID 
+//       LEFT JOIN users u ON r.customer_id = u.user_id 
+//       LEFT JOIN user_customer_meta ucm ON ucm.user_id = u.user_id 
+//       LEFT JOIN review_reply ON review_reply.review_id = r.id
+//       LEFT JOIN complaint_category cc ON r.category_id = cc.id 
+//       LEFT JOIN company_products cp ON r.product_id = cp.id 
+//       WHERE r.review_status = "1" AND c.status = "1" AND (r.flag_status != '0' OR r.flag_status IS NULL)
+//       GROUP BY r.id
+//       ORDER BY r.created_at DESC
+//   `;
+//   try {
+//     const get_latest_review_results = await query(get_latest_review_query);
+//     if (get_latest_review_results.length > 0) {
+//       //console.log(get_latest_review_results);
+//       return get_latest_review_results;
+//     } else {
+//       return [];
+//     }
+//   } catch (error) {
+//     console.error('Error during user get_latest_review_query:', error);
+//   }
+
+// }
+
+async function getAllReviews(country) {
   const get_latest_review_query = `
     SELECT r.*, c.company_name, c.logo, c.slug, cl.address, cl.country, cl.state, cl.city, cl.zip, u.first_name, 
     u.last_name, u.alise_name, u.user_id, u.user_status, ucm.profile_pic, COUNT(review_reply.id) as review_reply_count, cc.category_name, cp.product_title
@@ -303,12 +363,12 @@ async function getAllReviews() {
       LEFT JOIN review_reply ON review_reply.review_id = r.id
       LEFT JOIN complaint_category cc ON r.category_id = cc.id 
       LEFT JOIN company_products cp ON r.product_id = cp.id 
-      WHERE r.review_status = "1" AND c.status = "1" AND (r.flag_status != '0' OR r.flag_status IS NULL)
+      WHERE r.review_status = "1" AND c.status = "1" AND (r.flag_status != '0' OR r.flag_status IS NULL) AND cl.country =?
       GROUP BY r.id
       ORDER BY r.created_at DESC
   `;
   try {
-    const get_latest_review_results = await query(get_latest_review_query);
+    const get_latest_review_results = await query(get_latest_review_query,[country]);
     if (get_latest_review_results.length > 0) {
       //console.log(get_latest_review_results);
       return get_latest_review_results;
@@ -320,7 +380,6 @@ async function getAllReviews() {
   }
 
 }
-
 
 //Function to fetch Page Info Content from the  page_info table
 async function getPageInfo(pageName) {
@@ -2191,7 +2250,7 @@ async function getAllReviewsByCompanyID(companyId) {
 }
 
 //Function to get latest discussion from discussions table
-async function getAllLatestDiscussion(limit) {
+async function getAllLatestDiscussion(limit,country) {
   const sql = `
     SELECT
     discussions.*,
@@ -2212,7 +2271,7 @@ async function getAllLatestDiscussion(limit) {
     FROM discussions_user_view
     GROUP BY discussion_id
   ) views ON discussions.id = views.discussion_id
-  WHERE discussions.discussion_status = 1
+  WHERE discussions.discussion_status = 1 AND discussions.location = "${country}"
   ORDER BY discussions.id DESC
   LIMIT ${limit} ;
   `;
@@ -2231,7 +2290,7 @@ async function getAllLatestDiscussion(limit) {
 }
 
 //Function to get popular discussion from discussions table
-async function getAllPopularDiscussion() {
+async function getAllPopularDiscussion(country) {
   const sql = `
   SELECT
     discussions.*,
@@ -2251,7 +2310,7 @@ async function getAllPopularDiscussion() {
     FROM discussions_user_view
     GROUP BY discussion_id
   ) views ON discussions.id = views.discussion_id
-  WHERE discussions.discussion_status = 1
+  WHERE discussions.discussion_status = 1 AND discussions.location = "${country}"
   ORDER BY total_comments DESC;
   ;
   `;
@@ -2270,7 +2329,7 @@ async function getAllPopularDiscussion() {
 }
 
 //Function to get viewed discussion from discussions table
-async function getAllViewedDiscussion() {
+async function getAllViewedDiscussion(country) {
   const sql = `
   SELECT
     discussions.*,
@@ -2291,7 +2350,7 @@ async function getAllViewedDiscussion() {
     FROM discussions_user_view
     GROUP BY discussion_id
   ) views ON discussions.id = views.discussion_id
-  WHERE discussions.discussion_status = 1
+  WHERE discussions.discussion_status = 1 AND discussions.location = "${country}"
   ORDER BY total_views DESC;
   ;
   `;
@@ -2346,7 +2405,7 @@ async function getAllDiscussions() {
   }
 }
 //get all discussions when discussion_status =1 
-async function getAllDiscussion() {
+async function getAllDiscussion(country) {
   const sql = `
   SELECT
     discussions.*,
@@ -2366,7 +2425,7 @@ async function getAllDiscussion() {
     FROM discussions_user_view
     GROUP BY discussion_id
   ) views ON discussions.id = views.discussion_id
-  WHERE discussions.discussion_status = 1
+  WHERE discussions.discussion_status = 1 AND discussions.location = "${country}"
   ORDER BY discussions.id DESC
   `;
   try {
@@ -5310,6 +5369,40 @@ function getChildCompany(companyId) {
   });
 
 }
+// function getcountrybyIp(ipAddress,api_key) {
+//   try {
+//     //const ipAddress = req.ip; 
+//     // const ipAddress = '45.64.221.211';
+//     // console.log("ipAddress",ipAddress);
+//     // const api_key = '9b38b399323e4d05a3bcbd1505e8e834'
+
+//     const response = axios.get(`https://ipgeolocation.abstractapi.com/v1/?api_key=${api_key}&ip_address=${ipAddress}`)
+//               .then(response => {
+//                 var country_name = response.data;
+//                 console.log("country_name",country_name);
+//               })
+//               .catch(error => {
+//                   console.log(error);
+//               });
+//     return country_name;
+
+// } catch (err) {
+//     console.error(err);
+//     res.status(500).send('An error occurred');
+// }
+// }
+
+async function getcountrybyIp(ipAddress, api_key) {
+  try {
+      const response = await axios.get(`https://ipgeolocation.abstractapi.com/v1/?api_key=${api_key}&ip_address=${ipAddress}`);
+      const country_name = response.data.country;
+      //console.log("country_name", country_name);
+      return country_name;
+  } catch (error) {
+      console.error(error);
+      throw new Error('An error occurred');
+  }
+}
 
 module.exports = {
   getFaqPage,
@@ -5426,5 +5519,6 @@ module.exports = {
   getcompaniesbyCountry,
   getCountryName,
   getAllParentCompany,
-  getChildCompany
+  getChildCompany,
+  getcountrybyIp
 };

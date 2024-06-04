@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="styles.css" />
+  <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</head>
+<body>
+  <button id="getLocationButton">Share Location</button>
+  <div id="locationMessage"></div>
+
+  <script>
+const locationButton = document.getElementById("getLocationButton");
+const locationMessage = document.getElementById("locationMessage");
+const apiKey = "6d0e711d72d74daeb2b0bfd2a5cdfdba"; // Replace with your actual API key
+
+locationButton.addEventListener("click", () => {
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+
+      console.log("latitude",latitude);
+      console.log("longitude",longitude);
+
+      //const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=22.5764753,88.4306861&key="${apiKey}"`
+      //const url = `https://api.opencagedata.com/geocode/v1/json?q=${latitude},${longitude}&key=${apiKey}&language=en`;
+      const url = `https://api.opencagedata.com/geocode/v1/json?q=22.5764753,88.4306861&key=81dcead5b86345e4919b785fc3b2e3df`
+
+
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          if (data.results && data.results.length > 0) {
+            console.log("data",data.results[0].components.country);
+            const country = data.results[0].components.country;
+            const countryCode = data.results[0].components.country_code;
+            // const language = data.results[0].annotations.language.code; // May not be available in all responses
+            // console.log("language",language);
+            locationMessage.textContent = `Location: Country - ${country} (Code: ${countryCode})`;
+            // if (language) {
+            //   locationMessage.textContent += `, Language: ${language}`;
+            // }
+          } else {
+            console.error("Error: No country data found for coordinates.");
+            locationMessage.textContent = "Error: No country data found.";
+          }
+        })
+        .catch(error => {
+          console.error("Error fetching country data:", error);
+          locationMessage.textContent = "Error: Failed to get country data.";
+        });
+    },
+    (error) => {
+      console.error("Error getting location:", error.message);
+      locationMessage.textContent = "Error: " + error
+    }
+  );
+});
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+<!-- <script>
+    const locationButton = document.getElementById("getLocationButton");
+    const locationMessage = document.getElementById("locationMessage");
+
+    locationButton.addEventListener("click", () => {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          console.log("Latitude:", position.coords.latitude);
+          console.log("Longitude:", position.coords.longitude);
+          locationMessage.textContent = "Location: (" + position.coords.latitude + ", " + position.coords.longitude + ")";
+          // You can use the position data here (e.g., display on a map)
+        },
+        (error) => {
+          console.error("Error getting location:", error.message);
+          locationMessage.textContent = "Error: " + error.message;
+          // Handle location errors here (e.g., display an error message)
+        }
+      );
+    });
+  </script> -->

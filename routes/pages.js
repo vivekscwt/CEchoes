@@ -346,19 +346,30 @@ router.get('/about-us', checkCookieValue, async (req, res) => {
 router.get('/review', checkCookieValue, async (req, res) => {
     try {
         let currentUserData = JSON.parse(req.userData);
-        //console.log(userId);
-        // Fetch all the required data asynchronously
+        console.log(currentUserData);
+
+        //const ipAddress = req.ip; 
+        const ipAddress = '45.64.221.211';
+        console.log("ipAddress",ipAddress);
+        const api_key = '9b38b399323e4d05a3bcbd1505e8e834'
+        const getcountrybyIp = await Promise.all([comFunction2.getcountrybyIp(ipAddress,api_key)]) 
+        const country_name = getcountrybyIp[0];
+        //console.log("country_name",country_name);
+
         const [latestReviews, AllReviews, AllTrendingReviews, AllReviewTags, allRatingTags, globalPageMeta, homePageMeta, AllReviewVoting,getCountries] = await Promise.all([
-            comFunction2.getlatestReviews(20),
-            comFunction2.getAllReviews(),
-            comFunction2.getAllTrendingReviews(),
+            comFunction2.getlatestReviews(20,country_name),
+            comFunction2.getAllReviews(country_name),
+            comFunction2.getAllTrendingReviews(country_name),
             comFunction2.getAllReviewTags(),
             comFunction.getAllRatingTags(),
             comFunction2.getPageMetaValues('global'),
             comFunction2.getPageMetaValues('home'),
             comFunction2.getAllReviewVoting(),
-            comFunction.getCountries()
+            comFunction.getCountries(),
+            
         ]);
+         
+
         //console.log(getPageMetaValues);
         // res.json({
         //     menu_active_id: 'review',
@@ -384,8 +395,32 @@ router.get('/review', checkCookieValue, async (req, res) => {
             globalPageMeta: globalPageMeta,
             homePageMeta: homePageMeta,
             AllReviewVoting: AllReviewVoting,
-            getCountries: getCountries
+            getCountries: getCountries,
+            ip_address: ipAddress
         });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('An error occurred');
+    }
+});
+
+
+router.get('/get-country', async (req, res) => {
+    try {
+        //const ipAddress = req.ip; 
+        const ipAddress = '45.64.221.211';
+        console.log("ipAddress",ipAddress);
+        const api_key = '9b38b399323e4d05a3bcbd1505e8e834'
+
+        const response = axios.get(`https://ipgeolocation.abstractapi.com/v1/?api_key=${api_key}&ip_address=${ipAddress}`)
+                  .then(response => {
+                    var country_name = response.data;
+                    console.log("country_name",country_name);
+                  })
+                  .catch(error => {
+                      console.log(error);
+                  });
+
     } catch (err) {
         console.error(err);
         res.status(500).send('An error occurred');
@@ -1008,12 +1043,20 @@ router.get('/home', checkCookieValue, async (req, res) => {
 //Discussion page
 router.get('/discussion', checkCookieValue, async (req, res) => {
     let currentUserData = JSON.parse(req.userData);
+            //const ipAddress = req.ip; 
+            const ipAddress = '45.64.221.211';
+            console.log("ipAddress",ipAddress);
+            const api_key = '9b38b399323e4d05a3bcbd1505e8e834'
+            const getcountrybyIp = await Promise.all([comFunction2.getcountrybyIp(ipAddress,api_key)]) 
+            const country_name = getcountrybyIp[0];
+            console.log("country_name",country_name);
+
     const [globalPageMeta, getAllLatestDiscussion, getAllPopularDiscussion, getAllDiscussions, getAllViewedDiscussion, getPopularTags] = await Promise.all([
         comFunction2.getPageMetaValues('global'),
-        comFunction2.getAllLatestDiscussion(20),
-        comFunction2.getAllPopularDiscussion(),
-        comFunction2.getAllDiscussion(),
-        comFunction2.getAllViewedDiscussion(),
+        comFunction2.getAllLatestDiscussion(20,country_name),
+        comFunction2.getAllPopularDiscussion(country_name),
+        comFunction2.getAllDiscussion(country_name),
+        comFunction2.getAllViewedDiscussion(country_name),
         comFunction2.getPopularTags(20),
     ]);
     //console.log(getAllLatestDiscussion);
@@ -1048,6 +1091,20 @@ router.get('/discussion', checkCookieValue, async (req, res) => {
         // res.status(500).send('An error occurred');
     }
 });
+
+//Discussion page
+router.get('/translate', async (req, res) => {
+    try {
+        res.render('front-end/translate', {
+            menu_active_id: 'translate',
+            page_title: 'translate',
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('An error occurred');
+    }
+});
+
 
 //Discussion Details page
 // router.get('/discussion-details/:discussion_id', checkCookieValue, async (req, res) => {
