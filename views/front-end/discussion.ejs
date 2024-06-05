@@ -312,6 +312,14 @@
                 <label><span style="background-color: #ffffff;">Discussion Topic<span style="color: red;">*</span></span></label>
                 <textarea name="topic" id="search-topic" class="form-control mb-4" required></textarea>
              </div>
+             <div class="custom-form">
+                <select name="location" id="country" class="form-control" required>
+                    <option value="Worldwide" selected>Worldwide</option>
+                    <% getCountries.forEach(function(country) { %>
+                        <option value="<%= country.name %>"><%= country.name %></option>
+                    <% }); %>
+                </select>
+            </div>            
              <div class="autofield-dropdown">
             </div>
              <% const date = new Date(); %>
@@ -529,9 +537,9 @@
                     $('.response-message').show();
                     $('#invitation_email').prop('disabled', false);
                     $('.frm-loading').hide();
-                    setTimeout(function() {
-                        window.location.reload();
-                    }, 2000);
+                    // setTimeout(function() {
+                    //     window.location.reload();
+                    // }, 2000);
                 } else {
                     $('.response-message').text(data.message);
                     $('.response-message').show();

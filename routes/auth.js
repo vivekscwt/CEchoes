@@ -384,6 +384,12 @@ router.post('/delete-company-complaint-level', authController.deleteCompanyCompl
 //complaint register
 router.post('/complaint-register', authController.complaintRegister);
 
+//cechoescomplaintRegister
+router.post('/cechoescomplaintRegister', authController.cechoescomplaintRegister);
+
+//plans
+router.post('/add-plan', authController.addPlan);
+
 // company-query
 router.post('/company-query', authController.companyQuery);
 

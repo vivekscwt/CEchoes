@@ -6502,9 +6502,9 @@ exports.updateReviewFlag = async (req, res) => {
 exports.createDiscussion = async (req, res) => {
     //console.log('createDiscussion',req.body ); 
     //return false;
-    const { user_id, tags, topic, from_data, expire_date } = req.body;
+    const { user_id, tags, topic, from_data, expire_date, location } = req.body;
     const strTags = JSON.stringify(tags);
-    console.log("strTagssss", strTags);
+    //console.log("strTagssss", strTags);
 
     const user_location = `SELECT * FROM user_customer_meta WHERE user_id =?`;
     const user_location_data = await query(user_location,[user_id]);
@@ -6512,15 +6512,15 @@ exports.createDiscussion = async (req, res) => {
     if(user_location_data.length>0){
         //var user_locations = user_location_data[0].address;
         var user_locations = user_location_data[0].country;
-        console.log("user_locations",user_locations);
+        //console.log("user_locations",user_locations);
 
         var userData = `SELECT name FROM countries WHERE id=?`;
         var user_val = await query(userData,[user_locations]);
-        console.log("user_val",user_val[0].name);
+        //console.log("user_val",user_val[0].name);
     }
 
     const sql = `INSERT INTO discussions ( user_id, topic, tags, created_at, expired_at, query_alert_status,discussion_status, location) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
-    const data = [user_id, topic, strTags, from_data, expire_date, '0', '0',user_val[0].name];
+    const data = [user_id, topic, strTags, from_data, expire_date, '0', '0',location];
     db.query(sql, data, (err, result) => {
         if (err) {
             return res.send({
@@ -6672,7 +6672,7 @@ exports.createDiscussion = async (req, res) => {
 
 exports.updateDiscussion = async (req, res) => {
     try {
-        const { discussion_id, topic, tags, expire_date } = req.body;
+        const { discussion_id, topic, tags, expire_date, location } = req.body;
 
         //console.log("tags",tags);
 
@@ -6691,8 +6691,8 @@ exports.updateDiscussion = async (req, res) => {
         console.log("tagsArray", tagsArray);
         console.log("strTagsss", strTags);
 
-        const sql = `UPDATE discussions SET topic = ?, tags = ?, expired_at = ? WHERE id = ?`;
-        const data = [topic, strTags, expire_date, discussion_id];
+        const sql = `UPDATE discussions SET topic = ?, tags = ?, expired_at = ?, location = ? WHERE id = ?`;
+        const data = [topic, strTags, expire_date, location, discussion_id];
 
 
         db.query(sql, data, (err, result) => {
@@ -7072,13 +7072,15 @@ exports.addComment = async (req, res) => {
 
             const mailOptions = {
                 from: process.env.MAIL_USER,
-                to: "dev2.scwt@gmail.com",
+                //to: "dev2.scwt@gmail.com",
+                to: process.env.MAIL_USER,
                 subject: 'Discussion comment approval',
                 html: html
             };
 
             try {
                 await mdlconfig.transporter.sendMail(mailOptions);
+                console.log('Mail Send');
                 return res.send({
                     status: 'ok',
                     message: 'Your Comment Added Successfully'
@@ -7870,6 +7872,112 @@ exports.complaintRegister = async (req, res) => {
         }
     })
 }
+
+//Complaint Register against CEchoes
+exports.cechoescomplaintRegister = async (req, res) => {
+    console.log('cechoescomplaintRegister', req.body);
+    const { company_id, user_id, category_id, sub_category_id, model_no, allTags, transaction_date, location, message } = req.body;
+    //return false;
+    //const uuid = uuidv4();  
+    const randomNo = Math.floor(Math.random() * (100 - 0 + 1)) + 0;
+    const currentDate = new Date();
+    const ticket_no = randomNo + currentDate.getTime();
+    const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ');
+
+
+    const data = {
+        user_id: user_id,
+        company_id: company_id,
+        ticket_id: ticket_no,
+        category_id: category_id,
+        sub_cat_id: sub_category_id && sub_category_id !== undefined ? sub_category_id : 0,
+        model_desc: model_no,
+        // purchase_date: transaction_date,
+        // purchase_place: concatenatedAddress,
+        message: message,
+        tags: JSON.stringify(allTags),
+        level_id: '1',
+        status: '2',
+        created_at: formattedDate,
+        level_update_at: formattedDate
+    }
+
+
+    // console.log(complaintEmailToCompany);
+    const Query = `INSERT INTO complaint SET ?  `;
+    db.query(Query, data, async (err, result) => {
+        if (err) {
+            return res.send({
+                status: 'not ok',
+                message: 'Something went wrong  ' + err
+            });
+        } else {
+            console.log(company_id,user_id, result.insertId)
+            const [complaintEmailToCompany, complaintSuccessEmailToUser] = await Promise.all([
+                //comFunction2.complaintEmailToCompany(company_id, ticket_no, result.insertId),
+                comFunction2.complaintSuccessEmailToUser(user_id, ticket_no, result.insertId)
+            ]);
+            return res.send({
+                status: 'ok',
+                message: ' CEchoes Complaint Registered successfully !'
+            });
+        }
+    })
+}
+
+//addPlan
+exports.addPlan = async (req, res) => {
+    console.log('addPlan', req.body);
+    const { company_id, user_id, category_id, sub_category_id, model_no, allTags, transaction_date, location, message } = req.body;
+    //return false;
+    //const uuid = uuidv4();  
+    const randomNo = Math.floor(Math.random() * (100 - 0 + 1)) + 0;
+    const currentDate = new Date();
+    const ticket_no = randomNo + currentDate.getTime();
+    const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ');
+
+
+    const data = {
+        user_id: user_id,
+        company_id: company_id,
+        ticket_id: ticket_no,
+        category_id: category_id,
+        sub_cat_id: sub_category_id && sub_category_id !== undefined ? sub_category_id : 0,
+        model_desc: model_no,
+        // purchase_date: transaction_date,
+        // purchase_place: concatenatedAddress,
+        message: message,
+        tags: JSON.stringify(allTags),
+        level_id: '1',
+        status: '2',
+        created_at: formattedDate,
+        level_update_at: formattedDate
+    }
+
+
+    // console.log(complaintEmailToCompany);
+    const Query = `INSERT INTO complaint SET ?  `;
+    db.query(Query, data, async (err, result) => {
+        if (err) {
+            return res.send({
+                status: 'not ok',
+                message: 'Something went wrong  ' + err
+            });
+        } else {
+            console.log(company_id,user_id, result.insertId)
+            const [complaintEmailToCompany, complaintSuccessEmailToUser] = await Promise.all([
+                //comFunction2.complaintEmailToCompany(company_id, ticket_no, result.insertId),
+                comFunction2.complaintSuccessEmailToUser(user_id, ticket_no, result.insertId)
+            ]);
+            return res.send({
+                status: 'ok',
+                message: ' CEchoes Complaint Registered successfully !'
+            });
+        }
+    })
+}
+
+
 
 //Insert Company Query and  to user
 exports.companyQuery = async (req, res) => {

@@ -1,0 +1,230 @@
+<%- include('common/header') -%>
+<link href="/front-end/css/complain-style.css" rel="stylesheet" type="text/css">
+<%- include('common/header-banner') -%>
+
+<section class="main-content bottom-main-content">
+    <div class="complain-content">
+       <div class="container">
+          <h2 class="inner-main-head text-center mb-4">Fill out the form to register a complaint against CEchoes</h2>
+          <div class="row">
+            <div class="col-md-6 my-auto">
+               <div class="about-left-slider my-3">
+                  <div class="about-50-right">
+                     <div class="gr-slider3">
+                        <div class="item">
+                           <img src="/<%= meta_values_array.banner_img_1 %>" alt="img" width="298" height="434">
+                        </div>
+                        <div class="item">
+                           <img src="/<%= meta_values_array.banner_img_2 %>" alt="img" width="298" height="434">
+                        </div>
+                     </div>
+                     <div class="gr-slider4">
+                        <div class="item">
+                           <img src="/<%= meta_values_array.banner_img_3 %>" alt="img" width="252" height="250">
+                        </div>
+                        <div class="item">
+                           <img src="/<%= meta_values_array.banner_img_4 %>" alt="img" width="252" height="250">
+                        </div>
+                     </div>
+                  </div>
+                  <div class="about-50-left">
+                     <div class="gr-slider1">
+                        <div class="item">
+                           <img src="/<%= meta_values_array.banner_img_5 %>" alt="img" width="194" height="228">
+                        </div>
+                        <div class="item">
+                           <img src="/<%= meta_values_array.banner_img_6 %>" alt="img" width="194" height="228">
+                        </div>
+                     </div>
+                     <div class="gr-slider2">
+                        <div class="item">
+                           <img src="/<%= meta_values_array.banner_img_7 %>" alt="img" width="212" height="312">
+                        </div>
+                        <div class="item">
+                           <img src="/<%= meta_values_array.banner_img_8 %>" alt="img" width="212" height="312">
+                        </div>
+                     </div>
+                  </div>
+                  <div class="about-overlay-object1"><img src="/front-end/images/overlay-object1.png" alt="img" width="151" height="158"></div>
+                  <div class="complain-overlay-object1"><img src="/front-end/images/complain-slider-object1.svg" alt="img" width="36" height="117"></div>
+               </div>
+            </div>
+            <div class="col-md-6 my-auto">
+               <div class="complain-register-form my-3">
+                  <form id="complain_register_form">
+                     <div class="row">
+       
+       
+                        <div class="col-md-12">
+                            <div class="custom-form">
+                                <input type="text" id="companyInput" name="company_id" class="form-control" placeholder="Business/Institute/Establishment Name" value="CEchoes" readonly>
+                                <div class="dropdown-menu" id="companyDropdown" style="display: none;">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-sm-6">
+                            <div class="custom-form">
+                                <div class="custom-form m-0 dynamic_state_field_wrapper">
+                                    <select id="select_category" name="category_id" class="form-select" required>
+                                        <option value="">Select Category</option>
+                                        <option value="electronics">Electronics</option>
+                                        <option value="web_development">Web Development</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-sm-6">
+                            <div class="custom-form">
+                                <div class="custom-form m-0 dynamic_sub_category_field_wrapper">
+                                    <select id="select_sub_category" name="sub_category_id" class="form-select" required>
+                                        <option value="">Select Sub-Category</option>
+                                        <!-- Sub-category options will be dynamically populated via JavaScript -->
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-sm-12">
+                           <div class="custom-form">
+                              <input type="text" name="model_no" class="form-control" placeholder="Enter the Model Number">
+                           </div>
+                        </div>
+                        <div class="col-sm-12">
+                           <div class="tag-label">Tags</div>
+                           <div id="sendreviewtags">
+                           <input type="text" name="tags" placeholder="Add Tags" data-gtm-form-interact-field-id="0">
+                        </div>
+                        </div>
+                        <div class="col-sm-12">
+                           <div class="custom-form">
+                              <input type="text" onfocus="(this.type='date')" onblur="(this.type='text')" name="transaction_date" class="form-control" placeholder="Date of Transactions" required >
+                           </div>
+                        </div>
+                        <div class="col-sm-12">
+                           <div class="custom-form">
+                              <textarea name="message" id="" class="form-control" placeholder="Your Message" required></textarea>
+                           </div>
+                        </div>
+                     </div>
+                     <input type="hidden" name="user_id" value="<%= currentUserData.user_id %>" />
+                     <div class="text-center"><input type="submit" class="btn-default btn-warning" id="submit_btn" value="Submit"></div>
+                  </form>
+                  <div class="register-now frm-loading" style="color: aliceblue; display: none; ">
+                     <span class="indicator-progress">Please wait...
+                        <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                     </span>
+                  </div>
+                  <div style=" width: 100%; text-align: center; display: block; border: 2px solid #fccb06; padding: 6px; margin-top: 20px; border-radius: 5px; color: beige; display: none;" class="response-message"></div>
+                 </div>
+               </div>
+            </div>
+         </div>
+      </div>
+       <img src="/front-end/images/complain-overlay-object1.svg" alt="img" class="c-overlay1">
+       <img src="/front-end/images/complain-overlay-object2.svg" alt="img" class="c-overlay2">
+    </div>
+ </section>
+
+ <style>
+   #companyDropdown option {
+     color: black;
+ }
+ #state option {
+     color: black;
+ }
+ #country option {
+     color: black;
+ }
+ 
+ 
+ </style>
+
+
+<%- include('common/footer') -%>  
+
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+$(document).ready(function () {
+
+   var allTags = [];
+   $('form#complain_register_form').submit(function (e) {
+      e.preventDefault();
+      $('.response-message').hide();
+      $('.response-message').text('');
+      $('#submit_btn').prop('disabled', true);
+      $('.frm-loading').show(); 
+      //alert('aaaaaa')
+      const transformedResponse = {};
+      $(this).find('#sendreviewtags').find('span').each(function(){
+         var enteredTag = $(this).text();
+         allTags.push(enteredTag);
+      });
+      const formData = $(this).serializeArray();
+      $(formData).each(function(index, field) {
+         transformedResponse[field.name] = field.value; 
+      });
+      transformedResponse['allTags'] = allTags;
+      console.log("transformedResponse",transformedResponse);
+      //return false;
+      $.ajax({
+         url: '/auth/cechoescomplaintRegister',
+         method: 'POST',
+         data: JSON.stringify(transformedResponse),
+         //data: formData,
+         processData: false,
+         //contentType: false,
+         contentType: 'application/json',
+         success: function (data) {
+            if (data.status == 'ok') {
+               $('.response-message').text(data.message);
+               $('.response-message').show();
+               $('#submit_btn').prop('disabled', false);
+               $('.frm-loading').hide();
+               setTimeout(function() {
+                  window.location.href = "/my-complaints";
+               }, 2000);
+            } else {
+               $('.response-message').text(data.message);
+               $('.response-message').show();
+               $('#submit_btn').prop('disabled', false);
+               $('.frm-loading').hide();
+               console.log('Something went wrong');
+            }
+         },
+         error: function (xhr, status, error) {
+            // Handle any errors that occur during the request
+            console.log(error);
+         }
+      });
+   });
+})
+
+
+document.addEventListener("DOMContentLoaded", function() {
+    const categories = {
+        electronics: ["Fridge", "AC"],
+        web_development: ["Backend Development", "Frontend Development"]
+    };
+
+    const selectCategory = document.getElementById("select_category");
+    const selectSubCategory = document.getElementById("select_sub_category");
+
+    selectCategory.addEventListener("change", function() {
+        const selectedCategory = selectCategory.value;
+        const subCategories = categories[selectedCategory] || [];
+        selectSubCategory.innerHTML = '<option value="">Select Sub-Category</option>';
+
+        subCategories.forEach(subCategory => {
+            const option = document.createElement("option");
+            option.value = subCategory.toLowerCase().replace(/ /g, '_');
+            option.textContent = subCategory;
+            selectSubCategory.appendChild(option);
+        });
+    });
+});
+
+</script>

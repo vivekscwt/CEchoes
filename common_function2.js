@@ -2271,7 +2271,7 @@ async function getAllLatestDiscussion(limit,country) {
     FROM discussions_user_view
     GROUP BY discussion_id
   ) views ON discussions.id = views.discussion_id
-  WHERE discussions.discussion_status = 1 AND discussions.location = "${country}"
+  WHERE discussions.discussion_status = 1 AND (discussions.location = "${country}" OR discussions.location = "Worldwide")
   ORDER BY discussions.id DESC
   LIMIT ${limit} ;
   `;
@@ -2288,6 +2288,50 @@ async function getAllLatestDiscussion(limit,country) {
     console.error('Error during fetch All Latest Discussion:', error);
   }
 }
+
+// async function getAllLatestDiscussion(limit, country) {
+//   console.log("country",country);
+//   let sql = `
+//     SELECT
+//       discussions.*,
+//       u.first_name,
+//       u.last_name,
+//       COALESCE(comments.total_comments, 0) as total_comments,
+//       COALESCE(views.total_views, 0) as total_views
+//     FROM discussions
+//     LEFT JOIN users u ON discussions.user_id = u.user_id
+//     LEFT JOIN (
+//       SELECT discussion_id, COUNT(*) as total_comments
+//       FROM discussions_user_response
+//       WHERE comment_status = 1
+//       GROUP BY discussion_id
+//     ) comments ON discussions.id = comments.discussion_id
+//     LEFT JOIN (
+//       SELECT discussion_id, COUNT(*) as total_views
+//       FROM discussions_user_view
+//       GROUP BY discussion_id
+//     ) views ON discussions.id = views.discussion_id
+//     WHERE discussions.discussion_status = 1
+//   `;
+
+//   if (country !== 'Worldwide') {
+//     sql += ` AND discussions.location = "${country}"`;
+//   }
+
+//   sql += `
+//     ORDER BY discussions.id DESC
+//     LIMIT ${limit};
+//   `;
+
+//   try {
+//     const results = await query(sql);
+//     return results.length > 0 ? results : [];
+//   } catch (error) {
+//     console.error('Error during fetch All Latest Discussion:', error);
+//     return [];
+//   }
+// }
+
 
 //Function to get popular discussion from discussions table
 async function getAllPopularDiscussion(country) {
@@ -2310,7 +2354,7 @@ async function getAllPopularDiscussion(country) {
     FROM discussions_user_view
     GROUP BY discussion_id
   ) views ON discussions.id = views.discussion_id
-  WHERE discussions.discussion_status = 1 AND discussions.location = "${country}"
+  WHERE discussions.discussion_status = 1 AND (discussions.location = "${country}" OR discussions.location = "Worldwide")
   ORDER BY total_comments DESC;
   ;
   `;
@@ -2425,7 +2469,7 @@ async function getAllDiscussion(country) {
     FROM discussions_user_view
     GROUP BY discussion_id
   ) views ON discussions.id = views.discussion_id
-  WHERE discussions.discussion_status = 1 AND discussions.location = "${country}"
+  WHERE discussions.discussion_status = 1 AND (discussions.location = "${country}" OR discussions.location = "Worldwide")
   ORDER BY discussions.id DESC
   `;
   try {
@@ -2511,10 +2555,15 @@ async function getAllCommentByDiscusId(discussions_id) {
   ORDER BY created_at DESC;`
   try {
     const results = await query(sql);
+
+    console.log("results",results);
     const commentResult = await query(commentQuery);
     const cmntData = JSON.stringify(commentResult);
     results[0].commentData = cmntData;
     //console.log('alldata',results)
+
+    console.log("commentResult",commentResult);
+
     return results;
   }
   catch (error) {

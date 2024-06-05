@@ -99,7 +99,8 @@
                            <div class="custom-form">
                               <div class="custom-form m-0 dynamic_state_field_wrapper" >
                                  <select id="select_category" name="category_id" id="select_category"  class="form-select" required>
-                                     <option value="">Select Category</option>
+                                     <option value="0">Select Category</option>
+                                     <option value="0">General</option>
                                  </select>
                              </div> 
                            </div>
@@ -109,6 +110,7 @@
                               <div class="custom-form m-0 dynamic_sub_category_field_wrapper" >
                                  <select id="select_sub_category" name="sub_category_id"  class="form-select" required>
                                      <option value="">Select Sub-Category</option>
+                                     <option value="0">General</option>
                                  </select>
                              </div>
                            </div>
@@ -177,7 +179,7 @@
 <script>
 $(document).ready(function () {
    $('#select_company').change(function() {
-      $('#select_category').empty().append($('<option value="">Select Category</option><option value="0">General</option>'));
+      
       //$("#select_state").prop('required',false);
       $('#dynamic_state_field_wrapper').hide();
       var company_id = $(this).val();
