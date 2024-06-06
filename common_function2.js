@@ -259,6 +259,7 @@ function getAllReviewTags() {
 
 // }
 async function getlatestReviews(reviewCount,country) {
+  console.log("latestReviewscountry",country);
   const get_latest_review_query = `
     SELECT r.*, c.company_name, c.logo, c.slug, cl.address, cl.country, cl.state, cl.city, cl.zip, u.first_name, 
     u.last_name,u.alise_name, u.user_id, u.user_status, ucm.profile_pic, COUNT(review_reply.id) as review_reply_count, cc.category_name, cp.product_title 
@@ -1421,17 +1422,18 @@ async function getSubCategories(categorySlug) {
 }
 
 // Function to fetch  Category Company details
-async function getCompanyDetails(categorySlug) {
-  const sql = `SELECT c.ID, c.company_name, c.logo, c.status, c.trending, c.main_address, c.verified, c.paid_status, c.about_company, c.slug , AVG(r.rating) as comp_avg_rating, COUNT(r.id) as comp_total_reviews, pcd.cover_img
+async function getCompanyDetails(categorySlug,country) {
+  const sql = `SELECT c.ID, c.company_name, c.logo, c.status, c.trending, c.main_address, c.verified, c.paid_status, c.about_company, c.slug , AVG(r.rating) as comp_avg_rating, COUNT(r.id) as comp_total_reviews, pcd.cover_img,category.category_slug
                 FROM category  
                 JOIN company_cactgory_relation ccr ON ccr.category_id = category.ID
                 LEFT JOIN company c ON c.ID = ccr.company_id
                 LEFT JOIN reviews r ON r.company_id = c.ID
                 LEFT JOIN premium_company_data pcd ON pcd.company_id = c.ID
-                WHERE category.category_slug = '${categorySlug}' AND c.status = '1'
+                WHERE category.category_slug = '${categorySlug}' AND c.status = '1' AND C.main_address_country = "${country}"
                 GROUP BY c.ID, c.company_name `;
 
   const result = await query(sql);
+  console.log("getCompanyDetails",result);
   if (result.length > 0) {
     return result;
   } else {
@@ -5444,14 +5446,51 @@ function getChildCompany(companyId) {
 async function getcountrybyIp(ipAddress, api_key) {
   try {
       const response = await axios.get(`https://ipgeolocation.abstractapi.com/v1/?api_key=${api_key}&ip_address=${ipAddress}`);
-      const country_name = response.data.country;
+      //const countryname = response.data.country_code;
+      const country_code = response.data.country_code;
       //console.log("country_name", country_name);
-      return country_name;
+      console.log("response.data", response.data);
+      console.log("country_code", country_code);
+      return country_code;
+
+
   } catch (error) {
       console.error(error);
       throw new Error('An error occurred');
   }
 }
+// async function getcountrynamebyIp(ipAddress, api_key) {
+//   try {
+//       const response = await axios.get(`https://ipgeolocation.abstractapi.com/v1/?api_key=${api_key}&ip_address=${ipAddress}`);
+//       const country_name = response.data.country;
+//       //const country_code = response.data.country_code;
+//       //console.log("country_name", country_name);
+//       console.log("response.data", response.data);
+//       //console.log("country_code", country_code);
+//       return country_name;
+
+
+//   } catch (error) {
+//       console.error(error);
+//       throw new Error('An error occurred');
+//   }
+// }
+
+async function getcountrynamebyIp(ipAddress, api_key) {
+  try {
+      const response = await axios.get(`https://ipgeolocation.abstractapi.com/v1/?api_key=${api_key}&ip_address=${ipAddress}`);
+      const country_name = response.data.country;
+      const country_code = response.data.country_code;
+      console.log("country_name", country_name);
+      console.log("response.data", response.data);
+      console.log("country_code", country_code);
+      return { country_name, country_code };
+  } catch (error) {
+      console.error(error);
+      throw new Error('An error occurred');
+  }
+}
+
 
 module.exports = {
   getFaqPage,
@@ -5569,5 +5608,6 @@ module.exports = {
   getCountryName,
   getAllParentCompany,
   getChildCompany,
-  getcountrybyIp
+  getcountrybyIp,
+  getcountrynamebyIp
 };

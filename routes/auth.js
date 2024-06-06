@@ -84,6 +84,8 @@ router.post('/company-bulk-upload', csvupload.single('company_file'), authContro
 router.post('/delete-company', authController.deleteCompany);
 router.post('/deleteCompanies', authController.deleteCompanies);
 
+router.post('/get-company-details', authController.getcompanyDetails);
+
 
 router.post('/trash-company', authController.trashCompany);
 router.post('/trashCompanies', authController.trashCompanies);

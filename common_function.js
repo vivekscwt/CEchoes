@@ -804,10 +804,12 @@ async function createcompany(comInfo, userId) {
       console.log("company exits");
       console.log("company_name_checking_results[0].ID",company_name_checking_results[0].ID);
       try {
-        const company_address_exist_query = 'SELECT * FROM company_location WHERE company_id = ? AND address = ?';
+        //const company_address_exist_query = 'SELECT * FROM company_location WHERE company_id = ? AND address = ?';
+        const company_address_exist_query = 'SELECT * FROM company_location WHERE company_id = ?';
         const company_address_exist_values = [company_name_checking_results[0].ID, comInfo.address];
         const company_address_exist_results = await query(company_address_exist_query, company_address_exist_values);
         if (company_address_exist_results.length > 0) {
+          console.log("company_address_exist_results.length > 0");
           //address exist return location ID
           return_data.companyID = company_name_checking_results[0].ID;
           return_data.companyLocationID = company_address_exist_results[0].ID;
@@ -1380,14 +1382,34 @@ async function editCustomerReview(req) {
   }
 }
 
-async function searchCompany(keyword) {
+// async function searchCompany(keyword) {
+//   const get_company_query = `
+//     SELECT ID, company_name, logo, about_company, slug, main_address, main_address_pin_code FROM company
+//     WHERE company_name LIKE '%${keyword}%' AND status = '1'
+//     ORDER BY created_date DESC
+//   `;
+//   try {
+//     const get_company_results = await query(get_company_query);
+//     if (get_company_results.length > 0) {
+//       console.log(get_company_results);
+//       return { status: 'ok', data: get_company_results, message: get_company_results.length + ' company data recived' };
+//     } else {
+//       return { status: 'ok', data: '', message: 'No company data found' };
+//     }
+//   } catch (error) {
+//     return { status: 'err', data: '', message: 'No company data found' };
+//   }
+// }
+
+async function searchCompany(keyword,country) {
+  console.log("country",country);
   const get_company_query = `
     SELECT ID, company_name, logo, about_company, slug, main_address, main_address_pin_code FROM company
-    WHERE company_name LIKE '%${keyword}%' AND status = '1'
+    WHERE company_name LIKE '%${keyword}%' AND status = '1' AND main_address_country = ?
     ORDER BY created_date DESC
   `;
   try {
-    const get_company_results = await query(get_company_query);
+    const get_company_results = await query(get_company_query,[country]);
     if (get_company_results.length > 0) {
       console.log(get_company_results);
       return { status: 'ok', data: get_company_results, message: get_company_results.length + ' company data recived' };
@@ -1558,13 +1580,45 @@ async function reviewTagsCountByCompanyID(companyId) {
   }
 }
 
-async function getPopularCategories() {
+// async function getPopularCategories() {
+//   const get_popular_company_query = `
+//   SELECT 
+//   ccr.category_id,
+//   cg.category_name,
+//   cg.category_img,
+//   cg.category_slug,
+//   COUNT(*) AS review_count
+//   FROM 
+//     reviews r
+//   INNER JOIN
+//     company_cactgory_relation ccr ON r.company_id = ccr.company_id
+//   INNER JOIN
+//     category cg ON ccr.category_id = cg.ID
+//   WHERE 
+//     r.review_status = '1'
+//   GROUP BY 
+//     ccr.category_id
+//   ORDER BY 
+//     review_count DESC
+//   LIMIT 4;
+//   `;
+//   try {
+//     const get_popular_company_query_result = await query(get_popular_company_query);
+//     return get_popular_company_query_result;
+//   } catch (error) {
+//     return 'Error during user get_rewiew_tag_counts_query:' + error;
+//   }
+// }
+
+async function getPopularCategories(country) {
   const get_popular_company_query = `
   SELECT 
   ccr.category_id,
   cg.category_name,
   cg.category_img,
   cg.category_slug,
+  company.main_address_country,
+  company.company_name,
   COUNT(*) AS review_count
   FROM 
     reviews r
@@ -1572,8 +1626,10 @@ async function getPopularCategories() {
     company_cactgory_relation ccr ON r.company_id = ccr.company_id
   INNER JOIN
     category cg ON ccr.category_id = cg.ID
+  LEFT JOIN 
+    company ON r.company_id = company.ID
   WHERE 
-    r.review_status = '1'
+    r.review_status = '1' AND company.main_address_country = "${country}"
   GROUP BY 
     ccr.category_id
   ORDER BY 
@@ -1582,6 +1638,7 @@ async function getPopularCategories() {
   `;
   try {
     const get_popular_company_query_result = await query(get_popular_company_query);
+    console.log("get_popular_company_query_result",get_popular_company_query_result);
     return get_popular_company_query_result;
   } catch (error) {
     return 'Error during user get_rewiew_tag_counts_query:' + error;

@@ -93,13 +93,13 @@ router.get('/user-company-register', async (req, res) => {
             BLOG_URL: process.env.BLOG_URL,
             MAIN_URL: process.env.MAIN_URL,
         };
-        var url = process.env.MAIN_URL 
-        console.log("url",url);
+        var url = process.env.MAIN_URL
+        console.log("url", url);
 
-    const [globalPageMeta,countries] = await Promise.all([
-        comFunction2.getPageMetaValues('global'),
-        comFunction.getCountries(),
-    ]);
+        const [globalPageMeta, countries] = await Promise.all([
+            comFunction2.getPageMetaValues('global'),
+            comFunction.getCountries(),
+        ]);
         res.render('front-end/company_user_register', {
             menu_active_id: 'User Register',
             page_title: 'User Register',
@@ -120,22 +120,35 @@ router.get('', checkCookieValue, async (req, res) => {
         userId = currentUserData.user_id;
     }
 
+    //const ipAddress = req.ip; 
+    const ipAddress = '45.64.221.211';
+    console.log("ipAddress", ipAddress);
+    const api_key = '9b38b399323e4d05a3bcbd1505e8e834'
+    // const getcountrybyIp = await Promise.all([comFunction2.getcountrynamebyIp(ipAddress,api_key)]) 
+    // const country_name = getcountrybyIp[0];
+    // console.log("country_code",country_name);
+
+    const { country_name, country_code } = await comFunction2.getcountrynamebyIp(ipAddress, api_key);
+    console.log("Country Name:", country_name);
+    console.log("Country Code:", country_code);
+
     const [allRatingTags, globalPageMeta, latestReviews, AllReviewTags, AllReviewVoting, PopularCategories, ReviewCount, UserCount, PositiveReviewsCompany, NegativeReviewsCompany, HomeMeta, VisitorCheck, getAllLatestDiscussion, getAllPopularDiscussion, getAllDiscussions, getCountries] = await Promise.all([
         comFunction.getAllRatingTags(),
         comFunction2.getPageMetaValues('global'),
-        comFunction2.getlatestReviews(18),
+        comFunction2.getlatestReviews(18, country_name),
         comFunction2.getAllReviewTags(),
         comFunction2.getAllReviewVoting(),
-        comFunction.getPopularCategories(),
+        comFunction.getPopularCategories(country_code),
         comFunction.getReviewCount(),
         comFunction.getUserCount(),
         comFunction.getPositiveReviewsCompany(),
         comFunction.getNegativeReviewsCompany(),
         comFunction2.getPageMetaValues('home'),
         comFunction.getVisitorCheck(requestIp.getClientIp(req)),
-        comFunction2.getAllLatestDiscussion(20),
-        comFunction2.getAllPopularDiscussion(),
-        comFunction2.getAllDiscussions(),
+        comFunction2.getAllLatestDiscussion(20, country_name),
+        comFunction2.getAllPopularDiscussion(country_name),
+        //comFunction2.getAllDiscussions(),
+        comFunction2.getAllDiscussion(country_name),
         comFunction.getCountries()
     ]);
     const rangeTexts = {};
@@ -170,9 +183,14 @@ router.get('', checkCookieValue, async (req, res) => {
                     meta_values_array[item.page_meta_key] = item.page_meta_value;
                 })
                 //console.log(allRatingTags);
-                const featured_sql = `SELECT featured_companies.id,featured_companies.company_id,featured_companies.short_desc,featured_companies.link,company.logo,company.slug, company.company_name FROM featured_companies 
+                // const featured_sql = `SELECT featured_companies.id,featured_companies.company_id,featured_companies.short_desc,featured_companies.link,company.logo,company.slug, company.company_name FROM featured_companies 
+                //         JOIN company ON featured_companies.company_id = company.ID 
+                //         WHERE featured_companies.status = 'active' 
+                //         ORDER BY featured_companies.ordering ASC `;
+
+                        const featured_sql = `SELECT featured_companies.id,featured_companies.company_id,featured_companies.short_desc,featured_companies.link,company.logo,company.slug, company.company_name FROM featured_companies 
                         JOIN company ON featured_companies.company_id = company.ID 
-                        WHERE featured_companies.status = 'active' 
+                        WHERE featured_companies.status = 'active' AND company.main_address_country = "${country_code}"
                         ORDER BY featured_companies.ordering ASC `;
                 db.query(featured_sql, (featured_err, featured_result) => {
                     var featured_comps = featured_result;
@@ -222,7 +240,9 @@ router.get('', checkCookieValue, async (req, res) => {
                         AllLatestDiscussion: getAllLatestDiscussion,
                         AllPopularDiscussion: getAllPopularDiscussion,
                         AllDiscussions: getAllDiscussions,
-                        getCountries: getCountries
+                        getCountries: getCountries,
+                        country_name: country_name,
+                        countryname: country_code
                     });
                 })
 
@@ -350,14 +370,23 @@ router.get('/review', checkCookieValue, async (req, res) => {
 
         //const ipAddress = req.ip; 
         const ipAddress = '45.64.221.211';
-        console.log("ipAddress",ipAddress);
-        const api_key = '9b38b399323e4d05a3bcbd1505e8e834'
-        const getcountrybyIp = await Promise.all([comFunction2.getcountrybyIp(ipAddress,api_key)]) 
-        const country_name = getcountrybyIp[0];
-        //console.log("country_name",country_name);
+        console.log("ipAddress", ipAddress);
+        const api_key = '9b38b399323e4d05a3bcbd1505e8e834';
 
-        const [latestReviews, AllReviews, AllTrendingReviews, AllReviewTags, allRatingTags, globalPageMeta, homePageMeta, AllReviewVoting,getCountries] = await Promise.all([
-            comFunction2.getlatestReviews(20,country_name),
+        // const getcountrybyIp = await Promise.all([comFunction2.getcountrynamebyIp(ipAddress,api_key)]) 
+        // const country_name = getcountrybyIp[0];
+        // console.log("country_code",country_name);
+
+        // const getcountrynamebyIp = await Promise.all([comFunction2.getcountrybyIp(ipAddress,api_key)]) 
+        // const countryname = getcountrynamebyIp[0];
+        // console.log("countrynamesss",countryname);
+
+        const { country_name, country_code } = await comFunction2.getcountrynamebyIp(ipAddress, api_key);
+        console.log("Country Name:", country_name);
+        console.log("Country Code:", country_code);
+
+        const [latestReviews, AllReviews, AllTrendingReviews, AllReviewTags, allRatingTags, globalPageMeta, homePageMeta, AllReviewVoting, getCountries] = await Promise.all([
+            comFunction2.getlatestReviews(20, country_name),
             comFunction2.getAllReviews(country_name),
             comFunction2.getAllTrendingReviews(country_name),
             comFunction2.getAllReviewTags(),
@@ -366,9 +395,9 @@ router.get('/review', checkCookieValue, async (req, res) => {
             comFunction2.getPageMetaValues('home'),
             comFunction2.getAllReviewVoting(),
             comFunction.getCountries(),
-            
+
         ]);
-         
+
 
         //console.log(getPageMetaValues);
         // res.json({
@@ -396,7 +425,9 @@ router.get('/review', checkCookieValue, async (req, res) => {
             homePageMeta: homePageMeta,
             AllReviewVoting: AllReviewVoting,
             getCountries: getCountries,
-            ip_address: ipAddress
+            ip_address: ipAddress,
+            country_name: country_name,
+            countryname: country_code
         });
     } catch (err) {
         console.error(err);
@@ -409,17 +440,17 @@ router.get('/get-country', async (req, res) => {
     try {
         //const ipAddress = req.ip; 
         const ipAddress = '45.64.221.211';
-        console.log("ipAddress",ipAddress);
+        console.log("ipAddress", ipAddress);
         const api_key = '9b38b399323e4d05a3bcbd1505e8e834'
 
         const response = axios.get(`https://ipgeolocation.abstractapi.com/v1/?api_key=${api_key}&ip_address=${ipAddress}`)
-                  .then(response => {
-                    var country_name = response.data;
-                    console.log("country_name",country_name);
-                  })
-                  .catch(error => {
-                      console.log(error);
-                  });
+            .then(response => {
+                var country_name = response.data;
+                console.log("country_name", country_name);
+            })
+            .catch(error => {
+                console.log(error);
+            });
 
     } catch (err) {
         console.error(err);
@@ -692,7 +723,7 @@ router.get('/company/:slug', checkCookieValue, async (req, res) => {
             support_data = { support_email: PremiumCompanyData.support_email, escalation_one: PremiumCompanyData.escalation_one, escalation_two: PremiumCompanyData.escalation_two, escalation_three: PremiumCompanyData.escalation_three }
 
         }
-        console.log("products",products);
+        console.log("products", products);
 
         if (CompanyInfo) {
             //console.log("CompanyInfo",CompanyInfo);
@@ -722,7 +753,7 @@ router.get('/company/:slug', checkCookieValue, async (req, res) => {
                     ...detail,
                     ...(submitionsCountMap[detail.unique_id] || {}) // Add submitionsCount if it exists
                 }));
-                
+
                 // res.json(
                 // {
                 //     menu_active_id: 'company',
@@ -829,6 +860,27 @@ router.get('/company/:slug', checkCookieValue, async (req, res) => {
 // category listing page
 router.get('/categories', checkCookieValue, async (req, res) => {
     let currentUserData = JSON.parse(req.userData);
+
+        //const ipAddress = req.ip; 
+        const ipAddress = '45.64.221.211';
+        console.log("ipAddress", ipAddress);
+        const api_key = '9b38b399323e4d05a3bcbd1505e8e834'
+        // const getcountrybyIp = await Promise.all([comFunction2.getcountrynamebyIp(ipAddress,api_key)]) 
+        // const country_name = getcountrybyIp[0];
+        // console.log("country_code",country_name);
+    
+        const { country_name, country_code } = await comFunction2.getcountrynamebyIp(ipAddress, api_key);
+        console.log("Country Name:", country_name);
+        console.log("Country Code:", country_code);
+
+        const getcountry_code= `SELECT id FROM countries WHERE shortname = "${country_code}"`;
+        const getcountryval= await query(getcountry_code);
+        if(getcountryval.length>0){
+            var country_id = getcountryval[0].id;
+            console.log("country_id",country_id);
+        }
+
+
     const [globalPageMeta] = await Promise.all([
         comFunction2.getPageMetaValues('global'),
     ]);
@@ -839,7 +891,7 @@ router.get('/categories', checkCookieValue, async (req, res) => {
         JOIN category_country_relation ON category.id = category_country_relation.cat_id
         JOIN countries ON category_country_relation.country_id = countries.id
         LEFT JOIN category AS c ON c.ID = category.parent_id
-        WHERE category.parent_id = 0
+        WHERE category.parent_id = 0 AND category_country_relation.country_id= "${country_id}"
         GROUP BY category.category_name `;
         db.query(cat_query, (err, results) => {
             if (err) {
@@ -898,10 +950,23 @@ router.get('/category/:category_slug', checkCookieValue, async (req, res) => {
     let currentUserData = JSON.parse(req.userData);
     const category_slug = req.params.category_slug;
     const baseURL = process.env.MAIN_URL;
+
+    //const ipAddress = req.ip; 
+    const ipAddress = '45.64.221.211';
+    console.log("ipAddress", ipAddress);
+    const api_key = '9b38b399323e4d05a3bcbd1505e8e834'
+    // const getcountrybyIp = await Promise.all([comFunction2.getcountrynamebyIp(ipAddress,api_key)]) 
+    // const country_name = getcountrybyIp[0];
+    // console.log("country_code",country_name);
+
+    const { country_name, country_code } = await comFunction2.getcountrynamebyIp(ipAddress, api_key);
+    console.log("Country Name:", country_name);
+    console.log("Country Code:", country_code);
+
     const [globalPageMeta, getSubCategories, companyDetails, AllRatingTags, CategoryDetails] = await Promise.all([
         comFunction2.getPageMetaValues('global'),
         comFunction2.getSubCategories(category_slug),
-        comFunction2.getCompanyDetails(category_slug),
+        comFunction2.getCompanyDetails(category_slug, country_code),
         comFunction.getAllRatingTags(),
         comFunction.getCategoryDetails(category_slug),
         //comFunction.getParentCategories(category_slug),
@@ -1043,17 +1108,17 @@ router.get('/home', checkCookieValue, async (req, res) => {
 //Discussion page
 router.get('/discussion', checkCookieValue, async (req, res) => {
     let currentUserData = JSON.parse(req.userData);
-            //const ipAddress = req.ip; 
-            const ipAddress = '45.64.221.211';
-            console.log("ipAddress",ipAddress);
-            const api_key = '9b38b399323e4d05a3bcbd1505e8e834'
-            const getcountrybyIp = await Promise.all([comFunction2.getcountrybyIp(ipAddress,api_key)]) 
-            const country_name = getcountrybyIp[0];
-            console.log("country_name",country_name);
+    //const ipAddress = req.ip; 
+    const ipAddress = '45.64.221.211';
+    console.log("ipAddress", ipAddress);
+    const api_key = '9b38b399323e4d05a3bcbd1505e8e834'
+    const getcountrybyIp = await Promise.all([comFunction2.getcountrybyIp(ipAddress, api_key)])
+    const country_name = getcountrybyIp[0];
+    console.log("country_name", country_name);
 
     const [globalPageMeta, getAllLatestDiscussion, getAllPopularDiscussion, getAllDiscussions, getAllViewedDiscussion, getPopularTags, getCountries] = await Promise.all([
         comFunction2.getPageMetaValues('global'),
-        comFunction2.getAllLatestDiscussion(20,country_name),
+        comFunction2.getAllLatestDiscussion(20, country_name),
         comFunction2.getAllPopularDiscussion(country_name),
         comFunction2.getAllDiscussion(country_name),
         comFunction2.getAllViewedDiscussion(country_name),
@@ -4068,19 +4133,19 @@ router.get('/add-company', checkLoggedIn, async (req, res) => {
 //     try {
 //         const encodedUserData = req.cookies.user;
 //         const currentUserData = JSON.parse(encodedUserData);
-    
+
 //         const [allcompany] = await Promise.all([
 //             comFunction.getAllCompany(),
 //         ]);
-    
+
 //         let countries = [];
 //         await Promise.all(allcompany.map(async company => {
 //             if (company.main_address_country && !countries.includes(company.main_address_country)) {
 //                 countries.push(company.main_address_country);
-                
+
 //                 var company_country_query = `SELECT name FROM countries WHERE shortname= ?`;
 //                 var company_country_value = await query(company_country_query, [company.main_address_country]);
-    
+
 //                 if (company_country_value.length > 0) {
 //                     company.country_name = company_country_value[0].name;
 //                 } else {
@@ -4100,26 +4165,26 @@ router.get('/add-company', checkLoggedIn, async (req, res) => {
 //         console.error("Error:", error);
 //         res.status(500).send("Internal Server Error");
 //     }
-    
+
 // });
 
 router.get('/companies', checkLoggedIn, async (req, res) => {
     try {
         const encodedUserData = req.cookies.user;
         const currentUserData = JSON.parse(encodedUserData);
-    
+
         const [allcompany] = await Promise.all([
             comFunction2.getAllParentCompany(),
         ]);
-    
+
         let countries = [];
         await Promise.all(allcompany.map(async company => {
             if (company.main_address_country && !countries.includes(company.main_address_country)) {
                 countries.push(company.main_address_country);
-                
+
                 var company_country_query = `SELECT name FROM countries WHERE shortname= ?`;
                 var company_country_value = await query(company_country_query, [company.main_address_country]);
-    
+
                 if (company_country_value.length > 0) {
                     company.country_name = company_country_value[0].name;
                 } else {
@@ -4139,7 +4204,7 @@ router.get('/companies', checkLoggedIn, async (req, res) => {
         console.error("Error:", error);
         res.status(500).send("Internal Server Error");
     }
-    
+
 });
 
 router.get('/trashed-companies', checkLoggedIn, async (req, res) => {
@@ -4174,27 +4239,27 @@ router.get('/edit-company/:id', checkLoggedIn, async (req, res) => {
         const currentUserData = JSON.parse(encodedUserData);
         const companyId = req.params.id;
 
-        const getcompanyquery =`SELECT *
+        const getcompanyquery = `SELECT *
         FROM company 
         WHERE company.ID = ?`;
-        const getcompanyvalue = await query(getcompanyquery,[companyId]);
-        if(getcompanyvalue.length>0){
+        const getcompanyvalue = await query(getcompanyquery, [companyId]);
+        if (getcompanyvalue.length > 0) {
             var comp_state_id = getcompanyvalue[0].main_address_state;
             //console.log("comp_state_id",comp_state_id);
             var comp_country_shortname = getcompanyvalue[0].main_address_country;
             //console.log("comp_country_shortname",comp_country_shortname);
         }
         const getcountryidquery = `SELECT * FROM countries WHERE shortname=?`;
-        const getcountryidvalue = await query(getcountryidquery,[comp_country_shortname]);
-        if(getcountryidvalue.length>0){
-            var comp_country_id= getcountryidvalue[0].id;
+        const getcountryidvalue = await query(getcountryidquery, [comp_country_shortname]);
+        if (getcountryidvalue.length > 0) {
+            var comp_country_id = getcountryidvalue[0].id;
             //console.log("comp_country_id",comp_country_id);
         }
 
-        const getstatequery= `SELECT * FROM states WHERE country_id=?`;
-        const getstatevalue = await query(getstatequery,[comp_country_id]);
+        const getstatequery = `SELECT * FROM states WHERE country_id=?`;
+        const getstatevalue = await query(getstatequery, [comp_country_id]);
 
-        if(getstatevalue.length>0){
+        if (getstatevalue.length > 0) {
             var statevalue = getstatevalue[0].name;
             //console.log("statevalue",statevalue);
         }
@@ -4202,7 +4267,7 @@ router.get('/edit-company/:id', checkLoggedIn, async (req, res) => {
 
 
         // Fetch all the required data asynchronously
-        const [company, company_all_categories, users, getParentCompany, getCountries, getStatesByCountryID,getChildCompany] = await Promise.all([
+        const [company, company_all_categories, users, getParentCompany, getCountries, getStatesByCountryID, getChildCompany] = await Promise.all([
             comFunction.getCompany(companyId),
             comFunction.getCompanyCategoryBuID(companyId),
             comFunction.getUsersByRole(2),
@@ -4216,16 +4281,16 @@ router.get('/edit-company/:id', checkLoggedIn, async (req, res) => {
         ]);
         // console.log("company", company);
         // console.log("getStatesByCountryID",getStatesByCountryID);
-        console.log("getChildCompany",getChildCompany);
+        console.log("getChildCompany", getChildCompany);
 
         let countries = [];
         await Promise.all(getChildCompany.map(async company => {
             if (company.main_address_country && !countries.includes(company.main_address_country)) {
                 countries.push(company.main_address_country);
-                
+
                 var company_country_query = `SELECT name FROM countries WHERE shortname= ?`;
                 var company_country_value = await query(company_country_query, [company.main_address_country]);
-    
+
                 if (company_country_value.length > 0) {
                     company.country_name = company_country_value[0].name;
                 } else {
@@ -4277,27 +4342,27 @@ router.get('/plans', checkLoggedIn, async (req, res) => {
         const currentUserData = JSON.parse(encodedUserData);
         const companyId = req.params.id;
 
-        const getcompanyquery =`SELECT *
+        const getcompanyquery = `SELECT *
         FROM company 
         WHERE company.ID = ?`;
-        const getcompanyvalue = await query(getcompanyquery,[companyId]);
-        if(getcompanyvalue.length>0){
+        const getcompanyvalue = await query(getcompanyquery, [companyId]);
+        if (getcompanyvalue.length > 0) {
             var comp_state_id = getcompanyvalue[0].main_address_state;
             //console.log("comp_state_id",comp_state_id);
             var comp_country_shortname = getcompanyvalue[0].main_address_country;
             //console.log("comp_country_shortname",comp_country_shortname);
         }
         const getcountryidquery = `SELECT * FROM countries WHERE shortname=?`;
-        const getcountryidvalue = await query(getcountryidquery,[comp_country_shortname]);
-        if(getcountryidvalue.length>0){
-            var comp_country_id= getcountryidvalue[0].id;
+        const getcountryidvalue = await query(getcountryidquery, [comp_country_shortname]);
+        if (getcountryidvalue.length > 0) {
+            var comp_country_id = getcountryidvalue[0].id;
             //console.log("comp_country_id",comp_country_id);
         }
 
-        const getstatequery= `SELECT * FROM states WHERE country_id=?`;
-        const getstatevalue = await query(getstatequery,[comp_country_id]);
+        const getstatequery = `SELECT * FROM states WHERE country_id=?`;
+        const getstatevalue = await query(getstatequery, [comp_country_id]);
 
-        if(getstatevalue.length>0){
+        if (getstatevalue.length > 0) {
             var statevalue = getstatevalue[0].name;
             //console.log("statevalue",statevalue);
         }
@@ -5378,7 +5443,7 @@ router.get('/getcompanies', async (req, res) => {
         const state = req.query.state;
         const city = req.query.city
 
-        console.log("country,state,city",country,state,city);
+        console.log("country,state,city", country, state, city);
 
 
         if (!country) {
@@ -5399,7 +5464,7 @@ router.get('/getcompanies', async (req, res) => {
             queryParams.push(city);
         }
         console.log("SQL Query:", sqlQuery);
-console.log("Query Params:", queryParams);
+        console.log("Query Params:", queryParams);
 
 
         db.query(sqlQuery, queryParams, (err, results) => {
@@ -5409,7 +5474,7 @@ console.log("Query Params:", queryParams);
                 return res.status(500).json({ error: 'An error occurred while fetching companies' });
             } else {
                 console.log("bbbbaaasssvvv");
-                console.log("companyresults",results);
+                console.log("companyresults", results);
                 return res.json(results);
             }
         });
@@ -5426,13 +5491,13 @@ console.log("Query Params:", queryParams);
 router.get('/getstatebyCountry', async (req, res) => {
     try {
         const country_ID = req.query.country_ID;
-        console.log("country_ID",country_ID);
+        console.log("country_ID", country_ID);
 
         let statequery = `SELECT id FROM countries WHERE shortname = ?`;
-        let sttatevalue = await query(statequery,[country_ID]);
-        if(sttatevalue.length >0){
+        let sttatevalue = await query(statequery, [country_ID]);
+        if (sttatevalue.length > 0) {
             var state_id = sttatevalue[0].id;
-            console.log("state_id",state_id);
+            console.log("state_id", state_id);
         }
 
         let sqlQuery = 'SELECT * FROM states WHERE country_id = ?';
@@ -5444,7 +5509,7 @@ router.get('/getstatebyCountry', async (req, res) => {
                 console.error('Error executing SQL query:', err);
                 return res.status(500).json({ error: 'An error occurred while fetching companies' });
             } else {
-                console.log("results",results);
+                console.log("results", results);
                 return res.json(results);
             }
         });
@@ -5460,7 +5525,7 @@ router.get('/getstatebyCountry', async (req, res) => {
 router.get('/getstatebyCountries', async (req, res) => {
     try {
         const country_ID = req.query.country_ID;
-        console.log("country_ID",country_ID);
+        console.log("country_ID", country_ID);
 
         // let statequery = `SELECT id FROM countries WHERE shortname = ?`;
         // let sttatevalue = await query(statequery,[country_ID]);
@@ -5478,7 +5543,7 @@ router.get('/getstatebyCountries', async (req, res) => {
                 console.error('Error executing SQL query:', err);
                 return res.status(500).json({ error: 'An error occurred while fetching companies' });
             } else {
-                console.log("results",results);
+                console.log("results", results);
                 return res.json(results);
             }
         });
@@ -5497,7 +5562,7 @@ router.get('/getcomplaintcompanies', async (req, res) => {
         const state = req.query.state;
         const city = req.query.city
 
-        console.log("country,state,city",country,state,city);
+        console.log("country,state,city", country, state, city);
 
 
         if (!country) {
@@ -5509,8 +5574,8 @@ router.get('/getcomplaintcompanies', async (req, res) => {
         // LEFT JOIN company_cactgory_relation cr ON c.ID = cr.company_id
         // LEFT JOIN category cat ON cr.category_id = cat.ID
         // WHERE c.status != '3' AND c.membership_type_id >=3 AND c.complaint_status = '1' AND c.main_address_country = ?`;
-        
-        let sqlQuery =`SELECT c.*, GROUP_CONCAT(cat.category_name) AS categories
+
+        let sqlQuery = `SELECT c.*, GROUP_CONCAT(cat.category_name) AS categories
         FROM company c
         LEFT JOIN company_cactgory_relation cr ON c.ID = cr.company_id
         LEFT JOIN category cat ON cr.category_id = cat.ID
@@ -5530,7 +5595,7 @@ router.get('/getcomplaintcompanies', async (req, res) => {
             queryParams.push(city);
         }
         sqlQuery += ' GROUP BY c.ID';
-        
+
         console.log("SQL Query:", sqlQuery);
         console.log("Query Params:", queryParams);
 
@@ -5542,7 +5607,7 @@ router.get('/getcomplaintcompanies', async (req, res) => {
                 return res.status(500).json({ error: 'An error occurred while fetching companies' });
             } else {
                 console.log("bbbbaaasssvvv");
-                console.log("getcomplaintcompaniesresults",results);
+                console.log("getcomplaintcompaniesresults", results);
                 return res.json(results);
             }
         });
@@ -6009,7 +6074,7 @@ router.get('/my-complaints', checkFrontEndLoggedIn, async (req, res) => {
         };
     });
     //console.log(getAllComplaintsByUserId);
-    console.log("AllComplaintsByUserId",formattedCoplaintData);
+    console.log("AllComplaintsByUserId", formattedCoplaintData);
 
     try {
         // res.json( {
@@ -6085,13 +6150,13 @@ router.get('/user-compnaint-details/:complainId', checkFrontEndLoggedIn, async (
 router.get('/getCountryIdByShortName', async (req, res) => {
     try {
         const countryShortName = req.query.countryShortName;
-        console.log(countryShortName,"countryShortName");
+        console.log(countryShortName, "countryShortName");
         const countryIdquery = `SELECT * FROM countries WHERE shortname=
         "${countryShortName}"`;
         const countryIdS = await query(countryIdquery);
         //console.log("countryIdS",countryIdS);
-        if(countryIdS.length>0){
-            var countryId= countryIdS[0].id;
+        if (countryIdS.length > 0) {
+            var countryId = countryIdS[0].id;
             //console.log("countryId",countryId);
         }
 
@@ -6102,7 +6167,25 @@ router.get('/getCountryIdByShortName', async (req, res) => {
     }
 });
 
+router.get('/getCountryIdByName', async (req, res) => {
+    try {
+        const countryShortName = req.query.countryShortName;
+        console.log(countryShortName, "countryShortName");
+        const countryIdquery = `SELECT * FROM countries WHERE name=
+        "${countryShortName}"`;
+        const countryIdS = await query(countryIdquery);
+        //console.log("countryIdS",countryIdS);
+        if (countryIdS.length > 0) {
+            var countryId = countryIdS[0].id;
+            //console.log("countryId",countryId);
+        }
 
+        return res.json({ countryId: countryId });
+    } catch (error) {
+        console.error('Error fetching country ID:', error);
+        return res.status(500).json({ error: 'An error occurred while fetching country ID' });
+    }
+});
 
 
 //-----------------------------------------------------------------//

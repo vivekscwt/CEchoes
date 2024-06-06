@@ -993,7 +993,7 @@ $(document).ready(function() {
 
     function fetchStatesByCountry(countryId) {
         $.ajax({
-            url: '/getstatebyCountry', 
+            url: '/getstatebyCountries', 
             method: 'GET',
             data: { country_ID: countryId }, 
             success: function(response) {

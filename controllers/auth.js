@@ -1209,8 +1209,9 @@ exports.createCategory = async (req, res) => {
             }
         });
     });
-    const cat_sql = "SELECT category_name FROM category WHERE category_name = ?";
-    db.query(cat_sql, cat_name, (cat_err, cat_result) => {
+    // const cat_sql = "SELECT category_name FROM category WHERE category_name = ?";
+    const cat_sql = "SELECT category.category_name FROM category LEFT JOIN category_country_relation ON category.ID = category_country_relation.cat_id WHERE category.category_name = ? AND category_country_relation.country_id=?";
+    db.query(cat_sql, [cat_name, country], (cat_err, cat_result) => {
         if (cat_err) throw cat_err;
         if (cat_result.length > 0) {
             return res.send(
@@ -3152,6 +3153,51 @@ exports.deleteCompanies = async (req, res) => {
 };
 
 
+exports.getcompanyDetails = async (req, res) => {
+    try {
+        const company_name = req.body.company_name;
+        console.log("company_name", company_name);
+
+        const getcompanyquery = `SELECT * FROM company WHERE company_name=?`;
+        const companyvalue = await query(getcompanyquery, [company_name]);
+
+        if (companyvalue.length > 0) {
+            var company_state = companyvalue[0].main_address_state;
+            var company_city = companyvalue[0].main_address_city;
+
+
+            const state_query = `SELECT * FROM states WHERE ID = ?`;
+            const states = await query(state_query,[company_state]);
+
+            if(states.length>0){
+                var state_name = states[0].name;
+                console.log("state_name",state_name);
+            }
+
+            console.log("company_state", company_state);
+            console.log("company_city", company_city);
+
+            res.status(200).json({
+                status: 'ok',
+                companyDetails: {
+                    state: state_name,
+                    city: company_city
+                }
+            });
+        } else {
+            // Send error response if company not found
+            res.status(404).json({
+                status: 'error',
+                message: 'Company not found'
+            });
+        }
+    } catch (error) {
+        console.error('Error getcompanyDetails:', error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+}
+
+
 //--- Delete Company ----//
 exports.deletePayment = (req, res) => {
     //console.log(req.body.companyid);
@@ -3871,9 +3917,9 @@ exports.submitReview = async (req, res) => {
             const currentUserData = JSON.parse(encodedUserData);
             //console.log(currentUserData);
             const userId = currentUserData.user_id;
-            const company = await comFunction.createCompany(req.body, userId);
+            const company = await comFunction.createcompany(req.body, userId);
             console.log('companyInfo', company)
-            const review = await comFunction.createReview(req.body, userId, company);
+            const review = await comFunction.createreview(req.body, userId, company);
             // Render the 'edit-user' EJS view and pass the data
             if (company && review) {
                 console.log('submit review:', review)
@@ -4180,7 +4226,7 @@ exports.submitreview = async (req, res) => {
                     {
                         status: 'error',
                         data: { company, review },
-                        message: 'Error occurred please try again'
+                        message: 'Error occurred please try again',error
                     }
                 );
             }

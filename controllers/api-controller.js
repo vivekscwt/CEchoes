@@ -206,9 +206,11 @@ exports.companyProduct = (req, res) => {
 
 // --searchCompany --//
 exports.searchCompany = async (req, res) => {
-    //console.log(req.body);
+    console.log("searchCompany",req.body);
     const keyword = req.body.keyword; //Approved Company
-    const CompanyResponse = await comFunction.searchCompany(keyword);
+    const country = req.body.country;
+    const CompanyResponse = await comFunction.searchCompany(keyword,country);
+    console.log("CompanyResponse",CompanyResponse);
     if(CompanyResponse.status == 'ok'){
         res.status(200).json(CompanyResponse);
     }else{
