@@ -153,6 +153,8 @@ router.get('', checkCookieValue, async (req, res) => {
     ]);
     const rangeTexts = {};
 
+    console.log("PopularCategories",PopularCategories);
+
     try {
         // Make API request to fetch blog posts
         const apiUrl = process.env.BLOG_API_ENDPOINT + '/home-blog';
@@ -188,7 +190,7 @@ router.get('', checkCookieValue, async (req, res) => {
                 //         WHERE featured_companies.status = 'active' 
                 //         ORDER BY featured_companies.ordering ASC `;
 
-                        const featured_sql = `SELECT featured_companies.id,featured_companies.company_id,featured_companies.short_desc,featured_companies.link,company.logo,company.slug, company.company_name FROM featured_companies 
+                const featured_sql = `SELECT featured_companies.id,featured_companies.company_id,featured_companies.short_desc,featured_companies.link,company.logo,company.slug, company.company_name FROM featured_companies 
                         JOIN company ON featured_companies.company_id = company.ID 
                         WHERE featured_companies.status = 'active' AND company.main_address_country = "${country_code}"
                         ORDER BY featured_companies.ordering ASC `;
@@ -861,24 +863,24 @@ router.get('/company/:slug', checkCookieValue, async (req, res) => {
 router.get('/categories', checkCookieValue, async (req, res) => {
     let currentUserData = JSON.parse(req.userData);
 
-        //const ipAddress = req.ip; 
-        const ipAddress = '45.64.221.211';
-        console.log("ipAddress", ipAddress);
-        const api_key = '9b38b399323e4d05a3bcbd1505e8e834'
-        // const getcountrybyIp = await Promise.all([comFunction2.getcountrynamebyIp(ipAddress,api_key)]) 
-        // const country_name = getcountrybyIp[0];
-        // console.log("country_code",country_name);
-    
-        const { country_name, country_code } = await comFunction2.getcountrynamebyIp(ipAddress, api_key);
-        console.log("Country Name:", country_name);
-        console.log("Country Code:", country_code);
+    //const ipAddress = req.ip; 
+    const ipAddress = '45.64.221.211';
+    console.log("ipAddress", ipAddress);
+    const api_key = '9b38b399323e4d05a3bcbd1505e8e834'
+    // const getcountrybyIp = await Promise.all([comFunction2.getcountrynamebyIp(ipAddress,api_key)]) 
+    // const country_name = getcountrybyIp[0];
+    // console.log("country_code",country_name);
 
-        const getcountry_code= `SELECT id FROM countries WHERE shortname = "${country_code}"`;
-        const getcountryval= await query(getcountry_code);
-        if(getcountryval.length>0){
-            var country_id = getcountryval[0].id;
-            console.log("country_id",country_id);
-        }
+    const { country_name, country_code } = await comFunction2.getcountrynamebyIp(ipAddress, api_key);
+    console.log("Country Name:", country_name);
+    console.log("Country Code:", country_code);
+
+    const getcountry_code = `SELECT id FROM countries WHERE shortname = "${country_code}"`;
+    const getcountryval = await query(getcountry_code);
+    if (getcountryval.length > 0) {
+        var country_id = getcountryval[0].id;
+        console.log("country_id", country_id);
+    }
 
 
     const [globalPageMeta] = await Promise.all([
@@ -886,14 +888,14 @@ router.get('/categories', checkCookieValue, async (req, res) => {
     ]);
     try {
         const cat_query = `
-        SELECT category.ID AS category_id, category.category_slug, category.category_name AS category_name, category.category_img AS category_img, c.category_name AS parent_name, GROUP_CONCAT(countries.name) AS country_names
+        SELECT category.ID AS category_id, category.category_slug, category.category_name AS category_name, category.category_img AS category_img, c.category_name AS parent_name, GROUP_CONCAT(countries.name) AS country_names, category_country_relation.country_id AS country
         FROM category
         JOIN category_country_relation ON category.id = category_country_relation.cat_id
         JOIN countries ON category_country_relation.country_id = countries.id
         LEFT JOIN category AS c ON c.ID = category.parent_id
         WHERE category.parent_id = 0 AND category_country_relation.country_id= "${country_id}"
         GROUP BY category.category_name `;
-        db.query(cat_query, (err, results) => {
+        db.query(cat_query, async (err, results) => {
             if (err) {
                 return res.send(
                     {
@@ -903,6 +905,15 @@ router.get('/categories', checkCookieValue, async (req, res) => {
                     }
                 )
             } else {
+                console.log("results",results);
+                var country = results.country;
+                console.log("country",country);
+                var country_names = `SELECT shortname FROM countries WHERE id ="${country}"`;
+                if(country_names.length>0){
+                    var getcountry = country_names[0].shortname;
+                    console.log("getcountry",getcountry);
+                }
+
                 const categories = results.map((row) => ({
                     categoryId: row.category_id,
                     categoryName: row.category_name,
@@ -910,7 +921,29 @@ router.get('/categories', checkCookieValue, async (req, res) => {
                     parentName: row.parent_name,
                     categoryImage: row.category_img,
                     countryNames: row.country_names.split(','),
+                    //country: row.country
                 }));
+
+                try {
+                    for (const category of categories) {
+                      const countryNames = category.countryNames;
+                      const placeholders = countryNames.map(() => '?').join(',');
+                      const countryShortnamesQuery = `SELECT name, shortname FROM countries WHERE name IN (${placeholders})`;
+                      const [countryShortnamesResults] = await db.promise().query(countryShortnamesQuery, countryNames);
+                      
+                      // Convert the array of shortnames to a single string
+                      const countryCodes = countryShortnamesResults.map(row => row.shortname).join(', ');
+                      category.countryCodes = countryCodes;
+                    }
+                  } catch (error) {
+                    console.error('Error fetching country short names:', error);
+                    return res.send({
+                      status: 'err',
+                      data: '',
+                      message: 'An error occurred while fetching country short names' + error
+                    });
+                  }
+
                 var allCategories = categories.map(function (category) {
                     return {
                         category_slug: category.category_slug,
@@ -946,9 +979,11 @@ router.get('/categories', checkCookieValue, async (req, res) => {
 });
 
 //category Company Listing page
-router.get('/category/:category_slug', checkCookieValue, async (req, res) => {
+// router.get('/category/:category_slug', checkCookieValue, async (req, res) => {
+router.get('/category/:category_slug/:country', checkCookieValue, async (req, res) => {
     let currentUserData = JSON.parse(req.userData);
     const category_slug = req.params.category_slug;
+    const country = req.params.country;
     const baseURL = process.env.MAIN_URL;
 
     //const ipAddress = req.ip; 
@@ -1022,15 +1057,30 @@ router.get('/category/:category_slug', checkCookieValue, async (req, res) => {
 });
 
 //category filter company Listing page
-router.get('/category/:category_slug/:filter', checkCookieValue, async (req, res) => {
+router.get('/category/:category_slug/:country/:filter', checkCookieValue, async (req, res) => {
     let currentUserData = JSON.parse(req.userData);
     const category_slug = req.params.category_slug;
+    const country = req.params.country;
     const filter_value = req.params.filter;
     const baseURL = process.env.MAIN_URL;
+    
+    //const ipAddress = req.ip; 
+    const ipAddress = '45.64.221.211';
+    console.log("ipAddress", ipAddress);
+    const api_key = '9b38b399323e4d05a3bcbd1505e8e834'
+    // const getcountrybyIp = await Promise.all([comFunction2.getcountrynamebyIp(ipAddress,api_key)]) 
+    // const country_name = getcountrybyIp[0];
+    // console.log("country_code",country_name);
+
+    const { country_name, country_code } = await comFunction2.getcountrynamebyIp(ipAddress, api_key);
+    console.log("Country Name:", country_name);
+    console.log("Country Code:", country_code);
+
+
     const [globalPageMeta, getSubCategories, companyDetails, AllRatingTags, CategoryDetails] = await Promise.all([
         comFunction2.getPageMetaValues('global'),
         comFunction2.getSubCategories(category_slug),
-        comFunction2.getFilteredCompanyDetails(category_slug, filter_value),
+        comFunction2.getFilteredCompanyDetails(category_slug, filter_value, country_code),
         comFunction.getAllRatingTags(),
         comFunction.getCategoryDetails(category_slug),
     ]);
@@ -3868,10 +3918,16 @@ router.get('/add-user', checkLoggedIn, (req, res) => {
 
 
 //View Categories
-router.get('/manage-categories', checkLoggedIn, (req, res) => {
+router.get('/manage-categories', checkLoggedIn, async (req, res) => {
     const encodedUserData = req.cookies.user;
     const currentUserData = JSON.parse(encodedUserData);
+    const selectedCountryId  = req.query.country || 101;
+    console.log("selectedCountryId",selectedCountryId);
     //res.render('users', { menu_active_id: 'user', page_title: 'Users', currentUserData });
+
+
+    const countries = await comFunction.getCountries();
+    //console.log("countries",countries);
 
     const cat_query = `
                         SELECT category.ID AS category_id,category.category_name AS category_name, category.category_img AS category_img, c.category_name AS parent_name, GROUP_CONCAT(countries.name) AS country_names
@@ -3879,8 +3935,9 @@ router.get('/manage-categories', checkLoggedIn, (req, res) => {
                         JOIN category_country_relation ON category.id = category_country_relation.cat_id
                         JOIN countries ON category_country_relation.country_id = countries.id
                         LEFT JOIN category AS c ON c.ID = category.parent_id 
+                        WHERE category_country_relation.country_id = "${selectedCountryId }"
                         GROUP BY category.category_name `;
-    db.query(cat_query, (err, results) => {
+    db.query(cat_query, async (err, results) => {
         if (err) {
             return res.send(
                 {
@@ -3897,9 +3954,21 @@ router.get('/manage-categories', checkLoggedIn, (req, res) => {
                 categoryImage: row.category_img,
                 countryNames: row.country_names.split(','),
             }));
-            //console.log(categories);
+
+            for (const category of categories) {
+                const countryNames = category.countryNames;
+                const placeholders = countryNames.map(() => '?').join(',');
+                const countryShortnamesQuery = `SELECT name, shortname,id FROM countries WHERE name IN (${placeholders})`;
+                const [countryShortnamesResults] = await db.promise().query(countryShortnamesQuery, countryNames);
+                
+                // Convert the array of shortnames to a single string
+                const countryCodes = countryShortnamesResults.map(row => row.id).join(', ');
+                category.countryCodes = countryCodes;
+            }
+
+            console.log("categories",categories);
             //res.json({ menu_active_id: 'category', page_title: 'Categories', currentUserData, 'categories': categories });
-            res.render('categories', { menu_active_id: 'company', page_title: 'Categories', currentUserData, 'categories': categories });
+            res.render('categories', { menu_active_id: 'company', page_title: 'Categories', currentUserData, 'categoriess': categories, countries: countries, selectedCountryId :selectedCountryId  });
         }
     })
 });
@@ -3944,6 +4013,11 @@ router.get('/edit-category', checkLoggedIn, (req, res, next) => {
 
     console.log(req.query.id);
     const cat_id = req.query.id;
+    const country_id = req.query.country_id;
+    const cat_name = req.query.cat_name;
+    console.log("country_id",country_id);
+    console.log("cat_name",cat_name);
+
     const encodedUserData = req.cookies.user;
     const currentUserData = JSON.parse(encodedUserData);
     let country_response = [];
@@ -3971,6 +4045,12 @@ router.get('/edit-category', checkLoggedIn, (req, res, next) => {
                         JOIN category_country_relation ON category.id = category_country_relation.cat_id
                         JOIN countries ON category_country_relation.country_id = countries.id
                         LEFT JOIN category AS c ON c.ID = category.parent_id   WHERE category.ID = ${req.query.id}`;
+
+                        // const cat_query = `SELECT category.ID AS category_id,category.category_name AS category_name,category.category_slug  AS category_slug , category.category_img AS category_img, category.parent_id AS parent_id, c.category_name AS parent_name,GROUP_CONCAT(countries.id) AS country_id, GROUP_CONCAT(countries.name) AS country_names
+                        // FROM category
+                        // JOIN category_country_relation ON category.id = category_country_relation.cat_id
+                        // JOIN countries ON category_country_relation.country_id = countries.id
+                        // LEFT JOIN category AS c ON c.ID = category.parent_id WHERE category.category_name = "${cat_name}"`
                         db.query(cat_query, (cat_error, cat_result) => {
 
                             if (cat_error) {
@@ -4004,7 +4084,7 @@ router.get('/delete-category', checkLoggedIn, (req, res, next) => {
 
     const file_query = `SELECT category_img FROM category WHERE ID = ${req.query.id}`;
     db.query(file_query, async function (img_err, img_res) {
-        //console.log(img_res);
+        console.log("img_res",img_res);
         if (img_res[0].category_img != 'NULL') {
             const filename = img_res[0].category_img;
             const filePath = `uploads/${filename}`;
@@ -6187,7 +6267,86 @@ router.get('/getCountryIdByName', async (req, res) => {
     }
 });
 
+router.get('/getcatsbyCountry', async (req, res) => {
+    try {
+        const countryId = req.query.countryId;
+        // const getcategoryquery = `
+        //     SELECT category.* 
+        //     FROM category 
+        //     LEFT JOIN category_country_relation 
+        //     ON category.id = category_country_relation.cat_id 
+        //     WHERE category_country_relation.country_id = ?
+        // `;
+        // const categories = await query(getcategoryquery, [countryId]);
+        // console.log("getcatsbyCountry",categories);
+        
+        // if (!categories || categories.length === 0) {
+        //     return res.json({
+        //         status: 'ok',
+        //         categories: [],
+        //         message: 'No categories found for the selected country.'
+        //     });
+        // }
 
+        const cat_query = `
+        SELECT category.ID AS category_id,category.category_name AS category_name, category.category_img AS category_img, c.category_name AS parent_name, GROUP_CONCAT(countries.name) AS country_names
+        FROM category
+        JOIN category_country_relation ON category.id = category_country_relation.cat_id
+        JOIN countries ON category_country_relation.country_id = countries.id
+        LEFT JOIN category AS c ON c.ID = category.parent_id 
+        WHERE category_country_relation.country_id = "${countryId }"
+        GROUP BY category.category_name `;
+            db.query(cat_query, async (err, results) => {
+            if (err) {
+            return res.send(
+            {
+                status: 'err',
+                data: '',
+                message: 'An error occurred while processing your request' + err
+            }
+            )
+            } else {
+            const categories = results.map((row) => ({
+            categoryId: row.category_id,
+            categoryName: row.category_name,
+            parentName: row.parent_name,
+            categoryImage: row.category_img,
+            countryNames: row.country_names.split(','),
+            }));
+
+            for (const category of categories) {
+            const countryNames = category.countryNames;
+            const placeholders = countryNames.map(() => '?').join(',');
+            const countryShortnamesQuery = `SELECT name, shortname,id FROM countries WHERE name IN (${placeholders})`;
+            const [countryShortnamesResults] = await db.promise().query(countryShortnamesQuery, countryNames);
+
+            // Convert the array of shortnames to a single string
+            const countryCodes = countryShortnamesResults.map(row => row.id).join(', ');
+            category.countryCodes = countryCodes;
+            }
+
+            console.log("categories",categories);
+            // //res.json({ menu_active_id: 'category', page_title: 'Categories', currentUserData, 'categories': categories });
+            // res.render('categories', { menu_active_id: 'company', page_title: 'Categories', currentUserData, 'categoriess': categories, countries: countries, selectedCountryId :selectedCountryId  });
+
+            return res.json({
+                status: 'ok',
+                categories: categories,
+                message: 'Categories fetched successfully.'
+            });
+            }
+        })
+        
+
+
+    } catch (error) {
+        console.error('Error:', error);
+        return res.json({
+            status: 'err',
+            message: error.message
+        });
+    }
+});
 //-----------------------------------------------------------------//
 
 

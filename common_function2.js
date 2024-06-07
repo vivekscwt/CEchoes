@@ -1443,8 +1443,9 @@ async function getCompanyDetails(categorySlug,country) {
 }
 
 // Function to fetch Category Filtered Company details
-async function getFilteredCompanyDetails(categorySlug, filterValue) {
-  console.log('filterValue', filterValue)
+async function getFilteredCompanyDetails(categorySlug, filterValue, country) {
+  console.log('filterValue', filterValue);
+  console.log("country",country);
   if (filterValue == 'latest') {
     const sql = `SELECT c.ID, c.company_name, c.logo, c.status, c.trending, c.main_address, c.verified, c.paid_status, c.about_company, c.slug , AVG(r.rating) as comp_avg_rating, COUNT(r.id) as comp_total_reviews, pcd.cover_img
                 FROM category  
@@ -1452,7 +1453,7 @@ async function getFilteredCompanyDetails(categorySlug, filterValue) {
                 LEFT JOIN company c ON c.ID = ccr.company_id
                 LEFT JOIN reviews r ON r.company_id = c.ID
                 LEFT JOIN premium_company_data pcd ON pcd.company_id = c.ID
-                WHERE category.category_slug = '${categorySlug}' AND c.status = '1'
+                WHERE category.category_slug = '${categorySlug}' AND c.status = '1' AND c.main_address_country = "${country}"
                 GROUP BY c.ID, c.company_name 
                 ORDER BY c.created_date DESC 
                 LIMIT 20`;
@@ -1471,7 +1472,7 @@ async function getFilteredCompanyDetails(categorySlug, filterValue) {
                 LEFT JOIN company c ON c.ID = ccr.company_id
                 LEFT JOIN reviews r ON r.company_id = c.ID
                 LEFT JOIN premium_company_data pcd ON pcd.company_id = c.ID
-                WHERE category.category_slug = '${categorySlug}' AND c.status = '1' AND c.trending = '1'
+                WHERE category.category_slug = '${categorySlug}' AND c.status = '1' AND c.trending = '1' AND c.main_address_country = "${country}"
                 GROUP BY c.ID, c.company_name `;
 
     const result = await query(sql);
@@ -1487,7 +1488,7 @@ async function getFilteredCompanyDetails(categorySlug, filterValue) {
                 LEFT JOIN company c ON c.ID = ccr.company_id
                 LEFT JOIN reviews r ON r.company_id = c.ID
                 LEFT JOIN premium_company_data pcd ON pcd.company_id = c.ID
-                WHERE category.category_slug = '${categorySlug}' AND c.status = '1' AND c.verified = '1'
+                WHERE category.category_slug = '${categorySlug}' AND c.status = '1' AND c.verified = '1' AND c.main_address_country = "${country}"
                 GROUP BY c.ID, c.company_name `;
 
     const result = await query(sql);
@@ -5476,20 +5477,55 @@ async function getcountrybyIp(ipAddress, api_key) {
 //   }
 // }
 
+
+//actual
+// async function getcountrynamebyIp(ipAddress, api_key) {
+//   try {
+//       const response = await axios.get(`https://ipgeolocation.abstractapi.com/v1/?api_key=${api_key}&ip_address=${ipAddress}`);
+//       const country_name = response.data.country;
+//       const country_code = response.data.country_code;
+//       console.log("country_name", country_name);
+//       console.log("response.data", response.data);
+//       console.log("country_code", country_code);
+//       return { country_name, country_code };
+//   } catch (error) {
+//       console.error(error);
+//       throw new Error('An error occurred');
+//   }
+// }
+
+
+
 async function getcountrynamebyIp(ipAddress, api_key) {
-  try {
-      const response = await axios.get(`https://ipgeolocation.abstractapi.com/v1/?api_key=${api_key}&ip_address=${ipAddress}`);
+  const url = `https://ipgeolocation.abstractapi.com/v1/?api_key=${api_key}&ip_address=${ipAddress}`;
+  let attempts = 0;
+  const maxAttempts = 5;
+  const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+  while (attempts < maxAttempts) {
+    try {
+      const response = await axios.get(url);
       const country_name = response.data.country;
       const country_code = response.data.country_code;
       console.log("country_name", country_name);
       console.log("response.data", response.data);
       console.log("country_code", country_code);
       return { country_name, country_code };
-  } catch (error) {
-      console.error(error);
-      throw new Error('An error occurred');
+    } catch (error) {
+      if (error.response && error.response.status === 429) {
+        const retryAfter = error.response.headers['retry-after'] || 60;
+        console.log(`Rate limit exceeded. Retrying after ${retryAfter} seconds...`);
+        await delay(retryAfter * 1000);
+      } else {
+        console.error('Error fetching country name by IP:', error);
+        throw new Error('An error occurred while fetching the country name by IP');
+      }
+    }
+    attempts++;
   }
+  throw new Error('Failed to fetch country name by IP after several attempts');
 }
+
 
 
 module.exports = {

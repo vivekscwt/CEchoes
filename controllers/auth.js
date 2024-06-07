@@ -1194,6 +1194,130 @@ exports.createUser = (req, res) => {
 }
 
 //Create New Category
+// exports.createCategory = async (req, res) => {
+//     //console.log('category', req.body);
+//     const { cat_name, cat_parent_id, country } = req.body;
+
+//     const catSlug = await new Promise((resolve, reject) => {
+//         comFunction2.generateUniqueSlugCategory(cat_name, (error, generatedSlug) => {
+//             if (error) {
+//                 console.log('Error:', error.message);
+//                 reject(error);
+//             } else {
+//                 // console.log('Generated Company Slug:', generatedSlug);
+//                 resolve(generatedSlug);
+//             }
+//         });
+//     });
+//     // const cat_sql = "SELECT category_name FROM category WHERE category_name = ?";
+//     const cat_sql = "SELECT category.category_name FROM category LEFT JOIN category_country_relation ON category.ID = category_country_relation.cat_id WHERE category.category_name = ? AND category_country_relation.country_id=?";
+//     db.query(cat_sql, [cat_name, country], (cat_err, cat_result) => {
+//         if (cat_err) throw cat_err;
+//         if (cat_result.length > 0) {
+//             return res.send(
+//                 {
+//                     status: 'Not ok',
+//                     message: 'Category name already exists '
+//                 }
+//             )
+//         } else {
+//             if (req.file) {
+//                 if (cat_parent_id == '') {
+//                     const val = [cat_name, 0, req.file.filename, catSlug];
+//                     const sql = 'INSERT INTO category (category_name, parent_id, category_img, category_slug ) VALUES (?, ?, ?, ?)';
+//                     db.query(sql, val, async (err, result) => {
+//                         if (err) {
+//                             console.log(err)
+//                         } else {
+//                             for (var i = 0; i < country.length; i++) {
+//                                 db.query(`INSERT INTO category_country_relation (cat_id , country_id) VALUES (${result.insertId}, ${country[i]} )`, await function (err, country_val) {
+//                                     if (err) throw err;
+
+//                                 });
+//                             }
+//                             return res.send(
+//                                 {
+//                                     status: 'ok',
+//                                     data: result,
+//                                     message: 'New Category created'
+//                                 }
+//                             )
+//                         }
+//                     })
+//                 } else {
+//                     const val = [cat_name, cat_parent_id, req.file.filename, catSlug];
+//                     const sql = 'INSERT INTO category (category_name, parent_id, category_img, category_slug ) VALUES (?, ?, ?, ?)';
+//                     db.query(sql, val, async (err, result) => {
+//                         if (err) {
+//                             console.log(err)
+//                         } else {
+//                             for (var i = 0; i < country.length; i++) {
+//                                 db.query(`INSERT INTO category_country_relation (cat_id , country_id) VALUES (${result.insertId}, ${country[i]} )`, await function (err, country_val) {
+//                                     if (err) throw err;
+
+//                                 });
+//                             }
+//                             return res.send(
+//                                 {
+//                                     status: 'ok',
+//                                     data: result,
+//                                     message: 'New Category created'
+//                                 }
+//                             )
+//                         }
+//                     })
+//                 }
+//             } else {
+//                 if (cat_parent_id == '') {
+//                     const val = [cat_name, 0, 'NULL', catSlug];
+//                     const sql = 'INSERT INTO category (category_name, parent_id, category_img, category_slug ) VALUES (?, ?, ?, ?)';
+//                     db.query(sql, val, async (err, result) => {
+//                         if (err) {
+//                             console.log(err)
+//                         } else {
+//                             for (var i = 0; i < country.length; i++) {
+//                                 db.query(`INSERT INTO category_country_relation (cat_id , country_id) VALUES (${result.insertId}, ${country[i]} )`, await function (err, country_val) {
+//                                     if (err) throw err;
+
+//                                 });
+//                             }
+//                             return res.send(
+//                                 {
+//                                     status: 'ok',
+//                                     data: result,
+//                                     message: 'New Category created'
+//                                 }
+//                             )
+//                         }
+//                     })
+//                 } else {
+//                     const val = [cat_name, cat_parent_id, 'NULL', catSlug];
+//                     const sql = 'INSERT INTO category (category_name, parent_id, category_img, category_slug ) VALUES (?, ?, ?, ?)';
+//                     db.query(sql, val, async (err, result) => {
+//                         if (err) {
+//                             console.log(err)
+//                         } else {
+//                             for (var i = 0; i < country.length; i++) {
+//                                 db.query(`INSERT INTO category_country_relation (cat_id , country_id) VALUES (${result.insertId}, ${country[i]} )`, await function (err, country_val) {
+//                                     if (err) throw err;
+
+//                                 });
+//                             }
+//                             return res.send(
+//                                 {
+//                                     status: 'ok',
+//                                     data: result,
+//                                     message: 'New Category created'
+//                                 }
+//                             )
+//                         }
+//                     })
+//                 }
+//             }
+//         }
+//     })
+
+// }
 exports.createCategory = async (req, res) => {
     //console.log('category', req.body);
     const { cat_name, cat_parent_id, country } = req.body;
@@ -1229,12 +1353,16 @@ exports.createCategory = async (req, res) => {
                         if (err) {
                             console.log(err)
                         } else {
-                            for (var i = 0; i < country.length; i++) {
-                                db.query(`INSERT INTO category_country_relation (cat_id , country_id) VALUES (${result.insertId}, ${country[i]} )`, await function (err, country_val) {
+                            // for (var i = 0; i < country.length; i++) {
+                            //     db.query(`INSERT INTO category_country_relation (cat_id , country_id) VALUES (${result.insertId}, ${country[i]} )`, await function (err, country_val) {
+                            //         if (err) throw err;
+
+                            //     });
+                            // }
+                                db.query(`INSERT INTO category_country_relation (cat_id , country_id) VALUES (${result.insertId}, ${country} )`, await function (err, country_val) {
                                     if (err) throw err;
 
                                 });
-                            }
                             return res.send(
                                 {
                                     status: 'ok',
@@ -1251,12 +1379,16 @@ exports.createCategory = async (req, res) => {
                         if (err) {
                             console.log(err)
                         } else {
-                            for (var i = 0; i < country.length; i++) {
-                                db.query(`INSERT INTO category_country_relation (cat_id , country_id) VALUES (${result.insertId}, ${country[i]} )`, await function (err, country_val) {
-                                    if (err) throw err;
+                            // for (var i = 0; i < country.length; i++) {
+                            //     db.query(`INSERT INTO category_country_relation (cat_id , country_id) VALUES (${result.insertId}, ${country[i]} )`, await function (err, country_val) {
+                            //         if (err) throw err;
 
-                                });
-                            }
+                            //     });
+                            // }
+                            db.query(`INSERT INTO category_country_relation (cat_id , country_id) VALUES (${result.insertId}, ${country} )`, await function (err, country_val) {
+                                if (err) throw err;
+
+                            });
                             return res.send(
                                 {
                                     status: 'ok',
@@ -1275,12 +1407,16 @@ exports.createCategory = async (req, res) => {
                         if (err) {
                             console.log(err)
                         } else {
-                            for (var i = 0; i < country.length; i++) {
-                                db.query(`INSERT INTO category_country_relation (cat_id , country_id) VALUES (${result.insertId}, ${country[i]} )`, await function (err, country_val) {
-                                    if (err) throw err;
+                            // for (var i = 0; i < country.length; i++) {
+                            //     db.query(`INSERT INTO category_country_relation (cat_id , country_id) VALUES (${result.insertId}, ${country[i]} )`, await function (err, country_val) {
+                            //         if (err) throw err;
 
-                                });
-                            }
+                            //     });
+                            // }
+                            db.query(`INSERT INTO category_country_relation (cat_id , country_id) VALUES (${result.insertId}, ${country} )`, await function (err, country_val) {
+                                if (err) throw err;
+
+                            });
                             return res.send(
                                 {
                                     status: 'ok',
@@ -1297,12 +1433,16 @@ exports.createCategory = async (req, res) => {
                         if (err) {
                             console.log(err)
                         } else {
-                            for (var i = 0; i < country.length; i++) {
-                                db.query(`INSERT INTO category_country_relation (cat_id , country_id) VALUES (${result.insertId}, ${country[i]} )`, await function (err, country_val) {
-                                    if (err) throw err;
+                            // for (var i = 0; i < country.length; i++) {
+                            //     db.query(`INSERT INTO category_country_relation (cat_id , country_id) VALUES (${result.insertId}, ${country[i]} )`, await function (err, country_val) {
+                            //         if (err) throw err;
 
-                                });
-                            }
+                            //     });
+                            // }
+                            db.query(`INSERT INTO category_country_relation (cat_id , country_id) VALUES (${result.insertId}, ${country} )`, await function (err, country_val) {
+                                if (err) throw err;
+
+                            });
                             return res.send(
                                 {
                                     status: 'ok',
@@ -1319,13 +1459,12 @@ exports.createCategory = async (req, res) => {
 
 }
 
-
 //Update Category
 exports.updateCategory = (req, res) => {
     console.log('category', req.body, req.file);
     const { cat_id, cat_name, category_slug, cat_parent_id, country } = req.body;
     const check_arr = [cat_name, cat_id]
-    const cat_sql = "SELECT category_name FROM category WHERE category_name = ? AND ID != ?";
+    const cat_sql = "SELECT category.category_name FROM category LEFT JOIN category_country_relation ON category.ID = category_country_relation.cat_id WHERE category.category_name = ? AND category_country_relation.country_id = ?";
     db.query(cat_sql, check_arr, (cat_err, cat_result) => {
         if (cat_err) throw cat_err;
         if (cat_result.length > 0) {
@@ -1467,10 +1606,211 @@ exports.updateCategory = (req, res) => {
     })
 }
 
+exports.getcatsbyCountry = async (req, res) => {
+    try {
+        const countryId = req.query.countryId;
+        const getcategoryquery = `
+            SELECT category.* 
+            FROM category 
+            LEFT JOIN category_country_relation 
+            ON category.id = category_country_relation.cat_id 
+            WHERE category_country_relation.country_id = ?
+        `;
+        const categories = await query(getcategoryquery, [countryId]);
+        console.log("getcatsbyCountry",categories);
+        
+        if (!categories || categories.length === 0) {
+            return res.json({
+                status: 'ok',
+                categories: [],
+                message: 'No categories found for the selected country.'
+            });
+        }
+        
+        return res.json({
+            status: 'ok',
+            categories: categories,
+            message: 'Categories fetched successfully.'
+        });
+
+    } catch (error) {
+        console.error('Error:', error);
+        return res.json({
+            status: 'err',
+            message: error.message
+        });
+    }
+};
+
+
+// exports.updateCategory = (req, res) => {
+//     console.log('category', req.body, req.file);
+//     const { cat_id, cat_name, category_slug, cat_parent_id, country } = req.body;
+//     // const check_arr = [cat_name, cat_id]
+//     //const cat_sql = "SELECT category_name FROM category WHERE category_name = ? AND ID != ?";
+
+//     const cat_sql = "SELECT category.category_name FROM category LEFT JOIN category_country_relation ON category.ID = category_country_relation.cat_id WHERE category.category_name = ? AND category_country_relation.country_id = ?";
+//     db.query(cat_sql, [cat_name,country], (cat_err, cat_result) => {
+//         if (cat_err) throw cat_err;
+//         if (cat_result.length > 0) {
+//             return res.send(
+//                 {
+//                     status: 'Not ok',
+//                     message: 'Category name already exists '
+//                 }
+//             )
+//         } else {
+//             if (req.file) {
+//                 const file_query = `SELECT category_img FROM category WHERE ID = ${cat_id}`;
+//                 db.query(file_query, async function (img_err, img_res) {
+//                     console.log(img_res);
+//                     if (img_res[0].category_img != 'NULL') {
+//                         const filename = img_res[0].category_img;
+//                         const filePath = `uploads/${filename}`;
+//                         console.log(filePath);
+
+//                         fs.unlink(filePath, await function () {
+//                             console.log('file deleted');
+//                         })
+//                     }
+//                 })
+//                 if (cat_parent_id == '') {
+//                     const val = [cat_name, category_slug, req.file.filename, cat_id];
+//                     const sql = `UPDATE category SET category_name = ?, category_slug  = ?, category_img = ? WHERE ID = ?`;
+//                     db.query(sql, val, async (err, result) => {
+//                         if (err) {
+//                             console.log(err)
+//                         } else {
+//                             const delete_query = `DELETE FROM category_country_relation WHERE cat_id = ${cat_id}`;
+//                             db.query(`DELETE FROM category_country_relation WHERE cat_id = ${cat_id}`, await function (del_err, del_res) {
+
+//                             });
+//                             // for (var i = 0; i < country.length; i++) {
+//                             //     db.query(`INSERT INTO category_country_relation (cat_id , country_id) VALUES (${cat_id}, ${country[i]} )`, await function (err, country_val) {
+//                             //         if (err) throw err;
+
+//                             //     });
+//                             // }
+//                             db.query(`INSERT INTO category_country_relation (cat_id , country_id) VALUES (${cat_id}, ${country} )`, await function (err, country_val) {
+//                                 if (err) throw err;
+
+//                             });
+//                             return res.send(
+//                                 {
+//                                     status: 'ok',
+//                                     data: result,
+//                                     message: 'Category updated'
+//                                 }
+//                             )
+//                         }
+//                     })
+//                 } else {
+//                     const val = [cat_name, category_slug, cat_parent_id, req.file.filename, cat_id];
+
+//                     const sql = `UPDATE category SET category_name = ?,category_slug  = ?, parent_id = ?, category_img = ? WHERE ID = ?`;
+//                     db.query(sql, val, async (err, result) => {
+//                         if (err) {
+//                             console.log(err)
+//                         } else {
+//                             const delete_query = `DELETE FROM category_country_relation WHERE cat_id = ${cat_id}`;
+//                             db.query(`DELETE FROM category_country_relation WHERE cat_id = ${cat_id}`, await function (del_err, del_res) {
+
+//                             });
+
+//                             // for (var i = 0; i < country.length; i++) {
+//                             //     db.query(`INSERT INTO category_country_relation (cat_id , country_id) VALUES (${cat_id}, ${country[i]} )`, await function (err, country_val) {
+//                             //         if (err) throw err;
+
+//                             //     });
+//                             // }
+//                             db.query(`INSERT INTO category_country_relation (cat_id , country_id) VALUES (${cat_id}, ${country} )`, await function (err, country_val) {
+//                                 if (err) throw err;
+
+//                             });
+//                             return res.send(
+//                                 {
+//                                     status: 'ok',
+//                                     data: result,
+//                                     message: 'Category updated'
+//                                 }
+//                             )
+//                         }
+//                     })
+//                 }
+
+//             } else {
+//                 if (cat_parent_id == '') {
+//                     const val = [cat_name, category_slug, cat_id];
+
+//                     const sql = `UPDATE category SET category_name = ?, category_slug =?  WHERE ID = ?`;
+//                     db.query(sql, val, async (err, result) => {
+//                         if (err) {
+//                             console.log(err)
+//                         } else {
+//                             const delete_query = `DELETE FROM category_country_relation WHERE cat_id = ${cat_id}`;
+//                             db.query(`DELETE FROM category_country_relation WHERE cat_id = ${cat_id}`, await function (del_err, del_res) {
+
+//                             });
+//                             // for (var i = 0; i < country.length; i++) {
+//                             //     db.query(`INSERT INTO category_country_relation (cat_id , country_id) VALUES (${cat_id}, ${country[i]} )`, await function (err, country_val) {
+//                             //         if (err) throw err;
+
+//                             //     });
+//                             // }
+//                             db.query(`INSERT INTO category_country_relation (cat_id , country_id) VALUES (${cat_id}, ${country} )`, await function (err, country_val) {
+//                                 if (err) throw err;
+
+//                             });
+//                             return res.send(
+//                                 {
+//                                     status: 'ok',
+//                                     data: result,
+//                                     message: 'Category updated'
+//                                 }
+//                             )
+//                         }
+//                     })
+//                 } else {
+//                     const val = [cat_name, category_slug, cat_parent_id, cat_id];
+
+//                     const sql = `UPDATE category SET category_name = ?,category_slug = ?, parent_id = ?  WHERE ID = ?`;
+//                     db.query(sql, val, async (err, result) => {
+//                         if (err) {
+//                             console.log(err)
+//                         } else {
+//                             const delete_query = `DELETE FROM category_country_relation WHERE cat_id = ${cat_id}`;
+//                             db.query(`DELETE FROM category_country_relation WHERE cat_id = ${cat_id}`, await function (del_err, del_res) {
+
+//                             });
+//                             // for (var i = 0; i < country.length; i++) {
+//                             //     db.query(`INSERT INTO category_country_relation (cat_id , country_id) VALUES (${cat_id}, ${country[i]} )`, await function (err, country_val) {
+//                             //         if (err) throw err;
+
+//                             //     });
+//                             // }
+//                             db.query(`INSERT INTO category_country_relation (cat_id , country_id) VALUES (${cat_id}, ${country} )`, await function (err, country_val) {
+//                                 if (err) throw err;
+
+//                             });
+//                             return res.send(
+//                                 {
+//                                     status: 'ok',
+//                                     data: result,
+//                                     message: 'Category updated'
+//                                 }
+//                             )
+//                         }
+//                     })
+//                 }
+//             }
+//         }
+//     })
+// }
+
 //-- User Profile Edit --//
 exports.editUserData = (req, res) => {
     console.log(req.body);
-    return false
+    //return false
     const userId = req.body.user_id;
 
     // Update the user's data

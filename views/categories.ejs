@@ -50,6 +50,23 @@
                             </div>
                             <!--end::Search-->
                         </div>
+
+                        <div class="d-flex align-items-center position-relative my-1">
+                            <!-- Dropdown of countries -->
+                            <select name="main_address_country" id="main_address_country"
+                                class="form-control form-control-lg form-control-solid" required>
+                                <option value="" disabled>Select a country</option>
+                                <% countries.forEach(function(country) { %>
+                                    <option value="<%= country.id %>" <%=country.id==selectedCountryId ? 'selected' : ''
+                                        %>>
+                                        <%= country.name %>
+                                    </option>
+                                    <% }); %>
+                            </select>
+                        </div>
+
+
+
                         <!--begin::Card title-->
                         <!--begin::Card toolbar-->
                         <div class="card-toolbar">
@@ -90,7 +107,7 @@
                                                 <option></option>
                                                 <% const uniqueValues=new Set(); %>
 
-                                                    <% categories.forEach( category=> { %>
+                                                    <% categoriess.forEach( category=> { %>
                                                         <% if (category.parentName) { %>
                                                             <% if (!uniqueValues.has(category.parentName)) { %>
                                                                 <option value="<%= category.parentName %>">
@@ -305,13 +322,13 @@
                             </thead>
                             <!--end::Table head-->
                             <!--begin::Table body-->
-                            <tbody class="text-gray-600 fw-bold">
-                                <% categories.forEach( category=> { %>
+                            <tbody class="text-gray-600 fw-bold" id="categoryTable">
+                                <% categoriess.forEach( category=> { %>
                                     <!--begin::Table row-->
                                     <tr>
                                         <!--begin::Action=-->
                                         <td class="text-end">
-                                            <% if(currentUserData.user_type_id != 3 ) { %>
+                                            <% if(currentUserData.user_type_id !=3 ) { %>
                                                 <a href="#" class="btn btn-light btn-active-light-primary btn-sm"
                                                     data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end"
                                                     data-kt-menu-flip="top-end">Actions
@@ -334,21 +351,22 @@
                                                         <a href="/edit-category?id=<%= category.categoryId %>"
                                                             class="menu-link px-3">Edit</a>
                                                     </div>
-                                                        <div class="menu-item px-3">
-                                                            <a href="#" data-cat-id="<%= category.categoryId %>"
-                                                                class="menu-link px-3 category-id"
-                                                                data-kt-users-table-filter="delete_row">Delete</a>
-                                                        </div>
+                                                    <div class="menu-item px-3">
+                                                        <a href="#" data-cat-id="<%= category.categoryId %>"
+                                                            class="menu-link px-3 category-id"
+                                                            data-kt-users-table-filter="delete_row">Delete</a>
+                                                    </div>
                                                 </div>
                                                 <!--end::Menu-->
-                                            <% } else { %>
-                                                <a href="/edit-category?id=<%= category.categoryId %>" class="btn btn-light btn-active-light-primary btn-m"
-                                                    data-kt-menu-placement="bottom-end" data-kt-menu-trigger="click"
-                                                    data-kt-menu-flip="top-end"> Edit 
-                                                    
-                                                </a>
-                                            <% } %>
-                                            
+                                                <% } else { %>
+                                                    <a href="/edit-category?id=<%= category.categoryId %>"
+                                                        class="btn btn-light btn-active-light-primary btn-m"
+                                                        data-kt-menu-placement="bottom-end" data-kt-menu-trigger="click"
+                                                        data-kt-menu-flip="top-end"> Edit
+
+                                                    </a>
+                                                    <% } %>
+
                                         </td>
                                         <!--end::Action=-->
                                         <!--begin::Checkbox-->
@@ -407,7 +425,7 @@
                                         </td>
                                         <!--end::Last login=-->
 
-                                        
+
                                     </tr>
                                     <!--end::Table row-->
                                     <% }) %>
@@ -427,6 +445,8 @@
     <!--end::Content-->
     <%- include('common/footer') -%>
         <script src="/assets/plugins/custom/datatables/datatables.bundle.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
         <script>
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
@@ -592,7 +612,7 @@
                                     }
                                 }).then(function (result) {
                                     if (result.value) {
-                                        
+
                                         $.ajax({
                                             url: '/delete-category?id=' + cat_id,
                                             type: 'GET',
@@ -630,7 +650,7 @@
                                         });
                                     } else if (result.dismiss === 'cancel') {
                                         Swal.fire({
-                                            text:  "Category is not deleted.",
+                                            text: "Category is not deleted.",
                                             icon: "error",
                                             buttonsStyling: false,
                                             confirmButtonText: "Ok, got it!",
@@ -773,6 +793,99 @@
                 /******/
             })()
                 ;
-//# sourceMappingURL=table.js.map    
+
+            $(document).ready(function () {
+                let currentUserData = "<%= currentUserData%>"
+
+                function fetchCategoriesByCountry(countryId) {
+                    const tbody = $('.text-gray-600.fw-bold');
+                    $.ajax({
+                        url: '/getcatsbyCountry',
+                        type: 'GET',
+                        data: { countryId: countryId },
+                        dataType: 'json',
+                        success: function (response) {
+                            if (response.status === 'ok') {
+                                let data = updateTableBody(response.categories);
+                                tbody.empty() ;
+                                tbody.append(data);
+
+                            } else {
+                                console.error('Error fetching categories:', response.message);
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('AJAX Error:', error);
+                            console.error('Server response:', xhr.responseText); 
+                        }
+                    });
+                }
+
+                function updateTableBody(categoriess) {
+                    var categoryRow = '';
+                    categoriess.forEach(categoryy => {
+                        categoryRow += `
+                            <tr>
+                            <td class="text-end">
+                                ${currentUserData.user_type_id != 3 ? `
+                                    <div class="dropdown">
+                                        <button class="btn btn-light btn-active-light-primary btn-sm dropdown-toggle" type="button" id="actionsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                            Actions
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="actionsDropdown">
+                                            <li><a class="dropdown-item" href="/edit-category?id=${categoryy.categoryId}">Edit</a></li>
+                                            <li><a class="dropdown-item delete-category" href="#" data-cat-id="${categoryy.categoryId}">Delete</a></li>
+                                        </ul>
+                                    </div>
+                                ` : `
+                                    <a href="/edit-category?id=${categoryy.categoryId}" class="btn btn-light btn-active-light-primary btn-sm">Edit</a>
+                                `}
+                            </td>
+
+
+                                <td>
+                                    <div class="form-check form-check-sm form-check-custom form-check-solid">
+                                        <input class="form-check-input" type="checkbox" value="1" />
+                                    </div>
+                                </td>
+                                <td class="d-flex align-items-center">
+                                    <div class="symbol symbol-circle symbol-50px overflow-hidden me-3">
+                                        <a href="#">
+                                            <div class="symbol-label">
+                                                <img src="${categoryy.categoryImage ? categoryy.categoryImage : '/assets/media/no-image/no-photo.png'}" alt="${categoryy.categoryName}" class="w-100" />
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="d-flex flex-column">
+                                        <a href="#" class="text-gray-800 text-hover-primary mb-1">${categoryy.categoryName}</a>
+                                    </div>
+                                </td>
+                                <td>
+                                    ${categoryy.parentName ? categoryy.parentName : "-"}
+                                </td>
+                                <td>
+                                    ${categoryy.countryNames.join(', ')}
+                                </td>
+                            </tr>
+                        `;
+
+                    });
+                    return categoryRow
+                }
+
+                // Event listener for country selection change
+                $('#main_address_country').change(function () {
+                    const countryId = $(this).val();
+                    console.log("countryId", countryId);
+
+                    // Fetch categories for the selected country
+                    fetchCategoriesByCountry(countryId);
+                });
+
+
+            });
+
+
+            //# sourceMappingURL=table.js.map    
         </script>
         <script src="/assets/js/custom/apps/user-management/users/list/export-users.js"></script>

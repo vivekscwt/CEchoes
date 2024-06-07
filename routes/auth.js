@@ -67,6 +67,9 @@ router.post('/create-category', upload.single('cat_image'), authController.creat
 //Update category--------//
 router.post('/update-category', upload.single('cat_image'), authController.updateCategory);
 
+//getcatsbyCountry
+router.get('/getcatsbyCountry',authController.getcatsbyCountry)
+
 //Create New User--------//
 router.post('/create-user', upload.single('profile_pic'), authController.createUser);
 router.put('/edit-user-data', upload.single('profile_pic'), authController.editUserData);
