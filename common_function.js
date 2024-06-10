@@ -304,6 +304,25 @@ async function getCompanyCategoryBuID(compID) {
   }
 }
 
+async function getplans(){
+  try {
+    const planquery = `SELECT * FROM plan_management`;
+    const planvalue = await query(planquery);
+    console.log("planvalue", planvalue);
+
+    if (planvalue.length > 0) {
+      //var countries = countryvalue.
+      return planvalue;
+    } else {
+      return [];
+    }
+
+
+  } catch (error) {
+    throw new Error('Error fetching countries');
+  }
+}
+
 function renderCategoryTreeHTMLforCompany(categories, com_category_array) {
   let html = '<ul>';
   categories.forEach(function (category) {
@@ -1982,6 +2001,7 @@ module.exports = {
   getCountriesList,
   renderCategoryTreeHTML,
   getCompanyCategoryBuID,
+  getplans,//
   saveUserGoogleLoginDataToDB,
   saveUserFacebookLoginDataToDB,
   getAllRatingTags,

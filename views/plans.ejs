@@ -11,7 +11,7 @@
                     class="page-title d-flex align-items-center flex-wrap me-3 mb-5 mb-lg-0">
                     <!--begin::Title-->
                     <h1 class="d-flex align-items-center text-dark fw-bolder fs-3 my-1">
-                        Organization Details
+                        Membership Details
                         <!--end::Description-->
                     </h1>
                     <!--end::Title-->
@@ -25,500 +25,771 @@
         <div class="post d-flex flex-column-fluid" id="kt_post">
             <!--begin::Container-->
             <div id="kt_content_container" class="container-xxl">
-                <!--begin::Basic info-->
+                <!-- Basic Plan -->
                 <div class="card mb-5 mb-xl-10">
-                    <!--begin::Card header-->
                     <div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse"
-                        data-bs-target="#kt_account_profile_details" aria-expanded="true"
-                        aria-controls="kt_account_profile_details">
-                        <!--begin::Card title-->
+                        data-bs-target="#kt_account_profile_details_basic" aria-expanded="true"
+                        aria-controls="kt_account_profile_details_basic">
                         <div class="card-title m-0">
                             <h3 class="fw-bolder m-0">Basic</h3>
                         </div>
-                        <!--end::Card title-->
                     </div>
-                    <!--end::Card header-->
-                    <!--begin::Content-->
-                    <div id="kt_account_profile_details" class="collapse show">
-                        <!--begin::Form-->
-                        <form id="kt_account_profile_details_form" class="form" action="/auth/edit-company-data"
-                            method="POST" enctype="multipart/form-data">
-                            <!--begin::Card body-->
-                            <div class="card-body border-top p-9">
-                                <!--begin::Input group-->
-                                <div class="row mb-6">
-                                    <!--begin::Label-->
-                                    <label class="col-lg-4 col-form-label required fw-bold fs-6">Description</label>
-                                    <!--end::Label-->
-                                    <!--begin::Col-->
-                                    <div class="col-lg-8">
-                                        <!--begin::Row-->
-                                        <div class="row">
-                                            <!--begin::Col-->
-                                            <div class="col-lg-12 fv-row">
-                                                <input type="text" name="description" id="description"
-                                                    class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
-                                                    placeholder="Description" value="" />
-                                            </div>
-                                            <!--end::Col-->
+                    <div id="kt_account_profile_details_basic" class="collapse show">
+                        <% if (basic_val) { %>
+                            <form id="basic_plan_update" class="form" action="/auth/update-basic" method="POST">
+                                <div class="card-body border-top p-9">
+                                    <div class="row mb-6">
+                                        <label class="col-lg-4 col-form-label required fw-bold fs-6">Description</label>
+                                        <div class="col-lg-8">
+                                            <textarea name="descriptions" id="description_basics" class="form-control form-control-lg form-control-solid mb-3 mb-lg-0" placeholder="Description"><%= basic_val.description %></textarea>
                                         </div>
-                                        <!--end::Row-->
                                     </div>
-                                    <!--end::Col-->
+                                    <div class="row mb-6">
+                                        <label class="col-lg-4 col-form-label required fw-bold fs-6">Monthly Price</label>
+                                        <div class="col-lg-8">
+                                            <input type="number" name="monthly_prices" id="monthly_price_basics" class="form-control form-control-lg form-control-solid mb-3 mb-lg-0" placeholder="Monthly Price" value="<%= basic_val.monthly_price %>" />
+                                        </div>
+                                    </div>
+                                    <div class="row mb-6">
+                                        <label class="col-lg-4 col-form-label required fw-bold fs-6">Yearly Price</label>
+                                        <div class="col-lg-8">
+                                            <input type="number" name="yearly_prices" id="yearly_price_basics" class="form-control form-control-lg form-control-solid mb-3 mb-lg-0" placeholder="Yearly Price" value="<%= basic_val.yearly_price %>" />
+                                        </div>
+                                    </div>
                                 </div>
-                                <!--end::Input group-->
-                                <!--begin::Input group-->
-                                <div class="row mb-6">
-                                    <!--begin::Label-->
-                                    <label class="col-lg-4 col-form-label required fw-bold fs-6">Monthly Price</label>
-                                    <!--end::Label-->
-                                    <!--begin::Col-->
-                                    <div class="col-lg-8">
-                                        <!--begin::Row-->
-                                        <div class="row">
-                                            <!--begin::Col-->
-                                            <div class="col-lg-12 fv-row">
-                                                <input type="text" name="monthly_price" id="monthly_price"
+                                <!-- Update button -->
+                                <div class="card-footer d-flex justify-content-end py-6 px-9">
+                                    <button type="button" class="btn btn-primary" id="update_basic">Update</button>
+                                </div>
+                            </form>
+                            
+                            <% } else { %>
+                                <form id="basic_plan" class="form">
+                                    <input type="hidden" name="plan_name" value="Basic">
+                                    <input type="hidden" name="currency" value="USD">
+                                    <div class="card-body border-top p-9">
+                                        <div class="row mb-6">
+                                            <label
+                                                class="col-lg-4 col-form-label required fw-bold fs-6">Description</label>
+                                            <div class="col-lg-8">
+                                                <textarea name="description" id="description_basic"
+                                                    class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
+                                                    placeholder="Description"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-6">
+                                            <label class="col-lg-4 col-form-label required fw-bold fs-6">Monthly
+                                                Price</label>
+                                            <div class="col-lg-8">
+                                                <input type="number" name="monthly_price" id="monthly_price_basic"
                                                     class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
                                                     placeholder="Monthly Price" value="" />
                                             </div>
-                                            <!--end::Col-->
                                         </div>
-                                        <!--end::Row-->
-                                    </div>
-                                    <!--end::Col-->
-                                </div>
-                                <!--end::Input group-->
-                                <!--begin::Input group-->
-                                <div class="row mb-6">
-                                    <!--begin::Label-->
-                                    <label class="col-lg-4 col-form-label required fw-bold fs-6">Yearly Price</label>
-                                    <!--end::Label-->
-                                    <!--begin::Col-->
-                                    <div class="col-lg-8">
-                                        <!--begin::Row-->
-                                        <div class="row">
-                                            <!--begin::Col-->
-                                            <div class="col-lg-12 fv-row">
-                                                <input type="text" name="yearly_price" id="yearly_price"
+                                        <div class="row mb-6">
+                                            <label class="col-lg-4 col-form-label required fw-bold fs-6">Yearly
+                                                Price</label>
+                                            <div class="col-lg-8">
+                                                <input type="number" name="yearly_price" id="yearly_price_basic"
                                                     class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
                                                     placeholder="Yearly Price" value="" />
                                             </div>
-                                            <!--end::Col-->
                                         </div>
-                                        <!--end::Row-->
                                     </div>
-                                    <!--end::Col-->
-                                </div>
-                                <!--end::Input group-->
-                            </div>
-                            <!--end::Card body-->
-                            <!--begin::Actions-->
-                            <div class="card-footer d-flex justify-content-end py-6 px-9">
-                                <button type="submit" class="btn btn-primary"
-                                    id="kt_account_profile_details_submit">Save Changes</button>
-                            </div>
-                            <!--end::Actions-->
-                        </form>
-                        <!--end::Form-->
+                                    <div class="card-footer d-flex justify-content-end py-6 px-9">
+                                        <button type="submit" class="btn btn-primary" id="save_basic">Save
+                                            Changes</button>
+                                    </div>
+                                </form>
+                                <% } %>
                     </div>
-                    <!--end::Content-->
                 </div>
 
+                <!-- Standard Plan -->
                 <div class="card mb-5 mb-xl-10">
-                    <!--begin::Card header-->
                     <div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse"
-                        data-bs-target="#kt_additional_organization_details_1" aria-expanded="true"
-                        aria-controls="kt_additional_organization_details_1">
-                        <!--begin::Card title-->
+                        data-bs-target="#kt_account_profile_details_standard" aria-expanded="true"
+                        aria-controls="kt_account_profile_details_standard">
                         <div class="card-title m-0">
                             <h3 class="fw-bolder m-0">Standard</h3>
                         </div>
-                        <!--end::Card title-->
                     </div>
-                    <!--end::Card header-->
-                    <!--begin::Card body-->
-                    <div id="kt_additional_organization_details_1" class="collapse">
-                        <div class="card-body">
-                            <!--begin::Form-->
-                            <form id="child-company">
+                    <div id="kt_account_profile_details_standard" class="collapse">
+                        <% if (standard_val) { %>
+                            <form id="standard_plan_update" class="form" action="/auth/update-standard" method="POST">
                                 <div class="card-body border-top p-9">
-                                <!--begin::Input group-->
-                                <div class="row mb-6">
-                                    <!--begin::Label-->
-                                    <label class="col-lg-4 col-form-label required fw-bold fs-6">Description</label>
-                                    <!--end::Label-->
-                                    <!--begin::Col-->
-                                    <div class="col-lg-8">
-                                        <!--begin::Row-->
-                                        <div class="row">
-                                            <!--begin::Col-->
-                                            <div class="col-lg-12 fv-row">
-                                                <input type="text" name="description" id="description"
-                                                    class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
-                                                    placeholder="Description" value="" />
-                                            </div>
-                                            <!--end::Col-->
+                                    <div class="row mb-6">
+                                        <label class="col-lg-4 col-form-label required fw-bold fs-6">Description</label>
+                                        <div class="col-lg-8">
+                                            <textarea name="descriptions" id="standard_description_basics" class="form-control form-control-lg form-control-solid mb-3 mb-lg-0" placeholder="Description"><%= standard_val.description %></textarea>
                                         </div>
-                                        <!--end::Row-->
                                     </div>
-                                    <!--end::Col-->
-                                </div>
-                                <!--end::Input group-->
-                                <!--begin::Input group-->
-                                <div class="row mb-6">
-                                    <!--begin::Label-->
-                                    <label class="col-lg-4 col-form-label required fw-bold fs-6">Monthly Price</label>
-                                    <!--end::Label-->
-                                    <!--begin::Col-->
-                                    <div class="col-lg-8">
-                                        <!--begin::Row-->
-                                        <div class="row">
-                                            <!--begin::Col-->
-                                            <div class="col-lg-12 fv-row">
-                                                <input type="text" name="monthly_price" id="monthly_price"
-                                                    class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
-                                                    placeholder="Monthly Price" value="" />
-                                            </div>
-                                            <!--end::Col-->
+                                    <div class="row mb-6">
+                                        <label class="col-lg-4 col-form-label required fw-bold fs-6">Monthly Price</label>
+                                        <div class="col-lg-8">
+                                            <input type="number" name="standard_monthly_prices" id="monthly_price_basics" class="form-control form-control-lg form-control-solid mb-3 mb-lg-0" placeholder="Monthly Price" value="<%= standard_val.monthly_price %>" />
                                         </div>
-                                        <!--end::Row-->
                                     </div>
-                                    <!--end::Col-->
-                                </div>
-                                <!--end::Input group-->
-                                <!--begin::Input group-->
-                                <div class="row mb-6">
-                                    <!--begin::Label-->
-                                    <label class="col-lg-4 col-form-label required fw-bold fs-6">Yearly Price</label>
-                                    <!--end::Label-->
-                                    <!--begin::Col-->
-                                    <div class="col-lg-8">
-                                        <!--begin::Row-->
-                                        <div class="row">
-                                            <!--begin::Col-->
-                                            <div class="col-lg-12 fv-row">
-                                                <input type="text" name="yearly_price" id="yearly_price"
-                                                    class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
-                                                    placeholder="Yearly Price" value="" />
-                                            </div>
-                                            <!--end::Col-->
+                                    <div class="row mb-6">
+                                        <label class="col-lg-4 col-form-label required fw-bold fs-6">Yearly Price</label>
+                                        <div class="col-lg-8">
+                                            <input type="number" name="standard_yearly_prices" id="yearly_price_basics" class="form-control form-control-lg form-control-solid mb-3 mb-lg-0" placeholder="Yearly Price" value="<%= standard_val.yearly_price %>" />
                                         </div>
-                                        <!--end::Row-->
                                     </div>
-                                    <!--end::Col-->
                                 </div>
-                                <!--end::Input group-->
-                                </div>
+                                <!-- Update button -->
                                 <div class="card-footer d-flex justify-content-end py-6 px-9">
-                                    <button type="submit" class="btn btn-primary"
-                                        id="kt_account_profile_details_submit">Save Changes</button>
+                                    <button type="button" class="btn btn-primary" id="standard_update_basic">Update</button>
                                 </div>
                             </form>
-                            <!--end::Form-->
-                        </div>
+                            <% } else { %>
+                        <form id="standard_plan" class="form">
+                            <input type="hidden" name="plan_name" value="Standard">
+                            <input type="hidden" name="currency" value="USD">
+                            <div class="card-body border-top p-9">
+                                <div class="row mb-6">
+                                    <label class="col-lg-4 col-form-label required fw-bold fs-6">Description</label>
+                                    <div class="col-lg-8">
+                                        <textarea name="description" id="description_standard"
+                                            class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
+                                            placeholder="Description"></textarea>
+                                    </div>
+                                </div>
+                                <div class="row mb-6">
+                                    <label class="col-lg-4 col-form-label required fw-bold fs-6">Monthly Price</label>
+                                    <div class="col-lg-8">
+                                        <input type="number" name="monthly_price" id="monthly_price_standard"
+                                            class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
+                                            placeholder="Monthly Price" value="" />
+                                    </div>
+                                </div>
+                                <div class="row mb-6">
+                                    <label class="col-lg-4 col-form-label required fw-bold fs-6">Yearly Price</label>
+                                    <div class="col-lg-8">
+                                        <input type="number" name="yearly_price" id="yearly_price_standard"
+                                            class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
+                                            placeholder="Yearly Price" value="" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer d-flex justify-content-end py-6 px-9">
+                                <button type="submit" class="btn btn-primary" id="save_standard">Save</button>
+                            </div>
+                        </form>
+                        <% } %>
                     </div>
-                    <!--end::Card body-->
                 </div>
 
+                <!-- Advanced Plan -->
                 <div class="card mb-5 mb-xl-10">
-                    <!--begin::Card header-->
                     <div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse"
-                        data-bs-target="#kt_additional_organization_details_2" aria-expanded="true"
-                        aria-controls="kt_additional_organization_details_2">
-                        <!--begin::Card title-->
+                        data-bs-target="#kt_account_profile_details_advanced" aria-expanded="true"
+                        aria-controls="kt_account_profile_details_advanced">
                         <div class="card-title m-0">
                             <h3 class="fw-bolder m-0">Advanced</h3>
                         </div>
-                        <!--end::Card title-->
                     </div>
-                    <!--end::Card header-->
-                    <!--begin::Card body-->
-                    <div id="kt_additional_organization_details_2" class="collapse">
-                        <div class="card-body">
-                            <!--begin::Form-->
-                            <form id="child-company">
-                                <div class="card-body border-top p-9">
-                                                                    <!--begin::Input group-->
+                    <div id="kt_account_profile_details_advanced" class="collapse">
+                        <% if (advanced_val) { %>
+                            <form id="advanced_plan_update" class="form" action="/auth/update-advanced" method="POST">
+                            <div class="card-body border-top p-9">
                                 <div class="row mb-6">
-                                    <!--begin::Label-->
                                     <label class="col-lg-4 col-form-label required fw-bold fs-6">Description</label>
-                                    <!--end::Label-->
-                                    <!--begin::Col-->
                                     <div class="col-lg-8">
-                                        <!--begin::Row-->
-                                        <div class="row">
-                                            <!--begin::Col-->
-                                            <div class="col-lg-12 fv-row">
-                                                <input type="text" name="description" id="description"
-                                                    class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
-                                                    placeholder="Description" value="" />
-                                            </div>
-                                            <!--end::Col-->
-                                        </div>
-                                        <!--end::Row-->
+                                        <textarea name="descriptions" id="description_basics"
+                                            class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
+                                            placeholder="Description"><%= advanced_val.description %></textarea>
                                     </div>
-                                    <!--end::Col-->
                                 </div>
-                                <!--end::Input group-->
-                                <!--begin::Input group-->
                                 <div class="row mb-6">
-                                    <!--begin::Label-->
                                     <label class="col-lg-4 col-form-label required fw-bold fs-6">Monthly Price</label>
-                                    <!--end::Label-->
-                                    <!--begin::Col-->
                                     <div class="col-lg-8">
-                                        <!--begin::Row-->
-                                        <div class="row">
-                                            <!--begin::Col-->
-                                            <div class="col-lg-12 fv-row">
-                                                <input type="text" name="monthly_price" id="monthly_price"
-                                                    class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
-                                                    placeholder="Monthly Price" value="" />
-                                            </div>
-                                            <!--end::Col-->
-                                        </div>
-                                        <!--end::Row-->
+                                        <input type="number" name="monthly_prices" id="monthly_price_basics"
+                                            class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
+                                            placeholder="Monthly Price" value="<%= advanced_val.monthly_price %>" />
                                     </div>
-                                    <!--end::Col-->
                                 </div>
-                                <!--end::Input group-->
-                                <!--begin::Input group-->
                                 <div class="row mb-6">
-                                    <!--begin::Label-->
                                     <label class="col-lg-4 col-form-label required fw-bold fs-6">Yearly Price</label>
-                                    <!--end::Label-->
-                                    <!--begin::Col-->
                                     <div class="col-lg-8">
-                                        <!--begin::Row-->
-                                        <div class="row">
-                                            <!--begin::Col-->
-                                            <div class="col-lg-12 fv-row">
-                                                <input type="text" name="yearly_price" id="yearly_price"
-                                                    class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
-                                                    placeholder="Yearly Price" value="" />
-                                            </div>
-                                            <!--end::Col-->
-                                        </div>
-                                        <!--end::Row-->
+                                        <input type="number" name="yearly_prices" id="yearly_price_basics"
+                                            class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
+                                            placeholder="Yearly Price" value="<%= advanced_val.yearly_price %>" />
                                     </div>
-                                    <!--end::Col-->
                                 </div>
-                                <!--end::Input group-->
-                                </div>
-                                <div class="card-footer d-flex justify-content-end py-6 px-9">
-                                    <button type="submit" class="btn btn-primary"
-                                        id="kt_account_profile_details_submit">Save Changes</button>
-                                </div>
+                            </div>
+                            <!-- Update button -->
+                            <div class="card-footer d-flex justify-content-end py-6 px-9">
+                                <button type="button" class="btn btn-primary" id="update_advanced__basic">Update</button>
+                            </div>
                             </form>
-                            <!--end::Form-->
-                        </div>
+                            <% } else { %>
+                        <form id="advanced_plan" class="form">
+                            <input type="hidden" name="plan_name" value="Advanced">
+                            <input type="hidden" name="currency" value="USD">
+                            <div class="card-body border-top p-9">
+                                <div class="row mb-6">
+                                    <label class="col-lg-4 col-form-label required fw-bold fs-6">Description</label>
+                                    <div class="col-lg-8">
+                                        <textarea name="description" id="description_advanced"
+                                            class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
+                                            placeholder="Description"></textarea>
+                                    </div>
+                                </div>
+                                <div class="row mb-6">
+                                    <label class="col-lg-4 col-form-label required fw-bold fs-6">Monthly Price</label>
+                                    <div class="col-lg-8">
+                                        <input type="number" name="monthly_price" id="monthly_price_advanced"
+                                            class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
+                                            placeholder="Monthly Price" value="" />
+                                    </div>
+                                </div>
+                                <div class="row mb-6">
+                                    <label class="col-lg-4 col-form-label required fw-bold fs-6">Yearly Price</label>
+                                    <div class="col-lg-8">
+                                        <input type="number" name="yearly_price" id="yearly_price_advanced"
+                                            class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
+                                            placeholder="Yearly Price" value="" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer d-flex justify-content-end py-6 px-9">
+                                <button type="submit" class="btn btn-primary" id="save_advanced">Save</button>
+                            </div>
+                        </form>
+                        <% } %>
                     </div>
-                    <!--end::Card body-->
                 </div>
-
+                <!-- Premium Plan -->
                 <div class="card mb-5 mb-xl-10">
-                    <!--begin::Card header-->
                     <div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse"
-                        data-bs-target="#kt_additional_organization_details_3" aria-expanded="true"
-                        aria-controls="kt_additional_organization_details_3">
-                        <!--begin::Card title-->
+                        data-bs-target="#kt_account_profile_details_premium" aria-expanded="true"
+                        aria-controls="kt_account_profile_details_premium">
                         <div class="card-title m-0">
                             <h3 class="fw-bolder m-0">Premium</h3>
                         </div>
-                        <!--end::Card title-->
                     </div>
-                    <!--end::Card header-->
-                    <!--begin::Card body-->
-                    <div id="kt_additional_organization_details_3" class="collapse">
-                        <div class="card-body">
-                            <!--begin::Form-->
-                            <form id="child-company">
-                                <div class="card-body border-top p-9">
-                                                                    <!--begin::Input group-->
+                    <div id="kt_account_profile_details_premium" class="collapse">
+                        <% if (premium_val) { %>
+                            <form id="premium_plan_update" class="form" action="/auth/update-premium" method="POST">
+                            <div class="card-body border-top p-9">
                                 <div class="row mb-6">
-                                    <!--begin::Label-->
                                     <label class="col-lg-4 col-form-label required fw-bold fs-6">Description</label>
-                                    <!--end::Label-->
-                                    <!--begin::Col-->
                                     <div class="col-lg-8">
-                                        <!--begin::Row-->
-                                        <div class="row">
-                                            <!--begin::Col-->
-                                            <div class="col-lg-12 fv-row">
-                                                <input type="text" name="description" id="description"
-                                                    class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
-                                                    placeholder="Description" value="" />
-                                            </div>
-                                            <!--end::Col-->
-                                        </div>
-                                        <!--end::Row-->
+                                        <textarea name="descriptions" id="description_basics"
+                                            class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
+                                            placeholder="Description"><%= premium_val.description %></textarea>
                                     </div>
-                                    <!--end::Col-->
                                 </div>
-                                <!--end::Input group-->
-                                <!--begin::Input group-->
                                 <div class="row mb-6">
-                                    <!--begin::Label-->
                                     <label class="col-lg-4 col-form-label required fw-bold fs-6">Monthly Price</label>
-                                    <!--end::Label-->
-                                    <!--begin::Col-->
                                     <div class="col-lg-8">
-                                        <!--begin::Row-->
-                                        <div class="row">
-                                            <!--begin::Col-->
-                                            <div class="col-lg-12 fv-row">
-                                                <input type="text" name="monthly_price" id="monthly_price"
-                                                    class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
-                                                    placeholder="Monthly Price" value="" />
-                                            </div>
-                                            <!--end::Col-->
-                                        </div>
-                                        <!--end::Row-->
+                                        <input type="number" name="monthly_prices" id="monthly_price_basics"
+                                            class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
+                                            placeholder="Monthly Price" value="<%= premium_val.monthly_price %>" />
                                     </div>
-                                    <!--end::Col-->
                                 </div>
-                                <!--end::Input group-->
-                                <!--begin::Input group-->
                                 <div class="row mb-6">
-                                    <!--begin::Label-->
                                     <label class="col-lg-4 col-form-label required fw-bold fs-6">Yearly Price</label>
-                                    <!--end::Label-->
-                                    <!--begin::Col-->
                                     <div class="col-lg-8">
-                                        <!--begin::Row-->
-                                        <div class="row">
-                                            <!--begin::Col-->
-                                            <div class="col-lg-12 fv-row">
-                                                <input type="text" name="yearly_price" id="yearly_price"
-                                                    class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
-                                                    placeholder="Yearly Price" value="" />
-                                            </div>
-                                            <!--end::Col-->
-                                        </div>
-                                        <!--end::Row-->
+                                        <input type="number" name="yearly_prices" id="yearly_price_basics"
+                                            class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
+                                            placeholder="Yearly Price" value="<%= premium_val.yearly_price %>" />
                                     </div>
-                                    <!--end::Col-->
                                 </div>
-                                <!--end::Input group-->
+                            </div>
+                            <!-- Update button -->
+                            <div class="card-footer d-flex justify-content-end py-6 px-9">
+                                <button type="button" class="btn btn-primary" id="update_premium_basic">Update</button>
+                            </div>
+                        </form>
+                            <% } else { %>
+                        <form id="premium_plan" class="form">
+                            <input type="hidden" name="plan_name" value="Premium">
+                            <input type="hidden" name="currency" value="USD">
+                            <div class="card-body border-top p-9">
+                                <div class="row mb-6">
+                                    <label class="col-lg-4 col-form-label required fw-bold fs-6">Description</label>
+                                    <div class="col-lg-8">
+                                        <textarea name="description" id="description_premium"
+                                            class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
+                                            placeholder="Description"></textarea>
+                                    </div>
                                 </div>
-                                <div class="card-footer d-flex justify-content-end py-6 px-9">
-                                    <button type="submit" class="btn btn-primary"
-                                        id="kt_account_profile_details_submit">Save Changes</button>
+                                <div class="row mb-6">
+                                    <label class="col-lg-4 col-form-label required fw-bold fs-6">Monthly Price</label>
+                                    <div class="col-lg-8">
+                                        <input type="number" name="monthly_price" id="monthly_price_premium"
+                                            class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
+                                            placeholder="Monthly Price" value="" />
+                                    </div>
                                 </div>
-                            </form>
-                            <!--end::Form-->
-                        </div>
+                                <div class="row mb-6">
+                                    <label class="col-lg-4 col-form-label required fw-bold fs-6">Yearly Price</label>
+                                    <div class="col-lg-8">
+                                        <input type="number" name="yearly_price" id="yearly_price_premium"
+                                            class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
+                                            placeholder="Yearly Price" value="" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer d-flex justify-content-end py-6 px-9">
+                                <button type="submit" class="btn btn-primary" id="save_premium">Save</button>
+                            </div>
+                        </form>
+                        <% } %>
                     </div>
-                    <!--end::Card body-->
                 </div>
 
+                <!-- Enterprise Plan -->
                 <div class="card mb-5 mb-xl-10">
-                    <!--begin::Card header-->
                     <div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse"
-                        data-bs-target="#kt_additional_organization_details_4" aria-expanded="true"
-                        aria-controls="kt_additional_organization_details_4">
-                        <!--begin::Card title-->
+                        data-bs-target="#kt_account_profile_details_enterprise" aria-expanded="true"
+                        aria-controls="kt_account_profile_details_enterprise">
                         <div class="card-title m-0">
                             <h3 class="fw-bolder m-0">Enterprise</h3>
                         </div>
-                        <!--end::Card title-->
                     </div>
-                    <!--end::Card header-->
-                    <!--begin::Card body-->
-                    <div id="kt_additional_organization_details_4" class="collapse">
-                        <div class="card-body">
-                            <!--begin::Form-->
-                            <form id="child-company">
+                    <div id="kt_account_profile_details_enterprise" class="collapse">
+                        <% if (enterprise_val) { %>
+                            <form id="enterprise_plan_update" class="form" action="/auth/update-enterprise" method="POST">
                                 <div class="card-body border-top p-9">
-                                                                    <!--begin::Input group-->
-                                <div class="row mb-6">
-                                    <!--begin::Label-->
-                                    <label class="col-lg-4 col-form-label required fw-bold fs-6">Description</label>
-                                    <!--end::Label-->
-                                    <!--begin::Col-->
-                                    <div class="col-lg-8">
-                                        <!--begin::Row-->
-                                        <div class="row">
-                                            <!--begin::Col-->
-                                            <div class="col-lg-12 fv-row">
-                                                <input type="text" name="description" id="description"
-                                                    class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
-                                                    placeholder="Description" value="" />
-                                            </div>
-                                            <!--end::Col-->
+                                    <div class="row mb-6">
+                                        <label class="col-lg-4 col-form-label required fw-bold fs-6">Description</label>
+                                        <div class="col-lg-8">
+                                            <textarea name="enterprise_descriptions" id="description_basics" class="form-control form-control-lg form-control-solid mb-3 mb-lg-0" placeholder="Description"><%= enterprise_val.description %></textarea>
                                         </div>
-                                        <!--end::Row-->
                                     </div>
-                                    <!--end::Col-->
-                                </div>
-                                <!--end::Input group-->
-                                <!--begin::Input group-->
-                                <div class="row mb-6">
-                                    <!--begin::Label-->
-                                    <label class="col-lg-4 col-form-label required fw-bold fs-6">Monthly Price</label>
-                                    <!--end::Label-->
-                                    <!--begin::Col-->
-                                    <div class="col-lg-8">
-                                        <!--begin::Row-->
-                                        <div class="row">
-                                            <!--begin::Col-->
-                                            <div class="col-lg-12 fv-row">
-                                                <input type="text" name="monthly_price" id="monthly_price"
-                                                    class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
-                                                    placeholder="Monthly Price" value="" />
-                                            </div>
-                                            <!--end::Col-->
+                                    <div class="row mb-6">
+                                        <label class="col-lg-4 col-form-label required fw-bold fs-6">Monthly Price</label>
+                                        <div class="col-lg-8">
+                                            <input type="number" name="enterprise_monthly_prices" id="monthly_price_basics" class="form-control form-control-lg form-control-solid mb-3 mb-lg-0" placeholder="Monthly Price" value="<%= enterprise_val.monthly_price %>" />
                                         </div>
-                                        <!--end::Row-->
                                     </div>
-                                    <!--end::Col-->
-                                </div>
-                                <!--end::Input group-->
-                                <!--begin::Input group-->
-                                <div class="row mb-6">
-                                    <!--begin::Label-->
-                                    <label class="col-lg-4 col-form-label required fw-bold fs-6">Yearly Price</label>
-                                    <!--end::Label-->
-                                    <!--begin::Col-->
-                                    <div class="col-lg-8">
-                                        <!--begin::Row-->
-                                        <div class="row">
-                                            <!--begin::Col-->
-                                            <div class="col-lg-12 fv-row">
-                                                <input type="text" name="yearly_price" id="yearly_price"
-                                                    class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
-                                                    placeholder="Yearly Price" value="" />
-                                            </div>
-                                            <!--end::Col-->
+                                    <div class="row mb-6">
+                                        <label class="col-lg-4 col-form-label required fw-bold fs-6">Yearly Price</label>
+                                        <div class="col-lg-8">
+                                            <input type="number" name="enterprise_yearly_prices" id="yearly_price_basics" class="form-control form-control-lg form-control-solid mb-3 mb-lg-0" placeholder="Yearly Price" value="<%= enterprise_val.yearly_price %>" />
                                         </div>
-                                        <!--end::Row-->
                                     </div>
-                                    <!--end::Col-->
                                 </div>
-                                <!--end::Input group-->
-                                </div>
+                                <!-- Update button -->
                                 <div class="card-footer d-flex justify-content-end py-6 px-9">
-                                    <button type="submit" class="btn btn-primary"
-                                        id="kt_account_profile_details_submit">Save Changes</button>
+                                    <button type="button" class="btn btn-primary" id="update_enterprise_basic">Update</button>
                                 </div>
                             </form>
-                            <!--end::Form-->
-                        </div>
+                            
+                            <% } else { %>
+                        <form id="enterprise_plan" class="form">
+                            <input type="hidden" name="plan_name" value="Enterprise">
+                            <input type="hidden" name="currency" value="USD">
+                            <div class="card-body border-top p-9">
+                                <div class="row mb-6">
+                                    <label class="col-lg-4 col-form-label required fw-bold fs-6">Description</label>
+                                    <div class="col-lg-8">
+                                        <textarea name="description" id="description_enterprise"
+                                            class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
+                                            placeholder="Description"></textarea>
+                                    </div>
+                                </div>
+                                <div class="row mb-6">
+                                    <label class="col-lg-4 col-form-label required fw-bold fs-6">Monthly Price</label>
+                                    <div class="col-lg-8">
+                                        <input type="number" name="monthly_prices" id="monthly_price_enterprise"
+                                            class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
+                                            placeholder="Monthly Price" value="" />
+                                    </div>
+                                </div>
+                                <div class="row mb-6">
+                                    <label class="col-lg-4 col-form-label required fw-bold fs-6">Yearly Price</label>
+                                    <div class="col-lg-8">
+                                        <input type="number" name="yearly_price" id="yearly_price_enterprise"
+                                            class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
+                                            placeholder="Yearly Price" value="" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer d-flex justify-content-end py-6 px-9">
+                                <button type="submit" class="btn btn-primary" id="save_enterprise">Save</button>
+                            </div>
+                        </form>
+                        <% } %>
                     </div>
-                    <!--end::Card body-->
                 </div>
+                
             </div>
 
+            <!--end::Container-->
+            <!--end::Post-->
 
         </div>
-        <!--end::Container-->
-        <!--end::Post-->
+        <!--end::Content-->
 
-    </div>
-    <!--end::Content-->
-    <%- include('common/footer') -%>
+        <%- include('common/footer') -%>
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <!-- begin::CK editor -->
+            <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+            <script src="/assets/plugins/custom/tinymce/tinymce.bundle.js"></script>
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+            <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+            <!-- end:: CK editor -->
 
-    <script>
-        
-    </script>
+            <script>
+                $(document).ready(function () {
+
+                    $('#basic_plan').on('submit', function (e) {
+                        e.preventDefault();
+
+                        $.ajax({
+                            url: '/auth/add-membership-plan',
+                            type: 'POST',
+                            data: $(this).serialize(),
+                            success: function (response) {
+                                Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: response.message
+                            }).then(function() {
+                                window.location.reload();
+                            });
+                            },
+                            error: function (xhr, status, error) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    text: 'Membership plan has already added.'
+                                });
+                                console.error('Error:', error);
+                            }
+                        });
+                    });
+
+                    $('#standard_plan').on('submit', function (e) {
+                        e.preventDefault();
+                        var formData = $(this).serialize();
+                        console.log("formData", formData);
+
+                        $.ajax({
+                            url: '/auth/add-membership-plan',
+                            type: 'POST',
+                            data: $(this).serialize(),
+                            success: function (response) {
+                                Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: response.message
+                            }).then(function() {
+                                window.location.reload();
+                            });
+                            },
+                            error: function (xhr, status, error) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    text: 'Failed to add membership plan.'
+                                });
+                                console.error('Error:', error);
+                            }
+                        });
+                    });
+
+                    $('#advanced_plan').on('submit', function (e) {
+                        e.preventDefault();
+                        var formData = $(this).serialize();
+                        console.log("formData", formData);
+
+                        $.ajax({
+                            url: '/auth/add-membership-plan',
+                            type: 'POST',
+                            data: $(this).serialize(),
+                            success: function (response) {
+                                Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: response.message
+                            }).then(function() {
+                                window.location.reload();
+                            });
+                            },
+                            error: function (xhr, status, error) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    text: 'Failed to add membership plan.'
+                                });
+                                console.error('Error:', error);
+                            }
+                        });
+                    });
+
+                    $('#premium_plan').on('submit', function (e) {
+                        e.preventDefault();
+                        var formData = $(this).serialize();
+                        console.log("formData", formData);
+
+                        $.ajax({
+                            url: '/auth/add-membership-plan',
+                            type: 'POST',
+                            data: $(this).serialize(),
+                            success: function (response) {
+                                Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: response.message
+                            }).then(function() {
+                                window.location.reload();
+                            });
+                            },
+                            error: function (xhr, status, error) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    text: 'Failed to add membership plan.'
+                                });
+                                console.error('Error:', error);
+                            }
+                        });
+                    });
+
+                    $('#enterprise_plan').on('submit', function (e) {
+                        e.preventDefault();
+                        var formData = $(this).serialize();
+                        console.log("formData", formData);
+
+                        $.ajax({
+                            url: '/auth/add-membership-plan',
+                            type: 'POST',
+                            data: $(this).serialize(),
+                            success: function (response) {
+                                Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: response.message
+                            }).then(function() {
+                                window.location.reload();
+                            });
+                            },
+                            error: function (xhr, status, error) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    text: 'Failed to add membership plan.'
+                                });
+                                console.error('Error:', error);
+                            }
+                        });
+                    });
+
+                    $('#update_basic').click(function() {
+                        var formData = $('#basic_plan_update').serialize(); 
+                        $.ajax({
+                            type: 'POST',
+                            url: '/auth/update-basic',
+                            data: formData,
+                            success: function (response) {
+                                Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: response.message
+                            }).then(function() {
+                                window.location.reload();
+                            });
+                            },
+                            error: function (xhr, status, error) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    text: 'Failed to add basic_plan_update.'
+                                });
+                                console.error('Error:', error);
+                            }
+                        });
+                    });
+
+                    $('#standard_update_basic').click(function() {
+                        var formData = $('#standard_plan_update').serialize(); 
+                        console.log("formData",formData);
+                        $.ajax({
+                            url: '/auth/update-standard',
+                            type: 'POST',
+                            data: formData,
+                            success: function (response) {
+                                Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: response.message
+                            }).then(function() {
+                                window.location.reload();
+                            });
+                            },
+                            error: function (xhr, status, error) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    text: 'Failed to yupdate standard membership plan.'
+                                });
+                                console.error('Error:', error);
+                            }
+                        });
+                    });
+                    
+                    $('#update_advanced__basic').click(function() {
+                        var formData = $('#advanced_plan_update').serialize(); 
+                        console.log("formData",formData);
+                        $.ajax({
+                            url: '/auth/update-advanced',
+                            type: 'POST',
+                            data: formData,
+                            success: function (response) {
+                                Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: response.message
+                            }).then(function() {
+                                window.location.reload();
+                            });
+                            },
+                            error: function (xhr, status, error) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    text: 'Failed to update advanced membership plan.'
+                                });
+                                console.error('Error:', error);
+                            }
+                        });
+                    });
+                    
+                    $('#update_premium_basic').click(function() {
+                        var formData = $('#premium_plan_update').serialize(); 
+                        console.log("formData",formData);
+                        $.ajax({
+                            url: '/auth/update-premium',
+                            type: 'POST',
+                            data: formData,
+                            success: function (response) {
+                                Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: response.message
+                            }).then(function() {
+                                window.location.reload();
+                            });
+                            },
+                            error: function (xhr, status, error) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    text: 'Failed to update advanced membership plan.'
+                                });
+                                console.error('Error:', error);
+                            }
+                        });
+                    });
+                    
+                    $('#update_enterprise_basic').click(function() {
+                        var formData = $('#enterprise_plan_update').serialize(); 
+                        console.log("formData",formData);
+                        $.ajax({
+                            url: '/auth/update-enterprise',
+                            type: 'POST',
+                            data: formData,
+                            success: function (response) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: response.message
+                            }).then(function() {
+                                window.location.reload();
+                            });
+                        },
+                            error: function (xhr, status, error) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    text: 'Failed to update advanced membership plan.'
+                                });
+                                console.error('Error:', error);
+                            }
+                        });
+                    });
+ 
+                });
+            </script>
+
+
+
+
+
+
+
+
+
+
+
+<!-- 
+
+//                 function updateBasicPlan() {
+//     var description = document.getElementById('description_basics').value;
+//     var monthlyPrice = document.getElementById('monthly_price_basics').value;
+//     var yearlyPrice = document.getElementById('yearly_price_basics').value;
+
+//     var data = JSON.stringify({
+//         descriptions: description,
+//         monthly_prices: monthlyPrice,
+//         yearly_prices: yearlyPrice
+//     });
+//     console.log("data",data);
+
+//     $.ajax({
+//         type: 'POST',
+//         url: '/auth/update-basic',
+//         data: data,
+//         success: function(response) {
+//             Swal.fire({
+//                 icon: 'success',
+//                 title: 'Success',
+//                 text: 'Basic plan updated successfully!',
+//                 confirmButtonColor: '#3085d6',
+//                 confirmButtonText: 'OK'
+//             }).then((result) => {
+//                 if (result.isConfirmed) {
+//                     window.location.reload(); 
+//                 }
+//             });
+//         },
+//         error: function(xhr, status, error) {
+//             Swal.fire({
+//                 icon: 'error',
+//                 title: 'Error',
+//                 text: 'Failed to update basic plan. Please try again later.',
+//                 confirmButtonColor: '#d33',
+//                 confirmButtonText: 'OK'
+//             });
+//         }
+//     });
+// }
+
+//                 document.getElementById('update_basic').addEventListener('click', function(event) {
+//                     event.preventDefault(); 
+//                     updateBasicPlan();
+//                 });
+
+
+
+
+                //         $(document).ready(function () {
+                //             // CKEDITOR.replace('description');
+                // //             tinymce.init({
+                // //     selector: '#description'
+                // // });
+                //         });
+            
+
+
+
+
+            <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script> --> -->

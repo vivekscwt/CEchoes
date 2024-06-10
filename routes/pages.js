@@ -500,12 +500,13 @@ router.get('/faq', checkCookieValue, async (req, res) => {
 });
 
 router.get('/business', checkCookieValue, async (req, res) => {
-
-    const [globalPageMeta] = await Promise.all([
-        comFunction2.getPageMetaValues('global'),
-    ]);
-
     try {
+    const [globalPageMeta,getplans] = await Promise.all([
+        comFunction2.getPageMetaValues('global'),
+        comFunction2.getplans()
+    ]);
+    console.log("getplans",getplans);
+    
         let currentUserData = JSON.parse(req.userData);
         const sql = `SELECT * FROM page_info where secret_Key = 'business' `;
         db.query(sql, (err, results, fields) => {
@@ -532,7 +533,8 @@ router.get('/business', checkCookieValue, async (req, res) => {
                     meta_values_array,
                     UpcomingBusinessFeature,
                     BusinessFeature,
-                    globalPageMeta: globalPageMeta
+                    globalPageMeta: globalPageMeta,
+                    getplans: getplans
                 });
             })
 
@@ -4448,44 +4450,67 @@ router.get('/plans', checkLoggedIn, async (req, res) => {
         }
 
 
+        const basic_query = `SELECT * FROM plan_management WHERE name = 'Basic'`;
+        const basic_value = await query(basic_query);
+        if (basic_value.length > 0) {
+            var basic_val = basic_value[0];
+            console.log("basic_val",basic_val);
+            //return res.status(500).json({ message: 'Already added for Basic Plan Managemnet.' });
+        }
+
+
+        const standard_query = `SELECT * FROM plan_management WHERE name = 'standard'`;
+        const standard_value = await query(standard_query);
+        if (standard_value.length > 0) {
+            var standard_val = standard_value[0];
+            //console.log("standard_val",standard_val);
+            //return res.status(500).json({ message: 'Already added for Standard Plan Managemnet.' });
+        }
+    
+
+        const advanced_query = `SELECT * FROM plan_management WHERE name = 'advanced'`;
+        const advanced_value = await query(advanced_query);
+        if (advanced_value.length > 0) {
+            var advanced_val = advanced_value[0];
+            //console.log("advanced_val",advanced_val);
+            //return res.status(500).json({ message: 'Already added for Advanced Plan Managemnet.' });
+        }
+    
+
+        const premium_query = `SELECT * FROM plan_management WHERE name = 'premium'`;
+        const premium_value = await query(premium_query);
+        if (premium_value.length > 0) {
+            var premium_val = premium_value[0];
+            //console.log("premium_value",premium_val);
+            //return res.status(500).json({ message: 'Already added for Premium Plan Managemnet.' });
+        }
+
+        const enterprise_query = `SELECT * FROM plan_management WHERE name = 'enterprise'`;
+        const enterprise_value = await query(enterprise_query);
+        if (enterprise_value.length > 0) {
+            var enterprise_val = enterprise_value[0];
+            //console.log("enterprise_val",enterprise_val);
+        }
+    
 
         // Fetch all the required data asynchronously
-        const [company, company_all_categories] = await Promise.all([
+        const [company, company_all_categories,company_plans] = await Promise.all([
             comFunction.getCompany(companyId),
             comFunction.getCompanyCategoryBuID(companyId),
         ]);
-        // console.log("company", company);
-        // console.log("getStatesByCountryID",getStatesByCountryID);
 
-
-
-
-        // Render the 'edit-user' EJS view and pass the data
-        // res.json({
-        //     menu_active_id: 'company',
-        //     page_title: 'Edit Company',
-        //     currentUserData,
-        //     company: company,
-        //     company_all_categories: company_all_categories,
-        //     users: users
-        //     //countries: countries,
-        //     //states: states            
-        // });
         res.render('plans', {
             menu_active_id: 'Plans',
             page_title: 'Plans',
             currentUserData,
             company: company,
             company_all_categories: company_all_categories,
-            // Allusers: users,
-            // getParentCompany: getParentCompany,
-            // getCountries: getCountries,
-            // statevalue: statevalue,
-            // getStatesByCountryID: getStatesByCountryID,
-            // getChildCompany: getChildCompany,
-            // countries: countries
-            //countries: countries,
-            //states: states            
+            basic_val,
+            standard_val,
+            advanced_val,
+            premium_val,
+            enterprise_val
+        
         });
     } catch (err) {
         console.error(err);
@@ -5699,6 +5724,28 @@ router.get('/getcomplaintcompanies', async (req, res) => {
         });
     }
 })
+
+router.get('/get-plan', async (req, res) => {
+    const planName = req.query.plan_name;
+
+    try {
+        const connection = await mysql.createConnection(dbConfig);
+        const [rows] = await connection.execute('SELECT * FROM plan_management WHERE name = ?', [planName]);
+        
+        if (rows.length > 0) {
+            res.json({ success: true, data: rows[0] });
+        } else {
+            res.json({ success: false, message: 'Plan not found' });
+        }
+
+        await connection.end();
+    } catch (error) {
+        console.error('Error fetching plan data:', error);
+        res.status(500).json({ success: false, message: 'An error occurred', error: error.message });
+    }
+});
+
+
 
 
 //-----------------------------------------------------------------//

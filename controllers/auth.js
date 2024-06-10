@@ -1359,10 +1359,10 @@ exports.createCategory = async (req, res) => {
 
                             //     });
                             // }
-                                db.query(`INSERT INTO category_country_relation (cat_id , country_id) VALUES (${result.insertId}, ${country} )`, await function (err, country_val) {
-                                    if (err) throw err;
+                            db.query(`INSERT INTO category_country_relation (cat_id , country_id) VALUES (${result.insertId}, ${country} )`, await function (err, country_val) {
+                                if (err) throw err;
 
-                                });
+                            });
                             return res.send(
                                 {
                                     status: 'ok',
@@ -1617,8 +1617,8 @@ exports.getcatsbyCountry = async (req, res) => {
             WHERE category_country_relation.country_id = ?
         `;
         const categories = await query(getcategoryquery, [countryId]);
-        console.log("getcatsbyCountry",categories);
-        
+        console.log("getcatsbyCountry", categories);
+
         if (!categories || categories.length === 0) {
             return res.json({
                 status: 'ok',
@@ -1626,7 +1626,7 @@ exports.getcatsbyCountry = async (req, res) => {
                 message: 'No categories found for the selected country.'
             });
         }
-        
+
         return res.json({
             status: 'ok',
             categories: categories,
@@ -3507,11 +3507,11 @@ exports.getcompanyDetails = async (req, res) => {
 
 
             const state_query = `SELECT * FROM states WHERE ID = ?`;
-            const states = await query(state_query,[company_state]);
+            const states = await query(state_query, [company_state]);
 
-            if(states.length>0){
+            if (states.length > 0) {
                 var state_name = states[0].name;
-                console.log("state_name",state_name);
+                console.log("state_name", state_name);
             }
 
             console.log("company_state", company_state);
@@ -4566,7 +4566,7 @@ exports.submitreview = async (req, res) => {
                     {
                         status: 'error',
                         data: { company, review },
-                        message: 'Error occurred please try again',error
+                        message: 'Error occurred please try again', error
                     }
                 );
             }
@@ -6893,20 +6893,20 @@ exports.createDiscussion = async (req, res) => {
     //console.log("strTagssss", strTags);
 
     const user_location = `SELECT * FROM user_customer_meta WHERE user_id =?`;
-    const user_location_data = await query(user_location,[user_id]);
+    const user_location_data = await query(user_location, [user_id]);
 
-    if(user_location_data.length>0){
+    if (user_location_data.length > 0) {
         //var user_locations = user_location_data[0].address;
         var user_locations = user_location_data[0].country;
         //console.log("user_locations",user_locations);
 
         var userData = `SELECT name FROM countries WHERE id=?`;
-        var user_val = await query(userData,[user_locations]);
+        var user_val = await query(userData, [user_locations]);
         //console.log("user_val",user_val[0].name);
     }
 
     const sql = `INSERT INTO discussions ( user_id, topic, tags, created_at, expired_at, query_alert_status,discussion_status, location) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
-    const data = [user_id, topic, strTags, from_data, expire_date, '0', '0',location];
+    const data = [user_id, topic, strTags, from_data, expire_date, '0', '0', location];
     db.query(sql, data, (err, result) => {
         if (err) {
             return res.send({
@@ -8298,7 +8298,7 @@ exports.cechoescomplaintRegister = async (req, res) => {
                 message: 'Something went wrong  ' + err
             });
         } else {
-            console.log(company_id,user_id, result.insertId)
+            console.log(company_id, user_id, result.insertId)
             const [complaintEmailToCompany, complaintSuccessEmailToUser] = await Promise.all([
                 //comFunction2.complaintEmailToCompany(company_id, ticket_no, result.insertId),
                 comFunction2.complaintSuccessEmailToUser(user_id, ticket_no, result.insertId)
@@ -8350,7 +8350,7 @@ exports.addPlan = async (req, res) => {
                 message: 'Something went wrong  ' + err
             });
         } else {
-            console.log(company_id,user_id, result.insertId)
+            console.log(company_id, user_id, result.insertId)
             const [complaintEmailToCompany, complaintSuccessEmailToUser] = await Promise.all([
                 //comFunction2.complaintEmailToCompany(company_id, ticket_no, result.insertId),
                 comFunction2.complaintSuccessEmailToUser(user_id, ticket_no, result.insertId)
@@ -8363,6 +8363,123 @@ exports.addPlan = async (req, res) => {
     })
 }
 
+
+exports.addMembershipPlan = async (req, res) => {
+
+    const { plan_name, description, monthly_price, yearly_price, currency } = req.body;
+
+    const planNames = ["Basic", "standard", "advanced", "premium", "enterprise"];
+
+    if (!planNames.includes(plan_name)) {
+        return res.status(400).json({ message: 'Invalid plan name.' });
+    }
+
+    try {
+        const checkQuery = `SELECT * FROM plan_management WHERE name = ?`;
+        const existingPlan = await db.query(checkQuery, [plan_name]);
+
+        if (existingPlan.length > 0) {
+            const updateQuery = `
+            UPDATE plan_management 
+            SET description = ?, monthly_price = ?, yearly_price = ?, currency = ? 
+            WHERE name = ?
+        `;
+            await db.query(updateQuery, [description, monthly_price, yearly_price, currency, plan_name]);
+            return res.status(200).json({ message: `${plan_name} Plan Management updated successfully.` });
+        } else {
+            const insertQuery = `
+            INSERT INTO plan_management (name, description, monthly_price, yearly_price, currency)
+            VALUES (?, ?, ?, ?, ?)
+        `;
+            await db.query(insertQuery, [plan_name, description, monthly_price, yearly_price, currency]);
+            return res.status(200).json({ message: 'Membership plan added successfully.' });
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        return res.status(500).json({ message: 'An error occurred.', error: error.message });
+    }
+
+}
+
+exports.updateBasic = async (req, res) => {
+    try {
+        const { descriptions, monthly_prices, yearly_prices } = req.body;
+        console.log("updateBasic", req.body);
+        
+        const updatebasicquery = `UPDATE plan_management SET description = '${descriptions}', monthly_price = '${monthly_prices}', yearly_price = '${yearly_prices}' WHERE name="Basic"`;
+        
+        await query(updatebasicquery);
+
+        return res.status(200).json({ message: 'Basic plan updated successfully' });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'An error occurred while updating the basic plan' });
+    }
+};
+
+exports.updateAdvanced = async (req, res) => {
+    try {
+        const { descriptions, monthly_prices, yearly_prices } = req.body;
+        console.log("updateAdvanced", req.body);
+        
+        const updatebasicquery = `UPDATE plan_management SET description = '${descriptions}', monthly_price = '${monthly_prices}', yearly_price = '${yearly_prices}' WHERE name="advanced"`;
+        
+        await query(updatebasicquery);
+
+        return res.status(200).json({ message: 'Advanced plan updated successfully' });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'An error occurred while updating the advanced plan' });
+    }
+};
+
+exports.updateStandard = async (req, res) => {
+    try {
+        const { descriptions, standard_monthly_prices, standard_yearly_prices } = req.body;
+        console.log("updateStandard", req.body);
+        
+        const updatebasicquery = `UPDATE plan_management SET description = '${descriptions}', monthly_price = '${standard_monthly_prices}', yearly_price = '${standard_yearly_prices}' WHERE name="standard"`;
+        
+        await query(updatebasicquery);
+
+        return res.status(200).json({ message: 'Standard plan updated successfully' });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'An error occurred while updating the Standard plan' });
+    }
+};
+
+exports.updatePremium = async (req, res) => {
+    try {
+        const { descriptions, monthly_prices, yearly_prices } = req.body;
+        console.log("updatePremium", req.body);
+        
+        const updatebasicquery = `UPDATE plan_management SET description = '${descriptions}', monthly_price = '${monthly_prices}', yearly_price = '${yearly_prices}' WHERE name="premium"`;
+        
+        await query(updatebasicquery);
+
+        return res.status(200).json({ message: 'Premium plan updated successfully' });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'An error occurred while updating the Premium plan' });
+    }
+};
+
+exports.updateEnterprise = async (req, res) => {
+    try {
+        const { enterprise_descriptions, enterprise_monthly_prices, enterprise_yearly_prices } = req.body;
+        //console.log("updateEnterprise", req.body);
+        
+        const updatebasicquery = `UPDATE plan_management SET description = '${enterprise_descriptions}', monthly_price = '${enterprise_monthly_prices}', yearly_price = '${enterprise_yearly_prices}' WHERE name="enterprise"`;
+        
+        await query(updatebasicquery);
+
+        return res.status(200).json({ message: 'Enterprise plan updated successfully' });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'An error occurred while updating the enterprise plan' });
+    }
+};
 
 
 //Insert Company Query and  to user

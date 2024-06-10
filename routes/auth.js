@@ -395,6 +395,20 @@ router.post('/cechoescomplaintRegister', authController.cechoescomplaintRegister
 //plans
 router.post('/add-plan', authController.addPlan);
 
+//membership plans
+router.post('/add-membership-plan',authController.addMembershipPlan);
+
+//updateBasic
+router.post('/update-basic',authController.updateBasic);
+//updateBasic
+router.post('/update-advanced',authController.updateAdvanced);
+//updateBasic
+router.post('/update-standard',authController.updateStandard);
+//updateBasic
+router.post('/update-premium',authController.updatePremium);
+//updateBasic
+router.post('/update-enterprise',authController.updateEnterprise);
+
 // company-query
 router.post('/company-query', authController.companyQuery);
 

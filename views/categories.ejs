@@ -50,6 +50,7 @@
                             </div>
                             <!--end::Search-->
                         </div>
+                        <!--begin::Card title-->
 
                         <div class="d-flex align-items-center position-relative my-1">
                             <!-- Dropdown of countries -->
@@ -65,9 +66,6 @@
                             </select>
                         </div>
 
-
-
-                        <!--begin::Card title-->
                         <!--begin::Card toolbar-->
                         <div class="card-toolbar">
                             <!--begin::Toolbar-->
@@ -322,7 +320,7 @@
                             </thead>
                             <!--end::Table head-->
                             <!--begin::Table body-->
-                            <tbody class="text-gray-600 fw-bold" id="categoryTable">
+                            <tbody class="text-gray-600 fw-bold">
                                 <% categoriess.forEach( category=> { %>
                                     <!--begin::Table row-->
                                     <tr>
@@ -443,10 +441,28 @@
         <!--end::Post-->
     </div>
     <!--end::Content-->
+    <style></style>
+        .select2-container .select2-selection--single .select2-selection__rendered {
+         padding-right: 1.75em;    
+            padding-left: 50px;
+            padding-right: 50px;
+        }
+
+        .select2-container .select2-selection--single .select2-selection__clear {
+            top: 50%; 
+            right: 0.25em; 
+            transform: translateY(-50%); 
+        }
+
+        .select2-container .select2-selection--single {
+            height: calc(2.25rem + 2px); 
+        }
+    </style>
+
     <%- include('common/footer') -%>
         <script src="/assets/plugins/custom/datatables/datatables.bundle.js"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
         <script>
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
@@ -793,6 +809,7 @@
                 /******/
             })()
                 ;
+            //# sourceMappingURL=table.js.map    
 
             $(document).ready(function () {
                 let currentUserData = "<%= currentUserData%>"
@@ -807,7 +824,7 @@
                         success: function (response) {
                             if (response.status === 'ok') {
                                 let data = updateTableBody(response.categories);
-                                tbody.empty() ;
+                                tbody.empty();
                                 tbody.append(data);
 
                             } else {
@@ -816,7 +833,7 @@
                         },
                         error: function (xhr, status, error) {
                             console.error('AJAX Error:', error);
-                            console.error('Server response:', xhr.responseText); 
+                            console.error('Server response:', xhr.responseText);
                         }
                     });
                 }
@@ -834,7 +851,7 @@
                                         </button>
                                         <ul class="dropdown-menu" aria-labelledby="actionsDropdown">
                                             <li><a class="dropdown-item" href="/edit-category?id=${categoryy.categoryId}">Edit</a></li>
-                                            <li><a class="dropdown-item delete-category" href="#" data-cat-id="${categoryy.categoryId}">Delete</a></li>
+                                            <li><a href="#" data-cat-id="${categoryy.categoryId}" class="dropdown-item delete-category">Delete</a></li>
                                         </ul>
                                     </div>
                                 ` : `
@@ -882,10 +899,82 @@
                     fetchCategoriesByCountry(countryId);
                 });
 
+                $('#main_address_country').select2({
+                    placeholder: "Select a country",
+                    allowClear: true
+                });
+
+                $(document).ready(function () {
+                    $('#kt_table_users').DataTable();
+                });
+
+                $(document).on('click', '.delete-category', function (e) {
+                    e.preventDefault();
+                    var cat_id = $(this).data('cat-id');
+                    console.log(cat_id);
+
+                    Swal.fire({
+                        text: "Are you sure you want to delete?",
+                        icon: "warning",
+                        showCancelButton: true,
+                        buttonsStyling: false,
+                        confirmButtonText: "Yes, delete!",
+                        cancelButtonText: "No, cancel",
+                        customClass: {
+                            confirmButton: "btn fw-bold btn-danger",
+                            cancelButton: "btn fw-bold btn-active-light-primary"
+                        }
+                    }).then(function (result) {
+                        if (result.value) {
+                            $.ajax({
+                                url: '/delete-category?id=' + cat_id,
+                                type: 'GET',
+                                success: function (data) {
+                                    if (data.status == 'ok') {
+                                        Swal.fire({
+                                            text: data.message,
+                                            icon: "success",
+                                            buttonsStyling: false,
+                                            confirmButtonText: "Ok, got it!",
+                                            customClass: {
+                                                confirmButton: "btn btn-primary"
+                                            }
+                                        }).then(function (result) {
+                                            if (result.isConfirmed) {
+                                                window.location.href = "/categories";
+                                            }
+                                        });
+                                    } else {
+                                        Swal.fire({
+                                            text: data.message,
+                                            icon: "error",
+                                            buttonsStyling: false,
+                                            confirmButtonText: "Ok, got it!",
+                                            customClass: {
+                                                confirmButton: "btn btn-primary"
+                                            }
+                                        });
+                                    }
+                                },
+                                error: function (xhr, status, error) {
+                                    console.log(error);
+                                }
+                            });
+                        } else if (result.dismiss === 'cancel') {
+                            Swal.fire({
+                                text: "Category is not deleted.",
+                                icon: "error",
+                                buttonsStyling: false,
+                                confirmButtonText: "Ok, got it!",
+                                customClass: {
+                                    confirmButton: "btn fw-bold btn-primary"
+                                }
+                            });
+                        }
+                    });
+                });
 
             });
 
-
-            //# sourceMappingURL=table.js.map    
         </script>
         <script src="/assets/js/custom/apps/user-management/users/list/export-users.js"></script>
