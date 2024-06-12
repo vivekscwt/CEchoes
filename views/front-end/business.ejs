@@ -73,7 +73,7 @@
                   </div>
                </div>
                <% }) %>
-            <!-- <div class="business-feature-step" data-aos="fade-up">
+                  <!-- <div class="business-feature-step" data-aos="fade-up">
                <div class="business-feature-icon">
 
                   <svg width="43" height="48" viewBox="0 0 43 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -330,30 +330,49 @@
       <!-- ============== Section6 Start =============== -->
       <section class="main-content business-choose-your-plan-content" data-aos="fade-up">
          <div class="container">
-            <h2 class="text-center inner-main-head">Choose Your <span>Plan</span></h2>
-            <div class="choose-your-plan-box">
-               <div class="choose-your-plan-box-step">
-                  <%- getplans.basic_val.description %>
-               </div>
-               <div class="choose-your-plan-box-step">
-                  <%- getplans.standard_val.description %>
-               </div>
-               <div class="choose-your-plan-box-step">
-                  <%- getplans.advanced_val.description %>
-               </div>
-               <div class="choose-your-plan-box-step">
-                  <div class="best-value-tag">
-                     BEST <br> VALUE
-                  </div>
-                  <%- getplans.premium_val.description %>
-               </div>
-               
-               <div class="choose-your-plan-box-step overlay">
-                  <%- getplans.enterprise_val.description %>
-               </div>
-            </div>
+             <h2 class="text-center inner-main-head">Choose Your <span>Plan</span></h2>
+             <div class="choose-your-plan-box">
+                 <div class="choose-your-plan-box-step">
+                     <%- getplans.basic_val.description %>
+                 </div>
+                 <div class="choose-your-plan-box-step">
+                     <%- getplans.standard_val.description %>
+                     <div class="member-control">
+                        <label for="standard-member-count">Members:</label>
+                        <input type="number" name = memberCount id="standard-member-count" value="">
+                        <input type="text" name = userId value="<%= currentUserData.user_id%>">
+                        <input type="text" name = email value="<%= currentUserData.email%>">
+                    </div>
+                    <div class="total-price-display">
+                     Monthly Subscription Amount: $<span id="standard-total-monthly-price"><%= getplans.standard_val.monthly_price %></span> 
+                 </div>
+                 <button id="subscribe-monthly" onclick="redirectToStripePayment('<%= getplans.standard_val.name %>', '<%= getplans.standard_val.monthly_price %>', 'monthly')">Subscribe Monthly</button>
+                 
+                 <div class="total-price-display">
+                     Yearly Subscription Amount: $<span id="standard-total-yearly-price"><%= getplans.standard_val.yearly_price %></span> 
+                 </div>
+                 <button id="subscribe-yearly" onclick="redirectToYearlyStripePayment('<%= getplans.standard_val.name %>', '<%= getplans.standard_val.yearly_price %>', 'yearly')">Subscribe Yearly</button>
+                 
+                 
+
+                 </div>
+                 <div class="choose-your-plan-box-step">
+                     <%- getplans.advanced_val.description %>
+                 </div>
+                 <div class="choose-your-plan-box-step">
+                     <div class="best-value-tag">
+                         BEST <br> VALUE
+                     </div>
+                     <%- getplans.premium_val.description %>
+                 </div>
+                 <div class="choose-your-plan-box-step overlay">
+                     <%- getplans.enterprise_val.description %>
+                 </div>
+             </div>
          </div>
-      </section>
+     </section>
+     
+
       <!-- ============== Section6 end =============== -->
 
       <!-- ============== Section7 Start =============== -->
@@ -364,12 +383,14 @@
                <% UpcomingBusinessFeature.forEach( (upcoming_feature,index)=> { %>
                   <div class="col-md-6">
                      <div class="upcoming-feature-step" data-aos="zoom-in-right" data-aos-duration="2000">
-                        <span><%= index+1 %>.</span>
+                        <span>
+                           <%= index+1 %>.
+                        </span>
                         <p class="m-0"><%- upcoming_feature.content %></p>
                      </div>
                   </div>
                   <% }) %>
-               
+
             </div>
             <div class="business-bottom-tagline" data-aos="fade-in">
                <h3><%- meta_values_array.bottom_content %></h3>
@@ -379,3 +400,133 @@
       <!-- ============== Section7 End =============== -->
 
       <%- include('common/footer') -%>
+         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+         <script src="https://js.stripe.com/v3/"></script>
+
+         <script>
+            document.querySelectorAll('.choose-your-plan-box-step button').forEach(button => {
+                button.addEventListener('click', async () => {
+                    try {
+                        const response = await fetch('/auth/api/v1/create-subscription-checkout-session', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                               // planId: button.getAttribute('data-plan-id')
+                            }),
+                        });
+        
+                        const session = await response.json();
+                        window.location.href = session.url; // Redirect to the checkout session URL
+                    } catch (error) {
+                        console.error('Error:', error);
+                    }
+                });
+            });
+            
+            //
+            var memberCountInputs = document.getElementById("standard-member-count");
+            var memberCounts = 0; // Default value
+            console.log("Member counts:", memberCounts);
+
+            if (memberCountInputs) {
+               memberCountInputs.addEventListener('input', function() {
+                  var inputValue = memberCountInputs.value.trim();
+                  if (inputValue !== '') {
+                     memberCounts = parseInt(inputValue);
+                  }
+                  console.log("Member counts:", memberCounts);
+               });
+            }
+
+            //
+
+
+            // For Monthly Subscription
+            var monthlyTotalPriceSpan = document.getElementById("standard-total-monthly-price");
+            var memberCountInputMonthly = document.getElementById("standard-member-count"); 
+
+            var initialMonthlySubscriptionPrice = parseFloat('<%= getplans.standard_val.monthly_price %>');
+            console.log("initialMonthlySubscriptionPrice", initialMonthlySubscriptionPrice);
+
+            memberCountInputMonthly.addEventListener('input', function() {
+               var memberCountMonthly = parseInt(memberCountInputMonthly.value);
+               var newMonthlyTotalPrice = initialMonthlySubscriptionPrice * (1 + memberCountMonthly); 
+               console.log(newMonthlyTotalPrice, "newMonthlyTotalPrice");
+               monthlyTotalPriceSpan.textContent = newMonthlyTotalPrice.toFixed(2); 
+            });
+
+
+            // For Yearly Subscription
+            var yearlyTotalPriceSpan = document.getElementById("standard-total-yearly-price");
+            var memberCountInputYearly = document.getElementById("standard-member-count"); 
+
+            var initialYearlySubscriptionPrice = parseFloat('<%= getplans.standard_val.yearly_price %>');
+            console.log("initialYearlySubscriptionPrice", initialYearlySubscriptionPrice);
+
+            memberCountInputYearly.addEventListener('input', function() {
+               var memberCountYearly = parseInt(memberCountInputYearly.value);
+               var newYearlyTotalPrice = initialYearlySubscriptionPrice * (1 + memberCountYearly); 
+               console.log(newYearlyTotalPrice, "newYearlyTotalPrice");
+               yearlyTotalPriceSpan.textContent = newYearlyTotalPrice.toFixed(2);
+            });
+
+            
+
+
+            function redirectToStripePayment(planId, planPrice) {
+               const billingCycle = 'monthly'; 
+               const redirectURL = `/stripe-payment?planId=${encodeURIComponent(planId)}&planPrice=${encodeURIComponent(planPrice)}&billingCycle=${encodeURIComponent(billingCycle)}&memberCount=${encodeURIComponent(memberCounts)}`;
+               window.location.href = redirectURL;
+            }
+
+            function redirectToYearlyStripePayment(planId, planPrice) {
+               const billingCycle = 'yearly';
+               const redirectURL = `/stripe-year-payment?planId=${encodeURIComponent(planId)}&planPrice=${encodeURIComponent(planPrice)}&billingCycle=${encodeURIComponent(billingCycle)}&memberCount=${encodeURIComponent(memberCounts)}`;
+               window.location.href = redirectURL;
+            }
+
+
+        
+        </script>
+
+         <!-- <script>
+            // $(document).ready(function () {
+            //    const stripe = Stripe('pk_test_nuPxQQoGY8aklz3AnwHmk98A'); 
+
+
+
+
+
+
+
+
+
+               // $('button[data-plan-id]').click(async function () { 
+               //    var planId = $(this).attr('data-plan-id');
+
+               //    console.log('Clicked on button with plan ID:', planId);
+
+               //    try {
+               //       const response = await fetch('/api/v1/create-subscription-checkout-session', {
+               //          method: 'POST',
+               //          headers: {
+               //             'Content-Type': 'application/json',
+               //          },
+               //          body: JSON.stringify({ planId }),
+               //       });
+
+               //       const session = await response.json();
+               //       const result = await stripe.redirectToCheckout({ sessionId: session.id });
+
+               //       if (result.error) {
+               //          console.error(result.error.message);
+               //       }
+               //    } catch (error) {
+               //       console.error('Error:', error);
+               //    }
+               // });
+
+            //});
+         </script> -->

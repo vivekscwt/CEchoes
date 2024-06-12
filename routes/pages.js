@@ -20,6 +20,8 @@ const router = express.Router();
 const publicPath = path.join(__dirname, '../public');
 const requestIp = require('request-ip');
 const he = require('he');
+const queryAsync = util.promisify(db.query).bind(db);
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 function decodeHTMLEntities(text) {
     return he.decode(text);
@@ -501,13 +503,15 @@ router.get('/faq', checkCookieValue, async (req, res) => {
 
 router.get('/business', checkCookieValue, async (req, res) => {
     try {
+        let currentUserData = JSON.parse(req.userData);
+        console.log("currentUserData",currentUserData);
     const [globalPageMeta,getplans] = await Promise.all([
         comFunction2.getPageMetaValues('global'),
         comFunction2.getplans()
     ]);
     console.log("getplans",getplans);
     
-        let currentUserData = JSON.parse(req.userData);
+
         const sql = `SELECT * FROM page_info where secret_Key = 'business' `;
         db.query(sql, (err, results, fields) => {
             if (err) throw err;
@@ -545,6 +549,87 @@ router.get('/business', checkCookieValue, async (req, res) => {
         res.status(500).send('An error occurred');
     }
 });
+
+router.get('/stripe-payment', checkCookieValue, async (req, res) => {
+    try {
+        const { planId, planPrice, monthly,memberCount } = req.query;
+
+        let currentUserData = JSON.parse(req.userData);
+        console.log("currentUserData",currentUserData);
+        const planids = `SELECT * FROM plan_management WHERE name = "${planId}"`;
+        const planidvalue = await queryAsync(planids);
+        console.log("planidvalue",planidvalue[0].id);
+        const planID = planidvalue[0].id;
+
+        res.render('front-end/stripe_payment', {
+            planId,
+            planPrice,
+            monthly,
+            planID,
+            currentUserData,
+            memberCount
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('An error occurred');
+    }
+});
+router.get('/stripe-year-payment', checkCookieValue, async (req, res) => {
+    try {
+        const { planId, planPrice, yearly, memberCount } = req.query;
+        let currentUserData = JSON.parse(req.userData);
+        console.log("currentUserData",currentUserData);
+        const planids = `SELECT * FROM plan_management WHERE name = "${planId}"`;
+        const planidvalue = await queryAsync(planids);
+        console.log("planidvalue",planidvalue[0].id);
+        const planID = planidvalue[0].id;
+
+
+        res.render('front-end/stripe_payment_yearly', {
+            planId,
+            planPrice,
+            yearly,
+            planID,
+            memberCount,
+            currentUserData,
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('An error occurred');
+    }
+});
+
+
+router.post('/create-subscription', async (req, res) => {
+    try {
+        // Extract form data from request body
+        const { fullName, email, address } = req.body;
+
+        // Create a customer using Stripe API
+        const customer = await stripe.customers.create({
+            email: email,
+            name: fullName,
+            address: {
+                line1: address,
+                // Add other address fields as needed
+            }
+        });
+
+        // Create a subscription for the customer
+        const subscription = await stripe.subscriptions.create({
+            customer: customer.id,
+            // Add subscription details such as price, plan, etc.
+        });
+
+        // Send the subscription details back to the client or perform any other action
+        res.json(subscription);
+    } catch (error) {
+        console.error('Error creating subscription:', error);
+        res.status(500).json({ error: 'Failed to create subscription' });
+    }
+});
+
+
 
 router.get('/privacy-policy', checkCookieValue, async (req, res) => {
     let currentUserData = JSON.parse(req.userData);
@@ -4481,7 +4566,7 @@ router.get('/plans', checkLoggedIn, async (req, res) => {
         const premium_value = await query(premium_query);
         if (premium_value.length > 0) {
             var premium_val = premium_value[0];
-            //console.log("premium_value",premium_val);
+            console.log("premium_value",premium_val);
             //return res.status(500).json({ message: 'Already added for Premium Plan Managemnet.' });
         }
 
@@ -4517,6 +4602,107 @@ router.get('/plans', checkLoggedIn, async (req, res) => {
         res.status(500).send('An error occurred');
     }
 });
+
+router.get('/success', (req, res) => {
+    res.send('Subscription successful!');
+});
+
+router.get('/cancel', (req, res) => {
+    res.send('Subscription canceled.');
+});
+
+
+router.get('/subscription', async (req, res) => {
+    const planName = req.query.plan;
+    console.log("planName",planName);
+
+    try {
+        const query = 'SELECT * FROM plan_management WHERE name = ?';
+        const rows= await queryAsync(query, [planName]);
+        console.log("rows",rows);
+
+        if (rows.length > 0) {
+            const planDetails = rows;
+            console.log("planDetails",planDetails);
+            res.render('front-end/subscription', { plan: planDetails });
+        } else {
+            res.status(404).send('Plan not found');
+        }
+    } catch (error) {
+        console.error('Error fetching plan details:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+
+
+//router.post('/api/v1/create-subscription-checkout-session', async (req, res) => {
+// router.post('/api/v1/create-checkout-session', async (req, res) => {
+    
+//     const { planId } = req.body;
+
+//     try {
+//         const session = await stripe.checkout.sessions.create({
+//             mode: 'subscription',
+//             payment_method_types: ['card'],
+//             line_items: [
+//                 {
+//                     price: planId,
+//                     quantity: 1,
+//                 },
+//             ],
+//             success_url: 'http://localhost:2000/success',
+//             cancel_url: 'http://localhost:2000/cancel',
+//         });
+
+//         res.json({ id: session.id });
+//     } catch (error) {
+//         console.error('Error creating checkout session:', error);
+//         res.status(500).json({ error: 'Failed to create checkout session' });
+//     }
+// });
+
+router.post('/api/v1/create-checkout-session', async (req, res) => {
+    try {
+        const session = await stripe.checkout.sessions.create({
+            mode: 'payment', // Use payment mode instead of subscription mode
+            payment_method_types: ['card'],
+            line_items: [{
+                price_data: {
+                  currency: 'gbp',
+                  product_data: {
+                    name: 'Product 1',
+                  },
+                  unit_amount: Math.round(1000), // £10.00
+                },
+                quantity: 1,
+              },
+              {
+                price_data: {
+                  currency: 'gbp',
+                  product_data: {
+                    name: 'Product 4',
+                  },
+                  unit_amount: Math.round(750), // £7.50
+                },
+                quantity: 3,
+              }
+              ],
+            success_url: 'http://localhost:2000/success',
+            cancel_url: 'http://localhost:2000/cancel',
+        });
+
+        res.json({ id: session.id });
+    } catch (error) {
+        console.error('Error creating checkout session:', error);
+        res.status(500).json({ error: 'Failed to create checkout session' });
+    }
+});
+
+
+
+
+//
 
 router.get('/discussion-listing', checkLoggedIn, async (req, res) => {
     try {

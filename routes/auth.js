@@ -49,6 +49,7 @@ const csv_storage = multer.diskStorage({
 const csvupload = multer({ storage: csv_storage });
 
 
+
 router.post('/register', authController.register);
 router.post('/login', authController.login);
 
@@ -483,6 +484,18 @@ router.post('/likeComment',authController.likeComment);
 router.get('/getcompaniesbyCountry/:country/:state/:city',authController.getcompaniesbyCountry);
 
 
+//stripe//
+router.post('create-product',authController.createproduct);
+
+
+//addingUsers
+router.post('/adding-users',authController.addingUsers);
+
+router.post('/create-subscription',authController.createSubscription);
+//create-subscription-checkout-session
+router.post('/create-subscription-checkout-session',authController.createSubscriptionCheckoutSession);
+
+router.post('/api/v1/create-subscription-checkout-session',authController.createSession)
 
 
 module.exports = router;

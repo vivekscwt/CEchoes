@@ -12,7 +12,7 @@ const authController = require('../controllers/auth');
 const router = express.Router();
 //const publicPath = path.join(__dirname,'../public');
 
-
+const axios = require('axios');
 
 // Set up multer storage for file upload
 const storage = multer.diskStorage({
@@ -328,6 +328,7 @@ router.get('/getUserDetails/:user_id', verifyToken, async (req, res) => {
         });
     }
 });
+
 
 router.get('/getComapniesDetails/:ID', verifyToken, async (req, res) => {
     const user_ID = req.user.user_id;
@@ -2596,6 +2597,51 @@ router.post('/complaint-reopen', verifyToken, authenController.userComplaintResp
 
 //Complaint user rating
 router.post('/complaint-rating', verifyToken, authenController.userComplaintRating);
+
+router.get('/getLatitudeLongitude',async (req, res) => {
+
+    var zipCode = "743263"
+    console.log("zipCode",zipCode);
+        const apiKey = 'AIzaSyCc5pts6Y3V7g9ZGGVsCcEi0WD8seu1VJ8';
+        //const apiKey = "AIzaSyAUfkznF2maQoBpQkuJQQgnIbJOJQ7Zmpc"
+        const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(zipCode)}&key=${apiKey}`;
+      
+        try {
+          const response = await axios.get(apiUrl);
+          if (response.data.status === 'OK' && response.data.results.length > 0) {
+            const location = response.data.results[0].geometry.location;
+            //return location;
+
+            return res.status(200).json({
+                status: 'success',
+                data: location,
+            });
+          } else {
+            console.error('Unable to fetch latitude and longitude.');
+           // return null;
+            return res.status(200).json({
+                status: 'error',
+                //data: location,
+                data:response
+            });
+          }
+        } catch (error) {
+          console.error('Error fetching latitude and longitude:', error);
+          //return null;
+          return res.status(200).json({
+            status: 'error',
+            //data: location,
+        });
+        }
+      })
+
+
+
+
+
+
+
+
 
 // router.get('/discussiondetails/:discussion_id', verifyToken, async (req, res) => {
 //     const discussion_id = req.params.discussion_id;

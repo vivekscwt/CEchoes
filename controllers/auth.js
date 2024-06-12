@@ -19,10 +19,13 @@ const crypto = require('crypto');
 const { v4: uuidv4 } = require('uuid');
 var cron = require('node-cron');
 const base64url = require('base64url');
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 const query = util.promisify(db.query).bind(db);
+const queryAsync = util.promisify(db.query).bind(db);
 const mysql = require('mysql2/promise');
 const dbConfig = {
     host: process.env.DATABASE_HOST,
@@ -35,6 +38,7 @@ const secretKey = 'grahak-secret-key';
 const comFunction = require('../common_function');
 const comFunction2 = require('../common_function2');
 const axios = require('axios');
+const { log } = require('console');
 
 const formatter = new Intl.DateTimeFormat('en-US', {
     timeZone: process.env.DESIRED_TIMEZONE,
@@ -8403,11 +8407,11 @@ exports.addMembershipPlan = async (req, res) => {
 
 exports.updateBasic = async (req, res) => {
     try {
-        const { descriptions, monthly_prices, yearly_prices } = req.body;
+        const { descriptions, monthly_prices, yearly_prices,monthly_price_id,yearly_price_id,user_price } = req.body;
         console.log("updateBasic", req.body);
-        
-        const updatebasicquery = `UPDATE plan_management SET description = '${descriptions}', monthly_price = '${monthly_prices}', yearly_price = '${yearly_prices}' WHERE name="Basic"`;
-        
+
+        const updatebasicquery = `UPDATE plan_management SET description = '${descriptions}', monthly_price = '${monthly_prices}', yearly_price = '${yearly_prices}', stripe_monthly_price_id= '${monthly_price_id}',stripe_yearly_price_id= '${yearly_price_id}',per_user_price= '${user_price}' WHERE name="Basic"`;
+
         await query(updatebasicquery);
 
         return res.status(200).json({ message: 'Basic plan updated successfully' });
@@ -8419,11 +8423,11 @@ exports.updateBasic = async (req, res) => {
 
 exports.updateAdvanced = async (req, res) => {
     try {
-        const { descriptions, monthly_prices, yearly_prices } = req.body;
+        const { descriptions, monthly_prices, yearly_prices,monthly_price_id,yearly_price_id,user_price } = req.body;
         console.log("updateAdvanced", req.body);
-        
-        const updatebasicquery = `UPDATE plan_management SET description = '${descriptions}', monthly_price = '${monthly_prices}', yearly_price = '${yearly_prices}' WHERE name="advanced"`;
-        
+
+        const updatebasicquery = `UPDATE plan_management SET description = '${descriptions}', monthly_price = '${monthly_prices}', yearly_price = '${yearly_prices}', stripe_monthly_price_id= '${monthly_price_id}',stripe_yearly_price_id= '${yearly_price_id}',per_user_price= '${user_price}' WHERE name="advanced"`;
+
         await query(updatebasicquery);
 
         return res.status(200).json({ message: 'Advanced plan updated successfully' });
@@ -8435,11 +8439,11 @@ exports.updateAdvanced = async (req, res) => {
 
 exports.updateStandard = async (req, res) => {
     try {
-        const { descriptions, standard_monthly_prices, standard_yearly_prices } = req.body;
+        const { descriptions, standard_monthly_prices, standard_yearly_prices,monthly_price_id,yearly_price_id, user_price} = req.body;
         console.log("updateStandard", req.body);
-        
-        const updatebasicquery = `UPDATE plan_management SET description = '${descriptions}', monthly_price = '${standard_monthly_prices}', yearly_price = '${standard_yearly_prices}' WHERE name="standard"`;
-        
+
+        const updatebasicquery = `UPDATE plan_management SET description = '${descriptions}', monthly_price = '${standard_monthly_prices}', yearly_price = '${standard_yearly_prices}', stripe_monthly_price_id= '${monthly_price_id}',stripe_yearly_price_id= '${yearly_price_id}',per_user_price= '${user_price}' WHERE name="standard"`;
+
         await query(updatebasicquery);
 
         return res.status(200).json({ message: 'Standard plan updated successfully' });
@@ -8451,11 +8455,11 @@ exports.updateStandard = async (req, res) => {
 
 exports.updatePremium = async (req, res) => {
     try {
-        const { descriptions, monthly_prices, yearly_prices } = req.body;
+        const { descriptions, monthly_prices, yearly_prices,monthly_price_id,yearly_price_id, user_price} = req.body;
         console.log("updatePremium", req.body);
-        
-        const updatebasicquery = `UPDATE plan_management SET description = '${descriptions}', monthly_price = '${monthly_prices}', yearly_price = '${yearly_prices}' WHERE name="premium"`;
-        
+
+        const updatebasicquery = `UPDATE plan_management SET description = '${descriptions}', monthly_price = '${monthly_prices}', yearly_price = '${yearly_prices}', stripe_monthly_price_id= '${monthly_price_id}',stripe_yearly_price_id= '${yearly_price_id}',per_user_price= '${user_price}' WHERE name="premium"`;
+
         await query(updatebasicquery);
 
         return res.status(200).json({ message: 'Premium plan updated successfully' });
@@ -8467,11 +8471,11 @@ exports.updatePremium = async (req, res) => {
 
 exports.updateEnterprise = async (req, res) => {
     try {
-        const { enterprise_descriptions, enterprise_monthly_prices, enterprise_yearly_prices } = req.body;
+        const { enterprise_descriptions, enterprise_monthly_prices, enterprise_yearly_prices, yearly_price_id, monthly_price_id, user_price} = req.body;
         //console.log("updateEnterprise", req.body);
-        
-        const updatebasicquery = `UPDATE plan_management SET description = '${enterprise_descriptions}', monthly_price = '${enterprise_monthly_prices}', yearly_price = '${enterprise_yearly_prices}' WHERE name="enterprise"`;
-        
+
+        const updatebasicquery = `UPDATE plan_management SET description = '${enterprise_descriptions}', monthly_price = '${enterprise_monthly_prices}', yearly_price = '${enterprise_yearly_prices}', stripe_monthly_price_id= '${monthly_price_id}',stripe_yearly_price_id= '${yearly_price_id}',per_user_price= '${user_price}' WHERE name="enterprise"`;
+
         await query(updatebasicquery);
 
         return res.status(200).json({ message: 'Enterprise plan updated successfully' });
@@ -11887,6 +11891,420 @@ exports.userCompanyRegistration = async (req, res) => {
         return res.status(500).json({ status: 'err', message: 'An error occurred while processing your request.' });
     }
 }
+
+exports.createproduct = async (req, res) => {
+    try {
+        const { plan_name, description, monthly_price, yearly_price, currency } = req.body;
+
+        const planNames = ["Basic", "Standard", "Advanced", "Premium", "Enterprise"];
+
+        if (!planNames.includes(plan_name)) {
+            return res.status(400).json({ message: 'Invalid plan name.' });
+        }
+        const checkQuery = `SELECT * FROM plan_management WHERE name = ?`;
+        const existingPlan = await db.query(checkQuery, [plan_name]);
+
+        if (existingPlan.length > 0) {
+            const updateQuery = `
+                UPDATE plan_management 
+                SET description = ?, monthly_price = ?, yearly_price = ?, currency = ? 
+                WHERE name = ?
+            `;
+            await db.query(updateQuery, [description, monthly_price, yearly_price, currency, plan_name]);
+            return res.status(200).json({ message: `${plan_name} Plan Management updated successfully.` });
+        } else {
+            const insertQuery = `
+                INSERT INTO plan_management (name, description, monthly_price, yearly_price, currency)
+                VALUES (?, ?, ?, ?, ?)
+            `;
+            await db.query(insertQuery, [plan_name, description, monthly_price, yearly_price, currency]);
+
+        }
+
+        const product = await stripe.products.create({
+            name: plan_name,
+            description: description
+        });
+        return res.json({ message: 'Membership plan added successfully.', product });
+    } catch (error) {
+        console.log("error", error);
+        return res.json({ error: error.message });
+    }
+}
+
+exports.addingUsers = async (req, res) => {
+    try{
+        const {company_user_id,plan_id,no_of_users,total_price} = req.body;
+        console.log("req.body.addon_user",req.body);
+
+        var add_on_user_data={
+            company_user_id : company_user_id,
+            plan_id : plan_id,
+            no_of_users	: no_of_users,
+            total_price	: total_price
+
+        }
+        const addingUsersquery = `INSERT INTO add_on_users SET?`;
+        const addingUsersvalue = await queryAsync(addingUsersquery[add_on_user_data])
+
+    } catch(error){
+        res.status(500).send({ error: error.message });
+    }
+}
+
+
+//actual
+
+// const getPlanFromDatabase = async (planId) => {
+//     console.log("planId", planId);
+//     const sql = 'SELECT name, description, monthly_price, yearly_price, currency FROM plan_management WHERE id = ?';
+//     const result = await queryAsync(sql, [planId]);
+//     console.log("result", result);
+//     return result[0];
+// };
+
+// // const createStripeProductAndPrice = async (plan, billingCycle) => {
+// //     try {
+// //         const product = await stripe.products.create({
+// //             name: plan.name,
+// //             description: plan.description,
+// //         });
+
+// //         const unitAmount = billingCycle === 'yearly' ? plan.yearly_price : plan.monthly_price;
+
+// //         const price = await stripe.prices.create({
+// //             unit_amount: unitAmount * 100,
+// //             currency: plan.currency,
+// //             recurring: { interval: billingCycle === 'yearly' ? 'year' : 'month' },
+// //             product: product.id,
+// //         });
+
+// //         return price.id;
+// //     } catch (error) {
+// //         console.error('Error creating Stripe product and price:', error);
+// //         throw error;
+// //     }
+// // };
+
+
+// const createStripeProductAndPrice = async (plan) => {
+//     try {
+//         const product = await stripe.products.create({
+//             name: plan.name,
+//             description: plan.description,
+//         });
+
+//         const monthlyPrice = await stripe.prices.create({
+//             unit_amount: plan.monthly_price * 100,
+//             currency: plan.currency,
+//             recurring: { interval: 'month' },
+//             product: product.id,
+//         });
+
+//         const yearlyPrice = await stripe.prices.create({
+//             unit_amount: plan.yearly_price * 100,
+//             currency: plan.currency,
+//             recurring: { interval: 'year' },
+//             product: product.id,
+//         });
+
+//         return { monthlyPriceId: monthlyPrice.id, yearlyPriceId: yearlyPrice.id };
+//     } catch (error) {
+//         console.error('Error creating Stripe product and prices:', error);
+//         throw error;
+//     }
+// };
+
+// exports.createSubscription = async (req, res) => {
+//     try {
+//         const { userId, planId, billingCycle } = req.body;
+
+//         // Fetch user's email from your application's database
+//         const userQuery = 'SELECT email FROM users WHERE user_id = ?';
+//         const userResult = await queryAsync(userQuery, [userId]);
+//         const userEmail = userResult[0].email;
+
+//         const plan = await getPlanFromDatabase(planId);
+//         const priceId = await createStripeProductAndPrice(plan, billingCycle);
+
+//         const subscription = await stripe.subscriptions.create({
+//             customer: customer.id,
+//             items: [{ price: priceId }],
+//             expand: ['latest_invoice.payment_intent'],
+//         });
+//         res.send(subscription);
+//     } catch (error) {
+//         res.status(500).send({ error: error.message });
+//     }
+// };
+
+
+
+const getPlanFromDatabase = async (planId) => {
+    const sql = 'SELECT name, description, monthly_price, yearly_price, currency,per_user_price FROM plan_management WHERE id = ?';
+    const result = await queryAsync(sql, [planId]);
+    console.log(`Database query result for planId ${planId}:`, result);
+
+    if (result.length === 0) {
+        throw new Error(`Plan with ID ${planId} not found`);
+    }
+
+    return result[0];
+};
+
+const createStripeProductAndPrice = async (plan, billingCycle, memberCount) => {
+    try {
+        memberCount = parseInt(memberCount);
+        if (isNaN(memberCount) || memberCount <= 0) {
+            throw new Error('Invalid memberCount');
+        }
+
+        console.log('Creating Stripe product with plan:', plan);
+
+        const product = await stripe.products.create({
+            name: plan.name,
+            description: plan.description,
+        });
+
+        const basePrice = billingCycle === 'yearly' ? plan.yearly_price : plan.monthly_price;
+        if (isNaN(basePrice) || basePrice <= 0) {
+            throw new Error('Invalid base price');
+        }
+
+        const user_addon_price = plan.per_user_price;
+        console.log("user_addon_price",user_addon_price);
+
+        const AddonPrice= user_addon_price * memberCount;
+        console.log("AddonPrice",AddonPrice);
+
+
+        const totalPrice = parseFloat(basePrice) + parseFloat(AddonPrice);
+        console.log("totalPrice", totalPrice);
+        if (isNaN(totalPrice) || totalPrice <= 0) {
+            throw new Error('Invalid total price');
+        }
+
+        console.log(`Base Price: ${basePrice}, Member Count: ${memberCount}, Total Price: ${totalPrice}`);
+        const totalPriceInCents = totalPrice * 100;
+
+        const price = await stripe.prices.create({
+            unit_amount: totalPriceInCents,
+            currency: 'usd',
+            recurring: { interval: billingCycle === 'yearly' ? 'year' : 'month' },
+            product: product.id,
+        });
+
+        return price.id;
+    } catch (error) {
+        console.error('Error creating Stripe product and prices:', error);
+        throw error;
+    }
+};
+
+
+exports.createSubscription = async (req, res) => {
+    try {
+        const {
+            name,
+            email,
+            address,
+            city,
+            state,
+            zip,
+            cardName,
+            cardNum,
+            expMonth,
+            expYear,
+            cvv,
+            planId,
+            billingCycle,
+            memberCount
+        } = req.body;
+
+        console.log("req.body",req.body);
+
+        const userQuery = 'SELECT user_id, email FROM users WHERE email = ?';
+        const userResult = await queryAsync(userQuery, [email]);
+
+        console.log("userResult",userResult);
+        let userId;
+
+        if (userResult.length > 0) {
+            userId = userResult[0].user_id;
+        } else {
+            return res.status(404).send({ error: 'User not found' });
+        }
+
+        const plan = await getPlanFromDatabase(planId);
+        if (!plan) {
+            return res.status(404).send({ error: 'Plan not found' });
+        }
+
+        const priceId = await createStripeProductAndPrice(plan, billingCycle, memberCount);
+        if (!priceId) {
+            return res.status(500).send({ error: 'Failed to create price for the plan' });
+        }
+
+        const customer = await stripe.customers.create({
+            email: email,
+            name: name,
+            address: {
+                line1: address,
+                city: city,
+                state: state,
+                postal_code: zip,
+            },
+            source: {
+                object: 'card',
+                number: cardNum,
+                exp_month: expMonth,
+                exp_year: expYear,
+                cvc: cvv
+            }
+        });
+
+        const subscription = await stripe.subscriptions.create({
+            customer: customer.id,
+            items: [{ price: priceId }],
+            expand: ['latest_invoice.payment_intent'],
+        });
+
+        res.send({ id: subscription.id });
+    } catch (error) {
+        console.error('Error creating subscription:', error);
+        res.status(500).send({ error: error.message });
+    }
+};
+
+
+
+
+// exports.createSubscription = async (req, res) => {
+//     try {
+//         const { userId, planId, billingCycle, memberCount } = req.body;
+
+//         const userQuery = 'SELECT email FROM users WHERE user_id = ?';
+//         const userResult = await queryAsync(userQuery, [userId]);
+//         if (userResult.length === 0) {
+//             return res.status(404).send({ error: 'User not found' });
+//         }
+//         const userEmail = userResult[0].email;
+
+//         const plan = await getPlanFromDatabase(planId);
+//         if (!plan) {
+//             return res.status(404).send({ error: 'Plan not found' });
+//         }
+
+//         const priceId = await createStripeProductAndPrice(plan, billingCycle, memberCount);
+
+//         const customer = await stripe.customers.create({
+//             email: userEmail,
+//             // Other customer details
+//         });
+
+//         const subscription = await stripe.subscriptions.create({
+//             customer: customer.id,
+//             items: [{ price: priceId }],
+//             expand: ['latest_invoice.payment_intent'],
+//         });
+
+//         res.send({ id: subscription.id });
+//     } catch (error) {
+//         res.status(500).send({ error: error.message });
+//     }
+// };
+
+
+
+exports.createSubscriptionCheckoutSession = async (req, res) => {
+    try {
+        const { subscriptionId } = req.body;
+
+        const session = await stripe.checkout.sessions.create({
+            payment_method_types: ['card'],
+            mode: 'subscription',
+            subscription_data: {
+                items: [{ plan: subscriptionId }],
+            },
+            success_url: 'https://your-domain.com/success?session_id={CHECKOUT_SESSION_ID}',
+            cancel_url: 'https://your-domain.com/cancel',
+        });
+
+        res.send({ id: session.id });
+    } catch (error) {
+        res.status(500).send({ error: error.message });
+    }
+};
+
+
+
+
+
+
+// exports.createSession = async (req, res) => {
+
+// try{
+//     const session = await stripe.checkout.sessions.create({
+//         success_url: `${CLIENT_URL}`,
+//         cancel_url: `${CLIENT_URL}`,
+//         line_items: [
+//           {
+//             price: 'STRIPE_PRICE_ID',
+//             quantity: 2,
+//           },
+//         ],
+//         mode: 'subscription',
+//       });
+//     // const{plan,customerId}= req.body;
+//     // let planId = null;
+//     console.log("session: ",session.id, session.url, session);
+
+//     const sessionId= session.id;
+//     console.log("sessionId",sessionId);
+
+//     res.json({url: session.url})
+
+// } catch(error){
+//     res.status(500).send({ error: error.message });
+// };
+// }
+
+exports.createSession = async (req, res) => {
+    // anoth 
+// app.post('/create-checkout-session', async (req, res) => {
+    const { planId } = req.body;
+
+    const domainURL = 'http://localhost:3000';
+
+    try {
+        const session = await stripe.checkout.sessions.create({
+            payment_method_types: ['card'],
+            mode: 'subscription',
+            line_items: [
+                {
+                    price: planId,
+                    quantity: 1,
+                },
+            ],
+            success_url: `${domainURL}/success?session_id={CHECKOUT_SESSION_ID}`,
+            cancel_url: `${domainURL}/cancel`,
+        });
+
+        res.json({ id: session.id });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
+
+// const syncPlansWithStripe = async () => {
+//     const plans = await getPlanFromDatabase();
+//     for (const plan of plans) {
+//         await createStripeProductAndPrice(plan);
+//     }
+// };
+
+// syncPlansWithStripe();
 
 
 

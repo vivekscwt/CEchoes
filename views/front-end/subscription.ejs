@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Subscription</title>
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+    <h1>Subscribe to <%= plan.name %></h1>
+    <p><%= plan.description %></p>
+    <p>Monthly Price: $<%= plan.monthly_price %></p>
+    <p>Yearly Price: $<%= plan.yearly_price %></p>
+    <button id="checkout-button" data-monthly-price-id="<%= plan.stripe_monthly_price_id %>" data-yearly-price-id="<%= plan.stripe_yearly_price_id %>">Checkout</button>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        const stripe = Stripe('pk_test_nuPxQQoGY8aklz3AnwHmk98A'); // Replace with your Stripe publishable key
+    
+        $('#checkout-button').on('click', async function() {
+            const monthlyPriceId = $(this).data('monthly-price-id');
+            console.log("monthlyPriceId",monthlyPriceId);
+            const yearlyPriceId = $(this).data('yearly-price-id');
+            console.log("yearlyPriceId",yearlyPriceId);
+    
+            try {
+                const response = await $.ajax({
+                    url: '/auth/api/v1/create-subscription-checkout-session',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ priceId: monthlyPriceId }),
+                });
+    
+                const session = response;
+                const result = await stripe.redirectToCheckout({ sessionId: session.id });
+    
+                if (result.error) {
+                    console.error(result.error.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+    </script>
+    
+</body>
+</html>
