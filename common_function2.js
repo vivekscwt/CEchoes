@@ -4913,6 +4913,28 @@ function getAllPayments() {
   });
 }
 
+// function getAllPayments() {
+//   return new Promise((resolve, reject) => {
+//     db.query(
+//       `SELECT p.*, c.company_name , c.logo , c.comp_email , mp.plan_name
+//       FROM order_history p
+//       LEFT JOIN company_claim_request ccr ON ccr.claimed_by = p.user_id 
+//       LEFT JOIN company c ON c.ID = ccr.company_id  AND c.status != '3'
+//       LEFT JOIN order_history mp ON mp.user_id = company_claim_request.claimed_by  
+//       ORDER BY p.id DESC`,
+//       async (err, result) => {
+//         if (err) {
+//           reject(err);
+//         } else {
+//           console.log(
+//             "resultv",result
+//           );
+//           resolve(result);
+//         }
+//       });
+//   });
+// }
+
 // Fetch a payment details
 function getpaymentDetailsById(paymentId) {
   return new Promise((resolve, reject) => {

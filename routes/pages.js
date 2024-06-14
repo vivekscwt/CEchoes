@@ -122,8 +122,8 @@ router.get('', checkCookieValue, async (req, res) => {
         userId = currentUserData.user_id;
     }
 
-    //const ipAddress = req.ip; 
-    const ipAddress = '45.64.221.211';
+    const ipAddress = req.ip; 
+    //const ipAddress = '45.64.221.211';
     console.log("ipAddress", ipAddress);
     const api_key = '9b38b399323e4d05a3bcbd1505e8e834'
     // const getcountrybyIp = await Promise.all([comFunction2.getcountrynamebyIp(ipAddress,api_key)]) 
@@ -372,8 +372,8 @@ router.get('/review', checkCookieValue, async (req, res) => {
         let currentUserData = JSON.parse(req.userData);
         console.log(currentUserData);
 
-        //const ipAddress = req.ip; 
-        const ipAddress = '45.64.221.211';
+        const ipAddress = req.ip; 
+        //const ipAddress = '45.64.221.211';
         console.log("ipAddress", ipAddress);
         const api_key = '9b38b399323e4d05a3bcbd1505e8e834';
 
@@ -442,8 +442,8 @@ router.get('/review', checkCookieValue, async (req, res) => {
 
 router.get('/get-country', async (req, res) => {
     try {
-        //const ipAddress = req.ip; 
-        const ipAddress = '45.64.221.211';
+        const ipAddress = req.ip; 
+        //const ipAddress = '45.64.221.211';
         console.log("ipAddress", ipAddress);
         const api_key = '9b38b399323e4d05a3bcbd1505e8e834'
 
@@ -510,6 +510,16 @@ router.get('/business', checkCookieValue, async (req, res) => {
         comFunction2.getplans()
     ]);
     console.log("getplans",getplans);
+
+    //const ipAddress = req.ip; 
+    const ipAddress = '45.64.221.211';
+    console.log("ipAddress", ipAddress);
+    const api_key = '9b38b399323e4d05a3bcbd1505e8e834';
+    //const api_key = 'AIzaSyCc5pts6Y3V7g9ZGGVsCcEi0WD8seu1VJ8';
+
+    const { country_name, country_code } = await comFunction2.getcountrynamebyIp(ipAddress, api_key);
+    console.log("Country Name:", country_name);
+    console.log("Country Code:", country_code);
     
 
         const sql = `SELECT * FROM page_info where secret_Key = 'business' `;
@@ -602,10 +612,8 @@ router.get('/stripe-year-payment', checkCookieValue, async (req, res) => {
 
 router.post('/create-subscription', async (req, res) => {
     try {
-        // Extract form data from request body
         const { fullName, email, address } = req.body;
 
-        // Create a customer using Stripe API
         const customer = await stripe.customers.create({
             email: email,
             name: fullName,
@@ -615,13 +623,10 @@ router.post('/create-subscription', async (req, res) => {
             }
         });
 
-        // Create a subscription for the customer
         const subscription = await stripe.subscriptions.create({
             customer: customer.id,
-            // Add subscription details such as price, plan, etc.
         });
 
-        // Send the subscription details back to the client or perform any other action
         res.json(subscription);
     } catch (error) {
         console.error('Error creating subscription:', error);
@@ -950,8 +955,8 @@ router.get('/company/:slug', checkCookieValue, async (req, res) => {
 router.get('/categories', checkCookieValue, async (req, res) => {
     let currentUserData = JSON.parse(req.userData);
 
-    //const ipAddress = req.ip; 
-    const ipAddress = '45.64.221.211';
+    const ipAddress = req.ip; 
+    //const ipAddress = '45.64.221.211';
     console.log("ipAddress", ipAddress);
     const api_key = '9b38b399323e4d05a3bcbd1505e8e834'
     // const getcountrybyIp = await Promise.all([comFunction2.getcountrynamebyIp(ipAddress,api_key)]) 
@@ -1073,8 +1078,8 @@ router.get('/category/:category_slug/:country', checkCookieValue, async (req, re
     const country = req.params.country;
     const baseURL = process.env.MAIN_URL;
 
-    //const ipAddress = req.ip; 
-    const ipAddress = '45.64.221.211';
+    const ipAddress = req.ip; 
+    //const ipAddress = '45.64.221.211';
     console.log("ipAddress", ipAddress);
     const api_key = '9b38b399323e4d05a3bcbd1505e8e834'
     // const getcountrybyIp = await Promise.all([comFunction2.getcountrynamebyIp(ipAddress,api_key)]) 
@@ -1151,8 +1156,8 @@ router.get('/category/:category_slug/:country/:filter', checkCookieValue, async 
     const filter_value = req.params.filter;
     const baseURL = process.env.MAIN_URL;
     
-    //const ipAddress = req.ip; 
-    const ipAddress = '45.64.221.211';
+    const ipAddress = req.ip; 
+    //const ipAddress = '45.64.221.211';
     console.log("ipAddress", ipAddress);
     const api_key = '9b38b399323e4d05a3bcbd1505e8e834'
     // const getcountrybyIp = await Promise.all([comFunction2.getcountrynamebyIp(ipAddress,api_key)]) 
@@ -1245,8 +1250,8 @@ router.get('/home', checkCookieValue, async (req, res) => {
 //Discussion page
 router.get('/discussion', checkCookieValue, async (req, res) => {
     let currentUserData = JSON.parse(req.userData);
-    //const ipAddress = req.ip; 
-    const ipAddress = '45.64.221.211';
+    const ipAddress = req.ip; 
+    //const ipAddress = '45.64.221.211';
     console.log("ipAddress", ipAddress);
     const api_key = '9b38b399323e4d05a3bcbd1505e8e834'
     const getcountrybyIp = await Promise.all([comFunction2.getcountrybyIp(ipAddress, api_key)])
@@ -4585,7 +4590,7 @@ router.get('/plans', checkLoggedIn, async (req, res) => {
         ]);
 
         res.render('plans', {
-            menu_active_id: 'Plans',
+            menu_active_id: 'company',
             page_title: 'Plans',
             currentUserData,
             company: company,
@@ -4602,6 +4607,10 @@ router.get('/plans', checkLoggedIn, async (req, res) => {
         res.status(500).send('An error occurred');
     }
 });
+
+
+
+
 
 router.get('/success', (req, res) => {
     res.send('Subscription successful!');
