@@ -8408,10 +8408,10 @@ exports.addMembershipPlan = async (req, res) => {
 
 exports.updateBasic = async (req, res) => {
     try {
-        const { descriptions, monthly_prices, yearly_prices,monthly_price_id,yearly_price_id,user_price } = req.body;
+        const { descriptions, monthly_prices, yearly_prices,user_price } = req.body;
         console.log("updateBasic", req.body);
 
-        const updatebasicquery = `UPDATE plan_management SET description = '${descriptions}', monthly_price = '${monthly_prices}', yearly_price = '${yearly_prices}', stripe_monthly_price_id= '${monthly_price_id}',stripe_yearly_price_id= '${yearly_price_id}',per_user_price= '${user_price}' WHERE name="basic"`;
+        const updatebasicquery = `UPDATE plan_management SET description = '${descriptions}', monthly_price = '${monthly_prices}', yearly_price = '${yearly_prices}',per_user_price= '${user_price}' WHERE name="basic"`;
 
         await query(updatebasicquery);
 
@@ -8424,10 +8424,10 @@ exports.updateBasic = async (req, res) => {
 
 exports.updateAdvanced = async (req, res) => {
     try {
-        const { descriptions, monthly_prices, yearly_prices,monthly_price_id,yearly_price_id,user_price } = req.body;
+        const { descriptions, monthly_prices, yearly_prices,user_price } = req.body;
         console.log("updateAdvanced", req.body);
 
-        const updatebasicquery = `UPDATE plan_management SET description = '${descriptions}', monthly_price = '${monthly_prices}', yearly_price = '${yearly_prices}', stripe_monthly_price_id= '${monthly_price_id}',stripe_yearly_price_id= '${yearly_price_id}',per_user_price= '${user_price}' WHERE name="advanced"`;
+        const updatebasicquery = `UPDATE plan_management SET description = '${descriptions}', monthly_price = '${monthly_prices}', yearly_price = '${yearly_prices}',per_user_price= '${user_price}' WHERE name="advanced"`;
 
         await query(updatebasicquery);
 
@@ -8443,7 +8443,7 @@ exports.updateStandard = async (req, res) => {
         const { descriptions, standard_monthly_prices, standard_yearly_prices,monthly_price_id,yearly_price_id, user_price} = req.body;
         console.log("updateStandard", req.body);
 
-        const updatebasicquery = `UPDATE plan_management SET description = '${descriptions}', monthly_price = '${standard_monthly_prices}', yearly_price = '${standard_yearly_prices}', stripe_monthly_price_id= '${monthly_price_id}',stripe_yearly_price_id= '${yearly_price_id}',per_user_price= '${user_price}' WHERE name="standard"`;
+        const updatebasicquery = `UPDATE plan_management SET description = '${descriptions}', monthly_price = '${standard_monthly_prices}', yearly_price = '${standard_yearly_prices}',per_user_price= '${user_price}' WHERE name="standard"`;
 
         await query(updatebasicquery);
 
@@ -8459,7 +8459,7 @@ exports.updatePremium = async (req, res) => {
         const { descriptions, monthly_prices, yearly_prices,monthly_price_id,yearly_price_id, user_price} = req.body;
         console.log("updatePremium", req.body);
 
-        const updatebasicquery = `UPDATE plan_management SET description = '${descriptions}', monthly_price = '${monthly_prices}', yearly_price = '${yearly_prices}', stripe_monthly_price_id= '${monthly_price_id}',stripe_yearly_price_id= '${yearly_price_id}',per_user_price= '${user_price}' WHERE name="premium"`;
+        const updatebasicquery = `UPDATE plan_management SET description = '${descriptions}', monthly_price = '${monthly_prices}', yearly_price = '${yearly_prices}',per_user_price= '${user_price}' WHERE name="premium"`;
 
         await query(updatebasicquery);
 
@@ -8475,7 +8475,7 @@ exports.updateEnterprise = async (req, res) => {
         const { enterprise_descriptions, enterprise_monthly_prices, enterprise_yearly_prices, yearly_price_id, monthly_price_id, user_price} = req.body;
         //console.log("updateEnterprise", req.body);
 
-        const updatebasicquery = `UPDATE plan_management SET description = '${enterprise_descriptions}', monthly_price = '${enterprise_monthly_prices}', yearly_price = '${enterprise_yearly_prices}', stripe_monthly_price_id= '${monthly_price_id}',stripe_yearly_price_id= '${yearly_price_id}',per_user_price= '${user_price}' WHERE name="enterprise"`;
+        const updatebasicquery = `UPDATE plan_management SET description = '${enterprise_descriptions}', monthly_price = '${enterprise_monthly_prices}', yearly_price = '${enterprise_yearly_prices}', per_user_price= '${user_price}' WHERE name="enterprise"`;
 
         await query(updatebasicquery);
 
@@ -12139,8 +12139,8 @@ const createStripeProductAndPrice = async (plan, billingCycle, memberCount) => {
         const price = await stripe.prices.create({
             unit_amount: totalPriceInCents,
             currency: 'usd',
-            recurring: { interval: 'day' },
-            // recurring: { interval: billingCycle === 'yearly' ? 'year' : 'month' },
+            //recurring: { interval: 'day' },
+            recurring: { interval: billingCycle === 'yearly' ? 'year' : 'month' },
             product: product.id,
         });
     

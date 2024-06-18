@@ -122,7 +122,7 @@ router.get('', checkCookieValue, async (req, res) => {
         userId = currentUserData.user_id;
     }
 
-    const ipAddress = req.ip; 
+    const ipAddress = req.ip;
     //const ipAddress = '45.64.221.211';
     console.log("ipAddress", ipAddress);
     const api_key = process.env.GEO_LOCATION_API_KEY
@@ -155,7 +155,7 @@ router.get('', checkCookieValue, async (req, res) => {
     ]);
     const rangeTexts = {};
 
-    console.log("PopularCategories",PopularCategories);
+    console.log("PopularCategories", PopularCategories);
 
     try {
         // Make API request to fetch blog posts
@@ -372,7 +372,7 @@ router.get('/review', checkCookieValue, async (req, res) => {
         let currentUserData = JSON.parse(req.userData);
         console.log(currentUserData);
 
-        const ipAddress = req.ip; 
+        const ipAddress = req.ip;
         //const ipAddress = '45.64.221.211';
         console.log("ipAddress", ipAddress);
         const api_key = process.env.GEO_LOCATION_API_KEY
@@ -442,7 +442,7 @@ router.get('/review', checkCookieValue, async (req, res) => {
 
 router.get('/get-country', async (req, res) => {
     try {
-        const ipAddress = req.ip; 
+        const ipAddress = req.ip;
         //const ipAddress = '45.64.221.211';
         console.log("ipAddress", ipAddress);
         const api_key = process.env.GEO_LOCATION_API_KEY
@@ -504,23 +504,23 @@ router.get('/faq', checkCookieValue, async (req, res) => {
 router.get('/business', checkCookieValue, async (req, res) => {
     try {
         let currentUserData = JSON.parse(req.userData);
-        console.log("currentUserData",currentUserData);
-    const [globalPageMeta,getplans] = await Promise.all([
-        comFunction2.getPageMetaValues('global'),
-        comFunction2.getplans()
-    ]);
-    console.log("getplans",getplans);
+        console.log("currentUserData", currentUserData);
 
-    const ipAddress = req.ip; 
-    //const ipAddress = '45.64.221.211';
-    console.log("ipAddress", ipAddress);
-    const api_key = process.env.GEO_LOCATION_API_KEY;
-    //const api_key = 'AIzaSyCc5pts6Y3V7g9ZGGVsCcEi0WD8seu1VJ8';
+        //const ipAddress = req.ip; 
+        const ipAddress = '45.64.221.211';
+        console.log("ipAddress", ipAddress);
+        const api_key = process.env.GEO_LOCATION_API_KEY;
+        //const api_key = 'AIzaSyCc5pts6Y3V7g9ZGGVsCcEi0WD8seu1VJ8';
 
-    const { country_name, country_code } = await comFunction2.getcountrynamebyIp(ipAddress, api_key);
-    console.log("Country Name:", country_name);
-    console.log("Country Code:", country_code);
-    
+        const { country_name, country_code } = await comFunction2.getcountrynamebyIp(ipAddress, api_key);
+        console.log("Country Name:", country_name);
+        console.log("Country Code:", country_code);
+
+        const [globalPageMeta, getplans] = await Promise.all([
+            comFunction2.getPageMetaValues('global'),
+            comFunction2.getplans(country_name)
+        ]);
+        console.log("getplans", getplans);
 
         const sql = `SELECT * FROM page_info where secret_Key = 'business' `;
         db.query(sql, (err, results, fields) => {
@@ -548,7 +548,8 @@ router.get('/business', checkCookieValue, async (req, res) => {
                     UpcomingBusinessFeature,
                     BusinessFeature,
                     globalPageMeta: globalPageMeta,
-                    getplans: getplans
+                    getplans: getplans,
+                    country_name: country_name
                 });
             })
 
@@ -562,14 +563,24 @@ router.get('/business', checkCookieValue, async (req, res) => {
 
 router.get('/stripe-payment', checkCookieValue, async (req, res) => {
     try {
-        const { planId, planPrice, monthly,memberCount,total_price } = req.query;
-        console.log("req.query-monthly",req.query);
+        const { planId, planPrice, monthly, memberCount, total_price } = req.query;
+        console.log("req.query-monthly", req.query);
+
+        //const ipAddress = req.ip; 
+        const ipAddress = '45.64.221.211';
+        console.log("ipAddress", ipAddress);
+        const api_key = process.env.GEO_LOCATION_API_KEY;
+        //const api_key = 'AIzaSyCc5pts6Y3V7g9ZGGVsCcEi0WD8seu1VJ8';
+
+        const { country_name, country_code } = await comFunction2.getcountrynamebyIp(ipAddress, api_key);
+        console.log("Country Name:", country_name);
+        console.log("Country Code:", country_code);
 
         let currentUserData = JSON.parse(req.userData);
-        console.log("currentUserData",currentUserData);
+        console.log("currentUserData", currentUserData);
         const planids = `SELECT * FROM plan_management WHERE name = "${planId}"`;
         const planidvalue = await queryAsync(planids);
-        console.log("planidvalue",planidvalue[0].id);
+        console.log("planidvalue", planidvalue[0].id);
         const planID = planidvalue[0].id;
 
         res.render('front-end/stripe_payment', {
@@ -579,7 +590,8 @@ router.get('/stripe-payment', checkCookieValue, async (req, res) => {
             planID,
             currentUserData,
             memberCount,
-            total_price
+            total_price,
+            country_code: country_code
         });
     } catch (err) {
         console.error(err);
@@ -589,12 +601,24 @@ router.get('/stripe-payment', checkCookieValue, async (req, res) => {
 router.get('/stripe-year-payment', checkCookieValue, async (req, res) => {
     try {
         const { planId, planPrice, yearly, memberCount, total_price } = req.query;
-        console.log("req.query-yearly",req.query);
+        console.log("req.query-yearly", req.query);
+
+        
+        //const ipAddress = req.ip; 
+        const ipAddress = '45.64.221.211';
+        console.log("ipAddress", ipAddress);
+        const api_key = process.env.GEO_LOCATION_API_KEY;
+        //const api_key = 'AIzaSyCc5pts6Y3V7g9ZGGVsCcEi0WD8seu1VJ8';
+
+        const { country_name, country_code } = await comFunction2.getcountrynamebyIp(ipAddress, api_key);
+        console.log("Country Name:", country_name);
+        console.log("Country Code:", country_code);
+
         let currentUserData = JSON.parse(req.userData);
-        console.log("currentUserData",currentUserData);
+        console.log("currentUserData", currentUserData);
         const planids = `SELECT * FROM plan_management WHERE name = "${planId}"`;
         const planidvalue = await queryAsync(planids);
-        console.log("planidvalue",planidvalue[0].id);
+        console.log("planidvalue", planidvalue[0].id);
         const planID = planidvalue[0].id;
 
 
@@ -605,7 +629,8 @@ router.get('/stripe-year-payment', checkCookieValue, async (req, res) => {
             planID,
             memberCount,
             currentUserData,
-            total_price
+            total_price,
+            country_code: country_code
         });
     } catch (err) {
         console.error(err);
@@ -959,7 +984,7 @@ router.get('/company/:slug', checkCookieValue, async (req, res) => {
 router.get('/categories', checkCookieValue, async (req, res) => {
     let currentUserData = JSON.parse(req.userData);
 
-    const ipAddress = req.ip; 
+    const ipAddress = req.ip;
     //const ipAddress = '45.64.221.211';
     console.log("ipAddress", ipAddress);
     const api_key = process.env.GEO_LOCATION_API_KEY
@@ -1001,13 +1026,13 @@ router.get('/categories', checkCookieValue, async (req, res) => {
                     }
                 )
             } else {
-                console.log("results",results);
+                console.log("results", results);
                 var country = results.country;
-                console.log("country",country);
+                console.log("country", country);
                 var country_names = `SELECT shortname FROM countries WHERE id ="${country}"`;
-                if(country_names.length>0){
+                if (country_names.length > 0) {
                     var getcountry = country_names[0].shortname;
-                    console.log("getcountry",getcountry);
+                    console.log("getcountry", getcountry);
                 }
 
                 const categories = results.map((row) => ({
@@ -1022,23 +1047,23 @@ router.get('/categories', checkCookieValue, async (req, res) => {
 
                 try {
                     for (const category of categories) {
-                      const countryNames = category.countryNames;
-                      const placeholders = countryNames.map(() => '?').join(',');
-                      const countryShortnamesQuery = `SELECT name, shortname FROM countries WHERE name IN (${placeholders})`;
-                      const [countryShortnamesResults] = await db.promise().query(countryShortnamesQuery, countryNames);
-                      
-                      // Convert the array of shortnames to a single string
-                      const countryCodes = countryShortnamesResults.map(row => row.shortname).join(', ');
-                      category.countryCodes = countryCodes;
+                        const countryNames = category.countryNames;
+                        const placeholders = countryNames.map(() => '?').join(',');
+                        const countryShortnamesQuery = `SELECT name, shortname FROM countries WHERE name IN (${placeholders})`;
+                        const [countryShortnamesResults] = await db.promise().query(countryShortnamesQuery, countryNames);
+
+                        // Convert the array of shortnames to a single string
+                        const countryCodes = countryShortnamesResults.map(row => row.shortname).join(', ');
+                        category.countryCodes = countryCodes;
                     }
-                  } catch (error) {
+                } catch (error) {
                     console.error('Error fetching country short names:', error);
                     return res.send({
-                      status: 'err',
-                      data: '',
-                      message: 'An error occurred while fetching country short names' + error
+                        status: 'err',
+                        data: '',
+                        message: 'An error occurred while fetching country short names' + error
                     });
-                  }
+                }
 
                 var allCategories = categories.map(function (category) {
                     return {
@@ -1082,7 +1107,7 @@ router.get('/category/:category_slug/:country', checkCookieValue, async (req, re
     const country = req.params.country;
     const baseURL = process.env.MAIN_URL;
 
-    const ipAddress = req.ip; 
+    const ipAddress = req.ip;
     //const ipAddress = '45.64.221.211';
     console.log("ipAddress", ipAddress);
     const api_key = process.env.GEO_LOCATION_API_KEY
@@ -1159,8 +1184,8 @@ router.get('/category/:category_slug/:country/:filter', checkCookieValue, async 
     const country = req.params.country;
     const filter_value = req.params.filter;
     const baseURL = process.env.MAIN_URL;
-    
-    const ipAddress = req.ip; 
+
+    const ipAddress = req.ip;
     //const ipAddress = '45.64.221.211';
     console.log("ipAddress", ipAddress);
     const api_key = process.env.GEO_LOCATION_API_KEY
@@ -1255,7 +1280,7 @@ router.get('/home', checkCookieValue, async (req, res) => {
 //Discussion page
 router.get('/discussion', checkCookieValue, async (req, res) => {
     let currentUserData = JSON.parse(req.userData);
-    const ipAddress = req.ip; 
+    const ipAddress = req.ip;
     //const ipAddress = '45.64.221.211';
     console.log("ipAddress", ipAddress);
     // const api_key = '9b38b399323e4d05a3bcbd1505e8e834'
@@ -4020,8 +4045,8 @@ router.get('/add-user', checkLoggedIn, (req, res) => {
 router.get('/manage-categories', checkLoggedIn, async (req, res) => {
     const encodedUserData = req.cookies.user;
     const currentUserData = JSON.parse(encodedUserData);
-    const selectedCountryId  = req.query.country || 101;
-    console.log("selectedCountryId",selectedCountryId);
+    const selectedCountryId = req.query.country || 101;
+    console.log("selectedCountryId", selectedCountryId);
     //res.render('users', { menu_active_id: 'user', page_title: 'Users', currentUserData });
 
 
@@ -4034,7 +4059,7 @@ router.get('/manage-categories', checkLoggedIn, async (req, res) => {
                         JOIN category_country_relation ON category.id = category_country_relation.cat_id
                         JOIN countries ON category_country_relation.country_id = countries.id
                         LEFT JOIN category AS c ON c.ID = category.parent_id 
-                        WHERE category_country_relation.country_id = "${selectedCountryId }"
+                        WHERE category_country_relation.country_id = "${selectedCountryId}"
                         GROUP BY category.category_name `;
     db.query(cat_query, async (err, results) => {
         if (err) {
@@ -4059,15 +4084,15 @@ router.get('/manage-categories', checkLoggedIn, async (req, res) => {
                 const placeholders = countryNames.map(() => '?').join(',');
                 const countryShortnamesQuery = `SELECT name, shortname,id FROM countries WHERE name IN (${placeholders})`;
                 const [countryShortnamesResults] = await db.promise().query(countryShortnamesQuery, countryNames);
-                
+
                 // Convert the array of shortnames to a single string
                 const countryCodes = countryShortnamesResults.map(row => row.id).join(', ');
                 category.countryCodes = countryCodes;
             }
 
-            console.log("categories",categories);
+            console.log("categories", categories);
             //res.json({ menu_active_id: 'category', page_title: 'Categories', currentUserData, 'categories': categories });
-            res.render('categories', { menu_active_id: 'company', page_title: 'Categories', currentUserData, 'categoriess': categories, countries: countries, selectedCountryId :selectedCountryId  });
+            res.render('categories', { menu_active_id: 'company', page_title: 'Categories', currentUserData, 'categoriess': categories, countries: countries, selectedCountryId: selectedCountryId });
         }
     })
 });
@@ -4114,8 +4139,8 @@ router.get('/edit-category', checkLoggedIn, (req, res, next) => {
     const cat_id = req.query.id;
     const country_id = req.query.country_id;
     const cat_name = req.query.cat_name;
-    console.log("country_id",country_id);
-    console.log("cat_name",cat_name);
+    console.log("country_id", country_id);
+    console.log("cat_name", cat_name);
 
     const encodedUserData = req.cookies.user;
     const currentUserData = JSON.parse(encodedUserData);
@@ -4183,7 +4208,7 @@ router.get('/delete-category', checkLoggedIn, (req, res, next) => {
 
     const file_query = `SELECT category_img FROM category WHERE ID = ${req.query.id}`;
     db.query(file_query, async function (img_err, img_res) {
-        console.log("img_res",img_res);
+        console.log("img_res", img_res);
         if (img_res[0].category_img != 'NULL') {
             const filename = img_res[0].category_img;
             const filePath = `uploads/${filename}`;
@@ -4551,7 +4576,7 @@ router.get('/plans', checkLoggedIn, async (req, res) => {
         const basic_value = await query(basic_query);
         if (basic_value.length > 0) {
             var basic_val = basic_value[0];
-            console.log("basic_val",basic_val);
+            console.log("basic_val", basic_val);
             //return res.status(500).json({ message: 'Already added for Basic Plan Managemnet.' });
         }
 
@@ -4563,7 +4588,7 @@ router.get('/plans', checkLoggedIn, async (req, res) => {
             //console.log("standard_val",standard_val);
             //return res.status(500).json({ message: 'Already added for Standard Plan Managemnet.' });
         }
-    
+
 
         const advanced_query = `SELECT * FROM plan_management WHERE name = 'advanced'`;
         const advanced_value = await query(advanced_query);
@@ -4572,13 +4597,13 @@ router.get('/plans', checkLoggedIn, async (req, res) => {
             //console.log("advanced_val",advanced_val);
             //return res.status(500).json({ message: 'Already added for Advanced Plan Managemnet.' });
         }
-    
+
 
         const premium_query = `SELECT * FROM plan_management WHERE name = 'premium'`;
         const premium_value = await query(premium_query);
         if (premium_value.length > 0) {
             var premium_val = premium_value[0];
-            console.log("premium_value",premium_val);
+            console.log("premium_value", premium_val);
             //return res.status(500).json({ message: 'Already added for Premium Plan Managemnet.' });
         }
 
@@ -4588,10 +4613,10 @@ router.get('/plans', checkLoggedIn, async (req, res) => {
             var enterprise_val = enterprise_value[0];
             //console.log("enterprise_val",enterprise_val);
         }
-    
+
 
         // Fetch all the required data asynchronously
-        const [company, company_all_categories,company_plans] = await Promise.all([
+        const [company, company_all_categories, company_plans] = await Promise.all([
             comFunction.getCompany(companyId),
             comFunction.getCompanyCategoryBuID(companyId),
         ]);
@@ -4607,7 +4632,7 @@ router.get('/plans', checkLoggedIn, async (req, res) => {
             advanced_val,
             premium_val,
             enterprise_val
-        
+
         });
     } catch (err) {
         console.error(err);
@@ -4630,16 +4655,16 @@ router.get('/cancel', (req, res) => {
 
 router.get('/subscription', async (req, res) => {
     const planName = req.query.plan;
-    console.log("planName",planName);
+    console.log("planName", planName);
 
     try {
         const query = 'SELECT * FROM plan_management WHERE name = ?';
-        const rows= await queryAsync(query, [planName]);
-        console.log("rows",rows);
+        const rows = await queryAsync(query, [planName]);
+        console.log("rows", rows);
 
         if (rows.length > 0) {
             const planDetails = rows;
-            console.log("planDetails",planDetails);
+            console.log("planDetails", planDetails);
             res.render('front-end/subscription', { plan: planDetails });
         } else {
             res.status(404).send('Plan not found');
@@ -4654,7 +4679,7 @@ router.get('/subscription', async (req, res) => {
 
 //router.post('/api/v1/create-subscription-checkout-session', async (req, res) => {
 // router.post('/api/v1/create-checkout-session', async (req, res) => {
-    
+
 //     const { planId } = req.body;
 
 //     try {
@@ -4685,25 +4710,25 @@ router.post('/api/v1/create-checkout-session', async (req, res) => {
             payment_method_types: ['card'],
             line_items: [{
                 price_data: {
-                  currency: 'gbp',
-                  product_data: {
-                    name: 'Product 1',
-                  },
-                  unit_amount: Math.round(1000), // £10.00
+                    currency: 'gbp',
+                    product_data: {
+                        name: 'Product 1',
+                    },
+                    unit_amount: Math.round(1000), // £10.00
                 },
                 quantity: 1,
-              },
-              {
+            },
+            {
                 price_data: {
-                  currency: 'gbp',
-                  product_data: {
-                    name: 'Product 4',
-                  },
-                  unit_amount: Math.round(750), // £7.50
+                    currency: 'gbp',
+                    product_data: {
+                        name: 'Product 4',
+                    },
+                    unit_amount: Math.round(750), // £7.50
                 },
                 quantity: 3,
-              }
-              ],
+            }
+            ],
             success_url: 'http://localhost:2000/success',
             cancel_url: 'http://localhost:2000/cancel',
         });
@@ -5933,7 +5958,7 @@ router.get('/get-plan', async (req, res) => {
     try {
         const connection = await mysql.createConnection(dbConfig);
         const [rows] = await connection.execute('SELECT * FROM plan_management WHERE name = ?', [planName]);
-        
+
         if (rows.length > 0) {
             res.json({ success: true, data: rows[0] });
         } else {
@@ -6528,7 +6553,7 @@ router.get('/getcatsbyCountry', async (req, res) => {
         // `;
         // const categories = await query(getcategoryquery, [countryId]);
         // console.log("getcatsbyCountry",categories);
-        
+
         // if (!categories || categories.length === 0) {
         //     return res.json({
         //         status: 'ok',
@@ -6543,49 +6568,49 @@ router.get('/getcatsbyCountry', async (req, res) => {
         JOIN category_country_relation ON category.id = category_country_relation.cat_id
         JOIN countries ON category_country_relation.country_id = countries.id
         LEFT JOIN category AS c ON c.ID = category.parent_id 
-        WHERE category_country_relation.country_id = "${countryId }"
+        WHERE category_country_relation.country_id = "${countryId}"
         GROUP BY category.category_name `;
-            db.query(cat_query, async (err, results) => {
+        db.query(cat_query, async (err, results) => {
             if (err) {
-            return res.send(
-            {
-                status: 'err',
-                data: '',
-                message: 'An error occurred while processing your request' + err
-            }
-            )
+                return res.send(
+                    {
+                        status: 'err',
+                        data: '',
+                        message: 'An error occurred while processing your request' + err
+                    }
+                )
             } else {
-            const categories = results.map((row) => ({
-            categoryId: row.category_id,
-            categoryName: row.category_name,
-            parentName: row.parent_name,
-            categoryImage: row.category_img,
-            countryNames: row.country_names.split(','),
-            }));
+                const categories = results.map((row) => ({
+                    categoryId: row.category_id,
+                    categoryName: row.category_name,
+                    parentName: row.parent_name,
+                    categoryImage: row.category_img,
+                    countryNames: row.country_names.split(','),
+                }));
 
-            for (const category of categories) {
-            const countryNames = category.countryNames;
-            const placeholders = countryNames.map(() => '?').join(',');
-            const countryShortnamesQuery = `SELECT name, shortname,id FROM countries WHERE name IN (${placeholders})`;
-            const [countryShortnamesResults] = await db.promise().query(countryShortnamesQuery, countryNames);
+                for (const category of categories) {
+                    const countryNames = category.countryNames;
+                    const placeholders = countryNames.map(() => '?').join(',');
+                    const countryShortnamesQuery = `SELECT name, shortname,id FROM countries WHERE name IN (${placeholders})`;
+                    const [countryShortnamesResults] = await db.promise().query(countryShortnamesQuery, countryNames);
 
-            // Convert the array of shortnames to a single string
-            const countryCodes = countryShortnamesResults.map(row => row.id).join(', ');
-            category.countryCodes = countryCodes;
-            }
+                    // Convert the array of shortnames to a single string
+                    const countryCodes = countryShortnamesResults.map(row => row.id).join(', ');
+                    category.countryCodes = countryCodes;
+                }
 
-            console.log("categories",categories);
-            // //res.json({ menu_active_id: 'category', page_title: 'Categories', currentUserData, 'categories': categories });
-            // res.render('categories', { menu_active_id: 'company', page_title: 'Categories', currentUserData, 'categoriess': categories, countries: countries, selectedCountryId :selectedCountryId  });
+                console.log("categories", categories);
+                // //res.json({ menu_active_id: 'category', page_title: 'Categories', currentUserData, 'categories': categories });
+                // res.render('categories', { menu_active_id: 'company', page_title: 'Categories', currentUserData, 'categoriess': categories, countries: countries, selectedCountryId :selectedCountryId  });
 
-            return res.json({
-                status: 'ok',
-                categories: categories,
-                message: 'Categories fetched successfully.'
-            });
+                return res.json({
+                    status: 'ok',
+                    categories: categories,
+                    message: 'Categories fetched successfully.'
+                });
             }
         })
-        
+
 
 
     } catch (error) {

@@ -5627,7 +5627,6 @@ async function getcountrynamebyIp(ipAddress, api_key) {
   throw new Error('Failed to fetch country name by IP after several attempts');
 }
 
-
 // async function getCountryNamesByIp(ipAddress, apiKey) {
 //   const url = `https://www.googleapis.com/geolocation/v1/geolocate?key=${apiKey}`;
 
@@ -5663,56 +5662,249 @@ async function getcountrynamebyIp(ipAddress, api_key) {
 //   }
 // }
 
+//ac
+// async function getplans() {
+//     try {
+//       const basic_query = `SELECT * FROM plan_management WHERE name = 'Basic'`;
+//       const basic_value = await query(basic_query);
+//       if (basic_value.length > 0) {
+//           var basic_val = basic_value[0];
+//           console.log("basic_val",basic_val);
+//           //return res.status(500).json({ message: 'Already added for Basic Plan Managemnet.' });
+//       }
 
-async function getplans() {
-    try {
+
+//       const standard_query = `SELECT * FROM plan_management WHERE name = 'standard'`;
+//       const standard_value = await query(standard_query);
+//       if (standard_value.length > 0) {
+//           var standard_val = standard_value[0];
+//           //console.log("standard_val",standard_val);
+//           //return res.status(500).json({ message: 'Already added for Standard Plan Managemnet.' });
+//       }
+  
+
+//       const advanced_query = `SELECT * FROM plan_management WHERE name = 'advanced'`;
+//       const advanced_value = await query(advanced_query);
+//       if (advanced_value.length > 0) {
+//           var advanced_val = advanced_value[0];
+//           //console.log("advanced_val",advanced_val);
+//           //return res.status(500).json({ message: 'Already added for Advanced Plan Managemnet.' });
+//       }
+  
+
+//       const premium_query = `SELECT * FROM plan_management WHERE name = 'premium'`;
+//       const premium_value = await query(premium_query);
+//       if (premium_value.length > 0) {
+//           var premium_val = premium_value[0];
+//           //console.log("premium_value",premium_val);
+//           //return res.status(500).json({ message: 'Already added for Premium Plan Managemnet.' });
+//       }
+
+//       const enterprise_query = `SELECT * FROM plan_management WHERE name = 'enterprise'`;
+//       const enterprise_value = await query(enterprise_query);
+//       if (enterprise_value.length > 0) {
+//           var enterprise_val = enterprise_value[0];
+//           //console.log("enterprise_val",enterprise_val);
+//       }
+//       return {basic_val,standard_val,advanced_val,premium_val,enterprise_val}
+//     } catch (error) {
+//       console.error(error);
+//       throw new Error('An error occurred');
+//   }
+// }
+
+// async function getplans(userCountry) {
+//   try {
+//       // Example SQL queries to fetch plans
+//       const basic_query = `SELECT * FROM plan_management WHERE name = 'Basic'`;
+//       const standard_query = `SELECT * FROM plan_management WHERE name = 'standard'`;
+//       const advanced_query = `SELECT * FROM plan_management WHERE name = 'advanced'`;
+//       const premium_query = `SELECT * FROM plan_management WHERE name = 'premium'`;
+//       const enterprise_query = `SELECT * FROM plan_management WHERE name = 'enterprise'`;
+
+//       // Execute SQL queries concurrently using Promise.all
+//       const [
+//           basic_value,
+//           standard_value,
+//           advanced_value,
+//           premium_value,
+//           enterprise_value
+//       ] = await Promise.all([
+//           query(basic_query),
+//           query(standard_query),
+//           query(advanced_query),
+//           query(premium_query),
+//           query(enterprise_query)
+//       ]);
+
+//       // Assuming query results are checked for length and have first element accessed
+//       const basic_val = basic_value.length > 0 ? basic_value[0] : null;
+//       const standard_val = standard_value.length > 0 ? standard_value[0] : null;
+//       const advanced_val = advanced_value.length > 0 ? advanced_value[0] : null;
+//       const premium_val = premium_value.length > 0 ? premium_value[0] : null;
+//       const enterprise_val = enterprise_value.length > 0 ? enterprise_value[0] : null;
+
+//       // Return plans with currency conversion applied based on user's country
+//       const plansWithConvertedPrices = {
+//           basic_val: convertPrices(basic_val, userCountry),
+//           standard_val: convertPrices(standard_val, userCountry),
+//           advanced_val: convertPrices(advanced_val, userCountry),
+//           premium_val: convertPrices(premium_val, userCountry),
+//           enterprise_val: convertPrices(enterprise_val, userCountry)
+//       };
+
+//       return plansWithConvertedPrices;
+//   } catch (error) {
+//       console.error(error);
+//       throw new Error('An error occurred while fetching plans');
+//   }
+// }
+
+
+// function convertPrices(plan, userCountry) {
+//   if (!plan || !userCountry) return null;
+
+//   const exchangeRates = {
+//       USD: { INR: 83.4326, JPY: 158.11226}, 
+//   };
+
+//   const userCurrency = getUserCurrency(userCountry);
+
+//   let monthlyPriceConverted = plan.monthly_price;
+//   let yearlyPriceConverted = plan.yearly_price;
+//   let perUserPriceConverted = plan.per_user_price;
+
+//   if (userCurrency !== 'USD') {
+//       if (!exchangeRates['USD'][userCurrency]) {
+//           console.error(`Conversion rate for ${userCurrency} not defined`);
+//           return plan; 
+//       }
+
+//       monthlyPriceConverted = (parseFloat(plan.monthly_price) * exchangeRates['USD'][userCurrency]).toFixed(2);
+//       yearlyPriceConverted = (parseFloat(plan.yearly_price) * exchangeRates['USD'][userCurrency]).toFixed(2);
+//       perUserPriceConverted = (parseFloat(plan.per_user_price) * exchangeRates['USD'][userCurrency]).toFixed(2);
+//   }
+
+//   const convertedPlan = {
+//       ...plan,
+//       monthly_price_local: monthlyPriceConverted,
+//       yearly_price_local: yearlyPriceConverted,
+//       per_user_price_local: perUserPriceConverted,
+//       local_currency: userCurrency 
+//   };
+
+//   return convertedPlan;
+// }
+// function getUserCurrency(userCountry) {
+//   const countryCurrencyMap = {
+//       'India': 'INR',
+//       'Japan': 'JPY',
+//   };
+
+//   return countryCurrencyMap[userCountry] || 'USD';
+// }
+
+
+async function getplans(userCountry) {
+  try {
+      // Example SQL queries to fetch plans
       const basic_query = `SELECT * FROM plan_management WHERE name = 'Basic'`;
-      const basic_value = await query(basic_query);
-      if (basic_value.length > 0) {
-          var basic_val = basic_value[0];
-          console.log("basic_val",basic_val);
-          //return res.status(500).json({ message: 'Already added for Basic Plan Managemnet.' });
-      }
-
-
       const standard_query = `SELECT * FROM plan_management WHERE name = 'standard'`;
-      const standard_value = await query(standard_query);
-      if (standard_value.length > 0) {
-          var standard_val = standard_value[0];
-          //console.log("standard_val",standard_val);
-          //return res.status(500).json({ message: 'Already added for Standard Plan Managemnet.' });
-      }
-  
-
       const advanced_query = `SELECT * FROM plan_management WHERE name = 'advanced'`;
-      const advanced_value = await query(advanced_query);
-      if (advanced_value.length > 0) {
-          var advanced_val = advanced_value[0];
-          //console.log("advanced_val",advanced_val);
-          //return res.status(500).json({ message: 'Already added for Advanced Plan Managemnet.' });
-      }
-  
-
       const premium_query = `SELECT * FROM plan_management WHERE name = 'premium'`;
-      const premium_value = await query(premium_query);
-      if (premium_value.length > 0) {
-          var premium_val = premium_value[0];
-          //console.log("premium_value",premium_val);
-          //return res.status(500).json({ message: 'Already added for Premium Plan Managemnet.' });
-      }
-
       const enterprise_query = `SELECT * FROM plan_management WHERE name = 'enterprise'`;
-      const enterprise_value = await query(enterprise_query);
-      if (enterprise_value.length > 0) {
-          var enterprise_val = enterprise_value[0];
-          //console.log("enterprise_val",enterprise_val);
-      }
-      return {basic_val,standard_val,advanced_val,premium_val,enterprise_val}
-    } catch (error) {
-      console.error(error);
-      throw new Error('An error occurred');
+
+      // Execute SQL queries concurrently using Promise.all
+      const [
+          basic_value,
+          standard_value,
+          advanced_value,
+          premium_value,
+          enterprise_value
+      ] = await Promise.all([
+          query(basic_query),
+          query(standard_query),
+          query(advanced_query),
+          query(premium_query),
+          query(enterprise_query)
+      ]);
+
+      // Assuming query results are checked for length and have first element accessed
+      const basic_val = basic_value.length > 0 ? basic_value[0] : null;
+      const standard_val = standard_value.length > 0 ? standard_value[0] : null;
+      const advanced_val = advanced_value.length > 0 ? advanced_value[0] : null;
+      const premium_val = premium_value.length > 0 ? premium_value[0] : null;
+      const enterprise_val = enterprise_value.length > 0 ? enterprise_value[0] : null;
+
+      // Convert prices based on user's country
+      const convertedPlans = await Promise.all([
+          convertPrices(basic_val, userCountry),
+          convertPrices(standard_val, userCountry),
+          convertPrices(advanced_val, userCountry),
+          convertPrices(premium_val, userCountry),
+          convertPrices(enterprise_val, userCountry)
+      ]);
+
+      // Return an object with converted plans
+      return {
+          basic_val: convertedPlans[0],
+          standard_val: convertedPlans[1],
+          advanced_val: convertedPlans[2],
+          premium_val: convertedPlans[3],
+          enterprise_val: convertedPlans[4]
+      };
+  } catch (error) {
+      console.error('Error fetching plans:', error);
+      throw new Error('An error occurred while fetching plans');
   }
 }
+async function convertPrices(plan, userCountry) {
+  if (!plan || !userCountry) return null;
+
+  try {
+      const exchangeRatesResponse = await axios.get(`https://open.er-api.com/v6/latest/${plan.currency}`);
+      const exchangeRates = exchangeRatesResponse.data.rates;
+
+      const userCurrency = getUserCurrency(userCountry);
+
+      let monthlyPriceConverted = plan.monthly_price;
+      let yearlyPriceConverted = plan.yearly_price;
+      let perUserPriceConverted = plan.per_user_price;
+
+      if (userCurrency !== 'USD') {
+          if (!exchangeRates[userCurrency]) {
+              console.error(`Conversion rate for ${userCurrency} not available`);
+              return plan;
+          }
+
+          monthlyPriceConverted = (parseFloat(plan.monthly_price) * exchangeRates[userCurrency]).toFixed(2);
+          yearlyPriceConverted = (parseFloat(plan.yearly_price) * exchangeRates[userCurrency]).toFixed(2);
+          perUserPriceConverted = (parseFloat(plan.per_user_price) * exchangeRates[userCurrency]).toFixed(2);
+      }
+
+      const convertedPlan = {
+          ...plan,
+          monthly_price_local: monthlyPriceConverted,
+          yearly_price_local: yearlyPriceConverted,
+          per_user_price_local: perUserPriceConverted,
+          local_currency: userCurrency
+      };
+
+      return convertedPlan;
+  } catch (error) {
+      console.error('Error fetching exchange rates:', error.message);
+      return plan;
+  }
+}
+function getUserCurrency(userCountry) {
+  const countryCurrencyMap = {
+      'India': 'INR',
+      'Japan': 'JPY',
+  };
+
+  return countryCurrencyMap[userCountry] || 'USD';
+}
+
  
 
 module.exports = {

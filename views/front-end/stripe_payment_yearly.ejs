@@ -10,7 +10,15 @@
 
 <body>
 	<div class="container">
+		<div class="row">
+			<div class="col">
+				<h3 class="title">Amount</h3>
+				<div id="amountDisplay">
+					<p>Total Amount: <span id="amount">$0.00</span></p>
+				</div>
+			</div>
 
+		<div class="col">
 		<form id="paymentForm">
 
 			<div class="row">
@@ -126,7 +134,8 @@
 
 			<input type="submit" value="Proceed to Checkout" class="submit_btn">
 		</form>
-
+		</div>
+	</div>
 	</div>
 	<script type="text/javascript" src="index.js"></script>
 </body>
@@ -240,6 +249,7 @@
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 <script>
 
@@ -283,8 +293,8 @@
 			expYear: document.getElementById('expYear').value,
 			cvv: document.getElementById('cvv').value,
 			planId: planid,
-			//billingCycle: 'yearly', 
-			billingCycle: 'daily',
+			billingCycle: 'yearly', 
+			//billingCycle: 'daily',
 			memberCount: memberval
 		};
 		console.log("Name:", formData.name);
@@ -303,7 +313,6 @@
 		console.log("Member Count:", formData.memberCount);
 
 
-		// Send form data to server
 		const response = await fetch('/auth/create-subscription', {
 			method: 'POST',
 			headers: {
@@ -320,7 +329,9 @@
                 title: 'Payment Successful!',
                 text: data.message ,
                 confirmButtonText: 'OK'
-            });
+            }).then(() => {
+				window.location.href = '/business';
+			});
         } else {
             const errorMessage = data.error ? data.error.message : 'There was an error processing your payment. Please try again later.';
 			console.log("errorMessage",errorMessage);
@@ -332,6 +343,98 @@
                 confirmButtonText: 'OK'
             });
         }
+	});
+
+
+// 	document.addEventListener('DOMContentLoaded', function() {
+//     function getQueryParams() {
+//         const params = {};
+//         const queryString = window.location.search.substring(1);
+//         const queries = queryString.split('&');
+//         queries.forEach(function(query) {
+//             const [key, value] = query.split('=');
+//             params[decodeURIComponent(key)] = decodeURIComponent(value);
+//         });
+//         return params;
+//     }
+//     const queryParams = getQueryParams();
+//     const totalPrice = queryParams['total_price'];
+//     const amountElement = document.getElementById('amount');
+//     if (totalPrice) {
+//         amountElement.textContent = parseFloat(totalPrice).toFixed(2);
+//     } else {
+//         amountElement.textContent = '0.00';
+//     }
+//     console.log('Query Params:', queryParams);
+//     console.log('Total Price:', totalPrice);
+// });
+
+
+
+let countryCode = '<%= country_code %>';
+	//console.log("country_code", countryCode);
+
+	document.addEventListener('DOMContentLoaded', function() {
+		function getQueryParams() {
+			const params = {};
+			const queryString = window.location.search.substring(1);
+			const queries = queryString.split('&');
+			queries.forEach(function(query) {
+				const [key, value] = query.split('=');
+				params[decodeURIComponent(key)] = decodeURIComponent(value);
+			});
+			return params;
+		}
+
+		async function convertToUSD(totalPrice, countryCode) {
+			try {
+				const response = await axios.get(`https://api.exchangerate-api.com/v4/latest/USD`);
+				const exchangeRates = response.data.rates;
+
+				let convertedPrice;
+
+				if (countryCode === 'IN') {
+					convertedPrice = totalPrice / exchangeRates['INR'];
+				} else if (countryCode === 'JP') {
+					convertedPrice = totalPrice / exchangeRates['JPY'];
+				} else {
+					console.log('Unsupported country code:', countryCode);
+					return totalPrice; // Return as is if not IN or JP
+				}
+
+				return convertedPrice.toFixed(2);
+			} catch (error) {
+				console.error('Error fetching exchange rates:', error.message);
+				return totalPrice; // Return original price in case of error
+			}
+		}
+
+		const queryParams = getQueryParams();
+		const totalPrice = queryParams['total_price'];
+		const amountElement = document.getElementById('amount');
+
+		if (totalPrice) {
+			convertToUSD(parseFloat(totalPrice), countryCode)
+				.then(convertedPrice => {
+					if (convertedPrice) {
+						amountElement.textContent = '$' + convertedPrice;;
+						console.log('Converted Total Price to USD:', convertedPrice);
+					} else {
+						amountElement.textContent = '0.00';
+						console.log('Failed to convert total price to USD.');
+					}
+				})
+				.catch(error => {
+					console.error('Error converting total price to USD:', error.message);
+					amountElement.textContent = '0.00';
+				});
+		} else {
+			amountElement.textContent = '0.00';
+			console.log('No total price found in query parameters.');
+		}
+
+		console.log('Query Params:', queryParams);
+		console.log('Total Price:', totalPrice);
 	});
 
 </script>
