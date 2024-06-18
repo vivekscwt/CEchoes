@@ -12259,6 +12259,7 @@ exports.createSubscription = async (req, res) => {
                 subscription_duration: planInterval,
                 subscription_start_date: new Date(subscription.current_period_start * 1000),
                 subscription_end_date: new Date(subscription.current_period_end * 1000),
+                added_user_number: memberCount
             }
 
             const order_history_query= `INSERT INTO order_history SET ?`;

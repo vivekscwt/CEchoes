@@ -11,133 +11,131 @@
 <body>
 	<div class="container">
 
-		<form id="paymentForm">
-
-			<div class="row">
-
-				<div class="col">
-					<h3 class="title">
-						Billing Address
-					</h3>
-
-					<div class="inputBox">
-						<label for="name">
-							Full Name:
-						</label>
-						<input type="text" id="name" placeholder="Enter your full name" required>
-					</div>
-
-					<div class="inputBox">
-						<label for="email">
-							Email:
-						</label>
-						<input type="text" id="email" placeholder="Enter email address" required>
-					</div>
-
-					<div class="inputBox">
-						<label for="address">
-							Address:
-						</label>
-						<input type="text" id="address" placeholder="Enter address" required>
-					</div>
-
-					<div class="inputBox">
-						<label for="city">
-							City:
-						</label>
-						<input type="text" id="city" placeholder="Enter city" required>
-					</div>
-
-					<div class="flex">
-
-						<div class="inputBox">
-							<label for="state">
-								State:
-							</label>
-							<input type="text" id="state" placeholder="Enter state" required>
-						</div>
-
-						<div class="inputBox">
-							<label for="zip">
-								Zip Code:
-							</label>
-							<input type="number" id="zip" placeholder="123 456" required>
-						</div>
-
-					</div>
-
+		<div class="row">
+			<div class="col">
+				<h3 class="title">Amount</h3>
+				<div id="amountDisplay">
+					<p>Total Amount: <span id="amount">$0.00</span></p>
 				</div>
-				<div class="col">
-					<h3 class="title">Payment</h3>
-
-					<div class="inputBox">
-						<label for="name">
-							Card Accepted:
-						</label>
-						<img src="cards.png" alt="credit/debit card image">
-					</div>
-
-					<div class="inputBox">
-						<label for="cardName">
-							Name On Card:
-						</label>
-						<input type="text" id="cardName" placeholder="Enter card name" required>
-					</div>
-
-					<div class="inputBox">
-						<label for="cardNum">
-							Credit Card Number:
-						</label>
-						<input type="text" id="cardNum" placeholder="1111-2222-3333-4444" maxlength="19" required>
-					</div>
-
-					<div class="inputBox">
-						<label for="">Exp Month:</label>
-						<select name="" id="expMonth">
-							<option value="">Choose month</option>
-							<option value="01">January</option>
-							<option value="02">February</option>
-							<option value="03">March</option>
-							<option value="04">April</option>
-							<option value="05">May</option>
-							<option value="06">June</option>
-							<option value="07">July</option>
-							<option value="08">August</option>
-							<option value="09">September</option>
-							<option value="10">October</option>
-							<option value="11">November</option>
-							<option value="12">December</option>
-						</select>
-					</div>
-
-
-
-					<div class="flex">
-						<div class="inputBox">
-							<label for="">Exp Year:</label>
-							<select name="" id="expYear">
-								<option value="">Choose Year</option>
-								<option value="2023">2023</option>
-								<option value="2024">2024</option>
-								<option value="2025">2025</option>
-								<option value="2026">2026</option>
-								<option value="2027">2027</option>
-							</select>
-						</div>
-
-						<div class="inputBox">
-							<label for="cvv">CVV</label>
-							<input type="number" id="cvv" placeholder="1234" required>
-						</div>
-					</div>
-
-				</div>
-
 			</div>
 
-			<input type="submit" value="Proceed to Checkout" class="submit_btn">
-		</form>
+			<div class="col">
+				<form id="paymentForm">
 
+					<div class="row">
+
+						<div class="col">
+							<h3 class="title">
+								Billing Address
+							</h3>
+
+							<div class="inputBox">
+								<label for="name">
+									Full Name:
+								</label>
+								<input type="text" id="name" placeholder="Enter your full name" required>
+							</div>
+
+							<div class="inputBox">
+								<label for="address">
+									Address:
+								</label>
+								<input type="text" id="address" placeholder="Enter address" required>
+							</div>
+
+							<div class="inputBox">
+								<label for="city">
+									City:
+								</label>
+								<input type="text" id="city" placeholder="Enter city" required>
+							</div>
+							<div class="inputBox">
+								<label for="state">
+									State:
+								</label>
+								<input type="text" id="state" placeholder="Enter state" required>
+							</div>
+
+							<div class="inputBox">
+								<label for="zip">
+									Zip Code:
+								</label>
+								<input type="number" id="zip" placeholder="123 456" required>
+							</div>
+						</div>
+						<div class="col">
+							<h3 class="title">Payment</h3>
+
+							<div class="inputBox">
+								<label for="name">
+									Card Accepted:
+								</label>
+								<img src="cards.png" alt="credit/debit card image">
+							</div>
+
+							<div class="inputBox">
+								<label for="cardName">
+									Name On Card:
+								</label>
+								<input type="text" id="cardName" placeholder="Enter card name" required>
+							</div>
+
+							<div class="inputBox">
+								<label for="cardNum">
+									Credit Card Number:
+								</label>
+								<input type="text" id="cardNum" placeholder="1111-2222-3333-4444" maxlength="19"
+									required>
+							</div>
+
+							<div class="inputBox">
+								<label for="">Exp Month:</label>
+								<select name="" id="expMonth">
+									<option value="">Choose month</option>
+									<option value="01">January</option>
+									<option value="02">February</option>
+									<option value="03">March</option>
+									<option value="04">April</option>
+									<option value="05">May</option>
+									<option value="06">June</option>
+									<option value="07">July</option>
+									<option value="08">August</option>
+									<option value="09">September</option>
+									<option value="10">October</option>
+									<option value="11">November</option>
+									<option value="12">December</option>
+								</select>
+							</div>
+
+
+
+							<div class="flex">
+								<div class="inputBox">
+									<label for="">Exp Year:</label>
+									<select name="" id="expYear">
+										<option value="">Choose Year</option>
+										<option value="2023">2023</option>
+										<option value="2024">2024</option>
+										<option value="2025">2025</option>
+										<option value="2026">2026</option>
+										<option value="2027">2027</option>
+									</select>
+								</div>
+
+								<div class="inputBox">
+									<label for="cvv">CVV</label>
+									<input type="number" id="cvv" placeholder="1234" required>
+								</div>
+							</div>
+
+						</div>
+
+					</div>
+
+					<input type="submit" value="Proceed to Checkout" class="submit_btn">
+				</form>
+			</div>
+		</div>
 	</div>
 	<script type="text/javascript" src="index.js"></script>
 </body>
@@ -275,7 +273,7 @@
 	let memberval = '<%= memberCount%>'
 	console.log("memberval", memberval);
 
-	// Listen for form submission
+
 	document.getElementById('paymentForm').addEventListener('submit', async function (event) {
 		event.preventDefault();
 
@@ -326,23 +324,47 @@
 		console.log(data);
 
 		if (response.ok) {
-            Swal.fire({
-                icon: 'success',
-                title: 'Payment Successful!',
-                text: data.message ,
-                confirmButtonText: 'OK'
-            });
-        } else {
-            const errorMessage = data.error ? data.error.message : 'There was an error processing your payment. Please try again later.';
-			console.log("errorMessage",errorMessage);
+			Swal.fire({
+				icon: 'success',
+				title: 'Payment Successful!',
+				text: data.message,
+				confirmButtonText: 'OK'
+			});
+		} else {
+			const errorMessage = data.error ? data.error.message : 'There was an error processing your payment. Please try again later.';
+			console.log("errorMessage", errorMessage);
 
 			Swal.fire({
-                icon: 'error',
-                title: 'Payment Error',
-                text: data.error,
-                confirmButtonText: 'OK'
-            });
-        }
+				icon: 'error',
+				title: 'Payment Error',
+				text: data.error,
+				confirmButtonText: 'OK'
+			});
+		}
 	});
+
+
+	document.addEventListener('DOMContentLoaded', function() {
+    function getQueryParams() {
+        const params = {};
+        const queryString = window.location.search.substring(1);
+        const queries = queryString.split('&');
+        queries.forEach(function(query) {
+            const [key, value] = query.split('=');
+            params[decodeURIComponent(key)] = decodeURIComponent(value);
+        });
+        return params;
+    }
+    const queryParams = getQueryParams();
+    const totalPrice = queryParams['total_price'];
+    const amountElement = document.getElementById('amount');
+    if (totalPrice) {
+        amountElement.textContent = parseFloat(totalPrice).toFixed(2);
+    } else {
+        amountElement.textContent = '0.00';
+    }
+    console.log('Query Params:', queryParams);
+    console.log('Total Price:', totalPrice);
+});
 
 </script>

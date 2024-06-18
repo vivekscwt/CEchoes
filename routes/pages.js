@@ -562,7 +562,8 @@ router.get('/business', checkCookieValue, async (req, res) => {
 
 router.get('/stripe-payment', checkCookieValue, async (req, res) => {
     try {
-        const { planId, planPrice, monthly,memberCount } = req.query;
+        const { planId, planPrice, monthly,memberCount,total_price } = req.query;
+        console.log("req.query-monthly",req.query);
 
         let currentUserData = JSON.parse(req.userData);
         console.log("currentUserData",currentUserData);
@@ -577,7 +578,8 @@ router.get('/stripe-payment', checkCookieValue, async (req, res) => {
             monthly,
             planID,
             currentUserData,
-            memberCount
+            memberCount,
+            total_price
         });
     } catch (err) {
         console.error(err);
@@ -586,7 +588,8 @@ router.get('/stripe-payment', checkCookieValue, async (req, res) => {
 });
 router.get('/stripe-year-payment', checkCookieValue, async (req, res) => {
     try {
-        const { planId, planPrice, yearly, memberCount } = req.query;
+        const { planId, planPrice, yearly, memberCount, total_price } = req.query;
+        console.log("req.query-yearly",req.query);
         let currentUserData = JSON.parse(req.userData);
         console.log("currentUserData",currentUserData);
         const planids = `SELECT * FROM plan_management WHERE name = "${planId}"`;
@@ -602,6 +605,7 @@ router.get('/stripe-year-payment', checkCookieValue, async (req, res) => {
             planID,
             memberCount,
             currentUserData,
+            total_price
         });
     } catch (err) {
         console.error(err);
