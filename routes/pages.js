@@ -125,7 +125,7 @@ router.get('', checkCookieValue, async (req, res) => {
     const ipAddress = req.ip; 
     //const ipAddress = '45.64.221.211';
     console.log("ipAddress", ipAddress);
-    const api_key = '9b38b399323e4d05a3bcbd1505e8e834'
+    const api_key = process.env.GEO_LOCATION_API_KEY
     // const getcountrybyIp = await Promise.all([comFunction2.getcountrynamebyIp(ipAddress,api_key)]) 
     // const country_name = getcountrybyIp[0];
     // console.log("country_code",country_name);
@@ -375,7 +375,7 @@ router.get('/review', checkCookieValue, async (req, res) => {
         const ipAddress = req.ip; 
         //const ipAddress = '45.64.221.211';
         console.log("ipAddress", ipAddress);
-        const api_key = '9b38b399323e4d05a3bcbd1505e8e834';
+        const api_key = process.env.GEO_LOCATION_API_KEY
 
         // const getcountrybyIp = await Promise.all([comFunction2.getcountrynamebyIp(ipAddress,api_key)]) 
         // const country_name = getcountrybyIp[0];
@@ -445,7 +445,7 @@ router.get('/get-country', async (req, res) => {
         const ipAddress = req.ip; 
         //const ipAddress = '45.64.221.211';
         console.log("ipAddress", ipAddress);
-        const api_key = '9b38b399323e4d05a3bcbd1505e8e834'
+        const api_key = process.env.GEO_LOCATION_API_KEY
 
         const response = axios.get(`https://ipgeolocation.abstractapi.com/v1/?api_key=${api_key}&ip_address=${ipAddress}`)
             .then(response => {
@@ -511,10 +511,10 @@ router.get('/business', checkCookieValue, async (req, res) => {
     ]);
     console.log("getplans",getplans);
 
-    //const ipAddress = req.ip; 
-    const ipAddress = '45.64.221.211';
+    const ipAddress = req.ip; 
+    //const ipAddress = '45.64.221.211';
     console.log("ipAddress", ipAddress);
-    const api_key = '9b38b399323e4d05a3bcbd1505e8e834';
+    const api_key = process.env.GEO_LOCATION_API_KEY;
     //const api_key = 'AIzaSyCc5pts6Y3V7g9ZGGVsCcEi0WD8seu1VJ8';
 
     const { country_name, country_code } = await comFunction2.getcountrynamebyIp(ipAddress, api_key);
@@ -958,7 +958,7 @@ router.get('/categories', checkCookieValue, async (req, res) => {
     const ipAddress = req.ip; 
     //const ipAddress = '45.64.221.211';
     console.log("ipAddress", ipAddress);
-    const api_key = '9b38b399323e4d05a3bcbd1505e8e834'
+    const api_key = process.env.GEO_LOCATION_API_KEY
     // const getcountrybyIp = await Promise.all([comFunction2.getcountrynamebyIp(ipAddress,api_key)]) 
     // const country_name = getcountrybyIp[0];
     // console.log("country_code",country_name);
@@ -1081,7 +1081,7 @@ router.get('/category/:category_slug/:country', checkCookieValue, async (req, re
     const ipAddress = req.ip; 
     //const ipAddress = '45.64.221.211';
     console.log("ipAddress", ipAddress);
-    const api_key = '9b38b399323e4d05a3bcbd1505e8e834'
+    const api_key = process.env.GEO_LOCATION_API_KEY
     // const getcountrybyIp = await Promise.all([comFunction2.getcountrynamebyIp(ipAddress,api_key)]) 
     // const country_name = getcountrybyIp[0];
     // console.log("country_code",country_name);
@@ -1159,7 +1159,8 @@ router.get('/category/:category_slug/:country/:filter', checkCookieValue, async 
     const ipAddress = req.ip; 
     //const ipAddress = '45.64.221.211';
     console.log("ipAddress", ipAddress);
-    const api_key = '9b38b399323e4d05a3bcbd1505e8e834'
+    const api_key = process.env.GEO_LOCATION_API_KEY
+
     // const getcountrybyIp = await Promise.all([comFunction2.getcountrynamebyIp(ipAddress,api_key)]) 
     // const country_name = getcountrybyIp[0];
     // console.log("country_code",country_name);
@@ -1253,7 +1254,9 @@ router.get('/discussion', checkCookieValue, async (req, res) => {
     const ipAddress = req.ip; 
     //const ipAddress = '45.64.221.211';
     console.log("ipAddress", ipAddress);
-    const api_key = '9b38b399323e4d05a3bcbd1505e8e834'
+    // const api_key = '9b38b399323e4d05a3bcbd1505e8e834'
+    const api_key = process.env.GEO_LOCATION_API_KEY;
+
     const getcountrybyIp = await Promise.all([comFunction2.getcountrybyIp(ipAddress, api_key)])
     const country_name = getcountrybyIp[0];
     console.log("country_name", country_name);

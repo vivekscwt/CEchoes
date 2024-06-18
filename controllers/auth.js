@@ -12339,41 +12339,88 @@ FROM
     return results;
 };
 
-const insertOrUpdateOrderHistory = async (subscription, customerId) => {
-    const invoice = await stripe.invoices.retrieve(subscription.latest_invoice);
+// const insertOrUpdateOrderHistory = async (subscription, customerId) => {
+//     const invoice = await stripe.invoices.retrieve(subscription.latest_invoice);
 
-    if(invoice.status == 'paid'){
-        var payment_status= 'succeeded'
-    }else{
-        var payment_status= 'failed'
-    }
+//     if(invoice.status == 'paid'){
+//         var payment_status= 'succeeded'
+//     }else{
+//         var payment_status= 'failed'
+//     }
 
-    const getsubquery = `SELECT * FROM order_history WHERE stripe_subscription_id= "sub_1PRZGBAT9WBIzA8mpqaIL7vw"`;
-    const subqueryval = await queryAsync(getsubquery);
-    console.log("subqueryval",subqueryval);
-    if(subqueryval.length>0){
-        var customerid= subqueryval.user_id
-        var planid = subqueryval.plan_id
-    }
+//     const getsubquery = `SELECT * FROM order_history WHERE stripe_subscription_id= "${subscription.id}"`;
+//     const subqueryval = await queryAsync(getsubquery);
+//     console.log("subqueryval",subqueryval);
+//     if(subqueryval.length>0){
+//         var customerid= subqueryval.user_id
+//         var planid = subqueryval.plan_id
+//     }
     
 
-    const orderHistoryData = {
-        user_id: customerid, 
-        stripe_subscription_id: subscription.id,
-        plan_id: planid,
-        payment_status: payment_status,
-        subscription_details: JSON.stringify(subscription),
-        payment_details: JSON.stringify(invoice),
-        subscription_start_date: new Date(subscription.current_period_start * 1000),
-        subscription_end_date: new Date(subscription.current_period_end * 1000),
-        // subscription_start_date: subscription.current_period_start ,
-        // subscription_end_date: subscription.current_period_end,
-        subscription_duration: subscription.plan.interval
-    };
+//     const orderHistoryData = {
+//         user_id: customerid, 
+//         stripe_subscription_id: subscription.id,
+//         plan_id: planid,
+//         payment_status: payment_status,
+//         subscription_details: JSON.stringify(subscription),
+//         payment_details: JSON.stringify(invoice),
+//         subscription_start_date: new Date(subscription.current_period_start * 1000),
+//         subscription_end_date: new Date(subscription.current_period_end * 1000),
+//         // subscription_start_date: subscription.current_period_start ,
+//         // subscription_end_date: subscription.current_period_end,
+//         subscription_duration: subscription.plan.interval
+//     };
 
-    const orderHistoryQuery = `INSERT INTO order_history SET ? ON DUPLICATE KEY UPDATE ?`;
-    await queryAsync(orderHistoryQuery, [orderHistoryData, orderHistoryData]);
+//     const orderHistoryQuery = `INSERT INTO order_history SET ? ON DUPLICATE KEY UPDATE ?`;
+//     await queryAsync(orderHistoryQuery, [orderHistoryData, orderHistoryData]);
+// };
+
+const insertOrUpdateOrderHistory = async (subscription, customerId) => {
+    try {
+
+        console.log("subscriptionId",subscription.id);
+        //console.log("customerId",customerId);
+
+        const subscriptions = await stripe.subscriptions.retrieve(subscription.id);
+        
+        const invoice = await stripe.invoices.retrieve(subscription.latest_invoice);
+
+        let payment_status = invoice.status === 'paid' ? 'succeeded' : 'failed';
+
+        const getSubQuery = `SELECT * FROM order_history WHERE stripe_subscription_id = "${subscriptions.id}"`;
+        const subqueryval = await queryAsync(getSubQuery);
+
+        let customerid;
+        let planid = subscription.plan.id; 
+
+        if (subqueryval.length > 0) {
+            customerid = subqueryval[0].user_id;
+            planid = subqueryval[0].plan_id;
+
+            console.log("customerid",customerid);
+            console.log("planid",planid);
+        }
+
+        const orderHistoryData = {
+            user_id: customerid,
+            stripe_subscription_id: subscriptions.id,
+            plan_id: planid,
+            payment_status: payment_status,
+            subscription_details: JSON.stringify(subscription),
+            payment_details: JSON.stringify(invoice),
+            subscription_start_date: new Date(subscription.current_period_start * 1000),
+            subscription_end_date: new Date(subscription.current_period_end * 1000),
+            subscription_duration: subscription.plan.interval
+        };
+
+        const orderHistoryQuery = `INSERT INTO order_history SET ? ON DUPLICATE KEY UPDATE ?`;
+        await queryAsync(orderHistoryQuery, [orderHistoryData, orderHistoryData]);
+
+    } catch (error) {
+        console.error('Error inserting or updating order history:', error);
+    }
 };
+
 
 const updateOrderHistory = async () => {
     try {
@@ -12429,7 +12476,7 @@ cron.schedule('0 0 * * *', async () => {
 });
 
 // // Optionally, run the check immediately on startup
-// updateOrderHistory();
+//updateOrderHistory();
 
 
 

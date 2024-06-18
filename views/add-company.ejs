@@ -426,13 +426,13 @@
                                 <div class="row mb-6">
                                     <!--begin::Label-->
                                     <label class="col-lg-4 col-form-label required fw-bold fs-6">
-                                        <span>Parent Category</span>
+                                        <span>Parent Company</span>
                                     </label>
                                     <!--end::Label-->
                                     <!--begin::Col-->
                                     <div class="col-lg-8 fv-row">
                                         <select name="parent_id" class="form-control form-control-lg form-control-solid" required>
-                                            <option value="0" selected>Select as parent category</option>
+                                            <option value="0" selected>Select as parent company</option>
                                             <% getParentCompany.forEach(function(company) { %>
                                                 <option value="<%= company.ID %>">
                                                     <%= company.company_name + "-" + company.main_address_country %> <!-- Concatenated display text -->

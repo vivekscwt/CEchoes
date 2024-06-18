@@ -4895,32 +4895,110 @@ function getmembershipPlans() {
 }
 
 // Fetch one Payment details
-function getAllPayments() {
-  return new Promise((resolve, reject) => {
-    db.query(
-      `SELECT p.*, c.company_name , c.logo , c.comp_email , mp.plan_name
-      FROM payments p
-      LEFT JOIN company c ON c.ID = p.company_id  AND c.status != '3'
-      LEFT JOIN membership_plans mp ON p.membership_plan_id = mp.id  
-      ORDER BY p.id DESC`,
-      async (err, result) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(result);
-        }
-      });
-  });
-}
-
 // function getAllPayments() {
 //   return new Promise((resolve, reject) => {
 //     db.query(
 //       `SELECT p.*, c.company_name , c.logo , c.comp_email , mp.plan_name
+//       FROM payments p
+//       LEFT JOIN company c ON c.ID = p.company_id  AND c.status != '3'
+//       LEFT JOIN membership_plans mp ON p.membership_plan_id = mp.id  
+//       ORDER BY p.id DESC`,
+//       async (err, result) => {
+//         if (err) {
+//           reject(err);
+//         } else {
+//           resolve(result);
+//         }
+//       });
+//   });
+// }
+
+
+function getAllPayments() {
+  return new Promise((resolve, reject) => {
+    db.query(
+      `SELECT p.*, c.company_name, c.logo, c.comp_email, plan_management.name AS plan_name, plan_management.monthly_price, plan_management.yearly_price, users.email as company_user_email
+       FROM order_history p
+       LEFT JOIN company_claim_request ccr ON ccr.claimed_by = p.user_id 
+       LEFT JOIN company c ON c.ID = ccr.company_id AND c.status != '3'
+       LEFT JOIN plan_management ON p.plan_id = plan_management.id
+       LEFT JOIN users ON ccr.claimed_by = users.user_id
+       ORDER BY p.id DESC`,
+      async (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          const payments = [];
+
+          result.forEach(row => {
+            let transactionId = null;
+            let subscriptionAmount = null;
+            let subscriptionInterval = null;
+
+            try {
+              const paymentDetails = JSON.parse(row.payment_details);
+              transactionId = paymentDetails.charge;
+            } catch (error) {
+              console.error('Error parsing payment details:', error);
+            }
+
+            try {
+              const subscriptionDetails = JSON.parse(row.subscription_details);
+              const subscriptionItem = subscriptionDetails.items.data[0];
+              subscriptionAmount = subscriptionItem.plan.amount / 100;
+
+              const interval = subscriptionItem.plan.interval;
+              const intervalCount = subscriptionItem.plan.interval_count;
+
+              if (interval === 'day') {
+                subscriptionInterval = 'Daily';
+              } else if (interval === 'week') {
+                subscriptionInterval = 'Weekly';
+              } else if (interval === 'month') {
+                if (intervalCount === 1) {
+                  subscriptionInterval = 'Monthly';
+                } else {
+                  subscriptionInterval = `Every ${intervalCount} Months`;
+                }
+              } else if (interval === 'year') {
+                if (intervalCount === 1) {
+                  subscriptionInterval = 'Yearly';
+                } else {
+                  subscriptionInterval = `Every ${intervalCount} Years`;
+                }
+              } else {
+                subscriptionInterval = 'Unknown';
+              }
+            } catch (error) {
+              console.error('Error parsing subscription details:', error);
+            }
+
+            const modifiedRow = {
+              ...row,
+              transaction_id: transactionId,
+              subscription_amount: subscriptionAmount,
+              subscription_interval: subscriptionInterval
+            };
+            payments.push(modifiedRow);
+          });
+
+          //console.log("resultv", payments);
+          resolve(payments);
+        }
+      }
+    );
+  });
+}
+
+
+// function getAllPayments() {
+//   return new Promise((resolve, reject) => {
+//     db.query(
+//       `SELECT p.*, c.company_name , c.logo , c.comp_email , plan_management.name
 //       FROM order_history p
 //       LEFT JOIN company_claim_request ccr ON ccr.claimed_by = p.user_id 
 //       LEFT JOIN company c ON c.ID = ccr.company_id  AND c.status != '3'
-//       LEFT JOIN order_history mp ON mp.user_id = company_claim_request.claimed_by  
+//       LEFT JOIN plan_management ON p.plan_id = plan_management.id
 //       ORDER BY p.id DESC`,
 //       async (err, result) => {
 //         if (err) {
@@ -5517,9 +5595,10 @@ async function getcountrybyIp(ipAddress, api_key) {
 // }
 
 
-
+//actual
 async function getcountrynamebyIp(ipAddress, api_key) {
   const url = `https://ipgeolocation.abstractapi.com/v1/?api_key=${api_key}&ip_address=${ipAddress}`;
+  
   let attempts = 0;
   const maxAttempts = 5;
   const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
@@ -5547,6 +5626,43 @@ async function getcountrynamebyIp(ipAddress, api_key) {
   }
   throw new Error('Failed to fetch country name by IP after several attempts');
 }
+
+
+// async function getCountryNamesByIp(ipAddress, apiKey) {
+//   const url = `https://www.googleapis.com/geolocation/v1/geolocate?key=${apiKey}`;
+
+//   try {
+//     const response = await axios.post(url, {
+//       considerIp: true,
+//       wifiAccessPoints: [], 
+//       cellTowers: [],
+//     });
+
+//     const { country, countryCode } = response.data.location;
+
+//     console.log('Country Code:', countryCode);
+//     console.log('Country Name:', country);
+
+//     return { country_code: countryCode, country_name: country };
+//   } catch (error) {
+//     console.error('Error fetching country name by IP:', error);
+//     throw new Error('An error occurred while fetching the country name by IP');
+//   }
+// }
+
+// async function getcountrynamebyIp(ipAddress, apiKey) {
+//   try {
+//     const { country_code, country_name } = await getCountryNamesByIp(ipAddress, apiKey);
+//     console.log('Country Code:', country_code);
+//     console.log('Country Name:', country_name);
+
+//     return {country_code, country_name}
+//   } catch (error) {
+//     console.error('Error:', error.message);
+//     // Handle errors as needed
+//   }
+// }
+
 
 async function getplans() {
     try {
@@ -5598,7 +5714,6 @@ async function getplans() {
   }
 }
  
-
 
 module.exports = {
   getFaqPage,

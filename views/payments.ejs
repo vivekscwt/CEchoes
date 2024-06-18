@@ -217,11 +217,13 @@
                                     </div>
                                 </th>
                                 <th class="min-w-125px">Company</th>
+                                <th class="min-w-125px">Company User Email</th>
                                 <th class="min-w-125px">Transaction Id</th>
-                                <th class="min-w-125px">Payment Mode</th>
                                 <th class="min-w-125px">Membership Plan</th>
-                                <th class="min-w-125px">Remarks</th>
-                                <th class="min-w-125px">Subscription Mode</th>
+                                <th class="min-w-125px">Membership Monthly Price</th>
+                                <th class="min-w-125px">Membership Yearly Price</th>
+                                <th class="min-w-125px">Total Amount</th>
+                                <th class="min-w-125px">Payment Date</th>
                             </tr>
                         </thead>
                         <!--end::Table head-->
@@ -289,23 +291,30 @@
                                     </div>
                                 </td>
                                 <td>
+                                    <%= payment.company_user_email %>
+                                </td>    
+                                <td>
                                     <%= payment.transaction_id %>
                                 </td>
                                 <!--end::Role=-->
                                 <!--begin::Last login=-->
                                 <td>
-                                    <%= payment.mode_of_payment %>
+                                    <%= payment.plan_name %>
                                 </td>
                                 <!--end::Last login=-->
                                 <!--begin::Two step=-->
                                 <td>
-                                    <%= payment.plan_name %>
+                                    <%= payment.monthly_price %>
                                 </td>
                                 <td>
-                                    <%= payment.remarks %>
+                                    <%= payment.yearly_price %>
+                                </td>
+                                
+                                <td>
+                                    <%= payment.subscription_amount %>
                                 </td>
                                 <td>
-                                    <%= payment.subscription_mode %>
+                                    <%= payment.subscription_start_date %>
                                 </td>
                                 <!--begin::Joined-->
                                 
