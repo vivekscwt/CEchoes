@@ -12152,11 +12152,192 @@ const createStripeProductAndPrice = async (plan, billingCycle, memberCount) => {
 };
 
 
+// exports.createSubscription = async (req, res) => {
+//     try {
+//         const { name, email, address, city, state, zip, cardNum, expMonth, expYear, cvv, planId, billingCycle, memberCount } = req.body;
+//         //console.log("createSubscriptionreq.body",req.body);
+
+//         const userQuery = 'SELECT user_id, email FROM users WHERE email = ?';
+//         const userResult = await queryAsync(userQuery, [email]);
+
+//         if (userResult.length === 0) {
+//             return res.status(404).send({ error: 'User not found' });
+//         }
+//         const userId = userResult[0].user_id;
+
+
+//         const plan = await getPlanFromDatabase(planId);
+//         if (!plan) {
+//             return res.status(404).send({ error: 'Plan not found' });
+//         }
+
+//         const priceId = await createStripeProductAndPrice(plan, billingCycle, memberCount);
+//         if (!priceId) {
+//             return res.status(500).send({ error: 'Failed to create price for the plan' });
+//         }
+
+//         const customer = await stripe.customers.create({
+//             email: email,
+//             name: name,
+//             address: {
+//                 line1: address,
+//                 city: city,
+//                 state: state,
+//                 postal_code: zip,
+//             }
+//         });
+
+//         const paymentMethod = await stripe.paymentMethods.create({
+//             type: 'card',
+//             card: {
+//                 number: cardNum,
+//                 exp_month: expMonth,
+//                 exp_year: expYear,
+//                 cvc: cvv
+//             },
+//             billing_details: {
+//                 name: name,
+//                 address: {
+//                     line1: address,
+//                     city: city,
+//                     state: state,
+//                     postal_code: zip,
+//                 }
+//             }
+//         });
+//         await stripe.paymentMethods.attach(paymentMethod.id, { customer: customer.id });
+
+//         await stripe.customers.update(customer.id, {
+//             invoice_settings: {
+//                 default_payment_method: paymentMethod.id,
+//             }
+//         });
+
+
+//         // const subscription = await stripe.subscriptions.create({
+//         //     customer: customer.id,
+//         //     items: [{ price: priceId }],
+//         //     expand: ['latest_invoice.payment_intent'],
+//         // });
+//         const startDate = new Date();  // Set the start date dynamically
+//         const trialEndTimestamp = Math.floor(startDate.getTime() / 1000) + (365 * 24 * 60 * 60) + (30 * 24 * 60 * 60);
+
+
+
+//         let subscriptionParams = {
+//             customer: customer.id,
+//             items: [{ price: priceId }],
+//             expand: ['latest_invoice.payment_intent'],
+//             //trial_end: trialEndTimestamp,
+//         };
+
+//         const subscription = await stripe.subscriptions.create(subscriptionParams);
+
+//         console.log("createsubscription",subscription);
+
+//         const invoice = await stripe.invoices.retrieve(subscription.latest_invoice.id);
+
+
+//         const paymentIntent = invoice.payment_intent;
+//         if (!paymentIntent) {
+//             return res.status(500).send({ error: 'Payment intent not found in invoice' });
+//         }
+
+//         const paymentIntentStatus = await stripe.paymentIntents.retrieve(paymentIntent);
+
+//        // console.log("paymentIntentStatus",paymentIntentStatus);
+
+//         if (!paymentIntentStatus || !paymentIntentStatus.status) {
+//             return res.status(500).send({ error: 'Failed to retrieve payment intent status' });
+//         }
+
+//         let paymentStatus = paymentIntentStatus.status;
+//         if (paymentStatus === 'succeeded') {
+
+//             const updatedSubscription = await stripe.subscriptions.retrieve(subscription.id);
+
+//             //console.log("subscriptiondetails",updatedSubscription);
+//             const invoiceUrl = invoice.invoice_pdf;
+
+//             const planInterval = updatedSubscription.plan.interval;
+
+//             console.log("Plan Interval:", planInterval);
+
+//             const order_history_data={
+//                 user_id: userId,
+//                 stripe_subscription_id: subscription.id,
+//                 plan_id: planId,
+//                 payment_status: paymentIntentStatus.status,
+//                 subscription_details: JSON.stringify(subscription),
+//                 payment_details: JSON.stringify(paymentIntentStatus),
+//                 subscription_duration: planInterval,
+//                 subscription_start_date: new Date(subscription.current_period_start * 1000),
+//                 subscription_end_date: new Date(subscription.current_period_end * 1000),
+//                 added_user_number: memberCount
+//             }
+
+//             const order_history_query= `INSERT INTO order_history SET ?`;
+//             const order_history_value = await queryAsync(order_history_query,[order_history_data])
+
+
+//             const mailOptions = {
+//                 from: process.env.MAIL_USER,
+//                 // to: email,
+//                 to: 'dev2.scwt@gmail.com',
+//                 subject: 'Your Subscription Invoice',
+//                 html: `<p>Hello ${name},</p>
+//                        <p>Thank you for your subscription. You can view your invoice at the <a href="${invoiceUrl}">following link</a>.</p>
+//                        <p>Kind Regards,</p>
+//                        <p>CEchoes Technology Team</p>`
+//             };
+
+//             await mdlconfig.transporter.sendMail(mailOptions);
+
+//             return res.send({
+//                 status: 'ok',
+//                 message: 'Your payment has been successfully processed.',
+//                 subscriptionId: updatedSubscription.id,
+//                 invoiceUrl: invoiceUrl
+//             });
+//         } else if (paymentStatus === 'requires_action') {
+//             return res.status(400).send({
+//                 status: 'requires_action',
+//                 client_secret: paymentIntent.client_secret,
+//                 message: 'Payment requires additional actions.'
+//             });
+//         } else {
+//             return res.status(400).send({
+//                 status: 'failed',
+//                 message: 'Payment failed or requires a new payment method.'
+//             });
+//         }
+
+//     } catch (error) {
+//         console.error('Error creating subscription:', error);
+//         return res.status(500).send({ error: error.message });
+//     }
+// };
+
+
+
+
+
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+const createSubscriptionParams = (customer, priceId, cancelAt) => ({
+    customer: customer.id,
+    items: [{ price: priceId }],
+    expand: ['latest_invoice.payment_intent'],
+    cancel_at: cancelAt,
+});
+
 exports.createSubscription = async (req, res) => {
     try {
         const { name, email, address, city, state, zip, cardNum, expMonth, expYear, cvv, planId, billingCycle, memberCount } = req.body;
-        //console.log("createSubscriptionreq.body",req.body);
 
+        // Check if the user exists
         const userQuery = 'SELECT user_id, email FROM users WHERE email = ?';
         const userResult = await queryAsync(userQuery, [email]);
 
@@ -12165,17 +12346,19 @@ exports.createSubscription = async (req, res) => {
         }
         const userId = userResult[0].user_id;
 
-
+        // Get the plan details from the database
         const plan = await getPlanFromDatabase(planId);
         if (!plan) {
             return res.status(404).send({ error: 'Plan not found' });
         }
 
+        // Create a Stripe Product and Price
         const priceId = await createStripeProductAndPrice(plan, billingCycle, memberCount);
         if (!priceId) {
             return res.status(500).send({ error: 'Failed to create price for the plan' });
         }
 
+        // Create a new customer in Stripe
         const customer = await stripe.customers.create({
             email: email,
             name: name,
@@ -12187,6 +12370,7 @@ exports.createSubscription = async (req, res) => {
             }
         });
 
+        // Create a payment method using the card details
         const paymentMethod = await stripe.paymentMethods.create({
             type: 'card',
             card: {
@@ -12205,51 +12389,68 @@ exports.createSubscription = async (req, res) => {
                 }
             }
         });
+
+        // Attach the payment method to the customer
         await stripe.paymentMethods.attach(paymentMethod.id, { customer: customer.id });
 
+        // Update the customer's default payment method for invoices
         await stripe.customers.update(customer.id, {
             invoice_settings: {
                 default_payment_method: paymentMethod.id,
             }
         });
 
+        // Calculate the subscription end date (13 months from the current period start date)
+        let cancelAt = null;
+        if (billingCycle === 'yearly') {
+            console.log("Setting up yearly subscription");
+            const startDate = new Date();
+            const endDate = new Date(startDate);
+            endDate.setMonth(startDate.getMonth() + 13);
 
-        const subscription = await stripe.subscriptions.create({
-            customer: customer.id,
-            items: [{ price: priceId }],
-            expand: ['latest_invoice.payment_intent'],
-        });
-        console.log("createsubscription",subscription);
+            // Check for overflow
+            if (endDate.getDate() !== startDate.getDate()) {
+                endDate.setDate(0); // Go back to the last day of the previous month
+            }
 
+            cancelAt = Math.floor(endDate.getTime() / 1000);
+            console.log("Calculated cancelAt timestamp:", cancelAt);
+        }
+
+        const subscriptionParams = createSubscriptionParams(customer, priceId, cancelAt);
+
+        // Create the subscription in Stripe
+        const subscription = await stripe.subscriptions.create(subscriptionParams);
+
+        // Ensure the invoice is processed
+        await delay(2000); // Optional delay to allow Stripe to finalize the invoice
+
+        // Retrieve the latest invoice associated with the subscription
         const invoice = await stripe.invoices.retrieve(subscription.latest_invoice.id);
+        console.log("Retrieved invoice:", invoice);
 
+        // Retrieve the payment intent
+        const paymentIntent = await retrievePaymentIntentWithRetry(invoice.id);
+        console.log('Retrieved payment intent:', paymentIntent);
 
-        const paymentIntent = invoice.payment_intent;
-        if (!paymentIntent) {
+        if (!invoice || !invoice.payment_intent) {
             return res.status(500).send({ error: 'Payment intent not found in invoice' });
         }
 
-        const paymentIntentStatus = await stripe.paymentIntents.retrieve(paymentIntent);
-
-       // console.log("paymentIntentStatus",paymentIntentStatus);
+        const paymentIntentStatus = await stripe.paymentIntents.retrieve(invoice.payment_intent);
 
         if (!paymentIntentStatus || !paymentIntentStatus.status) {
             return res.status(500).send({ error: 'Failed to retrieve payment intent status' });
         }
 
-        let paymentStatus = paymentIntentStatus.status;
+        const paymentStatus = paymentIntentStatus.status;
         if (paymentStatus === 'succeeded') {
-
             const updatedSubscription = await stripe.subscriptions.retrieve(subscription.id);
-
-            //console.log("subscriptiondetails",updatedSubscription);
             const invoiceUrl = invoice.invoice_pdf;
 
             const planInterval = updatedSubscription.plan.interval;
 
-            console.log("Plan Interval:", planInterval);
-
-            const order_history_data={
+            const order_history_data = {
                 user_id: userId,
                 stripe_subscription_id: subscription.id,
                 plan_id: planId,
@@ -12258,18 +12459,16 @@ exports.createSubscription = async (req, res) => {
                 payment_details: JSON.stringify(paymentIntentStatus),
                 subscription_duration: planInterval,
                 subscription_start_date: new Date(subscription.current_period_start * 1000),
-                subscription_end_date: new Date(subscription.current_period_end * 1000),
+                subscription_end_date: new Date(cancelAt * 1000), // Use cancelAt for subscription end date
                 added_user_number: memberCount
-            }
+            };
 
-            const order_history_query= `INSERT INTO order_history SET ?`;
-            const order_history_value = await queryAsync(order_history_query,[order_history_data])
-
+            const order_history_query = `INSERT INTO order_history SET ?`;
+            await queryAsync(order_history_query, [order_history_data]);
 
             const mailOptions = {
                 from: process.env.MAIL_USER,
-                // to: email,
-                to: 'dev2.scwt@gmail.com',
+                to: email,
                 subject: 'Your Subscription Invoice',
                 html: `<p>Hello ${name},</p>
                        <p>Thank you for your subscription. You can view your invoice at the <a href="${invoiceUrl}">following link</a>.</p>
@@ -12286,12 +12485,14 @@ exports.createSubscription = async (req, res) => {
                 invoiceUrl: invoiceUrl
             });
         } else if (paymentStatus === 'requires_action') {
+            // Handle additional actions required for payment
             return res.status(400).send({
                 status: 'requires_action',
-                client_secret: paymentIntent.client_secret,
+                client_secret: paymentIntentStatus.client_secret,
                 message: 'Payment requires additional actions.'
             });
         } else {
+            // Handle payment failure scenarios
             return res.status(400).send({
                 status: 'failed',
                 message: 'Payment failed or requires a new payment method.'
@@ -12303,6 +12504,32 @@ exports.createSubscription = async (req, res) => {
         return res.status(500).send({ error: error.message });
     }
 };
+
+
+
+
+async function retrievePaymentIntentWithRetry(invoiceId, maxAttempts = 3) {
+    let attempt = 0;
+    while (attempt < maxAttempts) {
+        try {
+            const invoice = await stripe.invoices.retrieve(invoiceId);
+            if (!invoice || !invoice.payment_intent) {
+                throw new Error('Payment intent not found in invoice');
+            }
+            const paymentIntent = await stripe.paymentIntents.retrieve(invoice.payment_intent);
+            return paymentIntent;
+        } catch (error) {
+            console.error(`Attempt ${attempt + 1} failed:`, error.message);
+            attempt++;
+            await delay(Math.pow(2, attempt) * 1000); // Exponential backoff
+        }
+    }
+    throw new Error('Failed to retrieve payment intent');
+}
+
+
+
+
 
 
 const fetchActiveSubscriptionsFromStripe = async () => {
