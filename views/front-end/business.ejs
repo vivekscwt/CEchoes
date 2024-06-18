@@ -328,13 +328,13 @@
       <!-- ============== Section5 End =============== -->
 
       <!-- ============== Section6 Start =============== -->
-      <section class="main-content business-choose-your-plan-content" data-aos="fade-up">
+      <!-- <section class="main-content business-choose-your-plan-content" data-aos="fade-up">
          <div class="container">
             <h2 class="text-center inner-main-head">Choose Your <span>Plan</span></h2>
-            <div class="choose-your-plan-box">
+            <div class="choose-your-plan-box"> -->
                <!-- Basic Plan -->
-               <div class="choose-your-plan-box-step">
-                  <%- getplans.basic_val.description %>
+               <!-- <div class="choose-your-plan-box-step">
+                  <%- getplans.basic_val.description %> -->
                   <!-- <div class="member-control">
                      <label for="basic-member-count">Members:</label>
                      <input type="number" name="memberCount" id="basic-member-count" value="">
@@ -353,8 +353,8 @@
                </div>
             
                <!-- Standard Plan -->
-               <div class="choose-your-plan-box-step">
-                  <%- getplans.standard_val.description %>
+               <!-- <div class="choose-your-plan-box-step">
+                  <%- getplans.standard_val.description %> -->
                   <!-- <div class="member-control">
                      <label for="standard-member-count">Members:</label>
                      <input type="number" name="memberCount" id="standard-member-count" value="">
@@ -373,8 +373,8 @@
                </div>
             
                <!-- Advanced Plan -->
-               <div class="choose-your-plan-box-step">
-                  <%- getplans.advanced_val.description %>
+               <!-- <div class="choose-your-plan-box-step">
+                  <%- getplans.advanced_val.description %> -->
                   <!-- <div class="member-control">
                      <label for="advanced-member-count">Members:</label>
                      <input type="number" name="memberCount" id="advanced-member-count" value="">
@@ -393,8 +393,8 @@
                </div>
             
                <!-- Premium Plan -->
-               <div class="choose-your-plan-box-step">
-                  <%- getplans.premium_val.description %>
+               <!-- <div class="choose-your-plan-box-step">
+                  <%- getplans.premium_val.description %> -->
                   <!-- <div class="member-control">
                      <label for="premium-member-count">Members:</label>
                      <input type="number" name="memberCount" id="premium-member-count" value="">
@@ -413,8 +413,8 @@
                </div>
             
                <!-- Enterprise Plan -->
-               <div class="choose-your-plan-box-step">
-                  <%- getplans.enterprise_val.description %>
+               <!-- <div class="choose-your-plan-box-step">
+                  <%- getplans.enterprise_val.description %> -->
                   <!-- <div class="member-control">
                      <label for="enterprise-member-count">Members:</label>
                      <input type="number" name="memberCount" id="enterprise-member-count" value="">
@@ -430,9 +430,36 @@
                      Yearly Subscription Amount: $<span id="enterprise-total-yearly-price"><%= getplans.enterprise_val.yearly_price %></span>
                   </div>
                   <button id="subscribe-enterprise-yearly" onclick="redirectToYearlyStripePayment('<%= getplans.enterprise_val.name %>', '<%= getplans.enterprise_val.yearly_price %>', 'yearly')">Subscribe Yearly</button> -->
-               </div>
+               <!-- </div>
             </div>
             
+         </div>
+      </section> -->
+
+      <section class="main-content business-choose-your-plan-content" data-aos="fade-up">
+         <div class="container">
+            <h2 class="text-center inner-main-head">Choose Your <span>Plan</span></h2>
+            <div class="choose-your-plan-box">
+               <div class="choose-your-plan-box-step">
+                  <%- meta_values_array.basic_plan_content %>
+               </div>
+               <div class="choose-your-plan-box-step">
+                  <%- meta_values_array.standard_plan_content %>
+               </div>
+               <div class="choose-your-plan-box-step">
+                  <%- meta_values_array.advanced_plan_content %>
+               </div>
+               <div class="choose-your-plan-box-step">
+                  <div class="best-value-tag">
+                     BEST <br> VALUE
+                  </div>
+                  <%- meta_values_array.premium_plan_content %>
+               </div>
+               
+               <div class="choose-your-plan-box-step overlay">
+                  <%- meta_values_array.enterprice_plan_content %>
+               </div>
+            </div>
          </div>
       </section>
 
