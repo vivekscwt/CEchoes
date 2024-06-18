@@ -1419,26 +1419,91 @@ async function editCustomerReview(req) {
 //     return { status: 'err', data: '', message: 'No company data found' };
 //   }
 // }
+//actual
+// async function searchCompany(keyword,country) {
+//   console.log("country",country);
+//   const get_company_query = `
+//     SELECT ID, company_name, logo, about_company, slug, main_address, main_address_pin_code FROM company
+//     WHERE company_name LIKE '%${keyword}%' AND status = '1' AND main_address_country = ?
+//     ORDER BY created_date DESC
+//   `;
+//   try {
+//     const get_company_results = await query(get_company_query,[country]);
+//     if (get_company_results.length > 0) {
+//       console.log(get_company_results);
+//       return { status: 'ok', data: get_company_results, message: get_company_results.length + ' company data recived' };
+//     } else {
+//       return { status: 'ok', data: '', message: 'No company data found' };
+//     }
+//   } catch (error) {
+//     return { status: 'err', data: '', message: 'No company data found' };
+//   }
+// }
 
-async function searchCompany(keyword,country) {
-  console.log("country",country);
+
+async function searchCompany(keyword, country) {
   const get_company_query = `
-    SELECT ID, company_name, logo, about_company, slug, main_address, main_address_pin_code FROM company
-    WHERE company_name LIKE '%${keyword}%' AND status = '1' AND main_address_country = ?
+    SELECT ID, company_name, logo, about_company, slug, main_address, main_address_pin_code, review_display_type
+    FROM company
+    WHERE company_name LIKE '%${keyword}%' 
+      AND status = '1' 
+      AND main_address_country = ?
     ORDER BY created_date DESC
   `;
+  
   try {
-    const get_company_results = await query(get_company_query,[country]);
+    const get_company_results = await query(get_company_query, [country]);
+
     if (get_company_results.length > 0) {
-      console.log(get_company_results);
-      return { status: 'ok', data: get_company_results, message: get_company_results.length + ' company data recived' };
+      const filteredCompanies = [];
+
+      for (const company of get_company_results) {
+        if (company.review_display_type == '1') {
+          filteredCompanies.push(company);
+          
+          const childCompanies = await fetchChildCompanies(company.ID);
+          filteredCompanies.push(...childCompanies);
+        } else if (company.review_display_type == '0') {
+          filteredCompanies.push(company);
+        }
+      }
+
+      return { status: 'ok', data: filteredCompanies, message: `${filteredCompanies.length} company data received` };
     } else {
-      return { status: 'ok', data: '', message: 'No company data found' };
+      return { status: 'ok', data: [], message: 'No company data found' };
     }
   } catch (error) {
-    return { status: 'err', data: '', message: 'No company data found' };
+    console.error('Error fetching companies:', error);
+    return { status: 'err', data: [], message: 'An error occurred while fetching company data' };
   }
 }
+
+async function fetchChildCompanies(parentId) {
+  const get_child_query = `
+    SELECT ID, company_name, logo, about_company, slug, main_address, main_address_pin_code, review_display_type
+    FROM company
+    WHERE parent_id = ?
+      AND status = '1'
+    ORDER BY created_date DESC
+  `;
+  
+  try {
+    const childCompanies = await query(get_child_query, [parentId]);
+    const allChildCompanies = [];
+    
+    for (const childCompany of childCompanies) {
+      const grandChildCompanies = await fetchChildCompanies(childCompany.ID);
+      allChildCompanies.push(childCompany, ...grandChildCompanies);
+    }
+
+    return allChildCompanies;
+  } catch (error) {
+    console.error('Error fetching child companies:', error);
+    return [];
+  }
+}
+
+
 
 async function getCompanyReviewNumbers(companyID) {
   const get_company_rewiew_count_query = `
@@ -2018,6 +2083,7 @@ module.exports = {
   getCustomerReviewTagRelationData,
   editCustomerReview,
   searchCompany,
+  fetchChildCompanies,//
   getCompanyReviewNumbers,
   getCompanyReviews,
   getUsersByRole,

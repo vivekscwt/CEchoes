@@ -546,7 +546,34 @@
 
                             <!--end::Col-->
                         </div>
-                        
+                        <% if(company.parent_id=="0"){ %>
+                        <div class="row mb-6">
+                            <!--begin::Label-->
+                            <label class="col-lg-4 col-form-label required fw-bold fs-6">review display</label>
+                            <!--end::Label-->
+                            <!--begin::Col-->
+                            <div class="col-lg-8 fv-row">
+                                <!--begin::Options-->
+                                <div class="d-flex align-items-center mt-3">
+                                    <!--begin::Option-->
+                                    <label class="form-check form-check-inline form-check-solid me-5">
+                                        <input class="form-check-input mt-1" name="review_display_type" type="radio" value="0" <% if(company.review_display_type != '1'){ %>checked <% } %>/>
+                                        <span class="fw-bold fs-6 badge badge-light-danger fw-bolder px-4 py-3">No</span>
+                                    </label>
+                                    <!--end::Option-->
+                                    <!--begin::Option-->
+                                    <label class="form-check form-check-inline form-check-solid me-5">
+                                        <input class="form-check-input mt-1" name="review_display_type" type="radio" value="1" <% if(company.review_display_type == '1'){ %>checked <% } %>/>
+                                        <span class="fw-bold fs-6 badge badge-light-success fw-bolder px-4 py-3">Yes</span>
+                                    </label>
+                                    <!--end::Option-->
+                                    <!--end::Option-->
+                                </div>
+                                <!--end::Options-->
+                            </div>
+                            <!--end::Col-->
+                        </div>
+                        <% } %>
                     </div>
                     <!--end::Card body-->
                     <!--begin::Actions-->

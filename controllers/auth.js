@@ -2651,7 +2651,7 @@ exports.editCompany = async (req, res) => {
             });
         } else {
             // Update company details in the company table
-            const updateQuery = 'UPDATE company SET company_name = ?, heading = ?, logo = ?, about_company = ?, comp_phone = ?, comp_email = ?, comp_registration_id = ?, status = ?, trending = ?, updated_date = ?, tollfree_number = ?, main_address = ?, main_address_pin_code = ?, address_map_url = ?, main_address_country = ?, main_address_state = ?, main_address_city = ?, verified = ?, paid_status = ?, slug = ?, membership_type_id = ?, complaint_status = ?, complaint_level = ?, parent_id = ? WHERE ID = ?';
+            const updateQuery = 'UPDATE company SET company_name = ?, heading = ?, logo = ?, about_company = ?, comp_phone = ?, comp_email = ?, comp_registration_id = ?, status = ?, trending = ?, updated_date = ?, tollfree_number = ?, main_address = ?, main_address_pin_code = ?, address_map_url = ?, main_address_country = ?, main_address_state = ?, main_address_city = ?, verified = ?, paid_status = ?, slug = ?, membership_type_id = ?, complaint_status = ?, complaint_level = ?, parent_id = ?, review_display_type = ? WHERE ID = ?';
             const updateValues = [
                 req.body.company_name,
                 req.body.heading,
@@ -2677,6 +2677,7 @@ exports.editCompany = async (req, res) => {
                 req.body.complaint_status,
                 req.body.complaint_level,
                 req.body.parent_id,
+                req.body.review_display_type,
                 companyID
             ];
 
