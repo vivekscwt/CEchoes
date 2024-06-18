@@ -372,8 +372,8 @@ router.get('/review', checkCookieValue, async (req, res) => {
         let currentUserData = JSON.parse(req.userData);
         console.log(currentUserData);
 
-        //const ipAddress = req.ip; 
-        const ipAddress = '45.64.221.211';
+        const ipAddress = req.ip; 
+        //const ipAddress = '45.64.221.211';
         console.log("ipAddress", ipAddress);
         const api_key = process.env.GEO_LOCATION_API_KEY
 
