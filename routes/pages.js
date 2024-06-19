@@ -123,10 +123,13 @@ router.get('', checkCookieValue, async (req, res) => {
         userId = currentUserData.user_id;
     }
 
-    let ipAddress = await comFunction2.getPublicIpAddress();
-    console.log("ipAddress",ipAddress);
-    ipAddress = ipAddress.toString().replace('::ffff:', '');
-    console.log("ipAddress", ipAddress);
+    const ipAddress = requestIp.getClientIp(req); 
+    //console.log('Client IP Address:', ip);
+
+    // let ipAddress = await comFunction2.getPublicIpAddress();
+    // console.log("ipAddress",ipAddress);
+    // ipAddress = ipAddress.toString().replace('::ffff:', '');
+    // console.log("ipAddress", ipAddress);
 
     const api_key = process.env.GEO_LOCATION_API_KEY
     // const getcountrybyIp = await Promise.all([comFunction2.getcountrynamebyIp(ipAddress,api_key)]) 
@@ -377,10 +380,14 @@ router.get('/review', checkCookieValue, async (req, res) => {
 
         //let ipAddress = req.ip;
 
-        let ipAddress = await comFunction2.getPublicIpAddress();
-        console.log("ipAddress",ipAddress);
-        ipAddress = ipAddress.toString().replace('::ffff:', '');
-        console.log("ipAddress", ipAddress);
+        const ipAddress = requestIp.getClientIp(req); 
+        console.log('Client IP Address:', ipAddress);
+
+
+        // let ipAddress = await comFunction2.getPublicIpAddress();
+        // console.log("ipAddress",ipAddress);
+        // ipAddress = ipAddress.toString().replace('::ffff:', '');
+        // console.log("ipAddress", ipAddress);
 
         const api_key = process.env.GEO_LOCATION_API_KEY
 
@@ -449,48 +456,17 @@ router.get('/review', checkCookieValue, async (req, res) => {
 
 
 
-async function getPublicIpAddress() {
-    try {
-        const response = await axios.get('https://api.ipify.org?format=json');
-        const ipAddress = response.data.ip;
-        console.log('Public IP Address:', ipAddress);
-        return ipAddress;
-    } catch (error) {
-        console.error('Error fetching public IP address:', error.message);
-        throw new Error('Failed to fetch public IP address');
-    }
-}
-// Function to send the public IP address to a remote server
-async function sendIpAddressToServer(ipAddress) {
-    try {
-        const response = await axios.post('https://cechoes.com/getCountryByIP', { ipAddress });
-        console.log('Server Response:', response.data);
-        return response.data;
-    } catch (error) {
-        console.error('Error sending IP address to server:', error.message);
-        throw new Error('Failed to send IP address to server');
-    }
-}
-
-// Main function to get IP address and send to server
-(async () => {
-    try {
-        const ipAddress = await getPublicIpAddress();
-        const serverResponse = await sendIpAddressToServer(ipAddress);
-        console.log('Country Name:', serverResponse.countryName);
-    } catch (error) {
-        console.error('Error:', error.message);
-    }
-})();
-
 
 
 router.get('/get-country', async (req, res) => {
     try {
-        let ipAddress = await comFunction2.getPublicIpAddress();
-        console.log("ipAddress",ipAddress);
-        ipAddress = ipAddress.toString().replace('::ffff:', '');
-        console.log("ipAddress", ipAddress);
+        // let ipAddress = await comFunction2.getPublicIpAddress();
+        // console.log("ipAddress",ipAddress);
+        // ipAddress = ipAddress.toString().replace('::ffff:', '');
+        // console.log("ipAddress", ipAddress);
+
+        const ipAddress = requestIp.getClientIp(req); 
+        //console.log('Client IP Address:', ip);
 
         const api_key = process.env.GEO_LOCATION_API_KEY
 
@@ -598,10 +574,13 @@ router.get('/stripe-payment', checkCookieValue, async (req, res) => {
         const { planId, planPrice, monthly, memberCount, total_price } = req.query;
         console.log("req.query-monthly", req.query);
 
-        let ipAddress = await comFunction2.getPublicIpAddress();
-        console.log("ipAddress",ipAddress);
-        ipAddress = ipAddress.toString().replace('::ffff:', '');
-        console.log("ipAddress", ipAddress);
+        // let ipAddress = await comFunction2.getPublicIpAddress();
+        // console.log("ipAddress",ipAddress);
+        // ipAddress = ipAddress.toString().replace('::ffff:', '');
+        // console.log("ipAddress", ipAddress);
+
+        const ipAddress = requestIp.getClientIp(req); 
+        //console.log('Client IP Address:', ip);
 
         const api_key = process.env.GEO_LOCATION_API_KEY;
         //const api_key = 'AIzaSyCc5pts6Y3V7g9ZGGVsCcEi0WD8seu1VJ8';
@@ -637,11 +616,13 @@ router.get('/stripe-year-payment', checkCookieValue, async (req, res) => {
         const { planId, planPrice, yearly, memberCount, total_price } = req.query;
         console.log("req.query-yearly", req.query);
 
+        const ipAddress = requestIp.getClientIp(req); 
+        //console.log('Client IP Address:', ip);
         
-        let ipAddress = await comFunction2.getPublicIpAddress();
-        console.log("ipAddress",ipAddress);
-        ipAddress = ipAddress.toString().replace('::ffff:', '');
-        console.log("ipAddress", ipAddress);
+        // let ipAddress = await comFunction2.getPublicIpAddress();
+        // console.log("ipAddress",ipAddress);
+        // ipAddress = ipAddress.toString().replace('::ffff:', '');
+        // console.log("ipAddress", ipAddress);
 
         const api_key = process.env.GEO_LOCATION_API_KEY;
         //const api_key = 'AIzaSyCc5pts6Y3V7g9ZGGVsCcEi0WD8seu1VJ8';
@@ -1020,10 +1001,13 @@ router.get('/company/:slug', checkCookieValue, async (req, res) => {
 router.get('/categories', checkCookieValue, async (req, res) => {
     let currentUserData = JSON.parse(req.userData);
 
-    let ipAddress = await comFunction2.getPublicIpAddress();
-    console.log("ipAddress",ipAddress);
-    ipAddress = ipAddress.toString().replace('::ffff:', '');
-    console.log("ipAddress", ipAddress);
+    // let ipAddress = await comFunction2.getPublicIpAddress();
+    // console.log("ipAddress",ipAddress);
+    // ipAddress = ipAddress.toString().replace('::ffff:', '');
+    // console.log("ipAddress", ipAddress);
+
+    const ipAddress = requestIp.getClientIp(req); 
+    //console.log('Client IP Address:', ip);
 
     const api_key = process.env.GEO_LOCATION_API_KEY
     // const getcountrybyIp = await Promise.all([comFunction2.getcountrynamebyIp(ipAddress,api_key)]) 
@@ -1145,10 +1129,13 @@ router.get('/category/:category_slug/:country', checkCookieValue, async (req, re
     const country = req.params.country;
     const baseURL = process.env.MAIN_URL;
 
-    let ipAddress = await comFunction2.getPublicIpAddress();
-    console.log("ipAddress",ipAddress);
-    ipAddress = ipAddress.toString().replace('::ffff:', '');
-    console.log("ipAddress", ipAddress);
+    // let ipAddress = await comFunction2.getPublicIpAddress();
+    // console.log("ipAddress",ipAddress);
+    // ipAddress = ipAddress.toString().replace('::ffff:', '');
+    // console.log("ipAddress", ipAddress);
+
+    const ipAddress = requestIp.getClientIp(req); 
+    console.log('Client IP Address:', ip);
 
     const api_key = process.env.GEO_LOCATION_API_KEY
     // const getcountrybyIp = await Promise.all([comFunction2.getcountrynamebyIp(ipAddress,api_key)]) 
@@ -1225,10 +1212,13 @@ router.get('/category/:category_slug/:country/:filter', checkCookieValue, async 
     const filter_value = req.params.filter;
     const baseURL = process.env.MAIN_URL;
 
-    let ipAddress = await comFunction2.getPublicIpAddress();
-    console.log("ipAddress",ipAddress);
-    ipAddress = ipAddress.toString().replace('::ffff:', '');
-    console.log("ipAddress", ipAddress);
+    const ipAddress = requestIp.getClientIp(req); 
+    //console.log('Client IP Address:', ip);
+
+    // let ipAddress = await comFunction2.getPublicIpAddress();
+    // console.log("ipAddress",ipAddress);
+    // ipAddress = ipAddress.toString().replace('::ffff:', '');
+    // console.log("ipAddress", ipAddress);
 
     const api_key = process.env.GEO_LOCATION_API_KEY
 
@@ -1323,10 +1313,13 @@ router.get('/home', checkCookieValue, async (req, res) => {
 router.get('/discussion', checkCookieValue, async (req, res) => {
     let currentUserData = JSON.parse(req.userData);
 
-    let ipAddress = await comFunction2.getPublicIpAddress();
-    console.log("ipAddress",ipAddress);
-    ipAddress = ipAddress.toString().replace('::ffff:', '');
-    console.log("ipAddress", ipAddress);
+    // let ipAddress = await comFunction2.getPublicIpAddress();
+    // console.log("ipAddress",ipAddress);
+    // ipAddress = ipAddress.toString().replace('::ffff:', '');
+    // console.log("ipAddress", ipAddress);
+
+    const ipAddress = requestIp.getClientIp(req); 
+    //console.log('Client IP Address:', ip);
 
     const api_key = process.env.GEO_LOCATION_API_KEY;
 
