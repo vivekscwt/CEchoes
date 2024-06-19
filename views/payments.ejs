@@ -217,13 +217,11 @@
                                     </div>
                                 </th>
                                 <th class="min-w-125px">Company</th>
-                                <th class="min-w-125px">Company User Email</th>
                                 <th class="min-w-125px">Transaction Id</th>
+                                <th class="min-w-125px">Payment Mode</th>
                                 <th class="min-w-125px">Membership Plan</th>
-                                <th class="min-w-125px">Membership Monthly Price</th>
-                                <th class="min-w-125px">Membership Yearly Price</th>
-                                <th class="min-w-125px">Total Amount</th>
-                                <th class="min-w-125px">Payment Date</th>
+                                <th class="min-w-125px">Remarks</th>
+                                <th class="min-w-125px">Subscription Mode</th>
                             </tr>
                         </thead>
                         <!--end::Table head-->
@@ -291,30 +289,23 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <%= payment.company_user_email %>
-                                </td>    
-                                <td>
                                     <%= payment.transaction_id %>
                                 </td>
                                 <!--end::Role=-->
                                 <!--begin::Last login=-->
                                 <td>
-                                    <%= payment.plan_name %>
+                                    <%= payment.mode_of_payment %>
                                 </td>
                                 <!--end::Last login=-->
                                 <!--begin::Two step=-->
                                 <td>
-                                    <%= payment.monthly_price %>
+                                    <%= payment.plan_name %>
                                 </td>
                                 <td>
-                                    <%= payment.yearly_price %>
-                                </td>
-                                
-                                <td>
-                                    <%= payment.subscription_amount %>
+                                    <%= payment.remarks %>
                                 </td>
                                 <td>
-                                    <%= payment.subscription_start_date %>
+                                    <%= payment.subscription_mode %>
                                 </td>
                                 <!--begin::Joined-->
                                 
@@ -902,3 +893,8 @@ KTUtil.onDOMContentLoaded(function () {
         box-shadow: 0px 4px 14px 0px rgba(0, 0, 0, 0.25);
     }
 </style>
+
+
+
+
+
