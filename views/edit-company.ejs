@@ -431,7 +431,7 @@
                                 <div class="d-flex align-items-center mt-3">
                                     <!--begin::Option-->
                                     <label class="form-check form-check-inline form-check-solid me-5">
-                                        <input class="form-check-input mt-1" name="membership_type_id" type="radio" value="1" <% if(company.membership_type_id == 1){ %>checked <% } %> />
+                                        <input class="form-check-input mt-1" name="membership_type_id" type="radio" value="1" <% if(company.membership_type_id == 1){ %>checked <% } else { %>checked <% } %> />
                                         <span class="fw-bold fs-6 badge badge-light fw-bolder px-4 py-3">Basic</span>
                                     </label>
 
