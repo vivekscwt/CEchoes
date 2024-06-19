@@ -1,0 +1,192 @@
+<%- include('common/header') -%>
+    <!--begin::Content-->
+    <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+        <!--begin::Toolbar-->
+        <div class="toolbar" id="kt_toolbar">
+            <!--begin::Container-->
+            <div id="kt_toolbar_container" class="container-fluid d-flex flex-stack">
+                <!--begin::Page title-->
+                <div data-kt-swapper="true" data-kt-swapper-mode="prepend"
+                    data-kt-swapper-parent="{default: '#kt_content_container', 'lg' : '#kt_toolbar_container'}"
+                    class="page-title d-flex align-items-center flex-wrap me-3 mb-5 mb-lg-0">
+                    <!--begin::Title-->
+                    <h1 class="d-flex align-items-center text-dark fw-bolder fs-3 my-1">
+                        Membership Details
+                        <!--end::Description-->
+                    </h1>
+                    <!--end::Title-->
+                </div>
+                <!--end::Page title-->
+            </div>
+            <!--end::Container-->
+        </div>
+        <!--end::Toolbar-->
+        <!--begin::Post-->
+        <div class="post d-flex flex-column-fluid" id="kt_post">
+            <!--begin::Container-->
+            <div id="kt_content_container" class="container-xxl">
+                <!-- Basic Plan -->
+                <div class="card mb-5 mb-xl-10">
+                    <div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse"
+                        data-bs-target="#kt_account_profile_details_basic" aria-expanded="true"
+                        aria-controls="kt_account_profile_details_basic">
+                        <div class="card-title m-0">
+                            <h3 class="fw-bolder m-0">Basic</h3>
+                        </div>
+                    </div>
+                    <div id="kt_account_profile_details_basic" class="collapse show">
+                        <% if (getcurrency) { %>
+                            <form id="current_edit" class="form" action="/auth/currency-convert" method="POST">
+                                <div class="card-body border-top p-9">
+                                    <div class="row mb-6">
+                                        <label class="col-lg-4 col-form-label required fw-bold fs-6">INR
+                                            Currency</label>
+                                        <div class="col-lg-8">
+                                            <input type="number" name="inr_currency" id="inrs_currency"
+                                                class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
+                                                placeholder="INR Currency" value="<%= getcurrency.inr_currency %>" />
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-6">
+                                        <label class="col-lg-4 col-form-label required fw-bold fs-6">JPY
+                                            Currency</label>
+                                        <div class="col-lg-8">
+                                            <input type="number" name="jpy_currency" id="jpys_currency"
+                                                class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
+                                                placeholder="INR Currency" value="<%= getcurrency.jpy_currency %>" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Update button -->
+                                <div class="card-footer d-flex justify-content-end py-6 px-9">
+                                    <button type="button" class="btn btn-primary" id="updates_basic">Update</button>
+                                </div>
+                            </form>
+                            <% } else { %>
+                                <form id="current_add" class="form" action="/auth/currency-convert" method="POST">
+                                    <div class="card-body border-top p-9">
+                                        <div class="row mb-6">
+                                            <label class="col-lg-4 col-form-label required fw-bold fs-6">INR
+                                                Currency</label>
+                                            <div class="col-lg-8">
+                                                <input type="number" name="inr_currency" id="inr_currency"
+                                                    class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
+                                                    placeholder="INR Currency" />
+                                            </div>
+                                        </div>
+                                        <div class="row mb-6">
+                                            <label class="col-lg-4 col-form-label required fw-bold fs-6">JPY
+                                                Currency</label>
+                                            <div class="col-lg-8">
+                                                <input type="number" name="jpy_currency" id="jpy_currency"
+                                                    class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
+                                                    placeholder="JPY Currency" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Update button -->
+                                    <div class="card-footer d-flex justify-content-end py-6 px-9">
+                                        <button type="button" class="btn btn-primary" id="update_basic">Add</button>
+                                    </div>
+                                </form>
+                                <% } %>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!--end::Content-->
+
+        <%- include('common/footer') -%>
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <!-- begin::CK editor -->
+            <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+            <script src="/assets/plugins/custom/tinymce/tinymce.bundle.js"></script>
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+            <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+            <!-- end:: CK editor -->
+
+            <script>
+
+                $(document).ready(function () {
+                    $('#update_basic').click(function () {
+                        console.log('INR Currency:', $('#inr_currency').val());
+                        console.log('JPY Currency:', $('#jpy_currency').val());
+
+                        var formData = {
+                            inr_currency: $('#inr_currency').val(),
+                            jpy_currency: $('#jpy_currency').val()
+                        };
+
+                        console.log("formData:", formData);
+
+                        $.ajax({
+                            url: '/auth/currency-convert',
+                            type: 'POST',
+                            contentType: 'application/json',
+                            data: JSON.stringify(formData),
+                            success: function (response) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success!',
+                                    text: response.message
+                                }).then(function () {
+                                    window.location.reload();
+                                });
+                            },
+                            error: function (xhr, status, error) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    text: 'Membership plan has already added.'
+                                });
+                                console.error('Error:', error);
+                            }
+                        });
+                    });
+
+
+                    $('#updates_basic').click(function () {
+                        console.log('INR Currency:', $('#inrs_currency').val());
+                        console.log('JPY Currency:', $('#jpys_currency').val());
+
+                        var formData = {
+                            inr_currency: $('#inrs_currency').val(),
+                            jpy_currency: $('#jpys_currency').val()
+                        };
+
+                        console.log("formData:", formData);
+
+                        $.ajax({
+                            url: '/auth/edit-currency-convert',
+                            type: 'POST',
+                            contentType: 'application/json',
+                            data: JSON.stringify(formData),
+                            success: function (response) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success!',
+                                    text: response.message
+                                }).then(function () {
+                                    window.location.reload();
+                                });
+                            },
+                            error: function (xhr, status, error) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    text: 'Membership plan has already added.'
+                                });
+                                console.error('Error:', error);
+                            }
+
+                        });
+                    });
+
+
+                });
+
+            </script>

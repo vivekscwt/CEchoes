@@ -527,8 +527,10 @@ router.get('/faq', checkCookieValue, async (req, res) => {
 router.get('/business', checkCookieValue, async (req, res) => {
     try {
         let currentUserData = JSON.parse(req.userData);
-        console.log("currentUserData", currentUserData);
+        // console.log("currentUserData", currentUserData);
 
+        var user_id = currentUserData.user_id;
+        console.log("user_id", user_id);
         //const ipAddress = req.ip; 
         const ipAddress = '45.64.221.211';
         console.log("ipAddress", ipAddress);
@@ -539,11 +541,13 @@ router.get('/business', checkCookieValue, async (req, res) => {
         console.log("Country Name:", country_name);
         console.log("Country Code:", country_code);
 
-        const [globalPageMeta, getplans] = await Promise.all([
+        const [globalPageMeta, getplans, getSubscribedUsers] = await Promise.all([
             comFunction2.getPageMetaValues('global'),
-            comFunction2.getplans(country_name)
+            comFunction2.getplans(country_name),
+            comFunction2.getSubscribedUsers(user_id)
         ]);
-        console.log("getplans", getplans);
+        //console.log("getplans", getplans);
+        console.log("getSubscribedUsers", getSubscribedUsers);
 
         const sql = `SELECT * FROM page_info where secret_Key = 'business' `;
         db.query(sql, (err, results, fields) => {
@@ -572,7 +576,8 @@ router.get('/business', checkCookieValue, async (req, res) => {
                     BusinessFeature,
                     globalPageMeta: globalPageMeta,
                     getplans: getplans,
-                    country_name: country_name
+                    country_name: country_name,
+                    getSubscribedUsers: getSubscribedUsers
                 });
             })
 
@@ -4693,7 +4698,33 @@ router.get('/plans', checkLoggedIn, async (req, res) => {
 });
 
 
+router.get('/currency-conversion', checkLoggedIn, async (req, res) => {
+    try {
+        const encodedUserData = req.cookies.user;
+        const currentUserData = JSON.parse(encodedUserData);
+        const companyId = req.params.id;
 
+        const getquery= `SELECT * FROM currency_conversion`;
+        const getval = await queryAsync(getquery)
+        if(getval.length>0){
+            var getcurrency = getval[0]
+        }
+        //else{
+        //     var getcurrency = null
+        // }
+        console.log("getcurrency",getcurrency);
+
+        return res.render('curreny_conversion', {
+            menu_active_id: 'company',
+            page_title: 'Currency Convertion',
+            currentUserData,
+            getcurrency
+        })
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('An error occurred');
+    }
+});
 
 
 router.get('/success', (req, res) => {
@@ -5742,6 +5773,30 @@ router.get('/payments', checkLoggedIn, async (req, res) => {
         res.status(500).send('An error occurred');
     }
 });
+
+router.get('/payment_history', checkLoggedIn, async (req, res) => {
+    try {
+        const encodedUserData = req.cookies.user;
+        const currentUserData = JSON.parse(encodedUserData);
+
+        // Fetch all the required data asynchronously
+        const [getAllPayments] = await Promise.all([
+            comFunction2.getAllPaymentHistory(),
+        ]);
+        console.log(getAllPayments);
+
+        res.render('payment_history', {
+            menu_active_id: 'miscellaneous',
+            page_title: 'Payment History ',
+            currentUserData,
+            allPayments : getAllPayments,
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('An error occurred');
+    }
+});
+
 
 
 //---Edit Payment--//

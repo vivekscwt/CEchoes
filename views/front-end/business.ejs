@@ -340,8 +340,8 @@
                         <input type="number" name="memberCount" id="basic-member-count" value="">
                         <input type="hidden" id="basic-per-user-price"
                            value="<%= getplans.basic_val.per_user_price_local %>">
-                        <input type="hidden" name="userId" value="<%= currentUserData.user_id %>">
-                        <input type="hidden" name="email" value="<%= currentUserData.email %>">
+                        <input type="hidden" name="userId" value="<%= currentUserData ? currentUserData.user_id : '' %>">
+                        <input type="hidden" name="email" value="<%= currentUserData ? currentUserData.email : '' %>">
                      </div>
                      <% if (country_name === "India") { %>
                         <div class="total-price-display">
@@ -362,9 +362,15 @@
                             </span>
                         </div>
                     <% } %>
-                     <button id="subscribe-basic-monthly"
-                        onclick="redirectToStripePayment('<%= getplans.basic_val.name %>', '<%= getplans.basic_val.monthly_price %>', 'monthly')">Subscribe
-                        Monthly</button>
+                        <button id="subscribe-basic-monthly"
+                        <% if (currentUserData) { %>
+                              onclick="redirectToStripePayment('<%= getplans.basic_val.name %>', '<%= getplans.basic_val.monthly_price %>', 'monthly')"
+                        <% } else { %>
+                              onclick="redirectToLogin()"
+                        <% } %>
+                        >
+                        Subscribe Monthly
+                     </button>
                      <% if (country_name === "India") { %>
                         <div class="total-price-display">
                            Monthly Subscription Amount: ₹<span id="basic-total-yearly-price">
@@ -384,9 +390,15 @@
                            </span>
                        </div>
                    <% } %>
-                     <button id="subscribe-basic-yearly"
-                        onclick="redirectToYearlyStripePayment('<%= getplans.basic_val.name %>', '<%= getplans.basic_val.yearly_price %>', 'yearly')">Subscribe
-                        Yearly</button>
+                        <button id="subscribe-basic-yearly"
+                           <% if (currentUserData) { %>
+                                 onclick="redirectToYearlyStripePayment('<%= getplans.basic_val.name %>', '<%= getplans.basic_val.yearly_price %>', 'yearly')"
+                           <% } else { %>
+                                 onclick="redirectToLogin()"
+                           <% } %>
+                        >
+                           Subscribe Yearly
+                        </button>
                </div>
 
                <!-- Standard Plan -->
@@ -397,8 +409,8 @@
                         <input type="number" name="memberCount" id="standard-member-count" value="">
                         <input type="hidden" id="standard-per-user-price"
                            value="<%= getplans.standard_val.per_user_price_local %>">
-                        <input type="hidden" name="userId" value="<%= currentUserData.user_id %>">
-                        <input type="hidden" name="email" value="<%= currentUserData.email %>">
+                        <input type="hidden" name="userId" value="<%= currentUserData ? currentUserData.user_id : '' %>">
+                        <input type="hidden" name="email" value="<%= currentUserData ? currentUserData.email : '' %>">
                      </div>
                      <% if (country_name === "India") { %>
                         <div class="total-price-display">
@@ -419,9 +431,15 @@
                             </span>
                         </div>
                     <% } %>
-                     <button id="subscribe-standard-monthly"
-                        onclick="redirectToStripePayment('<%= getplans.standard_val.name %>', '<%= getplans.standard_val.monthly_price %>', 'monthly')">Subscribe
-                        Monthly</button>
+                        <button id="subscribe-standard-monthly"
+                        <% if (currentUserData) { %>
+                              onclick="redirectToStripePayment('<%= getplans.standard_val.name %>', '<%= getplans.standard_val.monthly_price %>', 'monthly')"
+                        <% } else { %>
+                              onclick="redirectToLogin()"
+                        <% } %>
+                        >
+                        Subscribe Monthly
+                     </button>
                   <% if (country_name === "India") { %>
                      <div class="total-price-display">
                         Monthly Subscription Amount: ₹<span id="standard-total-yearly-price">
@@ -441,9 +459,15 @@
                         </span>
                     </div>
                 <% } %>
-                     <button id="subscribe-standard-yearly"
-                        onclick="redirectToYearlyStripePayment('<%= getplans.standard_val.name %>', '<%= getplans.standard_val.yearly_price %>', 'yearly')">Subscribe
-                        Yearly</button>
+                        <button id="subscribe-standard-yearly"
+                        <% if (currentUserData) { %>
+                              onclick="redirectToYearlyStripePayment('<%= getplans.standard_val.name %>', '<%= getplans.standard_val.yearly_price %>', 'yearly')"
+                        <% } else { %>
+                              onclick="redirectToLogin()"
+                        <% } %>
+                     >
+                        Subscribe Yearly
+                     </button>
                </div>
 
                <!-- Advanced Plan -->
@@ -454,8 +478,8 @@
                         <input type="number" name="memberCount" id="advanced-member-count" value="">
                         <input type="hidden" id="advanced-per-user-price"
                            value="<%= getplans.advanced_val.per_user_price_local %>">
-                        <input type="hidden" name="userId" value="<%= currentUserData.user_id %>">
-                        <input type="hidden" name="email" value="<%= currentUserData.email %>">
+                           <input type="hidden" name="userId" value="<%= currentUserData ? currentUserData.user_id : '' %>">
+                           <input type="hidden" name="email" value="<%= currentUserData ? currentUserData.email : '' %>">
                      </div>
                      <% if (country_name === "India") { %>
                         <div class="total-price-display">
@@ -476,9 +500,16 @@
                             </span>
                         </div>
                     <% } %>
-                     <button id="subscribe-advanced-monthly"
-                        onclick="redirectToStripePayment('<%= getplans.advanced_val.name %>', '<%= getplans.advanced_val.monthly_price %>', 'monthly')">Subscribe
-                        Monthly</button>
+                        <button id="subscribe-advanced-monthly"
+                        <% if (currentUserData) { %>
+                              onclick="redirectToStripePayment('<%= getplans.advanced_val.name %>', '<%= getplans.advanced_val.monthly_price %>', 'monthly')"
+                        <% } else { %>
+                              onclick="redirectToLogin()"
+                        <% } %>
+                     >
+                        Subscribe Monthly
+                     </button>
+                        
                      <!-- <div class="total-price-display">
                         Yearly Subscription Amount: $<span id="advanced-total-yearly-price">
                            <%= getplans.advanced_val.yearly_price_local %>
@@ -503,9 +534,15 @@
                            </span>
                        </div>
                    <% } %>
-                     <button id="subscribe-advanced-yearly"
-                        onclick="redirectToYearlyStripePayment('<%= getplans.advanced_val.name %>', '<%= getplans.advanced_val.yearly_price %>', 'yearly')">Subscribe
-                        Yearly</button>
+                        <button id="subscribe-advanced-yearly"
+                        <% if (currentUserData) { %>
+                              onclick="redirectToYearlyStripePayment('<%= getplans.advanced_val.name %>', '<%= getplans.advanced_val.yearly_price %>', 'yearly')"
+                        <% } else { %>
+                              onclick="redirectToLogin()"
+                        <% } %>
+                     >
+                        Subscribe Yearly
+                     </button>
                </div>
 
                <!-- Premium Plan -->
@@ -516,8 +553,8 @@
                         <input type="number" name="memberCount" id="premium-member-count" value="">
                         <input type="hidden" id="premium-per-user-price"
                            value="<%= getplans.premium_val.per_user_price_local %>">
-                        <input type="hidden" name="userId" value="<%= currentUserData.user_id %>">
-                        <input type="hidden" name="email" value="<%= currentUserData.email %>">
+                           <input type="hidden" name="userId" value="<%= currentUserData ? currentUserData.user_id : '' %>">
+                           <input type="hidden" name="email" value="<%= currentUserData ? currentUserData.email : '' %>">
                      </div>
                      <% if (country_name === "India") { %>
                         <div class="total-price-display">
@@ -561,9 +598,15 @@
                         </span>
                     </div>
                 <% } %>
-                     <button id="subscribe-premium-yearly"
-                        onclick="redirectToYearlyStripePayment('<%= getplans.premium_val.name %>', '<%= getplans.premium_val.yearly_price %>', 'yearly')">Subscribe
-                        Yearly</button>
+                    <button id="subscribe-premium-yearly"
+                    <% if (currentUserData) { %>
+                          onclick="redirectToYearlyStripePayment('<%= getplans.premium_val.name %>', '<%= getplans.premium_val.yearly_price %>', 'yearly')"
+                    <% } else { %>
+                          onclick="redirectToLogin()"
+                    <% } %>
+                 >
+                    Subscribe Yearly
+                 </button>
                </div>
 
                <!-- Enterprise Plan -->
@@ -574,8 +617,8 @@
                         <input type="number" name="memberCount" id="enterprise-member-count" value="">
                         <input type="hidden" id="enterprise-per-user-price"
                            value="<%= getplans.enterprise_val.per_user_price_local %>">
-                        <input type="hidden" name="userId" value="<%= currentUserData.user_id %>">
-                        <input type="hidden" name="email" value="<%= currentUserData.email %>">
+                        <input type="hidden" name="userId" value="<%= currentUserData ? currentUserData.user_id : '' %>">
+                        <input type="hidden" name="email" value="<%= currentUserData ? currentUserData.email : '' %>">
                      </div>
                      <% if (country_name === "India") { %>
                         <div class="total-price-display">
@@ -596,9 +639,15 @@
                             </span>
                         </div>
                     <% } %>                    
-                     <button id="subscribe-enterprise-monthly"
-                        onclick="redirectToStripePayment('<%= getplans.enterprise_val.name %>', '<%= getplans.enterprise_val.monthly_price %>', 'monthly')">Subscribe
-                        Monthly</button>
+                        <button id="subscribe-enterprise-monthly"
+                        <% if (currentUserData) { %>
+                            onclick="redirectToStripePayment('<%= getplans.enterprise_val.name %>', '<%= getplans.enterprise_val.monthly_price %>', 'monthly')"
+                        <% } else { %>
+                            onclick="redirectToLogin()"
+                        <% } %>
+                        >
+                        Subscribe Monthly
+                    </button>
                      <% if (country_name === "India") { %>
                         <div class="total-price-display">
                            Monthly Subscription Amount: ₹<span id="enterprise-total-yearly-price">
@@ -618,9 +667,15 @@
                            </span>
                        </div>
                    <% } %>
-                     <button id="subscribe-enterprise-yearly"
-                        onclick="redirectToYearlyStripePayment('<%= getplans.enterprise_val.name %>', '<%= getplans.enterprise_val.yearly_price %>', 'yearly')">Subscribe
-                        Yearly</button>
+                   <button id="subscribe-enterprise-yearly"
+                   <% if (currentUserData) { %>
+                       onclick="redirectToYearlyStripePayment('<%= getplans.enterprise_val.name %>', '<%= getplans.enterprise_val.yearly_price %>', 'yearly')"
+                   <% } else { %>
+                       onclick="redirectToLogin()"
+                   <% } %>
+               >
+                   Subscribe Yearly
+               </button>
                </div>
             </div>
 
@@ -823,4 +878,7 @@
                window.location.href = redirectURL;
             }
 
+            function redirectToLogin() {
+               window.location.href = '/'; 
+            }
          </script>
