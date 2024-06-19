@@ -122,9 +122,11 @@ router.get('', checkCookieValue, async (req, res) => {
         userId = currentUserData.user_id;
     }
 
-    const ipAddress = req.ip;
-    //const ipAddress = '45.64.221.211';
+    let ipAddress = req.ip;
+    ipAddress = ipAddress.toString().replace('::ffff:', '');
     console.log("ipAddress", ipAddress);
+
+
     const api_key = process.env.GEO_LOCATION_API_KEY
     // const getcountrybyIp = await Promise.all([comFunction2.getcountrynamebyIp(ipAddress,api_key)]) 
     // const country_name = getcountrybyIp[0];
@@ -372,9 +374,10 @@ router.get('/review', checkCookieValue, async (req, res) => {
         let currentUserData = JSON.parse(req.userData);
         console.log(currentUserData);
 
-        const ipAddress = req.ip;
-        //const ipAddress = '45.64.221.211';
+        let ipAddress = req.ip;
+        ipAddress = ipAddress.toString().replace('::ffff:', '');
         console.log("ipAddress", ipAddress);
+
         const api_key = process.env.GEO_LOCATION_API_KEY
 
         // const getcountrybyIp = await Promise.all([comFunction2.getcountrynamebyIp(ipAddress,api_key)]) 
@@ -442,9 +445,10 @@ router.get('/review', checkCookieValue, async (req, res) => {
 
 router.get('/get-country', async (req, res) => {
     try {
-        const ipAddress = req.ip;
-        //const ipAddress = '45.64.221.211';
+        let ipAddress = req.ip;
+        ipAddress = ipAddress.toString().replace('::ffff:', '');
         console.log("ipAddress", ipAddress);
+
         const api_key = process.env.GEO_LOCATION_API_KEY
 
         const response = axios.get(`https://ipgeolocation.abstractapi.com/v1/?api_key=${api_key}&ip_address=${ipAddress}`)
@@ -551,9 +555,10 @@ router.get('/stripe-payment', checkCookieValue, async (req, res) => {
         const { planId, planPrice, monthly, memberCount, total_price } = req.query;
         console.log("req.query-monthly", req.query);
 
-        //const ipAddress = req.ip; 
-        const ipAddress = '45.64.221.211';
+        let ipAddress = req.ip;
+        ipAddress = ipAddress.toString().replace('::ffff:', '');
         console.log("ipAddress", ipAddress);
+
         const api_key = process.env.GEO_LOCATION_API_KEY;
         //const api_key = 'AIzaSyCc5pts6Y3V7g9ZGGVsCcEi0WD8seu1VJ8';
 
@@ -589,9 +594,10 @@ router.get('/stripe-year-payment', checkCookieValue, async (req, res) => {
         console.log("req.query-yearly", req.query);
 
         
-        //const ipAddress = req.ip; 
-        const ipAddress = '45.64.221.211';
+        let ipAddress = req.ip;
+        ipAddress = ipAddress.toString().replace('::ffff:', '');
         console.log("ipAddress", ipAddress);
+
         const api_key = process.env.GEO_LOCATION_API_KEY;
         //const api_key = 'AIzaSyCc5pts6Y3V7g9ZGGVsCcEi0WD8seu1VJ8';
 
@@ -969,9 +975,10 @@ router.get('/company/:slug', checkCookieValue, async (req, res) => {
 router.get('/categories', checkCookieValue, async (req, res) => {
     let currentUserData = JSON.parse(req.userData);
 
-    const ipAddress = req.ip;
-    //const ipAddress = '45.64.221.211';
+    let ipAddress = req.ip;
+    ipAddress = ipAddress.toString().replace('::ffff:', '');
     console.log("ipAddress", ipAddress);
+
     const api_key = process.env.GEO_LOCATION_API_KEY
     // const getcountrybyIp = await Promise.all([comFunction2.getcountrynamebyIp(ipAddress,api_key)]) 
     // const country_name = getcountrybyIp[0];
@@ -1092,9 +1099,10 @@ router.get('/category/:category_slug/:country', checkCookieValue, async (req, re
     const country = req.params.country;
     const baseURL = process.env.MAIN_URL;
 
-    const ipAddress = req.ip;
-    //const ipAddress = '45.64.221.211';
+    let ipAddress = req.ip;
+    ipAddress = ipAddress.toString().replace('::ffff:', '');
     console.log("ipAddress", ipAddress);
+
     const api_key = process.env.GEO_LOCATION_API_KEY
     // const getcountrybyIp = await Promise.all([comFunction2.getcountrynamebyIp(ipAddress,api_key)]) 
     // const country_name = getcountrybyIp[0];
@@ -1170,9 +1178,10 @@ router.get('/category/:category_slug/:country/:filter', checkCookieValue, async 
     const filter_value = req.params.filter;
     const baseURL = process.env.MAIN_URL;
 
-    const ipAddress = req.ip;
-    //const ipAddress = '45.64.221.211';
+    let ipAddress = req.ip;
+    ipAddress = ipAddress.toString().replace('::ffff:', '');
     console.log("ipAddress", ipAddress);
+
     const api_key = process.env.GEO_LOCATION_API_KEY
 
     // const getcountrybyIp = await Promise.all([comFunction2.getcountrynamebyIp(ipAddress,api_key)]) 
@@ -1265,10 +1274,10 @@ router.get('/home', checkCookieValue, async (req, res) => {
 //Discussion page
 router.get('/discussion', checkCookieValue, async (req, res) => {
     let currentUserData = JSON.parse(req.userData);
-    const ipAddress = req.ip;
-    //const ipAddress = '45.64.221.211';
+    let ipAddress = req.ip;
+    ipAddress = ipAddress.toString().replace('::ffff:', '');
     console.log("ipAddress", ipAddress);
-    // const api_key = '9b38b399323e4d05a3bcbd1505e8e834'
+
     const api_key = process.env.GEO_LOCATION_API_KEY;
 
     const getcountrybyIp = await Promise.all([comFunction2.getcountrybyIp(ipAddress, api_key)])
