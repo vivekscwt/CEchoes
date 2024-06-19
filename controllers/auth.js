@@ -12324,7 +12324,12 @@ exports.createSubscription = async (req, res) => {
             //console.log("subscriptiondetails",updatedSubscription);
             const invoiceUrl = invoice.invoice_pdf;
 
-            const planInterval = updatedSubscription.plan.interval;
+            //const planInterval = updatedSubscription.plan.interval;
+
+            var planInterva =updatedSubscription.plan.interval_count;
+            if(planInterva == "13"){
+                var planInterval= 'year'
+            }
 
             console.log("Plan Interval:", planInterval);
 
