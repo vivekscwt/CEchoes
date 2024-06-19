@@ -10,6 +10,7 @@ const mdlconfig = require('./config-module');
 const slugify = require('slugify');
 const { emit } = require('process');
 const base64url = require('base64url');
+const dns = require('dns');
 
 dotenv.config({ path: './.env' });
 const query = util.promisify(db.query).bind(db);
@@ -5544,6 +5545,18 @@ function getChildCompany(companyId) {
 // }
 // }
 
+async function getPublicIpAddress() {
+  try {
+      const response = await axios.get('http://httpbin.org/ip');
+      const ipAddress = response.data.origin;
+      console.log('Public IP Address:', ipAddress);
+      return ipAddress;
+  } catch (error) {
+      console.error('Error fetching public IP address:', error.message);
+      throw new Error('Failed to fetch public IP address');
+  }
+}
+
 async function getcountrybyIp(ipAddress, api_key) {
   try {
       const response = await axios.get(`https://ipgeolocation.abstractapi.com/v1/?api_key=${api_key}&ip_address=${ipAddress}`);
@@ -6023,6 +6036,7 @@ module.exports = {
   getCountryName,
   getAllParentCompany,
   getChildCompany,
+  getPublicIpAddress,//
   getcountrybyIp,
   getcountrynamebyIp,
   getplans

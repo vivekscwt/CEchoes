@@ -22,6 +22,7 @@ const requestIp = require('request-ip');
 const he = require('he');
 const queryAsync = util.promisify(db.query).bind(db);
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const dns = require('dns');
 
 function decodeHTMLEntities(text) {
     return he.decode(text);
@@ -122,7 +123,8 @@ router.get('', checkCookieValue, async (req, res) => {
         userId = currentUserData.user_id;
     }
 
-    let ipAddress = req.ip;
+    let ipAddress = await comFunction2.getPublicIpAddress();
+    console.log("ipAddress",ipAddress);
     ipAddress = ipAddress.toString().replace('::ffff:', '');
     console.log("ipAddress", ipAddress);
 
@@ -373,7 +375,10 @@ router.get('/review', checkCookieValue, async (req, res) => {
         let currentUserData = JSON.parse(req.userData);
         console.log(currentUserData);
 
-        let ipAddress = req.ip;
+        //let ipAddress = req.ip;
+
+        let ipAddress = await comFunction2.getPublicIpAddress();
+        console.log("ipAddress",ipAddress);
         ipAddress = ipAddress.toString().replace('::ffff:', '');
         console.log("ipAddress", ipAddress);
 
@@ -444,7 +449,8 @@ router.get('/review', checkCookieValue, async (req, res) => {
 
 router.get('/get-country', async (req, res) => {
     try {
-        let ipAddress = req.ip;
+        let ipAddress = await comFunction2.getPublicIpAddress();
+        console.log("ipAddress",ipAddress);
         ipAddress = ipAddress.toString().replace('::ffff:', '');
         console.log("ipAddress", ipAddress);
 
@@ -554,7 +560,8 @@ router.get('/stripe-payment', checkCookieValue, async (req, res) => {
         const { planId, planPrice, monthly, memberCount, total_price } = req.query;
         console.log("req.query-monthly", req.query);
 
-        let ipAddress = req.ip;
+        let ipAddress = await comFunction2.getPublicIpAddress();
+        console.log("ipAddress",ipAddress);
         ipAddress = ipAddress.toString().replace('::ffff:', '');
         console.log("ipAddress", ipAddress);
 
@@ -593,7 +600,8 @@ router.get('/stripe-year-payment', checkCookieValue, async (req, res) => {
         console.log("req.query-yearly", req.query);
 
         
-        let ipAddress = req.ip;
+        let ipAddress = await comFunction2.getPublicIpAddress();
+        console.log("ipAddress",ipAddress);
         ipAddress = ipAddress.toString().replace('::ffff:', '');
         console.log("ipAddress", ipAddress);
 
@@ -974,7 +982,8 @@ router.get('/company/:slug', checkCookieValue, async (req, res) => {
 router.get('/categories', checkCookieValue, async (req, res) => {
     let currentUserData = JSON.parse(req.userData);
 
-    let ipAddress = req.ip;
+    let ipAddress = await comFunction2.getPublicIpAddress();
+    console.log("ipAddress",ipAddress);
     ipAddress = ipAddress.toString().replace('::ffff:', '');
     console.log("ipAddress", ipAddress);
 
@@ -1098,7 +1107,8 @@ router.get('/category/:category_slug/:country', checkCookieValue, async (req, re
     const country = req.params.country;
     const baseURL = process.env.MAIN_URL;
 
-    let ipAddress = req.ip;
+    let ipAddress = await comFunction2.getPublicIpAddress();
+    console.log("ipAddress",ipAddress);
     ipAddress = ipAddress.toString().replace('::ffff:', '');
     console.log("ipAddress", ipAddress);
 
@@ -1177,7 +1187,8 @@ router.get('/category/:category_slug/:country/:filter', checkCookieValue, async 
     const filter_value = req.params.filter;
     const baseURL = process.env.MAIN_URL;
 
-    let ipAddress = req.ip;
+    let ipAddress = await comFunction2.getPublicIpAddress();
+    console.log("ipAddress",ipAddress);
     ipAddress = ipAddress.toString().replace('::ffff:', '');
     console.log("ipAddress", ipAddress);
 
@@ -1273,7 +1284,9 @@ router.get('/home', checkCookieValue, async (req, res) => {
 //Discussion page
 router.get('/discussion', checkCookieValue, async (req, res) => {
     let currentUserData = JSON.parse(req.userData);
-    let ipAddress = req.ip;
+    
+    let ipAddress = await comFunction2.getPublicIpAddress();
+    console.log("ipAddress",ipAddress);
     ipAddress = ipAddress.toString().replace('::ffff:', '');
     console.log("ipAddress", ipAddress);
 
