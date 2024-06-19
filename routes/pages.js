@@ -525,13 +525,26 @@ router.get('/faq', checkCookieValue, async (req, res) => {
 });
 
 router.get('/business', checkCookieValue, async (req, res) => {
-
-    const [globalPageMeta] = await Promise.all([
-        comFunction2.getPageMetaValues('global'),
-    ]);
-
     try {
         let currentUserData = JSON.parse(req.userData);
+        console.log("currentUserData", currentUserData);
+
+        //const ipAddress = req.ip; 
+        const ipAddress = '45.64.221.211';
+        console.log("ipAddress", ipAddress);
+        const api_key = process.env.GEO_LOCATION_API_KEY;
+        //const api_key = 'AIzaSyCc5pts6Y3V7g9ZGGVsCcEi0WD8seu1VJ8';
+
+        const { country_name, country_code } = await comFunction2.getcountrynamebyIp(ipAddress, api_key);
+        console.log("Country Name:", country_name);
+        console.log("Country Code:", country_code);
+
+        const [globalPageMeta, getplans] = await Promise.all([
+            comFunction2.getPageMetaValues('global'),
+            comFunction2.getplans(country_name)
+        ]);
+        console.log("getplans", getplans);
+
         const sql = `SELECT * FROM page_info where secret_Key = 'business' `;
         db.query(sql, (err, results, fields) => {
             if (err) throw err;
@@ -557,7 +570,9 @@ router.get('/business', checkCookieValue, async (req, res) => {
                     meta_values_array,
                     UpcomingBusinessFeature,
                     BusinessFeature,
-                    globalPageMeta: globalPageMeta
+                    globalPageMeta: globalPageMeta,
+                    getplans: getplans,
+                    country_name: country_name
                 });
             })
 
@@ -5717,7 +5732,7 @@ router.get('/payments', checkLoggedIn, async (req, res) => {
         //     allcompany: allcompany
         // });
         res.render('payments', {
-            menu_active_id: 'company',
+            menu_active_id: 'miscellaneous',
             page_title: 'Payments',
             currentUserData,
             allPayments: getAllPayments
@@ -5727,6 +5742,7 @@ router.get('/payments', checkLoggedIn, async (req, res) => {
         res.status(500).send('An error occurred');
     }
 });
+
 
 //---Edit Payment--//
 router.get('/edit-payment/:paymentId', checkLoggedIn, async (req, res) => {
