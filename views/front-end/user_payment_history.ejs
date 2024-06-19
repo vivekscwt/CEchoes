@@ -1,0 +1,721 @@
+<%- include('common/header') -%>
+<!--begin::Content-->
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <!--begin::Toolbar-->
+    <div class="toolbar" id="kt_toolbar">
+        <!--begin::Container-->
+        <div id="kt_toolbar_container" class="container-fluid d-flex flex-stack">
+        <!--begin::Page title-->
+        <div data-kt-swapper="true" data-kt-swapper-mode="prepend" data-kt-swapper-parent="{default: '#kt_content_container', 'lg' : '#kt_toolbar_container'}" class="page-title d-flex align-items-center flex-wrap me-3 mb-5 mb-lg-0">
+            <!--begin::Title-->
+            <h1
+                class="d-flex align-items-center text-dark fw-bolder fs-3 my-1">
+                <%= page_title %>
+                <!--end::Description-->
+            </h1>
+            <!--end::Title-->
+        </div>
+        <!--end::Page title-->
+        </div>
+        <!--end::Container-->
+    </div>
+    <!--end::Toolbar-->
+    <!--begin::Post-->
+    <div class="post d-flex flex-column-fluid" id="kt_post">
+        <!--b egin::Container-->
+        <div id="kt_content_container" class="container-xxl">
+            <!--begin::Card-->
+            <div class="card">
+                <!--begin::Card header-->
+                <div class="card-header border-0 pt-6">
+                    <!--begin::Card toolbar-->
+                    <div class="card-toolbar">
+                        <!--begin::Toolbar-->
+
+                        <!--end::Toolbar-->
+                        <!--begin::Group actions-->
+                        <div class="d-flex justify-content-end align-items-center d-none" data-kt-user-table-toolbar="selected">
+                            <div class="fw-bolder me-5">
+                            <span class="me-2" data-kt-user-table-select="selected_count"></span>Selected</div>
+                            <button type="button" class="btn btn-danger" data-kt-user-table-select="delete_selected">Delete Selected</button>
+                        </div>
+                        <!--end::Group actions-->
+                        <!--begin::Modal - Adjust Balance-->
+                        <div class="modal fade" id="kt_modal_import_company" tabindex="-1" aria-hidden="true">
+                            <!--begin::Modal dialog-->
+                            <div class="modal-dialog modal-dialog-centered mw-650px">
+                                <!--begin::Modal content-->
+                                <div class="modal-content">
+                                    <!--begin::Modal header-->
+                                    <div class="modal-header">
+                                        <!--begin::Modal title-->
+                                        <h2 class="fw-bolder">Import Companies</h2>
+                                        <!--end::Modal title-->
+                                        <!--begin::Close-->
+                                        <div class="btn btn-icon btn-sm btn-active-icon-primary" data-kt-users-modal-action="close">
+                                            <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
+                                            <span class="svg-icon svg-icon-1">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                    <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" />
+                                                    <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" />
+                                                </svg>
+                                            </span>
+                                            <!--end::Svg Icon-->
+                                        </div>
+                                        <!--end::Close-->
+                                    </div>
+                                    <!--end::Modal header-->
+                                    <!--begin::Modal body-->
+                                    <div class="modal-body scroll-y mx-5 mx-xl-15 my-7">
+                                        <!--begin::Form-->
+                                        <form id="kt_modal_import_company_form" class="form" action="#" method="POST" enctype="multipart/form-data">
+                                            <!--begin::Input group-->
+                                            <div class="fv-row mb-10">
+                                                <!--begin::Label-->
+                                                <label class="fs-6 fw-bold form-label mb-2">Select File:</label>
+                                                <!--end::Label-->
+                                                <!--begin::Input-->
+                                                <input type="file" name="company_file" class=""  accept=".csv">
+                                                <!--end::Input-->
+                                            </div>
+                                            <!--end::Input group-->
+                                            <!--begin::Actions-->
+                                            <div class="text-center">
+                                                <button type="reset" class="btn btn-light me-3" data-kt-users-modal-action="cancel">Discard</button>
+                                                <button type="submit" class="btn btn-primary" data-kt-users-modal-action="submit">
+                                                    <span class="indicator-label">Submit</span>
+                                                    <span class="indicator-progress">Please wait...
+                                                    <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                                                </button>
+                                            </div>
+                                            <!--end::Actions-->
+                                        </form>
+                                        <!--end::Form-->
+                                    </div>
+                                    <!--end::Modal body-->
+                                </div>
+                                <!--end::Modal content-->
+                            </div>
+                            <!--end::Modal dialog-->
+                        </div>
+                        <!--end::Modal - New Card-->
+                    </div>
+                    <!--end::Card toolbar-->
+                </div>
+                <!--end::Card header-->
+                <!--begin::Card body-->
+                <div class="card-body pt-0">
+                    <!--begin::List-->
+                        <!-- Assuming you have a frontend route or method to fetch and render the data from the getAllPaymentHistory function -->
+
+<!-- payment_history.ejs -->
+
+<h1>Payment History</h1>
+
+<% Object.keys(allPayments).forEach(planName => { %>
+  <% if (allPayments[planName].length > 0) { %>
+    <h2><%= planName %> Plan Payments:</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Payment Date</th>
+          <th>Payment Status</th>
+          <th>Next Payment Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% allPayments[planName].forEach(payment => { %>
+          <tr>
+            <td><%= payment.formattedPaymentDate %></td>
+            <td><%= payment.payment_status %></td>
+            <td><%= payment.next_payment_date %></td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  <% } else { %>
+    <p>No <%= planName %> Plan Payments</p>
+  <% } %>
+<% }); %>
+
+                          
+                      
+                    <!--end::List-->
+                </div>
+                
+                <!--end::Card body-->
+            </div>
+            <!--end::Card-->
+        </div>
+        <!--end::Container-->
+    </div>
+    <!--end::Post-->
+</div>
+<!--end::Content-->
+<%- include('common/footer') -%>
+<script src="/assets/plugins/custom/datatables/datatables.bundle.js"></script>
+<script>
+/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+var __webpack_exports__ = {};
+/*!**************************************************************************************************!*\
+  !*** ../../../themes/metronic/html/demo1/src/js/custom/apps/user-management/users/list/table.js ***!
+  \**************************************************************************************************/
+
+
+var KTUsersList = function () {
+    // Define shared variables
+    var table = document.getElementById('kt_table_users');
+    var datatable;
+    var toolbarBase;
+    var toolbarSelected;
+    var selectedCount;
+
+    // Private functions
+    var initUserTable = function () {
+        // Set date data order
+        const tableRows = table.querySelectorAll('tbody tr');
+
+        tableRows.forEach(row => {
+            const dateRow = row.querySelectorAll('td');
+            const lastLogin = dateRow[3].innerText.toLowerCase(); // Get last login time
+            let timeCount = 0;
+            let timeFormat = 'minutes';
+
+            // Determine date & time format -- add more formats when necessary
+            if (lastLogin.includes('yesterday')) {
+                timeCount = 1;
+                timeFormat = 'days';
+            } else if (lastLogin.includes('mins')) {
+                timeCount = parseInt(lastLogin.replace(/\D/g, ''));
+                timeFormat = 'minutes';
+            } else if (lastLogin.includes('hours')) {
+                timeCount = parseInt(lastLogin.replace(/\D/g, ''));
+                timeFormat = 'hours';
+            } else if (lastLogin.includes('days')) {
+                timeCount = parseInt(lastLogin.replace(/\D/g, ''));
+                timeFormat = 'days';
+            } else if (lastLogin.includes('weeks')) {
+                timeCount = parseInt(lastLogin.replace(/\D/g, ''));
+                timeFormat = 'weeks';
+            }
+
+            // Subtract date/time from today -- more info on moment datetime subtraction: https://momentjs.com/docs/#/durations/subtract/
+            const realDate = moment().subtract(timeCount, timeFormat).format();
+
+            // Insert real date to last login attribute
+            dateRow[3].setAttribute('data-order', realDate);
+
+            // Set real date for joined column
+            const joinedDate = moment(dateRow[5].innerHTML, "DD MMM YYYY, LT").format(); // select date from 5th column in table
+            dateRow[5].setAttribute('data-order', joinedDate);
+        });
+
+        // Init datatable --- more info on datatables: https://datatables.net/manual/
+        datatable = $(table).DataTable({
+            "info": true,
+            'order': [],
+            "pageLength": 10,
+            "lengthChange": true,
+            'columnDefs': [
+                { orderable: false, targets: 0 }, // Disable ordering on column 0 (checkbox)
+                { orderable: false, targets: 1 }, // Disable ordering on column 6 (actions)                
+            ]
+        });
+
+        // Re-init functions on every table re-draw -- more info: https://datatables.net/reference/event/draw
+        datatable.on('draw', function () {
+            initToggleToolbar();
+            handleDeleteRows();
+            toggleToolbars();
+        });
+    }
+
+    // Search Datatable --- official docs reference: https://datatables.net/reference/api/search()
+    var handleSearchDatatable = () => {
+        const filterSearch = document.querySelector('[data-kt-user-table-filter="search"]');
+        filterSearch.addEventListener('keyup', function (e) {
+            datatable.search(e.target.value).draw();
+        });
+    }
+
+    // Filter Datatable
+    var handleFilterDatatable = () => {
+        // Select filter options
+        const filterForm = document.querySelector('[data-kt-user-table-filter="form"]');
+        if (filterForm) {
+            const filterButton = filterForm.querySelector('[data-kt-user-table-filter="filter"]');
+            const selectOptions = filterForm.querySelectorAll('select');
+            // Filter datatable on submit
+            filterButton.addEventListener('click', function () {
+                var filterString = '';
+
+                // Get filter values
+                selectOptions.forEach((item, index) => {
+                    if (item.value && item.value !== '') {
+                        if (index !== 0) {
+                            filterString += ' ';
+                        }
+
+                        // Build filter value options
+                        filterString += item.value;
+                    }
+                });
+
+                // Filter datatable --- official docs reference: https://datatables.net/reference/api/search()
+                datatable.search(filterString).draw();
+            });
+        }
+       
+
+        
+    }
+
+    // Reset Filter
+    var handleResetForm = () => {
+        // Select reset button
+        const resetButton = document.querySelector('[data-kt-user-table-filter="reset"]');
+
+        // Reset datatable
+        if (resetButton) {
+            resetButton.addEventListener('click', function () {
+                // Select filter options
+                const filterForm = document.querySelector('[data-kt-user-table-filter="form"]');
+                const selectOptions = filterForm.querySelectorAll('select');
+
+                // Reset select2 values -- more info: https://select2.org/programmatic-control/add-select-clear-items
+                selectOptions.forEach(select => {
+                    $(select).val('').trigger('change');
+                });
+
+                // Reset datatable --- official docs reference: https://datatables.net/reference/api/search()
+                datatable.search('').draw();
+            });
+        }
+    }
+
+
+    // Delete subscirption
+    var handleDeleteRows = () => {
+        // Select all delete buttons
+        const deleteButtons = table.querySelectorAll('[data-kt-users-table-filter="delete_row"]');
+
+        deleteButtons.forEach(d => {
+            // Delete button on click
+            d.addEventListener('click', function (e) {
+                e.preventDefault();
+                //alert('aaaaaaaaa');
+                var paymentId = $(this).attr("data-companyid");
+                //console.log(companyid);
+                // Select parent row
+                const parent = e.target.closest('tr');
+
+                // Get user name
+                //const userName = parent.querySelectorAll('td')[2].querySelectorAll('a')[2].innerText;
+
+                // SweetAlert2 pop up --- official docs reference: https://sweetalert2.github.io/
+                Swal.fire({
+                    text: "Are you sure you want to delete the payment record ?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    buttonsStyling: false,
+                    confirmButtonText: "Yes, delete!",
+                    cancelButtonText: "No, cancel",
+                    customClass: {
+                        confirmButton: "btn fw-bold btn-danger",
+                        cancelButton: "btn fw-bold btn-active-light-primary"
+                    }
+                }).then(function (result) {
+                    if (result.value) {
+                        $.ajax({
+                            //url: '/auth/delete-company', 
+                            url: '/auth/delete-payment', 
+                            method: 'POST',
+                            data: {paymentId:paymentId},
+                            ContentType: 'application/json',
+                            success: function (data) {
+                                if (data.status == 'ok') {
+                                    Swal.fire({
+                                        text: data.message,
+                                        icon: "success",
+                                        buttonsStyling: false,
+                                        confirmButtonText: "Ok, got it!",
+                                        customClass: {
+                                            confirmButton: "btn btn-primary"
+                                        }
+                                    }).then(function (result) {
+                                        if (result.isConfirmed) {
+                                            location.reload();
+                                        }
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        text: data.message,
+                                        icon: "error",
+                                        buttonsStyling: false,
+                                        confirmButtonText: "Ok, got it!",
+                                        customClass: {
+                                            confirmButton: "btn btn-primary"
+                                        }
+                                    });
+                                }
+                            },
+                            error: function (xhr, status, error) {
+                                // Handle any errors that occur during the request
+                                console.log(error);
+                            }
+                        });
+                    } else if (result.dismiss === 'cancel') {
+                        Swal.fire({
+                            text:  "Payment details is not deleted.",
+                            icon: "error",
+                            buttonsStyling: false,
+                            confirmButtonText: "Ok, got it!",
+                            customClass: {
+                                confirmButton: "btn fw-bold btn-primary",
+                            }
+                        });
+                    }
+                });
+            })
+        });
+    }
+
+    // Init toggle toolbar
+    var initToggleToolbar = () => {
+        // Toggle selected action toolbar
+        // Select all checkboxes
+        const checkboxes = table.querySelectorAll('[type="checkbox"]');
+
+        // Select elements
+        toolbarBase = document.querySelector('[data-kt-user-table-toolbar="base"]');
+        toolbarSelected = document.querySelector('[data-kt-user-table-toolbar="selected"]');
+        selectedCount = document.querySelector('[data-kt-user-table-select="selected_count"]');
+        const deleteSelected = document.querySelector('[data-kt-user-table-select="delete_selected"]');
+
+        // Toggle delete selected toolbar
+        checkboxes.forEach(c => {
+            // Checkbox on click event
+            c.addEventListener('click', function () {
+                setTimeout(function () {
+                    toggleToolbars();
+                }, 50);
+            });
+        });
+
+        // Deleted selected rows
+        deleteSelected.addEventListener('click', function () {
+            // SweetAlert2 pop up --- official docs reference: https://sweetalert2.github.io/
+            Swal.fire({
+                text: "Are you sure you want to delete selected customers?",
+                icon: "warning",
+                showCancelButton: true,
+                buttonsStyling: false,
+                confirmButtonText: "Yes, delete!",
+                cancelButtonText: "No, cancel",
+                customClass: {
+                    confirmButton: "btn fw-bold btn-danger",
+                    cancelButton: "btn fw-bold btn-active-light-primary"
+                }
+            }).then(function (result) {
+                if (result.value) {
+                    Swal.fire({
+                        text: "You have deleted all selected customers!.",
+                        icon: "success",
+                        buttonsStyling: false,
+                        confirmButtonText: "Ok, got it!",
+                        customClass: {
+                            confirmButton: "btn fw-bold btn-primary",
+                        }
+                    }).then(function () {
+                        // Remove all selected customers
+                        checkboxes.forEach(c => {
+                            if (c.checked) {
+                                datatable.row($(c.closest('tbody tr'))).remove().draw();
+                            }
+                        });
+
+                        // Remove header checked box
+                        const headerCheckbox = table.querySelectorAll('[type="checkbox"]')[0];
+                        headerCheckbox.checked = false;
+                    }).then(function () {
+                        toggleToolbars(); // Detect checked checkboxes
+                        initToggleToolbar(); // Re-init toolbar to recalculate checkboxes
+                    });
+                } else if (result.dismiss === 'cancel') {
+                    Swal.fire({
+                        text: "Selected customers was not deleted.",
+                        icon: "error",
+                        buttonsStyling: false,
+                        confirmButtonText: "Ok, got it!",
+                        customClass: {
+                            confirmButton: "btn fw-bold btn-primary",
+                        }
+                    });
+                }
+            });
+        });
+    }
+
+    // Toggle toolbars
+    const toggleToolbars = () => {
+        // Select refreshed checkbox DOM elements 
+        const allCheckboxes = table.querySelectorAll('tbody [type="checkbox"]');
+
+        // Detect checkboxes state & count
+        let checkedState = false;
+        let count = 0;
+
+        // Count checked boxes
+        allCheckboxes.forEach(c => {
+            if (c.checked) {
+                checkedState = true;
+                count++;
+            }
+        });
+
+        // Toggle toolbars
+        if (checkedState) {
+            selectedCount.innerHTML = count;
+            toolbarBase.classList.add('d-none');
+            toolbarSelected.classList.remove('d-none');
+        } else {
+            toolbarBase.classList.remove('d-none');
+            toolbarSelected.classList.add('d-none');
+        }
+    }
+
+    return {
+        // Public functions  
+        init: function () {
+            if (!table) {
+                return;
+            }
+
+            initUserTable();
+            initToggleToolbar();
+            handleSearchDatatable();
+            handleResetForm();
+            handleDeleteRows();
+            handleFilterDatatable();
+
+        }
+    }
+}();
+
+// On document ready
+KTUtil.onDOMContentLoaded(function () {
+    KTUsersList.init();
+});
+/******/ })()
+;
+//# sourceMappingURL=table.js.map    
+</script>
+<!--Upload Company-->
+<script>
+/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+var __webpack_exports__ = {};
+/*!*********************************************************************************************************!*\
+  !*** ../../../themes/metronic/html/demo1/src/js/custom/apps/user-management/users/list/export-users.js ***!
+  \*********************************************************************************************************/
+
+
+// Class definition
+var KTModalExportUsers = function () {
+    // Shared variables
+    const element = document.getElementById('kt_modal_import_company');
+    const form = element.querySelector('#kt_modal_import_company_form');
+    const modal = new bootstrap.Modal(element);
+
+    // Init form inputs
+    var initForm = function () {
+
+        // Init form validation rules. For more info check the FormValidation plugin's official documentation:https://formvalidation.io/
+        var validator = FormValidation.formValidation(
+            form,
+            {
+                fields: {
+                    'format': {
+                        validators: {
+                            notEmpty: {
+                                message: 'File format is required'
+                            }
+                        }
+                    },
+                },
+                plugins: {
+                    trigger: new FormValidation.plugins.Trigger(),
+                    bootstrap: new FormValidation.plugins.Bootstrap5({
+                        rowSelector: '.fv-row',
+                        eleInvalidClass: '',
+                        eleValidClass: ''
+                    })
+                }
+            }
+        );
+
+        // Submit button handler
+        const submitButton = element.querySelector('[data-kt-users-modal-action="submit"]');
+        submitButton.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            // Validate form before submit
+            if (validator) {
+                validator.validate().then(function (status) {
+                    console.log('validated!');
+
+                    if (status == 'Valid') {
+                        submitButton.setAttribute('data-kt-indicator', 'on');
+
+                        // Disable submit button whilst loading
+                        submitButton.disabled = true;
+                        var formElement = document.getElementById('kt_modal_import_company_form');
+                        var formData = new FormData(formElement);
+                        
+                            //submitButton.removeAttribute('data-kt-indicator');
+                            $.ajax({
+                                url: '/auth/company-bulk-upload', // URL for your API endpoint
+                                type: 'POST',
+                                data: formData,
+                                processData: false, // Prevent jQuery from processing the data
+                                contentType: false, // Let the browser set the content type
+                                success: function (data) {
+                                    if (data.status == 'ok') {
+                                        Swal.fire({
+                                            text: data.message,
+                                            icon: "success",
+                                            buttonsStyling: false,
+                                            confirmButtonText: "Ok, got it!",
+                                            customClass: {
+                                                confirmButton: "btn btn-primary"
+                                            }
+                                        }).then(function (result) {
+                                            if (result.isConfirmed) {
+                                                location.reload();
+                                            }
+                                        });
+                                    } else {
+                                        Swal.fire({
+                                            text: data.message,
+                                            icon: "error",
+                                            buttonsStyling: false,
+                                            confirmButtonText: "Ok, got it!",
+                                            customClass: {
+                                                confirmButton: "btn btn-primary"
+                                            }
+                                        });
+                                    }
+                                },
+                                error: function (xhr, status, error) {
+                                    // Handle any errors that occur during the request
+                                    console.log(error);
+                                }
+                            });
+                        //setTimeout(function () {
+                        //}, 5000);
+                    } else {
+                        Swal.fire({
+                            text: "Sorry, looks like there are some errors detected, please try again.",
+                            icon: "error",
+                            buttonsStyling: false,
+                            confirmButtonText: "Ok, got it!",
+                            customClass: {
+                                confirmButton: "btn btn-primary"
+                            }
+                        });
+                    }
+                });
+            }
+        });
+
+        // Cancel button handler
+        const cancelButton = element.querySelector('[data-kt-users-modal-action="cancel"]');
+        cancelButton.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            Swal.fire({
+                text: "Are you sure you would like to cancel?",
+                icon: "warning",
+                showCancelButton: true,
+                buttonsStyling: false,
+                confirmButtonText: "Yes, cancel it!",
+                cancelButtonText: "No, return",
+                customClass: {
+                    confirmButton: "btn btn-primary",
+                    cancelButton: "btn btn-active-light"
+                }
+            }).then(function (result) {
+                if (result.value) {
+                    form.reset(); // Reset form	
+                    modal.hide(); // Hide modal				
+                } else if (result.dismiss === 'cancel') {
+                    Swal.fire({
+                        text: "Your form has not been cancelled!.",
+                        icon: "error",
+                        buttonsStyling: false,
+                        confirmButtonText: "Ok, got it!",
+                        customClass: {
+                            confirmButton: "btn btn-primary",
+                        }
+                    });
+                }
+            });
+        });
+
+        // Close button handler
+        const closeButton = element.querySelector('[data-kt-users-modal-action="close"]');
+        closeButton.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            Swal.fire({
+                text: "Are you sure you would like to cancel?",
+                icon: "warning",
+                showCancelButton: true,
+                buttonsStyling: false,
+                confirmButtonText: "Yes, cancel it!",
+                cancelButtonText: "No, return",
+                customClass: {
+                    confirmButton: "btn btn-primary",
+                    cancelButton: "btn btn-active-light"
+                }
+            }).then(function (result) {
+                if (result.value) {
+                    form.reset(); // Reset form	
+                    modal.hide(); // Hide modal				
+                } else if (result.dismiss === 'cancel') {
+                    Swal.fire({
+                        text: "Your form has not been cancelled!.",
+                        icon: "error",
+                        buttonsStyling: false,
+                        confirmButtonText: "Ok, got it!",
+                        customClass: {
+                            confirmButton: "btn btn-primary",
+                        }
+                    });
+                }
+            });
+        });
+    }
+
+    return {
+        // Public functions
+        init: function () {
+            initForm();
+        }
+    };
+}();
+
+// On document ready
+KTUtil.onDOMContentLoaded(function () {
+    KTModalExportUsers.init();
+});
+/******/ })()
+;
+//# sourceMappingURL=export-users.js.map
+</script>
+<style>
+    .symbol-circle{
+        box-shadow: 0px 4px 14px 0px rgba(0, 0, 0, 0.25);
+    }
+</style>

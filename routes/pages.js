@@ -5797,7 +5797,27 @@ router.get('/payment_history', checkLoggedIn, async (req, res) => {
     }
 });
 
+router.get('/user_payment_history', checkCookieValue,async (req, res) => {
+    try {
+            let currentUserData = JSON.parse(req.userData);
 
+        // Fetch all the required data asynchronously
+        const [getAllPayments] = await Promise.all([
+            comFunction2.getAllPaymentHistory(),
+        ]);
+        console.log(getAllPayments);
+
+        res.render('front-end/user_payment_history', {
+            menu_active_id: 'miscellaneous',
+            page_title: 'Payment History ',
+            currentUserData,
+            allPayments : getAllPayments,
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('An error occurred');
+    }
+});
 
 //---Edit Payment--//
 router.get('/edit-payment/:paymentId', checkLoggedIn, async (req, res) => {
