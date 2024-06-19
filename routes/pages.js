@@ -447,6 +447,44 @@ router.get('/review', checkCookieValue, async (req, res) => {
 });
 
 
+
+
+async function getPublicIpAddress() {
+    try {
+        const response = await axios.get('https://api.ipify.org?format=json');
+        const ipAddress = response.data.ip;
+        console.log('Public IP Address:', ipAddress);
+        return ipAddress;
+    } catch (error) {
+        console.error('Error fetching public IP address:', error.message);
+        throw new Error('Failed to fetch public IP address');
+    }
+}
+// Function to send the public IP address to a remote server
+async function sendIpAddressToServer(ipAddress) {
+    try {
+        const response = await axios.post('https://cechoes.com/getCountryByIP', { ipAddress });
+        console.log('Server Response:', response.data);
+        return response.data;
+    } catch (error) {
+        console.error('Error sending IP address to server:', error.message);
+        throw new Error('Failed to send IP address to server');
+    }
+}
+
+// Main function to get IP address and send to server
+(async () => {
+    try {
+        const ipAddress = await getPublicIpAddress();
+        const serverResponse = await sendIpAddressToServer(ipAddress);
+        console.log('Country Name:', serverResponse.countryName);
+    } catch (error) {
+        console.error('Error:', error.message);
+    }
+})();
+
+
+
 router.get('/get-country', async (req, res) => {
     try {
         let ipAddress = await comFunction2.getPublicIpAddress();
@@ -1284,7 +1322,7 @@ router.get('/home', checkCookieValue, async (req, res) => {
 //Discussion page
 router.get('/discussion', checkCookieValue, async (req, res) => {
     let currentUserData = JSON.parse(req.userData);
-    
+
     let ipAddress = await comFunction2.getPublicIpAddress();
     console.log("ipAddress",ipAddress);
     ipAddress = ipAddress.toString().replace('::ffff:', '');
