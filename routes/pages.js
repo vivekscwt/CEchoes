@@ -193,15 +193,15 @@ router.get('', checkCookieValue, async (req, res) => {
                     meta_values_array[item.page_meta_key] = item.page_meta_value;
                 })
                 //console.log(allRatingTags);
-                // const featured_sql = `SELECT featured_companies.id,featured_companies.company_id,featured_companies.short_desc,featured_companies.link,company.logo,company.slug, company.company_name FROM featured_companies 
-                //         JOIN company ON featured_companies.company_id = company.ID 
-                //         WHERE featured_companies.status = 'active' 
-                //         ORDER BY featured_companies.ordering ASC `;
-
                 const featured_sql = `SELECT featured_companies.id,featured_companies.company_id,featured_companies.short_desc,featured_companies.link,company.logo,company.slug, company.company_name FROM featured_companies 
                         JOIN company ON featured_companies.company_id = company.ID 
-                        WHERE featured_companies.status = 'active' AND company.main_address_country = "${country_code}"
+                        WHERE featured_companies.status = 'active' 
                         ORDER BY featured_companies.ordering ASC `;
+
+                // const featured_sql = `SELECT featured_companies.id,featured_companies.company_id,featured_companies.short_desc,featured_companies.link,company.logo,company.slug, company.company_name FROM featured_companies 
+                //         JOIN company ON featured_companies.company_id = company.ID 
+                //         WHERE featured_companies.status = 'active' AND company.main_address_country = "${country_code}"
+                //         ORDER BY featured_companies.ordering ASC `;
                 db.query(featured_sql, (featured_err, featured_result) => {
                     var featured_comps = featured_result;
                     // res.json( {
