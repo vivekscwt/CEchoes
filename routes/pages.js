@@ -1323,9 +1323,9 @@ router.get('/discussion', checkCookieValue, async (req, res) => {
 
     const api_key = process.env.GEO_LOCATION_API_KEY;
 
-    const getcountrybyIp = await Promise.all([comFunction2.getcountrybyIp(ipAddress, api_key)])
-    const country_name = getcountrybyIp[0];
-    console.log("country_name", country_name);
+    const { country_name, country_code } = await comFunction2.getcountrynamebyIp(ipAddress, api_key);
+    console.log("Country Name:", country_name);
+    console.log("Country Code:", country_code);
 
     const [globalPageMeta, getAllLatestDiscussion, getAllPopularDiscussion, getAllDiscussions, getAllViewedDiscussion, getPopularTags, getCountries] = await Promise.all([
         comFunction2.getPageMetaValues('global'),
