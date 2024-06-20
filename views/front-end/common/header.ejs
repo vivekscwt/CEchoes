@@ -1,118 +1,136 @@
 <!doctype html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>CEchoesTechnology || <%= page_title %></title>
-    <meta name="theme-color" content="black">
-    <link rel="icon" href="/assets/media/logos/favicon.ico" type="image/x-icon">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;0,1000;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900;1,1000&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Edu+SA+Beginner:wght@500&display=swap" rel="stylesheet">
-    <!-- Css -->
-    <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.4.0/css/all.css">
-    <link href="/front-end/default-style.css" rel="stylesheet" type="text/css">
-    <link href="/front-end/css/header-banner-style.css" rel="stylesheet" type="text/css">
-    <!-- Responsive css -->
 
-    <link href="/front-end/responsive/header-banner-responsive-style.css" rel="stylesheet" media='screen and (max-width:1440.98px)' type="text/css">
-    <!-- Google tag (gtag.js) --> 
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KZ0CX4E95T"></script> 
-    <script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-KZ0CX4E95T'); </script>
-    
-    <!--[if lt IE 9]>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CEchoesTechnology || <%= page_title %>
+  </title>
+  <meta name="theme-color" content="black">
+  <link rel="icon" href="/assets/media/logos/favicon.ico" type="image/x-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;0,1000;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900;1,1000&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Edu+SA+Beginner:wght@500&display=swap" rel="stylesheet">
+  <!-- Css -->
+  <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.4.0/css/all.css">
+  <link href="/front-end/default-style.css" rel="stylesheet" type="text/css">
+  <link href="/front-end/css/header-banner-style.css" rel="stylesheet" type="text/css">
+  <!-- Responsive css -->
+
+  <link href="/front-end/responsive/header-banner-responsive-style.css" rel="stylesheet"
+    media='screen and (max-width:1440.98px)' type="text/css">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KZ0CX4E95T"></script>
+  <script> window.dataLayer = window.dataLayer || []; function gtag() { dataLayer.push(arguments); } gtag('js', new Date()); gtag('config', 'G-KZ0CX4E95T'); </script>
+
+  <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-    <style>
-      
-      .preloder {
-          position: fixed;
-          width: 100%;
-          height: 100%;
-          background: black;
-          z-index: 999999999;
-      }
-      .preloder > img {
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          margin: auto;
-          width: 200px;
-      }
-      .loading {
-        display: flex;
-        flex-direction: row;
-        position: absolute;
-        top: 205px;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        /* margin: auto; */
-        margin: auto;
-        width: 105px;
-        height: 40px;
-        text-align: center;
-      }
-      .loading__letter {
-          font-size: 16px;
-          font-weight: normal;
-          letter-spacing: 2px;
-          text-transform: uppercase;
-          font-family: var(--nunito);
-          color: #fff;
-          animation-name: bounce;
-          animation-duration: 2s;
-          animation-iteration-count: infinite;
+  <style>
+    .preloder {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      background: black;
+      z-index: 999999999;
+    }
+
+    .preloder>img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      margin: auto;
+      width: 200px;
+    }
+
+    .loading {
+      display: flex;
+      flex-direction: row;
+      position: absolute;
+      top: 205px;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      /* margin: auto; */
+      margin: auto;
+      width: 105px;
+      height: 40px;
+      text-align: center;
+    }
+
+    .loading__letter {
+      font-size: 16px;
+      font-weight: normal;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-family: var(--nunito);
+      color: #fff;
+      animation-name: bounce;
+      animation-duration: 2s;
+      animation-iteration-count: infinite;
+    }
+
+    .loading__letter:nth-child(2) {
+      animation-delay: .1s;
+    }
+
+    .loading__letter:nth-child(3) {
+      animation-delay: .2s;
+    }
+
+    .loading__letter:nth-child(4) {
+      animation-delay: .3s;
+    }
+
+    .loading__letter:nth-child(5) {
+      animation-delay: .4s;
+    }
+
+    .loading__letter:nth-child(6) {
+      animation-delay: .5s;
+    }
+
+    .loading__letter:nth-child(7) {
+      animation-delay: .6s;
+    }
+
+    .loading__letter:nth-child(8) {
+      animation-delay: .8s;
+    }
+
+    .loading__letter:nth-child(9) {
+      animation-delay: 1s;
+    }
+
+    .loading__letter:nth-child(10) {
+      animation-delay: 1.2s;
+    }
+
+    @keyframes bounce {
+      0% {
+        transform: translateY(0px)
       }
 
-      .loading__letter:nth-child(2) {
-        animation-delay: .1s; 
-      }
-      .loading__letter:nth-child(3) {
-        animation-delay: .2s;
-      }
-      .loading__letter:nth-child(4) {
-        animation-delay: .3s; 
-      }
-      .loading__letter:nth-child(5) {
-        animation-delay: .4s;
-      }
-      .loading__letter:nth-child(6) {
-        animation-delay: .5s; 
-      }
-      .loading__letter:nth-child(7) {
-        animation-delay: .6s;
-      }
-      .loading__letter:nth-child(8) {
-        animation-delay: .8s;
-      }
-      .loading__letter:nth-child(9) {
-        animation-delay: 1s;
-      }
-      .loading__letter:nth-child(10) {
-        animation-delay: 1.2s;
+      40% {
+        transform: translateY(-40px);
       }
 
-      @keyframes bounce {
-        0% {
-          transform: translateY(0px)
-        }
-        40% {
-          transform: translateY(-40px);
-        }
-        80%,
-        100% {
-          transform: translateY(0px);
-        }
+      80%,
+      100% {
+        transform: translateY(0px);
       }
-    </style>
-  </head>
-  <body <% if(menu_active_id=='landing'){ %>class="home"<% }%>>
+    }
+  </style>
+</head>
+
+<body <% if(menu_active_id=='landing' ){ %>class="home"<% }%>>
     <!--<div id="preloder" class="preloder">
       <img src="/front-end/images/GIF_v2sec.gif" alt="preloder">
       <div class="loading">
@@ -129,38 +147,40 @@
       </div>
     </div>-->
     <!-- ============== Header Start =============== -->
-    <% if( menu_active_id == 'landing' || menu_active_id == 'home' ){ %>
+    <% if( menu_active_id=='landing' || menu_active_id=='home' ){ %>
       <% if( meta_values_array.bannner_message ){ %>
-      <section class="top-text-scroll">
-        <marquee behavior="scroll" direction="left" onmouseover="this.stop();" onmouseout="this.start();">
-          <%- meta_values_array.bannner_message -%>
-        </marquee>
-      </section>
-      <% } %>
-    <% } %>
-    <div id="google_translate_element"></div>
+        <section class="top-text-scroll">
+          <marquee behavior="scroll" direction="left" onmouseover="this.stop();" onmouseout="this.start();">
+            <%- meta_values_array.bannner_message -%>
+          </marquee>
+        </section>
+        <% } %>
+          <% } %>
 
-    <header class="main_header <% if(menu_active_id!='landing' &&  menu_active_id != 'home'){ %>inner_header<% }%>">
-      <div class="container">
-        <div class="header-wrapper">
-          <div class="logo">
-            <a href="/">
-              <img width="139" src="/front-end/images/cechoes-logo.png" alt="logo">
-            </a>
-          </div>
-          <div class="header-right-content">
-            <% if( menu_active_id == 'home'){ %>
-              <span class="header-middle-menu-link mbl-hide-link">
-                <ul>
-                  
-                  <% if(currentUserData && currentUserData.user_id ){ %>
-                    <li><a href="#">Lodge A Complaint</a></li>
-                  <% } else { %>
-                    <li><a href="#" class=" login">Lodge A Complaint</a></li>
-                  <% } %>
-                </ul>
-              </span>
-              <!-- <span class="country-select">
+
+            <header
+              class="main_header <% if(menu_active_id!='landing' &&  menu_active_id != 'home'){ %>inner_header<% }%>">
+              <div id="google_translate_element" style="padding-left:347px;"></div>
+              <div class="container">
+                <div class="header-wrapper">
+                  <div class="logo">
+                    <a href="/">
+                      <img width="139" src="/front-end/images/cechoes-logo.png" alt="logo">
+                    </a>
+                  </div>
+                  <div class="header-right-content">
+                    <% if( menu_active_id=='home' ){ %>
+                      <span class="header-middle-menu-link mbl-hide-link">
+                        <ul>
+
+                          <% if(currentUserData && currentUserData.user_id ){ %>
+                            <li><a href="#">Lodge A Complaint</a></li>
+                            <% } else { %>
+                              <li><a href="#" class=" login">Lodge A Complaint</a></li>
+                              <% } %>
+                        </ul>
+                      </span>
+                      <!-- <span class="country-select">
                 <span class="country-change">IND</span> <a href="" class="country-arw"><i class="fa-solid fa-angle-down"></i></a>
                 <div class="country-dropdown">
                   <ul class="p-0 m-0">
@@ -169,145 +189,166 @@
                   </ul>
                 </div>
             </span> -->
-            <span class="language-select">
-              <span class="lang-change">Eng</span> <a href="" class="lang-arw"><i class="fa-solid fa-angle-down"></i></a>
-              <div class="lang-dropdown">
-                <ul class="p-0 m-0">
-                  <li><a href="">Eng</a></li>
-                  <li><a href="">Ben</a></li>
-                </ul>
-              </div>
-            </span>
-            <% } %>
-            
-            <% if(menu_active_id != 'discussion'){ %>
-              <span class="tab-hide-link"><a href="/discussion" class="single-link">All Queries</a></span>
-            <% } %>
-            <span class="mbl-hide-link always"><a href="/review" class="btn-default btn-outline-warning">All Reviews</a></span>
-            <% if(menu_active_id!='business'){%>
-            <span class="tab-hide-link"><a href="/business" class="btn-default btn-outline-warning">For Business</a></span>      
-            <% } %>
-            <% if(currentUserData){ %>
-            <span class="user-log-profile">
-              <span class="user-login-profile-icon">
-                <% if(currentUserData.profile_pic){ %>
-                  <% if (currentUserData.profile_pic.includes('https')) { %>
-                    <img src="<%= currentUserData.profile_pic %>" alt="<%= currentUserData.first_name+' '+currentUserData.last_name %>" width="189" height="189" loading="lazy">
-                  <% } else { %>
-                    <img src="/<%= currentUserData.profile_pic %>" alt="<%= currentUserData.first_name+' '+currentUserData.last_name %>" width="189" height="189" loading="lazy">
-                  <% } %>
-                <% } else { %>
-                  <i class="fa-regular fa-user"></i>
-                <% } %>
-              </span>
-              <div class="user-log-profile-dropdown">
-                <ul class="p-0 m-0">
-                  <li><a href="/profile-dashboard">Profile</a></li>
-                  <li><a href="/logout">Logout</a></li>
-                </ul>
-              </div>
-            </span>
-            <% } else { %>
-            <span class="mbl-hide-link"><a href="#" class="btn-default btn-outline-warning login">Log in</a></span>
-            <% } %>
-            <span class="toggle-menu">
-              <div class="menu-circles">
-                <div class="circle-ball"></div>
-                <div class="circle-ball"></div>
-                <div class="circle-ball"></div>
-              </div>
-              <div class="menu-text">Menu</div>
-            </span>
-            <nav class="nav_sec">
-              <ul>
-                <li class="active"><a href="<%= globalData.BLOG_URL %>">Did You Know?</a></li>
-                <li><a href="/about-us">About Us</a></li>
-                <li><a href="/contact-us">Contact</a></li>
-                <% if(currentUserData && currentUserData.user_id){ %>
-                  <li><a href="/register-complaint">Lodge A Complaint</a></li>
-                <% } else { %>
-                  <li><a href="#" class="login">Lodge A Complaint</a></li>
-                  
-                <% } %>
-                <li class="tab-show-link"><a href="/review" class="btn-default btn-outline-warning">All Reviews</a></li>
-                <li class="tab-show-link"><a href="/business" class="btn-default btn-outline-warning">For business</a></li>
-                <% if(currentUserData){ %>
-                <li class="mbl-show-link"><a href="/logout" class="btn-default btn-outline-warning">Log out</a></li>
-                <% } else { %>
-                <li class="mbl-show-link"><a href="#" class="btn-default btn-outline-warning login">Log in</a></li>
-                <% } %>
-              </ul>
-            </nav>
-          </div>
-        </div>
-      </div>
-    </header>
-    <!-- ============== Header End =============== -->
-    
-    <!-- ============== Login Modal Start =============== -->
-    <div class="login-modal">
-      <div class="modal-logo text-center">
-        <a href="/">
-          <img style="margin: 0 auto;" src="/front-end/images/footer-logo.png" alt="Cechoes-logo">
-        </a>
-        <h4 style="color: #fff; margin-top:15px; font-weight:700; margin: 10px 0 0">Quick Login</h4>
-      </div>
-      <div class="login-modal-content">
-        <!-- <a href="#" class="login-modal-close"><img src="/front-end/images/cross.png" alt="img" width="32" height="32"></a> -->
-        <div class="row">
-          <div class="col-md-6">
-            <div class="login-left">
-              <h4 class="text-center mb-2">Existing User</h4>
-              <h5>Log in with</h5>
-              <div class="log-browse-content d-flex align-items-center justify-content-center" style="margin-bottom: 25px;">
-                <a href="/auth/google">
-                  <i class="fa-brands fa-google"></i><span>Google</span>
-                </a>
-                <a href="/auth/facebook" style="margin-left: 15px;">
-                  <i class="fa-brands fa-facebook-f"></i><span>Facebook</span>
-                </a>
-              </div>
-              <!--<div class="or-connect"><span>Or continue with</span></div>-->
-              <form id="user-signin" name="user-signin-frm" method="post">
-                <div class="custom-form">
-                  <label><span>Email</span></label>
-                  <input type="email" id="login-email" class="form-control" name="email" required="" autocomplete="off">
-                  <div class="input-icon"><i class="fa-solid fa-user"></i></div>
-                </div>
-                <div class="custom-form">
-                  <label><span>Password</span></label>
-                  <input type="password" class="form-control password" id="login-pass" name="password" required="" autocomplete="off">
-                  <div class="input-icon"><i class="fa-solid fa-eye-slash eye-change"></i></div>
-                </div>
-                <div class="d-flex align-items-center justify-content-between">
-                  <div class="remember">
-                    <div class="custom-form form-check m-0">
-                      <input type="checkbox" class="form-check-input" id="exampleCheck1" name="login-remember" value="1">
-                      <label class="form-check-label" for="exampleCheck1">Remember me <a href="" data-bs-toggle="tooltip" data-bs-placement="top" title="Check only if you are using from your own personal system"><i class="fa-solid fa-circle-info"></i></a></label>
-                    </div>
+                      <span class="language-select">
+                        <span class="lang-change">Eng</span> <a href="" class="lang-arw"><i
+                            class="fa-solid fa-angle-down"></i></a>
+                        <div class="lang-dropdown">
+                          <ul class="p-0 m-0">
+                            <li><a href="">Eng</a></li>
+                            <li><a href="">Ben</a></li>
+                          </ul>
+                        </div>
+                      </span>
+                      <% } %>
+
+                        <% if(menu_active_id !='discussion' ){ %>
+                          <span class="tab-hide-link"><a href="/discussion" class="single-link">All Queries</a></span>
+                          <% } %>
+                            <span class="mbl-hide-link always"><a href="/review"
+                                class="btn-default btn-outline-warning">All Reviews</a></span>
+                            <% if(menu_active_id!='business' ){%>
+                              <span class="tab-hide-link"><a href="/business"
+                                  class="btn-default btn-outline-warning">For Business</a></span>
+                              <% } %>
+                                <% if(currentUserData){ %>
+                                  <span class="user-log-profile">
+                                    <span class="user-login-profile-icon">
+                                      <% if(currentUserData.profile_pic){ %>
+                                        <% if (currentUserData.profile_pic.includes('https')) { %>
+                                          <img src="<%= currentUserData.profile_pic %>"
+                                            alt="<%= currentUserData.first_name+' '+currentUserData.last_name %>"
+                                            width="189" height="189" loading="lazy">
+                                          <% } else { %>
+                                            <img src="/<%= currentUserData.profile_pic %>"
+                                              alt="<%= currentUserData.first_name+' '+currentUserData.last_name %>"
+                                              width="189" height="189" loading="lazy">
+                                            <% } %>
+                                              <% } else { %>
+                                                <i class="fa-regular fa-user"></i>
+                                                <% } %>
+                                    </span>
+                                    <div class="user-log-profile-dropdown">
+                                      <ul class="p-0 m-0">
+                                        <li><a href="/profile-dashboard">Profile</a></li>
+                                        <li><a href="/logout">Logout</a></li>
+                                      </ul>
+                                    </div>
+                                  </span>
+                                  <% } else { %>
+                                    <span class="mbl-hide-link"><a href="#"
+                                        class="btn-default btn-outline-warning login">Log in</a></span>
+                                    <% } %>
+                                      <span class="toggle-menu">
+                                        <div class="menu-circles">
+                                          <div class="circle-ball"></div>
+                                          <div class="circle-ball"></div>
+                                          <div class="circle-ball"></div>
+                                        </div>
+                                        <div class="menu-text">Menu</div>
+                                      </span>
+                                      <nav class="nav_sec">
+                                        <ul>
+                                          <li class="active"><a href="<%= globalData.BLOG_URL %>">Did You Know?</a></li>
+                                          <li><a href="/about-us">About Us</a></li>
+                                          <li><a href="/contact-us">Contact</a></li>
+                                          <% if(currentUserData && currentUserData.user_id){ %>
+                                            <li><a href="/register-complaint">Lodge A Complaint</a></li>
+                                            <% } else { %>
+                                              <li><a href="#" class="login">Lodge A Complaint</a></li>
+
+                                              <% } %>
+                                                <li class="tab-show-link"><a href="/review"
+                                                    class="btn-default btn-outline-warning">All Reviews</a></li>
+                                                <li class="tab-show-link"><a href="/business"
+                                                    class="btn-default btn-outline-warning">For business</a></li>
+                                                <% if(currentUserData){ %>
+                                                  <li class="mbl-show-link"><a href="/logout"
+                                                      class="btn-default btn-outline-warning">Log out</a></li>
+                                                  <% } else { %>
+                                                    <li class="mbl-show-link"><a href="#"
+                                                        class="btn-default btn-outline-warning login">Log in</a></li>
+                                                    <% } %>
+                                        </ul>
+                                      </nav>
                   </div>
-                  <!-- <div class="forget-psw">
+                </div>
+              </div>
+            </header>
+            <!-- ============== Header End =============== -->
+
+            <!-- ============== Login Modal Start =============== -->
+            <div class="login-modal">
+              <div class="modal-logo text-center">
+                <a href="/">
+                  <img style="margin: 0 auto;" src="/front-end/images/footer-logo.png" alt="Cechoes-logo">
+                </a>
+                <h4 style="color: #fff; margin-top:15px; font-weight:700; margin: 10px 0 0">Quick Login</h4>
+              </div>
+              <div class="login-modal-content">
+                <!-- <a href="#" class="login-modal-close"><img src="/front-end/images/cross.png" alt="img" width="32" height="32"></a> -->
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="login-left">
+                      <h4 class="text-center mb-2">Existing User</h4>
+                      <h5>Log in with</h5>
+                      <div class="log-browse-content d-flex align-items-center justify-content-center"
+                        style="margin-bottom: 25px;">
+                        <a href="/auth/google">
+                          <i class="fa-brands fa-google"></i><span>Google</span>
+                        </a>
+                        <a href="/auth/facebook" style="margin-left: 15px;">
+                          <i class="fa-brands fa-facebook-f"></i><span>Facebook</span>
+                        </a>
+                      </div>
+                      <!--<div class="or-connect"><span>Or continue with</span></div>-->
+                      <form id="user-signin" name="user-signin-frm" method="post">
+                        <div class="custom-form">
+                          <label><span>Email</span></label>
+                          <input type="email" id="login-email" class="form-control" name="email" required=""
+                            autocomplete="off">
+                          <div class="input-icon"><i class="fa-solid fa-user"></i></div>
+                        </div>
+                        <div class="custom-form">
+                          <label><span>Password</span></label>
+                          <input type="password" class="form-control password" id="login-pass" name="password"
+                            required="" autocomplete="off">
+                          <div class="input-icon"><i class="fa-solid fa-eye-slash eye-change"></i></div>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between">
+                          <div class="remember">
+                            <div class="custom-form form-check m-0">
+                              <input type="checkbox" class="form-check-input" id="exampleCheck1" name="login-remember"
+                                value="1">
+                              <label class="form-check-label" for="exampleCheck1">Remember me <a href=""
+                                  data-bs-toggle="tooltip" data-bs-placement="top"
+                                  title="Check only if you are using from your own personal system"><i
+                                    class="fa-solid fa-circle-info"></i></a></label>
+                            </div>
+                          </div>
+                          <!-- <div class="forget-psw">
                     <a href="#" data-target="#pwdModal" data-toggle="modal" >Forgot password?</a>
                   </div> -->
-                  <div class="forget-psw">
-                    <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">Forgot password?</a>
-                </div>
-                </div>
-                <input type="submit" value="Log In" id="kt_sign_in_submit" class="btn-default btn-warning w-100">
-              </form>
-              <div class="register-now frm-loading" style="display: none;">
-                <span class="indicator-progress">Please wait...
-									<span class="spinner-border spinner-border-sm align-middle ms-2"></span>
-                </span>
-              </div>
-              <div class="register-now frm-error-message" style="display: none;"></div>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="signup-right mt-md-0 mt-4">
-              <h4 class="text-center mb-2">New User</h4>
-              <h5>Sign up with</h5>
-                <!--<div class="log-browse-content d-flex align-items-center justify-content-center">
+                          <div class="forget-psw">
+                            <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                              data-bs-whatever="@mdo">Forgot password?</a>
+                          </div>
+                        </div>
+                        <input type="submit" value="Log In" id="kt_sign_in_submit"
+                          class="btn-default btn-warning w-100">
+                      </form>
+                      <div class="register-now frm-loading" style="display: none;">
+                        <span class="indicator-progress">Please wait...
+                          <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                        </span>
+                      </div>
+                      <div class="register-now frm-error-message" style="display: none;"></div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="signup-right mt-md-0 mt-4">
+                      <h4 class="text-center mb-2">New User</h4>
+                      <h5>Sign up with</h5>
+                      <!--<div class="log-browse-content d-flex align-items-center justify-content-center">
                   <a href="/auth/google">
                     <i class="fa-brands fa-google"></i><span>Google</span>
                   </a>
@@ -315,120 +356,350 @@
                     <i class="fa-brands fa-facebook-f"></i><span>Facebook</span>
                   </a>
                 </div>-->
-              <!--<div class="or-connect"><span>Or continue with</span></div>-->
-              <form id="user-signup" name="user-signup-frm" method="post">
-                <div class="custom-form">
-                  <label><span>First Name</span></label>
-                  <input type="text" class="form-control" name="first_name" required="" autocomplete="off">
-                  <div class="input-icon"><i class="fa-solid fa-user"></i></div>
+                      <!--<div class="or-connect"><span>Or continue with</span></div>-->
+                      <form id="user-signup" name="user-signup-frm" method="post">
+                        <div class="custom-form">
+                          <label><span>First Name</span></label>
+                          <input type="text" class="form-control" name="first_name" required="" autocomplete="off">
+                          <div class="input-icon"><i class="fa-solid fa-user"></i></div>
+                        </div>
+                        <div class="fv-row custom-form">
+                          <label><span>Last Name</span></label>
+                          <input type="text" class="form-control" name="last_name" required="" autocomplete="off">
+                          <div class="input-icon"><i class="fa-solid fa-user"></i></div>
+                        </div>
+                        <div class="fv-row custom-form">
+                          <label><span>Email</span></label>
+                          <input type="email" class="form-control" id="signup_email" name="email" required=""
+                            autocomplete="off">
+                          <div class="input-icon"><i class="fa-solid fa-envelope"></i></div>
+                        </div>
+                        <div class="fv-row custom-form">
+                          <label><span>Password</span></label>
+                          <input type="password" class="form-control password" name="register_password"
+                            autocomplete="off" required="">
+                          <div class="input-icon"><i class="fa-solid fa-eye-slash eye-change"></i></div>
+                        </div>
+                        <div class="fv-row custom-form">
+                          <label><span>Confirm Password</span></label>
+                          <input type="password" class="form-control password" name="register_confirm_password"
+                            autocomplete="off" required="">
+                          <div class="input-icon"><i class="fa-solid fa-eye-slash eye-change"></i></div>
+                        </div>
+                        <div class="fv-row custom-form d-none" id="signup_otp">
+                          <label><span>OTP</span></label>
+                          <input type="number" class="form-control password" name="signup_otp" autocomplete="off"
+                            min="0000" max="9999" pattern="\d{4}" title="Please enter a 4-digit number">
+                        </div>
+                        <input type="submit" value="Sign Up" id="kt_sign_up_submit"
+                          class="btn-default btn-warning w-100 ">
+                        <!-- <a href="#" id="sign_up_otp" class="btn-default btn-warning w-100" >Sign Up</a> -->
+                      </form>
+                      <div class="register-now frm-loading-register" style="display: none;">
+                        <span class="indicator-progress">Please wait...
+                          <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                        </span>
+                      </div>
+                      <div class="register-now frm-error-message-register" style="display: none;"></div>
+                    </div>
+                  </div>
                 </div>
-                <div class="fv-row custom-form">
-                  <label><span>Last Name</span></label>
-                  <input type="text" class="form-control" name="last_name" required="" autocomplete="off">
-                  <div class="input-icon"><i class="fa-solid fa-user"></i></div>
-                </div>
-                <div class="fv-row custom-form">
-                  <label><span>Email</span></label>
-                  <input type="email" class="form-control" id="signup_email" name="email" required="" autocomplete="off">
-                  <div class="input-icon"><i class="fa-solid fa-envelope"></i></div>
-                </div>
-                <div class="fv-row custom-form">
-                  <label><span>Password</span></label>
-                  <input type="password" class="form-control password" name="register_password" autocomplete="off" required="">
-                  <div class="input-icon"><i class="fa-solid fa-eye-slash eye-change"></i></div>
-                </div>
-                <div class="fv-row custom-form">
-                  <label><span>Confirm Password</span></label>
-                  <input type="password" class="form-control password" name="register_confirm_password" autocomplete="off" required="">
-                  <div class="input-icon"><i class="fa-solid fa-eye-slash eye-change"></i></div>
-                </div>
-                <div class="fv-row custom-form d-none" id="signup_otp">
-                  <label><span>OTP</span></label>
-                  <input type="number" class="form-control password" name="signup_otp" autocomplete="off" min="0000" max="9999" pattern="\d{4}" title="Please enter a 4-digit number">
-                </div>
-                <input type="submit" value="Sign Up" id="kt_sign_up_submit" class="btn-default btn-warning w-100 ">
-                <!-- <a href="#" id="sign_up_otp" class="btn-default btn-warning w-100" >Sign Up</a> -->
-              </form>
-              <div class="register-now frm-loading-register" style="display: none;">
-                <span class="indicator-progress">Please wait...
-									<span class="spinner-border spinner-border-sm align-middle ms-2"></span>
-                </span>
               </div>
-              <div class="register-now frm-error-message-register" style="display: none;"></div>
+              <div class="login-overlay1"><img src="/front-end/images/login-overlay1.png" alt="img" width="148"
+                  height="352"></div>
+              <div class="login-overlay2"><img src="/front-end/images/login-overlay2.png" alt="img" width="164"
+                  height="314"></div>
             </div>
-          </div>
-        </div>
-      </div>
-      <div class="login-overlay1"><img src="/front-end/images/login-overlay1.png" alt="img" width="148" height="352"></div>
-      <div class="login-overlay2"><img src="/front-end/images/login-overlay2.png" alt="img" width="164" height="314"></div>
-    </div>
-    <!-- ============== Quick Login Modal Start =============== -->
+            <!-- ============== Quick Login Modal Start =============== -->
 
-    <% if(menu_active_id != 'survey-invitation'){ %>
-      <div class="modal fade pe-0" tabindex="-1" id="quickloginmodal">
-        <div class="modal-dialog">
-          <div class="modal-content">
-              <div class="modal-header justify-content-center">
-                <h4 class="modal-title fw-bold">Quick Login</h4>
-                <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-circle-xmark"></i></button> -->
-              </div>
-              <div class="modal-body text-center">
-                <%#<a href="/auth/google" target="_blank" class="quick-login">
-                <span><i class="fa-brands fa-google"></i></span>
-                  <span>Log in with Google</span>
-                </a>#%>
-                <!--<a href="/auth/facebook" target="_blank" class="quick-login">
+            <% if(menu_active_id !='survey-invitation' ){ %>
+              <div class="modal fade pe-0" tabindex="-1" id="quickloginmodal">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header justify-content-center">
+                      <h4 class="modal-title fw-bold">Quick Login</h4>
+                      <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-circle-xmark"></i></button> -->
+                    </div>
+                    <div class="modal-body text-center">
+                      <%#<a href="/auth/google" target="_blank" class="quick-login">
+                        <span><i class="fa-brands fa-google"></i></span>
+                        <span>Log in with Google</span>
+                        </a>#%>
+                        <!--<a href="/auth/facebook" target="_blank" class="quick-login">
                   <span><i class="fa-brands fa-facebook-f"></i></span>
                   <span>Log in with Facebook</span>
                 </a>-->
-                <div style="clear: both;"></div>
-                <span class="my-3 d-inline-block">Or</span>
-                <div style="clear: both;"></div>
-                <a href="#" class="fw-bold quicklog"><i class="fa-solid fa-envelope"></i> Log in with Email</a>
+                        <div style="clear: both;"></div>
+                        <span class="my-3 d-inline-block">Or</span>
+                        <div style="clear: both;"></div>
+                        <a href="#" class="fw-bold quicklog"><i class="fa-solid fa-envelope"></i> Log in with Email</a>
+                    </div>
+                  </div>
+                </div>
               </div>
-          </div>
-        </div>
-    </div>
-    <% } %>
-  <!-- =================== Forgot Password Modal Start ==========================-->
-   <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Enter your registered email address</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form id="forgotPassword">
-              <div class="fv-row custom-form mb-3">
-                <label><span>Email</span></label>
-                <input type="email" class="form-control" name="email" required autocomplete="off" placeholder="Enter Your Email Address">
-                <div class="input-icon"><i class="fa-solid fa-envelope" ></i></div>
-              </div>
-              <input type="submit" value="SEND" id="forgot_submit_btn" class="btn-default btn-warning w-100">
-          </form>
-        </div>
-        <div class="register-now frm-loading-forgot" style="display: none;">
-          <span class="indicator-progress">Please wait...
-            <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
-          </span>
-        </div>
-        <div class="modal-footer">
-          <div class="register-now frm-error-message-forgot" style="display: none;"></div>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <!-- <button type="button" class="btn btn-primary"></button> -->
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- =================== Forgot Password Modal End ==========================-->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://js.stripe.com/v3/"></script>
-  <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-  <script>
-
-  function googleTranslateElementInit() {
-    new google.translate.TranslateElement({ pageLanguage: 'en' }, 'google_translate_element');
+              <% } %>
+                <!-- =================== Forgot Password Modal Start ==========================-->
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                  aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Enter your registered email address</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        <form id="forgotPassword">
+                          <div class="fv-row custom-form mb-3">
+                            <label><span>Email</span></label>
+                            <input type="email" class="form-control" name="email" required autocomplete="off"
+                              placeholder="Enter Your Email Address">
+                            <div class="input-icon"><i class="fa-solid fa-envelope"></i></div>
+                          </div>
+                          <input type="submit" value="SEND" id="forgot_submit_btn"
+                            class="btn-default btn-warning w-100">
+                        </form>
+                      </div>
+                      <div class="register-now frm-loading-forgot" style="display: none;">
+                        <span class="indicator-progress">Please wait...
+                          <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                        </span>
+                      </div>
+                      <div class="modal-footer">
+                        <div class="register-now frm-error-message-forgot" style="display: none;"></div>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <!-- <button type="button" class="btn btn-primary"></button> -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- =================== Forgot Password Modal End ==========================-->
+                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+                <script src="https://js.stripe.com/v3/"></script>
+                <script type="text/javascript"
+                  src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+                <!-- <script>
+      function getCookie(name) {
+    const cookieValue = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+    return cookieValue ? cookieValue[2] : null;
   }
 
-  </script>
+  function googleTranslateElementInit() {
+    const countryCode = getCookie('countryCode');
+    console.log("countryCode",countryCode);
+    // new google.translate.TranslateElement({ pageLanguage: 'en' }, 'google_translate_element');
+    new google.translate.TranslateElement({ pageLanguage: countryCode }, 'google_translate_element');
+  }
+  googleTranslateElementInit()
+
+  </script> -->
+
+                <!-- <script>
+
+                  function getCookie(name) {
+                    const cookieValue = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+                    return cookieValue ? cookieValue[2] : null;
+                  }
+                  let countryCode = getCookie('countryCode'); -->
+
+                  <!-- // const countryLanguageMap = {
+                  //   'AD': 'ca',   // Catalan for Andorra
+                  //   'AE': 'ar',   // Arabic for United Arab Emirates
+                  //   'AF': 'ps',   // Pashto for Afghanistan
+                  //   'AG': 'en',   // English for Antigua and Barbuda
+                  //   'AI': 'en',   // English for Anguilla
+                  //   'AL': 'sq',   // Albanian for Albania
+                  //   'AM': 'hy',   // Armenian for Armenia
+                  //   'AO': 'pt',   // Portuguese for Angola
+                  //   'AR': 'es',   // Spanish for Argentina
+                  //   'AS': 'en',   // English for American Samoa
+                  //   'AT': 'de',   // German for Austria
+                  //   'AU': 'en',   // English for Australia
+                  //   'AW': 'nl',   // Dutch for Aruba
+                  //   'AX': 'sv',   // Swedish for Åland Islands
+                  //   'AZ': 'az',   // Azerbaijani for Azerbaijan
+                  //   'BA': 'bs',   // Bosnian for Bosnia and Herzegovina
+                  //   'BB': 'en',   // English for Barbados
+                  //   'BD': 'bn',   // Bengali for Bangladesh
+                  //   'BE': 'nl',   // Dutch for Belgium
+                  //   'BF': 'fr',   // French for Burkina Faso
+                  //   'BG': 'bg',   // Bulgarian for Bulgaria
+                  //   'BH': 'ar',   // Arabic for Bahrain
+                  //   'BI': 'fr',   // French for Burundi
+                  //   'BJ': 'fr',   // French for Benin
+                  //   'BM': 'en',   // English for Bermuda
+                  //   'BN': 'ms',   // Malay for Brunei Darussalam
+                  //   'BO': 'es',   // Spanish for Bolivia
+                  //   'BR': 'pt',   // Portuguese for Brazil
+                  //   'BS': 'en',   // English for Bahamas
+                  //   'BT': 'dz',   // Dzongkha for Bhutan
+                  //   'BW': 'en',   // English for Botswana
+                  //   'BY': 'be',   // Belarusian for Belarus
+                  //   'BZ': 'en',   // English for Belize
+                  //   'CA': 'en',   // English for Canada
+                  //   'CD': 'fr',   // French for Democratic Republic of the Congo
+                  //   'CF': 'fr',   // French for Central African Republic
+                  //   'CG': 'fr',   // French for Republic of the Congo
+                  //   'CH': 'de',   // German for Switzerland
+                  //   'CI': 'fr',   // French for Côte d'Ivoire
+                  //   'CK': 'en',   // English for Cook Islands
+                  //   'CL': 'es',   // Spanish for Chile
+                  //   'CM': 'fr',   // French for Cameroon
+                  //   'CN': 'zh-CN',   // Simplified Chinese for China
+                  //   'CO': 'es',   // Spanish for Colombia
+                  //   'CR': 'es',   // Spanish for Costa Rica
+                  //   'CU': 'es',   // Spanish for Cuba
+                  //   'CV': 'pt',   // Portuguese for Cape Verde
+                  //   'CW': 'nl',   // Dutch for Curaçao
+                  //   'CY': 'el',   // Greek for Cyprus
+                  //   'CZ': 'cs',   // Czech for Czech Republic
+                  //   'DE': 'de',   // German for Germany
+                  //   'DJ': 'fr',   // French for Djibouti
+                  //   'DK': 'da',   // Danish for Denmark
+                  //   'DM': 'en',   // English for Dominica
+                  //   'DO': 'es',   // Spanish for Dominican Republic
+                  //   'DZ': 'ar',   // Arabic for Algeria
+                  //   'EC': 'es',   // Spanish for Ecuador
+                  //   'EE': 'et',   // Estonian for Estonia
+                  //   'EG': 'ar',   // Arabic for Egypt
+                  //   'ER': 'ti',   // Tigrinya for Eritrea
+                  //   'ES': 'es',   // Spanish for Spain
+                  //   'ET': 'am',   // Amharic for Ethiopia
+                  //   'FI': 'fi',   // Finnish for Finland
+                  //   'FJ': 'en',   // English for Fiji
+                  //   'FM': 'en',   // English for Federated States of Micronesia
+                  //   'FO': 'fo',   // Faroese for Faroe Islands
+                  //   'FR': 'fr',   // French for France
+                  //   'GA': 'fr',   // French for Gabon
+                  //   'GB': 'en',   // English for United Kingdom
+                  //   'GD': 'en',   // English for Grenada
+                  //   'GE': 'ka',   // Georgian for Georgia
+                  //   'GF': 'fr',   // French for French Guiana
+                  //   'GG': 'en',   // English for Guernsey
+                  //   'GH': 'en',   // English for Ghana
+                  //   'GI': 'en',   // English for Gibraltar
+                  //   'GL': 'kl',   // Greenlandic for Greenland
+                  //   'GM': 'en',   // English for Gambia
+                  //   'GN': 'fr',   // French for Guinea
+                  //   'GP': 'fr',   // French for Guadeloupe
+                  //   'GQ': 'es',   // Spanish for Equatorial Guinea
+                  //   'GR': 'el',   // Greek for Greece
+                  //   'GT': 'es',   // Spanish for Guatemala
+                  //   'GU': 'en',   // English for Guam
+                  //   'GW': 'pt',   // Portuguese for Guinea-Bissau
+                  //   'GY': 'en',   // English for Guyana
+                  //   'HK': 'zh-TW',   // Traditional Chinese for Hong Kong
+                  //   'HN': 'es',   // Spanish for Honduras
+                  //   'HR': 'hr',   // Croatian for Croatia
+                  //   'HT': 'ht',   // Haitian Creole for Haiti
+                  //   'HU': 'hu',   // Hungarian for Hungary
+                  //   'ID': 'id',   // Indonesian for Indonesia
+                  //   'IE': 'ga',   // Irish for Ireland
+                  //   'IL': 'he',   // Hebrew for Israel
+                  //   'IM': 'en',   // English for Isle of Man
+                  //   'IN': 'hi',   // Hindi for India
+                  //   'IQ': 'ar',   // Arabic for Iraq
+                  //   'IR': 'fa',   // Persian for Iran
+                  //   'IS': 'is',   // Icelandic for Iceland
+                  //   'IT': 'it',   // Italian for Italy
+                  //   'JE': 'en',   // English for Jersey
+                  //   'JM': 'en',   // English for Jamaica
+                  //   'JO': 'ar',   // Arabic for Jordan
+                  //   'JP': 'ja',   // Japanese for Japan
+                  //   'KE': 'sw',   // Swahili for Kenya
+                  //   'KG': 'ky',   // Kyrgyz for Kyrgyzstan
+                  //   'KH': 'km',   // Khmer for Cambodia
+                  //   'KI': 'en',   // English for Kiribati
+                  //   'KM': 'ar',   // Arabic for Comoros
+                  //   'KN': 'en',   // English for Saint Kitts and Nevis
+                  //   'KP': 'ko',   // Korean for North Korea
+                  //   'KR': 'ko',   // Korean for South Korea
+                  //   'KW': 'ar',   // Arabic for Kuwait
+                  //   'KY': 'en',   // English for Cayman Islands
+                  //   'KZ': 'kk',   // Kazakh for Kazakhstan
+                  //   'LA': 'lo',   // Lao for Laos
+                  //   'LB': 'ar',   // Arabic for Lebanon
+                  //   'LC': 'en',   // English for Saint Lucia
+                  //   'LI': 'de',   // German for Liechtenstein
+                  //   'LK': 'si',   // Sinhalese for Sri Lanka
+                  //   'LR': 'en',   // English for Liberia
+                  //   'LS': 'en',   // English for Lesotho
+                  //   'LT': 'lt',   // Lithuanian for Lithuania
+                  //   'LU': 'lb',   // Luxembourgish for Luxembourg
+                  //   'LV': 'lv',   // Latvian for Latvia
+                  //   'LY': 'ar',   // Arabic for Libya
+                  //   'MA': 'ar',   // Arabic for Morocco
+                  //   'MC': 'fr',   // French for Monaco
+                  //   'MD': 'ro',   // Romanian for Moldova
+                  //   'ME': 'sr',   // Serbian for Montenegro
+                  //   'MF': 'fr',   // French for Saint Martin (French part)
+                  //   'MG': 'mg',   // Malagasy for Madagascar
+                  //   'MH': 'mh',   // Marshallese for Marshall Islands
+                  //   'MK': 'mk',   // Macedonian for North Macedonia
+                  //   'ML': 'fr',   // French for Mali
+                  //   'MM': 'my',   // Burmese for Myanmar
+                  //   'MN': 'mn',   // Mongolian for Mongolia
+                  //   'MO': 'zh-TW',   // Traditional Chinese for Macao
+                  //   'MP': 'ch',
+                  // }
+
+                  // function getLanguageCodeFromCountryCode(countryCode) {
+                  //   return countryLanguageMap[countryCode] || 'en';
+                  // }
+                  // function googleTranslateElementInit() {
+                  //   console.log('googleTranslateElementInit called');
+                  //   const countryCode = getCookie('countryCode');
+                  //   console.log('countryCode:', countryCode);
+
+                  //   const pageLanguage = getLanguageCodeFromCountryCode(countryCode);
+                  //   console.log('pageLanguage:', pageLanguage);
+
+
+                //   function googleTranslateElementInit() {
+                //     new google.translate.TranslateElement({ pageLanguage: "hi" }, 'google_translate_element');
+                //   }
+
+
+                //   googleTranslateElementInit();
+
+
+                // </script> -->
+              <script>
+                function googleTranslateElementInit() {
+                  new google.translate.TranslateElement({ pageLanguage: 'en' }, 'google_translate_element');
+                  
+                  // Timeout to ensure the iframe is fully loaded
+                  setTimeout(setDefaultLanguage, 1000); // Adjust timing as needed
+                }
+                
+                // Function to set the default selected language in the dropdown
+                function setDefaultLanguage() {
+                  // Get the iframe containing Google Translate
+                  const googleTranslateFrame = document.querySelector('#google_translate_element iframe');
+                  console.log("googleTranslateFrame",googleTranslateFrame);
+                  
+                  if (googleTranslateFrame) {
+                    googleTranslateFrame.addEventListener('load', function() {
+                      // Accessing the content of the iframe
+                      const iframeDoc = googleTranslateFrame.contentDocument || googleTranslateFrame.contentWindow.document;
+                      
+                      // Finding the dropdown select element
+                      const dropdown = iframeDoc.querySelector('.goog-te-combo');
+                      
+                      // Setting the value of the dropdown to 'hi' for Hindi if found
+                      if (dropdown) {
+                        dropdown.value = 'hi';
+                        // Trigger change event manually
+                        const event = new Event('change');
+                        dropdown.dispatchEvent(event);
+                      }
+                    });
+                  }
+                }
+                
+                // Call googleTranslateElementInit when script is loaded
+                document.addEventListener('DOMContentLoaded', function() {
+                  googleTranslateElementInit();
+                });
+                
+                </script>
