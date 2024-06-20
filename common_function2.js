@@ -4879,11 +4879,26 @@ async function complaintLevelUpdate() {
 }
 
 // Fetch membership plan
+// function getmembershipPlans() {
+//   return new Promise((resolve, reject) => {
+//     db.query(
+//       `SELECT *
+//       FROM membership_plans 
+//       WHERE 1`,
+//       async (err, result) => {
+//         if (err) {
+//           reject(err);
+//         } else {
+//           resolve(result);
+//         }
+//       });
+//   });
+// }
 function getmembershipPlans() {
   return new Promise((resolve, reject) => {
     db.query(
       `SELECT *
-      FROM membership_plans 
+      FROM plan_management 
       WHERE 1`,
       async (err, result) => {
         if (err) {
@@ -4939,7 +4954,7 @@ function getAllPayments() {
 
             try {
               const paymentDetails = JSON.parse(row.payment_details);
-              transactionId = paymentDetails.charge;
+              transactionId = paymentDetails.latest_charge;
             } catch (error) {
               console.error('Error parsing payment details:', error);
             }
@@ -5256,6 +5271,8 @@ async function getAllPaymentHistory() {
             try {
               const subscriptionDetails = JSON.parse(row.subscription_details);
               const currentPeriodEnd = subscriptionDetails.current_period_end;
+
+
               if (currentPeriodEnd) {
                 const nextPaymentTimestamp = new Date(currentPeriodEnd * 1000);
                 const interval = subscriptionDetails.items.data[0].plan.interval;
@@ -5316,9 +5333,7 @@ async function getAllPaymentHistory() {
             payments.push(modifiedRow);
           });
 
-          console.log('All Payments:', payments); // Log payments for debugging
-
-          // Group payments by plan_name
+         // console.log('All Payments:', payments); 
           const groupedPayments = {
             Basic: payments.filter(payment => payment.plan_name === 'basic'),
             Standard: payments.filter(payment => payment.plan_name === 'standard'),
@@ -5327,7 +5342,7 @@ async function getAllPaymentHistory() {
             Enterprise: payments.filter(payment => payment.plan_name === 'enterprise'),
           };
 
-          console.log('Grouped Payments:', groupedPayments); // Log grouped payments for debugging
+          console.log('Grouped Payments:', groupedPayments); 
 
           resolve(groupedPayments);
         }
@@ -5960,6 +5975,7 @@ async function getcountrybyIp(ipAddress, api_key) {
 
 //actual
 async function getcountrynamebyIp(ipAddress, api_key) {
+  console.log("ipAddress",ipAddress);
   const url = `https://ipgeolocation.abstractapi.com/v1/?api_key=${api_key}&ip_address=${ipAddress}`;
   
   let attempts = 0;
@@ -6168,6 +6184,46 @@ async function getcountrynamebyIp(ipAddress, api_key) {
 // }
 
 
+// async function convertPrices(plan, userCountry) {
+//   if (!plan || !userCountry) return null;
+
+//   try {
+//       const exchangeRatesResponse = await axios.get(`https://open.er-api.com/v6/latest/${plan.currency}`);
+//       const exchangeRates = exchangeRatesResponse.data.rates;
+      
+
+//       const userCurrency = getUserCurrency(userCountry);
+
+//       let monthlyPriceConverted = plan.monthly_price;
+//       let yearlyPriceConverted = plan.yearly_price;
+//       let perUserPriceConverted = plan.per_user_price;
+
+//       if (userCurrency !== 'USD') {
+//           if (!exchangeRates[userCurrency]) {
+//               console.error(`Conversion rate for ${userCurrency} not available`);
+//               return plan;
+//           }
+
+//           monthlyPriceConverted = (parseFloat(plan.monthly_price) * exchangeRates[userCurrency]).toFixed(2);
+//           yearlyPriceConverted = (parseFloat(plan.yearly_price) * exchangeRates[userCurrency]).toFixed(2);
+//           perUserPriceConverted = (parseFloat(plan.per_user_price) * exchangeRates[userCurrency]).toFixed(2);
+//       }
+
+//       const convertedPlan = {
+//           ...plan,
+//           monthly_price_local: monthlyPriceConverted,
+//           yearly_price_local: yearlyPriceConverted,
+//           per_user_price_local: perUserPriceConverted,
+//           local_currency: userCurrency
+//       };
+
+//       return convertedPlan;
+//   } catch (error) {
+//       console.error('Error fetching exchange rates:', error.message);
+//       return plan;
+//   }
+// }
+
 async function getplans(userCountry) {
   try {
       // Example SQL queries to fetch plans
@@ -6221,44 +6277,57 @@ async function getplans(userCountry) {
       throw new Error('An error occurred while fetching plans');
   }
 }
+
+async function getCurrency() {
+  const getcurrencyquery = `SELECT * FROM currency_conversion`;
+  const getcurrencyvalue = await query(getcurrencyquery);
+  console.log("getcurrencyvalue", getcurrencyvalue);
+
+  const exchangeRates = {};
+  for (const row of getcurrencyvalue) {
+      if (row.inr_currency) {
+          exchangeRates['INR'] = row.inr_currency;
+      }
+      if (row.jpy_currency) {
+          exchangeRates['JPY'] = row.jpy_currency;
+      }
+  }
+
+  return exchangeRates;
+}
+
 async function convertPrices(plan, userCountry) {
   if (!plan || !userCountry) return null;
 
-  try {
-      const exchangeRatesResponse = await axios.get(`https://open.er-api.com/v6/latest/${plan.currency}`);
-      const exchangeRates = exchangeRatesResponse.data.rates;
+  const exchangeRates = await getCurrency();
+  const userCurrency = getUserCurrency(userCountry);
 
-      const userCurrency = getUserCurrency(userCountry);
+  let monthlyPriceConverted = plan.monthly_price;
+  let yearlyPriceConverted = plan.yearly_price;
+  let perUserPriceConverted = plan.per_user_price;
 
-      let monthlyPriceConverted = plan.monthly_price;
-      let yearlyPriceConverted = plan.yearly_price;
-      let perUserPriceConverted = plan.per_user_price;
-
-      if (userCurrency !== 'USD') {
-          if (!exchangeRates[userCurrency]) {
-              console.error(`Conversion rate for ${userCurrency} not available`);
-              return plan;
-          }
-
-          monthlyPriceConverted = (parseFloat(plan.monthly_price) * exchangeRates[userCurrency]).toFixed(2);
-          yearlyPriceConverted = (parseFloat(plan.yearly_price) * exchangeRates[userCurrency]).toFixed(2);
-          perUserPriceConverted = (parseFloat(plan.per_user_price) * exchangeRates[userCurrency]).toFixed(2);
+  if (userCurrency !== 'USD') {
+      if (!exchangeRates[userCurrency]) {
+          console.error(`Conversion rate for ${userCurrency} not available`);
+          return plan;
       }
 
-      const convertedPlan = {
-          ...plan,
-          monthly_price_local: monthlyPriceConverted,
-          yearly_price_local: yearlyPriceConverted,
-          per_user_price_local: perUserPriceConverted,
-          local_currency: userCurrency
-      };
-
-      return convertedPlan;
-  } catch (error) {
-      console.error('Error fetching exchange rates:', error.message);
-      return plan;
+      monthlyPriceConverted = (parseFloat(plan.monthly_price) * exchangeRates[userCurrency]).toFixed(2);
+      yearlyPriceConverted = (parseFloat(plan.yearly_price) * exchangeRates[userCurrency]).toFixed(2);
+      perUserPriceConverted = (parseFloat(plan.per_user_price) * exchangeRates[userCurrency]).toFixed(2);
   }
+
+  const convertedPlan = {
+      ...plan,
+      monthly_price_local: monthlyPriceConverted,
+      yearly_price_local: yearlyPriceConverted,
+      per_user_price_local: perUserPriceConverted,
+      local_currency: userCurrency
+  };
+
+  return convertedPlan;
 }
+
 function getUserCurrency(userCountry) {
   const countryCurrencyMap = {
       'India': 'INR',
@@ -6268,9 +6337,11 @@ function getUserCurrency(userCountry) {
   return countryCurrencyMap[userCountry] || 'USD';
 }
 
+
+
 async function getSubscribedUsers(userId){
   try {
-    const querys = `SELECT * FROM order_history WHERE user_id = "${userId}" AND payment_status= "succeeded"`;
+    const querys = `SELECT order_history.*, plan_management.name as plan_name FROM order_history LEFT JOIN plan_management ON order_history.plan_id = plan_management.id WHERE user_id = "${userId}" AND payment_status= "succeeded"`;
     const querys_val = await query(querys);
 
     if(querys_val.length>0){

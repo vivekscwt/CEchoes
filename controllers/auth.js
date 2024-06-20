@@ -12329,6 +12329,8 @@ exports.createSubscription = async (req, res) => {
             var planInterva =updatedSubscription.plan.interval_count;
             if(planInterva == "13"){
                 var planInterval= 'year'
+            }else{
+                var planInterval= 'month'
             }
 
             console.log("Plan Interval:", planInterval);
@@ -12349,6 +12351,15 @@ exports.createSubscription = async (req, res) => {
             const order_history_query= `INSERT INTO order_history SET ?`;
             const order_history_value = await queryAsync(order_history_query,[order_history_data])
 
+            const getcompany_query = `SELECT * FROM company LEFT JOIN company_claim_request ON company.ID = company_claim_request.company_id WHERE company_claim_request.claimed_by= "${userId}"`;
+            const getcompany_value  = await queryAsync(getcompany_query);
+            var companyID = getcompany_value[0].ID;
+            console.log("companyID",companyID);
+
+            const updatecompany_query = `UPDATE company SET membership_type_id = ? WHERE ID = "${companyID}"`;
+            const updatecompany_value = await queryAsync(updatecompany_query,[planId]);
+
+            console.log("updatecompany_value",updatecompany_value);
 
             const mailOptions = {
                 from: process.env.MAIL_USER,
