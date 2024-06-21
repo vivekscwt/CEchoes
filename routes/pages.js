@@ -132,8 +132,8 @@ router.get('', checkCookieValue, async (req, res) => {
 
     const api_key = process.env.GEO_LOCATION_API_KEY
 
-    const country_name = req.cookies.countryName || 'Default Country Name';
-    const country_code = req.cookies.countryCode || 'Default Country Code';
+    const country_name = req.cookies.countryName || 'India';
+    const country_code = req.cookies.countryCode || 'IN';
     console.log("country_names",country_name);
     console.log("country_codes",country_code);
 
@@ -393,8 +393,8 @@ router.get('/review', checkCookieValue, async (req, res) => {
         // const ipAddress = '45.64.221.211';
         // console.log('Client IP Address:', ipAddress);
 
-        const country_name = req.cookies.countryName || 'Default Country Name';
-        const country_code = req.cookies.countryCode || 'Default Country Code';
+        const country_name = req.cookies.countryName || 'India';
+        const country_code = req.cookies.countryCode || 'IN';
     
     
         console.log("country_names",country_name);
@@ -457,8 +457,8 @@ router.get('/review', checkCookieValue, async (req, res) => {
 
 router.get('/get-country', async (req, res) => {
     try {
-        let country_name = req.cookies.countryName || 'Default Country Name';
-        let country_code = req.cookies.countryCode || 'Default Country Code';
+        let country_name = req.cookies.countryName || 'India';
+        let country_code = req.cookies.countryCode || 'IN';
 
         console.log("country_names", country_name);
         console.log("country_codes", country_code);
@@ -525,8 +525,8 @@ router.get('/business', checkCookieValue, async (req, res) => {
         const api_key = process.env.GEO_LOCATION_API_KEY;
 
 
-        let country_name = req.cookies.countryName || 'Default Country Name';
-        let country_code = req.cookies.countryCode || 'Default Country Code';
+        let country_name = req.cookies.countryName || 'India';
+        let country_code = req.cookies.countryCode || 'IN';
 
         console.log("country_names", country_name);
         console.log("country_codes", country_code);
@@ -593,8 +593,8 @@ router.get('/stripe-payment', checkCookieValue, async (req, res) => {
         // const { country_name, country_code } = await comFunction2.getcountrynamebyIp(ipAddress, api_key);
         // console.log("Country Name:", country_name);
         // console.log("Country Code:", country_code);
-        let country_name = req.cookies.countryName || 'Default Country Name';
-        let country_code = req.cookies.countryCode || 'Default Country Code';
+        let country_name = req.cookies.countryName || 'India';
+        let country_code = req.cookies.countryCode || 'IN';
 
         console.log("country_names", country_name);
         console.log("country_codes", country_code);
@@ -634,8 +634,8 @@ router.get('/stripe-year-payment', checkCookieValue, async (req, res) => {
         // console.log("Country Name:", country_name);
         // console.log("Country Code:", country_code);
 
-        let country_name = req.cookies.countryName || 'Default Country Name';
-        let country_code = req.cookies.countryCode || 'Default Country Code';
+        let country_name = req.cookies.countryName || 'India';
+        let country_code = req.cookies.countryCode || 'IN';
 
         console.log("country_names", country_name);
         console.log("country_codes", country_code);
@@ -1011,8 +1011,8 @@ router.get('/categories', checkCookieValue, async (req, res) => {
     let currentUserData = JSON.parse(req.userData);
 
 
-    let country_name = req.cookies.countryName || 'Default Country Name';
-    let country_code = req.cookies.countryCode || 'Default Country Code';
+    let country_name = req.cookies.countryName || 'India';
+    let country_code = req.cookies.countryCode || 'IN';
 
     console.log("country_names", country_name);
     console.log("country_codes", country_code);
@@ -1129,8 +1129,8 @@ router.get('/category/:category_slug/:country', checkCookieValue, async (req, re
     const baseURL = process.env.MAIN_URL;
 
 
-    let country_name = req.cookies.countryName || 'Default Country Name';
-    let country_code = req.cookies.countryCode || 'Default Country Code';
+    let country_name = req.cookies.countryName || 'India';
+    let country_code = req.cookies.countryCode || 'IN';
 
     console.log("country_names", country_name);
     console.log("country_codes", country_code);
@@ -1201,8 +1201,8 @@ router.get('/category/:category_slug/:country/:filter', checkCookieValue, async 
     const filter_value = req.params.filter;
     const baseURL = process.env.MAIN_URL;
 
-    let country_name = req.cookies.countryName || 'Default Country Name';
-    let country_code = req.cookies.countryCode || 'Default Country Code';
+    let country_name = req.cookies.countryName || 'India';
+    let country_code = req.cookies.countryCode || 'IN';
 
     console.log("country_names", country_name);
     console.log("country_codes", country_code);
@@ -1290,8 +1290,8 @@ router.get('/home', checkCookieValue, async (req, res) => {
 router.get('/discussion', checkCookieValue, async (req, res) => {
     let currentUserData = JSON.parse(req.userData);
 
-    let country_name = req.cookies.countryName || 'Default Country Name';
-    let country_code = req.cookies.countryCode || 'Default Country Code';
+    let country_name = req.cookies.countryName || 'India';
+    let country_code = req.cookies.countryCode || 'IN';
 
     console.log("country_names", country_name);
     console.log("country_codes", country_code);
