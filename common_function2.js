@@ -5559,11 +5559,12 @@ async function getPublicIpAddress() {
 
 async function getcountrybyIp(ipAddress, api_key) {
   try {
-      const response = await axios.get(`https://ipgeolocation.abstractapi.com/v1/?api_key=${api_key}&ip_address=${ipAddress}`);
+      //const response = await axios.get(`https://ipgeolocation.abstractapi.com/v1/?api_key=${api_key}&ip_address=${ipAddress}`);
       //const countryname = response.data.country_code;
-      const country_code = response.data.country_code;
+     // const country_code = response.data.country_code;
+      const country_code='IN';
       //console.log("country_name", country_name);
-      console.log("response.data", response.data);
+      //console.log("response.data", response.data);
       console.log("country_code", country_code);
       return country_code;
 
@@ -5618,11 +5619,13 @@ async function getcountrynamebyIp(ipAddress, api_key) {
 
   while (attempts < maxAttempts) {
     try {
-      const response = await axios.get(url);
-      const country_name = response.data.country;
-      const country_code = response.data.country_code;
+     // const response = await axios.get(url);
+     // const country_name = response.data.country;
+     // const country_code = response.data.country_code;
+       const country_name='India';
+       const country_code='IN';
       console.log("country_name", country_name);
-      console.log("response.data", response.data);
+     // console.log("response.data", response.data);
       console.log("country_code", country_code);
       return { country_name, country_code };
     } catch (error) {
