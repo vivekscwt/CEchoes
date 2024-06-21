@@ -1430,7 +1430,7 @@ async function getCompanyDetails(categorySlug,country) {
                 LEFT JOIN company c ON c.ID = ccr.company_id
                 LEFT JOIN reviews r ON r.company_id = c.ID
                 LEFT JOIN premium_company_data pcd ON pcd.company_id = c.ID
-                WHERE category.category_slug = '${categorySlug}' AND c.status = '1' AND C.main_address_country = "${country}"
+                WHERE category.category_slug = '${categorySlug}' AND c.status = '1' AND c.main_address_country = "${country}"
                 GROUP BY c.ID, c.company_name `;
 
   const result = await query(sql);

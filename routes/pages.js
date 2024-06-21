@@ -155,11 +155,12 @@ router.get('', checkCookieValue, async (req, res) => {
         comFunction2.getAllPopularDiscussion(country_name),
         //comFunction2.getAllDiscussions(),
         comFunction2.getAllDiscussion(country_name),
-        comFunction.getCountries()
+        comFunction.getCountries(),
     ]);
     const rangeTexts = {};
 
-    console.log("PopularCategories", PopularCategories);
+    //console.log("PopularCategories", PopularCategories);
+    console.log("getCountries", getCountries);
 
     try {
         // Make API request to fetch blog posts
@@ -540,7 +541,7 @@ router.get('/business', checkCookieValue, async (req, res) => {
             comFunction2.getplans(country_name),
             comFunction2.getSubscribedUsers(user_id)
         ]);
-        // console.log("getplans", getplans);
+         console.log("getplans", getplans);
         console.log("getSubscribedUsers", getSubscribedUsers);
 
         const sql = `SELECT * FROM page_info where secret_Key = 'business' `;
@@ -6001,7 +6002,7 @@ router.get('/getcomplaintcompanies', async (req, res) => {
         FROM company c
         LEFT JOIN company_cactgory_relation cr ON c.ID = cr.company_id
         LEFT JOIN category cat ON cr.category_id = cat.ID
-        WHERE c.status = '1' AND c.membership_type_id >=3 AND c.complaint_status = '1' AND main_address_country=?
+        WHERE c.status = '1' AND c.membership_type_id >=3 AND c.complaint_status = '1' AND c.main_address_country=?
         `;
 
         let queryParams = [country];

@@ -1121,41 +1121,38 @@
    ////////////////////////////// Range Slider End
 
    //-------Review Form Submit-----------------//
-   $("#review_submit_frm").on("submit", function (event) {
-     $('.submit-message').hide();
-     $('.submit-message').text('');
-     event.preventDefault();
-     const formData = $('#review_submit_frm').serializeArray();
-     const jsonData = {};
-     $(formData).each(function (index, field) {
-       if (field.name === 'tags') {
-         if (!jsonData.tags) {
-           jsonData.tags = [];
-         }
-         jsonData.tags.push(field.value);;
-       } else {
-         jsonData[field.name] = field.value;
-       }
-     });
-     $.ajax({
-       url: '/auth/add-review',
-       method: 'POST',
-       data: jsonData,
-       ContentType: 'application/json',
-       success: function (data) {
-         if (data.status == 'ok') {
-           $('#review_submit_frm')[0].reset();
-           $('.submit-message').text(data.message);
-           $('.submit-message').show();
-         } else {
-           $('.submit-message').text(data.message);
-           $('.submit-message').show();
-         }
-         //console.log(data);
-       },
-       error: function (error) {
-         console.log(error);
-       }
-     });
-   });
+   $(document).ready(function() {
+    $("#review_submit_frm").on("submit", function(event) {
+        event.preventDefault(); // Prevent default form submission
+
+        // Serialize form data into JSON format
+        const formData = $(this).serializeArray();
+        const jsonData = {};
+        $(formData).each(function(index, field) {
+            jsonData[field.name] = field.value;
+        });
+
+        // AJAX request to submit form data
+        $.ajax({
+            url: '/auth/add-review',
+            method: 'POST',
+            data: JSON.stringify(jsonData), // Convert to JSON string if sending JSON
+            contentType: 'application/json', // Specify content type for JSON
+            success: function(data) {
+                // Handle successful response
+                console.log('Form submitted successfully:', data);
+                // Reset form or show success message
+                $('#review_submit_frm')[0].reset();
+                $('.submit-message').text(data.message).show();
+            },
+            error: function(error) {
+                // Handle error
+                console.error('Error submitting form:', error);
+                // Show error message
+                $('.submit-message').text('Error submitting form').show();
+            }
+        });
+    });
+});
+
  </script>
