@@ -497,140 +497,131 @@
         </div>
         <div class="col-md-6">
          <div class="review-right mt-md-0 mt-5" data-aos="fade-left">
-           <form id="review_submit_frm" name="review_submit_frm" action="" method="post">
-            <input type="hidden" name="review_lable" value="1" >
-             <div class="row">
-               <!--<div class="col-md-12">
-                      <div class="custom-form">
-                         <input type="text" class="form-control" id="autocomplete" name="address" placeholder="Business, Institute Establishment Name" required>
-                      </div>
-                      <div id="map"></div>
-                   </div>-->
-                  <div class="col-md-12">
-                      <div class="custom-form">
-                          <input type="text" class="form-control" id="search-input-review" name="company_name"
-                              placeholder="Business/Institute/Establishment Name" required autocomplete="off">
-                          <div class="autofield-dropdown-review"></div>
-                      </div>
-                  </div>
-                  <div class="col-md-12">
-                      <div class="custom-form">
-                          <select name="main_address_country" id="country" class="form-control" required>
-                              <option value="" disabled <% if (!countryname) { %>selected<% } %>>Select a country</option>
-                              <% getCountries.forEach(function(country) { %>
-                                  <option value="<%= country.shortname %>" <% if (country.shortname === countryname) { %>selected<% } %>><%= country.name %></option>
-                              <% }); %>
-                          </select>
-                      </div>
-                  </div>
-                  <div class="col-md-12">
-                      <div class="custom-form">
-                          <select class="form-control" id="state" name="main_address_state">
-                              <option value="Select State" selected disabled>Select State</option>
-                          </select>
-                      </div>
-                  </div>
-                  <div class="col-md-12">
-                      <div class="custom-form">
-                          <input type="text" class="form-control" id="city" name="review-address"
-                              placeholder="City Name" autocomplete="off">
-                      </div>
-                  </div>
-
-              </div>
-              <div class="row">
-             <div class="col-md-6">
-              <div class="custom-form dynamic_state_field_wrapper ">
-                  <select id="select_category" name="category_id" class="form-select">
-                      <option value="0" selected>Select Category </option>
-                  </select>
-                  <!-- <input type="text" class="form-control" placeholder="Category Name" name="category"> -->
-              </div>
-          </div>
-          <div class="col-md-6">
+<form id="review_submit_frm" name="review_submit_frm" action="" method="post">
+    <input type="hidden" name="review_lable" value="1">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="custom-form">
+                <input type="text" class="form-control" id="search-input-review" name="company_name"
+                    placeholder="Business/Institute/Establishment Name" required autocomplete="off">
+                <div class="autofield-dropdown-review"></div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="custom-form">
+                <select name="main_address_country" id="country_review" class="form-control" required>
+                    <option value="" disabled <% if (!countryname) { %>selected<% } %>>Select a country</option>
+                      <% getCountries.forEach(function(country) { %>
+                        <option value="<%= country.shortname %>" <% if (country.shortname === countryname) { %>selected<% } %>><%= country.name %></option>
+                    <% }); %>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="custom-form">
+                <select class="form-control" id="state" name="main_address_state">
+                    <option value="Select State" selected disabled>Select State</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="custom-form">
+                <input type="text" class="form-control" id="city" name="review-address"
+                    placeholder="City Name" autocomplete="off">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="custom-form dynamic_state_field_wrapper">
+                <select id="select_category" name="category_id" class="form-select">
+                    <option value="0" selected>Select Category</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-6">
             <div class="custom-form" id="dynamic_sub_category_field_wrapper">
                 <select id="select_sub_category" name="product_id" class="form-select">
                     <option value="0">Select Product</option>
                 </select>
-                <!-- <input type="text" class="form-control" placeholder="Sub-category Name" name="sub_category"> -->
             </div>
         </div>
-      </div>
-             <div class="col-md-12">
-               <div class="rating-slider">
-                 <span class="emojisss"><img style="width:50px;" src="" id="selected-range-emojis" /></span>
-                 <label>Rating</label>
-                 <div id="rating-range" class="rating"></div>
-                 <input type="text" id="ratingRange" readonly>
-                 <input type="hidden" id="ratingvalue" name="rating" value="">
-                 <div id="slider-values" class="text-center">
-                   <span id="selected-range-text"></span>
-                 </div>
-               </div>
-             </div>
-             <div class="col-md-12">
-               <div class="tag-label">Tags</div>
-               <div class="range-tag-wrap">
-                 <% allRatingTags.forEach( (rev_tag, index)=> { %>
-                   <div
-                     class="tag-items-wrapper range-tag<%= rev_tag.review_rating_value.replace(/\./g, "") %> <% if(index!=9){ %>d-none<% } %>">
-                     <% const tag_items=rev_tag.rating_tags.split('|'); %>
-                       <% tag_items.forEach(function(tag) { %>
-                         <div class="form-check custom-check position-relative">
-                           <input class="form-check-input" type="checkbox" name="tags" value="<%= tag %>" id="">
-                           <label class="form-check-label" for="flexCheckDefault">
-                             <%= tag %>
-                           </label>
-                         </div>
-                         <% }); %>
-                   </div>
-                   <% }) %>
-               </div>
-             </div>
-             <div class="col-md-12">
-               <div class="custom-form">
-                 <textarea name="review_content" rows="4" class="form-control" placeholder="Review/Feedback"
-                   required></textarea>
-               </div>
-             </div>
-             <div class="col-md-12">
-               <div class="custom-form">
-                 <span class="fw-bold d-inline-block me-2">Show your name?</span>
-                 <div class="form-check form-check-inline">
-                   <input class="form-check-input" type="radio" name="user_privacy" checked id="inlineRadio1"
-                     value="1">
-                   <label class="form-check-label" for="inlineRadio1">Yes</label>
-                 </div>
-                 <div class="form-check form-check-inline">
-                   <input class="form-check-input" type="radio" name="user_privacy" id="inlineRadio2" value="0">
-                   <label class="form-check-label" for="inlineRadio2">No</label>
-                 </div>
-               </div>
-             </div>
-             <div class="col-md-12">
-              <div class="custom-form">
-                <span class="fw-bold d-inline-block me-2">Do you want the organisation to contact you?</span>
-                <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="user_contact" checked id="inlineRadio3"
-                    value="1">
-                  <label class="form-check-label" for="inlineRadio3">Yes</label>
-                </div>
-                <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="user_contact" id="inlineRadio4" value="0">
-                  <label class="form-check-label" for="inlineRadio4">No</label>
-                </div>
-              </div>
+    </div>
+    <div class="col-md-12">
+        <div class="rating-slider">
+            <span class="emojisss"><img style="width:50px;" src="" id="selected-range-emojis" /></span>
+            <label>Rating</label>
+            <div id="rating-range" class="rating"></div>
+            <input type="text" id="ratingRange" readonly>
+            <input type="hidden" id="ratingvalue" name="rating" value="">
+            <div id="slider-values" class="text-center">
+                <span id="selected-range-text"></span>
             </div>
-             <div class="col-md-12">
-               <div class="review-submit d-flex justify-content-between align-items-center">
-                 <% if(currentUserData){ %>
-                   <input type="submit" class="btn-default btn-warning" value="Submit">
-                   <% } else { %>
-                     <a href="#" class="btn-default btn-outline-warning login">Submit</a>
-                     <% } %>
-               </div>
-             </div>
-           </form>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="tag-label">Tags</div>
+        <div class="range-tag-wrap">
+            <% allRatingTags.forEach( (rev_tag, index)=> { %>
+            <div class="tag-items-wrapper range-tag<%= rev_tag.review_rating_value.replace(/\./g, "") %> <% if(index!=9){ %>d-none<% } %>">
+                <% const tag_items=rev_tag.rating_tags.split('|'); %>
+                <% tag_items.forEach(function(tag) { %>
+                <div class="form-check custom-check position-relative">
+                    <input class="form-check-input" type="checkbox" name="tags" value="<%= tag %>" id="">
+                    <label class="form-check-label" for="flexCheckDefault">
+                        <%= tag %>
+                    </label>
+                </div>
+                <% }); %>
+            </div>
+            <% }) %>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="custom-form">
+            <textarea name="review_content" rows="4" class="form-control" placeholder="Review/Feedback"
+                required></textarea>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="custom-form">
+            <span class="fw-bold d-inline-block me-2">Show your name?</span>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="user_privacy" checked id="inlineRadio1"
+                    value="1">
+                <label class="form-check-label" for="inlineRadio1">Yes</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="user_privacy" id="inlineRadio2" value="0">
+                <label class="form-check-label" for="inlineRadio2">No</label>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="custom-form">
+            <span class="fw-bold d-inline-block me-2">Do you want the organisation to contact you?</span>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="user_contact" checked id="inlineRadio3"
+                    value="1">
+                <label class="form-check-label" for="inlineRadio3">Yes</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="user_contact" id="inlineRadio4" value="0">
+                <label class="form-check-label" for="inlineRadio4">No</label>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="review-submit d-flex justify-content-between align-items-center">
+            <% if(currentUserData){ %>
+            <input type="submit" class="btn-default btn-warning" value="Submit">
+            <% } else { %>
+            <a href="#" class="btn-default btn-outline-warning login">Submit</a>
+            <% } %>
+        </div>
+    </div>
+</form>
+
          </div>
          <div class="submit-message"></div>
         </div>
@@ -2341,6 +2332,91 @@ fetchGeolocationAndSetCountryInfo();
 
 
 });
+
+
+$(document).ready(function() {
+    // Initialize Select2 for country dropdown
+    $('#country_review').select2({
+        placeholder: "Select a country",
+        allowClear: true,
+        width: '100%'
+    });
+
+    // AJAX call to fetch company details and populate state and city
+    $('.autofield-dropdown-review').on('click', 'a', function(e) {
+        e.preventDefault();
+        const selectedCompanyName = $(this).data('resulttitle');
+        if (selectedCompanyName) {
+            $.ajax({
+                url: 'auth/get-company-details',
+                method: 'POST',
+                data: JSON.stringify({ company_name: selectedCompanyName }),
+                contentType: 'application/json',
+                success: function(data) {
+                    if (data.status === 'ok') {
+                        const companyDetails = data.companyDetails;
+                        if (companyDetails) {
+                            $('#state').val(companyDetails.state).trigger('change');
+                            $('#city').val(companyDetails.city);
+                        }
+                    } else {
+                        console.error('No company details found');
+                    }
+                },
+                error: function(error) {
+                    console.error('Error fetching company details:', error);
+                }
+            });
+        }
+    });
+
+    // Form submission handling
+    $("#review_submit_frm").on("submit", function(event) {
+        event.preventDefault();
+        $('.submit-message').hide().text('');
+
+        const formData = $(this).serializeArray();
+        const jsonData = {};
+
+        $(formData).each(function(index, field) {
+            if (field.name === 'tags') {
+                if (!jsonData.tags) {
+                    jsonData.tags = [];
+                }
+                jsonData.tags.push(field.value);
+            } else {
+                jsonData[field.name] = field.value;
+            }
+        });
+
+        // Add selected country to jsonData
+        jsonData.main_address_country = $('#country_review').val();
+
+        // Perform AJAX request to submit review
+        $.ajax({
+            url: '/auth/add-review',
+            method: 'POST',
+            data: JSON.stringify(jsonData),
+            contentType: 'application/json',
+            success: function(data) {
+                if (data.status == 'ok') {
+                    $('#review_submit_frm')[0].reset();
+                    $('.submit-message').text(data.message).show();
+                    setTimeout(function() {
+                        $('.submit-message').hide();
+                        $('#all-review-hidden-btn').fadeIn();
+                    }, 2000);
+                } else {
+                    $('.submit-message').text(data.message).show();
+                }
+            },
+            error: function(error) {
+                console.error('Error submitting review:', error);
+            }
+        });
+    });
+});
+
 </script>
 
 <script>
