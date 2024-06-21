@@ -517,8 +517,12 @@ router.get('/business', checkCookieValue, async (req, res) => {
         let currentUserData = JSON.parse(req.userData);
         console.log("currentUserData", currentUserData);
 
-        var user_id = currentUserData.user_id;
-        console.log("user_id", user_id);
+        if(currentUserData){
+            var user_id = currentUserData.user_id;
+            console.log("user_id", user_id);
+        }
+
+
 
         // const ipAddress = requestIp.getClientIp(req); 
         //console.log('Client IP Address:', ipAddress);
