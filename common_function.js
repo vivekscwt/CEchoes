@@ -25,16 +25,38 @@ function getUser(userId) {
 }
 
 // Function to fetch user metadata from the user_customer_meta table
+// function getUserMeta(userId) {
+//   return new Promise((resolve, reject) => {
+//     const user_meta_query = `
+//             SELECT user_meta.*, c.name as country_name, s.name as state_name, ccr.company_id as claimed_comp_id, company.paid_status as payment_status, company.slug, mp.plan_name
+//             FROM user_customer_meta user_meta
+//             LEFT JOIN countries c ON user_meta.country = c.id
+//             LEFT JOIN states s ON user_meta.state = s.id
+//             LEFT JOIN company_claim_request ccr ON user_meta.user_id = ccr.claimed_by
+//             LEFT JOIN company ON company.ID = ccr.company_id
+//             LEFT JOIN membership_plans mp ON company.membership_type_id = mp.id
+//             WHERE user_meta.user_id = ?
+//         `;
+//     db.query(user_meta_query, [userId], (err, result) => {
+//       if (err) {
+//         reject(err);
+//       } else {
+//         resolve(result[0]);
+//       }
+//     });
+//   });
+// }
+
 function getUserMeta(userId) {
   return new Promise((resolve, reject) => {
     const user_meta_query = `
-            SELECT user_meta.*, c.name as country_name, s.name as state_name, ccr.company_id as claimed_comp_id, company.paid_status as payment_status, company.slug, mp.plan_name
+            SELECT user_meta.*, c.name as country_name, s.name as state_name, ccr.company_id as claimed_comp_id, company.paid_status as payment_status, company.slug, mp.name AS plan_name
             FROM user_customer_meta user_meta
             LEFT JOIN countries c ON user_meta.country = c.id
             LEFT JOIN states s ON user_meta.state = s.id
             LEFT JOIN company_claim_request ccr ON user_meta.user_id = ccr.claimed_by
             LEFT JOIN company ON company.ID = ccr.company_id
-            LEFT JOIN membership_plans mp ON company.membership_type_id = mp.id
+            LEFT JOIN plan_management mp ON company.membership_type_id = mp.id
             WHERE user_meta.user_id = ?
         `;
     db.query(user_meta_query, [userId], (err, result) => {
@@ -176,12 +198,30 @@ function getAllTrashedCompany() {
   });
 }
 
+// function getCompany(companyId) {
+//   return new Promise((resolve, reject) => {
+//     const sql = `SELECT company.*, ccr.claimed_by, mp.plan_name as membership_plan_name, pcd.cover_img
+//               FROM company 
+//               LEFT JOIN company_claim_request ccr ON company.ID = ccr.company_id
+//               LEFT JOIN membership_plans mp ON company.membership_type_id = mp.id
+//               LEFT JOIN premium_company_data pcd ON company.ID = pcd.company_id
+//               WHERE company.ID = ?`
+//     db.query(sql, [companyId], (err, result) => {
+//       if (err) {
+//         reject(err);
+//       } else {
+//         resolve(result[0]);
+//       }
+//     });
+//   });
+// }
+
 function getCompany(companyId) {
   return new Promise((resolve, reject) => {
-    const sql = `SELECT company.*, ccr.claimed_by, mp.plan_name as membership_plan_name, pcd.cover_img
+    const sql = `SELECT company.*, ccr.claimed_by, mp.name as membership_plan_name, pcd.cover_img
               FROM company 
               LEFT JOIN company_claim_request ccr ON company.ID = ccr.company_id
-              LEFT JOIN membership_plans mp ON company.membership_type_id = mp.id
+              LEFT JOIN plan_management mp ON company.membership_type_id = mp.id
               LEFT JOIN premium_company_data pcd ON company.ID = pcd.company_id
               WHERE company.ID = ?`
     db.query(sql, [companyId], (err, result) => {

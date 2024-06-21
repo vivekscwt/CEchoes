@@ -1707,7 +1707,7 @@ jQuery(document).ready(function ($) {
    
 
     var country_name = "<%= countryname %>";
-     console.log("country_name from server:", country_name);
+     //console.log("country_name from server:", country_name);
 
     if (country_name) {
       $('#country').val(country_name).trigger('change');
@@ -2131,8 +2131,213 @@ jQuery(document).ready(function ($) {
       }
    });    
    });
-   
 
+   let apiKey = '<%= api_key%>'
+
+   function setCookie(name, value, days) {
+  const expires = new Date();
+  expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+  document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
+}
+
+function getCookie(name) {
+    const cookieValue = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+    return cookieValue ? cookieValue[2] : null;
+  }
+
+async function fetchGeolocationAndSetCountryInfo() {
+  const countryName = getCookie('countryName');
+  const countryCode = getCookie('countryCode');
+
+  if (countryName && countryCode) {
+    updateCountryInfo(countryName, countryCode);
+    await sendCountryInfoToServer(countryName, countryCode);
+    
+    if (!localStorage.getItem('pageRefreshed')) {
+      localStorage.setItem('pageRefreshed', 'true');
+      window.location.reload(); 
+    }
+    return;
+  }
+
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(async (position) => {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+
+      const { countryName, countryCode } = await getCountryDetails(latitude, longitude);
+
+      setCookie('countryName', countryName, 7); 
+      setCookie('countryCode', countryCode, 7);
+
+      updateCountryInfo(countryName, countryCode);
+
+      await sendCountryInfoToServer(countryName, countryCode);
+
+      if (!localStorage.getItem('pageRefreshed')) {
+        localStorage.setItem('pageRefreshed', 'true');
+        window.location.reload(); 
+      }
+    }, (error) => {
+      console.error('Error getting geolocation:', error);
+    });
+  } else {
+    console.error('Geolocation is not supported by this browser.');
+  }
+}
+
+function updateCountryInfo(countryName, countryCode) {
+  document.getElementById('country').innerText = `${countryName} (${countryCode})`;
+}
+
+async function sendCountryInfoToServer(countryName, countryCode) {
+  try {
+    const response = await fetch('/setCountry', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ countryName, countryCode })
+    });
+
+    if (response.ok) {
+      console.log('Country information sent to server successfully.');
+    } else {
+      console.error('Failed to send country information to the server.');
+    }
+  } catch (error) {
+    console.error('Error sending country information to the server:', error);
+  }
+}
+
+async function getCountryDetails(latitude, longitude) {
+  const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${apiKey}`;
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    const results = data.results;
+    if (results.length > 0) {
+      const addressComponents = results[0].address_components;
+      let countryName = 'Country not found';
+      let countryCode = 'Code not found';
+      for (let i = 0; i < addressComponents.length; i++) {
+        if (addressComponents[i].types.includes("country")) {
+          countryName = addressComponents[i].long_name;
+          countryCode = addressComponents[i].short_name;
+          break;
+        }
+      }
+      console.log("countryName", countryName);
+      console.log("countryCode", countryCode);
+      return { countryName, countryCode };
+    }
+    return { countryName: "Country not found", countryCode: "Code not found" };
+  } catch (error) {
+    console.error('Error fetching country details:', error);
+    return { countryName: 'Unable to get country name', countryCode: 'Unable to get country code' };
+  }
+}
+
+fetchGeolocationAndSetCountryInfo();
+
+
+
+// function setCookie(name, value, days) {
+//   const expires = new Date();
+//   expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+//   document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
+// }
+
+// async function fetchGeolocationAndSetCountryInfo() {
+//   if (navigator.geolocation) {
+//     navigator.geolocation.getCurrentPosition(async (position) => {
+//       const latitude = position.coords.latitude;
+//       const longitude = position.coords.longitude;
+
+//       // Fetch country details using geolocation API
+//       const { countryName, countryCode } = await getCountryDetails(latitude, longitude);
+
+//       // Set country details in cookies
+//       setCookie('countryName', countryName, 7); // Example: expires in 7 days
+//       setCookie('countryCode', countryCode, 7); // Example: expires in 7 days
+
+//       // Optionally, update UI with country details
+//       updateCountryInfo(countryName, countryCode);
+
+//       // Send the country information to the server
+//       await sendCountryInfoToServer(countryName, countryCode);
+
+//       // Check if page has been refreshed already
+//       if (!localStorage.getItem('pageRefreshed')) {
+//         localStorage.setItem('pageRefreshed', 'true');
+//         window.location.reload(); // Refresh the page once
+//       }
+//     }, (error) => {
+//       console.error('Error getting geolocation:', error);
+//       // Handle errors or display appropriate message
+//     });
+//   } else {
+//     console.error('Geolocation is not supported by this browser.');
+//     // Handle geolocation not supported scenario
+//   }
+// }
+
+// function updateCountryInfo(countryName, countryCode) {
+//   document.getElementById('country').innerText = `${countryName} (${countryCode})`;
+// }
+
+// async function sendCountryInfoToServer(countryName, countryCode) {
+//   try {
+//     const response = await fetch('/setCountry', {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json'
+//       },
+//       body: JSON.stringify({ countryName, countryCode })
+//     });
+
+//     if (response.ok) {
+//       console.log('Country information sent to server successfully.');
+//       // Optionally handle success response
+//     } else {
+//       console.error('Failed to send country information to the server.');
+//       // Optionally handle error response
+//     }
+//   } catch (error) {
+//     console.error('Error sending country information to the server:', error);
+//     // Handle fetch error
+//   }
+// }
+
+// async function getCountryDetails(latitude, longitude) {
+//   const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${apiKey}`;
+//   try {
+//     const response = await fetch(url);
+//     const data = await response.json();
+//     const results = data.results;
+//     if (results.length > 0) {
+//       const addressComponents = results[0].address_components;
+//       let countryName = 'Country not found';
+//       let countryCode = 'Code not found';
+//       for (let i = 0; i < addressComponents.length; i++) {
+//         if (addressComponents[i].types.includes("country")) {
+//           countryName = addressComponents[i].long_name;
+//           countryCode = addressComponents[i].short_name;
+//           break;
+//         }
+//       }
+//       console.log("countryName", countryName);
+//       console.log("countryCode", countryCode);
+//       return { countryName, countryCode };
+//     }
+//     return { countryName: "Country not found", countryCode: "Code not found" };
+//   } catch (error) {
+//     console.error('Error fetching country details:', error);
+//     return { countryName: 'Unable to get country name', countryCode: 'Unable to get country code' };
+//   }
+// }
+
+// fetchGeolocationAndSetCountryInfo();
 
 
 });

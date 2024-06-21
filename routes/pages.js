@@ -10,6 +10,8 @@ const dotenv = require('dotenv');
 dotenv.config({ path: './.env' });
 const crypto = require('crypto');
 const app = express();
+const cookieParser = require('cookie-parser');
+app.use(cookieParser());
 const comFunction = require('../common_function');
 const comFunction2 = require('../common_function2');
 const comFuncApi = require('../common_function_api');
@@ -123,22 +125,18 @@ router.get('', checkCookieValue, async (req, res) => {
         userId = currentUserData.user_id;
     }
 
-    const ipAddress = requestIp.getClientIp(req); 
+    //const ipAddress = '45.64.221.211';
+    //const ipAddress = requestIp.getClientIp(req); 
     //console.log('Client IP Address:', ip);
 
-    // let ipAddress = await comFunction2.getPublicIpAddress();
-    // console.log("ipAddress",ipAddress);
-    // ipAddress = ipAddress.toString().replace('::ffff:', '');
-    // console.log("ipAddress", ipAddress);
 
     const api_key = process.env.GEO_LOCATION_API_KEY
-    // const getcountrybyIp = await Promise.all([comFunction2.getcountrynamebyIp(ipAddress,api_key)]) 
-    // const country_name = getcountrybyIp[0];
-    // console.log("country_code",country_name);
 
-    const { country_name, country_code } = await comFunction2.getcountrynamebyIp(ipAddress, api_key);
-    console.log("Country Name:", country_name);
-    console.log("Country Code:", country_code);
+    const country_name = req.cookies.countryName || 'India';
+    const country_code = req.cookies.countryCode || 'IN';
+    console.log("country_names",country_name);
+    console.log("country_codes",country_code);
+
 
     const [allRatingTags, globalPageMeta, latestReviews, AllReviewTags, AllReviewVoting, PopularCategories, ReviewCount, UserCount, PositiveReviewsCompany, NegativeReviewsCompany, HomeMeta, VisitorCheck, getAllLatestDiscussion, getAllPopularDiscussion, getAllDiscussions, getCountries] = await Promise.all([
         comFunction.getAllRatingTags(),
@@ -247,12 +245,13 @@ router.get('', checkCookieValue, async (req, res) => {
                         NegativeReviewsCompany,
                         HomeMeta,
                         VisitorCheck,
-                        AllLatestDiscussion: getAllLatestDiscussion,
-                        AllPopularDiscussion: getAllPopularDiscussion,
-                        AllDiscussions: getAllDiscussions,
+                       AllLatestDiscussion: getAllLatestDiscussion,
+                       AllPopularDiscussion: getAllPopularDiscussion,
+                       AllDiscussions: getAllDiscussions,
                         getCountries: getCountries,
                         country_name: country_name,
-                        countryname: country_code
+                        countryname: country_code,
+                        api_key
                     });
                 })
 
@@ -316,6 +315,18 @@ router.get('', checkCookieValue, async (req, res) => {
         })
     }
 });
+
+router.post('/setCountry', (req, res) => {
+    const { countryName, countryCode } = req.body;
+    
+    // Save country information in session or wherever needed
+    req.session.countryName = countryName;
+    req.session.countryCode = countryCode;
+  
+    res.status(200).send('Country information saved successfully.');
+});
+
+
 //view Contact Us Page
 router.get('/contact-us', checkCookieValue, async (req, res) => {
     //resp.sendFile(`${publicPath}/index.html`)
@@ -378,30 +389,19 @@ router.get('/review', checkCookieValue, async (req, res) => {
         let currentUserData = JSON.parse(req.userData);
         console.log(currentUserData);
 
-        //let ipAddress = req.ip;
+        // const ipAddress = requestIp.getClientIp(req); 
+        // const ipAddress = '45.64.221.211';
+        // console.log('Client IP Address:', ipAddress);
 
-        const ipAddress = requestIp.getClientIp(req); 
-        console.log('Client IP Address:', ipAddress);
-
-
-        // let ipAddress = await comFunction2.getPublicIpAddress();
-        // console.log("ipAddress",ipAddress);
-        // ipAddress = ipAddress.toString().replace('::ffff:', '');
-        // console.log("ipAddress", ipAddress);
+        const country_name = req.cookies.countryName || 'India';
+        const country_code = req.cookies.countryCode || 'IN';
+    
+    
+        console.log("country_names",country_name);
+        console.log("country_codes",country_code);
 
         const api_key = process.env.GEO_LOCATION_API_KEY
 
-        // const getcountrybyIp = await Promise.all([comFunction2.getcountrynamebyIp(ipAddress,api_key)]) 
-        // const country_name = getcountrybyIp[0];
-        // console.log("country_code",country_name);
-
-        // const getcountrynamebyIp = await Promise.all([comFunction2.getcountrybyIp(ipAddress,api_key)]) 
-        // const countryname = getcountrynamebyIp[0];
-        // console.log("countrynamesss",countryname);
-
-        const { country_name, country_code } = await comFunction2.getcountrynamebyIp(ipAddress, api_key);
-        console.log("Country Name:", country_name);
-        console.log("Country Code:", country_code);
 
         const [latestReviews, AllReviews, AllTrendingReviews, AllReviewTags, allRatingTags, globalPageMeta, homePageMeta, AllReviewVoting, getCountries] = await Promise.all([
             comFunction2.getlatestReviews(20, country_name),
@@ -443,7 +443,7 @@ router.get('/review', checkCookieValue, async (req, res) => {
             homePageMeta: homePageMeta,
             AllReviewVoting: AllReviewVoting,
             getCountries: getCountries,
-            ip_address: ipAddress,
+           // ip_address: ipAddress,
             country_name: country_name,
             countryname: country_code
         });
@@ -455,32 +455,20 @@ router.get('/review', checkCookieValue, async (req, res) => {
 
 
 
-
-
-
 router.get('/get-country', async (req, res) => {
     try {
-        // let ipAddress = await comFunction2.getPublicIpAddress();
-        // console.log("ipAddress",ipAddress);
-        // ipAddress = ipAddress.toString().replace('::ffff:', '');
-        // console.log("ipAddress", ipAddress);
+        let country_name = req.cookies.countryName || 'India';
+        let country_code = req.cookies.countryCode || 'IN';
 
-        const ipAddress = requestIp.getClientIp(req); 
-        //console.log('Client IP Address:', ip);
+        console.log("country_names", country_name);
+        console.log("country_codes", country_code);
 
-        const api_key = process.env.GEO_LOCATION_API_KEY
-
-        const response = axios.get(`https://ipgeolocation.abstractapi.com/v1/?api_key=${api_key}&ip_address=${ipAddress}`)
-            .then(response => {
-                var country_name = response.data;
-                console.log("country_name", country_name);
-            })
-            .catch(error => {
-                console.log(error);
-            });
-
+        res.json({
+            countryName: country_name,
+            countryCode: country_code
+        });
     } catch (err) {
-        console.error(err);
+        console.error('Error retrieving country information:', err);
         res.status(500).send('An error occurred');
     }
 });
@@ -525,13 +513,32 @@ router.get('/faq', checkCookieValue, async (req, res) => {
 });
 
 router.get('/business', checkCookieValue, async (req, res) => {
-
-    const [globalPageMeta] = await Promise.all([
-        comFunction2.getPageMetaValues('global'),
-    ]);
-
     try {
         let currentUserData = JSON.parse(req.userData);
+        console.log("currentUserData", currentUserData);
+
+        var user_id = currentUserData.user_id;
+        console.log("user_id", user_id);
+
+        // const ipAddress = requestIp.getClientIp(req); 
+        //console.log('Client IP Address:', ipAddress);
+        const api_key = process.env.GEO_LOCATION_API_KEY;
+
+
+        let country_name = req.cookies.countryName || 'India';
+        let country_code = req.cookies.countryCode || 'IN';
+
+        console.log("country_names", country_name);
+        console.log("country_codes", country_code);
+
+        const [globalPageMeta, getplans, getSubscribedUsers] = await Promise.all([
+            comFunction2.getPageMetaValues('global'),
+            comFunction2.getplans(country_name),
+            comFunction2.getSubscribedUsers(user_id)
+        ]);
+        // console.log("getplans", getplans);
+        console.log("getSubscribedUsers", getSubscribedUsers);
+
         const sql = `SELECT * FROM page_info where secret_Key = 'business' `;
         db.query(sql, (err, results, fields) => {
             if (err) throw err;
@@ -557,7 +564,10 @@ router.get('/business', checkCookieValue, async (req, res) => {
                     meta_values_array,
                     UpcomingBusinessFeature,
                     BusinessFeature,
-                    globalPageMeta: globalPageMeta
+                    globalPageMeta: globalPageMeta,
+                    getplans: getplans,
+                    country_name: country_name,
+                    getSubscribedUsers: getSubscribedUsers
                 });
             })
 
@@ -574,20 +584,20 @@ router.get('/stripe-payment', checkCookieValue, async (req, res) => {
         const { planId, planPrice, monthly, memberCount, total_price } = req.query;
         console.log("req.query-monthly", req.query);
 
-        // let ipAddress = await comFunction2.getPublicIpAddress();
-        // console.log("ipAddress",ipAddress);
-        // ipAddress = ipAddress.toString().replace('::ffff:', '');
-        // console.log("ipAddress", ipAddress);
+        // const ipAddress = requestIp.getClientIp(req); 
+        // //console.log('Client IP Address:', ip);
 
-        const ipAddress = requestIp.getClientIp(req); 
-        //console.log('Client IP Address:', ip);
+        // const api_key = process.env.GEO_LOCATION_API_KEY;
+        // //const api_key = 'AIzaSyCc5pts6Y3V7g9ZGGVsCcEi0WD8seu1VJ8';
 
-        const api_key = process.env.GEO_LOCATION_API_KEY;
-        //const api_key = 'AIzaSyCc5pts6Y3V7g9ZGGVsCcEi0WD8seu1VJ8';
+        // const { country_name, country_code } = await comFunction2.getcountrynamebyIp(ipAddress, api_key);
+        // console.log("Country Name:", country_name);
+        // console.log("Country Code:", country_code);
+        let country_name = req.cookies.countryName || 'India';
+        let country_code = req.cookies.countryCode || 'IN';
 
-        const { country_name, country_code } = await comFunction2.getcountrynamebyIp(ipAddress, api_key);
-        console.log("Country Name:", country_name);
-        console.log("Country Code:", country_code);
+        console.log("country_names", country_name);
+        console.log("country_codes", country_code);
 
         let currentUserData = JSON.parse(req.userData);
         console.log("currentUserData", currentUserData);
@@ -616,20 +626,19 @@ router.get('/stripe-year-payment', checkCookieValue, async (req, res) => {
         const { planId, planPrice, yearly, memberCount, total_price } = req.query;
         console.log("req.query-yearly", req.query);
 
-        const ipAddress = requestIp.getClientIp(req); 
-        //console.log('Client IP Address:', ip);
-        
-        // let ipAddress = await comFunction2.getPublicIpAddress();
-        // console.log("ipAddress",ipAddress);
-        // ipAddress = ipAddress.toString().replace('::ffff:', '');
-        // console.log("ipAddress", ipAddress);
+        // const ipAddress = requestIp.getClientIp(req); 
+        // //console.log('Client IP Address:', ip);
+        // const api_key = process.env.GEO_LOCATION_API_KEY;
+        // //const api_key = 'AIzaSyCc5pts6Y3V7g9ZGGVsCcEi0WD8seu1VJ8';
+        // const { country_name, country_code } = await comFunction2.getcountrynamebyIp(ipAddress, api_key);
+        // console.log("Country Name:", country_name);
+        // console.log("Country Code:", country_code);
 
-        const api_key = process.env.GEO_LOCATION_API_KEY;
-        //const api_key = 'AIzaSyCc5pts6Y3V7g9ZGGVsCcEi0WD8seu1VJ8';
+        let country_name = req.cookies.countryName || 'India';
+        let country_code = req.cookies.countryCode || 'IN';
 
-        const { country_name, country_code } = await comFunction2.getcountrynamebyIp(ipAddress, api_key);
-        console.log("Country Name:", country_name);
-        console.log("Country Code:", country_code);
+        console.log("country_names", country_name);
+        console.log("country_codes", country_code);
 
         let currentUserData = JSON.parse(req.userData);
         console.log("currentUserData", currentUserData);
@@ -1001,22 +1010,12 @@ router.get('/company/:slug', checkCookieValue, async (req, res) => {
 router.get('/categories', checkCookieValue, async (req, res) => {
     let currentUserData = JSON.parse(req.userData);
 
-    // let ipAddress = await comFunction2.getPublicIpAddress();
-    // console.log("ipAddress",ipAddress);
-    // ipAddress = ipAddress.toString().replace('::ffff:', '');
-    // console.log("ipAddress", ipAddress);
 
-    const ipAddress = requestIp.getClientIp(req); 
-    //console.log('Client IP Address:', ip);
+    let country_name = req.cookies.countryName || 'India';
+    let country_code = req.cookies.countryCode || 'IN';
 
-    const api_key = process.env.GEO_LOCATION_API_KEY
-    // const getcountrybyIp = await Promise.all([comFunction2.getcountrynamebyIp(ipAddress,api_key)]) 
-    // const country_name = getcountrybyIp[0];
-    // console.log("country_code",country_name);
-
-    const { country_name, country_code } = await comFunction2.getcountrynamebyIp(ipAddress, api_key);
-    console.log("Country Name:", country_name);
-    console.log("Country Code:", country_code);
+    console.log("country_names", country_name);
+    console.log("country_codes", country_code);
 
     const getcountry_code = `SELECT id FROM countries WHERE shortname = "${country_code}"`;
     const getcountryval = await query(getcountry_code);
@@ -1129,22 +1128,12 @@ router.get('/category/:category_slug/:country', checkCookieValue, async (req, re
     const country = req.params.country;
     const baseURL = process.env.MAIN_URL;
 
-    // let ipAddress = await comFunction2.getPublicIpAddress();
-    // console.log("ipAddress",ipAddress);
-    // ipAddress = ipAddress.toString().replace('::ffff:', '');
-    // console.log("ipAddress", ipAddress);
 
-    const ipAddress = requestIp.getClientIp(req); 
-    console.log('Client IP Address:', ip);
+    let country_name = req.cookies.countryName || 'India';
+    let country_code = req.cookies.countryCode || 'IN';
 
-    const api_key = process.env.GEO_LOCATION_API_KEY
-    // const getcountrybyIp = await Promise.all([comFunction2.getcountrynamebyIp(ipAddress,api_key)]) 
-    // const country_name = getcountrybyIp[0];
-    // console.log("country_code",country_name);
-
-    const { country_name, country_code } = await comFunction2.getcountrynamebyIp(ipAddress, api_key);
-    console.log("Country Name:", country_name);
-    console.log("Country Code:", country_code);
+    console.log("country_names", country_name);
+    console.log("country_codes", country_code);
 
     const [globalPageMeta, getSubCategories, companyDetails, AllRatingTags, CategoryDetails] = await Promise.all([
         comFunction2.getPageMetaValues('global'),
@@ -1212,23 +1201,11 @@ router.get('/category/:category_slug/:country/:filter', checkCookieValue, async 
     const filter_value = req.params.filter;
     const baseURL = process.env.MAIN_URL;
 
-    const ipAddress = requestIp.getClientIp(req); 
-    //console.log('Client IP Address:', ip);
+    let country_name = req.cookies.countryName || 'India';
+    let country_code = req.cookies.countryCode || 'IN';
 
-    // let ipAddress = await comFunction2.getPublicIpAddress();
-    // console.log("ipAddress",ipAddress);
-    // ipAddress = ipAddress.toString().replace('::ffff:', '');
-    // console.log("ipAddress", ipAddress);
-
-    const api_key = process.env.GEO_LOCATION_API_KEY
-
-    // const getcountrybyIp = await Promise.all([comFunction2.getcountrynamebyIp(ipAddress,api_key)]) 
-    // const country_name = getcountrybyIp[0];
-    // console.log("country_code",country_name);
-
-    const { country_name, country_code } = await comFunction2.getcountrynamebyIp(ipAddress, api_key);
-    console.log("Country Name:", country_name);
-    console.log("Country Code:", country_code);
+    console.log("country_names", country_name);
+    console.log("country_codes", country_code);
 
 
     const [globalPageMeta, getSubCategories, companyDetails, AllRatingTags, CategoryDetails] = await Promise.all([
@@ -1313,19 +1290,11 @@ router.get('/home', checkCookieValue, async (req, res) => {
 router.get('/discussion', checkCookieValue, async (req, res) => {
     let currentUserData = JSON.parse(req.userData);
 
-    // let ipAddress = await comFunction2.getPublicIpAddress();
-    // console.log("ipAddress",ipAddress);
-    // ipAddress = ipAddress.toString().replace('::ffff:', '');
-    // console.log("ipAddress", ipAddress);
+    let country_name = req.cookies.countryName || 'India';
+    let country_code = req.cookies.countryCode || 'IN';
 
-    const ipAddress = requestIp.getClientIp(req); 
-    //console.log('Client IP Address:', ip);
-
-    const api_key = process.env.GEO_LOCATION_API_KEY;
-
-    const { country_name, country_code } = await comFunction2.getcountrynamebyIp(ipAddress, api_key);
-    console.log("Country Name:", country_name);
-    console.log("Country Code:", country_code);
+    console.log("country_names", country_name);
+    console.log("country_codes", country_code);
 
     const [globalPageMeta, getAllLatestDiscussion, getAllPopularDiscussion, getAllDiscussions, getAllViewedDiscussion, getPopularTags, getCountries] = await Promise.all([
         comFunction2.getPageMetaValues('global'),
@@ -4678,7 +4647,33 @@ router.get('/plans', checkLoggedIn, async (req, res) => {
 });
 
 
+router.get('/currency-conversion', checkLoggedIn, async (req, res) => {
+    try {
+        const encodedUserData = req.cookies.user;
+        const currentUserData = JSON.parse(encodedUserData);
+        const companyId = req.params.id;
 
+        const getquery= `SELECT * FROM currency_conversion`;
+        const getval = await queryAsync(getquery)
+        if(getval.length>0){
+            var getcurrency = getval[0]
+        }
+        //else{
+        //     var getcurrency = null
+        // }
+        console.log("getcurrency",getcurrency);
+
+        return res.render('curreny_conversion', {
+            menu_active_id: 'company',
+            page_title: 'Currency Convertion',
+            currentUserData,
+            getcurrency
+        })
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('An error occurred');
+    }
+});
 
 
 router.get('/success', (req, res) => {
@@ -5717,10 +5712,64 @@ router.get('/payments', checkLoggedIn, async (req, res) => {
         //     allcompany: allcompany
         // });
         res.render('payments', {
-            menu_active_id: 'company',
+            menu_active_id: 'miscellaneous',
             page_title: 'Payments',
             currentUserData,
             allPayments: getAllPayments
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('An error occurred');
+    }
+});
+
+router.get('/payment_history', checkLoggedIn, async (req, res) => {
+    try {
+        const encodedUserData = req.cookies.user;
+        const currentUserData = JSON.parse(encodedUserData);
+
+        // Fetch all the required data asynchronously
+        const [getAllPayments] = await Promise.all([
+            comFunction2.getAllPaymentHistory(),
+        ]);
+        // console.log("getAllPayments",getAllPayments);
+
+        res.render('payment_history', {
+            menu_active_id: 'miscellaneous',
+            page_title: 'Payment History ',
+            currentUserData,
+            allPayments : getAllPayments,
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('An error occurred');
+    }
+});
+
+router.get('/user_payment_history', checkCookieValue,async (req, res) => {
+    try {
+            let currentUserData = JSON.parse(req.userData);
+            var userId = currentUserData.user_id;
+
+        // Fetch all the required data asynchronously
+        const [getAllPayments, getUser,getUserMeta, globalPageMeta, AllCompaniesReviews] = await Promise.all([
+            comFunction2.getAllPaymentHistory(),
+            comFunction.getUser(userId),
+            comFunction.getUserMeta(userId),
+            comFunction2.getPageMetaValues('global'),
+            comFunction2.getAllCompaniesReviews(userId),
+        ]);
+        console.log("getAllPayments",getAllPayments);
+
+        res.render('front-end/user_payment_history', {
+            menu_active_id: 'miscellaneous',
+            page_title: 'Payment History ',
+            currentUserData,
+            allPayments : getAllPayments,
+            user: getUser,
+            userMeta: getUserMeta,
+            globalPageMeta: globalPageMeta,
+            AllCompaniesReviews: AllCompaniesReviews
         });
     } catch (err) {
         console.error(err);

@@ -1,0 +1,65 @@
+<%- include('common/header') -%>
+<link href="/front-end/css/myprofile-style.css" rel="stylesheet" type="text/css">
+<%- include('common/header-banner') -%>
+
+<!-- ============== Section1 Start =============== -->
+<section class="main-content my-profile-content">
+  <div class="container">
+     <div class="my-profile-wrapper">
+        <div class="row">
+          <%- include('common/profile-sidebar') -%>
+          <div class="col-md-8">
+            <div class="profile-right-content">
+              <div class="profile-info-table">
+                <% Object.keys(allPayments).forEach(planName => { %>
+                    <% if (allPayments[planName].length > 0) { %>
+                        <h2>Plan: <%= planName %> </h2>
+                        <table>
+                            <% Object.keys(allPayments).forEach(planName => { %>
+                            <% const planPayments = allPayments[planName]; %>
+                            <% if (planPayments.length > 0) { %>
+                                <% 
+                                planPayments.sort((a, b) => new Date(a.subscription_start_date) - new Date(b.subscription_start_date)); %>
+                                
+                                <%
+                                const firstPaymentDate = new Date(planPayments[0].subscription_start_date); %>
+                                
+                                <tr>
+                                <td colspan="4">Payment: <%= firstPaymentDate.toLocaleDateString() %></td>
+                                </tr>
+                                
+                                <% planPayments.forEach(payment => { %>
+                                <tr>
+                                    <td><%= new Date(payment.subscription_start_date).toLocaleDateString() %></td>
+                                    <td><%= payment.payment_status %></td>
+                                    <td><%= new Date(payment.subscription_end_date).toLocaleDateString() %></td>
+                                </tr>
+                                <% }); %>
+                                
+                                <% // Find the latest subscription end date for this plan
+                                const latestSubscriptionEndDate = new Date(Math.max(...planPayments.map(payment => new Date(payment.subscription_end_date)))); %>
+                                
+                                <% // Calculate next payment date as the day after latestSubscriptionEndDate
+                                const nextPaymentDate = new Date(latestSubscriptionEndDate);
+                                nextPaymentDate.setDate(nextPaymentDate.getDate() + 1); %>
+                                
+                                <tr>
+                                <td colspan="3">Next Payment Date</td>
+                                <td><%= nextPaymentDate.toLocaleDateString() %></td>
+                                </tr>
+                            <% } %>
+                            <% }); %>
+                        </table>
+                    
+                    <% } %>
+                    <% }); %>
+              </div>
+            </div>
+           </div>
+        </div>
+     </div>
+  </div>
+</section>
+<!-- ============== Section1 End =============== -->
+
+<%- include('common/footer') -%>

@@ -90,6 +90,9 @@ router.post('/deleteCompanies', authController.deleteCompanies);
 
 router.post('/get-company-details', authController.getcompanyDetails);
 
+router.post("/currency-convert",authController.currencyConvert);
+
+router.post("/edit-currency-convert",authController.editcurrencyConvert);
 
 router.post('/trash-company', authController.trashCompany);
 router.post('/trashCompanies', authController.trashCompanies);

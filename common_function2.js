@@ -2254,87 +2254,87 @@ async function getAllReviewsByCompanyID(companyId) {
 }
 
 //Function to get latest discussion from discussions table
-async function getAllLatestDiscussion(limit,country) {
-  const sql = `
-    SELECT
-    discussions.*,
-    u.first_name,
-    u.last_name,
-    COALESCE(comments.total_comments, 0) as total_comments,
-    COALESCE(views.total_views, 0) as total_views
-  FROM discussions
-  LEFT JOIN users u ON discussions.user_id = u.user_id
-  LEFT JOIN (
-    SELECT discussion_id, COUNT(*) as total_comments
-    FROM discussions_user_response
-    WHERE comment_status = 1
-    GROUP BY discussion_id
-  ) comments ON discussions.id = comments.discussion_id
-  LEFT JOIN (
-    SELECT discussion_id, COUNT(*) as total_views
-    FROM discussions_user_view
-    GROUP BY discussion_id
-  ) views ON discussions.id = views.discussion_id
-  WHERE discussions.discussion_status = 1 AND (discussions.location = "${country}" OR discussions.location = "Worldwide")
-  ORDER BY discussions.id DESC
-  LIMIT ${limit} ;
-  `;
-  try {
-    const results = await query(sql);
-    if (results.length > 0) {
-
-      return results;
-    } else {
-      return [];
-    }
-  }
-  catch (error) {
-    console.error('Error during fetch All Latest Discussion:', error);
-  }
-}
-
-// async function getAllLatestDiscussion(limit, country) {
-//   console.log("country",country);
-//   let sql = `
+// async function getAllLatestDiscussion(limit,country) {
+//   const sql = `
 //     SELECT
-//       discussions.*,
-//       u.first_name,
-//       u.last_name,
-//       COALESCE(comments.total_comments, 0) as total_comments,
-//       COALESCE(views.total_views, 0) as total_views
-//     FROM discussions
-//     LEFT JOIN users u ON discussions.user_id = u.user_id
-//     LEFT JOIN (
-//       SELECT discussion_id, COUNT(*) as total_comments
-//       FROM discussions_user_response
-//       WHERE comment_status = 1
-//       GROUP BY discussion_id
-//     ) comments ON discussions.id = comments.discussion_id
-//     LEFT JOIN (
-//       SELECT discussion_id, COUNT(*) as total_views
-//       FROM discussions_user_view
-//       GROUP BY discussion_id
-//     ) views ON discussions.id = views.discussion_id
-//     WHERE discussions.discussion_status = 1
+//     discussions.*,
+//     u.first_name,
+//     u.last_name,
+//     COALESCE(comments.total_comments, 0) as total_comments,
+//     COALESCE(views.total_views, 0) as total_views
+//   FROM discussions
+//   LEFT JOIN users u ON discussions.user_id = u.user_id
+//   LEFT JOIN (
+//     SELECT discussion_id, COUNT(*) as total_comments
+//     FROM discussions_user_response
+//     WHERE comment_status = 1
+//     GROUP BY discussion_id
+//   ) comments ON discussions.id = comments.discussion_id
+//   LEFT JOIN (
+//     SELECT discussion_id, COUNT(*) as total_views
+//     FROM discussions_user_view
+//     GROUP BY discussion_id
+//   ) views ON discussions.id = views.discussion_id
+//   WHERE discussions.discussion_status = 1 AND (discussions.location = "${country}" OR discussions.location = "Worldwide")
+//   ORDER BY discussions.id DESC
+//   LIMIT ${limit} ;
 //   `;
-
-//   if (country !== 'Worldwide') {
-//     sql += ` AND discussions.location = "${country}"`;
-//   }
-
-//   sql += `
-//     ORDER BY discussions.id DESC
-//     LIMIT ${limit};
-//   `;
-
 //   try {
 //     const results = await query(sql);
-//     return results.length > 0 ? results : [];
-//   } catch (error) {
+//     if (results.length > 0) {
+
+//       return results;
+//     } else {
+//       return [];
+//     }
+//   }
+//   catch (error) {
 //     console.error('Error during fetch All Latest Discussion:', error);
-//     return [];
 //   }
 // }
+
+async function getAllLatestDiscussion(limit, country) {
+  console.log("country",country);
+  let sql = `
+    SELECT
+      discussions.*,
+      u.first_name,
+      u.last_name,
+      COALESCE(comments.total_comments, 0) as total_comments,
+      COALESCE(views.total_views, 0) as total_views
+    FROM discussions
+    LEFT JOIN users u ON discussions.user_id = u.user_id
+    LEFT JOIN (
+      SELECT discussion_id, COUNT(*) as total_comments
+      FROM discussions_user_response
+      WHERE comment_status = 1
+      GROUP BY discussion_id
+    ) comments ON discussions.id = comments.discussion_id
+    LEFT JOIN (
+      SELECT discussion_id, COUNT(*) as total_views
+      FROM discussions_user_view
+      GROUP BY discussion_id
+    ) views ON discussions.id = views.discussion_id
+    WHERE discussions.discussion_status = 1
+  `;
+
+  if (country !== 'Worldwide') {
+    sql += ` AND discussions.location = "${country}"`;
+  }
+
+  sql += `
+    ORDER BY discussions.id DESC
+    LIMIT ${limit};
+  `;
+
+  try {
+    const results = await query(sql);
+    return results.length > 0 ? results : [];
+  } catch (error) {
+    console.error('Error during fetch All Latest Discussion:', error);
+    return [];
+  }
+}
 
 
 //Function to get popular discussion from discussions table
@@ -4879,11 +4879,26 @@ async function complaintLevelUpdate() {
 }
 
 // Fetch membership plan
+// function getmembershipPlans() {
+//   return new Promise((resolve, reject) => {
+//     db.query(
+//       `SELECT *
+//       FROM membership_plans 
+//       WHERE 1`,
+//       async (err, result) => {
+//         if (err) {
+//           reject(err);
+//         } else {
+//           resolve(result);
+//         }
+//       });
+//   });
+// }
 function getmembershipPlans() {
   return new Promise((resolve, reject) => {
     db.query(
       `SELECT *
-      FROM membership_plans 
+      FROM plan_management 
       WHERE 1`,
       async (err, result) => {
         if (err) {
@@ -4896,26 +4911,105 @@ function getmembershipPlans() {
 }
 
 // Fetch one Payment details
+// function getAllPayments() {
+//   return new Promise((resolve, reject) => {
+//     db.query(
+//       `SELECT p.*, c.company_name , c.logo , c.comp_email , mp.plan_name
+//       FROM payments p
+//       LEFT JOIN company c ON c.ID = p.company_id  AND c.status != '3'
+//       LEFT JOIN membership_plans mp ON p.membership_plan_id = mp.id  
+//       ORDER BY p.id DESC`,
+//       async (err, result) => {
+//         if (err) {
+//           reject(err);
+//         } else {
+//           resolve(result);
+//         }
+//       });
+//   });
+// }
+
+
+
 function getAllPayments() {
   return new Promise((resolve, reject) => {
     db.query(
-      `SELECT p.*, c.company_name , c.logo , c.comp_email , mp.plan_name
-      FROM payments p
-      LEFT JOIN company c ON c.ID = p.company_id  AND c.status != '3'
-      LEFT JOIN membership_plans mp ON p.membership_plan_id = mp.id  
-      ORDER BY p.id DESC`,
+      `SELECT p.*, c.company_name, c.logo, c.comp_email, plan_management.name AS plan_name, plan_management.monthly_price, plan_management.yearly_price, users.email as company_user_email
+       FROM order_history p
+       LEFT JOIN company_claim_request ccr ON ccr.claimed_by = p.user_id 
+       LEFT JOIN company c ON c.ID = ccr.company_id AND c.status != '3'
+       LEFT JOIN plan_management ON p.plan_id = plan_management.id
+       LEFT JOIN users ON ccr.claimed_by = users.user_id
+       ORDER BY p.id DESC`,
       async (err, result) => {
         if (err) {
           reject(err);
         } else {
-          resolve(result);
+          const payments = [];
+
+          result.forEach(row => {
+            let transactionId = null;
+            let subscriptionAmount = null;
+            let subscriptionInterval = null;
+
+            try {
+              const paymentDetails = JSON.parse(row.payment_details);
+              transactionId = paymentDetails.latest_charge;
+            } catch (error) {
+              console.error('Error parsing payment details:', error);
+            }
+
+            try {
+              const subscriptionDetails = JSON.parse(row.subscription_details);
+              const subscriptionItem = subscriptionDetails.items.data[0];
+              subscriptionAmount = subscriptionItem.plan.amount / 100;
+
+              const interval = subscriptionItem.plan.interval;
+              const intervalCount = subscriptionItem.plan.interval_count;
+
+              if (interval === 'day') {
+                subscriptionInterval = 'Daily';
+              } else if (interval === 'week') {
+                subscriptionInterval = 'Weekly';
+              } else if (interval === 'month') {
+                if (intervalCount === 1) {
+                  subscriptionInterval = 'Monthly';
+                } else {
+                  subscriptionInterval = `Every ${intervalCount} Months`;
+                }
+              } else if (interval === 'year') {
+                if (intervalCount === 1) {
+                  subscriptionInterval = 'Yearly';
+                } else {
+                  subscriptionInterval = `Every ${intervalCount} Years`;
+                }
+              } else {
+                subscriptionInterval = 'Unknown';
+              }
+            } catch (error) {
+              console.error('Error parsing subscription details:', error);
+            }
+
+            const modifiedRow = {
+              ...row,
+              transaction_id: transactionId,
+              subscription_amount: subscriptionAmount,
+              subscription_interval: subscriptionInterval
+            };
+            payments.push(modifiedRow);
+          });
+
+          //console.log("resultv", payments);
+          resolve(payments);
         }
-      });
+      }
+    );
   });
 }
 
 
-// function getAllPayments() {
+
+// function getAllPaymentHistory() {
 //   return new Promise((resolve, reject) => {
 //     db.query(
 //       `SELECT p.*, c.company_name, c.logo, c.comp_email, plan_management.name AS plan_name, plan_management.monthly_price, plan_management.yearly_price, users.email as company_user_email
@@ -4928,6 +5022,122 @@ function getAllPayments() {
 //       async (err, result) => {
 //         if (err) {
 //           reject(err);
+//           return;
+//         }
+
+//         const payments = [];
+
+//         result.forEach(row => {
+//           let transactionId = null;
+//           let subscriptionAmount = null;
+//           let subscriptionInterval = null;
+//           let formattedPaymentDate = null;
+
+//           try {
+//             const paymentDetails = JSON.parse(row.payment_details);
+//             transactionId = paymentDetails.charge;
+
+//             const paymentDate = new Date(paymentDetails.created * 1000);
+//             formattedPaymentDate = paymentDate.toLocaleDateString('en-US');
+
+//             console.log('Payment Date:', formattedPaymentDate);
+//           } catch (error) {
+//             console.error('Error parsing payment details:', error);
+//           }
+
+//           try {
+//             const subscriptionDetails = JSON.parse(row.subscription_details);
+//             const subscriptionItem = subscriptionDetails.items.data[0];
+//             subscriptionAmount = subscriptionItem.plan.amount / 100;
+
+//             const interval = subscriptionItem.plan.interval;
+//             const intervalCount = subscriptionItem.plan.interval_count;
+
+//             if (interval === 'day') {
+//               subscriptionInterval = 'Daily';
+//             } else if (interval === 'week') {
+//               subscriptionInterval = 'Weekly';
+//             } else if (interval === 'month') {
+//               if (intervalCount === 1) {
+//                 subscriptionInterval = 'Monthly';
+//               } else {
+//                 subscriptionInterval = `Every ${intervalCount} Months`;
+//               }
+//             } else if (interval === 'year') {
+//               if (intervalCount === 1) {
+//                 subscriptionInterval = 'Yearly';
+//               } else {
+//                 subscriptionInterval = `Every ${intervalCount} Years`;
+//               }
+//             } else {
+//               subscriptionInterval = 'Unknown';
+//             }
+//           } catch (error) {
+//             console.error('Error parsing subscription details:', error);
+//           }
+
+//           const modifiedRow = {
+//             ...row,
+//             transaction_id: transactionId,
+//             subscription_amount: subscriptionAmount,
+//             subscription_interval: subscriptionInterval,
+//             formattedPaymentDate: formattedPaymentDate
+//           };
+//           payments.push(modifiedRow);
+//         });
+
+//         // Group payments by plan_name
+//         const groupedPayments = {
+//           Basic: [],
+//           Standard: [],
+//           Advanced: [],
+//           Premium: [],
+//           Enterprise: []
+//         };
+
+//         payments.forEach(payment => {
+//           switch (payment.plan_name) {
+//             case 'basic':
+//               groupedPayments.Basic.push(payment);
+//               break;
+//             case 'standard':
+//               groupedPayments.Standard.push(payment);
+//               break;
+//             case 'advanced':
+//               groupedPayments.Advanced.push(payment);
+//               break;
+//             case 'premium':
+//               groupedPayments.Premium.push(payment);
+//               break;
+//             case 'enterprise':
+//               groupedPayments.Enterprise.push(payment);
+//               break;
+//             default:
+//               break;
+//           }
+//         });
+
+//         resolve(groupedPayments);
+//       }
+//     );
+//   });
+// }
+
+
+
+// async function getAllPaymentHistory() {
+//   return new Promise((resolve, reject) => {
+//     db.query(
+//       `SELECT p.*, c.company_name, c.logo, c.comp_email, plan_management.name AS plan_name, plan_management.monthly_price, plan_management.yearly_price, users.email as company_user_email
+//           FROM order_history p
+//           LEFT JOIN company_claim_request ccr ON ccr.claimed_by = p.user_id 
+//          LEFT JOIN company c ON c.ID = ccr.company_id AND c.status != '3'
+//          LEFT JOIN plan_management ON p.plan_id = plan_management.id
+//            LEFT JOIN users ON ccr.claimed_by = users.user_id
+//            ORDER BY p.id DESC`,
+//       async (err, result) => {
+//         if (err) {
+//           reject(err);
 //         } else {
 //           const payments = [];
 
@@ -4935,16 +5145,31 @@ function getAllPayments() {
 //             let transactionId = null;
 //             let subscriptionAmount = null;
 //             let subscriptionInterval = null;
+//             let formattedPaymentDate = null;
+//             let nextPaymentDate = null;
 
 //             try {
 //               const paymentDetails = JSON.parse(row.payment_details);
 //               transactionId = paymentDetails.charge;
+
+//               const paymentDate = new Date(paymentDetails.created * 1000);
+//               formattedPaymentDate = paymentDate.toLocaleDateString('en-US');
+
+//               console.log('Payment Date:', formattedPaymentDate);
 //             } catch (error) {
 //               console.error('Error parsing payment details:', error);
 //             }
 
 //             try {
 //               const subscriptionDetails = JSON.parse(row.subscription_details);
+//               const currentPeriodEnd = subscriptionDetails.current_period_end;
+//               if (currentPeriodEnd) {
+//                 const nextPaymentTimestamp = new Date(currentPeriodEnd * 1000);
+//                 nextPaymentDate = nextPaymentTimestamp.toLocaleDateString('en-US');
+//               } else {
+//                 console.warn('No current_period_end found in subscription_details');
+//               }
+
 //               const subscriptionItem = subscriptionDetails.items.data[0];
 //               subscriptionAmount = subscriptionItem.plan.amount / 100;
 
@@ -4978,18 +5203,158 @@ function getAllPayments() {
 //               ...row,
 //               transaction_id: transactionId,
 //               subscription_amount: subscriptionAmount,
-//               subscription_interval: subscriptionInterval
+//               subscription_interval: subscriptionInterval,
+//               formattedPaymentDate: formattedPaymentDate,
+//               next_payment_date: nextPaymentDate
 //             };
 //             payments.push(modifiedRow);
 //           });
 
-//           //console.log("resultv", payments);
-//           resolve(payments);
+//           console.log('All Payments:', payments); // Log payments for debugging
+
+//           // Group payments by plan_name
+//           const groupedPayments = {
+//             Basic: payments.filter(payment => payment.plan_name === 'basic'),
+//             Standard: payments.filter(payment => payment.plan_name === 'standard'),
+//             Advanced: payments.filter(payment => payment.plan_name === 'advanced'),
+//             Premium: payments.filter(payment => payment.plan_name === 'premium'),
+//             Enterprise: payments.filter(payment => payment.plan_name === 'enterprise'),
+//           };
+
+//           console.log('Grouped Payments:', groupedPayments); // Log grouped payments for debugging
+
+//           resolve(groupedPayments);
 //         }
 //       }
 //     );
 //   });
 // }
+
+
+
+
+
+async function getAllPaymentHistory() {
+  return new Promise((resolve, reject) => {
+    db.query(
+      `SELECT p.*, c.company_name, c.logo, c.comp_email, plan_management.name AS plan_name, plan_management.monthly_price, plan_management.yearly_price, users.email as company_user_email
+       FROM order_history p
+       LEFT JOIN company_claim_request ccr ON ccr.claimed_by = p.user_id 
+       LEFT JOIN company c ON c.ID = ccr.company_id AND c.status != '3'
+       LEFT JOIN plan_management ON p.plan_id = plan_management.id
+       LEFT JOIN users ON ccr.claimed_by = users.user_id`,
+      async (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          const payments = [];
+
+          result.forEach(row => {
+            let transactionId = null;
+            let subscriptionAmount = null;
+            let subscriptionInterval = null;
+            let formattedPaymentDate = null;
+            let nextPaymentDate = null;
+
+            try {
+              const paymentDetails = JSON.parse(row.payment_details);
+              transactionId = paymentDetails.charge;
+
+              const paymentDate = new Date(paymentDetails.created * 1000);
+              formattedPaymentDate = paymentDate.toLocaleDateString('en-US');
+
+              console.log('Payment Date:', formattedPaymentDate);
+            } catch (error) {
+              console.error('Error parsing payment details:', error);
+            }
+
+            try {
+              const subscriptionDetails = JSON.parse(row.subscription_details);
+              const currentPeriodEnd = subscriptionDetails.current_period_end;
+
+
+              if (currentPeriodEnd) {
+                const nextPaymentTimestamp = new Date(currentPeriodEnd * 1000);
+                const interval = subscriptionDetails.items.data[0].plan.interval;
+                const intervalCount = subscriptionDetails.items.data[0].plan.interval_count;
+
+                if (interval === 'day') {
+                  nextPaymentTimestamp.setDate(nextPaymentTimestamp.getDate() + intervalCount);
+                } else if (interval === 'week') {
+                  nextPaymentTimestamp.setDate(nextPaymentTimestamp.getDate() + intervalCount * 7);
+                } else if (interval === 'month') {
+                  nextPaymentTimestamp.setMonth(nextPaymentTimestamp.getMonth() + intervalCount);
+                } else if (interval === 'year') {
+                  nextPaymentTimestamp.setFullYear(nextPaymentTimestamp.getFullYear() + intervalCount);
+                }
+
+                nextPaymentDate = nextPaymentTimestamp.toLocaleDateString('en-US');
+              } else {
+                console.warn('No current_period_end found in subscription_details');
+              }
+
+              const subscriptionItem = subscriptionDetails.items.data[0];
+              subscriptionAmount = subscriptionItem.plan.amount / 100;
+
+              const interval = subscriptionItem.plan.interval;
+              const intervalCount = subscriptionItem.plan.interval_count;
+
+              if (interval === 'day') {
+                subscriptionInterval = 'Daily';
+              } else if (interval === 'week') {
+                subscriptionInterval = 'Weekly';
+              } else if (interval === 'month') {
+                if (intervalCount === 1) {
+                  subscriptionInterval = 'Monthly';
+                } else {
+                  subscriptionInterval = `Every ${intervalCount} Months`;
+                }
+              } else if (interval === 'year') {
+                if (intervalCount === 1) {
+                  subscriptionInterval = 'Yearly';
+                } else {
+                  subscriptionInterval = `Every ${intervalCount} Years`;
+                }
+              } else {
+                subscriptionInterval = 'Unknown';
+              }
+            } catch (error) {
+              console.error('Error parsing subscription details:', error);
+            }
+
+            const modifiedRow = {
+              ...row,
+              transaction_id: transactionId,
+              subscription_amount: subscriptionAmount,
+              subscription_interval: subscriptionInterval,
+              formattedPaymentDate: formattedPaymentDate,
+              next_payment_date: nextPaymentDate
+            };
+            payments.push(modifiedRow);
+          });
+
+         // console.log('All Payments:', payments); 
+          const groupedPayments = {
+            Basic: payments.filter(payment => payment.plan_name === 'basic'),
+            Standard: payments.filter(payment => payment.plan_name === 'standard'),
+            Advanced: payments.filter(payment => payment.plan_name === 'advanced'),
+            Premium: payments.filter(payment => payment.plan_name === 'premium'),
+            Enterprise: payments.filter(payment => payment.plan_name === 'enterprise'),
+          };
+
+          console.log('Grouped Payments:', groupedPayments); 
+
+          resolve(groupedPayments);
+        }
+      }
+    );
+  });
+}
+
+
+
+
+
 
 
 // function getAllPayments() {
@@ -5611,6 +5976,7 @@ async function getcountrybyIp(ipAddress, api_key) {
 
 //actual
 async function getcountrynamebyIp(ipAddress, api_key) {
+  console.log("ipAddress",ipAddress);
   const url = `https://ipgeolocation.abstractapi.com/v1/?api_key=${api_key}&ip_address=${ipAddress}`;
   
   let attempts = 0;
@@ -5821,6 +6187,46 @@ async function getcountrynamebyIp(ipAddress, api_key) {
 // }
 
 
+// async function convertPrices(plan, userCountry) {
+//   if (!plan || !userCountry) return null;
+
+//   try {
+//       const exchangeRatesResponse = await axios.get(`https://open.er-api.com/v6/latest/${plan.currency}`);
+//       const exchangeRates = exchangeRatesResponse.data.rates;
+      
+
+//       const userCurrency = getUserCurrency(userCountry);
+
+//       let monthlyPriceConverted = plan.monthly_price;
+//       let yearlyPriceConverted = plan.yearly_price;
+//       let perUserPriceConverted = plan.per_user_price;
+
+//       if (userCurrency !== 'USD') {
+//           if (!exchangeRates[userCurrency]) {
+//               console.error(`Conversion rate for ${userCurrency} not available`);
+//               return plan;
+//           }
+
+//           monthlyPriceConverted = (parseFloat(plan.monthly_price) * exchangeRates[userCurrency]).toFixed(2);
+//           yearlyPriceConverted = (parseFloat(plan.yearly_price) * exchangeRates[userCurrency]).toFixed(2);
+//           perUserPriceConverted = (parseFloat(plan.per_user_price) * exchangeRates[userCurrency]).toFixed(2);
+//       }
+
+//       const convertedPlan = {
+//           ...plan,
+//           monthly_price_local: monthlyPriceConverted,
+//           yearly_price_local: yearlyPriceConverted,
+//           per_user_price_local: perUserPriceConverted,
+//           local_currency: userCurrency
+//       };
+
+//       return convertedPlan;
+//   } catch (error) {
+//       console.error('Error fetching exchange rates:', error.message);
+//       return plan;
+//   }
+// }
+
 async function getplans(userCountry) {
   try {
       // Example SQL queries to fetch plans
@@ -5874,44 +6280,57 @@ async function getplans(userCountry) {
       throw new Error('An error occurred while fetching plans');
   }
 }
+
+async function getCurrency() {
+  const getcurrencyquery = `SELECT * FROM currency_conversion`;
+  const getcurrencyvalue = await query(getcurrencyquery);
+  console.log("getcurrencyvalue", getcurrencyvalue);
+
+  const exchangeRates = {};
+  for (const row of getcurrencyvalue) {
+      if (row.inr_currency) {
+          exchangeRates['INR'] = row.inr_currency;
+      }
+      if (row.jpy_currency) {
+          exchangeRates['JPY'] = row.jpy_currency;
+      }
+  }
+
+  return exchangeRates;
+}
+
 async function convertPrices(plan, userCountry) {
   if (!plan || !userCountry) return null;
 
-  try {
-      const exchangeRatesResponse = await axios.get(`https://open.er-api.com/v6/latest/${plan.currency}`);
-      const exchangeRates = exchangeRatesResponse.data.rates;
+  const exchangeRates = await getCurrency();
+  const userCurrency = getUserCurrency(userCountry);
 
-      const userCurrency = getUserCurrency(userCountry);
+  let monthlyPriceConverted = plan.monthly_price;
+  let yearlyPriceConverted = plan.yearly_price;
+  let perUserPriceConverted = plan.per_user_price;
 
-      let monthlyPriceConverted = plan.monthly_price;
-      let yearlyPriceConverted = plan.yearly_price;
-      let perUserPriceConverted = plan.per_user_price;
-
-      if (userCurrency !== 'USD') {
-          if (!exchangeRates[userCurrency]) {
-              console.error(`Conversion rate for ${userCurrency} not available`);
-              return plan;
-          }
-
-          monthlyPriceConverted = (parseFloat(plan.monthly_price) * exchangeRates[userCurrency]).toFixed(2);
-          yearlyPriceConverted = (parseFloat(plan.yearly_price) * exchangeRates[userCurrency]).toFixed(2);
-          perUserPriceConverted = (parseFloat(plan.per_user_price) * exchangeRates[userCurrency]).toFixed(2);
+  if (userCurrency !== 'USD') {
+      if (!exchangeRates[userCurrency]) {
+          console.error(`Conversion rate for ${userCurrency} not available`);
+          return plan;
       }
 
-      const convertedPlan = {
-          ...plan,
-          monthly_price_local: monthlyPriceConverted,
-          yearly_price_local: yearlyPriceConverted,
-          per_user_price_local: perUserPriceConverted,
-          local_currency: userCurrency
-      };
-
-      return convertedPlan;
-  } catch (error) {
-      console.error('Error fetching exchange rates:', error.message);
-      return plan;
+      monthlyPriceConverted = (parseFloat(plan.monthly_price) * exchangeRates[userCurrency]).toFixed(2);
+      yearlyPriceConverted = (parseFloat(plan.yearly_price) * exchangeRates[userCurrency]).toFixed(2);
+      perUserPriceConverted = (parseFloat(plan.per_user_price) * exchangeRates[userCurrency]).toFixed(2);
   }
+
+  const convertedPlan = {
+      ...plan,
+      monthly_price_local: monthlyPriceConverted,
+      yearly_price_local: yearlyPriceConverted,
+      per_user_price_local: perUserPriceConverted,
+      local_currency: userCurrency
+  };
+
+  return convertedPlan;
 }
+
 function getUserCurrency(userCountry) {
   const countryCurrencyMap = {
       'India': 'INR',
@@ -5919,6 +6338,24 @@ function getUserCurrency(userCountry) {
   };
 
   return countryCurrencyMap[userCountry] || 'USD';
+}
+
+
+
+async function getSubscribedUsers(userId){
+  try {
+    const querys = `SELECT order_history.*, plan_management.name as plan_name FROM order_history LEFT JOIN plan_management ON order_history.plan_id = plan_management.id WHERE user_id = "${userId}" AND payment_status= "succeeded"`;
+    const querys_val = await query(querys);
+
+    if(querys_val.length>0){
+      console.log("querys_val",querys_val);
+    }
+    
+    return querys_val;
+} catch (error) {
+    console.error('Error fetching plans:', error);
+    throw new Error('An error occurred while fetching plans');
+}
 }
 
  
@@ -6017,6 +6454,7 @@ module.exports = {
   complaintLevelUpdate,
   getmembershipPlans,
   getAllPayments,
+  getAllPaymentHistory,//
   getpaymentDetailsById,
   getAllPolls,
   getAllComplaints,
@@ -6042,5 +6480,6 @@ module.exports = {
   getPublicIpAddress,//
   getcountrybyIp,
   getcountrynamebyIp,
-  getplans
+  getplans,
+  getSubscribedUsers
 };

@@ -75,6 +75,9 @@
                 <% if(user.register_from == "web"){ %>
                 <li><a href="/change-password"><i class="fa-solid fa-lock-keyhole"></i>Change Password</a></li>
                 <% } %>
+                <% if(userMeta && userMeta.claimed_comp_id) { %>
+                  <li><a href="/user_payment_history %>"><i class="fa-solid fa-briefcase"></i>Payment History </a></li>
+               <% } %>
                 <li><a href="/logout"><i class="fa-solid fa-right-from-bracket"></i>Logout</a></li>
              </ul>
           </div>
