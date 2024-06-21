@@ -234,6 +234,27 @@ function getCompany(companyId) {
   });
 }
 
+// async function getCompanyCategory() {
+//   try {
+//     const connection = await mysql.createConnection({
+//       host: process.env.DATABASE_HOST,
+//       user: process.env.DATABASE_USER,
+//       password: process.env.DATABASE_PASSWORD,
+//       database: process.env.DATABASE
+//     });
+
+//     const [categories] = await connection.query('SELECT * FROM category');
+//     //console.log(categories);
+//     connection.end();
+//     const nestedCategories = buildCategoryTree(categories);   // This is the Json Format Of All Categories
+//     const nestedCategoriesHTML = renderCategoryTreeHTML(nestedCategories);
+
+//     return nestedCategoriesHTML;
+//   } catch (error) {
+//     throw new Error('Error fetching company categories');
+//   }
+// }
+
 async function getCompanyCategory() {
   try {
     const connection = await mysql.createConnection({
@@ -243,17 +264,27 @@ async function getCompanyCategory() {
       database: process.env.DATABASE
     });
 
-    const [categories] = await connection.query('SELECT * FROM category');
-    //console.log(categories);
+    const [categories] = await connection.query(`
+      SELECT category.*, GROUP_CONCAT(category_country_relation.country_id) AS country_ids
+      FROM category
+      LEFT JOIN category_country_relation ON category.ID = category_country_relation.cat_id
+      GROUP BY category.ID
+    `);
+
+    console.log("categories", categories);
     connection.end();
+
     const nestedCategories = buildCategoryTree(categories);   // This is the Json Format Of All Categories
     const nestedCategoriesHTML = renderCategoryTreeHTML(nestedCategories);
 
     return nestedCategoriesHTML;
   } catch (error) {
+    console.error('Error fetching company categories:', error);
     throw new Error('Error fetching company categories');
   }
 }
+
+
 
 
 async function getParentCompany(country_shortname) {
@@ -297,7 +328,7 @@ function buildCategoryTree(categories, parentId = 0) {
   categories.forEach((category) => {
     if (category.parent_id === parentId) {
       const children = buildCategoryTree(categories, category.ID);
-      const categoryNode = { id: category.ID, name: category.category_name, img: category.category_img, children };
+      const categoryNode = { id: category.ID, name: category.category_name, img: category.category_img,country_id: category.country_id, children };
       categoryTree.push(categoryNode);
     }
   });

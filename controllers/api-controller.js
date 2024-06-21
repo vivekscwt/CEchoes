@@ -203,6 +203,39 @@ exports.companyProduct = (req, res) => {
         }
     })
 }
+// categoriesController.js
+
+
+
+// exports.getCategories = async (req, res) => {
+//   try {
+//     const countryId = req.params.countryId;
+
+//     const nestedCategoriesHTML = await comFunction2.getCompanyCategoriess(countryId);
+
+//     console.log("nestedCategoriesHTML",nestedCategoriesHTML);
+
+//     res.status(200).send(nestedCategoriesHTML);
+//   } catch (error) {
+//     console.error('Error fetching categories:', error);
+//     res.status(500).send('Error fetching categories');
+//   }
+// };
+
+exports.getCategories = async (req, res) => {
+  const countryId = req.params.countryId;
+
+  try {
+    const nestedCategoriesHTML = await comFunction2.getCompanyCategoriess(countryId);
+    res.status(200).send(nestedCategoriesHTML);
+  } catch (error) {
+    console.error('Error fetching categories:', error);
+    res.status(500).send('Error fetching categories');
+  }
+  }
+
+
+
 
 // --searchCompany --//
 exports.searchCompany = async (req, res) => {

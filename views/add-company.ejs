@@ -326,31 +326,7 @@
                                     </label>
                                     <!--end::Label-->
                                     <!--begin::Col-->
-                                    <div class="col-lg-8 fv-row">
-                                        <%- company_categories %>
-                                            <!-- <ul id="myUL">
-                                    <li><span class="box">Beverages</span>
-                                      <ul class="nested">
-                                        <li>Water</li>
-                                        <li>Coffee</li>
-                                        <li><span class="box">Tea</span>
-                                          <ul class="nested">
-                                            <li>Black Tea</li>
-                                            <li>White Tea</li>
-                                            <li><span class="box">Green Tea</span>
-                                              <ul class="nested">
-                                                <li>Sencha</li>
-                                                <li>Gyokuro</li>
-                                                <li>Matcha</li>
-                                                <li>Pi Lo Chun</li>
-                                              </ul>
-                                            </li>
-                                          </ul>
-                                        </li>  
-                                      </ul>
-                                    </li>
-                                </ul>-->
-                                    </div>
+                                    <div id="categoryTree"></div>
                                     <!--end::Col-->
                                 </div>
                                 <!--end::Input group-->
@@ -838,4 +814,29 @@ $(document).ready(function() {
 
 
             //# sourceMappingURL=profile-details.js.map    
+        </script>
+
+        <script>
+            $(document).ready(function() {
+  // Event handler for country dropdown change
+  $('#main_address_country').change(async function() {
+    const selectedCountry = $(this).val();
+
+    console.log("selectedCountry",selectedCountry);
+
+    try {
+      const response = await fetch(`/categories/${selectedCountry}`); // Assuming your backend API endpoint
+      const html = await response.text();
+
+      $('#categoryTree').html(html); // Replace content of categoryTree div with HTML received
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+      // Handle error display
+    }
+  });
+
+  // Trigger change event on page load to fetch categories for default country (India)
+  $('#main_address_country').trigger('change');
+});
+
         </script>

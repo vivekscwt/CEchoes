@@ -147,8 +147,12 @@ router.get('', checkCookieValue, async (req, res) => {
         comFunction.getPopularCategories(country_code),
         comFunction.getReviewCount(),
         comFunction.getUserCount(),
+        comFunction.getPopularCategories(country_code),
+        comFunction.getPopularCategories(country_code),
         comFunction.getPositiveReviewsCompany(),
         comFunction.getNegativeReviewsCompany(),
+        // comFunction.getPositiveReviewsCompany(country_code),
+        // comFunction.getNegativeReviewsCompany(country_code),
         comFunction2.getPageMetaValues('home'),
         comFunction.getVisitorCheck(requestIp.getClientIp(req)),
         comFunction2.getAllLatestDiscussion(20, country_name),
@@ -192,15 +196,15 @@ router.get('', checkCookieValue, async (req, res) => {
                     meta_values_array[item.page_meta_key] = item.page_meta_value;
                 })
                 //console.log(allRatingTags);
-                const featured_sql = `SELECT featured_companies.id,featured_companies.company_id,featured_companies.short_desc,featured_companies.link,company.logo,company.slug, company.company_name FROM featured_companies 
-                        JOIN company ON featured_companies.company_id = company.ID 
-                        WHERE featured_companies.status = 'active' 
-                        ORDER BY featured_companies.ordering ASC `;
-
                 // const featured_sql = `SELECT featured_companies.id,featured_companies.company_id,featured_companies.short_desc,featured_companies.link,company.logo,company.slug, company.company_name FROM featured_companies 
                 //         JOIN company ON featured_companies.company_id = company.ID 
-                //         WHERE featured_companies.status = 'active' AND company.main_address_country = "${country_code}"
+                //         WHERE featured_companies.status = 'active' 
                 //         ORDER BY featured_companies.ordering ASC `;
+
+                const featured_sql = `SELECT featured_companies.id,featured_companies.company_id,featured_companies.short_desc,featured_companies.link,company.logo,company.slug, company.company_name FROM featured_companies 
+                        JOIN company ON featured_companies.company_id = company.ID 
+                        WHERE featured_companies.status = 'active' AND company.main_address_country = "${country_code}"
+                        ORDER BY featured_companies.ordering ASC `;
                 db.query(featured_sql, (featured_err, featured_result) => {
                     var featured_comps = featured_result;
                     // res.json( {
@@ -4321,12 +4325,14 @@ router.get('/add-company', checkLoggedIn, async (req, res) => {
 
         // Fetch all the required data asynchronously
         const [company_all_categories, getCountries, getParentCompany] = await Promise.all([
-            comFunction.getCompanyCategory(),
+            //comFunction.getCompanyCategory(),
+            comFunction2.getCompanyCategoriess(),
             comFunction.getCountries(),
             comFunction.getParentCompany()
+            
         ]);
-        console.log("getCountries", getCountries);
-        console.log("getParentCompany", getParentCompany);
+        // console.log("getCountries", getCountries);
+        // console.log("getParentCompany", getParentCompany);
 
         // Render the 'edit-user' EJS view and pass the data
         res.render('add-company', {
@@ -4342,6 +4348,54 @@ router.get('/add-company', checkLoggedIn, async (req, res) => {
         res.status(500).send('An error occurred');
     }
 });
+
+
+router.get('/categories/:countryId', async (req, res) => {
+    const countryId = req.params.countryId;
+
+    const getcountryquery = `SELECT * FROM countries WHERE shortname = "${countryId}"`;
+    const getcountryval = await queryAsync(getcountryquery);
+    if(getcountryval.length>0){
+        var countryid = getcountryval[0].id;
+        console.log("countryid",countryid);
+    }
+    else{
+        countryid="101"
+    }
+  
+    try {
+      const nestedCategoriesHTML = await comFunction2.getCompanyCategoriess(countryid);
+      console.log("nestedCategoriesHTML",nestedCategoriesHTML);
+      res.status(200).send(nestedCategoriesHTML);
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+      res.status(500).send('Error fetching categories');
+    }
+    })
+    router.get('/edit-categories/:countryId/:compid', async (req, res) => {
+        const countryId = req.params.countryId;
+        const compid= req.params.compid;
+        console.log("editcompid",compid);
+    
+        const getcountryquery = `SELECT * FROM countries WHERE shortname = "${countryId}"`;
+        const getcountryval = await queryAsync(getcountryquery);
+        if(getcountryval.length>0){
+            var countryid = getcountryval[0].id;
+            console.log("countryid",countryid);
+        }
+        else{
+            countryid="101"
+        }
+      
+        try {
+          const nestedCategoriesHTML = await comFunction2.getCompanyCategoryBuID(countryid,compid);
+          console.log("nestedCategoriesHTML",nestedCategoriesHTML);
+          res.status(200).send(nestedCategoriesHTML);
+        } catch (error) {
+          console.error('Error fetching categories:', error);
+          res.status(500).send('Error fetching categories');
+        }
+        })
 
 
 // router.get('/companies', checkLoggedIn, async (req, res) => {

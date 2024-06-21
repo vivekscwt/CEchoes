@@ -30,4 +30,6 @@ router.post('/complain_sub_category', apiController.complainSubCategory);
 
 router.post('/company_product', apiController.companyProduct);
 
+router.get('/categories/:countryId', apiController.getCategories);
+
 module.exports = router;

@@ -904,7 +904,7 @@
                 <textarea name="topic" id="search-topic" class="form-control mb-4" required></textarea>
              </div>
               <div class="custom-form">
-                <select name="location" class="form-control" required>
+                <select name="location" id="country" class="form-control" required>
                     <option value="Worldwide" selected>Worldwide</option>
                     <% getCountries.forEach(function(country) { %>
                         <option value="<%= country.name %>"><%= country.name %></option>
@@ -1529,16 +1529,41 @@
     var countryId;
     var country;
     var state;
-    var countrynamess = '<%= countryname%>';
-    console.log('countryname:', countrynamess);
     console.log("maincountryId",countryId);
     console.log("country",country);
+    $(document).ready(function() {
+    //   $('#country').on('change', function() {
+    //   country = $(this).val(); 
+    //   console.log("country_IDcountry",country);
 
+    //   $.ajax({
+    //     url: '/getCountryIdByName',
+    //     method: 'GET',
+    //     data: { countryShortName: country },
+    //     success: function(response) {
+    //         countryId = response.countryId; 
+    //         console.log("country_IDddd", countryId);
+    //         handleCountryChange();
+    //     },
+    //     error: function(err) {
+    //         console.error('Error fetching country ID:', err);
+    //     }
+    // });
+    // });
+
+
+        
+
+
+
+
+
+});
 </script>
 
 <script>
 jQuery(document).ready(function ($) {
-
+   
   $("#sendreviewtags_discussion input").on({
        focusout : function() {
           var txt = this.value.replace(/[^a-z0-9+\-.\@ ]/ig, ''); // allowed characters
@@ -1584,9 +1609,94 @@ jQuery(document).ready(function ($) {
          $('.autofield-dropdown-review').html(''); // Clear search results if less than three letters
          $('#review-address').val('');
        }
-     });
-   
+     })
 
+   
+    //  // Function to perform the AJAX search
+    //  function performSearch(keyword) {
+    //    $('.autofield-dropdown').css('height', "200px");
+    //    const data = {
+    //      keyword: keyword,
+    //    };
+    //    console.log("data value", data);
+    //    $.ajax({
+    //      url: 'api/search-company',
+    //      method: 'POST',
+    //      data: { keyword: keyword },
+    //      ContentType: 'application/json',
+    //      success: function (data) {
+    //        console.log("Search data received:", data);
+    //        if (data.status == 'ok') {
+    //          if (data.data.length > 0) {
+    //            let respData = data.data;
+    //            let html = '<ul class="p-0 m-0">';
+    //            respData.forEach(company => {
+    //              html += '<li><a href="#" data-resulttitle="' + company.company_name + '" data-resultexcerpt="' + company.about_company + '" data-resultpermalink="/company/' + company.slug + '" >' + company.company_name + '</a></li>';
+    //            });
+    //            html += '</ul>';
+    //            $('.autofield-dropdown').html(html);
+    //            $('.autofield-dropdown').show();
+    //            if(data.data.length < 4){
+    //              var divlength = data.data.length*48;
+    //              $('.autofield-dropdown').css('height', divlength + "px");
+    //            }
+    //          } else {
+    //            $('.autofield-dropdown').hide();
+    //            $('.autofield-dropdown').html('');
+    //          }
+    //        } else {
+    //          $('.autofield-dropdown').hide();
+    //          $('.autofield-dropdown').html('');
+    //        }
+    //      },
+    //      error: function (error) {
+   
+    //      }
+    //    });
+    //  }
+   
+    //  // Company Search For review
+    //  function performSearchForReview(keyword) {
+    //    $('.autofield-dropdown-review').css('height', "200px");
+    //    const data = {
+    //      keyword: keyword,
+    //    };
+    //    $.ajax({
+    //      url: 'api/search-company',
+    //      method: 'POST',
+    //      data: { keyword: keyword },
+    //      ContentType: 'application/json',
+    //      success: function (data) {
+    //        if (data.status == 'ok') {
+    //          if (data.data.length > 0) {
+    //            let respData = data.data;
+    //            let html = '<ul class="p-0 m-0">';
+    //            respData.forEach(company => {
+    //              html += '<li><a href="#" data-resulttitle="' + company.company_name + '" data-companyID="' + company.ID + '" data-companyAddress="' + company.main_address + '" data-companyPin="' + company.main_address_pin_code + '" >' + company.company_name + '</a></li>';
+    //            });
+    //            html += '</ul>';
+    //            $('.autofield-dropdown-review').html(html);
+    //            $('.autofield-dropdown-review').show();
+    //            if(data.data.length < 4){
+    //              var divlength = data.data.length*48;
+    //              $('.autofield-dropdown-review').css('height', divlength + "px");
+    //            }
+    //          } else {
+    //            $('.autofield-dropdown-review').hide();
+    //            $('.autofield-dropdown-review').html('');
+    //          }
+    //        } else {
+    //          $('.autofield-dropdown-review').hide();
+    //          $('.autofield-dropdown-review').html('');
+    //        }
+    //      },
+    //      error: function (error) {
+    //        $('.autofield-dropdown-review').hide();
+    //        $('.autofield-dropdown-review').html('');
+    //      }
+    //    });
+    //  }
+   
 
     var country_name = "<%= countryname %>";
      //console.log("country_name from server:", country_name);
@@ -1646,65 +1756,6 @@ jQuery(document).ready(function ($) {
        });
 
      }
-     // Company Search For review
-     function performSearchForReview(keyword) {
-       $('.autofield-dropdown-review').css('height', "200px");
-       const data = {
-         keyword: keyword,
-         country: country_name
-       };
-       $.ajax({
-         url: 'api/search-company',
-         method: 'POST',
-         data: { keyword: keyword, country: country_name },
-         ContentType: 'application/json',
-         success: function (data) {
-           if (data.status == 'ok') {
-             if (data.data.length > 0) {
-               let respData = data.data;
-               let html = '<ul class="p-0 m-0">';
-               respData.forEach(company => {
-                 html += '<li><a href="#" data-resulttitle="' + company.company_name + '" data-companyID="' + company.ID + '" data-companyAddress="' + company.main_address + '" data-companyPin="' + company.main_address_pin_code + '" >' + company.company_name + '</a></li>';
-               });
-               html += '</ul>';
-               $('.autofield-dropdown-review').html(html);
-               $('.autofield-dropdown-review').show();
-               if(data.data.length < 4){
-                 var divlength = data.data.length*48;
-                 $('.autofield-dropdown-review').css('height', divlength + "px");
-               }
-
-               $('.autofield-dropdown-review a').click(function(e) {
-                  e.preventDefault();
-                  console.log("Clicked element data:", $(this).data()); 
-                  var companyName = $(this).data('resulttitle');
-                  console.log("Selected company name:", companyName); 
-                  console.log("Event:", e); // Log the event object
-                  // Do something with the selected company name
-                  // Hide the dropdown
-
-                
-
-                  $('.autofield-dropdown-review').hide();
-              });
-
-             } else {
-               $('.autofield-dropdown-review').hide();
-               $('.autofield-dropdown-review').html('');
-             }
-           } else {
-             $('.autofield-dropdown-review').hide();
-             $('.autofield-dropdown-review').html('');
-           }
-         },
-         error: function (error) {
-           $('.autofield-dropdown-review').hide();
-           $('.autofield-dropdown-review').html('');
-         }
-       });
-
-     }
-
 
 
      $('#country').select2({
@@ -1820,17 +1871,17 @@ jQuery(document).ready(function ($) {
      }
    
      $("body").on('click', ".autofield-dropdown ul > li", function (e) {
-       e.preventDefault();
-       var resulttitle = $(this).find('a').attr('data-resulttitle');
-       var resultexcerpt = $(this).find('a').attr('data-resultexcerpt');
-       var resultpermalink = $(this).find('a').attr('data-resultpermalink');
-       $('#dynamic-search-title').text(resulttitle);
-       $('#dynamic-search-content').text(resultexcerpt);
-       $('#dynamic-search-link').attr("href", resultpermalink);
-   
-       $(".custom-modal").fadeIn();
-   
-     });
+     e.preventDefault();
+     var resulttitle = $(this).find('a').attr('data-resulttitle');
+     var resultexcerpt = $(this).find('a').attr('data-resultexcerpt');
+     var resultpermalink = $(this).find('a').attr('data-resultpermalink');
+     $('#dynamic-search-title').text(resulttitle);
+     $('#dynamic-search-content').text(resultexcerpt);
+     $('#dynamic-search-link').attr("href", resultpermalink);
+
+     $(".custom-modal").fadeIn();
+
+   });
    
      var allTags = [];
      var transformedResponse = {};
@@ -2226,86 +2277,83 @@ fetchGeolocationAndSetCountryInfo();
 
 
 $(document).ready(function() {
-    // Initialize Select2 for country dropdown
     $('#country_review').select2({
         placeholder: "Select a country",
         allowClear: true,
         width: '100%'
     });
 
-    // AJAX call to fetch company details and populate state and city
-    $('.autofield-dropdown-review').on('click', 'a', function(e) {
-        e.preventDefault();
-        const selectedCompanyName = $(this).data('resulttitle');
-        if (selectedCompanyName) {
-            $.ajax({
-                url: 'auth/get-company-details',
-                method: 'POST',
-                data: JSON.stringify({ company_name: selectedCompanyName }),
-                contentType: 'application/json',
-                success: function(data) {
-                    if (data.status === 'ok') {
-                        const companyDetails = data.companyDetails;
-                        if (companyDetails) {
-                            $('#state').val(companyDetails.state).trigger('change');
-                            $('#city').val(companyDetails.city);
-                        }
-                    } else {
-                        console.error('No company details found');
-                    }
-                },
-                error: function(error) {
-                    console.error('Error fetching company details:', error);
-                }
-            });
-        }
-    });
+    // // Initialize event handler for search input
+    // $('#search-input-review').on('input', function() {
+    //     var keyword = $(this).val().trim();
+    //     var country_name = $('#country_review').val();
 
-    // Form submission handling
-    $("#review_submit_frm").on("submit", function(event) {
-        event.preventDefault();
-        $('.submit-message').hide().text('');
+    //     // Perform search only if keyword is not empty
+    //     if (keyword !== '') {
+    //         performSearchForReview(keyword, country_name);
+    //     } else {
+    //         $('.autofield-dropdown-review').hide().html('');
+    //     }
+    // });
 
-        const formData = $(this).serializeArray();
-        const jsonData = {};
+    function performSearchForReview(keyword,country_name) {
+       $('.autofield-dropdown-review').css('height', "200px");
+       const data = {
+         keyword: keyword,
+         country: country_name
+       };
+       $.ajax({
+         url: 'api/search-company',
+         method: 'POST',
+         data: { keyword: keyword, country: country_name },
+         ContentType: 'application/json',
+         success: function (data) {
+           if (data.status == 'ok') {
+             if (data.data.length > 0) {
+               let respData = data.data;
+               let html = '<ul class="p-0 m-0">';
+               respData.forEach(company => {
+                 html += '<li><a href="#" data-resulttitle="' + company.company_name + '" data-companyID="' + company.ID + '" data-companyAddress="' + company.main_address + '" data-companyPin="' + company.main_address_pin_code + '" >' + company.company_name + '</a></li>';
+               });
+               html += '</ul>';
+               $('.autofield-dropdown-review').html(html);
+               $('.autofield-dropdown-review').show();
+               if(data.data.length < 4){
+                 var divlength = data.data.length*48;
+                 $('.autofield-dropdown-review').css('height', divlength + "px");
+               }
 
-        $(formData).each(function(index, field) {
-            if (field.name === 'tags') {
-                if (!jsonData.tags) {
-                    jsonData.tags = [];
-                }
-                jsonData.tags.push(field.value);
-            } else {
-                jsonData[field.name] = field.value;
-            }
-        });
+               $('.autofield-dropdown-review a').click(function(e) {
+                  e.preventDefault();
+                  console.log("Clicked element data:", $(this).data()); 
+                  var companyName = $(this).data('resulttitle');
+                  console.log("Selected company name:", companyName); 
+                  console.log("Event:", e); // Log the event object
+                  // Do something with the selected company name
+                  // Hide the dropdown
 
-        // Add selected country to jsonData
-        jsonData.main_address_country = $('#country_review').val();
+                
 
-        // Perform AJAX request to submit review
-        $.ajax({
-            url: '/auth/add-review',
-            method: 'POST',
-            data: JSON.stringify(jsonData),
-            contentType: 'application/json',
-            success: function(data) {
-                if (data.status == 'ok') {
-                    $('#review_submit_frm')[0].reset();
-                    $('.submit-message').text(data.message).show();
-                    setTimeout(function() {
-                        $('.submit-message').hide();
-                        $('#all-review-hidden-btn').fadeIn();
-                    }, 2000);
-                } else {
-                    $('.submit-message').text(data.message).show();
-                }
-            },
-            error: function(error) {
-                console.error('Error submitting review:', error);
-            }
-        });
-    });
+                  $('.autofield-dropdown-review').hide();
+              });
+
+             } else {
+               $('.autofield-dropdown-review').hide();
+               $('.autofield-dropdown-review').html('');
+             }
+           } else {
+             $('.autofield-dropdown-review').hide();
+             $('.autofield-dropdown-review').html('');
+           }
+         },
+         error: function (error) {
+           $('.autofield-dropdown-review').hide();
+           $('.autofield-dropdown-review').html('');
+         }
+       });
+
+     }
+
 });
 
 </script>
@@ -2380,44 +2428,138 @@ $(document).ready(function() {
    
        //-------Review Form Submit-----------------//
        
-   $("#review_submit_frm").on("submit", function (event) {
-    $('.submit-message').hide();
-     $('.submit-message').text('');
-     event.preventDefault();
-     const formData = $('#review_submit_frm').serializeArray();
-     const jsonData = {};
-     $(formData).each(function (index, field) {
-       if (field.name === 'tags') {
-         if (!jsonData.tags) {
-           jsonData.tags = [];
-         }
-         jsonData.tags.push(field.value);;
-       } else {
-         jsonData[field.name] = field.value;
-       }
-     });
-     $.ajax({
-       url: '/auth/add-review',
-       method: 'POST',
-       data: jsonData,
-       ContentType: 'application/json',
-       success: function (data) {
-         if (data.status == 'ok') {
-           $('#review_submit_frm')[0].reset();
-           $('.submit-message').text(data.message);
-           $('.submit-message').show();
-         } else {
-           $('.submit-message').text(data.message);
-           $('.submit-message').show();
-         }
-         //console.log(data);
-       },
-       error: function (error) {
-         console.log(error);
-       }
-     });
-   });
-   
+$(document).ready(function() {
+    // Initialize Select2 for country dropdown
+    $('#country_review').select2({
+        placeholder: "Select a country",
+        allowClear: true,
+        width: '100%'
+    });
+
+    let timeoutId; // Variable to store timeout ID for delaying search
+
+    // Event handler for search input
+    $('#search-input-review').on('input', function() {
+        var keyword = $(this).val().trim();
+        var country_name = $('#country_review').val();
+
+        // Clear previous timeout
+        clearTimeout(timeoutId);
+
+        // Minimum character length for search and country selected check
+        if (keyword.length >= 3 && country_name) {
+            // Delayed execution of search function
+            timeoutId = setTimeout(function() {
+                performSearchForReview(keyword, country_name);
+            }, 300); // Adjust delay time as needed (milliseconds)
+        } else {
+            // Clear dropdown and hide it if conditions are not met
+            $('.autofield-dropdown-review').hide().html('');
+        }
+    });
+
+    // Function to perform search for review
+    function performSearchForReview(keyword, country_name) {
+        $('.autofield-dropdown-review').css('height', "200px");
+        const data = {
+            keyword: keyword,
+            country: country_name
+        };
+
+        $.ajax({
+            url: 'http://localhost:2000/api/search-company',
+            method: 'POST',
+            data: JSON.stringify(data),
+            contentType: 'application/json', // Ensure correct content type
+            success: function(data) {
+                console.log("Company search response:", data);
+                if (data.status === 'ok') {
+                    if (data.data.length > 0) {
+                        let respData = data.data;
+                        let html = '<ul class="p-0 m-0">';
+                        respData.forEach(company => {
+                            html += '<li><a href="#" data-resulttitle="' + company.company_name + '" data-companyID="' + company.ID + '" data-companyAddress="' + company.main_address + '" data-companyPin="' + company.main_address_pin_code + '">' + company.company_name + '</a></li>';
+                        });
+                        html += '</ul>';
+                        $('.autofield-dropdown-review').html(html).show();
+                        if (data.data.length < 4) {
+                            var divlength = data.data.length * 48;
+                            $('.autofield-dropdown-review').css('height', divlength + "px");
+                        }
+
+                        // Click handler for company links
+                        $('.autofield-dropdown-review a').click(function(e) {
+                            e.preventDefault();
+                            var companyName = $(this).data('resulttitle');
+                            console.log("Selected company name:", companyName);
+                            $('#search-input-review').val(companyName); // Set the selected company name in the input field
+                            // Optionally, you can trigger additional actions here
+
+                            $('.autofield-dropdown-review').hide();
+                        });
+
+                    } else {
+                        $('.autofield-dropdown-review').hide().html('');
+                    }
+                } else {
+                    $('.autofield-dropdown-review').hide().html('');
+                }
+            },
+            error: function(error) {
+                console.error('Error searching companies:', error);
+                console.log('Response text:', error.responseText);
+                $('.autofield-dropdown-review').hide().html('');
+            }
+        });
+    }
+
+    // Form submission handling
+    $("#review_submit_frm").on("submit", function(event) {
+        $('.submit-message').hide();
+        $('.submit-message').text('');
+        event.preventDefault();
+        const formData = $('#review_submit_frm').serializeArray();
+        const jsonData = {};
+        $(formData).each(function(index, field) {
+            if (field.name === 'tags') {
+                if (!jsonData.tags) {
+                    jsonData.tags = [];
+                }
+                jsonData.tags.push(field.value);;
+            } else {
+                jsonData[field.name] = field.value;
+            }
+        });
+
+        // Add selected country to jsonData
+        jsonData.main_address_country = $('#country_review').val();
+
+        $.ajax({
+            url: '/auth/add-review',
+            method: 'POST',
+            data: JSON.stringify(jsonData),
+            contentType: 'application/json',
+            success: function(data) {
+                if (data.status == 'ok') {
+                    $('#review_submit_frm')[0].reset();
+                    $('.submit-message').text(data.message);
+                    $('.submit-message').show();
+                    setTimeout(function() {
+                        $('.submit-message').hide();
+                        $('#all-review-hidden-btn').fadeIn();
+                    }, 2000);
+                } else {
+                    $('.submit-message').text(data.message);
+                    $('.submit-message').show();
+                }
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+    });
+});
+
        $(".review-voting").click(function(e){
           e.preventDefault();
           var votingValue = $(this).attr("data-voting");
