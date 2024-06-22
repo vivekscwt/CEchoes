@@ -132,10 +132,12 @@ router.get('', checkCookieValue, async (req, res) => {
 
     const api_key = process.env.GEO_LOCATION_API_KEY
 
-    const country_name = req.cookies.countryName || 'India';
-    const country_code = req.cookies.countryCode || 'IN';
-    console.log("country_names",country_name);
-    console.log("country_codes",country_code);
+    const country_name = req.cookies.countryName;
+     //|| 'India';
+    const country_code = req.cookies.countryCode 
+    //|| 'IN';
+    console.log("country_names", country_name);
+    console.log("country_codes", country_code);
 
 
     const [allRatingTags, globalPageMeta, latestReviews, AllReviewTags, AllReviewVoting, PopularCategories, ReviewCount, UserCount, PositiveReviewsCompany, NegativeReviewsCompany, HomeMeta, VisitorCheck, getAllLatestDiscussion, getAllPopularDiscussion, getAllDiscussions, getCountries] = await Promise.all([
@@ -250,9 +252,9 @@ router.get('', checkCookieValue, async (req, res) => {
                         NegativeReviewsCompany,
                         HomeMeta,
                         VisitorCheck,
-                       AllLatestDiscussion: getAllLatestDiscussion,
-                       AllPopularDiscussion: getAllPopularDiscussion,
-                       AllDiscussions: getAllDiscussions,
+                        AllLatestDiscussion: getAllLatestDiscussion,
+                        AllPopularDiscussion: getAllPopularDiscussion,
+                        AllDiscussions: getAllDiscussions,
                         getCountries: getCountries,
                         country_name: country_name,
                         countryname: country_code,
@@ -323,11 +325,11 @@ router.get('', checkCookieValue, async (req, res) => {
 
 router.post('/setCountry', (req, res) => {
     const { countryName, countryCode } = req.body;
-    
+
     // Save country information in session or wherever needed
     req.session.countryName = countryName;
     req.session.countryCode = countryCode;
-  
+
     res.status(200).send('Country information saved successfully.');
 });
 
@@ -400,10 +402,10 @@ router.get('/review', checkCookieValue, async (req, res) => {
 
         const country_name = req.cookies.countryName || 'India';
         const country_code = req.cookies.countryCode || 'IN';
-    
-    
-        console.log("country_names",country_name);
-        console.log("country_codes",country_code);
+
+
+        console.log("country_names", country_name);
+        console.log("country_codes", country_code);
 
         const api_key = process.env.GEO_LOCATION_API_KEY
 
@@ -448,7 +450,7 @@ router.get('/review', checkCookieValue, async (req, res) => {
             homePageMeta: homePageMeta,
             AllReviewVoting: AllReviewVoting,
             getCountries: getCountries,
-           // ip_address: ipAddress,
+            // ip_address: ipAddress,
             country_name: country_name,
             countryname: country_code
         });
@@ -522,7 +524,7 @@ router.get('/business', checkCookieValue, async (req, res) => {
         let currentUserData = JSON.parse(req.userData);
         console.log("currentUserData", currentUserData);
 
-        if(currentUserData){
+        if (currentUserData) {
             var user_id = currentUserData.user_id;
             console.log("user_id", user_id);
         }
@@ -545,7 +547,7 @@ router.get('/business', checkCookieValue, async (req, res) => {
             comFunction2.getplans(country_name),
             comFunction2.getSubscribedUsers(user_id)
         ]);
-         console.log("getplans", getplans);
+        console.log("getplans", getplans);
         console.log("getSubscribedUsers", getSubscribedUsers);
 
         const sql = `SELECT * FROM page_info where secret_Key = 'business' `;
@@ -609,11 +611,14 @@ router.get('/stripe-payment', checkCookieValue, async (req, res) => {
         console.log("country_codes", country_code);
 
         let currentUserData = JSON.parse(req.userData);
-        console.log("currentUserData", currentUserData);
+        //console.log("currentUserData", currentUserData);
         const planids = `SELECT * FROM plan_management WHERE name = "${planId}"`;
         const planidvalue = await queryAsync(planids);
-        console.log("planidvalue", planidvalue[0].id);
+        //console.log("planidvalue", planidvalue[0].id);
         const planID = planidvalue[0].id;
+
+        const exchangeRates = await comFunction2.getCurrency();
+        //console.log("exchangeRates",exchangeRates);
 
         res.render('front-end/stripe_payment', {
             planId,
@@ -623,7 +628,8 @@ router.get('/stripe-payment', checkCookieValue, async (req, res) => {
             currentUserData,
             memberCount,
             total_price,
-            country_code: country_code
+            country_code: country_code,
+            exchangeRates: exchangeRates
         });
     } catch (err) {
         console.error(err);
@@ -635,26 +641,26 @@ router.get('/stripe-year-payment', checkCookieValue, async (req, res) => {
         const { planId, planPrice, yearly, memberCount, total_price } = req.query;
         console.log("req.query-yearly", req.query);
 
-        // const ipAddress = requestIp.getClientIp(req); 
-        // //console.log('Client IP Address:', ip);
-        // const api_key = process.env.GEO_LOCATION_API_KEY;
-        // //const api_key = 'AIzaSyCc5pts6Y3V7g9ZGGVsCcEi0WD8seu1VJ8';
-        // const { country_name, country_code } = await comFunction2.getcountrynamebyIp(ipAddress, api_key);
-        // console.log("Country Name:", country_name);
-        // console.log("Country Code:", country_code);
-
         let country_name = req.cookies.countryName || 'India';
         let country_code = req.cookies.countryCode || 'IN';
 
         console.log("country_names", country_name);
         console.log("country_codes", country_code);
 
+        const getcountrcodequery = `SELECT * FROM countries WHERE shortname= "${country_code}"`;
+        const getcountrycodeval = await queryAsync(getcountrcodequery);
+        const country_no = getcountrycodeval[0].id;
+        console.log("country_no",country_no);
+
         let currentUserData = JSON.parse(req.userData);
-        console.log("currentUserData", currentUserData);
         const planids = `SELECT * FROM plan_management WHERE name = "${planId}"`;
         const planidvalue = await queryAsync(planids);
-        console.log("planidvalue", planidvalue[0].id);
         const planID = planidvalue[0].id;
+
+        const exchangeRates = await comFunction2.getCurrency();
+        const getstatesquery = `SELECT * FROM states WHERE country_id = ?`;
+        const getstatevalue = await queryAsync(getstatesquery,[country_no]);
+        //console.log("getstatevalue",getstatevalue);
 
 
         res.render('front-end/stripe_payment_yearly', {
@@ -665,7 +671,9 @@ router.get('/stripe-year-payment', checkCookieValue, async (req, res) => {
             memberCount,
             currentUserData,
             total_price,
-            country_code: country_code
+            country_code: country_code,
+            exchangeRates: exchangeRates,
+            getstatevalue: getstatevalue
         });
     } catch (err) {
         console.error(err);
@@ -2329,7 +2337,7 @@ router.get('/company-dashboard/:slug', checkClientClaimedCompany, async (req, re
         res.render('front-end/basic-company-profile-dashboard',
             {
                 menu_active_id: 'company-dashboard',
-                page_title: 'Company Dashboard',
+                page_title: 'Organization Dashboard',
                 currentUserData,
                 globalPageMeta: globalPageMeta,
                 company,
@@ -2368,7 +2376,7 @@ router.get('/company-dashboard/:slug', checkClientClaimedCompany, async (req, re
         res.render('front-end/premium-company-profile-dashboard',
             {
                 menu_active_id: 'company-dashboard',
-                page_title: 'Company Dashboard',
+                page_title: 'Organization Dashboard',
                 currentUserData,
                 globalPageMeta: globalPageMeta,
                 company,
@@ -2409,7 +2417,7 @@ router.get('/company-profile-management/:slug', checkClientClaimedCompany, async
         comFunction.getAllRatingTags(),
     ]);
 
-    const companyPaidStatus = company.paid_status.trim();;
+    const companyPaidStatus = company.paid_status.trim();
     if (companyPaidStatus == 'free') {
         let gallery_img = [];
         if (typeof PremiumCompanyData !== 'undefined') {
@@ -4329,7 +4337,7 @@ router.get('/add-company', checkLoggedIn, async (req, res) => {
             comFunction2.getCompanyCategoriess(),
             comFunction.getCountries(),
             comFunction.getParentCompany()
-            
+
         ]);
         // console.log("getCountries", getCountries);
         // console.log("getParentCompany", getParentCompany);
@@ -4355,47 +4363,47 @@ router.get('/categories/:countryId', async (req, res) => {
 
     const getcountryquery = `SELECT * FROM countries WHERE shortname = "${countryId}"`;
     const getcountryval = await queryAsync(getcountryquery);
-    if(getcountryval.length>0){
+    if (getcountryval.length > 0) {
         var countryid = getcountryval[0].id;
-        console.log("countryid",countryid);
+        console.log("countryid", countryid);
     }
-    else{
-        countryid="101"
+    else {
+        countryid = "101"
     }
-  
+
     try {
-      const nestedCategoriesHTML = await comFunction2.getCompanyCategoriess(countryid);
-      console.log("nestedCategoriesHTML",nestedCategoriesHTML);
-      res.status(200).send(nestedCategoriesHTML);
+        const nestedCategoriesHTML = await comFunction2.getCompanyCategoriess(countryid);
+        console.log("nestedCategoriesHTML", nestedCategoriesHTML);
+        res.status(200).send(nestedCategoriesHTML);
     } catch (error) {
-      console.error('Error fetching categories:', error);
-      res.status(500).send('Error fetching categories');
+        console.error('Error fetching categories:', error);
+        res.status(500).send('Error fetching categories');
     }
-    })
-    router.get('/edit-categories/:countryId/:compid', async (req, res) => {
-        const countryId = req.params.countryId;
-        const compid= req.params.compid;
-        console.log("editcompid",compid);
-    
-        const getcountryquery = `SELECT * FROM countries WHERE shortname = "${countryId}"`;
-        const getcountryval = await queryAsync(getcountryquery);
-        if(getcountryval.length>0){
-            var countryid = getcountryval[0].id;
-            console.log("countryid",countryid);
-        }
-        else{
-            countryid="101"
-        }
-      
-        try {
-          const nestedCategoriesHTML = await comFunction2.getCompanyCategoryBuID(countryid,compid);
-          console.log("nestedCategoriesHTML",nestedCategoriesHTML);
-          res.status(200).send(nestedCategoriesHTML);
-        } catch (error) {
-          console.error('Error fetching categories:', error);
-          res.status(500).send('Error fetching categories');
-        }
-        })
+})
+router.get('/edit-categories/:countryId/:compid', async (req, res) => {
+    const countryId = req.params.countryId;
+    const compid = req.params.compid;
+    console.log("editcompid", compid);
+
+    const getcountryquery = `SELECT * FROM countries WHERE shortname = "${countryId}"`;
+    const getcountryval = await queryAsync(getcountryquery);
+    if (getcountryval.length > 0) {
+        var countryid = getcountryval[0].id;
+        console.log("countryid", countryid);
+    }
+    else {
+        var countryid = "101"
+    }
+
+    try {
+        const nestedCategoriesHTML = await comFunction2.getCompanyCategoryBuID(countryid, compid);
+        console.log("nestedCategoriesHTML", nestedCategoriesHTML);
+        res.status(200).send(nestedCategoriesHTML);
+    } catch (error) {
+        console.error('Error fetching categories:', error);
+        res.status(500).send('Error fetching categories');
+    }
+})
 
 
 // router.get('/companies', checkLoggedIn, async (req, res) => {
@@ -4712,15 +4720,15 @@ router.get('/currency-conversion', checkLoggedIn, async (req, res) => {
         const currentUserData = JSON.parse(encodedUserData);
         const companyId = req.params.id;
 
-        const getquery= `SELECT * FROM currency_conversion`;
+        const getquery = `SELECT * FROM currency_conversion`;
         const getval = await queryAsync(getquery)
-        if(getval.length>0){
+        if (getval.length > 0) {
             var getcurrency = getval[0]
         }
         //else{
         //     var getcurrency = null
         // }
-        console.log("getcurrency",getcurrency);
+        console.log("getcurrency", getcurrency);
 
         return res.render('curreny_conversion', {
             menu_active_id: 'company',
@@ -5797,7 +5805,7 @@ router.get('/payment_history', checkLoggedIn, async (req, res) => {
             menu_active_id: 'miscellaneous',
             page_title: 'Payment History ',
             currentUserData,
-            allPayments : getAllPayments,
+            allPayments: getAllPayments,
         });
     } catch (err) {
         console.error(err);
@@ -5805,26 +5813,26 @@ router.get('/payment_history', checkLoggedIn, async (req, res) => {
     }
 });
 
-router.get('/user_payment_history', checkCookieValue,async (req, res) => {
+router.get('/user_payment_history', checkCookieValue, async (req, res) => {
     try {
-            let currentUserData = JSON.parse(req.userData);
-            var userId = currentUserData.user_id;
+        let currentUserData = JSON.parse(req.userData);
+        var userId = currentUserData.user_id;
 
         // Fetch all the required data asynchronously
-        const [getAllPayments, getUser,getUserMeta, globalPageMeta, AllCompaniesReviews] = await Promise.all([
+        const [getAllPayments, getUser, getUserMeta, globalPageMeta, AllCompaniesReviews] = await Promise.all([
             comFunction2.getAllPaymentHistory(),
             comFunction.getUser(userId),
             comFunction.getUserMeta(userId),
             comFunction2.getPageMetaValues('global'),
             comFunction2.getAllCompaniesReviews(userId),
         ]);
-        console.log("getAllPayments",getAllPayments);
+        console.log("getAllPayments", getAllPayments);
 
         res.render('front-end/user_payment_history', {
             menu_active_id: 'miscellaneous',
             page_title: 'Payment History ',
             currentUserData,
-            allPayments : getAllPayments,
+            allPayments: getAllPayments,
             user: getUser,
             userMeta: getUserMeta,
             globalPageMeta: globalPageMeta,

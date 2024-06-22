@@ -6672,5 +6672,6 @@ module.exports = {
   getplans,
   getSubscribedUsers,
   getCompanyCategoriess,
-  getCompanyCategoryBuID
+  getCompanyCategoryBuID,
+  getCurrency
 };

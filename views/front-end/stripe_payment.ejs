@@ -345,42 +345,50 @@
 			});
 		}
 	});
-// 	let countryCode = '<%= country_code%>'
-// 	console.log("country_code",countryCode);
 
+	document.addEventListener('DOMContentLoaded', function () {
+		const zipInput = document.getElementById('zip');
 
-// 	document.addEventListener('DOMContentLoaded', function() {
-//     function getQueryParams() {
-//         const params = {};
-//         const queryString = window.location.search.substring(1);
-//         const queries = queryString.split('&');
-//         queries.forEach(function(query) {
-//             const [key, value] = query.split('=');
-//             params[decodeURIComponent(key)] = decodeURIComponent(value);
-//         });
-//         return params;
-//     }
-//     const queryParams = getQueryParams();
-//     const totalPrice = queryParams['total_price'];
-//     const amountElement = document.getElementById('amount');
-//     if (totalPrice) {
-//         amountElement.textContent = parseFloat(totalPrice).toFixed(2);
-//     } else {
-//         amountElement.textContent = '0.00';
-//     }
-//     console.log('Query Params:', queryParams);
-//     console.log('Total Price:', totalPrice);
-// });
+		zipInput.addEventListener('input', function () {
+			const maxLength = 6;
+			if (zipInput.value.length > maxLength) {
+				zipInput.value = zipInput.value.slice(0, maxLength);
+			}
+		});
 
-let countryCode = '<%= country_code %>';
+		const cvvInput = document.getElementById('cvv');
+
+		cvvInput.addEventListener('input', function () {
+			const maxLength = 3;
+			if (cvvInput.value.length > maxLength) {
+				cvvInput.value = cvvInput.value.slice(0, maxLength);
+			}
+		});
+
+		const selectYear = document.getElementById('expYear');
+		const currentYear = new Date().getFullYear();
+		const futureYearsCount = 20;
+
+		for (let i = 0; i <= futureYearsCount; i++) {
+			const year = currentYear + i;
+			const option = document.createElement('option');
+			option.textContent = year;
+			option.value = year;
+			selectYear.appendChild(option);
+		}
+
+	});
+
+	let countryCode = '<%= country_code %>';
 	//console.log("country_code", countryCode);
-
-	document.addEventListener('DOMContentLoaded', function() {
+	const exchangeRates = '<%- JSON.stringify(exchangeRates) %>';
+	console.log("Exchange Rates:", exchangeRates);
+	document.addEventListener('DOMContentLoaded', function () {
 		function getQueryParams() {
 			const params = {};
 			const queryString = window.location.search.substring(1);
 			const queries = queryString.split('&');
-			queries.forEach(function(query) {
+			queries.forEach(function (query) {
 				const [key, value] = query.split('=');
 				params[decodeURIComponent(key)] = decodeURIComponent(value);
 			});
@@ -389,36 +397,35 @@ let countryCode = '<%= country_code %>';
 
 		async function convertToUSD(totalPrice, countryCode) {
 			try {
-				const response = await axios.get(`https://api.exchangerate-api.com/v4/latest/USD`);
-				const exchangeRates = response.data.rates;
-
 				let convertedPrice;
 
 				if (countryCode === 'IN') {
-					convertedPrice = totalPrice / exchangeRates['INR'];
+					convertedPrice = totalPrice / parseFloat(exchangeRates['INR']);
 				} else if (countryCode === 'JP') {
-					convertedPrice = totalPrice / exchangeRates['JPY'];
+					convertedPrice = totalPrice / parseFloat(exchangeRates['JPY']);
 				} else {
 					console.log('Unsupported country code:', countryCode);
-					return totalPrice; 
+					return totalPrice;
 				}
 
 				return convertedPrice.toFixed(2);
 			} catch (error) {
-				console.error('Error fetching exchange rates:', error.message);
-				return totalPrice; 
+				console.error('Error converting price:', error.message);
+				return totalPrice;
 			}
 		}
 
 		const queryParams = getQueryParams();
-		const totalPrice = queryParams['total_price'];
+		const totalPrice = parseFloat(queryParams['total_price']);
+		const countryCode = '<%= country_code %>';
+
 		const amountElement = document.getElementById('amount');
 
-		if (totalPrice) {
-			convertToUSD(parseFloat(totalPrice), countryCode)
+		if (!isNaN(totalPrice)) {
+			convertToUSD(totalPrice, countryCode)
 				.then(convertedPrice => {
-					if (convertedPrice) {
-						amountElement.textContent = '$' + convertedPrice;;
+					if (!isNaN(convertedPrice)) {
+						amountElement.textContent = '$' + convertedPrice;
 						console.log('Converted Total Price to USD:', convertedPrice);
 					} else {
 						amountElement.textContent = '0.00';
@@ -431,7 +438,7 @@ let countryCode = '<%= country_code %>';
 				});
 		} else {
 			amountElement.textContent = '0.00';
-			console.log('No total price found in query parameters.');
+			console.log('Invalid total price:', queryParams['total_price']);
 		}
 
 		console.log('Query Params:', queryParams);
