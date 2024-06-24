@@ -173,6 +173,8 @@ router.get('', checkCookieValue, async (req, res) => {
     const rangeTexts = {};
 
     //console.log("PopularCategories", PopularCategories);
+    console.log("getPositiveReviewsCompany",PositiveReviewsCompany);
+    console.log("getNegativeReviewsCompany",NegativeReviewsCompany);
     console.log("getCountries", getCountries);
 
     try {

@@ -95,7 +95,7 @@
                   </div>
                 </div>
 
-                <% if(PositiveReviewsCompany) { %><br>
+                <% if (PositiveReviewsCompany && Array.isArray(PositiveReviewsCompany) && PositiveReviewsCompany.length > 0) { %>
                   <div class="banner-trending-scroll">
                     <div class="like-dislike-tren-label">
                       <i class="fa-solid fa-thumbs-up"></i>
@@ -103,31 +103,35 @@
                     <div class="like-dislike-company-scroll">
                       <marquee behavior="scroll" direction="left" onmouseover="this.stop();" onmouseout="this.start();">
                         <ul>
-                          <% PositiveReviewsCompany.forEach( (company, index)=> {%>
+                          <% PositiveReviewsCompany.forEach((company, index) => { %>
                             <li><a href="/company/<%- company.slug %>"><%- company.company_name %></a></li>
-                            <% })%>
+                          <% }); %>
                         </ul>
                       </marquee>
                     </div>
                   </div>
-                  <% } %>
+                <% } else { %>
+                <% } %>
+                
 
-                    <% if(NegativeReviewsCompany) { %>
-                      <!-- <div class="banner-trending-scroll">
-                  <div class="like-dislike-tren-label">
-                      <i class="fa-solid fa-thumbs-down"></i> 
-                  </div>
-                  <div class="like-dislike-company-scroll">
+                <% if (NegativeReviewsCompany && NegativeReviewsCompany.length > 0) { %>
+                  <div class="banner-trending-scroll">
+                    <div class="like-dislike-tren-label">
+                      <i class="fa-solid fa-thumbs-down"></i>
+                    </div>
+                    <div class="like-dislike-company-scroll">
                       <marquee behavior="scroll" direction="left" onmouseover="this.stop();" onmouseout="this.start();">
-                          <ul>
-                            <% NegativeReviewsCompany.forEach( (company, index)=> {%>
-                              <li><a href="/company/<%- company.slug %>"><%- company.company_name %></a></li>
-                            <% })%> 
-                          </ul>
+                        <ul>
+                          <% NegativeReviewsCompany.forEach((company, index) => { %>
+                            <li><a href="/company/<%- company.slug %>"><%- company.company_name %></a></li>
+                          <% }); %>
+                        </ul>
                       </marquee>
+                    </div>
                   </div>
-                </div> -->
-                      <% } %>
+                  <% } else { %>
+                    <% } %>
+                
 
 
 
