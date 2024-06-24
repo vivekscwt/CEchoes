@@ -1693,7 +1693,7 @@
           var keyword = $(this).val();
           if (keyword.length >= 3) {
             timer = setTimeout(function () {
-              performSearchForReview(keyword);
+              performSearchForReview(keyword, country_name);
             }, 500);
           } else {
             $('.autofield-dropdown-review').hide('');
