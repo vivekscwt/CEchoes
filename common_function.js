@@ -1862,30 +1862,12 @@ async function getParentCategories(ID) {
   }
 }
 
-async function getPositiveReviewsCompany() {
-  const get_positive_reviews_company_query = `
-  SELECT company_id, COUNT(*) AS review_count, com.company_name, com.slug
-  FROM reviews
-  JOIN company com ON reviews.company_id = com.ID
-  WHERE rating >= 4 AND review_status = '1'
-  GROUP BY company_id
-  ORDER BY review_count DESC
-  LIMIT 5;
-  `;
-  try {
-    const get_positive_reviews_result = await query(get_positive_reviews_company_query);
-    return get_positive_reviews_result;
-  } catch (error) {
-    return 'Error during user get_positive_reviews_company_query:' + error;
-  }
-}
-
-// async function getPositiveReviewsCompany(country_code) {
+// async function getPositiveReviewsCompany() {
 //   const get_positive_reviews_company_query = `
 //   SELECT company_id, COUNT(*) AS review_count, com.company_name, com.slug
 //   FROM reviews
 //   JOIN company com ON reviews.company_id = com.ID
-//   WHERE rating >= 4 AND review_status = '1' AND company.main_address_country = "${country_code}"
+//   WHERE rating >= 4 AND review_status = '1'
 //   GROUP BY company_id
 //   ORDER BY review_count DESC
 //   LIMIT 5;
@@ -1897,6 +1879,24 @@ async function getPositiveReviewsCompany() {
 //     return 'Error during user get_positive_reviews_company_query:' + error;
 //   }
 // }
+
+async function getPositiveReviewsCompany(country_code) {
+  const get_positive_reviews_company_query = `
+  SELECT company_id, COUNT(*) AS review_count, com.company_name, com.slug
+  FROM reviews
+  JOIN company com ON reviews.company_id = com.ID
+  WHERE rating >= 4 AND review_status = '1' AND company.main_address_country = "${country_code}"
+  GROUP BY company_id
+  ORDER BY review_count DESC
+  LIMIT 5;
+  `;
+  try {
+    const get_positive_reviews_result = await query(get_positive_reviews_company_query);
+    return get_positive_reviews_result;
+  } catch (error) {
+    return 'Error during user get_positive_reviews_company_query:' + error;
+  }
+}
 
 // async function getNegativeReviewsCompany() {
 //   const get_negative_reviews_company_query = `
