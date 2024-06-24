@@ -1368,9 +1368,47 @@ function generateUniqueSlug(companyName, callback) {
 
 
 // Function to generate a unique slug from a string
+// function generateUniqueSlugCategory(catName, callback) {
+//   // Check if the generated slug already exists in the database
+//   db.query('SELECT category_name, category_slug  FROM category', (err, existingSlugs) => {
+//     if (err) {
+//       callback(err);
+//       return;
+//     }
+
+//     const baseSlug = slugify(catName, {
+//       replacement: '-',  // replace spaces with hyphens
+//       lower: true,      // convert to lowercase
+//       strict: true,     // strip special characters
+//       remove: /[*+~.()'"!:@]/g,
+//     });
+
+//     let slug = baseSlug;
+//     let slugExists = false;
+//     let count = 1;
+//     // Check if the generated slug already exists in the existing slugs
+//     existingSlugs.forEach((value) => {
+//       if (value.category_slug === baseSlug) {
+//         slugExists = true;
+//       }
+//       if (value.category_name == catName) {
+//         count++
+//       }
+//     });
+
+//     if (slugExists) {
+//       slug = `${baseSlug}-${count}`;
+//       //slug = `${baseSlug}-${Math.floor(Math.random() * 10000)}`;
+//     }
+
+//     callback(null, slug);
+//   });
+// }
+
+//new
 function generateUniqueSlugCategory(catName, callback) {
   // Check if the generated slug already exists in the database
-  db.query('SELECT category_name, category_slug  FROM category', (err, existingSlugs) => {
+  db.query('SELECT category_slug FROM category', (err, existingSlugs) => {
     if (err) {
       callback(err);
       return;
@@ -1378,32 +1416,27 @@ function generateUniqueSlugCategory(catName, callback) {
 
     const baseSlug = slugify(catName, {
       replacement: '-',  // replace spaces with hyphens
-      lower: true,      // convert to lowercase
-      strict: true,     // strip special characters
+      lower: true,       // convert to lowercase
+      strict: true,      // strip special characters
       remove: /[*+~.()'"!:@]/g,
     });
 
     let slug = baseSlug;
     let slugExists = false;
     let count = 1;
-    // Check if the generated slug already exists in the existing slugs
-    existingSlugs.forEach((value) => {
-      if (value.category_slug === baseSlug) {
-        slugExists = true;
-      }
-      if (value.category_name == catName) {
-        count++
-      }
-    });
 
-    if (slugExists) {
+    // Check if the generated slug already exists in the existing slugs
+    const existingSlugMap = existingSlugs.map(row => row.category_slug);
+
+    while (existingSlugMap.includes(slug)) {
       slug = `${baseSlug}-${count}`;
-      //slug = `${baseSlug}-${Math.floor(Math.random() * 10000)}`;
+      count++;
     }
 
     callback(null, slug);
   });
 }
+
 
 // Function to fetch Sub Category
 async function getSubCategories(categorySlug) {
