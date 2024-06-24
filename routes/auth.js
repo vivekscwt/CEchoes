@@ -499,6 +499,6 @@ router.post('/create-subscription',authController.createSubscription);
 router.post('/create-subscription-checkout-session',authController.createSubscriptionCheckoutSession);
 
 router.post('/api/v1/create-subscription-checkout-session',authController.createSession)
-
+router.post('/getlocation',authController.getLocation);
 
 module.exports = router;

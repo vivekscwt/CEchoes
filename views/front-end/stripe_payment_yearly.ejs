@@ -18,124 +18,131 @@
 				</div>
 			</div>
 
-		<div class="col">
-		<form id="paymentForm">
+			<div class="col">
+				<form id="paymentForm">
 
-			<div class="row">
+					<div class="row">
 
-				<div class="col">
-					<h3 class="title">
-						Billing Address
-					</h3>
+						<div class="col">
+							<h3 class="title">
+								Billing Address
+							</h3>
 
-					<div class="inputBox">
-						<label for="name">
-							Full Name:
-						</label>
-						<input type="text" id="name" placeholder="Enter your full name" required>
-					</div>
+							<div class="inputBox">
+								<label for="name">
+									Full Name:
+								</label>
+								<input type="text" id="name" placeholder="Enter your full name" required>
+							</div>
 
-					<div class="inputBox">
-						<label for="address">
-							Address:
-						</label>
-						<input type="text" id="address" placeholder="Enter address" required>
-					</div>
+							<div class="inputBox">
+								<label for="address">
+									Address:
+								</label>
+								<input type="text" id="address" placeholder="Enter address" required>
+							</div>
 
-					<div class="inputBox">
-						<label for="city">
-							City:
-						</label>
-						<input type="text" id="city" placeholder="Enter city" required>
-					</div>
+							<div class="inputBox">
+								<label for="city">
+									City:
+								</label>
+								<input type="text" id="city" placeholder="Enter city" required>
+							</div>
 
-						<div class="inputBox">
-							<label for="state">
-								State:
-							</label>
-							<input type="text" id="state" placeholder="Enter state" required>
+							<div class="inputBox">
+								<label for="state">State:</label>
+								<select id="state" required>
+									<option value="">Select a state</option>
+									<% getstatevalue.forEach(function(state) { %>
+										<option value="<%= state.name %>">
+											<%= state.name %>
+										</option>
+										<% }); %>
+								</select>
+							</div>
+
+
+							<div class="inputBox">
+								<label for="zip">
+									Zip Code:
+								</label>
+								<input type="number" id="zip" placeholder="123 456" maxlength="6" required>
+							</div>
+
+						</div>
+						<div class="col">
+							<h3 class="title">Payment</h3>
+
+							<div class="inputBox">
+								<label for="name">
+									Card Accepted:
+								</label>
+								<img src="cards.png" alt="credit/debit card image">
+							</div>
+
+							<div class="inputBox">
+								<label for="cardName">
+									Name On Card:
+								</label>
+								<input type="text" id="cardName" placeholder="Enter card name" required>
+							</div>
+
+							<div class="inputBox">
+								<label for="cardNum">
+									Credit Card Number:
+								</label>
+								<input type="text" id="cardNum" placeholder="1111-2222-3333-4444" maxlength="19"
+									required>
+							</div>
+
+							<div class="inputBox">
+								<label for="">Exp Month:</label>
+								<select name="" id="expMonth">
+									<option value="">Choose month</option>
+									<option value="01">January</option>
+									<option value="02">February</option>
+									<option value="03">March</option>
+									<option value="04">April</option>
+									<option value="05">May</option>
+									<option value="06">June</option>
+									<option value="07">July</option>
+									<option value="08">August</option>
+									<option value="09">September</option>
+									<option value="10">October</option>
+									<option value="11">November</option>
+									<option value="12">December</option>
+								</select>
+							</div>
+
+
+
+							<div class="flex">
+								<div class="inputBox">
+									<label for="">Exp Year:</label>
+									<select name="" id="expYear">
+										<option value="">Choose Year</option>
+										<!-- <option value="2023">2023</option>
+										<option value="2024">2024</option>
+										<option value="2025">2025</option>
+										<option value="2026">2026</option>
+										<option value="2027">2027</option> -->
+									</select>
+								</div>
+
+								<div class="inputBox">
+									<label for="cvv">CVV</label>
+									<input type="number" id="cvv" placeholder="1234" required>
+								</div>
+							</div>
+
 						</div>
 
-						<div class="inputBox">
-							<label for="zip">
-								Zip Code:
-							</label>
-							<input type="number" id="zip" placeholder="123 456" required>
-						</div>
-
-				</div>
-				<div class="col">
-					<h3 class="title">Payment</h3>
-
-					<div class="inputBox">
-						<label for="name">
-							Card Accepted:
-						</label>
-						<img src="cards.png" alt="credit/debit card image">
 					</div>
 
-					<div class="inputBox">
-						<label for="cardName">
-							Name On Card:
-						</label>
-						<input type="text" id="cardName" placeholder="Enter card name" required>
-					</div>
-
-					<div class="inputBox">
-						<label for="cardNum">
-							Credit Card Number:
-						</label>
-						<input type="text" id="cardNum" placeholder="1111-2222-3333-4444" maxlength="19" required>
-					</div>
-
-					<div class="inputBox">
-						<label for="">Exp Month:</label>
-						<select name="" id="expMonth">
-							<option value="">Choose month</option>
-							<option value="01">January</option>
-							<option value="02">February</option>
-							<option value="03">March</option>
-							<option value="04">April</option>
-							<option value="05">May</option>
-							<option value="06">June</option>
-							<option value="07">July</option>
-							<option value="08">August</option>
-							<option value="09">September</option>
-							<option value="10">October</option>
-							<option value="11">November</option>
-							<option value="12">December</option>
-						</select>
-					</div>
-
-
-
-					<div class="flex">
-						<div class="inputBox">
-							<label for="">Exp Year:</label>
-							<select name="" id="expYear">
-								<option value="">Choose Year</option>
-								<option value="2023">2023</option>
-								<option value="2024">2024</option>
-								<option value="2025">2025</option>
-								<option value="2026">2026</option>
-								<option value="2027">2027</option>
-							</select>
-						</div>
-
-						<div class="inputBox">
-							<label for="cvv">CVV</label>
-							<input type="number" id="cvv" placeholder="1234" required>
-						</div>
-					</div>
-
-				</div>
-
+					<input type="submit" value="Proceed to Checkout" class="submit_btn">
+				</form>
 			</div>
-
-			<input type="submit" value="Proceed to Checkout" class="submit_btn">
-		</form>
 		</div>
-	</div>
 	</div>
 	<script type="text/javascript" src="index.js"></script>
 </body>
@@ -275,7 +282,7 @@
 	let memberval = '<%= memberCount%>'
 	console.log("memberval", memberval);
 
-	// Listen for form submission
+
 	document.getElementById('paymentForm').addEventListener('submit', async function (event) {
 		event.preventDefault();
 
@@ -293,7 +300,7 @@
 			expYear: document.getElementById('expYear').value,
 			cvv: document.getElementById('cvv').value,
 			planId: planid,
-			billingCycle: 'yearly', 
+			billingCycle: 'yearly',
 			//billingCycle: 'daily',
 			memberCount: memberval
 		};
@@ -324,62 +331,72 @@
 		const data = await response.json();
 		console.log(data);
 		if (response.ok) {
-            Swal.fire({
-                icon: 'success',
-                title: 'Payment Successful!',
-                text: data.message ,
-                confirmButtonText: 'OK'
-            }).then(() => {
+			Swal.fire({
+				icon: 'success',
+				title: 'Payment Successful!',
+				text: data.message,
+				confirmButtonText: 'OK'
+			}).then(() => {
 				window.location.href = '/business';
 			});
-        } else {
-            const errorMessage = data.error ? data.error.message : 'There was an error processing your payment. Please try again later.';
-			console.log("errorMessage",errorMessage);
+		} else {
+			const errorMessage = data.error ? data.error.message : 'There was an error processing your payment. Please try again later.';
+			console.log("errorMessage", errorMessage);
 
 			Swal.fire({
-                icon: 'error',
-                title: 'Payment Error',
-                text: data.error,
-                confirmButtonText: 'OK'
-            });
-        }
+				icon: 'error',
+				title: 'Payment Error',
+				text: data.error,
+				confirmButtonText: 'OK'
+			});
+		}
+	});
+
+	document.addEventListener('DOMContentLoaded', function () {
+		const zipInput = document.getElementById('zip');
+
+		zipInput.addEventListener('input', function () {
+			const maxLength = 6;
+			if (zipInput.value.length > maxLength) {
+				zipInput.value = zipInput.value.slice(0, maxLength);
+			}
+		});
+
+		const cvvInput = document.getElementById('cvv');
+
+		cvvInput.addEventListener('input', function () {
+			const maxLength = 3;
+			if (cvvInput.value.length > maxLength) {
+				cvvInput.value = cvvInput.value.slice(0, maxLength);
+			}
+		});
+
+		const selectYear = document.getElementById('expYear');
+		const currentYear = new Date().getFullYear();
+		const futureYearsCount = 20;
+
+		for (let i = 0; i <= futureYearsCount; i++) {
+			const year = currentYear + i;
+			const option = document.createElement('option');
+			option.textContent = year;
+			option.value = year;
+			selectYear.appendChild(option);
+		}
+
 	});
 
 
-// 	document.addEventListener('DOMContentLoaded', function() {
-//     function getQueryParams() {
-//         const params = {};
-//         const queryString = window.location.search.substring(1);
-//         const queries = queryString.split('&');
-//         queries.forEach(function(query) {
-//             const [key, value] = query.split('=');
-//             params[decodeURIComponent(key)] = decodeURIComponent(value);
-//         });
-//         return params;
-//     }
-//     const queryParams = getQueryParams();
-//     const totalPrice = queryParams['total_price'];
-//     const amountElement = document.getElementById('amount');
-//     if (totalPrice) {
-//         amountElement.textContent = parseFloat(totalPrice).toFixed(2);
-//     } else {
-//         amountElement.textContent = '0.00';
-//     }
-//     console.log('Query Params:', queryParams);
-//     console.log('Total Price:', totalPrice);
-// });
-
-
-
-let countryCode = '<%= country_code %>';
+	let countryCode = '<%= country_code %>';
 	//console.log("country_code", countryCode);
+	const exchangeRates = '<%- JSON.stringify(exchangeRates) %>';
+	console.log("Exchange Rates:", exchangeRates);
 
-	document.addEventListener('DOMContentLoaded', function() {
+	document.addEventListener('DOMContentLoaded', function () {
 		function getQueryParams() {
 			const params = {};
 			const queryString = window.location.search.substring(1);
 			const queries = queryString.split('&');
-			queries.forEach(function(query) {
+			queries.forEach(function (query) {
 				const [key, value] = query.split('=');
 				params[decodeURIComponent(key)] = decodeURIComponent(value);
 			});
@@ -388,53 +405,52 @@ let countryCode = '<%= country_code %>';
 
 		async function convertToUSD(totalPrice, countryCode) {
 			try {
-				const response = await axios.get(`https://api.exchangerate-api.com/v4/latest/USD`);
-				const exchangeRates = response.data.rates;
-
 				let convertedPrice;
 
-				if (countryCode === 'IN') {
+				if (countryCode === 'IN' && exchangeRates['INR']) {
 					convertedPrice = totalPrice / exchangeRates['INR'];
-				} else if (countryCode === 'JP') {
+				} else if (countryCode === 'JP' && exchangeRates['JPY']) {
 					convertedPrice = totalPrice / exchangeRates['JPY'];
 				} else {
-					console.log('Unsupported country code:', countryCode);
-					return totalPrice; // Return as is if not IN or JP
+					console.log('Unsupported country code or missing exchange rate:', countryCode);
+					return totalPrice;
 				}
 
 				return convertedPrice.toFixed(2);
 			} catch (error) {
-				console.error('Error fetching exchange rates:', error.message);
-				return totalPrice; // Return original price in case of error
+				console.error('Error converting price:', error.message);
+				return totalPrice;
 			}
 		}
 
 		const queryParams = getQueryParams();
-		const totalPrice = queryParams['total_price'];
+		const totalPrice = parseFloat(queryParams['total_price']);
+		const countryCode = '<%= country_code %>'; // Replace with actual country code
+
 		const amountElement = document.getElementById('amount');
 
-		if (totalPrice) {
-			convertToUSD(parseFloat(totalPrice), countryCode)
-				.then(convertedPrice => {
-					if (convertedPrice) {
-						amountElement.textContent = '$' + convertedPrice;;
-						console.log('Converted Total Price to USD:', convertedPrice);
-					} else {
-						amountElement.textContent = '0.00';
-						console.log('Failed to convert total price to USD.');
-					}
-				})
-				.catch(error => {
-					console.error('Error converting total price to USD:', error.message);
-					amountElement.textContent = '0.00';
-				});
-		} else {
+		if (isNaN(totalPrice)) {
+			console.log('Invalid total price:', queryParams['total_price']);
 			amountElement.textContent = '0.00';
-			console.log('No total price found in query parameters.');
+			return;
 		}
+
+		convertToUSD(totalPrice, countryCode)
+			.then(convertedPrice => {
+				if (!isNaN(convertedPrice)) {
+					amountElement.textContent = '$' + convertedPrice;
+					console.log('Converted Total Price to USD:', convertedPrice);
+				} else {
+					amountElement.textContent = '0.00';
+					console.log('Failed to convert total price to USD.');
+				}
+			})
+			.catch(error => {
+				console.error('Error converting total price to USD:', error.message);
+				amountElement.textContent = '0.00';
+			});
 
 		console.log('Query Params:', queryParams);
 		console.log('Total Price:', totalPrice);
 	});
-
 </script>

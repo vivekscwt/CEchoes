@@ -16,6 +16,7 @@ const bodyParser = require('body-parser');
 const comFunction = require('./common_function');
 const mdlconfig = require('./config-module');
 const bcrypt = require('bcryptjs');
+const helmet = require('helmet')
 
 dotenv.config({ path: './.env' });
 const query = util.promisify(db.query).bind(db);
@@ -23,13 +24,10 @@ const query = util.promisify(db.query).bind(db);
 const app = express();
 const publicPath = path.join(__dirname, 'public');
 const uploadsPath = path.join(__dirname, 'uploads');
-
-
 app.use(cookieParser());
 app.use(express.static(publicPath));
 app.use(express.static(uploadsPath));
 app.set('view engine', 'ejs');
-
 
 
 app.use(express.urlencoded({ extended: false }));

@@ -313,9 +313,7 @@
                             </label>
                             <!--end::Label-->
                             <!--begin::Col-->
-                            <div class="col-lg-8 fv-row">
-                                <%- company_all_categories %>                  
-                            </div>
+                            <div id="categoryTree"></div>
                             <!--end::Col-->
                         </div>
                         <div class="row mb-6">
@@ -870,6 +868,7 @@ var KTAccountSettingsProfileDetails = function () {
             } else{
                     //$('#kt_account_profile_details_form').submit();
                     var formElement = document.getElementById('kt_account_profile_details_form');
+                    console.log("formElement",formElement);
                     var formData = new FormData(formElement);
                     fetch('/auth/edit-company-data', {
                         method: 'PUT',
@@ -1059,4 +1058,33 @@ $(document).ready(function () {
                     allowClear: true
                 });
             });
+</script>
+
+<script>
+    let compidss= '<%= company.ID%>';
+    console.log("compidss",compidss);
+                $(document).ready(function() {
+
+
+  // Event handler for country dropdown change
+  $('#main_address_country').change(async function() {
+    const selectedCountry = $(this).val();
+
+    console.log("selectedCountry",selectedCountry);
+
+    try {
+      const response = await fetch(`/edit-categories/${selectedCountry}/${compidss}`); // Assuming your backend API endpoint
+      const html = await response.text();
+
+      $('#categoryTree').html(html); // Replace content of categoryTree div with HTML received
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+      // Handle error display
+    }
+  });
+
+  // Trigger change event on page load to fetch categories for default country (India)
+  $('#main_address_country').trigger('change');
+});
+
 </script>

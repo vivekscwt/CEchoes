@@ -6358,7 +6358,196 @@ async function getSubscribedUsers(userId){
 }
 }
 
+// async function getCompanyCategoriess(countryId) {
+//   try {
+//     const connection = await mysql.createConnection({
+//       host: process.env.DATABASE_HOST,
+//       user: process.env.DATABASE_USER,
+//       password: process.env.DATABASE_PASSWORD,
+//       database: process.env.DATABASE
+//     });
+
+//     const [categories] = await connection.query(`
+//       SELECT 
+//           category.ID,
+//           category.category_name,
+//           category.category_img,
+//           GROUP_CONCAT(category_country_relation.country_id) AS country_ids
+//       FROM category
+//       LEFT JOIN category_country_relation ON category.ID = category_country_relation.cat_id
+//       WHERE category_country_relation.country_id = ?
+//       GROUP BY category.ID, category.category_name, category.category_img
+//     `, [countryId]); 
+//     console.log("categories", categories);
+//     connection.end();
+
+//     const nestedCategories = buildCategoryTree(categories);  
+//     const nestedCategoriesHTML = renderCategoryTreeHTML(nestedCategories);
+
+//     return nestedCategoriesHTML;
+//   } catch (error) {
+//     console.error('Error fetching company categories:', error);
+//     throw new Error('Error fetching company categories');
+//   }
+// }
+
+
+
+// function buildCategoryTree(categories, parentId = 0) {
+//   const categoryTree = [];
+
+//   categories.forEach((category) => {
+//     if (category.parent_id === parentId) {
+//       const children = buildCategoryTree(categories, category.ID);
+//       const categoryNode = { id: category.ID, name: category.category_name, img: category.category_img,country_id: category.country_id, children };
+//       categoryTree.push(categoryNode);
+//     }
+//   });
+
+//   return categoryTree;
+// }
+
+// function renderCategoryTreeHTML(categories) {
+//   let html = '<ul>';
+//   categories.forEach(function (category) {
+//     html += '<li class="mt-5"><div class="mb-5"><div class="form-check"><input type="checkbox" name="category" class="form-check-input" value="' + category.id + '"><label class="form-check-label" for="flexCheckDefault">' + category.name + '</label>';
+//     if (category.children.length > 0) {
+//       html += renderCategoryTreeHTML(category.children);
+//     }
+//     html += '</div></div></li>';
+//   });
+//   html += '</ul>';
+//   return html;
+// }
+
+
+
+async function getCompanyCategoriess(country) {
+  try {
+    const connection = await mysql.createConnection({
+      host: process.env.DATABASE_HOST,
+      user: process.env.DATABASE_USER,
+      password: process.env.DATABASE_PASSWORD,
+      database: process.env.DATABASE
+    });
+    console.log("countryfse",country);
+
+    // Query to fetch categories and their associated country_ids
+    const [categories] = await connection.query(`
+      SELECT category.*, GROUP_CONCAT(category_country_relation.country_id) AS country_ids
+      FROM category
+      LEFT JOIN category_country_relation ON category.ID = category_country_relation.cat_id
+      WHERE category_country_relation.country_id= "${country}"
+      GROUP BY category.ID
+    `);
+
+    console.log("categoriessss", categories);
+    connection.end();
+
+    // Build category tree structure
+    const nestedCategories = buildCategoryTree(categories);
+    const nestedCategoriesHTML = renderCategoryTreeHTML(nestedCategories);
+
+    return nestedCategoriesHTML;
+  } catch (error) {
+    console.error('Error fetching company categories:', error);
+    throw new Error('Error fetching company categories');
+  }
+}
+
+
+
+function renderCategoryTreeHTML(categories) {
+  let html = '<ul>';
+  categories.forEach(function (category) {
+    html += '<li class="mt-5"><div class="mb-5"><div class="form-check"><input type="checkbox" name="category" class="form-check-input" value="' + category.id + '"><label class="form-check-label" for="flexCheckDefault">' + category.name + '</label>';
+    if (category.children.length > 0) {
+      html += renderCategoryTreeHTML(category.children);
+    }
+    html += '</div></div></li>';
+  });
+  html += '</ul>';
+  return html;
+}
+
+
+
+async function getCompanyCategoryBuID(country,compID) {
+  try {
+    const connection = await mysql.createConnection({
+      host: process.env.DATABASE_HOST,
+      user: process.env.DATABASE_USER,
+      password: process.env.DATABASE_PASSWORD,
+      database: process.env.DATABASE
+    });
+
+    // const [categories] = await connection.query('SELECT * FROM category');
+
+    console.log("compIDssss",compID);
+    console.log("countryaaa",country);
+
+    const [categories] = await connection.query(`
+      SELECT category.*, GROUP_CONCAT(category_country_relation.country_id) AS country_ids
+      FROM category
+      LEFT JOIN category_country_relation ON category.ID = category_country_relation.cat_id
+      WHERE category_country_relation.country_id= "${country}"
+      GROUP BY category.ID
+    `);
+
+    console.log("Fetched categories:", categories);
+
+    const [com_categories] = await connection.query('SELECT category_id FROM company_cactgory_relation WHERE company_id = ?', [compID]);
+    console.log("Fetched company categories:", com_categories);
+
+    const com_category_array = com_categories.map((category) => category.category_id);
+
+    console.log("com_category_array",com_category_array);
+    connection.end();
+    const nestedCategories = buildCategoryTree(categories);   // This is the Json Format Of All Categories
+    const nestedCategoriesHTMLwithChecked = renderCategoryTreeHTMLforCompany(nestedCategories, com_category_array);
+
+    return nestedCategoriesHTMLwithChecked;
+  } catch (error) {
+    throw new Error('Error fetching company categories');
+  }
+}
+function renderCategoryTreeHTMLforCompany(categories, com_category_array) {
+  let html = '<ul>';
+  categories.forEach(function (category) {
+    if (com_category_array.includes(category.id)) {
+      var inputchecked = 'checked';
+    } else {
+      var inputchecked = '';
+    }
+    html += '<li class="mt-5"><div class="mb-5"><div class="form-check"><input type="checkbox" name="category" class="form-check-input" value="' + category.id + '" ' + inputchecked + '><label class="form-check-label" for="flexCheckDefault">' + category.name + '</label>';
+    if (category.children.length > 0) {
+      html += renderCategoryTreeHTMLforCompany(category.children, com_category_array);
+    }
+    html += '</div></div></li>';
+  });
+  html += '</ul>';
+  return html;
+}
  
+function buildCategoryTree(categories, parentId = 0) {
+  const categoryTree = [];
+
+  categories.forEach((category) => {
+    if (category.parent_id === parentId) {
+      const children = buildCategoryTree(categories, category.ID);
+      const categoryNode = {
+        id: category.ID,
+        name: category.category_name,
+        img: category.category_img,
+        country_ids: category.country_ids ? category.country_ids.split(',') : [], // Convert country_ids string to array
+        children
+      };
+      categoryTree.push(categoryNode);
+    }
+  });
+
+  return categoryTree;
+}
 
 module.exports = {
   getFaqPage,
@@ -6481,5 +6670,8 @@ module.exports = {
   getcountrybyIp,
   getcountrynamebyIp,
   getplans,
-  getSubscribedUsers
+  getSubscribedUsers,
+  getCompanyCategoriess,
+  getCompanyCategoryBuID,
+  getCurrency
 };

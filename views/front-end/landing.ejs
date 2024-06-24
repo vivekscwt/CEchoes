@@ -3,25 +3,25 @@
   <link href="/front-end/css/discussion-style.css" rel="stylesheet" type="text/css">
   <!-- ============== Banner Start =============== -->
   <div id="google_translate_element">
-  <section class="main-banner landing-banner">
-    <div class="container">
-      <div class="row flex-md-row-reverse">
-        <div class="col-md-6 my-auto">
-          <div class="banner-right" data-aos="fade-left">
-            <div class="row">
-              <div class="col-6">
-                <div class="banner-mas-img banner-mas-img1">
-                  <div class="banner-slider1">
-                    <div class="item">
-                      <img src="/<%= meta_values_array.banner_img_1 %>" alt="image" loading="lazy" width="273"
-                        height="354">
+    <section class="main-banner landing-banner">
+      <div class="container">
+        <div class="row flex-md-row-reverse">
+          <div class="col-md-6 my-auto">
+            <div class="banner-right" data-aos="fade-left">
+              <div class="row">
+                <div class="col-6">
+                  <div class="banner-mas-img banner-mas-img1">
+                    <div class="banner-slider1">
+                      <div class="item">
+                        <img src="/<%= meta_values_array.banner_img_1 %>" alt="image" loading="lazy" width="273"
+                          height="354">
+                      </div>
+                      <div class="item">
+                        <img src="/<%= meta_values_array.banner_img_2 %>" alt="image" loading="lazy" width="273"
+                          height="354">
+                      </div>
                     </div>
-                    <div class="item">
-                      <img src="/<%= meta_values_array.banner_img_2 %>" alt="image" loading="lazy" width="273"
-                        height="354">
-                    </div>
-                  </div>
-                  <!--<div class="banner-counter-tag" style="background-image: url(../front-end/images/b-counter-bg2.svg);">
+                    <!--<div class="banner-counter-tag" style="background-image: url(../front-end/images/b-counter-bg2.svg);">
                     Reviews
                     <div class="counter-text">
                       <% if( meta_values_array.reviews_count_visibility && meta_values_array.reviews_count_visibility == 'original' ){ %>
@@ -31,21 +31,21 @@
                       <% } %>  
                     </div>
                   </div>-->
-                </div>
-              </div>
-              <div class="col-6">
-                <div class="banner-mas-img banner-mas-img2">
-                  <div class="banner-slider2">
-                    <div class="item">
-                      <img src="/<%= meta_values_array.banner_img_3 %>" alt="image" loading="lazy" width="262"
-                        height="255">
-                    </div>
-                    <div class="item">
-                      <img src="/<%= meta_values_array.banner_img_4 %>" alt="image" loading="lazy" width="262"
-                        height="255">
-                    </div>
                   </div>
-                  <!--<div class="banner-counter-tag" style="background-image: url(../front-end/images/b-counter-bg1.svg);">
+                </div>
+                <div class="col-6">
+                  <div class="banner-mas-img banner-mas-img2">
+                    <div class="banner-slider2">
+                      <div class="item">
+                        <img src="/<%= meta_values_array.banner_img_3 %>" alt="image" loading="lazy" width="262"
+                          height="255">
+                      </div>
+                      <div class="item">
+                        <img src="/<%= meta_values_array.banner_img_4 %>" alt="image" loading="lazy" width="262"
+                          height="255">
+                      </div>
+                    </div>
+                    <!--<div class="banner-counter-tag" style="background-image: url(../front-end/images/b-counter-bg1.svg);">
                     Impression
                     <div class="counter-text">
                       <% if( meta_values_array.impression_number_visibility && meta_values_array.impression_number_visibility == 'original' ){ %>
@@ -55,19 +55,19 @@
                       <% } %>  
                     </div>
                   </div>-->
-                </div>
-                <div class="banner-mas-img banner-mas-img2">
-                  <div class="banner-slider3">
-                    <div class="item">
-                      <img src="/<%= meta_values_array.banner_img_5 %>" alt="image" loading="lazy" width="262"
-                        height="255">
-                    </div>
-                    <div class="item">
-                      <img src="/<%= meta_values_array.banner_img_6 %>" alt="image" loading="lazy" width="262"
-                        height="255">
-                    </div>
                   </div>
-                  <!--<div class="banner-counter-tag" style="background-image: url(../front-end/images/b-counter-bg1.svg);">
+                  <div class="banner-mas-img banner-mas-img2">
+                    <div class="banner-slider3">
+                      <div class="item">
+                        <img src="/<%= meta_values_array.banner_img_5 %>" alt="image" loading="lazy" width="262"
+                          height="255">
+                      </div>
+                      <div class="item">
+                        <img src="/<%= meta_values_array.banner_img_6 %>" alt="image" loading="lazy" width="262"
+                          height="255">
+                      </div>
+                    </div>
+                    <!--<div class="banner-counter-tag" style="background-image: url(../front-end/images/b-counter-bg1.svg);">
                     Total Users
                     <div class="counter-text">
                       <% if( meta_values_array.total_users_count_visibility && meta_values_array.total_users_count_visibility == 'original' ){ %>
@@ -77,43 +77,43 @@
                       <% } %>
                     </div>
                   </div>-->
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="col-md-6 my-auto">
-          <div class="banner-left" data-aos="fade-right">
-            <%- meta_values_array.bannner_content -%>
-              <div class="search-area position-relative">
-                <form>
-                  <input type="text" class="form-control" id="search-input"
-                    placeholder="Business/Institute/Establishment Name" required>
-                </form>
-                <input type="submit" value="Search">
-                <div class="autofield-dropdown">
+          <div class="col-md-6 my-auto">
+            <div class="banner-left" data-aos="fade-right">
+              <%- meta_values_array.bannner_content -%>
+                <div class="search-area position-relative">
+                  <form>
+                    <input type="text" class="form-control" id="search-input"
+                      placeholder="Business/Institute/Establishment Name" required>
+                  </form>
+                  <input type="submit" value="Search">
+                  <div class="autofield-dropdown">
+                  </div>
                 </div>
-              </div>
 
-              <% if(PositiveReviewsCompany) { %><br>
-              <div class="banner-trending-scroll">
-                <div class="like-dislike-tren-label">
-                    <i class="fa-solid fa-thumbs-up"></i> 
-                </div>
-                <div class="like-dislike-company-scroll">
-                    <marquee behavior="scroll" direction="left" onmouseover="this.stop();" onmouseout="this.start();">
+                <% if(PositiveReviewsCompany) { %><br>
+                  <div class="banner-trending-scroll">
+                    <div class="like-dislike-tren-label">
+                      <i class="fa-solid fa-thumbs-up"></i>
+                    </div>
+                    <div class="like-dislike-company-scroll">
+                      <marquee behavior="scroll" direction="left" onmouseover="this.stop();" onmouseout="this.start();">
                         <ul>
                           <% PositiveReviewsCompany.forEach( (company, index)=> {%>
                             <li><a href="/company/<%- company.slug %>"><%- company.company_name %></a></li>
-                          <% })%>  
+                            <% })%>
                         </ul>
-                    </marquee>
-                </div>
-              </div>
-              <% } %>
+                      </marquee>
+                    </div>
+                  </div>
+                  <% } %>
 
-              <% if(NegativeReviewsCompany) { %>
-                <!-- <div class="banner-trending-scroll">
+                    <% if(NegativeReviewsCompany) { %>
+                      <!-- <div class="banner-trending-scroll">
                   <div class="like-dislike-tren-label">
                       <i class="fa-solid fa-thumbs-down"></i> 
                   </div>
@@ -127,36 +127,36 @@
                       </marquee>
                   </div>
                 </div> -->
-                <% } %>
-              
-              
+                      <% } %>
 
-              <!-- <h3><span>#CustomerRightsMatterBG</span></h3> -->
-              <!-- <p class="text-light"><span id="type-writing"><noscript>
+
+
+                        <!-- <h3><span>#CustomerRightsMatterBG</span></h3> -->
+                        <!-- <p class="text-light"><span id="type-writing"><noscript>
                     <%= meta_values_array.bannner_content_2 %>
                   </noscript></span></p>
               <h3><span id="type-writing2"><noscript>
                     <%= meta_values_array.bannner_hashtag %>
                   </noscript></span></h3> -->
+            </div>
           </div>
         </div>
       </div>
+    </section>
+    <div class="custom-modal">
+      <div class="custom-modal-content">
+        <a href="#" class="custom-modal-close">
+          <i class="fa-solid fa-circle-xmark"></i>
+        </a>
+        <h3 id="dynamic-search-title"></h3>
+        <p id="dynamic-search-content"></p>
+        <a id="dynamic-search-link" href="" class="btn-default btn-warning">View More</a>
+      </div>
     </div>
-  </section>
-  <div class="custom-modal">
-    <div class="custom-modal-content">
-      <a href="#" class="custom-modal-close">
-        <i class="fa-solid fa-circle-xmark"></i>
-      </a>
-      <h3 id="dynamic-search-title"></h3>
-      <p id="dynamic-search-content"></p>
-      <a id="dynamic-search-link" href="" class="btn-default btn-warning">View More</a>
-    </div>
-  </div>
-  <!-- ============== Banner End =============== -->
+    <!-- ============== Banner End =============== -->
 
-  <!-- ============== Latest Reviews Start =============== -->
-  <!-- <section class="home-latest-reviews">
+    <!-- ============== Latest Reviews Start =============== -->
+    <!-- <section class="home-latest-reviews">
     <div class="container">
       <div class="review-slider-wrap">
         <h2 class="inner-main-head">Latest Customer Reviews</h2>
@@ -277,692 +277,765 @@
       </div>
     </div>
   </section> -->
-  <!-- ============== Latest Reviews End =============== -->
+    <!-- ============== Latest Reviews End =============== -->
 
-  <% if(latestReviews) { %>
-  <!-- ============= Our popular review start =============== -->
-  <section class="main-content pt-md-0 our-popular-content">
-    <div class="container">
-        <div class="default-content-area">
+    <% if(latestReviews) { %>
+      <!-- ============= Our popular review start =============== -->
+      <section class="main-content pt-md-0 our-popular-content">
+        <div class="container">
+          <div class="default-content-area">
             <h2 class="main-head text-center">Our Popular <span>Reviews</span></h2>
             <div class="home-popular-review-area">
-             <!-- ================= box 1 start ======================= -->
-             <!-- for desktop show -->
+              <!-- ================= box 1 start ======================= -->
+              <!-- for desktop show -->
               <div class="home-popular-review-box-wrapper">
-                <% let rev_count = 0; %>
-                <% latestReviews.forEach( (latestReview, index)=> {%>
-                <% rev_count++; %>
-                <div class="home-popular-review-box home-popular-review-box<%= rev_count %>">
-                  <div class="home-popular-client">
-                    <% if(latestReview.user_privacy == 1) { %>
-                      <div class="home-client-img">
-                        <% if(latestReview && latestReview.profile_pic ) { %>
-                          <img src="/<%= latestReview.profile_pic %>" alt="img">
-                        <% } else { %>
-                          <img src="/assets/media/avatars/blank.png" alt="img">
-                        <% } %>
+                <% let rev_count=0; %>
+                  <% latestReviews.forEach( (latestReview, index)=> {%>
+                    <% rev_count++; %>
+                      <div class="home-popular-review-box home-popular-review-box<%= rev_count %>">
+                        <div class="home-popular-client">
+                          <% if(latestReview.user_privacy==1) { %>
+                            <div class="home-client-img">
+                              <% if(latestReview && latestReview.profile_pic ) { %>
+                                <img src="/<%= latestReview.profile_pic %>" alt="img">
+                                <% } else { %>
+                                  <img src="/assets/media/avatars/blank.png" alt="img">
+                                  <% } %>
+                            </div>
+                            <h4>
+                              <%= latestReview.alise_name %>
+                            </h4>
+                            <% } else { %>
+                              <div class="home-client-img">
+                                <img src="front-end/images/blur-img.png" alt="img">
+                              </div>
+                              <h4><img src="front-end/images/blur-name.png" alt="img"></h4>
+                              <% } %>
+                                <!--<p>Level</p>-->
+                                <% var avg=latestReview.rating %>
+                                  <div class="user-rating">
+                                    <% allRatingTags.forEach( tag=> { %>
+                                      <% if(tag.review_rating_value==avg){ %>
+                                        <span><img src="/<%= tag.rating_image %>" alt="" style="display: inline-block;"
+                                            width="35"></span>
+                                        <% } %>
+                                          <% }) %>
+                                            <span>
+                                              <%= latestReview.rating %>/5
+                                            </span>
+                                            <% if(latestReview.labels=='2' ) { %>
+                                              <span class="invited-tag ms-2">Invited</span>
+                                              <% } %>
+                                  </div>
+                        </div>
+                        <div class="home-popular-review-info">
+                          <a href="/company/<%= latestReview.slug %>">
+                            <h3>
+                              <%= latestReview.company_name %>
+                            </h3>
+                          </a>
+                          <p><%- latestReview.review_content -%></p>
+                        </div>
                       </div>
-                      <h4><%= latestReview.alise_name %></h4>
-                    <% } else { %>
-                      <div class="home-client-img">
-                        <img src="front-end/images/blur-img.png" alt="img">
-                      </div>
-                      <h4><img src="front-end/images/blur-name.png" alt="img"></h4>
-                    <% } %>
-                    <!--<p>Level</p>-->
-                    <% var avg = latestReview.rating %>
-                    <div class="user-rating">
-                      <% allRatingTags.forEach( tag => { %>
-                        <% if(tag.review_rating_value == avg){ %>
-                        <span><img src="/<%= tag.rating_image %>" alt="" style="display: inline-block;" width="35"></span>
-                        <% } %>
-                      <% }) %> 
-                      <span><%= latestReview.rating %>/5</span>
-                      <% if(latestReview.labels == '2') { %>
-                        <span class="invited-tag ms-2">Invited</span>
-                      <% } %>
-                   </div>
-                  </div>
-                  <div class="home-popular-review-info">
-                    <a href="/company/<%= latestReview.slug %>"><h3><%= latestReview.company_name %></h3></a>
-                    <p><%- latestReview.review_content -%></p>
-                  </div>
-                </div>
-                <% if(rev_count == 3) { %>
-                  <% rev_count = 0; %>
-                <% } %>
-                <% }) %>
+                      <% if(rev_count==3) { %>
+                        <% rev_count=0; %>
+                          <% } %>
+                            <% }) %>
               </div>
 
               <!-- for mbl show -->
               <div class="home-popular-review-slider">
                 <% latestReviews.forEach( (latestReview, index)=> {%>
-                <div class="item">
-                  <div class="home-popular-review-box">
-                    <div class="home-popular-client">
-                      <% if(latestReview.user_privacy == 1) { %>
-                      <div class="home-client-img">
-                        <% if(latestReview && latestReview.profile_pic ) { %>
-                          <img src="/<%= latestReview.profile_pic %>" alt="img">
-                        <% } else { %>
-                          <img src="/assets/media/avatars/blank.png" alt="img">
-                        <% } %>
+                  <div class="item">
+                    <div class="home-popular-review-box">
+                      <div class="home-popular-client">
+                        <% if(latestReview.user_privacy==1) { %>
+                          <div class="home-client-img">
+                            <% if(latestReview && latestReview.profile_pic ) { %>
+                              <img src="/<%= latestReview.profile_pic %>" alt="img">
+                              <% } else { %>
+                                <img src="/assets/media/avatars/blank.png" alt="img">
+                                <% } %>
+                          </div>
+                          <h4>
+                            <%= latestReview.first_name %>
+                              <%= latestReview.last_name %>
+                          </h4>
+                          <% } else { %>
+                            <div class="home-client-img">
+                              <img src="front-end/images/blur-img.png" alt="img">
+                            </div>
+                            <h4><img src="front-end/images/blur-name.png" alt="img"></h4>
+                            <% } %>
+                              <!--<p>Level</p>-->
+                              <% var avg=latestReview.rating %>
+                                <div class="user-rating">
+                                  <% allRatingTags.forEach( tag=> { %>
+                                    <% if(tag.review_rating_value==avg){ %>
+                                      <span><img src="/<%= tag.rating_image %>" alt="" style="display: inline-block;"
+                                          width="35"></span>
+                                      <% } %>
+                                        <% }) %>
+                                          <span>
+                                            <%= latestReview.rating %>/5
+                                          </span>
+                                </div>
                       </div>
-                      <h4><%= latestReview.first_name %> <%= latestReview.last_name %></h4>
-                      <% } else { %>
-                      <div class="home-client-img">
-                        <img src="front-end/images/blur-img.png" alt="img">
+                      <div class="home-popular-review-info">
+                        <a href="/company/<%= latestReview.slug %>">
+                          <h3>
+                            <%= latestReview.company_name %>
+                          </h3>
+                        </a>
+                        <p><%- latestReview.review_content -%></p>
                       </div>
-                      <h4><img src="front-end/images/blur-name.png" alt="img"></h4>
-                      <% } %>
-                      <!--<p>Level</p>-->
-                      <% var avg = latestReview.rating %>
-                      <div class="user-rating">
-                        <% allRatingTags.forEach( tag => { %>
-                          <% if(tag.review_rating_value == avg){ %>
-                          <span><img src="/<%= tag.rating_image %>" alt="" style="display: inline-block;" width="35"></span>
-                          <% } %>
-                        <% }) %>
-                        <span><%= latestReview.rating %>/5</span>
-                     </div>
-                    </div>
-                    <div class="home-popular-review-info">
-                      <a href="/company/<%= latestReview.slug %>"><h3><%= latestReview.company_name %></h3></a>
-                      <p><%- latestReview.review_content -%></p>
                     </div>
                   </div>
-                </div>
-                <% }) %>
+                  <% }) %>
               </div>
 
             </div>
-        </div>
-    </div>
-  </section>
-  <!-- ============= Our popular review end =============== -->
-  <% } %>
-
-  <% if(PopularCategories.length>0) { %>
-  <!-- ============== Most Popular category Start =============== -->
-<section class="main-content most-popular-categories-content">
-  <div class="container">
-    <div class="default-content-area">
-      <h4>Most Popular</h4>
-      <h2 class="main-head">Categories</h2>
-      <div class="row">
-        <% PopularCategories.forEach( category=> { %>
-        <div class="col-lg-3 col-sm-6">
-          <div class="popular-category-part">
-            <a href="category/<%= category.category_slug %>/<%= category.main_address_country%>">
-              <% if(category.category_img){ %>
-              <img src="<%= category.category_img %>" alt="<%= category.category_name %>" loading="lazy" width="100" height="100">
-              <% }else{ %>
-              <img src="/front-end/images/company-placeholder-image.png" alt="<%= category.category_name %>" loading="lazy" width="100" height="100">
-              <% } %>
-            </a>
-            <a href="category/<%= category.category_slug %>"><%= category.category_name %></a>
           </div>
         </div>
-        <% }) %>
-      </div>
-      <div class="text-center">
-        <a href="/categories" class="view-more"><span class="position-relative"><i class="fa-solid fa-angle-right"></i>View More</span></a>
-      </div>
-    </div>
-  </div>
-</section>
-  <!-- ============== Most Popular category End =============== -->
-  <% } %>
+      </section>
+      <!-- ============= Our popular review end =============== -->
+      <% } %>
 
- <!-- ============== Featured Section Start =============== -->
- <section class="main-content featured-content text-center">
-  <div class="container">
-    <div class="featured-object-wrap position-relative">
-      <h2 class="main-head">Featured <span>Companies</span></h2>
-      <div class="featured-slider">
-        <% if(featured_comps && featured_comps.length>0) { %>
-          <% featured_comps.forEach( company=> { %>
-            <div class="item">
-              <div class="feature-box">
-                <a href="company/<%= company.slug %>"><img src="/<%= company.logo %>" alt="img" width="118"
-                    height="45" class="mx-auto"></a>
-                <h5>
-                  <%= company.company_name %>
-                </h5>
-                <p class="m-0">
-                  <% var txt = company.short_desc; %>
-                  <% if(txt.length > 100) { 
-                    txt = txt.substr(0,100) + "...";
-                  } %>
-                  
-                    <%= txt %>
-                  
-                </p>
+        <% if(PopularCategories.length>0) { %>
+          <!-- ============== Most Popular category Start =============== -->
+          <section class="main-content most-popular-categories-content">
+            <div class="container">
+              <div class="default-content-area">
+                <h4>Most Popular</h4>
+                <h2 class="main-head">Categories</h2>
+                <div class="row">
+                  <% PopularCategories.forEach( category=> { %>
+                    <div class="col-lg-3 col-sm-6">
+                      <div class="popular-category-part">
+                        <a href="category/<%= category.category_slug %>/<%= category.main_address_country%>">
+                          <% if(category.category_img){ %>
+                            <img src="<%= category.category_img %>" alt="<%= category.category_name %>" loading="lazy"
+                              width="100" height="100">
+                            <% }else{ %>
+                              <img src="/front-end/images/company-placeholder-image.png"
+                                alt="<%= category.category_name %>" loading="lazy" width="100" height="100">
+                              <% } %>
+                        </a>
+                        <a href="category/<%= category.category_slug %>">
+                          <%= category.category_name %>
+                        </a>
+                      </div>
+                    </div>
+                    <% }) %>
+                </div>
+                <div class="text-center">
+                  <a href="/categories" class="view-more"><span class="position-relative"><i
+                        class="fa-solid fa-angle-right"></i>View More</span></a>
+                </div>
               </div>
             </div>
-            <% }) %>
-              <% } else { %>
-                <h1>There is no such Company</h1>
-                <% } %>
-      </div>
-      <div class="feature-man1" data-aos="fade-down"><img src="/front-end/images/feature-man1.png" alt="img"
-          width="198" height="169"></div>
-      <div class="feature-man2" data-aos="fade-down" data-aos-delay="500"><img
-          src="/front-end/images/feature-man2.png" alt="img" width="202" height="145"></div>
-      <div class="feature-man3" data-aos="fade-right"><img src="/front-end/images/feature-man3.png" alt="img"
-          width="131" height="226"></div>
-      <div class="feature-man4" data-aos="fade-left" data-aos-delay="300"><img
-          src="/front-end/images/feature-man4.png" alt="img" width="253" height="235"></div>
-    </div>
-  </div>
-</section>
-<!-- ============== Featured Section End =============== -->
+          </section>
+          <!-- ============== Most Popular category End =============== -->
+          <% } %>
 
-  <!-- ============== Review section Start =============== -->
-  <section class="main-content review-content">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-6">
-          <div class="review-left text-center" data-aos="fade-right">
-            <h2 class="main-head mb-md-5 mb-4">Submit Your <span>Review</span></h2>
-            <!-- <picture>
+            <!-- ============== Featured Section Start =============== -->
+            <section class="main-content featured-content text-center">
+              <div class="container">
+                <div class="featured-object-wrap position-relative">
+                  <h2 class="main-head">Featured <span>Companies</span></h2>
+                  <div class="featured-slider">
+                    <% if(featured_comps && featured_comps.length>0) { %>
+                      <% featured_comps.forEach( company=> { %>
+                        <div class="item">
+                          <div class="feature-box">
+                            <a href="company/<%= company.slug %>"><img src="/<%= company.logo %>" alt="img" width="118"
+                                height="45" class="mx-auto"></a>
+                            <h5>
+                              <%= company.company_name %>
+                            </h5>
+                            <p class="m-0">
+                              <% var txt=company.short_desc; %>
+                                <% if(txt.length> 100) {
+                                  txt = txt.substr(0,100) + "...";
+                                  } %>
+
+                                  <%= txt %>
+
+                            </p>
+                          </div>
+                        </div>
+                        <% }) %>
+                          <% } else { %>
+                            <h1>There is no such Company</h1>
+                            <% } %>
+                  </div>
+                  <div class="feature-man1" data-aos="fade-down"><img src="/front-end/images/feature-man1.png" alt="img"
+                      width="198" height="169"></div>
+                  <div class="feature-man2" data-aos="fade-down" data-aos-delay="500"><img
+                      src="/front-end/images/feature-man2.png" alt="img" width="202" height="145"></div>
+                  <div class="feature-man3" data-aos="fade-right"><img src="/front-end/images/feature-man3.png"
+                      alt="img" width="131" height="226"></div>
+                  <div class="feature-man4" data-aos="fade-left" data-aos-delay="300"><img
+                      src="/front-end/images/feature-man4.png" alt="img" width="253" height="235"></div>
+                </div>
+              </div>
+            </section>
+            <!-- ============== Featured Section End =============== -->
+
+            <!-- ============== Review section Start =============== -->
+            <section class="main-content review-content">
+              <div class="container">
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="review-left text-center" data-aos="fade-right">
+                      <h2 class="main-head mb-md-5 mb-4">Submit Your <span>Review</span></h2>
+                      <!-- <picture>
                  <source media="(max-width:575px)" srcset="/front-end/images/review-img-mbl-screen.png" width="300" height="253">
                  <source media="(max-width:767px)" srcset="/front-end/images/review-img-tab-screen.png" width="410" height="346">
                  <img src="/front-end/images/review-img.png" alt="img" width="542" height="458" loading="lazy">
               </picture> -->
-            <div class="review-left-img">
-              <div class="review-big-img">
-                <div class="review-big-slider1">
-                  <div class="item">
-                    <img src="/<%= meta_values_array.review_img_1 %>" alt="img" width="464" height="535" loading="lazy">
-                  </div>
-                  <div class="item">
-                    <img src="/<%= meta_values_array.review_img_2 %>" alt="img" width="464" height="535" loading="lazy">
-                  </div>
-                </div>
-              </div>
-              <div class="review-small-img">
-                <div class="review-small-slider2">
-                  <div class="item">
-                    <img src="/<%= meta_values_array.review_img_3 %>" alt="img" width="246" height="283" loading="lazy">
-                  </div>
-                  <div class="item">
-                    <img src="/<%= meta_values_array.review_img_4 %>" alt="img" width="246" height="283" loading="lazy">
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!--<h5><a href="#" data-bs-toggle="modal" data-bs-target="#reviewers_guidelines"><%= meta_values_array.reviewers_guidelines_title %></a></h5>-->
-          </div>
-        </div>
-        <div class="col-md-6">
-         <div class="review-right mt-md-0 mt-5" data-aos="fade-left">
-<form id="review_submit_frm" name="review_submit_frm" action="" method="post">
-    <input type="hidden" name="review_lable" value="1">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="custom-form">
-                <input type="text" class="form-control" id="search-input-review" name="company_name"
-                    placeholder="Business/Institute/Establishment Name" required autocomplete="off">
-                <div class="autofield-dropdown-review"></div>
-            </div>
-        </div>
-        <div class="col-md-12">
-            <div class="custom-form">
-                <select name="main_address_country" id="country_review" class="form-control" required>
-                    <option value="" disabled <% if (!countryname) { %>selected<% } %>>Select a country</option>
-                      <% getCountries.forEach(function(country) { %>
-                        <option value="<%= country.shortname %>" <% if (country.shortname === countryname) { %>selected<% } %>><%= country.name %></option>
-                    <% }); %>
-                </select>
-            </div>
-        </div>
-        <div class="col-md-12">
-            <div class="custom-form">
-                <select class="form-control" id="state" name="main_address_state">
-                    <option value="Select State" selected disabled>Select State</option>
-                </select>
-            </div>
-        </div>
-        <div class="col-md-12">
-            <div class="custom-form">
-                <input type="text" class="form-control" id="city" name="review-address"
-                    placeholder="City Name" autocomplete="off">
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-6">
-            <div class="custom-form dynamic_state_field_wrapper">
-                <select id="select_category" name="category_id" class="form-select">
-                    <option value="0" selected>Select Category</option>
-                </select>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="custom-form" id="dynamic_sub_category_field_wrapper">
-                <select id="select_sub_category" name="product_id" class="form-select">
-                    <option value="0">Select Product</option>
-                </select>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-12">
-        <div class="rating-slider">
-            <span class="emojisss"><img style="width:50px;" src="" id="selected-range-emojis" /></span>
-            <label>Rating</label>
-            <div id="rating-range" class="rating"></div>
-            <input type="text" id="ratingRange" readonly>
-            <input type="hidden" id="ratingvalue" name="rating" value="">
-            <div id="slider-values" class="text-center">
-                <span id="selected-range-text"></span>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-12">
-        <div class="tag-label">Tags</div>
-        <div class="range-tag-wrap">
-            <% allRatingTags.forEach( (rev_tag, index)=> { %>
-            <div class="tag-items-wrapper range-tag<%= rev_tag.review_rating_value.replace(/\./g, "") %> <% if(index!=9){ %>d-none<% } %>">
-                <% const tag_items=rev_tag.rating_tags.split('|'); %>
-                <% tag_items.forEach(function(tag) { %>
-                <div class="form-check custom-check position-relative">
-                    <input class="form-check-input" type="checkbox" name="tags" value="<%= tag %>" id="">
-                    <label class="form-check-label" for="flexCheckDefault">
-                        <%= tag %>
-                    </label>
-                </div>
-                <% }); %>
-            </div>
-            <% }) %>
-        </div>
-    </div>
-    <div class="col-md-12">
-        <div class="custom-form">
-            <textarea name="review_content" rows="4" class="form-control" placeholder="Review/Feedback"
-                required></textarea>
-        </div>
-    </div>
-    <div class="col-md-12">
-        <div class="custom-form">
-            <span class="fw-bold d-inline-block me-2">Show your name?</span>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="user_privacy" checked id="inlineRadio1"
-                    value="1">
-                <label class="form-check-label" for="inlineRadio1">Yes</label>
-            </div>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="user_privacy" id="inlineRadio2" value="0">
-                <label class="form-check-label" for="inlineRadio2">No</label>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-12">
-        <div class="custom-form">
-            <span class="fw-bold d-inline-block me-2">Do you want the organisation to contact you?</span>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="user_contact" checked id="inlineRadio3"
-                    value="1">
-                <label class="form-check-label" for="inlineRadio3">Yes</label>
-            </div>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="user_contact" id="inlineRadio4" value="0">
-                <label class="form-check-label" for="inlineRadio4">No</label>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-12">
-        <div class="review-submit d-flex justify-content-between align-items-center">
-            <% if(currentUserData){ %>
-            <input type="submit" class="btn-default btn-warning" value="Submit">
-            <% } else { %>
-            <a href="#" class="btn-default btn-outline-warning login">Submit</a>
-            <% } %>
-        </div>
-    </div>
-</form>
-
-         </div>
-         <div class="submit-message"></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- The Modal -->
-  <div class="modal fade pe-0" id="reviewers_guidelines">
-    <div class="modal-dialog">
-      <div class="modal-content">
-
-        <!-- Modal Header -->
-        <div class="modal-header">
-          <h4 class="modal-title fw-bold">
-            <%= meta_values_array.reviewers_guidelines_title %>
-          </h4>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"><i
-              class="fa-solid fa-circle-xmark"></i></button>
-        </div>
-
-        <!-- Modal body -->
-        <div class="modal-body">
-          <p>
-            <%= meta_values_array.reviewers_guidelines_popup %>
-          </p>
-        </div>
-
-      </div>
-    </div>
-  </div>
-  <!-- ============== Review section End =============== -->
-
-<!-- ============== Discussions section Start =============== -->
-
-
-<section class="main-content discussion-content" style="background: #fbfbfb;">
-  <div class="container">
-    <h2 class="main-head text-center" style="color:#000000;">Our <span>Queries</span></h2>
-    <div class="row test">
-      <% if (AllLatestDiscussion && AllLatestDiscussion.length > 0) { %>
-      <div class="col-md-8">
-        <div class="discussions-left">
-          <div class="discussion-view">
-            <a href="/discussion" class="view-more mt-0"><span class="position-relative"><i class="fa-solid fa-angle-right"></i>View All</span></a>
-          </div> 
-          <div id="horizontalTab">
-          <ul class="resp-tabs-list">
-              <li>Latest</li>
-              <li>Popular</li>
-              <li>All</li>
-              <!-- <li>Eldest</li> -->
-          </ul>
-          <div class="resp-tabs-container">
-              <div class="tab-content-wrap">
-                <% if (AllLatestDiscussion && AllLatestDiscussion.length > 0) { %>
-                  <% AllLatestDiscussion.forEach((LatestDiscussion,index)=>{  %>
-                    <% const ExpireDate = new Date(LatestDiscussion.expired_at); %>
-                        <% const date2 = new Date(); %>
-                        <% const daysDiff = Math.round((ExpireDate - date2)/(1000 * 60 * 60 * 24)) %>
-                        <% if(daysDiff > -1){ %>
-                  <% if(index < 7 ) { %>
-                    <div class="discussion-review-panel">
-                        <a href="/discussion-details/<%= LatestDiscussion.id %>" title="<%= LatestDiscussion.topic %>" >
-                            <div class="discussion-user-img" title="">
-                            <!-- <img src="../front-end/images/user-img.jpg" alt="img" width="60" height="60"> -->
-                            <h4><%= LatestDiscussion.first_name.charAt(0).toUpperCase()  %></h4>
+                      <div class="review-left-img">
+                        <div class="review-big-img">
+                          <div class="review-big-slider1">
+                            <div class="item">
+                              <img src="/<%= meta_values_array.review_img_1 %>" alt="img" width="464" height="535"
+                                loading="lazy">
                             </div>
-                            <div class="discussion-user-info">
-                            <h4>
-                                <% if (LatestDiscussion.topic.length > 75) { %>
-                                <%= LatestDiscussion.topic.substring(0, 75) + ' . . . ' %>
-                                <% } else { %>
-                                    <%= LatestDiscussion.topic %>
-                                <% } %> 
-                            </h4>
-                            <% const date = new Date(LatestDiscussion.created_at); %>
-                            <p>Created <%= date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) %> </p>
-                        
+                            <div class="item">
+                              <img src="/<%= meta_values_array.review_img_2 %>" alt="img" width="464" height="535"
+                                loading="lazy">
                             </div>
-                            <div class="dis-comment-views">
-                            <span><%= LatestDiscussion.total_comments %> Comments</span>
-                            <span><%= LatestDiscussion.total_views %> Views</span>
+                          </div>
+                        </div>
+                        <div class="review-small-img">
+                          <div class="review-small-slider2">
+                            <div class="item">
+                              <img src="/<%= meta_values_array.review_img_3 %>" alt="img" width="246" height="283"
+                                loading="lazy">
                             </div>
-                        </a>
+                            <div class="item">
+                              <img src="/<%= meta_values_array.review_img_4 %>" alt="img" width="246" height="283"
+                                loading="lazy">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <!--<h5><a href="#" data-bs-toggle="modal" data-bs-target="#reviewers_guidelines"><%= meta_values_array.reviewers_guidelines_title %></a></h5>-->
                     </div>
-                  <% } %>
-                  <% } %>
-                  <% }) %>
-                  <% } %>
-                  <!-- <div class="text-center mt-md-5 mt-4">
-                      <a href="#" class="btn-default btn-warning discussion-load-btn">Load More</a>
-                  </div> -->
-              </div>
-              <div class="tab-content-wrap">
-                  <% if(AllPopularDiscussion&& AllPopularDiscussion.length > 0) { %>
-                      <% AllPopularDiscussion.forEach((PopularDiscussion, index)=>{  %>
-                        <% const ExpireDate = new Date(PopularDiscussion.expired_at); %>
-                        <% const date2 = new Date(); %>
-                        <% const daysDiff = Math.round((ExpireDate - date2)/(1000 * 60 * 60 * 24)) %>
-                        <% if(daysDiff > -1){ %>
-                        <% if(index < 7 ) { %>
-                      <div class="discussion-review-panel">
-                          <a href="/discussion-details/<%= PopularDiscussion.id %>" title="<%= PopularDiscussion.topic %>" >
-                              <div class="discussion-user-img" title="">
-                              <!-- <img src="../front-end/images/user-img.jpg" alt="img" width="60" height="60"> -->
-                              <h4><%= PopularDiscussion.first_name.charAt(0).toUpperCase()  %></h4>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="review-right mt-md-0 mt-5" data-aos="fade-left">
+                      <form id="review_submit_frm" name="review_submit_frm" action="" method="post">
+                        <input type="hidden" name="review_lable" value="1">
+                        <div class="row">
+                          <div class="col-md-12">
+                            <div class="custom-form">
+                              <input type="text" class="form-control" id="search-input-review" name="company_name"
+                                placeholder="Business/Institute/Establishment Name" required autocomplete="off">
+                              <div class="autofield-dropdown-review"></div>
+                            </div>
+                          </div>
+                          <div class="col-md-12">
+                              <div class="custom-form">
+                                  <select name="main_address_country" id="country_review" class="form-control" required>
+                                      <option value="" disabled <% if (!countryname) { %>selected<% } %>>Select a country</option>
+                                        <% getCountries.forEach(function(country) { %>
+                                          <option value="<%= country.shortname %>" <%= country.shortname == countryname ? 'selected' : '' %>><%= country.name %></option>
+                                      <% }); %>
+                                  </select>
                               </div>
-                              <div class="discussion-user-info">
-                              <h4>
-                                  <% if (PopularDiscussion.topic.length > 75) { %>
-                                  <%= PopularDiscussion.topic.substring(0, 75) + ' . . . ' %>
-                                  <% } else { %>
-                                      <%= PopularDiscussion.topic %>
-                                  <% } %>
-                              </h4>
-                              <% const date = new Date(PopularDiscussion.created_at); %>
-                              <p>Created <%= date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) %></p>
-                          
+                          </div>
+
+
+                          <div class="col-md-12">
+                            <div class="custom-form">
+                              <select class="form-control" id="state" name="main_address_state">
+                                <option value="Select State" selected disabled>Select State</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div class="col-md-12">
+                            <div class="custom-form">
+                              <input type="text" class="form-control" id="city" name="review-address"
+                                placeholder="City Name" autocomplete="off">
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="custom-form dynamic_state_field_wrapper">
+                              <select id="select_category" name="category_id" class="form-select">
+                                <option value="0" selected>Select Category</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="custom-form" id="dynamic_sub_category_field_wrapper">
+                              <select id="select_sub_category" name="product_id" class="form-select">
+                                <option value="0">Select Product</option>
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-12">
+                          <div class="rating-slider">
+                            <span class="emojisss"><img style="width:50px;" src="" id="selected-range-emojis" /></span>
+                            <label>Rating</label>
+                            <div id="rating-range" class="rating"></div>
+                            <input type="text" id="ratingRange" readonly>
+                            <input type="hidden" id="ratingvalue" name="rating" value="">
+                            <div id="slider-values" class="text-center">
+                              <span id="selected-range-text"></span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-12">
+                          <div class="tag-label">Tags</div>
+                          <div class="range-tag-wrap">
+                            <% allRatingTags.forEach( (rev_tag, index)=> { %>
+                              <div
+                                class="tag-items-wrapper range-tag<%= rev_tag.review_rating_value.replace(/\./g, "") %> <% if(index!=9){ %>d-none<% } %>">
+                                <% const tag_items=rev_tag.rating_tags.split('|'); %>
+                                  <% tag_items.forEach(function(tag) { %>
+                                    <div class="form-check custom-check position-relative">
+                                      <input class="form-check-input" type="checkbox" name="tags" value="<%= tag %>"
+                                        id="">
+                                      <label class="form-check-label" for="flexCheckDefault">
+                                        <%= tag %>
+                                      </label>
+                                    </div>
+                                    <% }); %>
                               </div>
-                              <div class="dis-comment-views">
-                              <span><%= PopularDiscussion.total_comments %> Comments</span>
-                              <span><%= PopularDiscussion.total_views %> Views</span>
-                              </div>
-                          </a>
-                      </div>
-                      <% } %>
-                      <% } %>
-                      <% }) %>
-                  <% } %>
-                  <!-- <div class="text-center mt-md-5 mt-4">
-                      <a href="#" class="btn-default btn-warning discussion-load-btn">Load More</a>
-                  </div> -->
-              </div>
-              <div class="tab-content-wrap">
-                  <% if(AllDiscussions&& AllDiscussions.length > 0) { %>
-                      <% AllDiscussions.forEach((AllDiscussion, index)=>{  %>
-                        <% const ExpireDate = new Date(AllDiscussion.expired_at); %>
-                                <% const date2 = new Date(); %>
-                                <% const daysDiff = Math.round((ExpireDate - date2)/(1000 * 60 * 60 * 24)) %>
-                                <% if(daysDiff > -1){ %>
-                        <% if(index < 7 ) { %>
-                      <div class="discussion-review-panel">
-                          <a href="/discussion-details/<%= AllDiscussion.id %>" title="<%= AllDiscussion.topic %>" >
-                              <div class="discussion-user-img" title="">
-                              <!-- <img src="../front-end/images/user-img.jpg" alt="img" width="60" height="60"> -->
-                              <h4><%= AllDiscussion.first_name.charAt(0).toUpperCase()  %></h4>
-                              </div>
-                              <div class="discussion-user-info">
-                              <h4>
-                                  <% if (AllDiscussion.topic.length > 75) { %>
-                                  <%= AllDiscussion.topic.substring(0, 75) + ' . . . ' %>
-                                  <% } else { %>
-                                      <%= AllDiscussion.topic %>
-                                  <% } %>
-                              </h4>
-                              <% const date = new Date(AllDiscussion.created_at); %>
-                              <p>Created <%= date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) %> </p>
-                          
-                              </div>
-                              <div class="dis-comment-views">
-                              <span><%= AllDiscussion.total_comments %> Comments</span>
-                              <span><%= AllDiscussion.total_views %> Views</span>
-                              </div>
-                          </a>
-                      </div>
-                      <% } %>
-                      <% } %>
-                      <% }) %>
-                  <% } %>
-                  <!-- <div class="text-center mt-md-5 mt-4">
-                      <a href="#" class="btn-default btn-warning discussion-load-btn">Load More</a>
-                  </div> -->
-              </div>
-              
-          </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="discussions-right mt-md-0 mt-4">
-          <div class="start-a-discussion-btn text-center">
-            <% if(currentUserData){ %>
-              <a href="#" class="btn-default btn-dark" data-bs-toggle="modal" data-bs-target="#creatediscussion"><i class="fa-solid fa-pen-to-square"></i> Raise A Query</a>
-            <% } else { %>
-              <a href="#" class="btn-default btn-dark mt-3 login">Raise A Query</a>
-            <% } %>
-          </div>
-          <div class="discussions-right-panel">
-            <h4>Popular Query</h4>
-            <% if(AllPopularDiscussion&& AllPopularDiscussion.length > 0) { %>
-            <% AllPopularDiscussion.forEach((PopularDiscussion, index)=>{  %>
-              <% const ExpireDate = new Date(PopularDiscussion.expired_at); %>
-                  <% const date2 = new Date(); %>
-                  <% const daysDiff = Math.round((ExpireDate - date2)/(1000 * 60 * 60 * 24)) %>
-                  <% if(daysDiff > -1){ %>
-                    <% if(index < 5){ %>
-                      <div class="dis-right-panel-item">
-                          <div class="dis-r-panel-item-left">
-                          <a href="/discussion-details/<%= PopularDiscussion.id %>" title="<%= PopularDiscussion.topic %>" ><i class="fa-regular fa-arrow-right-long"></i>
-                              <% if (PopularDiscussion.topic.length > 25) { %>
-                              <%= PopularDiscussion.topic.substring(0, 25) + ' . . . ' %>
+                              <% }) %>
+                          </div>
+                        </div>
+                        <div class="col-md-12">
+                          <div class="custom-form">
+                            <textarea name="review_content" rows="4" class="form-control" placeholder="Review/Feedback"
+                              required></textarea>
+                          </div>
+                        </div>
+                        <div class="col-md-12">
+                          <div class="custom-form">
+                            <span class="fw-bold d-inline-block me-2">Show your name?</span>
+                            <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="radio" name="user_privacy" checked id="inlineRadio1"
+                                value="1">
+                              <label class="form-check-label" for="inlineRadio1">Yes</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="radio" name="user_privacy" id="inlineRadio2"
+                                value="0">
+                              <label class="form-check-label" for="inlineRadio2">No</label>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-12">
+                          <div class="custom-form">
+                            <span class="fw-bold d-inline-block me-2">Do you want the organisation to contact
+                              you?</span>
+                            <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="radio" name="user_contact" checked id="inlineRadio3"
+                                value="1">
+                              <label class="form-check-label" for="inlineRadio3">Yes</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="radio" name="user_contact" id="inlineRadio4"
+                                value="0">
+                              <label class="form-check-label" for="inlineRadio4">No</label>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-12">
+                          <div class="review-submit d-flex justify-content-between align-items-center">
+                            <% if(currentUserData){ %>
+                              <input type="submit" class="btn-default btn-warning" value="Submit">
                               <% } else { %>
-                                  <%= PopularDiscussion.topic %>
-                              <% } %>
-                          </a> 
+                                <a href="#" class="btn-default btn-outline-warning login">Submit</a>
+                                <% } %>
                           </div>
-                          <div class="dis-r-panel-item-right">
-                              <%= PopularDiscussion.total_comments %>
+                        </div>
+                      </form>
+
+                    </div>
+                    <div class="submit-message"></div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- The Modal -->
+            <div class="modal fade pe-0" id="reviewers_guidelines">
+              <div class="modal-dialog">
+                <div class="modal-content">
+
+                  <!-- Modal Header -->
+                  <div class="modal-header">
+                    <h4 class="modal-title fw-bold">
+                      <%= meta_values_array.reviewers_guidelines_title %>
+                    </h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"><i
+                        class="fa-solid fa-circle-xmark"></i></button>
+                  </div>
+
+                  <!-- Modal body -->
+                  <div class="modal-body">
+                    <p>
+                      <%= meta_values_array.reviewers_guidelines_popup %>
+                    </p>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+            <!-- ============== Review section End =============== -->
+
+            <!-- ============== Discussions section Start =============== -->
+
+
+            <section class="main-content discussion-content" style="background: #fbfbfb;">
+              <div class="container">
+                <h2 class="main-head text-center" style="color:#000000;">Our <span>Queries</span></h2>
+                <div class="row test">
+                  <% if (AllLatestDiscussion && AllLatestDiscussion.length> 0) { %>
+                    <div class="col-md-8">
+                      <div class="discussions-left">
+                        <div class="discussion-view">
+                          <a href="/discussion" class="view-more mt-0"><span class="position-relative"><i
+                                class="fa-solid fa-angle-right"></i>View All</span></a>
+                        </div>
+                        <div id="horizontalTab">
+                          <ul class="resp-tabs-list">
+                            <li>Latest</li>
+                            <li>Popular</li>
+                            <li>All</li>
+                            <!-- <li>Eldest</li> -->
+                          </ul>
+                          <div class="resp-tabs-container">
+                            <div class="tab-content-wrap">
+                              <% if (AllLatestDiscussion && AllLatestDiscussion.length> 0) { %>
+                                <% AllLatestDiscussion.forEach((LatestDiscussion,index)=>{ %>
+                                  <% const ExpireDate=new Date(LatestDiscussion.expired_at); %>
+                                    <% const date2=new Date(); %>
+                                      <% const daysDiff=Math.round((ExpireDate - date2)/(1000 * 60 * 60 * 24)) %>
+                                        <% if(daysDiff> -1){ %>
+                                          <% if(index < 7 ) { %>
+                                            <div class="discussion-review-panel">
+                                              <a href="/discussion-details/<%= LatestDiscussion.id %>"
+                                                title="<%= LatestDiscussion.topic %>">
+                                                <div class="discussion-user-img" title="">
+                                                  <!-- <img src="../front-end/images/user-img.jpg" alt="img" width="60" height="60"> -->
+                                                  <h4>
+                                                    <%= LatestDiscussion.first_name.charAt(0).toUpperCase() %>
+                                                  </h4>
+                                                </div>
+                                                <div class="discussion-user-info">
+                                                  <h4>
+                                                    <% if (LatestDiscussion.topic.length> 75) { %>
+                                                      <%= LatestDiscussion.topic.substring(0, 75) + ' . . . ' %>
+                                                        <% } else { %>
+                                                          <%= LatestDiscussion.topic %>
+                                                            <% } %>
+                                                  </h4>
+                                                  <% const date=new Date(LatestDiscussion.created_at); %>
+                                                    <p>Created <%= date.toLocaleDateString('en-IN', { day: 'numeric' ,
+                                                        month: 'short' , year: 'numeric' }) %>
+                                                    </p>
+
+                                                </div>
+                                                <div class="dis-comment-views">
+                                                  <span>
+                                                    <%= LatestDiscussion.total_comments %> Comments
+                                                  </span>
+                                                  <span>
+                                                    <%= LatestDiscussion.total_views %> Views
+                                                  </span>
+                                                </div>
+                                              </a>
+                                            </div>
+                                            <% } %>
+                                              <% } %>
+                                                <% }) %>
+                                                  <% } %>
+                                                    <!-- <div class="text-center mt-md-5 mt-4">
+                      <a href="#" class="btn-default btn-warning discussion-load-btn">Load More</a>
+                  </div> -->
+                            </div>
+                            <div class="tab-content-wrap">
+                              <% if(AllPopularDiscussion&& AllPopularDiscussion.length> 0) { %>
+                                <% AllPopularDiscussion.forEach((PopularDiscussion, index)=>{ %>
+                                  <% const ExpireDate=new Date(PopularDiscussion.expired_at); %>
+                                    <% const date2=new Date(); %>
+                                      <% const daysDiff=Math.round((ExpireDate - date2)/(1000 * 60 * 60 * 24)) %>
+                                        <% if(daysDiff> -1){ %>
+                                          <% if(index < 7 ) { %>
+                                            <div class="discussion-review-panel">
+                                              <a href="/discussion-details/<%= PopularDiscussion.id %>"
+                                                title="<%= PopularDiscussion.topic %>">
+                                                <div class="discussion-user-img" title="">
+                                                  <!-- <img src="../front-end/images/user-img.jpg" alt="img" width="60" height="60"> -->
+                                                  <h4>
+                                                    <%= PopularDiscussion.first_name.charAt(0).toUpperCase() %>
+                                                  </h4>
+                                                </div>
+                                                <div class="discussion-user-info">
+                                                  <h4>
+                                                    <% if (PopularDiscussion.topic.length> 75) { %>
+                                                      <%= PopularDiscussion.topic.substring(0, 75) + ' . . . ' %>
+                                                        <% } else { %>
+                                                          <%= PopularDiscussion.topic %>
+                                                            <% } %>
+                                                  </h4>
+                                                  <% const date=new Date(PopularDiscussion.created_at); %>
+                                                    <p>Created <%= date.toLocaleDateString('en-IN', { day: 'numeric' ,
+                                                        month: 'short' , year: 'numeric' }) %>
+                                                    </p>
+
+                                                </div>
+                                                <div class="dis-comment-views">
+                                                  <span>
+                                                    <%= PopularDiscussion.total_comments %> Comments
+                                                  </span>
+                                                  <span>
+                                                    <%= PopularDiscussion.total_views %> Views
+                                                  </span>
+                                                </div>
+                                              </a>
+                                            </div>
+                                            <% } %>
+                                              <% } %>
+                                                <% }) %>
+                                                  <% } %>
+                                                    <!-- <div class="text-center mt-md-5 mt-4">
+                      <a href="#" class="btn-default btn-warning discussion-load-btn">Load More</a>
+                  </div> -->
+                            </div>
+                            <div class="tab-content-wrap">
+                              <% if(AllDiscussions&& AllDiscussions.length> 0) { %>
+                                <% AllDiscussions.forEach((AllDiscussion, index)=>{ %>
+                                  <% const ExpireDate=new Date(AllDiscussion.expired_at); %>
+                                    <% const date2=new Date(); %>
+                                      <% const daysDiff=Math.round((ExpireDate - date2)/(1000 * 60 * 60 * 24)) %>
+                                        <% if(daysDiff> -1){ %>
+                                          <% if(index < 7 ) { %>
+                                            <div class="discussion-review-panel">
+                                              <a href="/discussion-details/<%= AllDiscussion.id %>"
+                                                title="<%= AllDiscussion.topic %>">
+                                                <div class="discussion-user-img" title="">
+                                                  <!-- <img src="../front-end/images/user-img.jpg" alt="img" width="60" height="60"> -->
+                                                  <h4>
+                                                    <%= AllDiscussion.first_name.charAt(0).toUpperCase() %>
+                                                  </h4>
+                                                </div>
+                                                <div class="discussion-user-info">
+                                                  <h4>
+                                                    <% if (AllDiscussion.topic.length> 75) { %>
+                                                      <%= AllDiscussion.topic.substring(0, 75) + ' . . . ' %>
+                                                        <% } else { %>
+                                                          <%= AllDiscussion.topic %>
+                                                            <% } %>
+                                                  </h4>
+                                                  <% const date=new Date(AllDiscussion.created_at); %>
+                                                    <p>Created <%= date.toLocaleDateString('en-IN', { day: 'numeric' ,
+                                                        month: 'short' , year: 'numeric' }) %>
+                                                    </p>
+
+                                                </div>
+                                                <div class="dis-comment-views">
+                                                  <span>
+                                                    <%= AllDiscussion.total_comments %> Comments
+                                                  </span>
+                                                  <span>
+                                                    <%= AllDiscussion.total_views %> Views
+                                                  </span>
+                                                </div>
+                                              </a>
+                                            </div>
+                                            <% } %>
+                                              <% } %>
+                                                <% }) %>
+                                                  <% } %>
+                                                    <!-- <div class="text-center mt-md-5 mt-4">
+                      <a href="#" class="btn-default btn-warning discussion-load-btn">Load More</a>
+                  </div> -->
+                            </div>
+
                           </div>
+                        </div>
                       </div>
-                <% } %>
-                <% } %>
-            <% }) %>
-            <% } %>
-        </div>
-        <div class="discussions-right-panel">
-          <h4>Newest Query</h4>
-          <% if (AllLatestDiscussion && AllLatestDiscussion.length > 0) { %>
-          <% AllLatestDiscussion.forEach((LatestDiscussion, index)=>{  %>
-            <% const ExpireDate = new Date(LatestDiscussion.expired_at); %>
-              <% const date2 = new Date(); %>
-              <% const daysDiff = Math.round((ExpireDate - date2)/(1000 * 60 * 60 * 24)) %>
-              <% if(daysDiff > -1){ %>
-                <% if(index < 5 ){ %>
-                <div class="dis-right-panel-item">
-                    <div class="dis-r-panel-item-left">
-                    <a href="/discussion-details/<%= LatestDiscussion.id %>" title="<%= LatestDiscussion.topic %>"  ><i class="fa-regular fa-arrow-right-long"></i>
-                        <% if (LatestDiscussion.topic.length > 25) { %>
-                        <%= LatestDiscussion.topic.substring(0, 25) + ' . . . ' %>
-                        <% } else { %>
-                            <%= LatestDiscussion.topic %>
-                        <% } %>
-                    </a> 
                     </div>
-                    <div class="dis-r-panel-item-right">
-                        <%= LatestDiscussion.total_comments %>
+                    <div class="col-md-4">
+                      <div class="discussions-right mt-md-0 mt-4">
+                        <div class="start-a-discussion-btn text-center">
+                          <% if(currentUserData){ %>
+                            <a href="#" class="btn-default btn-dark" data-bs-toggle="modal"
+                              data-bs-target="#creatediscussion"><i class="fa-solid fa-pen-to-square"></i> Raise A
+                              Query</a>
+                            <% } else { %>
+                              <a href="#" class="btn-default btn-dark mt-3 login">Raise A Query</a>
+                              <% } %>
+                        </div>
+                        <div class="discussions-right-panel">
+                          <h4>Popular Query</h4>
+                          <% if(AllPopularDiscussion&& AllPopularDiscussion.length> 0) { %>
+                            <% AllPopularDiscussion.forEach((PopularDiscussion, index)=>{ %>
+                              <% const ExpireDate=new Date(PopularDiscussion.expired_at); %>
+                                <% const date2=new Date(); %>
+                                  <% const daysDiff=Math.round((ExpireDate - date2)/(1000 * 60 * 60 * 24)) %>
+                                    <% if(daysDiff> -1){ %>
+                                      <% if(index < 5){ %>
+                                        <div class="dis-right-panel-item">
+                                          <div class="dis-r-panel-item-left">
+                                            <a href="/discussion-details/<%= PopularDiscussion.id %>"
+                                              title="<%= PopularDiscussion.topic %>"><i
+                                                class="fa-regular fa-arrow-right-long"></i>
+                                              <% if (PopularDiscussion.topic.length> 25) { %>
+                                                <%= PopularDiscussion.topic.substring(0, 25) + ' . . . ' %>
+                                                  <% } else { %>
+                                                    <%= PopularDiscussion.topic %>
+                                                      <% } %>
+                                            </a>
+                                          </div>
+                                          <div class="dis-r-panel-item-right">
+                                            <%= PopularDiscussion.total_comments %>
+                                          </div>
+                                        </div>
+                                        <% } %>
+                                          <% } %>
+                                            <% }) %>
+                                              <% } %>
+                        </div>
+                        <div class="discussions-right-panel">
+                          <h4>Newest Query</h4>
+                          <% if (AllLatestDiscussion && AllLatestDiscussion.length> 0) { %>
+                            <% AllLatestDiscussion.forEach((LatestDiscussion, index)=>{ %>
+                              <% const ExpireDate=new Date(LatestDiscussion.expired_at); %>
+                                <% const date2=new Date(); %>
+                                  <% const daysDiff=Math.round((ExpireDate - date2)/(1000 * 60 * 60 * 24)) %>
+                                    <% if(daysDiff> -1){ %>
+                                      <% if(index < 5 ){ %>
+                                        <div class="dis-right-panel-item">
+                                          <div class="dis-r-panel-item-left">
+                                            <a href="/discussion-details/<%= LatestDiscussion.id %>"
+                                              title="<%= LatestDiscussion.topic %>"><i
+                                                class="fa-regular fa-arrow-right-long"></i>
+                                              <% if (LatestDiscussion.topic.length> 25) { %>
+                                                <%= LatestDiscussion.topic.substring(0, 25) + ' . . . ' %>
+                                                  <% } else { %>
+                                                    <%= LatestDiscussion.topic %>
+                                                      <% } %>
+                                            </a>
+                                          </div>
+                                          <div class="dis-r-panel-item-right">
+                                            <%= LatestDiscussion.total_comments %>
+                                          </div>
+                                        </div>
+                                        <% } %>
+                                          <% } %>
+                                            <% }) %>
+                                              <% } %>
+                        </div>
+                      </div>
                     </div>
+                    <% } else { %>
+                      <div class="col-md-12">
+                        <div class="start-a-discussion-btn text-center">
+                          <% if(currentUserData){ %>
+                            <a href="#" class="btn-default btn-dark" data-bs-toggle="modal"
+                              data-bs-target="#creatediscussion"><i class="fa-solid fa-pen-to-square"></i> Raise A
+                              Query</a>
+                            <% } else { %>
+                              <a href="#" class="btn-default btn-dark mt-3 login">Raise A Query</a>
+                              <% } %>
+                        </div>
+                      </div>
+                      <% } %>
                 </div>
-              <% } %>
-            <% } %>
-          <% }) %>
-          <% } %>
-        </div>
-        </div>
-      </div>
-      <% } else { %>
-        <div class="col-md-12">
-          <div class="start-a-discussion-btn text-center">
-            <% if(currentUserData){ %>
-              <a href="#" class="btn-default btn-dark" data-bs-toggle="modal" data-bs-target="#creatediscussion"><i class="fa-solid fa-pen-to-square"></i> Raise A Query</a>
-            <% } else { %>
-              <a href="#" class="btn-default btn-dark mt-3 login">Raise A Query</a>
-            <% } %>
-          </div>
-        </div>
-        <% } %>
-    </div>
-  </div>
-</section>
+              </div>
+            </section>
 
-  <!-- The Modal -->
-  <div class="modal fade" id="creatediscussion">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <!-- Modal Header -->
-        <div class="modal-header">
-            <h2>Create Query</h2>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
-        <!-- Modal body -->
-        <div class="modal-body">
-          <form id="create_discussion_form">
-            <div id="sendreviewtags_discussion" class="custom-form">
-                <label style="background-color: #ffffff;">Tags</label>
-                <input type="text" name="tags" placeholder="Add tag" data-gtm-form-interact-field-id="0">
-             </div>
-             <div class="custom-form">
-                <label><span style="background-color: #ffffff;">Discussion Topic<span style="color: red;">*</span></span></label>
-                <textarea name="topic" id="search-topic" class="form-control mb-4" required></textarea>
-             </div>
-              <div class="custom-form">
-                <select name="location" class="form-control" required>
-                    <option value="Worldwide" selected>Worldwide</option>
-                    <% getCountries.forEach(function(country) { %>
-                        <option value="<%= country.name %>"><%= country.name %></option>
-                    <% }); %>
-                </select>
-            </div>
-             <div class="autofield-dropdown">
-            </div>
-             <% const date = new Date(); %>
-            <%
-                const year = date.getFullYear();
-                const month = String(date.getMonth() + 1).padStart(2, '0');
-                const day = String(date.getDate()).padStart(2, '0');
-                const formattedDate = `${year}-${month}-${day}`;
-            %>
-            <div class="row">
-                <div class="col-sm-6">
-                    <div class="custom-form">
-                        <label><span style="background-color: #ffffff;">From</span></label>
-                        <input type="date" class="form-control" name="from_data" value="<%= formattedDate %>" placeholder="" style="pointer-events: none;">
-                    </div>
+            <!-- The Modal -->
+            <div class="modal fade" id="creatediscussion">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <!-- Modal Header -->
+                  <div class="modal-header">
+                    <h2>Create Query</h2>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                  </div>
+                  <!-- Modal body -->
+                  <div class="modal-body">
+                    <form id="create_discussion_form">
+                      <div id="sendreviewtags_discussion" class="custom-form">
+                        <label style="background-color: #ffffff;">Tags</label>
+                        <input type="text" name="tags" placeholder="Add tag" data-gtm-form-interact-field-id="0">
+                      </div>
+                      <div class="custom-form">
+                        <label><span style="background-color: #ffffff;">Discussion Topic<span
+                              style="color: red;">*</span></span></label>
+                        <textarea name="topic" id="search-topic" class="form-control mb-4" required></textarea>
+                      </div>
+                      <div class="custom-form">
+                        <select name="location" id="country" class="form-control" required>
+                          <option value="Worldwide" selected>Worldwide</option>
+                          <% getCountries.forEach(function(country) { %>
+                            <option value="<%= country.name %>">
+                              <%= country.name %>
+                            </option>
+                            <% }); %>
+                        </select>
+                      </div>
+                      <div class="autofield-dropdown">
+                      </div>
+                      <% const date=new Date(); %>
+                        <% const year=date.getFullYear(); const month=String(date.getMonth() + 1).padStart(2, '0' );
+                          const day=String(date.getDate()).padStart(2, '0' ); const
+                          formattedDate=`${year}-${month}-${day}`; %>
+                          <div class="row">
+                            <div class="col-sm-6">
+                              <div class="custom-form">
+                                <label><span style="background-color: #ffffff;">From</span></label>
+                                <input type="date" class="form-control" name="from_data" value="<%= formattedDate %>"
+                                  placeholder="" style="pointer-events: none;">
+                              </div>
+                            </div>
+                            <% const nextyear=date.getFullYear() + 1; // Add 1 to the current year const
+                              nextmonth=String(date.getMonth() + 1).padStart(2, '0' ); const
+                              nextday=String(date.getDate()).padStart(2, '0' ); const
+                              nextYearDate=`${nextyear}-${nextmonth}-${nextday}`; %>
+                              <div class="col-sm-6">
+                                <div class="custom-form">
+                                  <label><span style="background-color: #ffffff;">To</span></label>
+                                  <input type="date" class="form-control" name="expire_date" value="<%= nextYearDate%>"
+                                    style="padding-right: 18px;">
+                                </div>
+                              </div>
+                          </div>
+                          <% if(currentUserData){ %>
+                            <div class="custom-form mb-sm-0" style="margin-top: 22px;">
+                              <input type="hidden" name="user_id" value="<%= currentUserData.user_id %>" />
+                              <input type="submit" class="btn-default btn-warning" value="Submit">
+                            </div>
+                            <% } %>
+                    </form>
+                  </div>
+                  <div class="register-now frm-loading" style="display: none;">
+                    <span class="indicator-progress">Please wait...
+                      <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                    </span>
+                  </div>
+                  <div
+                    style=" width: 100%; text-align: center; display: block; border: 2px solid #fccb06; padding: 6px; margin-top: 20px; border-radius: 5px; display: none;"
+                    class="response-message"></div>
                 </div>
-                <%
-                    const nextyear = date.getFullYear() + 1; // Add 1 to the current year
-                    const nextmonth = String(date.getMonth() + 1).padStart(2, '0');
-                    const nextday = String(date.getDate()).padStart(2, '0');
-                    const nextYearDate = `${nextyear}-${nextmonth}-${nextday}`;
-                %>
-                <div class="col-sm-6">
-                    <div class="custom-form">
-                        <label><span style="background-color: #ffffff;">To</span></label>
-                        <input type="date" class="form-control" name="expire_date" value="<%= nextYearDate%>" style="padding-right: 18px;">
-                    </div>
-                </div>
+              </div>
             </div>
-            <% if(currentUserData){ %>
-            <div class="custom-form mb-sm-0" style="margin-top: 22px;">
-                <input type="hidden" name="user_id" value="<%= currentUserData.user_id %>" />
-                <input type="submit" class="btn-default btn-warning" value="Submit">
-            </div>
-            <% } %>
-          </form>
-        </div>
-        <div class="register-now frm-loading" style="display: none;">
-            <span class="indicator-progress">Please wait...
-               <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
-            </span>
-         </div>
-         <div style=" width: 100%; text-align: center; display: block; border: 2px solid #fccb06; padding: 6px; margin-top: 20px; border-radius: 5px; display: none;" class="response-message"></div>
-      </div>
-    </div>
-  </div>
-<!-- ============== Discussions section End =============== -->
+            <!-- ============== Discussions section End =============== -->
 
- 
-  
-  <!-- ============== Social Widgets Start =============== -->
-  <!--<section class="main-content social-widgets-content py-0">
+
+
+            <!-- ============== Social Widgets Start =============== -->
+            <!--<section class="main-content social-widgets-content py-0">
     <div class="social-widgets-wrapper">
       <div class="video-slider-left">
         <h4>Watch Us on</h4>
@@ -1168,12 +1241,12 @@
       </div>
     </div>
   </section>-->
-  <!-- ============== Social Widgets End =============== -->
+            <!-- ============== Social Widgets End =============== -->
 
-  <!-- ============== Business Start =============== -->
-  <section class="main-content business-content pt-md-0">
-    <div class="container">
-      <!-- <div class="toggle-blink text-center">
+            <!-- ============== Business Start =============== -->
+            <section class="main-content business-content pt-md-0">
+              <div class="container">
+                <!-- <div class="toggle-blink text-center">
         <span>Toogle to change</span>
         <div class="toogle-pointer-blink">
           <i class="fa-solid fa-arrow-down"></i>
@@ -1182,241 +1255,253 @@
           <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked">
         </div>
       </div> -->
-      <div class="row">
-        <!-- <div class="col-md-12">
+                <div class="row">
+                  <!-- <div class="col-md-12">
           <div class="business-left">
             <%- meta_values_array.for_business -%>
           </div>
         </div> -->
-        <div class="col-md-12">
-          <%- meta_values_array.for_customer -%>
-          <!-- <div class="business-right">
+                  <div class="col-md-12">
+                    <%- meta_values_array.for_customer -%>
+                      <!-- <div class="business-right">
           </div> -->
-        </div>
-      </div>
-    </div>
-    <div class="business-left-cartoon" data-aos="zoom-in-right" data-aos-delay="500">
-      <img src="/front-end/images/business-left-cartoon-img.png" alt="img" width="373" height="248" loading="lazy">
-    </div>
-    <div class="business-right-cartoon" data-aos="zoom-in-left" data-aos-delay="1200">
-      <img src="/front-end/images/business-right-cartoon-img.png" alt="img" width="358" height="270" loading="lazy">
-    </div>
-  </section>
-  <!-- ============== Business End =============== -->
-
-  <!-- ============== Blog Start =============== -->
-  <section class="main-content landing-blog-content">
-    <div class="container">
-      <h2 class="main-head text-center">Did You <span>Know?</span></h2>
-      <% if (homePosts.length> 0) { %>
-        <div class="row">
-          <div class="col-md-6">
-            <div class="blog-left position-relative" data-aos="fade-right">
-              <img src="<%= homePosts[0].thumbnail %>" alt="<%= homePosts[0].thumbnail_alt %>" loading="lazy"
-                width="564" height="387" class="w-100">
-              <div class="blog-overlay-caption">
-                <span class="date-tag">
-                  <%= homePosts[0].publish_date %>
-                </span>
-                <h3 title="<%= homePosts[0].title %>"><a href="<%= homePosts[0].permalink %>">
-                    <%= homePosts[0].title %>
-                  </a> <span><a href="<%= homePosts[0].permalink %>"><i class="fa-solid fa-angle-right"></i></a></span>
-                </h3>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <% if (homePosts.length> 1) { %>
-              <div class="blog-right position-relative" data-aos="fade-left">
-                <% let counter=0; %>
-                  <% homePosts.forEach((post)=> { %>
-                    <% if (counter> 0) { %>
-                      <div class="row">
-                        <div class="col-6 my-auto">
-                          <div class="small-blog-img">
-                            <img src="<%= post.thumbnail %>" alt="<%= post.thumbnail_alt %>" loading="lazy" width="264"
-                              height="215">
+              <div class="business-left-cartoon" data-aos="zoom-in-right" data-aos-delay="500">
+                <img src="/front-end/images/business-left-cartoon-img.png" alt="img" width="373" height="248"
+                  loading="lazy">
+              </div>
+              <div class="business-right-cartoon" data-aos="zoom-in-left" data-aos-delay="1200">
+                <img src="/front-end/images/business-right-cartoon-img.png" alt="img" width="358" height="270"
+                  loading="lazy">
+              </div>
+            </section>
+            <!-- ============== Business End =============== -->
+
+            <!-- ============== Blog Start =============== -->
+            <section class="main-content landing-blog-content">
+              <div class="container">
+                <h2 class="main-head text-center">Did You <span>Know?</span></h2>
+                <% if (homePosts.length> 0) { %>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="blog-left position-relative" data-aos="fade-right">
+                        <img src="<%= homePosts[0].thumbnail %>" alt="<%= homePosts[0].thumbnail_alt %>" loading="lazy"
+                          width="564" height="387" class="w-100">
+                        <div class="blog-overlay-caption">
+                          <span class="date-tag">
+                            <%= homePosts[0].publish_date %>
+                          </span>
+                          <h3 title="<%= homePosts[0].title %>"><a href="<%= homePosts[0].permalink %>">
+                              <%= homePosts[0].title %>
+                            </a> <span><a href="<%= homePosts[0].permalink %>"><i
+                                  class="fa-solid fa-angle-right"></i></a></span>
+                          </h3>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <% if (homePosts.length> 1) { %>
+                        <div class="blog-right position-relative" data-aos="fade-left">
+                          <% let counter=0; %>
+                            <% homePosts.forEach((post)=> { %>
+                              <% if (counter> 0) { %>
+                                <div class="row">
+                                  <div class="col-6 my-auto">
+                                    <div class="small-blog-img">
+                                      <img src="<%= post.thumbnail %>" alt="<%= post.thumbnail_alt %>" loading="lazy"
+                                        width="264" height="215">
+                                    </div>
+                                  </div>
+                                  <div class="col-6 my-auto">
+                                    <div class="small-blog-text">
+                                      <span class="date-tag">
+                                        <%= post.publish_date %>
+                                      </span>
+                                      <h4 title="<%= post.title %>" class="m-0"><a href="<%= post.permalink %>">
+                                          <%= post.title %>
+                                        </a>
+                                      </h4>
+                                    </div>
+                                  </div>
+                                </div>
+                                <% } %>
+                                  <% counter++; %>
+                                    <% }); %>
+                        </div>
+                        <% } %>
+                    </div>
+                  </div>
+                  <% } %>
+                    <div class="text-center">
+                      <a href="<%= globalData.BLOG_URL %>" class="view-more"><span class="position-relative"><i
+                            class="fa-solid fa-angle-right"></i>View All</span></a>
+                    </div>
+              </div>
+            </section>
+            <!-- ============== Blog End =============== -->
+
+            <!-- ============== About Start =============== -->
+            <section class="main-content about-content">
+              <div class="container">
+                <div class="row">
+                  <div class="col-md-6 my-auto">
+                    <div class="about-left-slider my-3" data-aos="fade-right">
+                      <div class="about-50-left">
+                        <div class="gr-slider1">
+                          <div class="item">
+                            <img src="/<%= meta_values_array.cus_right_img_1 %>" alt="img" width="194" height="228">
+                          </div>
+                          <div class="item">
+                            <img src="/<%= meta_values_array.cus_right_img_2 %>" alt="img" width="194" height="228">
                           </div>
                         </div>
-                        <div class="col-6 my-auto">
-                          <div class="small-blog-text">
-                            <span class="date-tag">
-                              <%= post.publish_date %>
-                            </span>
-                            <h4 title="<%= post.title %>" class="m-0"><a href="<%= post.permalink %>">
-                                <%= post.title %>
-                              </a>
-                            </h4>
+                        <div class="gr-slider2">
+                          <div class="item">
+                            <img src="/<%= meta_values_array.cus_right_img_3 %>" alt="img" width="212" height="312">
+                          </div>
+                          <div class="item">
+                            <img src="/<%= meta_values_array.cus_right_img_4 %>" alt="img" width="212" height="312">
                           </div>
                         </div>
                       </div>
-                      <% } %>
-                        <% counter++; %>
-                          <% }); %>
+                      <div class="about-50-right">
+                        <div class="gr-slider3">
+                          <div class="item">
+                            <img src="/<%= meta_values_array.cus_right_img_5 %>" alt="img" width="298" height="434">
+                          </div>
+                          <div class="item">
+                            <img src="/<%= meta_values_array.cus_right_img_6 %>" alt="img" width="298" height="434">
+                          </div>
+                        </div>
+                        <div class="gr-slider4">
+                          <div class="item">
+                            <img src="/<%= meta_values_array.cus_right_img_7 %>" alt="img" width="252" height="250">
+                          </div>
+                          <div class="item">
+                            <img src="/<%= meta_values_array.cus_right_img_8 %>" alt="img" width="252" height="250">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="about-overlay-object1"><img src="/front-end/images/overlay-object1.png" alt="img"
+                          width="151" height="158"></div>
+                    </div>
+                  </div>
+                  <div class="col-md-6 my-auto">
+                    <div class="about-right my-3" data-aos="fade-left">
+                      <%- meta_values_array.cus_right_content %>
+                        <% if(meta_values_array.cus_right_button_link){ %>
+                          <div class="text-sm-start text-center">
+                            <a href="<%= meta_values_array.cus_right_button_link %>" class="view-more mt-0">
+                              <span class="position-relative"><i class="fa-solid fa-angle-right"></i>
+                                <%= meta_values_array.cus_right_button_text %>
+                              </span>
+                            </a>
+                          </div>
+                          <% } %>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <% } %>
-          </div>
-        </div>
-        <% } %>
-          <div class="text-center">
-            <a href="<%= globalData.BLOG_URL %>" class="view-more"><span class="position-relative"><i
-                  class="fa-solid fa-angle-right"></i>View All</span></a>
-          </div>
-    </div>
-  </section>
-  <!-- ============== Blog End =============== -->
+              <div class="tooltip-pop" data-aos="zoom-in-left">
+                <h4><span>Facts</span></h4>
+                <p class="m-0">
+                  <%= meta_values_array.cus_right_facts_popup %>
+                </p>
+              </div>
+            </section>
+            <!-- ============== About End =============== -->
 
-  <!-- ============== About Start =============== -->
-  <section class="main-content about-content">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-6 my-auto">
-          <div class="about-left-slider my-3" data-aos="fade-right">
-            <div class="about-50-left">
-              <div class="gr-slider1">
-                <div class="item">
-                  <img src="/<%= meta_values_array.cus_right_img_1 %>" alt="img" width="194" height="228">
-                </div>
-                <div class="item">
-                  <img src="/<%= meta_values_array.cus_right_img_2 %>" alt="img" width="194" height="228">
-                </div>
-              </div>
-              <div class="gr-slider2">
-                <div class="item">
-                  <img src="/<%= meta_values_array.cus_right_img_3 %>" alt="img" width="212" height="312">
-                </div>
-                <div class="item">
-                  <img src="/<%= meta_values_array.cus_right_img_4 %>" alt="img" width="212" height="312">
-                </div>
-              </div>
-            </div>
-            <div class="about-50-right">
-              <div class="gr-slider3">
-                <div class="item">
-                  <img src="/<%= meta_values_array.cus_right_img_5 %>" alt="img" width="298" height="434">
-                </div>
-                <div class="item">
-                  <img src="/<%= meta_values_array.cus_right_img_6 %>" alt="img" width="298" height="434">
-                </div>
-              </div>
-              <div class="gr-slider4">
-                <div class="item">
-                  <img src="/<%= meta_values_array.cus_right_img_7 %>" alt="img" width="252" height="250">
-                </div>
-                <div class="item">
-                  <img src="/<%= meta_values_array.cus_right_img_8 %>" alt="img" width="252" height="250">
-                </div>
-              </div>
-            </div>
-            <div class="about-overlay-object1"><img src="/front-end/images/overlay-object1.png" alt="img" width="151"
-                height="158"></div>
-          </div>
-        </div>
-        <div class="col-md-6 my-auto">
-          <div class="about-right my-3" data-aos="fade-left">
-            <%- meta_values_array.cus_right_content %>
-              <% if(meta_values_array.cus_right_button_link){ %>
-                <div class="text-sm-start text-center">
-                  <a href="<%= meta_values_array.cus_right_button_link %>" class="view-more mt-0">
-                    <span class="position-relative"><i class="fa-solid fa-angle-right"></i>
-                      <%= meta_values_array.cus_right_button_text %>
-                    </span>
-                  </a>
-                </div>
-                <% } %>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="tooltip-pop" data-aos="zoom-in-left">
-      <h4><span>Facts</span></h4>
-      <p class="m-0">
-        <%= meta_values_array.cus_right_facts_popup %>
-      </p>
-    </div>
-  </section>
-  <!-- ============== About End =============== -->
-
-  <!-- ============== About Start =============== -->
-  <section class="main-content about-content2">
-    <div class="container">
-      <div class="row flex-md-row-reverse">
-        <div class="col-md-6 my-auto">
-          <div class="about-left-slider my-3" data-aos="fade-left">
-            <div class="about-50-right">
-              <div class="gr-slider3">
-                <div class="item">
-                  <img src="/<%= meta_values_array.org_responsibility_img_1 %>" alt="img" width="298" height="434">
-                </div>
-                <div class="item">
-                  <img src="/<%= meta_values_array.org_responsibility_img_2 %>" alt="img" width="298" height="434">
+            <!-- ============== About Start =============== -->
+            <section class="main-content about-content2">
+              <div class="container">
+                <div class="row flex-md-row-reverse">
+                  <div class="col-md-6 my-auto">
+                    <div class="about-left-slider my-3" data-aos="fade-left">
+                      <div class="about-50-right">
+                        <div class="gr-slider3">
+                          <div class="item">
+                            <img src="/<%= meta_values_array.org_responsibility_img_1 %>" alt="img" width="298"
+                              height="434">
+                          </div>
+                          <div class="item">
+                            <img src="/<%= meta_values_array.org_responsibility_img_2 %>" alt="img" width="298"
+                              height="434">
+                          </div>
+                        </div>
+                        <div class="gr-slider4">
+                          <div class="item">
+                            <img src="/<%= meta_values_array.org_responsibility_img_3 %>" alt="img" width="252"
+                              height="250">
+                          </div>
+                          <div class="item">
+                            <img src="/<%= meta_values_array.org_responsibility_img_4 %>" alt="img" width="252"
+                              height="250">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="about-50-left">
+                        <div class="gr-slider1">
+                          <div class="item">
+                            <img src="/<%= meta_values_array.org_responsibility_img_5 %>" alt="img" width="194"
+                              height="228">
+                          </div>
+                          <div class="item">
+                            <img src="/<%= meta_values_array.org_responsibility_img_6 %>" alt="img" width="194"
+                              height="228">
+                          </div>
+                        </div>
+                        <div class="gr-slider2">
+                          <div class="item">
+                            <img src="/<%= meta_values_array.org_responsibility_img_7 %>" alt="img" width="212"
+                              height="312">
+                          </div>
+                          <div class="item">
+                            <img src="/<%= meta_values_array.org_responsibility_img_8 %>" alt="img" width="212"
+                              height="312">
+                          </div>
+                        </div>
+                      </div>
+                      <div class="about-overlay-object1"><img src="/front-end/images/overlay-object1.png" alt="img"
+                          width="151" height="158"></div>
+                    </div>
+                  </div>
+                  <div class="col-md-6 my-auto">
+                    <div class="about-right my-3" data-aos="fade-right">
+                      <%- meta_values_array.org_responsibility_content %>
+                        <% if(meta_values_array.org_responsibility_buttton_link){ %>
+                          <div class="text-sm-start text-center"><a
+                              href="<%= meta_values_array.org_responsibility_buttton_link %>"
+                              class="view-more mt-0"><span class="position-relative"><i
+                                  class="fa-solid fa-angle-right"></i>
+                                <%= meta_values_array.org_responsibility_buttton_text %>
+                              </span></a></div>
+                          <% } %>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div class="gr-slider4">
-                <div class="item">
-                  <img src="/<%= meta_values_array.org_responsibility_img_3 %>" alt="img" width="252" height="250">
-                </div>
-                <div class="item">
-                  <img src="/<%= meta_values_array.org_responsibility_img_4 %>" alt="img" width="252" height="250">
-                </div>
+              <div class="tooltip-pop" data-aos="zoom-in-right">
+                <h4>Facts</h4>
+                <p class="m-0">
+                  <%= meta_values_array.org_responsibility_facts_popup %>
+                </p>
               </div>
-            </div>
-            <div class="about-50-left">
-              <div class="gr-slider1">
-                <div class="item">
-                  <img src="/<%= meta_values_array.org_responsibility_img_5 %>" alt="img" width="194" height="228">
-                </div>
-                <div class="item">
-                  <img src="/<%= meta_values_array.org_responsibility_img_6 %>" alt="img" width="194" height="228">
-                </div>
-              </div>
-              <div class="gr-slider2">
-                <div class="item">
-                  <img src="/<%= meta_values_array.org_responsibility_img_7 %>" alt="img" width="212" height="312">
-                </div>
-                <div class="item">
-                  <img src="/<%= meta_values_array.org_responsibility_img_8 %>" alt="img" width="212" height="312">
-                </div>
-              </div>
-            </div>
-            <div class="about-overlay-object1"><img src="/front-end/images/overlay-object1.png" alt="img" width="151"
-                height="158"></div>
-          </div>
-        </div>
-        <div class="col-md-6 my-auto">
-          <div class="about-right my-3" data-aos="fade-right">
-            <%- meta_values_array.org_responsibility_content %>
-              <% if(meta_values_array.org_responsibility_buttton_link){ %>
-                <div class="text-sm-start text-center"><a
-                    href="<%= meta_values_array.org_responsibility_buttton_link %>" class="view-more mt-0"><span
-                      class="position-relative"><i class="fa-solid fa-angle-right"></i>
-                      <%= meta_values_array.org_responsibility_buttton_text %>
-                    </span></a></div>
-                <% } %>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="tooltip-pop" data-aos="zoom-in-right">
-      <h4>Facts</h4>
-      <p class="m-0">
-        <%= meta_values_array.org_responsibility_facts_popup %>
-      </p>
-    </div>
-  </section>
-  <section class="main-content about-digital-content">
-    <div class="container">
-      <div class="row flex-md-row-reverse">
-        <div class="col-md-6 my-auto ms-auto">
-          <div class="about-right my-3 text-md-start text-center" data-aos="fade-left">
-            <%- meta_values_array.about_us_content %>
-              <a href="<%= meta_values_array.about_us_button_link %>" class="view-more mt-3"><span
-                  class="position-relative"><i class="fa-solid fa-angle-right"></i>
-                  <%= meta_values_array.about_us_button_text %>
-                </span></a>
-          </div>
-        </div>
-        <!-- <div class="col-md-6 my-auto">
+            </section>
+            <section class="main-content about-digital-content">
+              <div class="container">
+                <div class="row flex-md-row-reverse">
+                  <div class="col-md-6 my-auto ms-auto">
+                    <div class="about-right my-3 text-md-start text-center" data-aos="fade-left">
+                      <%- meta_values_array.about_us_content %>
+                        <a href="<%= meta_values_array.about_us_button_link %>" class="view-more mt-3"><span
+                            class="position-relative"><i class="fa-solid fa-angle-right"></i>
+                            <%= meta_values_array.about_us_button_text %>
+                          </span></a>
+                    </div>
+                  </div>
+                  <!-- <div class="col-md-6 my-auto">
           <div class="about-left my-md-0 mt-3 mb-0" data-aos="fade-right">
             <picture>
               <source media="(max-width:575px)" srcset="/front-end/images/about-dummy-mbl-img.jpg" width="280" height="186">
@@ -1425,338 +1510,395 @@
             </picture>
           </div>
         </div> -->
-      </div>
-    </div>
-    <div class="about-digital-wrold" data-aos="fade-right">
-      <picture>
-        <source media="(max-width:575px)" srcset="/front-end/images/about-img3-tab.png" width="500" height="296">
-        <source media="(max-width:767px)" srcset="/front-end/images/about-img3-tab.png" width="500" height="296">
-        <img src="/<%= meta_values_array.about_us_img %>" alt="img" width="1063" height="763" loading="lazy">
-      </picture>
-    </div>
-  </section>
-  <!-- ============== About End =============== -->
-  <!-- ============== Map Content Start =============== -->
-  <section class="main-content bottom-main-content map-content">
-    <div class="container">
-      <picture>
-        <source media="(max-width:575px)" srcset="/<%= meta_values_array.map_img %>" width="535" height="323">
-        <source media="(max-width:767px)" srcset="/<%= meta_values_array.map_img %>" width="603" height="364">
-        <img src="/<%= meta_values_array.map_img %>" alt="image" loading="lazy">
-      </picture>
-    </div>
-    <div class="overlay-object5"><img src="/front-end/images/overlay-object5.png" alt="img" width="118" height="315"
-        loading="lazy"></div>
-    <div class="overlay-object6"><img src="/front-end/images/overlay-object6.png" alt="img" width="81" height="215"
-        loading="lazy"></div>
-  </section>
-  <!-- ============== Map Content End =============== -->
-  <div class="floating-emoji">
-    <a href="" data-bs-toggle="tooltip" data-bs-placement="left" title="May I Help You?"><img
-        src="/front-end/images/emoji-gif.gif" alt="img" width="77" height="77"></a>
-  </div>
+                </div>
+              </div>
+              <div class="about-digital-wrold" data-aos="fade-right">
+                <picture>
+                  <source media="(max-width:575px)" srcset="/front-end/images/about-img3-tab.png" width="500"
+                    height="296">
+                  <source media="(max-width:767px)" srcset="/front-end/images/about-img3-tab.png" width="500"
+                    height="296">
+                  <img src="/<%= meta_values_array.about_us_img %>" alt="img" width="1063" height="763" loading="lazy">
+                </picture>
+              </div>
+            </section>
+            <!-- ============== About End =============== -->
+            <!-- ============== Map Content Start =============== -->
+            <section class="main-content bottom-main-content map-content">
+              <div class="container">
+                <picture>
+                  <source media="(max-width:575px)" srcset="/<%= meta_values_array.map_img %>" width="535" height="323">
+                  <source media="(max-width:767px)" srcset="/<%= meta_values_array.map_img %>" width="603" height="364">
+                  <img src="/<%= meta_values_array.map_img %>" alt="image" loading="lazy">
+                </picture>
+              </div>
+              <div class="overlay-object5"><img src="/front-end/images/overlay-object5.png" alt="img" width="118"
+                  height="315" loading="lazy"></div>
+              <div class="overlay-object6"><img src="/front-end/images/overlay-object6.png" alt="img" width="81"
+                  height="215" loading="lazy"></div>
+            </section>
+            <!-- ============== Map Content End =============== -->
+            <div class="floating-emoji">
+              <a href="" data-bs-toggle="tooltip" data-bs-placement="left" title="May I Help You?"><img
+                  src="/front-end/images/emoji-gif.gif" alt="img" width="77" height="77"></a>
+            </div>
   </div>
   <%- include('common/footer') -%>
-  <style>
-    #sendreviewtags_discussion {
-       border: 2px solid #fccb06;
-       padding: 5px 9px;
-       border-radius: 6px;
-       margin-bottom: 32px;
-    }
-    #sendreviewtags_discussion > span {
-       cursor: pointer;
-       display: block;
-       float: left;
-       color: #fff;
-       background: #fccb06;
-       padding: 7px;
-       padding-right: 25px;
-       margin: 4px;
-       border-radius: 4px;
-   }
-   #sendreviewtags_discussion > span:after {
-    position: absolute;
-    content: "×";
-    border: 1px solid;
-    padding: 2px 5px;
-    margin-left: 3px;
-    font-size: 11px;
- }
- #sendreviewtags_discussion > input {
-    background: #f2f2f2;
-    border: 0;
-    margin: 4px;
-    padding: 7px;
-    width: auto;
-    border-radius: 4px;
-    outline: none;
- }
+    <style>
+      #sendreviewtags_discussion {
+        border: 2px solid #fccb06;
+        padding: 5px 9px;
+        border-radius: 6px;
+        margin-bottom: 32px;
+      }
 
-.search-container {
-  margin-bottom: 20px;
-}
+      #sendreviewtags_discussion>span {
+        cursor: pointer;
+        display: block;
+        float: left;
+        color: #fff;
+        background: #fccb06;
+        padding: 7px;
+        padding-right: 25px;
+        margin: 4px;
+        border-radius: 4px;
+      }
 
-.search-container input[type=text] {
-  padding: 10px;
-  margin-bottom: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
+      #sendreviewtags_discussion>span:after {
+        position: absolute;
+        content: "×";
+        border: 1px solid;
+        padding: 2px 5px;
+        margin-left: 3px;
+        font-size: 11px;
+      }
 
-  #companyDropdown option {
-    color: black;
-}
-#state option {
-    color: black;
-}
-#country option {
-    color: black;
-}
+      #sendreviewtags_discussion>input {
+        background: #f2f2f2;
+        border: 0;
+        margin: 4px;
+        padding: 7px;
+        width: auto;
+        border-radius: 4px;
+        outline: none;
+      }
 
-.select2-container--default .select2-selection--single {
-    height: 50px;
-    line-height: 50px; 
-}
+      .search-container {
+        margin-bottom: 20px;
+      }
 
- </style>
+      .search-container input[type=text] {
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
 
- 
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+      #companyDropdown option {
+        color: black;
+      }
 
-   <script>
-    var countryId;
-    var country;
-    var state;
-    var countrynamess = '<%= countryname%>';
-    console.log('countryname:', countrynamess);
-    console.log("maincountryId",countryId);
-    console.log("country",country);
+      #state option {
+        color: black;
+      }
 
-</script>
+      #country option {
+        color: black;
+      }
 
-<script>
-jQuery(document).ready(function ($) {
-
-  $("#sendreviewtags_discussion input").on({
-       focusout : function() {
-          var txt = this.value.replace(/[^a-z0-9+\-.\@ ]/ig, ''); // allowed characters
-          if (txt) $("<span/>", { text: txt.toLowerCase().replace(/\s/g, ' '), insertBefore: this });
-          this.value = "";
-       },
-       keyup : function(ev) {
-         // if: comma|enter (delimit more keyCodes with | pipe)
-         if (/^(188|13)$/.test(ev.which)) $(this).focusout();
-       }
-     });
-   
-     $('#sendreviewtags_discussion').on('click', 'span', function() {
-       if(confirm("Remove "+ $(this).text() +"?")) $(this).remove(); 
-     });  
-   
-     // /////////////////////////////////////// Auto Field Dropdown Start
-     var timer;
-     $("#search-input").keyup(function () {
-       console.log("Keyup triggered");
-       clearTimeout(timer);
-       var keyword = $(this).val();
-       if (keyword.length >= 3) {
-         timer = setTimeout(function () {
-           console.log("Performing search for:", keyword);
-           performSearch(keyword);
-         }, 500);
-       } else {
-         $('.autofield-dropdown').hide();
-         $('.autofield-dropdown').html(''); // Clear search results if less than three letters
-       }
-     });
-   
-     $("#search-input-review").keyup(function () {
-       clearTimeout(timer);
-       var keyword = $(this).val();
-       if (keyword.length >= 3) {
-         timer = setTimeout(function () {
-           performSearchForReview(keyword);
-         }, 500);
-       } else {
-         $('.autofield-dropdown-review').hide('');
-         $('.autofield-dropdown-review').html(''); // Clear search results if less than three letters
-         $('#review-address').val('');
-       }
-     });
-   
+      .select2-container--default .select2-selection--single {
+        height: 50px;
+        line-height: 50px;
+      }
+    </style>
 
 
-    var country_name = "<%= countryname %>";
-     //console.log("country_name from server:", country_name);
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-    if (country_name) {
-      $('#country').val(country_name).trigger('change');
-    }
+    <script>
+      var countryId;
+      var country;
+      var state;
+      console.log("maincountryId", countryId);
+      console.log("country", country);
+      $(document).ready(function () {
+        //   $('#country').on('change', function() {
+        //   country = $(this).val(); 
+        //   console.log("country_IDcountry",country);
 
-    $('#country').on('change', function() {
-        country_name = $(this).val();
-        console.log('Selected country:', country_name);
-        $('#state').val('').trigger('change');
-        $('#city').val('');
-        $('#search-input-review').val('');
-    });
-
-
-     function performSearch(keyword) {
-       $('.autofield-dropdown').css('height', "200px");
-       const data = {
-         keyword: keyword,
-         country: country_name
-       };
-       console.log("data",data);
-       $.ajax({
-         url: 'api/search-company',
-         method: 'POST',
-         data: { keyword: keyword,country: country_name },
-         ContentType: 'application/json',
-         success: function (data) {
-           if (data.status == 'ok') {
-             if (data.data.length > 0) {
-               let respData = data.data;
-               let html = '<ul class="p-0 m-0">';
-               respData.forEach(company => {
-                 html += '<li><a href="#" data-resulttitle="' + company.company_name + '" data-resultexcerpt="' + company.about_company + '" data-resultpermalink="/company/' + company.ID + '" >' + company.company_name + '</a></li>';
-               });
-               html += '</ul>';
-               $('.autofield-dropdown').html(html);
-               $('.autofield-dropdown').show();
-               if(data.data.length < 4){
-                 var divlength = data.data.length*48;
-                 $('.autofield-dropdown').css('height', divlength + "px");
-               }
-             } else {
-               $('.autofield-dropdown').hide();
-               $('.autofield-dropdown').html('');
-             }
-           } else {
-             $('.autofield-dropdown').hide();
-             $('.autofield-dropdown').html('');
-           }
-         },
-         error: function (error) {
-
-         }
-       });
-
-     }
-     // Company Search For review
-     function performSearchForReview(keyword) {
-       $('.autofield-dropdown-review').css('height', "200px");
-       const data = {
-         keyword: keyword,
-         country: country_name
-       };
-       $.ajax({
-         url: 'api/search-company',
-         method: 'POST',
-         data: { keyword: keyword, country: country_name },
-         ContentType: 'application/json',
-         success: function (data) {
-           if (data.status == 'ok') {
-             if (data.data.length > 0) {
-               let respData = data.data;
-               let html = '<ul class="p-0 m-0">';
-               respData.forEach(company => {
-                 html += '<li><a href="#" data-resulttitle="' + company.company_name + '" data-companyID="' + company.ID + '" data-companyAddress="' + company.main_address + '" data-companyPin="' + company.main_address_pin_code + '" >' + company.company_name + '</a></li>';
-               });
-               html += '</ul>';
-               $('.autofield-dropdown-review').html(html);
-               $('.autofield-dropdown-review').show();
-               if(data.data.length < 4){
-                 var divlength = data.data.length*48;
-                 $('.autofield-dropdown-review').css('height', divlength + "px");
-               }
-
-               $('.autofield-dropdown-review a').click(function(e) {
-                  e.preventDefault();
-                  console.log("Clicked element data:", $(this).data()); 
-                  var companyName = $(this).data('resulttitle');
-                  console.log("Selected company name:", companyName); 
-                  console.log("Event:", e); // Log the event object
-                  // Do something with the selected company name
-                  // Hide the dropdown
-
-                
-
-                  $('.autofield-dropdown-review').hide();
-              });
-
-             } else {
-               $('.autofield-dropdown-review').hide();
-               $('.autofield-dropdown-review').html('');
-             }
-           } else {
-             $('.autofield-dropdown-review').hide();
-             $('.autofield-dropdown-review').html('');
-           }
-         },
-         error: function (error) {
-           $('.autofield-dropdown-review').hide();
-           $('.autofield-dropdown-review').html('');
-         }
-       });
-
-     }
+        //   $.ajax({
+        //     url: '/getCountryIdByName',
+        //     method: 'GET',
+        //     data: { countryShortName: country },
+        //     success: function(response) {
+        //         countryId = response.countryId; 
+        //         console.log("country_IDddd", countryId);
+        //         handleCountryChange();
+        //     },
+        //     error: function(err) {
+        //         console.error('Error fetching country ID:', err);
+        //     }
+        // });
+        // });
 
 
 
-     $('#country').select2({
-        placeholder: "Select a country",
-        allowClear: true, 
-        width: '100%'
-    });
-   
-    $('#search-input-review').on('input', function() {
-    $('.autofield-dropdown-review').on('click', 'a', function(e) {
-        e.preventDefault();
-        const selectedCompanyName = $(this).data('resulttitle');
-        console.log('Selected company name from dropdown:', selectedCompanyName);
-        if (selectedCompanyName) {
-            $.ajax({
+
+
+
+
+
+      });
+    </script>
+
+    <script>
+      jQuery(document).ready(function ($) {
+
+        $("#sendreviewtags_discussion input").on({
+          focusout: function () {
+            var txt = this.value.replace(/[^a-z0-9+\-.\@ ]/ig, ''); // allowed characters
+            if (txt) $("<span/>", { text: txt.toLowerCase().replace(/\s/g, ' '), insertBefore: this });
+            this.value = "";
+          },
+          keyup: function (ev) {
+            // if: comma|enter (delimit more keyCodes with | pipe)
+            if (/^(188|13)$/.test(ev.which)) $(this).focusout();
+          }
+        });
+
+        $('#sendreviewtags_discussion').on('click', 'span', function () {
+          if (confirm("Remove " + $(this).text() + "?")) $(this).remove();
+        });
+
+        // /////////////////////////////////////// Auto Field Dropdown Start
+        var timer;
+        $("#search-input").keyup(function () {
+          console.log("Keyup triggered");
+          clearTimeout(timer);
+          var keyword = $(this).val();
+          if (keyword.length >= 3) {
+            timer = setTimeout(function () {
+              console.log("Performing search for:", keyword);
+              performSearch(keyword);
+            }, 500);
+          } else {
+            $('.autofield-dropdown').hide();
+            $('.autofield-dropdown').html(''); // Clear search results if less than three letters
+          }
+        });
+
+        $("#search-input-review").keyup(function () {
+          clearTimeout(timer);
+          var keyword = $(this).val();
+          if (keyword.length >= 3) {
+            timer = setTimeout(function () {
+              performSearchForReview(keyword);
+            }, 500);
+          } else {
+            $('.autofield-dropdown-review').hide('');
+            $('.autofield-dropdown-review').html(''); // Clear search results if less than three letters
+            $('#review-address').val('');
+          }
+        })
+
+
+        //  // Function to perform the AJAX search
+        //  function performSearch(keyword) {
+        //    $('.autofield-dropdown').css('height', "200px");
+        //    const data = {
+        //      keyword: keyword,
+        //    };
+        //    console.log("data value", data);
+        //    $.ajax({
+        //      url: 'api/search-company',
+        //      method: 'POST',
+        //      data: { keyword: keyword },
+        //      ContentType: 'application/json',
+        //      success: function (data) {
+        //        console.log("Search data received:", data);
+        //        if (data.status == 'ok') {
+        //          if (data.data.length > 0) {
+        //            let respData = data.data;
+        //            let html = '<ul class="p-0 m-0">';
+        //            respData.forEach(company => {
+        //              html += '<li><a href="#" data-resulttitle="' + company.company_name + '" data-resultexcerpt="' + company.about_company + '" data-resultpermalink="/company/' + company.slug + '" >' + company.company_name + '</a></li>';
+        //            });
+        //            html += '</ul>';
+        //            $('.autofield-dropdown').html(html);
+        //            $('.autofield-dropdown').show();
+        //            if(data.data.length < 4){
+        //              var divlength = data.data.length*48;
+        //              $('.autofield-dropdown').css('height', divlength + "px");
+        //            }
+        //          } else {
+        //            $('.autofield-dropdown').hide();
+        //            $('.autofield-dropdown').html('');
+        //          }
+        //        } else {
+        //          $('.autofield-dropdown').hide();
+        //          $('.autofield-dropdown').html('');
+        //        }
+        //      },
+        //      error: function (error) {
+
+        //      }
+        //    });
+        //  }
+
+        //  // Company Search For review
+        //  function performSearchForReview(keyword) {
+        //    $('.autofield-dropdown-review').css('height', "200px");
+        //    const data = {
+        //      keyword: keyword,
+        //    };
+        //    $.ajax({
+        //      url: 'api/search-company',
+        //      method: 'POST',
+        //      data: { keyword: keyword },
+        //      ContentType: 'application/json',
+        //      success: function (data) {
+        //        if (data.status == 'ok') {
+        //          if (data.data.length > 0) {
+        //            let respData = data.data;
+        //            let html = '<ul class="p-0 m-0">';
+        //            respData.forEach(company => {
+        //              html += '<li><a href="#" data-resulttitle="' + company.company_name + '" data-companyID="' + company.ID + '" data-companyAddress="' + company.main_address + '" data-companyPin="' + company.main_address_pin_code + '" >' + company.company_name + '</a></li>';
+        //            });
+        //            html += '</ul>';
+        //            $('.autofield-dropdown-review').html(html);
+        //            $('.autofield-dropdown-review').show();
+        //            if(data.data.length < 4){
+        //              var divlength = data.data.length*48;
+        //              $('.autofield-dropdown-review').css('height', divlength + "px");
+        //            }
+        //          } else {
+        //            $('.autofield-dropdown-review').hide();
+        //            $('.autofield-dropdown-review').html('');
+        //          }
+        //        } else {
+        //          $('.autofield-dropdown-review').hide();
+        //          $('.autofield-dropdown-review').html('');
+        //        }
+        //      },
+        //      error: function (error) {
+        //        $('.autofield-dropdown-review').hide();
+        //        $('.autofield-dropdown-review').html('');
+        //      }
+        //    });
+        //  }
+
+
+        var country_name = "<%= countryname %>";
+        //console.log("country_name from server:", country_name);
+
+        if (country_name) {
+          $('#country').val(country_name).trigger('change');
+        }
+
+        $('#country').on('change', function () {
+          country_name = $(this).val();
+          console.log('Selected country:', country_name);
+          $('#state').val('').trigger('change');
+          $('#city').val('');
+          $('#search-input-review').val('');
+        });
+
+
+        function performSearch(keyword) {
+          $('.autofield-dropdown').css('height', "200px");
+          const data = {
+            keyword: keyword,
+            country: country_name
+          };
+          console.log("data", data);
+          $.ajax({
+            url: 'api/search-company',
+            method: 'POST',
+            data: { keyword: keyword, country: country_name },
+            ContentType: 'application/json',
+            success: function (data) {
+              if (data.status == 'ok') {
+                if (data.data.length > 0) {
+                  let respData = data.data;
+                  let html = '<ul class="p-0 m-0">';
+                  respData.forEach(company => {
+                    html += '<li><a href="#" data-resulttitle="' + company.company_name + '" data-resultexcerpt="' + company.about_company + '" data-resultpermalink="/company/' + company.ID + '" >' + company.company_name + '</a></li>';
+                  });
+                  html += '</ul>';
+                  $('.autofield-dropdown').html(html);
+                  $('.autofield-dropdown').show();
+                  if (data.data.length < 4) {
+                    var divlength = data.data.length * 48;
+                    $('.autofield-dropdown').css('height', divlength + "px");
+                  }
+                } else {
+                  $('.autofield-dropdown').hide();
+                  $('.autofield-dropdown').html('');
+                }
+              } else {
+                $('.autofield-dropdown').hide();
+                $('.autofield-dropdown').html('');
+              }
+            },
+            error: function (error) {
+
+            }
+          });
+
+        }
+
+
+        $('#country').select2({
+          placeholder: "Select a country",
+          allowClear: true,
+          width: '100%'
+        });
+
+        $('#search-input-review').on('input', function () {
+          $('.autofield-dropdown-review').on('click', 'a', function (e) {
+            e.preventDefault();
+            const selectedCompanyName = $(this).data('resulttitle');
+            console.log('Selected company name from dropdown:', selectedCompanyName);
+            if (selectedCompanyName) {
+              $.ajax({
                 url: 'auth/get-company-details',
                 method: 'POST',
                 data: JSON.stringify({ company_name: selectedCompanyName }),
                 contentType: 'application/json',
-                success: function(data) {
+                success: function (data) {
                   console.log('Response from server:', data);
-                    console.log("aaaaaa");
-                    if (data.status === 'ok') {
-                        console.log("bbbbb");
-                        const companyDetails = data.companyDetails;
-                        console.log("companyDetails", companyDetails);
+                  console.log("aaaaaa");
+                  if (data.status === 'ok') {
+                    console.log("bbbbb");
+                    const companyDetails = data.companyDetails;
+                    console.log("companyDetails", companyDetails);
 
-                        if (companyDetails) {
-                            const stateSelect = $('#state');
-                            stateSelect.html('<option value="' + companyDetails.state + '">' + companyDetails.state + '</option>');
+                    if (companyDetails) {
+                      const stateSelect = $('#state');
+                      stateSelect.html('<option value="' + companyDetails.state + '">' + companyDetails.state + '</option>');
 
-                            const cityInput = $('#city');
-                            cityInput.val(companyDetails.city);
-                        }
-                    } else {
-                        console.error('No company details found');
+                      const cityInput = $('#city');
+                      cityInput.val(companyDetails.city);
                     }
+                  } else {
+                    console.error('No company details found');
+                  }
                 },
-                error: function(error) {
-                    console.error('Error fetching company details:', error);
+                error: function (error) {
+                  console.error('Error fetching company details:', error);
                 }
-            });
-        }
-    });
-});
+              });
+            }
+          });
+        });
 
-    $('#country').on('change', function() {
-      $('#state').val('Select state').trigger('change');
+        $('#country').on('change', function () {
+          $('#state').val('Select state').trigger('change');
 
-            $('#city').val('');
+          $('#city').val('');
 
-            $('#search-input-review').val('');
+          $('#search-input-review').val('');
         });
 
 
@@ -1764,713 +1906,708 @@ jQuery(document).ready(function ($) {
 
 
 
-     $("#search-topic").keyup(function () {
-       clearTimeout(timer);
-       //alert('aaaaaa')
-       var keyword = $(this).val();
-       if (keyword.length >= 3) {
-         timer = setTimeout(function () {
-           performSearchtopic(keyword);
-         }, 500);
-       } else {
-         $('.autofield-dropdown').hide();
-         $('.autofield-dropdown').html(''); // Clear search results if less than three letters
-       }
-     });
-   
-     // Function to perform the AJAX search
-     function performSearchtopic(keyword) {
-       $('.autofield-dropdown').css('height', "200px");
-       const data = {
-         keyword: keyword,
-       };
-       $.ajax({
-         url: 'api/search-discussion',
-         method: 'POST',
-         data: { keyword: keyword },
-         ContentType: 'application/json',
-         success: function (data) {
-           if (data.status == 'ok') {
-             if (data.data.length > 0) {
-               let respData = data.data;
-               let html = '<ul class="p-0 m-0">';
-               respData.forEach(discussion => {
-                 html += '<li><a class="custom_link" href="/discussion-details/' + discussion.id + '" >' + discussion.topic + '</a></li>';
-               });
-               html += '</ul>';
-               $('.autofield-dropdown').html(html);
-               $('.autofield-dropdown').show();
-               if(data.data.length < 4){
-                 var divlength = data.data.length*48;
-                 $('.autofield-dropdown').css('height', divlength + "px");
-               }
-             } else {
-               $('.autofield-dropdown').hide();
-               $('.autofield-dropdown').html('');
-             }
-           } else {
-             $('.autofield-dropdown').hide();
-             $('.autofield-dropdown').html('');
-           }
-         },
-         error: function (error) {
-   
-         }
-       });
-     }
-   
-     $("body").on('click', ".autofield-dropdown ul > li", function (e) {
-       e.preventDefault();
-       var resulttitle = $(this).find('a').attr('data-resulttitle');
-       var resultexcerpt = $(this).find('a').attr('data-resultexcerpt');
-       var resultpermalink = $(this).find('a').attr('data-resultpermalink');
-       $('#dynamic-search-title').text(resulttitle);
-       $('#dynamic-search-content').text(resultexcerpt);
-       $('#dynamic-search-link').attr("href", resultpermalink);
-   
-       $(".custom-modal").fadeIn();
-   
-     });
-   
-     var allTags = [];
-     var transformedResponse = {};
-     $('form#create_discussion_form').submit(function (e) {
-       e.preventDefault();
-       $('.response-message').hide();
-       $('.response-message').text('');
-       $('#invitation_email').prop('disabled', true);
-       $('.frm-loading').show(); 
-       //alert('aaaaaa')
-       $(this).find('#sendreviewtags_discussion').find('span').each(function(){
-          var enteredTag= $(this).text();
-          allTags.push(enteredTag);
-       });
-         const formData = $('#create_discussion_form').serializeArray();
-         $(formData).each(function (index, field) {
-             transformedResponse[field.name] = field.value;
-         });
-       transformedResponse['tags'] = allTags;
-       console.log(transformedResponse);
-         //return false;
-       
-         $.ajax({
-         url: '/auth/create-discussion', // URL for your API endpoint
-         method: 'POST',
-         data: JSON.stringify(transformedResponse),
-         processData: false,
-         contentType: 'application/json',
-         success: function (data) {
-             if (data.status == 'ok') {
-                 $('.response-message').text(data.message);
-                 $('.response-message').show();
-                 $('#invitation_email').prop('disabled', false);
-                 $('.frm-loading').hide();
-                 setTimeout(function() {
-                     window.location.reload();
-                 }, 2000);
-             } else {
-                 $('.response-message').text(data.message);
-                 $('.response-message').show();
-                 $('#invitation_email').prop('disabled', false);
-                 $('.frm-loading').hide();
-                 console.log('Something went wrong');
-             }
-         },
-         error: function (xhr, status, error) {
-             // Handle any errors that occur during the request
-             console.log(error);
-         }
-     }); 
-    });
-   
-    
-   $("body").on('click', ".autofield-dropdown ul > li", function (e) {
-     e.preventDefault();
-     var resulttitle = $(this).find('a').attr('data-resulttitle');
-     var resultexcerpt = $(this).find('a').attr('data-resultexcerpt');
-     var resultpermalink = $(this).find('a').attr('data-resultpermalink');
-     $('#dynamic-search-title').text(resulttitle);
-     $('#dynamic-search-content').text(resultexcerpt);
-     $('#dynamic-search-link').attr("href", resultpermalink);
-   
-     $(".custom-modal").fadeIn();
-   
-   });
-   
-   $("body").on('click', ".autofield-dropdown-review ul > li", function(e){
-   e.preventDefault();
-   var resulttitle = $(this).find('a').attr('data-resulttitle');
-   var address = $(this).find('a').attr('data-companyAddress');
-   var pin_code = $(this).find('a').attr('data-companyPin');
-   var companyId= $(this).find('a').attr('data-companyid');
-   //alert(companyId);
-   
-   $('#search-input-review').val(resulttitle);
-   if(address && address!='null'){
-     $('#review-address').val(address);
-     $('#review-address').attr('readonly', true);
-   }else{
-     $('#review-address').val('');
-     $('#review-address').attr('readonly', false);
-   }
-   
-   $('#select_category').empty().append($('<option value="0">Select Category</option><option value="0">General</option>'));
-   //$("#select_state").prop('required',false);
-   $('#dynamic_state_field_wrapper').hide();
-   //var company_id = $(this).val();
-   $.ajax({
-      url: '/api/complain_category',
-      method: 'POST',
-      data: {company_id:companyId},
-      ContentType: 'application/json',
-      success: function (data) {
-         if (data.status == 'ok') {
-            $('#dynamic_state_field_wrapper').show();
-            //$("#select_state").prop('required',true);
-            //$('#select_category').empty().append($('<option value="">Select Category</option>'));
-            $.each(data.data, function (i, item) {
-                  $('#select_category').append($('<option>', { 
-                     value: item.id,
-                     text : item.category_name 
-                  }));
-            });                
-         } else {
-            $('#dynamic_state_field_wrapper').hide();
-            $("#select_category").prop('required',false);
-         }
-      },
-      error: function (error) {
-         // Handle any errors
-         Swal.fire({
-            text: error,
-            icon: "error",
-            buttonsStyling: false,
-            confirmButtonText: "Ok, got it!",
-            customClass: {
-                  confirmButton: "btn btn-primary"
-            }
-         });
-         submitButton.disabled = false;
-      }
-      //$(".autofield-dropdown-review").fadeOut();
-   }); 
-   
-   
-   
-   /*
-   if(pin_code && pin_code!='null'){
-     $('#review-zip').val(pin_code);
-     $('#review-zip').attr('readonly', true);
-   }else{
-     $('#review-zip').val('');
-     $('#review-zip').attr('readonly', false);
-   }
-   */
-   $(".autofield-dropdown-review").fadeOut();
-   
-   });
-   
-   $('#select_category').change(function() {
-   $('#select_sub_category').empty().append($('<option value="0">Select Product</option><option value="0">General</option>'));
-   //$("#select_state").prop('required',false);
-   //$('#dynamic_sub_category_field_wrapper').hide();
-   var category_id = $(this).val();
-   //alert(category_id);
-   //return false;
-   //$('#country_name').val(this.options[this.selectedIndex].text);
-   $.ajax({
-      url: '/api/company_product',
-      method: 'POST',
-      data: {category_id:category_id},
-      ContentType: 'application/json',
-      success: function (data) {
-         if (data.status == 'ok') {
-            $('#dynamic_sub_category_field_wrapper').show();
-            //$("#select_state").prop('required',true);
-            $.each(data.data, function (i, item) {
-                  $('#select_sub_category').append($('<option>', { 
-                     value: item.id,
-                     text : item.product_title 
-                  }));
-            });                
-         } else {
-            //$('#dynamic_sub_category_field_wrapper').hide();
-            $("#select_sub_category").prop('required',false);
-         }
-      },
-      error: function (error) {
-         // Handle any errors
-         Swal.fire({
-            text: error,
-            icon: "error",
-            buttonsStyling: false,
-            confirmButtonText: "Ok, got it!",
-            customClass: {
-                  confirmButton: "btn btn-primary"
-            }
-         });
-         submitButton.disabled = false;
-      }
-   });    
-   });
+        $("#search-topic").keyup(function () {
+          clearTimeout(timer);
+          //alert('aaaaaa')
+          var keyword = $(this).val();
+          if (keyword.length >= 3) {
+            timer = setTimeout(function () {
+              performSearchtopic(keyword);
+            }, 500);
+          } else {
+            $('.autofield-dropdown').hide();
+            $('.autofield-dropdown').html(''); // Clear search results if less than three letters
+          }
+        });
 
-   let apiKey = '<%= api_key%>'
-
-   function setCookie(name, value, days) {
-  const expires = new Date();
-  expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
-  document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
-}
-
-function getCookie(name) {
-    const cookieValue = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
-    return cookieValue ? cookieValue[2] : null;
-  }
-
-async function fetchGeolocationAndSetCountryInfo() {
-  const countryName = getCookie('countryName');
-  const countryCode = getCookie('countryCode');
-
-  if (countryName && countryCode) {
-    updateCountryInfo(countryName, countryCode);
-    await sendCountryInfoToServer(countryName, countryCode);
-    
-    if (!localStorage.getItem('pageRefreshed')) {
-      localStorage.setItem('pageRefreshed', 'true');
-      window.location.reload(); 
-    }
-    return;
-  }
-
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(async (position) => {
-      const latitude = position.coords.latitude;
-      const longitude = position.coords.longitude;
-
-      const { countryName, countryCode } = await getCountryDetails(latitude, longitude);
-
-      setCookie('countryName', countryName, 7); 
-      setCookie('countryCode', countryCode, 7);
-
-      updateCountryInfo(countryName, countryCode);
-
-      await sendCountryInfoToServer(countryName, countryCode);
-
-      if (!localStorage.getItem('pageRefreshed')) {
-        localStorage.setItem('pageRefreshed', 'true');
-        window.location.reload(); 
-      }
-    }, (error) => {
-      console.error('Error getting geolocation:', error);
-    });
-  } else {
-    console.error('Geolocation is not supported by this browser.');
-  }
-}
-
-function updateCountryInfo(countryName, countryCode) {
-  document.getElementById('country').innerText = `${countryName} (${countryCode})`;
-}
-
-async function sendCountryInfoToServer(countryName, countryCode) {
-  try {
-    const response = await fetch('/setCountry', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ countryName, countryCode })
-    });
-
-    if (response.ok) {
-      console.log('Country information sent to server successfully.');
-    } else {
-      console.error('Failed to send country information to the server.');
-    }
-  } catch (error) {
-    console.error('Error sending country information to the server:', error);
-  }
-}
-
-async function getCountryDetails(latitude, longitude) {
-  const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${apiKey}`;
-  try {
-    const response = await fetch(url);
-    const data = await response.json();
-    const results = data.results;
-    if (results.length > 0) {
-      const addressComponents = results[0].address_components;
-      let countryName = 'Country not found';
-      let countryCode = 'Code not found';
-      for (let i = 0; i < addressComponents.length; i++) {
-        if (addressComponents[i].types.includes("country")) {
-          countryName = addressComponents[i].long_name;
-          countryCode = addressComponents[i].short_name;
-          break;
-        }
-      }
-      console.log("countryName", countryName);
-      console.log("countryCode", countryCode);
-      return { countryName, countryCode };
-    }
-    return { countryName: "Country not found", countryCode: "Code not found" };
-  } catch (error) {
-    console.error('Error fetching country details:', error);
-    return { countryName: 'Unable to get country name', countryCode: 'Unable to get country code' };
-  }
-}
-
-fetchGeolocationAndSetCountryInfo();
-
-
-
-// function setCookie(name, value, days) {
-//   const expires = new Date();
-//   expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
-//   document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
-// }
-
-// async function fetchGeolocationAndSetCountryInfo() {
-//   if (navigator.geolocation) {
-//     navigator.geolocation.getCurrentPosition(async (position) => {
-//       const latitude = position.coords.latitude;
-//       const longitude = position.coords.longitude;
-
-//       // Fetch country details using geolocation API
-//       const { countryName, countryCode } = await getCountryDetails(latitude, longitude);
-
-//       // Set country details in cookies
-//       setCookie('countryName', countryName, 7); // Example: expires in 7 days
-//       setCookie('countryCode', countryCode, 7); // Example: expires in 7 days
-
-//       // Optionally, update UI with country details
-//       updateCountryInfo(countryName, countryCode);
-
-//       // Send the country information to the server
-//       await sendCountryInfoToServer(countryName, countryCode);
-
-//       // Check if page has been refreshed already
-//       if (!localStorage.getItem('pageRefreshed')) {
-//         localStorage.setItem('pageRefreshed', 'true');
-//         window.location.reload(); // Refresh the page once
-//       }
-//     }, (error) => {
-//       console.error('Error getting geolocation:', error);
-//       // Handle errors or display appropriate message
-//     });
-//   } else {
-//     console.error('Geolocation is not supported by this browser.');
-//     // Handle geolocation not supported scenario
-//   }
-// }
-
-// function updateCountryInfo(countryName, countryCode) {
-//   document.getElementById('country').innerText = `${countryName} (${countryCode})`;
-// }
-
-// async function sendCountryInfoToServer(countryName, countryCode) {
-//   try {
-//     const response = await fetch('/setCountry', {
-//       method: 'POST',
-//       headers: {
-//         'Content-Type': 'application/json'
-//       },
-//       body: JSON.stringify({ countryName, countryCode })
-//     });
-
-//     if (response.ok) {
-//       console.log('Country information sent to server successfully.');
-//       // Optionally handle success response
-//     } else {
-//       console.error('Failed to send country information to the server.');
-//       // Optionally handle error response
-//     }
-//   } catch (error) {
-//     console.error('Error sending country information to the server:', error);
-//     // Handle fetch error
-//   }
-// }
-
-// async function getCountryDetails(latitude, longitude) {
-//   const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${apiKey}`;
-//   try {
-//     const response = await fetch(url);
-//     const data = await response.json();
-//     const results = data.results;
-//     if (results.length > 0) {
-//       const addressComponents = results[0].address_components;
-//       let countryName = 'Country not found';
-//       let countryCode = 'Code not found';
-//       for (let i = 0; i < addressComponents.length; i++) {
-//         if (addressComponents[i].types.includes("country")) {
-//           countryName = addressComponents[i].long_name;
-//           countryCode = addressComponents[i].short_name;
-//           break;
-//         }
-//       }
-//       console.log("countryName", countryName);
-//       console.log("countryCode", countryCode);
-//       return { countryName, countryCode };
-//     }
-//     return { countryName: "Country not found", countryCode: "Code not found" };
-//   } catch (error) {
-//     console.error('Error fetching country details:', error);
-//     return { countryName: 'Unable to get country name', countryCode: 'Unable to get country code' };
-//   }
-// }
-
-// fetchGeolocationAndSetCountryInfo();
-
-
-});
-
-
-$(document).ready(function() {
-    // Initialize Select2 for country dropdown
-    $('#country_review').select2({
-        placeholder: "Select a country",
-        allowClear: true,
-        width: '100%'
-    });
-
-    // AJAX call to fetch company details and populate state and city
-    $('.autofield-dropdown-review').on('click', 'a', function(e) {
-        e.preventDefault();
-        const selectedCompanyName = $(this).data('resulttitle');
-        if (selectedCompanyName) {
-            $.ajax({
-                url: 'auth/get-company-details',
-                method: 'POST',
-                data: JSON.stringify({ company_name: selectedCompanyName }),
-                contentType: 'application/json',
-                success: function(data) {
-                    if (data.status === 'ok') {
-                        const companyDetails = data.companyDetails;
-                        if (companyDetails) {
-                            $('#state').val(companyDetails.state).trigger('change');
-                            $('#city').val(companyDetails.city);
-                        }
-                    } else {
-                        console.error('No company details found');
-                    }
-                },
-                error: function(error) {
-                    console.error('Error fetching company details:', error);
+        // Function to perform the AJAX search
+        function performSearchtopic(keyword) {
+          $('.autofield-dropdown').css('height', "200px");
+          const data = {
+            keyword: keyword,
+          };
+          $.ajax({
+            url: 'api/search-discussion',
+            method: 'POST',
+            data: { keyword: keyword },
+            ContentType: 'application/json',
+            success: function (data) {
+              if (data.status == 'ok') {
+                if (data.data.length > 0) {
+                  let respData = data.data;
+                  let html = '<ul class="p-0 m-0">';
+                  respData.forEach(discussion => {
+                    html += '<li><a class="custom_link" href="/discussion-details/' + discussion.id + '" >' + discussion.topic + '</a></li>';
+                  });
+                  html += '</ul>';
+                  $('.autofield-dropdown').html(html);
+                  $('.autofield-dropdown').show();
+                  if (data.data.length < 4) {
+                    var divlength = data.data.length * 48;
+                    $('.autofield-dropdown').css('height', divlength + "px");
+                  }
+                } else {
+                  $('.autofield-dropdown').hide();
+                  $('.autofield-dropdown').html('');
                 }
-            });
+              } else {
+                $('.autofield-dropdown').hide();
+                $('.autofield-dropdown').html('');
+              }
+            },
+            error: function (error) {
+
+            }
+          });
         }
-    });
 
-    // Form submission handling
-    $("#review_submit_frm").on("submit", function(event) {
-        event.preventDefault();
-        $('.submit-message').hide().text('');
+        $("body").on('click', ".autofield-dropdown ul > li", function (e) {
+          e.preventDefault();
+          var resulttitle = $(this).find('a').attr('data-resulttitle');
+          var resultexcerpt = $(this).find('a').attr('data-resultexcerpt');
+          var resultpermalink = $(this).find('a').attr('data-resultpermalink');
+          $('#dynamic-search-title').text(resulttitle);
+          $('#dynamic-search-content').text(resultexcerpt);
+          $('#dynamic-search-link').attr("href", resultpermalink);
 
-        const formData = $(this).serializeArray();
-        const jsonData = {};
+          $(".custom-modal").fadeIn();
 
-        $(formData).each(function(index, field) {
+        });
+
+        var allTags = [];
+        var transformedResponse = {};
+        $('form#create_discussion_form').submit(function (e) {
+          e.preventDefault();
+          $('.response-message').hide();
+          $('.response-message').text('');
+          $('#invitation_email').prop('disabled', true);
+          $('.frm-loading').show();
+          //alert('aaaaaa')
+          $(this).find('#sendreviewtags_discussion').find('span').each(function () {
+            var enteredTag = $(this).text();
+            allTags.push(enteredTag);
+          });
+          const formData = $('#create_discussion_form').serializeArray();
+          $(formData).each(function (index, field) {
+            transformedResponse[field.name] = field.value;
+          });
+          transformedResponse['tags'] = allTags;
+          console.log(transformedResponse);
+          //return false;
+
+          $.ajax({
+            url: '/auth/create-discussion', // URL for your API endpoint
+            method: 'POST',
+            data: JSON.stringify(transformedResponse),
+            processData: false,
+            contentType: 'application/json',
+            success: function (data) {
+              if (data.status == 'ok') {
+                $('.response-message').text(data.message);
+                $('.response-message').show();
+                $('#invitation_email').prop('disabled', false);
+                $('.frm-loading').hide();
+                setTimeout(function () {
+                  window.location.reload();
+                }, 2000);
+              } else {
+                $('.response-message').text(data.message);
+                $('.response-message').show();
+                $('#invitation_email').prop('disabled', false);
+                $('.frm-loading').hide();
+                console.log('Something went wrong');
+              }
+            },
+            error: function (xhr, status, error) {
+              // Handle any errors that occur during the request
+              console.log(error);
+            }
+          });
+        });
+
+
+        $("body").on('click', ".autofield-dropdown ul > li", function (e) {
+          e.preventDefault();
+          var resulttitle = $(this).find('a').attr('data-resulttitle');
+          var resultexcerpt = $(this).find('a').attr('data-resultexcerpt');
+          var resultpermalink = $(this).find('a').attr('data-resultpermalink');
+          $('#dynamic-search-title').text(resulttitle);
+          $('#dynamic-search-content').text(resultexcerpt);
+          $('#dynamic-search-link').attr("href", resultpermalink);
+
+          $(".custom-modal").fadeIn();
+
+        });
+
+        $("body").on('click', ".autofield-dropdown-review ul > li", function (e) {
+          e.preventDefault();
+          var resulttitle = $(this).find('a').attr('data-resulttitle');
+          var address = $(this).find('a').attr('data-companyAddress');
+          var pin_code = $(this).find('a').attr('data-companyPin');
+          var companyId = $(this).find('a').attr('data-companyid');
+          //alert(companyId);
+
+          $('#search-input-review').val(resulttitle);
+          if (address && address != 'null') {
+            $('#review-address').val(address);
+            $('#review-address').attr('readonly', true);
+          } else {
+            $('#review-address').val('');
+            $('#review-address').attr('readonly', false);
+          }
+
+          $('#select_category').empty().append($('<option value="0">Select Category</option><option value="0">General</option>'));
+          //$("#select_state").prop('required',false);
+          $('#dynamic_state_field_wrapper').hide();
+          //var company_id = $(this).val();
+          $.ajax({
+            url: '/api/complain_category',
+            method: 'POST',
+            data: { company_id: companyId },
+            ContentType: 'application/json',
+            success: function (data) {
+              if (data.status == 'ok') {
+                $('#dynamic_state_field_wrapper').show();
+                //$("#select_state").prop('required',true);
+                //$('#select_category').empty().append($('<option value="">Select Category</option>'));
+                $.each(data.data, function (i, item) {
+                  $('#select_category').append($('<option>', {
+                    value: item.id,
+                    text: item.category_name
+                  }));
+                });
+              } else {
+                $('#dynamic_state_field_wrapper').hide();
+                $("#select_category").prop('required', false);
+              }
+            },
+            error: function (error) {
+              // Handle any errors
+              Swal.fire({
+                text: error,
+                icon: "error",
+                buttonsStyling: false,
+                confirmButtonText: "Ok, got it!",
+                customClass: {
+                  confirmButton: "btn btn-primary"
+                }
+              });
+              submitButton.disabled = false;
+            }
+            //$(".autofield-dropdown-review").fadeOut();
+          });
+
+
+
+          /*
+          if(pin_code && pin_code!='null'){
+            $('#review-zip').val(pin_code);
+            $('#review-zip').attr('readonly', true);
+          }else{
+            $('#review-zip').val('');
+            $('#review-zip').attr('readonly', false);
+          }
+          */
+          $(".autofield-dropdown-review").fadeOut();
+
+        });
+
+        $('#select_category').change(function () {
+          $('#select_sub_category').empty().append($('<option value="0">Select Product</option><option value="0">General</option>'));
+          //$("#select_state").prop('required',false);
+          //$('#dynamic_sub_category_field_wrapper').hide();
+          var category_id = $(this).val();
+          //alert(category_id);
+          //return false;
+          //$('#country_name').val(this.options[this.selectedIndex].text);
+          $.ajax({
+            url: '/api/company_product',
+            method: 'POST',
+            data: { category_id: category_id },
+            ContentType: 'application/json',
+            success: function (data) {
+              if (data.status == 'ok') {
+                $('#dynamic_sub_category_field_wrapper').show();
+                //$("#select_state").prop('required',true);
+                $.each(data.data, function (i, item) {
+                  $('#select_sub_category').append($('<option>', {
+                    value: item.id,
+                    text: item.product_title
+                  }));
+                });
+              } else {
+                //$('#dynamic_sub_category_field_wrapper').hide();
+                $("#select_sub_category").prop('required', false);
+              }
+            },
+            error: function (error) {
+              // Handle any errors
+              Swal.fire({
+                text: error,
+                icon: "error",
+                buttonsStyling: false,
+                confirmButtonText: "Ok, got it!",
+                customClass: {
+                  confirmButton: "btn btn-primary"
+                }
+              });
+              submitButton.disabled = false;
+            }
+          });
+        });
+
+        let apiKey = '<%= apiKey%>'
+        //     const cookieValues = document.cookie.match('(^|;) ? countryName =([^;]*)(;|$)');
+        //  console.log("cookieValues",cookieValues);
+
+        // const cookieArray = document.cookie.split(';');
+
+
+        // const cookieValue = cookieArray.find(cookie => cookie.trim().startsWith('countryName='));
+
+
+        // let value = null;
+        // if (cookieValue) {
+        //   value = cookieValue.trim().substring('countryName='.length);
+        // }
+
+        // console.log("Cookie Value:", value);
+
+        //    function setCookie(name, value, days) {
+        //   const expires = new Date();
+        //   expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+        //   document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
+        // }
+
+        // function getCookie(name) {
+        //     const cookieValue = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+        //     return cookieValue ? cookieValue[2] : null;
+        //   }
+
+        // async function fetchGeolocationAndSetCountryInfo() {
+        //   const countryName = getCookie('countryName');
+        //   const countryCode = getCookie('countryCode');
+
+        //   if (countryName && countryCode) {
+        //     updateCountryInfo(countryName, countryCode);
+        //     await sendCountryInfoToServer(countryName, countryCode);
+
+        //     if (!localStorage.getItem('pageRefreshed')) {
+        //       localStorage.setItem('pageRefreshed', 'true');
+        //       window.location.reload(); 
+        //     }
+        //     return;
+        //   }
+
+        //   if (navigator.geolocation) {
+        //     navigator.geolocation.getCurrentPosition(async (position) => {
+        //       const latitude = position.coords.latitude;
+        //       const longitude = position.coords.longitude;
+
+        //       const { countryName, countryCode } = await getCountryDetails(latitude, longitude);
+
+        //       setCookie('countryName', countryName, 7); 
+        //       setCookie('countryCode', countryCode, 7);
+
+        //       updateCountryInfo(countryName, countryCode);
+
+        //       await sendCountryInfoToServer(countryName, countryCode);
+
+        //       if (!localStorage.getItem('pageRefreshed')) {
+        //         localStorage.setItem('pageRefreshed', 'true');
+        //         window.location.reload(); 
+        //       }
+        //     }, (error) => {
+        //       console.error('Error getting geolocation:', error);
+        //     });
+        //   } else {
+        //     console.error('Geolocation is not supported by this browser.');
+        //   }
+        // }
+
+        // function updateCountryInfo(countryName, countryCode) {
+        //   document.getElementById('country').innerText = `${countryName} (${countryCode})`;
+        // }
+
+        // async function sendCountryInfoToServer(countryName, countryCode) {
+        //   try {
+        //     const response = await fetch('/setCountry', {
+        //       method: 'POST',
+        //       headers: {
+        //         'Content-Type': 'application/json'
+        //       },
+        //       body: JSON.stringify({ countryName, countryCode })
+        //     });
+
+        //     if (response.ok) {
+        //       console.log('Country information sent to server successfully.');
+        //     } else {
+        //       console.error('Failed to send country information to the server.');
+        //     }
+        //   } catch (error) {
+        //     console.error('Error sending country information to the server:', error);
+        //   }
+        // }
+
+        // async function getCountryDetails(latitude, longitude) {
+        //   const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${apiKey}`;
+        //   try {
+        //     const response = await fetch(url);
+        //     const data = await response.json();
+        //     const results = data.results;
+        //     if (results.length > 0) {
+        //       const addressComponents = results[0].address_components;
+        //       let countryName = 'Country not found';
+        //       let countryCode = 'Code not found';
+        //       for (let i = 0; i < addressComponents.length; i++) {
+        //         if (addressComponents[i].types.includes("country")) {
+        //           countryName = addressComponents[i].long_name;
+        //           countryCode = addressComponents[i].short_name;
+        //           break;
+        //         }
+        //       }
+        //       console.log("countryName", countryName);
+        //       console.log("countryCode", countryCode);
+        //       return { countryName, countryCode };
+        //     }
+        //     return { countryName: "Country not found", countryCode: "Code not found" };
+        //   } catch (error) {
+        //     console.error('Error fetching country details:', error);
+        //     return { countryName: 'Unable to get country name', countryCode: 'Unable to get country code' };
+        //   }
+        // }
+
+        // fetchGeolocationAndSetCountryInfo();
+
+      });
+
+
+      $(document).ready(function () {
+        $('#country_review').select2({
+          placeholder: "Select a country",
+          allowClear: true,
+          width: '100%'
+        });
+
+        function performSearchForReview(keyword, country_name) {
+          $('.autofield-dropdown-review').css('height', "200px");
+          const data = {
+            keyword: keyword,
+            country: country_name
+          };
+          $.ajax({
+            url: 'api/search-company',
+            method: 'POST',
+            data: { keyword: keyword, country: country_name },
+            ContentType: 'application/json',
+            success: function (data) {
+              if (data.status == 'ok') {
+                if (data.data.length > 0) {
+                  let respData = data.data;
+                  let html = '<ul class="p-0 m-0">';
+                  respData.forEach(company => {
+                    html += '<li><a href="#" data-resulttitle="' + company.company_name + '" data-companyID="' + company.ID + '" data-companyAddress="' + company.main_address + '" data-companyPin="' + company.main_address_pin_code + '" >' + company.company_name + '</a></li>';
+                  });
+                  html += '</ul>';
+                  $('.autofield-dropdown-review').html(html);
+                  $('.autofield-dropdown-review').show();
+                  if (data.data.length < 4) {
+                    var divlength = data.data.length * 48;
+                    $('.autofield-dropdown-review').css('height', divlength + "px");
+                  }
+
+                  $('.autofield-dropdown-review a').click(function (e) {
+                    e.preventDefault();
+                    console.log("Clicked element data:", $(this).data());
+                    var companyName = $(this).data('resulttitle');
+                    console.log("Selected company name:", companyName);
+                    console.log("Event:", e); // Log the event object
+                    // Do something with the selected company name
+                    // Hide the dropdown
+
+
+
+                    $('.autofield-dropdown-review').hide();
+                  });
+
+                } else {
+                  $('.autofield-dropdown-review').hide();
+                  $('.autofield-dropdown-review').html('');
+                }
+              } else {
+                $('.autofield-dropdown-review').hide();
+                $('.autofield-dropdown-review').html('');
+              }
+            },
+            error: function (error) {
+              $('.autofield-dropdown-review').hide();
+              $('.autofield-dropdown-review').html('');
+            }
+          });
+
+        }
+
+      });
+
+    </script>
+
+    <script>
+      // Function to handle Google Maps API initialization
+      function initMap() {
+        // Your JavaScript code that interacts with the Maps API should be placed here,
+        // after the API has been initialized.
+        // For example, you can initialize the Autocomplete service and map here.
+
+        // Initialize the Autocomplete service
+        const autocomplete = new google.maps.places.Autocomplete(
+          document.getElementById('autocomplete'),
+          { types: ['geocode'] }
+        );
+
+        // Initialize the map (optional, just for illustration purposes)
+        const map = new google.maps.Map(document.getElementById('map'), {
+          center: { lat: -34.397, lng: 150.644 },
+          zoom: 8
+        });
+
+        // Optional: Listen for the "place_changed" event to get the selected place details
+        autocomplete.addListener('place_changed', () => {
+          const place = autocomplete.getPlace();
+          console.log('Selected place:', place);
+        });
+      }
+
+      // ////////////////////////////// Range Slider Start
+
+      const rangeTexts = {
+     <% allRatingTags.forEach((rev_tag, index) => { %>
+        "<%= rev_tag.review_rating_value %>": "<%= rev_tag.review_rating_name %>",
+     <% }) %>
+   };
+      const rangeEmojis = {
+     <% allRatingTags.forEach((rev_tag, index) => { %>
+        "<%= rev_tag.review_rating_value %>": "<%= rev_tag.rating_image %>",
+     <% }) %>
+   };
+
+
+      $("#rating-range").slider({
+        step: 0.5,
+        range: "min",
+        min: 0.5,
+        max: 5,
+        value: 5,
+        create: function (event, ui) {
+          $("#ratingRange").val('5/5');
+          $("#ratingvalue").val(5);
+          $("#selected-range-text").text(rangeTexts[5]);
+          $("#selected-range-emojis").attr('src', rangeEmojis[5]);
+        },
+        slide: function (event, ui) {
+          console.log(ui.value);
+          $("#ratingRange").val(ui.value + " / " + "5");
+          $("#ratingvalue").val(ui.value);
+          // When slider values change, update the text
+          var numberAsString = ui.value.toString();
+          var classnumber = numberAsString.replace(".", "");
+          $("#selected-range-text").text(rangeTexts[ui.value]);
+          $("#selected-range-emojis").attr('src', rangeEmojis[ui.value]);
+          $('.range-tag' + classnumber).removeClass('d-none');
+          $('.tag-items-wrapper:not(.range-tag' + classnumber + ')').addClass("d-none");
+          $('input[type="checkbox"][name="tags"]').prop('checked', false);
+        }
+      });
+      ////////////////////////////// Range Slider End
+
+      //-------Review Form Submit-----------------//
+
+      $(document).ready(function () {
+        // Initialize Select2 for country dropdown
+        $('#country_review').select2({
+          placeholder: "Select a country",
+          allowClear: true,
+          width: '100%'
+        });
+
+        let timeoutId; // Variable to store timeout ID for delaying search
+
+        // Event handler for search input
+        $('#search-input-review').on('input', function () {
+          var keyword = $(this).val().trim();
+          var country_name = $('#country_review').val();
+
+          // Clear previous timeout
+          clearTimeout(timeoutId);
+
+          // Minimum character length for search and country selected check
+          if (keyword.length >= 3 && country_name) {
+            // Delayed execution of search function
+            timeoutId = setTimeout(function () {
+              performSearchForReview(keyword, country_name);
+            }, 300); // Adjust delay time as needed (milliseconds)
+          } else {
+            // Clear dropdown and hide it if conditions are not met
+            $('.autofield-dropdown-review').hide().html('');
+          }
+        });
+
+        // Function to perform search for review
+        function performSearchForReview(keyword, country_name) {
+          $('.autofield-dropdown-review').css('height', "200px");
+          const data = {
+            keyword: keyword,
+            country: country_name
+          };
+
+          $.ajax({
+            url: 'http://localhost:2000/api/search-company',
+            method: 'POST',
+            data: JSON.stringify(data),
+            contentType: 'application/json', // Ensure correct content type
+            success: function (data) {
+              console.log("Company search response:", data);
+              if (data.status === 'ok') {
+                if (data.data.length > 0) {
+                  let respData = data.data;
+                  let html = '<ul class="p-0 m-0">';
+                  respData.forEach(company => {
+                    html += '<li><a href="#" data-resulttitle="' + company.company_name + '" data-companyID="' + company.ID + '" data-companyAddress="' + company.main_address + '" data-companyPin="' + company.main_address_pin_code + '">' + company.company_name + '</a></li>';
+                  });
+                  html += '</ul>';
+                  $('.autofield-dropdown-review').html(html).show();
+                  if (data.data.length < 4) {
+                    var divlength = data.data.length * 48;
+                    $('.autofield-dropdown-review').css('height', divlength + "px");
+                  }
+
+                  // Click handler for company links
+                  $('.autofield-dropdown-review a').click(function (e) {
+                    e.preventDefault();
+                    var companyName = $(this).data('resulttitle');
+                    console.log("Selected company name:", companyName);
+                    $('#search-input-review').val(companyName); // Set the selected company name in the input field
+                    // Optionally, you can trigger additional actions here
+
+                    $('.autofield-dropdown-review').hide();
+                  });
+
+                } else {
+                  $('.autofield-dropdown-review').hide().html('');
+                }
+              } else {
+                $('.autofield-dropdown-review').hide().html('');
+              }
+            },
+            error: function (error) {
+              console.error('Error searching companies:', error);
+              console.log('Response text:', error.responseText);
+              $('.autofield-dropdown-review').hide().html('');
+            }
+          });
+        }
+
+        // Form submission handling
+        $("#review_submit_frm").on("submit", function (event) {
+          $('.submit-message').hide();
+          $('.submit-message').text('');
+          event.preventDefault();
+          const formData = $('#review_submit_frm').serializeArray();
+          const jsonData = {};
+          $(formData).each(function (index, field) {
             if (field.name === 'tags') {
-                if (!jsonData.tags) {
-                    jsonData.tags = [];
-                }
-                jsonData.tags.push(field.value);
+              if (!jsonData.tags) {
+                jsonData.tags = [];
+              }
+              jsonData.tags.push(field.value);;
             } else {
-                jsonData[field.name] = field.value;
+              jsonData[field.name] = field.value;
             }
-        });
+          });
 
-        // Add selected country to jsonData
-        jsonData.main_address_country = $('#country_review').val();
+          // Add selected country to jsonData
+          jsonData.main_address_country = $('#country_review').val();
 
-        // Perform AJAX request to submit review
-        $.ajax({
+          $.ajax({
             url: '/auth/add-review',
             method: 'POST',
             data: JSON.stringify(jsonData),
             contentType: 'application/json',
-            success: function(data) {
-                if (data.status == 'ok') {
-                    $('#review_submit_frm')[0].reset();
-                    $('.submit-message').text(data.message).show();
-                    setTimeout(function() {
-                        $('.submit-message').hide();
-                        $('#all-review-hidden-btn').fadeIn();
-                    }, 2000);
-                } else {
-                    $('.submit-message').text(data.message).show();
-                }
+            success: function (data) {
+              if (data.status == 'ok') {
+                $('#review_submit_frm')[0].reset();
+                $('.submit-message').text(data.message);
+                $('.submit-message').show();
+                setTimeout(function () {
+                  $('.submit-message').hide();
+                  $('#all-review-hidden-btn').fadeIn();
+                }, 2000);
+              } else {
+                $('.submit-message').text(data.message);
+                $('.submit-message').show();
+              }
             },
-            error: function(error) {
-                console.error('Error submitting review:', error);
+            error: function (error) {
+              console.log(error);
             }
+          });
         });
-    });
-});
+      });
 
-</script>
+      $(".review-voting").click(function (e) {
+        e.preventDefault();
+        var votingValue = $(this).attr("data-voting");
+        var userId = $(this).attr("data-userId");
+        var reviewId = $(this).attr("data-reviewId");
+        console.log(votingValue, userId, reviewId);
+        var votingData = {
+          votingValue: votingValue,
+          userId: userId,
+          reviewId: reviewId
+        };
+        var jsonData = JSON.stringify(votingData);
+        console.log(votingData)
+        $.ajax({
+          url: '/auth/reviewVoting',
+          method: 'POST',
+          data: votingData,
+          success: function (data) {
+            if (data.status == 'ok') {
+              var updatedLike = data.totalLike.totalLike;
+              var updatedDislike = data.totalDislike.totalDislike;
+              var responseReviewId = data.reviewId;
+              var votingValue = data.votingValue;
+              if (votingValue == '1') {
+                $('#rev_' + responseReviewId).find('.like_class').addClass('active')
+                $('#rev_' + responseReviewId).find('.dislike_class').removeClass('active')
+              } else {
 
-<script>
-   // Function to handle Google Maps API initialization
-   function initMap() {
-     // Your JavaScript code that interacts with the Maps API should be placed here,
-     // after the API has been initialized.
-     // For example, you can initialize the Autocomplete service and map here.
-     
-     // Initialize the Autocomplete service
-     const autocomplete = new google.maps.places.Autocomplete(
-       document.getElementById('autocomplete'),
-       { types: ['geocode'] }
-     );
-     
-     // Initialize the map (optional, just for illustration purposes)
-     const map = new google.maps.Map(document.getElementById('map'), {
-       center: { lat: -34.397, lng: 150.644 },
-       zoom: 8
-     });
-     
-     // Optional: Listen for the "place_changed" event to get the selected place details
-     autocomplete.addListener('place_changed', () => {
-       const place = autocomplete.getPlace();
-       console.log('Selected place:', place);
-     });
-   }
-   
-       // ////////////////////////////// Range Slider Start
-   
-       const rangeTexts = {
-     <% allRatingTags.forEach((rev_tag, index) => { %>
-         "<%= rev_tag.review_rating_value %>": "<%= rev_tag.review_rating_name %>",
-     <% }) %>
-   };
-       const rangeEmojis = {
-     <% allRatingTags.forEach((rev_tag, index) => { %>
-         "<%= rev_tag.review_rating_value %>": "<%= rev_tag.rating_image %>",
-     <% }) %>
-   };
-   
-   
-       $("#rating-range").slider({
-         step: 0.5,
-         range: "min",
-         min: 0.5,
-         max: 5,
-         value: 5,
-         create: function (event, ui) {
-           $("#ratingRange").val('5/5');
-           $("#ratingvalue").val(5);
-           $("#selected-range-text").text(rangeTexts[5]);
-           $("#selected-range-emojis").attr('src', rangeEmojis[5]);
-         },
-         slide: function (event, ui) {
-           console.log(ui.value);
-           $("#ratingRange").val(ui.value + " / " + "5");
-           $("#ratingvalue").val(ui.value);
-           // When slider values change, update the text
-           var numberAsString = ui.value.toString();
-           var classnumber = numberAsString.replace(".", "");
-           $("#selected-range-text").text(rangeTexts[ui.value]);
-           $("#selected-range-emojis").attr('src', rangeEmojis[ui.value]);
-           $('.range-tag' + classnumber).removeClass('d-none');
-           $('.tag-items-wrapper:not(.range-tag' + classnumber + ')').addClass("d-none");
-           $('input[type="checkbox"][name="tags"]').prop('checked', false);
-         }
-       });
-       ////////////////////////////// Range Slider End
-   
-       //-------Review Form Submit-----------------//
-       
-   $("#review_submit_frm").on("submit", function (event) {
-    $('.submit-message').hide();
-     $('.submit-message').text('');
-     event.preventDefault();
-     const formData = $('#review_submit_frm').serializeArray();
-     const jsonData = {};
-     $(formData).each(function (index, field) {
-       if (field.name === 'tags') {
-         if (!jsonData.tags) {
-           jsonData.tags = [];
-         }
-         jsonData.tags.push(field.value);;
-       } else {
-         jsonData[field.name] = field.value;
-       }
-     });
-     $.ajax({
-       url: '/auth/add-review',
-       method: 'POST',
-       data: jsonData,
-       ContentType: 'application/json',
-       success: function (data) {
-         if (data.status == 'ok') {
-           $('#review_submit_frm')[0].reset();
-           $('.submit-message').text(data.message);
-           $('.submit-message').show();
-         } else {
-           $('.submit-message').text(data.message);
-           $('.submit-message').show();
-         }
-         //console.log(data);
-       },
-       error: function (error) {
-         console.log(error);
-       }
-     });
-   });
-   
-       $(".review-voting").click(function(e){
-          e.preventDefault();
-          var votingValue = $(this).attr("data-voting");
-          var userId = $(this).attr("data-userId");
-          var reviewId = $(this).attr("data-reviewId");
-          console.log(votingValue,userId,reviewId);
-          var votingData = {
-             votingValue:votingValue,
-             userId:userId,
-             reviewId:reviewId
-          };
-          var jsonData = JSON.stringify(votingData);
-          console.log(votingData)
-          $.ajax({
-             url:'/auth/reviewVoting',
-             method:'POST',
-             data:votingData,
-             success: function(data) {
-                if (data.status == 'ok') {
-                   var updatedLike = data.totalLike.totalLike;
-                   var updatedDislike = data.totalDislike.totalDislike;
-                   var responseReviewId = data.reviewId;
-                   var votingValue = data.votingValue;
-                   if (votingValue == '1') {
-                      $('#rev_'+responseReviewId).find('.like_class').addClass('active')
-                      $('#rev_'+responseReviewId).find('.dislike_class').removeClass('active')
-                   } else {
-                      
-                      $('#rev_'+responseReviewId).find('.like_class').removeClass('active')
-                      $('#rev_'+responseReviewId).find('.dislike_class').addClass('active')
-                   }
-                   // Update the value displayed on the page thumbs-down-link
-                   $('#rev_'+responseReviewId).find('.like_count').text(updatedLike);
-                   $('#rev_'+responseReviewId).find('.dislike_count').text(updatedDislike);
-                   
-                }else{
-                   console.log('Error on response')
-                }
-             }
-          })
-       })
-   
-       $(document).ready(function() {
-         var currentURL = window.location.href;
-         if (currentURL.indexOf('?error=web') !== -1) {
-             $('.frm-error-message').text('This email-ID already exist, Please login with your Email and Password.');
-             $('.frm-error-message').show();
-             $('.login').trigger('click');
-         }
-       });
+                $('#rev_' + responseReviewId).find('.like_class').removeClass('active')
+                $('#rev_' + responseReviewId).find('.dislike_class').addClass('active')
+              }
+              // Update the value displayed on the page thumbs-down-link
+              $('#rev_' + responseReviewId).find('.like_count').text(updatedLike);
+              $('#rev_' + responseReviewId).find('.dislike_count').text(updatedDislike);
+
+            } else {
+              console.log('Error on response')
+            }
+          }
+        })
+      })
+
+      $(document).ready(function () {
+        var currentURL = window.location.href;
+        if (currentURL.indexOf('?error=web') !== -1) {
+          $('.frm-error-message').text('This email-ID already exist, Please login with your Email and Password.');
+          $('.frm-error-message').show();
+          $('.login').trigger('click');
+        }
+      });
 
 
 
-</script>
-<script src="https://maps.googleapis.com/maps/api/js?key=<%= AddressapiKey %>&libraries=places&callback=initMap"
-   async defer></script>
+    </script>
+
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=<%= AddressapiKey %>&libraries=places&callback=initMap"
+      async defer></script>
