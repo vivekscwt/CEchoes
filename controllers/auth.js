@@ -1323,7 +1323,7 @@ exports.createUser = (req, res) => {
 
 // }
 exports.createCategory = async (req, res) => {
-    //console.log('category', req.body);
+    console.log('category', req.body);
     const { cat_name, cat_parent_id, country } = req.body;
 
     const catSlug = await new Promise((resolve, reject) => {
@@ -1332,7 +1332,7 @@ exports.createCategory = async (req, res) => {
                 console.log('Error:', error.message);
                 reject(error);
             } else {
-                // console.log('Generated Company Slug:', generatedSlug);
+                console.log('Generated Company Slug:', generatedSlug);
                 resolve(generatedSlug);
             }
         });
