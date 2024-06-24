@@ -407,13 +407,14 @@
 					console.log('Unsupported country code:', countryCode);
 					return totalPrice;
 				}
-
+				console.log("convertedPrice",convertedPrice);
 				return convertedPrice.toFixed(2);
 			} catch (error) {
 				console.error('Error converting price:', error.message);
 				return totalPrice;
 			}
 		}
+		
 
 		const queryParams = getQueryParams();
 		const totalPrice = parseFloat(queryParams['total_price']);

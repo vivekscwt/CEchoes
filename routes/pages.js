@@ -618,25 +618,25 @@ router.get('/stripe-payment', checkCookieValue, async (req, res) => {
         const { planId, planPrice, monthly, memberCount, total_price } = req.query;
         console.log("req.query-monthly", req.query);
         const apiKey = process.env.GEO_LOCATION_API_KEY;
-        console.log("apiKey",apiKey);
+        //console.log("apiKey",apiKey);
 
-        // const ipAddress = requestIp.getClientIp(req); 
-        // //console.log('Client IP Address:', ip);
+        let currentUserData = JSON.parse(req.userData);
+        //console.log("currentUserData", currentUserData);
 
-        // const api_key = process.env.GEO_LOCATION_API_KEY;
-        // //const api_key = 'AIzaSyCc5pts6Y3V7g9ZGGVsCcEi0WD8seu1VJ8';
+        const encryptedEmail = await comFunction2.encryptEmail(currentUserData.email);
 
-        // const { country_name, country_code } = await comFunction2.getcountrynamebyIp(ipAddress, api_key);
-        // console.log("Country Name:", country_name);
-        // console.log("Country Code:", country_code);
+        const decryptedEmail = await comFunction2.decryptEmail(encryptedEmail);
+        if (decryptedEmail !== currentUserData.email) {
+            return res.status(403).send('Unauthorized access');
+        }
+
+
         let country_name = req.cookies.countryName || 'India';
         let country_code = req.cookies.countryCode || 'IN';
 
         console.log("country_names", country_name);
         console.log("country_codes", country_code);
 
-        let currentUserData = JSON.parse(req.userData);
-        //console.log("currentUserData", currentUserData);
         const planids = `SELECT * FROM plan_management WHERE name = "${planId}"`;
         const planidvalue = await queryAsync(planids);
         //console.log("planidvalue", planidvalue[0].id);

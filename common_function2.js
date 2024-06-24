@@ -11,6 +11,9 @@ const slugify = require('slugify');
 const { emit } = require('process');
 const base64url = require('base64url');
 const dns = require('dns');
+const crypto = require('crypto');
+const algorithm = 'aes-256-ctr';
+const secretKey = process.env.ENCRYPT_DECRYPT_SECRET; 
 
 dotenv.config({ path: './.env' });
 const query = util.promisify(db.query).bind(db);
@@ -6391,69 +6394,6 @@ async function getSubscribedUsers(userId){
 }
 }
 
-// async function getCompanyCategoriess(countryId) {
-//   try {
-//     const connection = await mysql.createConnection({
-//       host: process.env.DATABASE_HOST,
-//       user: process.env.DATABASE_USER,
-//       password: process.env.DATABASE_PASSWORD,
-//       database: process.env.DATABASE
-//     });
-
-//     const [categories] = await connection.query(`
-//       SELECT 
-//           category.ID,
-//           category.category_name,
-//           category.category_img,
-//           GROUP_CONCAT(category_country_relation.country_id) AS country_ids
-//       FROM category
-//       LEFT JOIN category_country_relation ON category.ID = category_country_relation.cat_id
-//       WHERE category_country_relation.country_id = ?
-//       GROUP BY category.ID, category.category_name, category.category_img
-//     `, [countryId]); 
-//     console.log("categories", categories);
-//     connection.end();
-
-//     const nestedCategories = buildCategoryTree(categories);  
-//     const nestedCategoriesHTML = renderCategoryTreeHTML(nestedCategories);
-
-//     return nestedCategoriesHTML;
-//   } catch (error) {
-//     console.error('Error fetching company categories:', error);
-//     throw new Error('Error fetching company categories');
-//   }
-// }
-
-
-
-// function buildCategoryTree(categories, parentId = 0) {
-//   const categoryTree = [];
-
-//   categories.forEach((category) => {
-//     if (category.parent_id === parentId) {
-//       const children = buildCategoryTree(categories, category.ID);
-//       const categoryNode = { id: category.ID, name: category.category_name, img: category.category_img,country_id: category.country_id, children };
-//       categoryTree.push(categoryNode);
-//     }
-//   });
-
-//   return categoryTree;
-// }
-
-// function renderCategoryTreeHTML(categories) {
-//   let html = '<ul>';
-//   categories.forEach(function (category) {
-//     html += '<li class="mt-5"><div class="mb-5"><div class="form-check"><input type="checkbox" name="category" class="form-check-input" value="' + category.id + '"><label class="form-check-label" for="flexCheckDefault">' + category.name + '</label>';
-//     if (category.children.length > 0) {
-//       html += renderCategoryTreeHTML(category.children);
-//     }
-//     html += '</div></div></li>';
-//   });
-//   html += '</ul>';
-//   return html;
-// }
-
-
 
 async function getCompanyCategoriess(country) {
   try {
@@ -6488,8 +6428,6 @@ async function getCompanyCategoriess(country) {
   }
 }
 
-
-
 function renderCategoryTreeHTML(categories) {
   let html = '<ul>';
   categories.forEach(function (category) {
@@ -6502,8 +6440,6 @@ function renderCategoryTreeHTML(categories) {
   html += '</ul>';
   return html;
 }
-
-
 
 async function getCompanyCategoryBuID(country,compID) {
   try {
@@ -6572,7 +6508,7 @@ function buildCategoryTree(categories, parentId = 0) {
         id: category.ID,
         name: category.category_name,
         img: category.category_img,
-        country_ids: category.country_ids ? category.country_ids.split(',') : [], // Convert country_ids string to array
+        country_ids: category.country_ids ? category.country_ids.split(',') : [], 
         children
       };
       categoryTree.push(categoryNode);
@@ -6580,6 +6516,22 @@ function buildCategoryTree(categories, parentId = 0) {
   });
 
   return categoryTree;
+}
+
+function encryptEmail(email) {
+    const cipher = crypto.createCipher(algorithm, secretKey);
+    let encrypted = cipher.update(email, 'utf8', 'hex');
+    encrypted += cipher.final('hex');
+    console.log("encrypted",encrypted);
+    return encrypted;
+}
+
+function decryptEmail(encryptedEmail) {
+    const decipher = crypto.createDecipher(algorithm, secretKey);
+    let decrypted = decipher.update(encryptedEmail, 'hex', 'utf8');
+    decrypted += decipher.final('utf8');
+    console.log("decrypted",decrypted);
+    return decrypted;
 }
 
 module.exports = {
@@ -6706,5 +6658,7 @@ module.exports = {
   getSubscribedUsers,
   getCompanyCategoriess,
   getCompanyCategoryBuID,
-  getCurrency
+  getCurrency,
+  encryptEmail,
+  decryptEmail
 };
