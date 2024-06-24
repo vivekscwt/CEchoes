@@ -12881,6 +12881,46 @@ exports.createSession = async (req, res) => {
 }
 
 
+exports.getLocation = async (req, res) => {
+    try {
+        const { latitude, longitude } = req.body; 
+        var apiKey = process.env.GEO_LOCATION_API_KEY;
+        console.log("apiKey",apiKey);
+
+        if (!latitude || !longitude) {
+            return res.status(400).json({ error: 'Latitude and longitude are required' });
+        }
+
+        async function getCountryDetails(latitude, longitude) {
+            const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${apiKey}`;
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                const results = data.results;
+                if (results.length > 0) {
+                    const addressComponents = results[0].address_components;
+                    for (let i = 0; i < addressComponents.length; i++) {
+                        if (addressComponents[i].types.includes("country")) {
+                            const countryName = addressComponents[i].long_name;
+                            const countryCode = addressComponents[i].short_name;
+                            return { countryName, countryCode };
+                        }
+                    }
+                }
+                return { countryName: 'India', countryCode: 'IN' };
+            } catch (error) {
+                console.error('Error fetching country details:', error);
+                return { countryName: 'India', countryCode: 'IN' };
+            }
+        }
+
+        const countryDetails = await getCountryDetails(latitude, longitude);
+        res.status(200).json(countryDetails);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
 // const syncPlansWithStripe = async () => {
 //     const plans = await getPlanFromDatabase();
 //     for (const plan of plans) {

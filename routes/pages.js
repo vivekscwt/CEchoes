@@ -55,8 +55,10 @@ router.get('/countries', (req, res) => {
 
 router.get('/admin-login', (req, res) => {
     const encodedUserData = req.cookies.user;
+    const apiKey = process.env.GEO_LOCATION_API_KEY;
+    console.log("apiKey",apiKey);
     if (encodedUserData) {
-        res.redirect('dashboard');
+        res.redirect('dashboard',apiKey);
     } else {
         res.render('sign-in', { message: '' })
     }
@@ -65,6 +67,8 @@ router.get('/admin-login', (req, res) => {
 router.get('/register-user', async (req, res) => {
     console.log(req.query);
     const userResponse = JSON.parse(req.query.userResponse);
+    const apiKey = process.env.GEO_LOCATION_API_KEY;
+    console.log("apiKey",apiKey);
     res.json({
         menu_active_id: req.query.menu_active_id,
         page_title: req.query.page_title,
@@ -130,14 +134,17 @@ router.get('', checkCookieValue, async (req, res) => {
     //console.log('Client IP Address:', ip);
 
 
-    const api_key = process.env.GEO_LOCATION_API_KEY
+    const apiKey = process.env.GEO_LOCATION_API_KEY
+    console.log("apiKey",apiKey);
 
     const country_name = req.cookies.countryName;
      //|| 'India';
     const country_code = req.cookies.countryCode 
     //|| 'IN';
-    console.log("country_names", country_name);
-    console.log("country_codes", country_code);
+    console.log("country_namesland", country_name);
+    console.log("country_codesland", country_code);
+
+    
 
 
     const [allRatingTags, globalPageMeta, latestReviews, AllReviewTags, AllReviewVoting, PopularCategories, ReviewCount, UserCount, PositiveReviewsCompany, NegativeReviewsCompany, HomeMeta, VisitorCheck, getAllLatestDiscussion, getAllPopularDiscussion, getAllDiscussions, getCountries] = await Promise.all([
@@ -149,8 +156,8 @@ router.get('', checkCookieValue, async (req, res) => {
         comFunction.getPopularCategories(country_code),
         comFunction.getReviewCount(),
         comFunction.getUserCount(),
-        comFunction.getPopularCategories(country_code),
-        comFunction.getPopularCategories(country_code),
+        // comFunction.getPopularCategories(country_code),
+        // comFunction.getPopularCategories(country_code),
         comFunction.getPositiveReviewsCompany(),
         comFunction.getNegativeReviewsCompany(),
         // comFunction.getPositiveReviewsCompany(country_code),
@@ -258,7 +265,7 @@ router.get('', checkCookieValue, async (req, res) => {
                         getCountries: getCountries,
                         country_name: country_name,
                         countryname: country_code,
-                        api_key
+                        apiKey
                     });
                 })
 
@@ -313,7 +320,8 @@ router.get('', checkCookieValue, async (req, res) => {
                         AllLatestDiscussion: getAllLatestDiscussion,
                         AllPopularDiscussion: getAllPopularDiscussion,
                         AllDiscussions: getAllDiscussions,
-                        getCountries: getCountries
+                        getCountries: getCountries,
+                        apiKey
                     });
                 })
 
@@ -338,6 +346,8 @@ router.post('/setCountry', (req, res) => {
 router.get('/contact-us', checkCookieValue, async (req, res) => {
     //resp.sendFile(`${publicPath}/index.html`)
     let currentUserData = JSON.parse(req.userData);
+    const apiKey = process.env.GEO_LOCATION_API_KEY;
+    console.log("apiKey",apiKey);
     const [globalPageMeta] = await Promise.all([
         comFunction2.getPageMetaValues('global'),
     ]);
@@ -363,6 +373,8 @@ router.get('/contact-us', checkCookieValue, async (req, res) => {
 //View About us Page
 router.get('/about-us', checkCookieValue, async (req, res) => {
     let currentUserData = JSON.parse(req.userData);
+    const apiKey = process.env.GEO_LOCATION_API_KEY;
+    console.log("apiKey",apiKey);
     try {
         const [PageInfo, PageMetaValues, globalPageMeta] = await Promise.all([
             comFunction2.getPageInfo('about'),
@@ -395,6 +407,8 @@ router.get('/review', checkCookieValue, async (req, res) => {
     try {
         let currentUserData = JSON.parse(req.userData);
         console.log(currentUserData);
+        const apiKey = process.env.GEO_LOCATION_API_KEY;
+        console.log("apiKey",apiKey);
 
         // const ipAddress = requestIp.getClientIp(req); 
         // const ipAddress = '45.64.221.211';
@@ -404,8 +418,8 @@ router.get('/review', checkCookieValue, async (req, res) => {
         const country_code = req.cookies.countryCode || 'IN';
 
 
-        console.log("country_names", country_name);
-        console.log("country_codes", country_code);
+        console.log("country_namesreview", country_name);
+        console.log("country_codesreview", country_code);
 
         const api_key = process.env.GEO_LOCATION_API_KEY
 
@@ -424,7 +438,7 @@ router.get('/review', checkCookieValue, async (req, res) => {
         ]);
 
 
-        //console.log(getPageMetaValues);
+        console.log("getCountries",getCountries);
         // res.json({
         //     menu_active_id: 'review',
         //     page_title: 'Customer Reviews',
@@ -452,7 +466,8 @@ router.get('/review', checkCookieValue, async (req, res) => {
             getCountries: getCountries,
             // ip_address: ipAddress,
             country_name: country_name,
-            countryname: country_code
+            countryname: country_code,
+            apiKey: apiKey
         });
     } catch (err) {
         console.error(err);
@@ -486,6 +501,8 @@ router.get('/faq', checkCookieValue, async (req, res) => {
         // const faqPageData = await comFunction2.getFaqPage();
         // const faqCategoriesData = await comFunction2.getFaqCategories();
         // const faqItemsData = await comFunction2.getFaqItems();
+        const apiKey = process.env.GEO_LOCATION_API_KEY;
+        console.log("apiKey",apiKey);
         const [faqPageData, faqCategoriesData, faqItemsData, globalPageMeta] = await Promise.all([
             comFunction2.getFaqPage(),
             comFunction2.getFaqCategories(),
@@ -523,6 +540,8 @@ router.get('/business', checkCookieValue, async (req, res) => {
     try {
         let currentUserData = JSON.parse(req.userData);
         console.log("currentUserData", currentUserData);
+        const apiKey = process.env.GEO_LOCATION_API_KEY;
+        console.log("apiKey",apiKey);
 
         if (currentUserData) {
             var user_id = currentUserData.user_id;
@@ -594,6 +613,8 @@ router.get('/stripe-payment', checkCookieValue, async (req, res) => {
     try {
         const { planId, planPrice, monthly, memberCount, total_price } = req.query;
         console.log("req.query-monthly", req.query);
+        const apiKey = process.env.GEO_LOCATION_API_KEY;
+        console.log("apiKey",apiKey);
 
         // const ipAddress = requestIp.getClientIp(req); 
         // //console.log('Client IP Address:', ip);
@@ -640,6 +661,8 @@ router.get('/stripe-year-payment', checkCookieValue, async (req, res) => {
     try {
         const { planId, planPrice, yearly, memberCount, total_price } = req.query;
         console.log("req.query-yearly", req.query);
+        const apiKey = process.env.GEO_LOCATION_API_KEY;
+        console.log("apiKey",apiKey);
 
         let country_name = req.cookies.countryName || 'India';
         let country_code = req.cookies.countryCode || 'IN';
@@ -685,6 +708,8 @@ router.get('/stripe-year-payment', checkCookieValue, async (req, res) => {
 router.post('/create-subscription', async (req, res) => {
     try {
         const { fullName, email, address } = req.body;
+        const apiKey = process.env.GEO_LOCATION_API_KEY;
+        console.log("apiKey",apiKey);
 
         const customer = await stripe.customers.create({
             email: email,
@@ -710,6 +735,8 @@ router.post('/create-subscription', async (req, res) => {
 
 router.get('/privacy-policy', checkCookieValue, async (req, res) => {
     let currentUserData = JSON.parse(req.userData);
+    const apiKey = process.env.GEO_LOCATION_API_KEY;
+    console.log("apiKey",apiKey);
     const [globalPageMeta] = await Promise.all([
         comFunction2.getPageMetaValues('global'),
     ]);
@@ -734,7 +761,8 @@ router.get('/privacy-policy', checkCookieValue, async (req, res) => {
                     currentUserData,
                     common,
                     meta_values_array,
-                    globalPageMeta: globalPageMeta
+                    globalPageMeta: globalPageMeta,
+                    apiKey
                 });
             })
 
@@ -747,6 +775,8 @@ router.get('/privacy-policy', checkCookieValue, async (req, res) => {
 
 router.get('/disclaimer', checkCookieValue, async (req, res) => {
     let currentUserData = JSON.parse(req.userData);
+    const apiKey = process.env.GEO_LOCATION_API_KEY;
+    console.log("apiKey",apiKey);
     const [globalPageMeta] = await Promise.all([
         comFunction2.getPageMetaValues('global'),
     ]);
@@ -785,6 +815,8 @@ router.get('/disclaimer', checkCookieValue, async (req, res) => {
 
 router.get('/terms-of-service', checkCookieValue, async (req, res) => {
     let currentUserData = JSON.parse(req.userData);
+    const apiKey = process.env.GEO_LOCATION_API_KEY;
+    console.log("apiKey",apiKey);
     const [globalPageMeta] = await Promise.all([
         comFunction2.getPageMetaValues('global'),
     ]);
@@ -826,6 +858,9 @@ router.get('/company/:slug', checkCookieValue, async (req, res) => {
     const labeltype = req.query.type || null;
     console.log(labeltype)
     let currentUserData = JSON.parse(req.userData);
+    const apiKey = process.env.GEO_LOCATION_API_KEY;
+    console.log("apiKey",apiKey);
+
     const comp_res = await comFunction2.getCompanyIdBySlug(slug);
     if (typeof comp_res == 'undefined') {
         const [globalPageMeta] = await Promise.all([
@@ -1026,6 +1061,8 @@ router.get('/company/:slug', checkCookieValue, async (req, res) => {
 // category listing page
 router.get('/categories', checkCookieValue, async (req, res) => {
     let currentUserData = JSON.parse(req.userData);
+    const apiKey = process.env.GEO_LOCATION_API_KEY;
+    console.log("apiKey",apiKey);
 
 
     let country_name = req.cookies.countryName || 'India';
@@ -1144,6 +1181,8 @@ router.get('/category/:category_slug/:country', checkCookieValue, async (req, re
     const category_slug = req.params.category_slug;
     const country = req.params.country;
     const baseURL = process.env.MAIN_URL;
+    const apiKey = process.env.GEO_LOCATION_API_KEY;
+    console.log("apiKey",apiKey);
 
 
     let country_name = req.cookies.countryName || 'India';
@@ -1218,6 +1257,9 @@ router.get('/category/:category_slug/:country/:filter', checkCookieValue, async 
     const filter_value = req.params.filter;
     const baseURL = process.env.MAIN_URL;
 
+    const apiKey = process.env.GEO_LOCATION_API_KEY;
+    console.log("apiKey",apiKey);
+
     let country_name = req.cookies.countryName || 'India';
     let country_code = req.cookies.countryCode || 'IN';
 
@@ -1285,6 +1327,9 @@ router.get('/category/:category_slug/:country/:filter', checkCookieValue, async 
 //New Home page
 router.get('/home', checkCookieValue, async (req, res) => {
     let currentUserData = JSON.parse(req.userData);
+    const apiKey = process.env.GEO_LOCATION_API_KEY;
+    console.log("apiKey",apiKey);
+
     const [globalPageMeta] = await Promise.all([
         comFunction2.getPageMetaValues('global'),
     ]);
@@ -1306,6 +1351,9 @@ router.get('/home', checkCookieValue, async (req, res) => {
 //Discussion page
 router.get('/discussion', checkCookieValue, async (req, res) => {
     let currentUserData = JSON.parse(req.userData);
+
+    const apiKey = process.env.GEO_LOCATION_API_KEY;
+    console.log("apiKey",apiKey);
 
     let country_name = req.cookies.countryName || 'India';
     let country_code = req.cookies.countryCode || 'IN';
@@ -1358,6 +1406,8 @@ router.get('/discussion', checkCookieValue, async (req, res) => {
 
 //Discussion page
 router.get('/translate', async (req, res) => {
+    const apiKey = process.env.GEO_LOCATION_API_KEY;
+    console.log("apiKey",apiKey);
     try {
         res.render('front-end/translate', {
             menu_active_id: 'translate',
@@ -1422,6 +1472,8 @@ router.get('/translate', async (req, res) => {
 router.get('/discussion-details/:discussion_id', checkCookieValue, async (req, res) => {
     let currentUserData = JSON.parse(req.userData);
     console.log("currentUserData", currentUserData);
+    const apiKey = process.env.GEO_LOCATION_API_KEY;
+    console.log("apiKey",apiKey);
 
     try {
         const discussion_id = req.params.discussion_id;
@@ -1485,6 +1537,8 @@ router.get('/discussion-details/:discussion_id', checkCookieValue, async (req, r
 router.get('/similar-discussions/:tag', checkCookieValue, async (req, res) => {
     let currentUserData = JSON.parse(req.userData);
     const tag = req.params.tag;
+    const apiKey = process.env.GEO_LOCATION_API_KEY;
+    console.log("apiKey",apiKey);
     const [globalPageMeta, getDiscussionListingByTag] = await Promise.all([
         comFunction2.getPageMetaValues('global'),
         comFunction2.getDiscussionListingByTag(tag),
@@ -1518,6 +1572,8 @@ router.get('/:slug/survey/:id', checkCookieValue, async (req, res) => {
     const companyId = comp_res.ID;
     const survey_uniqueid = req.params.id;
     //console.log('aaaaaaaaaaaaa')
+    const apiKey = process.env.GEO_LOCATION_API_KEY;
+    console.log("apiKey",apiKey);
     try {
         const [globalPageMeta, company, companySurveyQuestions, AllRatingTags, companySurveyAnswersByUser] = await Promise.all([
             comFunction2.getPageMetaValues('global'),
@@ -1569,6 +1625,8 @@ router.get('/:slug/survey/:id/:email', checkCookieValue, async (req, res) => {
         MAIN_URL: process.env.MAIN_URL,
         // Add other variables as needed
     };
+    const apiKey = process.env.GEO_LOCATION_API_KEY;
+    console.log("apiKey",apiKey);
 
     const slug = req.params.slug;
     const comp_res = await comFunction2.getCompanyIdBySlug(slug);
@@ -1654,6 +1712,9 @@ router.get('/create-survey/:slug', checkClientClaimedCompany, async (req, res) =
     const slug = req.params.slug;
     const comp_res = await comFunction2.getCompanyIdBySlug(slug);
     const companyId = comp_res.ID;
+
+    const apiKey = process.env.GEO_LOCATION_API_KEY;
+    console.log("apiKey",apiKey);
 
     const currentDate = new Date();
     // Get the day, month, and year components
@@ -2498,6 +2559,35 @@ router.get('/company-profile-management/:slug', checkClientClaimedCompany, async
             });
     }
 });
+
+
+router.get('/header-ej', async (req, res) => {
+    const encodedUserData = req.cookies.user;
+    console.log("encodedUserData",encodedUserData);
+    const currentUserData = JSON.parse(encodedUserData);
+    const apiKey = process.env.GEO_LOCATION_API_KEY;
+    console.log("apiKey",apiKey);
+
+    res.locals.globalData = {
+        BLOG_URL: process.env.BLOG_URL,
+        MAIN_URL: process.env.MAIN_URL,
+        // Add other variables as needed
+    };
+
+    const [globalPageMeta] = await Promise.all([
+        comFunction2.getPageMetaValues('global'),
+    ]);
+    console.log("apiKey-------", apiKey);
+        res.render('front-end/common/header',
+            {
+                menu_active_id: 'company-profile-management',
+                page_title: 'Profile Management',
+                currentUserData,
+                globalPageMeta: globalPageMeta,
+                myData : "sudipta"
+            });
+});
+
 
 //company dashboard Review listing Page 
 router.get('/company-review-listing/:slug', checkClientClaimedCompany, async (req, res) => {
