@@ -413,24 +413,23 @@
                 <h4>Most Popular</h4>
                 <h2 class="main-head">Categories</h2>
                 <div class="row">
-                  <% PopularCategories.forEach( category=> { %>
-                    <div class="col-lg-3 col-sm-6">
+                  <% PopularCategories.forEach(category => { %>
+                  <div class="col-lg-3 col-sm-6">
                       <div class="popular-category-part">
-                        <a href="category/<%= category.category_slug %>/<%= category.main_address_country%>">
-                          <% if(category.category_img){ %>
-                            <img src="<%= category.category_img %>" alt="<%= category.category_name %>" loading="lazy"
-                              width="100" height="100">
-                            <% }else{ %>
-                              <img src="/front-end/images/company-placeholder-image.png"
-                                alt="<%= category.category_name %>" loading="lazy" width="100" height="100">
+                          <a href="category/<%= category.category_slug %>/<%= category.country_shortname %>">
+                              <% if(category.category_img) { %>
+                                  <img src="<%= category.category_img %>" alt="<%= category.category_name %>" loading="lazy" width="100" height="100">
+                              <% } else { %>
+                                  <img src="/front-end/images/company-placeholder-image.png" alt="<%= category.category_name %>" loading="lazy" width="100" height="100">
                               <% } %>
-                        </a>
-                        <a href="category/<%= category.category_slug %>">
-                          <%= category.category_name %>
-                        </a>
+                          </a>
+                          <a href="category/<%= category.category_slug %>/<%= category.country_shortname %>">
+                              <%= category.category_name %>
+                          </a>
                       </div>
-                    </div>
-                    <% }) %>
+                  </div>
+              <% }) %>
+
                 </div>
                 <div class="text-center">
                   <a href="/categories" class="view-more"><span class="position-relative"><i
@@ -980,7 +979,7 @@
                         <textarea name="topic" id="search-topic" class="form-control mb-4" required></textarea>
                       </div>
                       <div class="custom-form">
-                        <select name="location" id="country" class="form-control" required>
+                        <select name="location" id="country_discussion" class="form-control" required>
                           <option value="Worldwide" selected>Worldwide</option>
                           <% getCountries.forEach(function(country) { %>
                             <option value="<%= country.name %>">
@@ -1817,7 +1816,7 @@
           };
           console.log("data", data);
           $.ajax({
-            url: 'api/search-company',
+            url: 'api/new-search-company',
             method: 'POST',
             data: { keyword: keyword, country: country_name },
             ContentType: 'application/json',
@@ -2292,6 +2291,11 @@
           allowClear: true,
           width: '100%'
         });
+        $('#country_discussion').select2({
+          placeholder: "Select a country",
+          allowClear: true,
+          width: '100%'
+        });
 
         function performSearchForReview(keyword, country_name) {
           $('.autofield-dropdown-review').css('height', "200px");
@@ -2326,11 +2330,6 @@
                     var companyName = $(this).data('resulttitle');
                     console.log("Selected company name:", companyName);
                     console.log("Event:", e); // Log the event object
-                    // Do something with the selected company name
-                    // Hide the dropdown
-
-
-
                     $('.autofield-dropdown-review').hide();
                   });
 

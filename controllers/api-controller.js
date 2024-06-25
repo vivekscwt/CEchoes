@@ -252,6 +252,21 @@ exports.searchCompany = async (req, res) => {
 
 }
 
+exports.newSearchCompany = async (req, res) => {
+    console.log("newSearchCompany",req.body);
+    const keyword = req.body.keyword; //Approved Company
+    const CompanyResponse = await comFunction.newsearchCompany(keyword);
+    console.log("CompanyResponse",CompanyResponse);
+    if(CompanyResponse.status == 'ok'){
+        res.status(200).json(CompanyResponse);
+    }else{
+        res.status(404).json(CompanyResponse);
+    }
+
+}
+
+
+
 // --search Discussion --//
 exports.searchDiscussion = async (req, res) => {
     console.log('req.body');
