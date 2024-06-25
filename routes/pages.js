@@ -55,10 +55,10 @@ router.get('/countries', (req, res) => {
 
 router.get('/admin-login', (req, res) => {
     const encodedUserData = req.cookies.user;
-    const apiKey = process.env.GEO_LOCATION_API_KEY;
-    console.log("apiKey",apiKey);
+    // const apiKey = process.env.GEO_LOCATION_API_KEY;
+    // console.log("apiKey",apiKey);
     if (encodedUserData) {
-        res.redirect('dashboard',apiKey);
+        res.redirect('dashboard');
     } else {
         res.render('sign-in', { message: '' })
     }
