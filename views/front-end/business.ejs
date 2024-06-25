@@ -569,9 +569,11 @@
          <script src="https://js.stripe.com/v3/"></script>
 
          <script>
-
             let userCountry = '<%= country_name %>';
             console.log('userCountry:', userCountry);
+            let encryptedemail = '<%= encryptedEmail%>';
+            //console.log("encryptedemail",encryptedemail);
+
             document.querySelectorAll('.choose-your-plan-box-step').forEach(step => {
                const planId = step.querySelector('input[name="memberCount"]').id.split('-')[0];
 
@@ -595,28 +597,6 @@
 
                   console.log('New Monthly Total Price:', monthlyTotalPriceSpan.textContent);
                   console.log('New Yearly Total Price:', yearlyTotalPriceSpan.textContent);
-
-            //       if (userCountry != 'United States of America') {
-            //       console.log("oppp",userCountry);
-            //    try {
-            //       console.log("lllll");
-            //       const exchangeRatesResponse = axios.get(`https://api.exchangerate-api.com/v4/latest/USD`);
-            //       const exchangeRates = exchangeRatesResponse.data.rates;
-
-            //       const userCurrency = getUserCurrency(userCountry);
-            //       if (!exchangeRates[userCurrency]) {
-            //          throw new Error(`Conversion rate for ${userCurrency} not available`);
-            //       }
-
-            //       total_price /= exchangeRates[userCurrency];
-            //       console.log(`Converted total_price to USD: ${newMonthlyTotalPrice.toFixed(2).toFixed(2)}`);
-            //    } catch (error) {
-            //       console.error('Error fetching exchange rates:', error.message);
-            //       // Handle error appropriately, perhaps fallback to original total_price
-            //    }
-            // }
-
-
                });
             });
 
@@ -653,9 +633,8 @@
 
 
 
-
-               // Construct redirect URL with all parameters
-               const redirectURL = `/stripe-payment?planId=${encodeURIComponent(planId)}&planPrice=${encodeURIComponent(planPrice)}&billingCycle=${encodeURIComponent(billingCycle)}&memberCount=${encodeURIComponent(memberCount)}&total_price=${encodeURIComponent(total_price.toFixed(2))}`;
+               // const redirectURL = `/stripe-payment?planId=${encodeURIComponent(planId)}&planPrice=${encodeURIComponent(planPrice)}&billingCycle=${encodeURIComponent(billingCycle)}&memberCount=${encodeURIComponent(memberCount)}&total_price=${encodeURIComponent(total_price.toFixed(2))}`;
+               const redirectURL = `/stripe-payment?planId=${encodeURIComponent(planId)}&planPrice=${encodeURIComponent(planPrice)}&billingCycle=${encodeURIComponent(billingCycle)}&memberCount=${encodeURIComponent(memberCount)}&total_price=${encodeURIComponent(total_price.toFixed(2))}&encryptedEmail=${encodeURIComponent(encryptedemail)}`;
 
                window.location.href = redirectURL;
             }
@@ -690,7 +669,7 @@
                console.log("total_price", total_price);
 
                // Construct redirect URL with all parameters
-               const redirectURL = `/stripe-year-payment?planId=${encodeURIComponent(planId)}&planPrice=${encodeURIComponent(planPrice)}&billingCycle=${encodeURIComponent(billingCycle)}&memberCount=${encodeURIComponent(memberCount)}&total_price=${encodeURIComponent(total_price.toFixed(2))}`;
+               const redirectURL = `/stripe-year-payment?planId=${encodeURIComponent(planId)}&planPrice=${encodeURIComponent(planPrice)}&billingCycle=${encodeURIComponent(billingCycle)}&memberCount=${encodeURIComponent(memberCount)}&total_price=${encodeURIComponent(total_price.toFixed(2))}&encryptedEmail=${encodeURIComponent(encryptedemail)}`;
 
                // Redirect to the URL
                window.location.href = redirectURL;

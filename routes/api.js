@@ -18,6 +18,9 @@ const storage = multer.diskStorage({
 // Create multer instance
 const upload = multer({ storage: storage });
 router.post('/search-company', apiController.searchCompany);
+
+router.post('/new-search-company', apiController.newSearchCompany);
+
 router.post('/states', apiController.states);
 router.put('/edit-profile', upload.single('profile_pic'), apiController.editProfile);
 

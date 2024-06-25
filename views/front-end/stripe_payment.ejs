@@ -398,7 +398,8 @@
 		async function convertToUSD(totalPrice, countryCode) {
 			try {
 				let convertedPrice;
-
+				console.log("totalPricssse",totalPrice);
+				console.log("countryCodess",countryCode);
 				if (countryCode === 'IN') {
 					convertedPrice = totalPrice / parseFloat(exchangeRates['INR']);
 				} else if (countryCode === 'JP') {
@@ -407,13 +408,14 @@
 					console.log('Unsupported country code:', countryCode);
 					return totalPrice;
 				}
-
+				console.log("convertedPrice",convertedPrice);
 				return convertedPrice.toFixed(2);
 			} catch (error) {
 				console.error('Error converting price:', error.message);
 				return totalPrice;
 			}
 		}
+		
 
 		const queryParams = getQueryParams();
 		const totalPrice = parseFloat(queryParams['total_price']);
