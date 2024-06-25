@@ -398,7 +398,8 @@
 		async function convertToUSD(totalPrice, countryCode) {
 			try {
 				let convertedPrice;
-
+				console.log("totalPricssse",totalPrice);
+				console.log("countryCodess",countryCode);
 				if (countryCode === 'IN') {
 					convertedPrice = totalPrice / parseFloat(exchangeRates['INR']);
 				} else if (countryCode === 'JP') {

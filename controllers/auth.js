@@ -12478,7 +12478,7 @@ const handleStripeSubscription = async (req, res, { name, email, address, city, 
 const handleRazorpaySubscription = async (req, res, { name, email, address, city, state, zip, plan, billingCycle, memberCount, userId }) => {
   try {
     const options = {
-      plan_id: plan.razorpay_plan_id, // Assuming your plan has a Razorpay plan ID
+      plan_id: plan.razorpay_plan_id,
       total_count: billingCycle === 'yearly' ? 12 : 1,
       customer_notify: 1,
       notes: {

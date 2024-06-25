@@ -552,6 +552,11 @@ router.get('/business', checkCookieValue, async (req, res) => {
             console.log("user_id", user_id);
         }
 
+        const encryptedEmail = await comFunction2.encryptEmail(currentUserData.email);
+        console.log("encryptedEmail",encryptedEmail);
+
+
+
 
 
         // const ipAddress = requestIp.getClientIp(req); 
@@ -601,7 +606,8 @@ router.get('/business', checkCookieValue, async (req, res) => {
                     globalPageMeta: globalPageMeta,
                     getplans: getplans,
                     country_name: country_name,
-                    getSubscribedUsers: getSubscribedUsers
+                    getSubscribedUsers: getSubscribedUsers,
+                    encryptedEmail: encryptedEmail
                 });
             })
 
@@ -615,7 +621,7 @@ router.get('/business', checkCookieValue, async (req, res) => {
 
 router.get('/stripe-payment', checkCookieValue, async (req, res) => {
     try {
-        const { planId, planPrice, monthly, memberCount, total_price } = req.query;
+        const { planId, planPrice, monthly, memberCount, total_price, encryptedEmail } = req.query;
         console.log("req.query-monthly", req.query);
         const apiKey = process.env.GEO_LOCATION_API_KEY;
         //console.log("apiKey",apiKey);
@@ -623,11 +629,9 @@ router.get('/stripe-payment', checkCookieValue, async (req, res) => {
         let currentUserData = JSON.parse(req.userData);
         //console.log("currentUserData", currentUserData);
 
-        const encryptedEmail = await comFunction2.encryptEmail(currentUserData.email);
-
         const decryptedEmail = await comFunction2.decryptEmail(encryptedEmail);
         if (decryptedEmail !== currentUserData.email) {
-            return res.status(403).send('Unauthorized access');
+            return res.status(500).send('You are not authorized to access the payment page.');
         }
 
 
@@ -654,7 +658,8 @@ router.get('/stripe-payment', checkCookieValue, async (req, res) => {
             memberCount,
             total_price,
             country_code: country_code,
-            exchangeRates: exchangeRates
+            exchangeRates: exchangeRates,
+            encryptedEmail
         });
     } catch (err) {
         console.error(err);
@@ -663,7 +668,7 @@ router.get('/stripe-payment', checkCookieValue, async (req, res) => {
 });
 router.get('/stripe-year-payment', checkCookieValue, async (req, res) => {
     try {
-        const { planId, planPrice, yearly, memberCount, total_price } = req.query;
+        const { planId, planPrice, yearly, memberCount, total_price, encryptedEmail } = req.query;
         console.log("req.query-yearly", req.query);
         const apiKey = process.env.GEO_LOCATION_API_KEY;
         console.log("apiKey",apiKey);
@@ -683,6 +688,11 @@ router.get('/stripe-year-payment', checkCookieValue, async (req, res) => {
         const planids = `SELECT * FROM plan_management WHERE name = "${planId}"`;
         const planidvalue = await queryAsync(planids);
         const planID = planidvalue[0].id;
+
+        const decryptedEmail = await comFunction2.decryptEmail(encryptedEmail);
+        if (decryptedEmail !== currentUserData.email) {
+            return res.status(500).send('You are not authorized to access the payment page.');
+        }
 
         const exchangeRates = await comFunction2.getCurrency();
         const getstatesquery = `SELECT * FROM states WHERE country_id = ?`;
