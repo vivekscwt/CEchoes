@@ -460,6 +460,7 @@
          <div class="review-right mt-md-0 mt-5" data-aos="fade-left">
            <form id="review_submit_frm" name="review_submit_frm" action="" method="post">
             <input type="hidden" name="review_lable" value="1" >
+            <input type="hidden" id="selected_company_id" name="update_company_id" value="">
              <div class="row">
                <!--<div class="col-md-12">
                       <div class="custom-form">
@@ -772,6 +773,7 @@
          $('.autofield-dropdown-review').hide('');
          $('.autofield-dropdown-review').html(''); // Clear search results if less than three letters
          $('#review-address').val('');
+         //$('#selected_company_id').val('');
        }
      })
 
@@ -893,6 +895,19 @@
      }
 
 
+//      $('.autofield-dropdown-review').on('click', 'a', function (e) {
+//     e.preventDefault();
+//     var companyId = $(this).data('company-id');
+//     console.log("companyId",companyId);
+//     var companyName = $(this).data('company-name');
+//     console.log("companyName",companyName);
+
+//     $('#selected_company_id').val(companyId);
+
+//     $('#search-input-review').val(companyName);
+
+//     $('.autofield-dropdown-review').hide();
+// });
 
      $('#review_country').select2({
         placeholder: "Select a country",
@@ -905,6 +920,7 @@
         e.preventDefault();
         const selectedCompanyName = $(this).data('resulttitle');
         console.log('Selected company name from dropdown:', selectedCompanyName);
+
         if (selectedCompanyName) {
             $.ajax({
                 url: 'auth/get-company-details',
@@ -925,6 +941,9 @@
 
                             const cityInput = $('#city');
                             cityInput.val(companyDetails.city);
+
+                            const compid = $('#selected_company_id');
+                            stateSelect.html('<option value="' + companyDetails.ID + '">' + companyDetails.state + '</option>');
                         }
                     } else {
                         console.error('No company details found');
@@ -966,6 +985,7 @@
       var address = $(this).find('a').attr('data-companyAddress');
       var pin_code = $(this).find('a').attr('data-companyPin');
       var companyId= $(this).find('a').attr('data-companyid');
+      console.log( "var companyId= $(this).find('a').attr('data-companyid')",companyId);
       //alert(companyId);
 
       $('#search-input-review').val(resulttitle);

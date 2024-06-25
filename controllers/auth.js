@@ -3514,6 +3514,7 @@ exports.getcompanyDetails = async (req, res) => {
         if (companyvalue.length > 0) {
             var company_state = companyvalue[0].main_address_state;
             var company_city = companyvalue[0].main_address_city;
+            var company_id = companyvalue[0].ID;
 
 
             const state_query = `SELECT * FROM states WHERE ID = ?`;
@@ -3526,12 +3527,15 @@ exports.getcompanyDetails = async (req, res) => {
 
             console.log("company_state", company_state);
             console.log("company_city", company_city);
+            console.log("company_id", company_id);
+            
 
             res.status(200).json({
                 status: 'ok',
                 companyDetails: {
                     state: state_name,
-                    city: company_city
+                    city: company_city,
+                    company_id: company_id
                 }
             });
         } else {

@@ -5611,7 +5611,7 @@ router.get('/edit-review/:id', checkLoggedIn, async (req, res) => {
             comFunction2.getCompanyCategoryByReviewId(review_Id),
             comFunction2.getCompanyProductByReviewId(review_Id),
         ]);
-        //console.log(reviewData);
+        console.log("reviewData",reviewData);
         // Render the 'edit-user' EJS view and pass the data
         // res.json({
         //     reviewData: reviewData,
