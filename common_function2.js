@@ -6704,6 +6704,9 @@ async function getCompanyCategoriess(country) {
 }
 
 function renderCategoryTreeHTML(categories) {
+  if (categories.length == 0) {
+    return '<p>No categories found.</p>';
+  }
   let html = '<ul>';
   categories.forEach(function (category) {
     html += '<li class="mt-5"><div class="mb-5"><div class="form-check"><input type="checkbox" name="category" class="form-check-input" value="' + category.id + '"><label class="form-check-label" for="flexCheckDefault">' + category.name + '</label>';
@@ -6756,6 +6759,9 @@ async function getCompanyCategoryBuID(country,compID) {
   }
 }
 function renderCategoryTreeHTMLforCompany(categories, com_category_array) {
+  if (categories.length == 0) {
+    return '<p>No categories found.</p>';
+}
   let html = '<ul>';
   categories.forEach(function (category) {
     if (com_category_array.includes(category.id)) {
