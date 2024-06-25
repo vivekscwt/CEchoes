@@ -46,7 +46,8 @@
                                 </span>
                                 <!--end::Svg Icon-->
                                 <input type="text" data-kt-user-table-filter="search"
-                                    class="form-control form-control-solid w-250px ps-14" placeholder="Search user" />
+                                    class="form-control form-control-solid w-250px ps-14"
+                                    placeholder="Search category" />
                             </div>
                             <!--end::Search-->
                         </div>
@@ -443,19 +444,19 @@
     <!--end::Content-->
     <style>
         .select2-container .select2-selection--single .select2-selection__rendered {
-         padding-right: 1.75em;    
+            padding-right: 1.75em;
             padding-left: 50px;
             padding-right: 50px;
         }
 
         .select2-container .select2-selection--single .select2-selection__clear {
-            top: 50%; 
-            right: 0.25em; 
-            transform: translateY(-50%); 
+            top: 50%;
+            right: 0.25em;
+            transform: translateY(-50%);
         }
 
         .select2-container .select2-selection--single {
-            height: calc(2.25rem + 2px); 
+            height: calc(2.25rem + 2px);
         }
     </style>
 
@@ -812,7 +813,7 @@
             //# sourceMappingURL=table.js.map    
 
             $(document).ready(function () {
-                let currentUserData = "<%= currentUserData%>"
+                let currentUserData = "<%= currentUserData %>";
 
                 function fetchCategoriesByCountry(countryId) {
                     const tbody = $('.text-gray-600.fw-bold');
@@ -824,9 +825,14 @@
                         success: function (response) {
                             if (response.status === 'ok') {
                                 let data = updateTableBody(response.categories);
+                                // Destroy existing DataTable
+                                if ($.fn.DataTable.isDataTable('#kt_table_users')) {
+                                    $('#kt_table_users').DataTable().destroy();
+                                }
                                 tbody.empty();
                                 tbody.append(data);
-
+                                // Reinitialize DataTable
+                                $('#kt_table_users').DataTable();
                             } else {
                                 console.error('Error fetching categories:', response.message);
                             }
@@ -842,52 +848,49 @@
                     var categoryRow = '';
                     categoriess.forEach(categoryy => {
                         categoryRow += `
-                            <tr>
-                            <td class="text-end">
-                                ${currentUserData.user_type_id != 3 ? `
-                                    <div class="dropdown">
-                                        <button class="btn btn-light btn-active-light-primary btn-sm dropdown-toggle" type="button" id="actionsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                            Actions
-                                        </button>
-                                        <ul class="dropdown-menu" aria-labelledby="actionsDropdown">
-                                            <li><a class="dropdown-item" href="/edit-category?id=${categoryy.categoryId}">Edit</a></li>
-                                            <li><a href="#" data-cat-id="${categoryy.categoryId}" class="dropdown-item delete-category">Delete</a></li>
-                                        </ul>
-                                    </div>
-                                ` : `
-                                    <a href="/edit-category?id=${categoryy.categoryId}" class="btn btn-light btn-active-light-primary btn-sm">Edit</a>
-                                `}
-                            </td>
-
-
-                                <td>
-                                    <div class="form-check form-check-sm form-check-custom form-check-solid">
-                                        <input class="form-check-input" type="checkbox" value="1" />
-                                    </div>
-                                </td>
-                                <td class="d-flex align-items-center">
-                                    <div class="symbol symbol-circle symbol-50px overflow-hidden me-3">
-                                        <a href="#">
-                                            <div class="symbol-label">
-                                                <img src="${categoryy.categoryImage ? categoryy.categoryImage : '/assets/media/no-image/no-photo.png'}" alt="${categoryy.categoryName}" class="w-100" />
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div class="d-flex flex-column">
-                                        <a href="#" class="text-gray-800 text-hover-primary mb-1">${categoryy.categoryName}</a>
-                                    </div>
-                                </td>
-                                <td>
-                                    ${categoryy.parentName ? categoryy.parentName : "-"}
-                                </td>
-                                <td>
-                                    ${categoryy.countryNames.join(', ')}
-                                </td>
-                            </tr>
-                        `;
-
+                <tr>
+                    <td class="text-end">
+                        ${currentUserData.user_type_id != 3 ? `
+                            <div class="dropdown">
+                                <button class="btn btn-light btn-active-light-primary btn-sm dropdown-toggle" type="button" id="actionsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Actions
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="actionsDropdown">
+                                    <li><a class="dropdown-item" href="/edit-category?id=${categoryy.categoryId}">Edit</a></li>
+                                    <li><a href="#" data-cat-id="${categoryy.categoryId}" class="dropdown-item delete-category">Delete</a></li>
+                                </ul>
+                            </div>
+                        ` : `
+                            <a href="/edit-category?id=${categoryy.categoryId}" class="btn btn-light btn-active-light-primary btn-sm">Edit</a>
+                        `}
+                    </td>
+                    <td>
+                        <div class="form-check form-check-sm form-check-custom form-check-solid">
+                            <input class="form-check-input" type="checkbox" value="1" />
+                        </div>
+                    </td>
+                    <td class="d-flex align-items-center">
+                        <div class="symbol symbol-circle symbol-50px overflow-hidden me-3">
+                            <a href="#">
+                                <div class="symbol-label">
+                                    <img src="${categoryy.categoryImage ? categoryy.categoryImage : '/assets/media/no-image/no-photo.png'}" alt="${categoryy.categoryName}" class="w-100" />
+                                </div>
+                            </a>
+                        </div>
+                        <div class="d-flex flex-column">
+                            <a href="#" class="text-gray-800 text-hover-primary mb-1">${categoryy.categoryName}</a>
+                        </div>
+                    </td>
+                    <td>
+                        ${categoryy.parentName ? categoryy.parentName : "-"}
+                    </td>
+                    <td>
+                        ${categoryy.countryNames.join(', ')}
+                    </td>
+                </tr>
+            `;
                     });
-                    return categoryRow
+                    return categoryRow;
                 }
 
                 // Event listener for country selection change
@@ -904,9 +907,7 @@
                     allowClear: true
                 });
 
-                $(document).ready(function () {
-                    $('#kt_table_users').DataTable();
-                });
+                $('#kt_table_users').DataTable();
 
                 $(document).on('click', '.delete-category', function (e) {
                     e.preventDefault();
@@ -973,7 +974,6 @@
                         }
                     });
                 });
-
             });
 
         </script>
