@@ -1480,7 +1480,11 @@ async function createreview(reviewIfo, userId, comInfo) {
   if(getcompanylocvalue.length>0){
       var CompanylocID = getcompanylocvalue[0].ID;
       console.log("CompanylocID",CompanylocID);
+  }else{
+    var CompanylocID = "0";
+    console.log("CompanylocID",CompanylocID);
   }
+
 
 
   // const country_name_query = `SELECT name FROM countries WHERE shortname = "${reviewIfo.main_address_country}"`;
