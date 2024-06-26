@@ -1518,6 +1518,30 @@ async function getSubCategories(categorySlug) {
 
 }
 
+
+async function getsubCategories(categorySlug) {
+  const sql = `SELECT category.category_name,
+                      category.category_slug, 
+                      GROUP_CONCAT(DISTINCT c.category_name) AS subcategories, 
+                      GROUP_CONCAT(DISTINCT c.category_slug) AS subcategoriesSlug, 
+                      category_country_relation.country_id,
+                      countries.shortname
+               FROM category 
+               LEFT JOIN category c ON category.ID = c.parent_id
+               LEFT JOIN category_country_relation ON category.ID = category_country_relation.cat_id
+               LEFT JOIN countries ON category_country_relation.country_id = countries.id
+               WHERE category.category_slug = '${categorySlug}'
+               GROUP BY category.category_name, category.category_slug, category_country_relation.country_id, country.country_name`;
+
+  const result = await query(sql);
+  if (result.length > 0) {
+    return result;
+  } else {
+    return [];
+  }
+}
+
+
 // Function to fetch  Category Company details
 async function getCompanyDetails(categorySlug,country) {
   const sql = `SELECT c.ID, c.company_name, c.logo, c.status, c.trending, c.main_address, c.verified, c.paid_status, c.about_company, c.slug , AVG(r.rating) as comp_avg_rating, COUNT(r.id) as comp_total_reviews, pcd.cover_img,category.category_slug
@@ -6871,6 +6895,7 @@ module.exports = {
   getCompanyIdBySlug,
   generateUniqueSlug,
   getSubCategories,
+  getsubCategories,//
   getCompanyDetails,
   getFilteredCompanyDetails,
   getCompanyPollDetails,
