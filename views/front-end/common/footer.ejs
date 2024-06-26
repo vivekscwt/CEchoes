@@ -399,9 +399,9 @@ src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit
 
                           if (response.ok) {
                             const { countryName, countryCode } = await response.json();
-
-                            setCookie('countryName', countryName, 7);
-                            setCookie('countryCode', countryCode, 7);
+                            console.log("Country details fetched:", { countryName, countryCode });
+                            setCookie('countryName', countryName, 20);
+                            setCookie('countryCode', countryCode, 20);
 
                             updateCountryInfo(countryName, countryCode);
                             setDefaultLanguage(countryName);
@@ -478,8 +478,8 @@ src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit
                     const defaultCountryName = 'India';
                     const defaultCountryCode = 'IN';
 
-                    setCookie('countryName', defaultCountryName, 7);
-                    setCookie('countryCode', defaultCountryCode, 7);
+                    setCookie('countryName', defaultCountryName, 20);
+                    setCookie('countryCode', defaultCountryCode, 20);
 
                     updateCountryInfo(defaultCountryName, defaultCountryCode);
                     setDefaultLanguage(defaultCountryName); 
