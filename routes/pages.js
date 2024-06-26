@@ -865,6 +865,7 @@ router.get('/terms-of-service', checkCookieValue, async (req, res) => {
 
 router.get('/company/:slug', checkCookieValue, async (req, res) => {
     const slug = req.params.slug;
+    console.log("slug",slug);
     const labeltype = req.query.type || null;
     console.log(labeltype)
     let currentUserData = JSON.parse(req.userData);
@@ -872,6 +873,8 @@ router.get('/company/:slug', checkCookieValue, async (req, res) => {
     console.log("apiKey",apiKey);
 
     const comp_res = await comFunction2.getCompanyIdBySlug(slug);
+    console.log("comp_res",comp_res);
+
     if (typeof comp_res == 'undefined') {
         const [globalPageMeta] = await Promise.all([
             comFunction2.getPageMetaValues('global'),
@@ -1491,7 +1494,8 @@ router.get('/category/:category_slug', checkCookieValue, async (req, res) => {
     const [globalPageMeta, getSubCategories, companyDetails, AllRatingTags, CategoryDetails] = await Promise.all([
         comFunction2.getPageMetaValues('global'),
         comFunction2.getSubCategories(category_slug),
-        comFunction2.getCompanyDetails(category_slug, country_code),
+        // comFunction2.getCompanyDetails(category_slug, country_code),
+        comFunction2.getCompanyDetails(category_slug),
         comFunction.getAllRatingTags(),
         comFunction.getCategoryDetails(category_slug),
         //comFunction.getParentCategories(category_slug),
