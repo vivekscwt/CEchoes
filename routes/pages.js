@@ -1646,8 +1646,8 @@ router.get('/category/:category_slug/:filter', checkCookieValue, async (req, res
     const [globalPageMeta, getSubCategories, companyDetails, AllRatingTags, CategoryDetails] = await Promise.all([
         comFunction2.getPageMetaValues('global'),
         comFunction2.getSubCategories(category_slug),
-        //comFunction2.getFilteredCompanyDetails(category_slug, filter_value, country_code),
-        comFunction2.getFilteredCompanyDetails(category_slug, filter_value),
+        comFunction2.getFilteredCompanyDetails(category_slug, filter_value, country_code),
+        //comFunction2.getFilteredCompanyDetails(category_slug, filter_value),
         comFunction.getAllRatingTags(),
         comFunction.getCategoryDetails(category_slug),
     ]);
