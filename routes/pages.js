@@ -1430,6 +1430,8 @@ router.get('/category/:category_slug/:country', checkCookieValue, async (req, re
     const categoryParentId = CategoryDetails[0].parent_id;
     const ParentCategories = await comFunction.getParentCategories(categoryParentId);
 
+    console.log("getSubCategories",getSubCategories);
+
     try {
 
         const subcategories = getSubCategories.map((row) => ({
@@ -1437,6 +1439,7 @@ router.get('/category/:category_slug/:country', checkCookieValue, async (req, re
             categorySlug: row.category_slug,
             subCategoryNames: row.subcategories ? row.subcategories.split(',') : [],
             subCategorySlug: row.subcategoriesSlug ? row.subcategoriesSlug.split(',') : [],
+            country:row.shortname
         }));
 
         // res.json({
