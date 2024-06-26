@@ -1167,6 +1167,9 @@
            $('#review_submit_frm')[0].reset();
            $('.submit-message').text(data.message);
            $('.submit-message').show();
+           setTimeout(function () {
+              location.reload(); 
+          }, 2000);
          } else {
            $('.submit-message').text(data.message);
            $('.submit-message').show();

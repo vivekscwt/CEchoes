@@ -979,14 +979,14 @@
                         <textarea name="topic" id="search-topic" class="form-control mb-4" required></textarea>
                       </div>
                       <div class="custom-form">
-                        <select name="location" id="country_discussion" class="form-control" required>
-                          <option value="Worldwide" selected>Worldwide</option>
-                          <% getCountries.forEach(function(country) { %>
+                        <select name="location" id="country_discussion" class="form-select" aria-label="Default select example" required>
+                        <option value="Worldwide"selected>Worldwide</option>
+                        <% getCountries.forEach(function(country) { %>
                             <option value="<%= country.name %>">
                               <%= country.name %>
                             </option>
                             <% }); %>
-                        </select>
+                      </select>
                       </div>
                       <div class="autofield-dropdown">
                       </div>
@@ -1826,7 +1826,7 @@
                   let respData = data.data;
                   let html = '<ul class="p-0 m-0">';
                   respData.forEach(company => {
-                    html += '<li><a href="#" data-resulttitle="' + company.company_name + '" data-resultexcerpt="' + company.about_company + '" data-resultpermalink="/company/' + company.ID + '" >' + company.company_name + '</a></li>';
+                    html += '<li><a href="#" data-resulttitle="' + company.company_name + '" data-resultexcerpt="' + company.about_company + '" data-resultpermalink="/company/' + company.slug + '" >' + company.company_name + '</a></li>';
                   });
                   html += '</ul>';
                   $('.autofield-dropdown').html(html);
@@ -1969,6 +1969,8 @@
           var resulttitle = $(this).find('a').attr('data-resulttitle');
           var resultexcerpt = $(this).find('a').attr('data-resultexcerpt');
           var resultpermalink = $(this).find('a').attr('data-resultpermalink');
+          console.log("resultpermalink",resultpermalink);
+          
           $('#dynamic-search-title').text(resulttitle);
           $('#dynamic-search-content').text(resultexcerpt);
           $('#dynamic-search-link').attr("href", resultpermalink);
@@ -2291,11 +2293,11 @@
           allowClear: true,
           width: '100%'
         });
-        $('#country_discussion').select2({
-          placeholder: "Select a country",
-          allowClear: true,
-          width: '100%'
-        });
+        // $('#country_discussion').select2({
+        //   placeholder: "Select a country",
+        //   allowClear: true,
+        //   width: '100%'
+        // });
 
         function performSearchForReview(keyword, country_name) {
           $('.autofield-dropdown-review').css('height', "200px");
@@ -2543,6 +2545,7 @@
                 setTimeout(function () {
                   $('.submit-message').hide();
                   $('#all-review-hidden-btn').fadeIn();
+                  location.reload();
                 }, 2000);
               } else {
                 $('.submit-message').text(data.message);

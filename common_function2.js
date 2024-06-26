@@ -1519,6 +1519,26 @@ async function getSubCategories(categorySlug) {
 }
 
 // Function to fetch  Category Company details
+// async function getCompanyDetails(categorySlug,country) {
+//   const sql = `SELECT c.ID, c.company_name, c.logo, c.status, c.trending, c.main_address, c.verified, c.paid_status, c.about_company, c.slug , AVG(r.rating) as comp_avg_rating, COUNT(r.id) as comp_total_reviews, pcd.cover_img,category.category_slug
+//                 FROM category  
+//                 JOIN company_cactgory_relation ccr ON ccr.category_id = category.ID
+//                 LEFT JOIN company c ON c.ID = ccr.company_id
+//                 LEFT JOIN reviews r ON r.company_id = c.ID
+//                 LEFT JOIN premium_company_data pcd ON pcd.company_id = c.ID
+//                 WHERE category.category_slug = '${categorySlug}' AND c.status = '1' AND c.main_address_country = "${country}"
+//                 GROUP BY c.ID, c.company_name `;
+
+//   const result = await query(sql);
+//   console.log("getCompanyDetails",result);
+//   if (result.length > 0) {
+//     return result;
+//   } else {
+//     return [];
+//   }
+
+// }
+
 async function getCompanyDetails(categorySlug,country) {
   const sql = `SELECT c.ID, c.company_name, c.logo, c.status, c.trending, c.main_address, c.verified, c.paid_status, c.about_company, c.slug , AVG(r.rating) as comp_avg_rating, COUNT(r.id) as comp_total_reviews, pcd.cover_img,category.category_slug
                 FROM category  
@@ -1526,7 +1546,7 @@ async function getCompanyDetails(categorySlug,country) {
                 LEFT JOIN company c ON c.ID = ccr.company_id
                 LEFT JOIN reviews r ON r.company_id = c.ID
                 LEFT JOIN premium_company_data pcd ON pcd.company_id = c.ID
-                WHERE category.category_slug = '${categorySlug}' AND c.status = '1' AND c.main_address_country = "${country}"
+                WHERE category.category_slug = '${categorySlug}' AND c.status = '1'
                 GROUP BY c.ID, c.company_name `;
 
   const result = await query(sql);
