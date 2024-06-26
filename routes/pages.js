@@ -133,10 +133,10 @@ router.get('', checkCookieValue, async (req, res) => {
     const apiKey = process.env.GEO_LOCATION_API_KEY
     console.log("apiKey",apiKey);
 
-    const country_name = req.cookies.countryName;
-     //|| 'India';
+    const country_name = req.cookies.countryName
+     || 'India';
     const country_code = req.cookies.countryCode 
-    //|| 'IN';
+    || 'IN';
     console.log("country_namesland", country_name);
     console.log("country_codesland", country_code);
 
