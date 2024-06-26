@@ -13,15 +13,15 @@
                 <% categories.forEach((category) => { %>
                     <div class="col-lg-3 col-md-4 col-sm-6 all-cat-slice all-cat-slice">
                         <div class="popular-category-part">
-                           <!-- <a href="category/<%= category.category_slug %>/<%= category.countryCodes%>"> -->
-                            <a href="category/<%= category.category_slug %>">
+                           <a href="category/<%= category.category_slug %>/<%= category.countryCodes%>">
+                            <!-- <a href="category/<%= category.category_slug %>"> -->
                               <% if(category.categoryImage){ %>
                               <img src="/<%= category.categoryImage %>" alt="image" loading="lazy" width="100" height="100">
                               <% }else{ %>
                               <img src="/front-end/images/company-placeholder-image.png" alt="<%= category.category_name %>" loading="lazy" width="100" height="100">
                               <% } %>
                            </a>
-                           <a href="category/<%= category.category_slug %>"><%= category.categoryName %></a>
+                           <a href="category/<%= category.category_slug %>/<%= category.countryCodes%>"><%= category.categoryName %></a>
                         </div>
                      </div>
                 <% }) %>

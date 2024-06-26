@@ -1188,125 +1188,11 @@ router.get('/company/:slug', checkCookieValue, async (req, res) => {
 // });
 
 //actual
-// router.get('/categories', checkCookieValue, async (req, res) => {
-//     let currentUserData = JSON.parse(req.userData);
-//     const apiKey = process.env.GEO_LOCATION_API_KEY;
-//     console.log("apiKey",apiKey);
-
-
-//     let country_name = req.cookies.countryName || 'India';
-//     let country_code = req.cookies.countryCode || 'IN';
-
-//     console.log("country_names", country_name);
-//     console.log("country_codes", country_code);
-
-//     const getcountry_code = `SELECT id FROM countries WHERE shortname = "${country_code}"`;
-//     const getcountryval = await query(getcountry_code);
-//     if (getcountryval.length > 0) {
-//         var country_id = getcountryval[0].id;
-//         console.log("country_id", country_id);
-//     }
-
-
-//     const [globalPageMeta] = await Promise.all([
-//         comFunction2.getPageMetaValues('global'),
-//     ]);
-//     try {
-//         const cat_query = `
-//         SELECT category.ID AS category_id, category.category_slug, category.category_name AS category_name, category.category_img AS category_img, c.category_name AS parent_name, GROUP_CONCAT(countries.name) AS country_names, category_country_relation.country_id AS country
-//         FROM category
-//         JOIN category_country_relation ON category.id = category_country_relation.cat_id
-//         JOIN countries ON category_country_relation.country_id = countries.id
-//         LEFT JOIN category AS c ON c.ID = category.parent_id
-//         WHERE category.parent_id = 0
-//         GROUP BY category.category_name`;
-//         db.query(cat_query, async (err, results) => {
-//             if (err) {
-//                 return res.send(
-//                     {
-//                         status: 'err',
-//                         data: '',
-//                         message: 'An error occurred while processing your request' + err
-//                     }
-//                 )
-//             } else {
-//                 console.log("results", results);
-//                 var country = results.country;
-//                 console.log("country", country);
-//                 var country_names = `SELECT shortname FROM countries WHERE id ="${country}"`;
-//                 if (country_names.length > 0) {
-//                     var getcountry = country_names[0].shortname;
-//                     console.log("getcountry", getcountry);
-//                 }
-
-//                 const categories = results.map((row) => ({
-//                     categoryId: row.category_id,
-//                     categoryName: row.category_name,
-//                     category_slug: row.category_slug,
-//                     parentName: row.parent_name,
-//                     categoryImage: row.category_img,
-//                     countryNames: row.country_names.split(','),
-//                     //country: row.country
-//                 }));
-
-//                 try {
-//                     for (const category of categories) {
-//                         const countryNames = category.countryNames;
-//                         const placeholders = countryNames.map(() => '?').join(',');
-//                         const countryShortnamesQuery = `SELECT name, shortname FROM countries WHERE name IN (${placeholders})`;
-//                         const [countryShortnamesResults] = await db.promise().query(countryShortnamesQuery, countryNames);
-
-//                         // Convert the array of shortnames to a single string
-//                         const countryCodes = countryShortnamesResults.map(row => row.shortname).join(', ');
-//                         category.countryCodes = countryCodes;
-//                     }
-//                 } catch (error) {
-//                     console.error('Error fetching country short names:', error);
-//                     return res.send({
-//                         status: 'err',
-//                         data: '',
-//                         message: 'An error occurred while fetching country short names' + error
-//                     });
-//                 }
-
-//                 var allCategories = categories.map(function (category) {
-//                     return {
-//                         category_slug: category.category_slug,
-//                         categoryName: category.categoryName,
-//                         categoryImage: category.categoryImage
-//                     };
-//                 });
-//                 console.log("categories", categories);
-
-//                 // res.json({
-//                 //     menu_active_id: 'category-listing',
-//                 //     page_title: 'All Categories',
-//                 //     currentUserData,
-//                 //     globalPageMeta:globalPageMeta,
-//                 //     categories: categories 
-//                 // });    
-//                 res.render('front-end/category-listing', {
-//                     menu_active_id: 'category-listing',
-//                     page_title: 'All Categories',
-//                     currentUserData,
-//                     globalPageMeta: globalPageMeta,
-//                     categories: categories,
-//                     allCategories
-//                 });
-//             }
-
-//         })
-
-//     } catch (err) {
-//         console.error(err);
-//         res.status(500).send('An error occurred');
-//     }
-// });
-
 router.get('/categories', checkCookieValue, async (req, res) => {
     let currentUserData = JSON.parse(req.userData);
     const apiKey = process.env.GEO_LOCATION_API_KEY;
-    console.log("apiKey", apiKey);
+    console.log("apiKey",apiKey);
+
 
     let country_name = req.cookies.countryName || 'India';
     let country_code = req.cookies.countryCode || 'IN';
@@ -1321,38 +1207,46 @@ router.get('/categories', checkCookieValue, async (req, res) => {
         console.log("country_id", country_id);
     }
 
+
     const [globalPageMeta] = await Promise.all([
         comFunction2.getPageMetaValues('global'),
     ]);
     try {
         const cat_query = `
-        SELECT category.ID AS category_id, category.category_slug, category.category_name AS category_name, category.category_img AS category_img, c.category_name AS parent_name, GROUP_CONCAT(countries.name) AS country_names, GROUP_CONCAT(countries.shortname) AS country_shortnames, category_country_relation.country_id AS country_id
+        SELECT category.ID AS category_id, category.category_slug, category.category_name AS category_name, category.category_img AS category_img, c.category_name AS parent_name, GROUP_CONCAT(countries.name) AS country_names, category_country_relation.country_id AS country
         FROM category
         JOIN category_country_relation ON category.id = category_country_relation.cat_id
         JOIN countries ON category_country_relation.country_id = countries.id
         LEFT JOIN category AS c ON c.ID = category.parent_id
         WHERE category.parent_id = 0
-        GROUP BY category.category_name, category_country_relation.country_id `;
-        
+        GROUP BY category.category_name`;
         db.query(cat_query, async (err, results) => {
             if (err) {
-                return res.send({
-                    status: 'err',
-                    data: '',
-                    message: 'An error occurred while processing your request' + err
-                });
+                return res.send(
+                    {
+                        status: 'err',
+                        data: '',
+                        message: 'An error occurred while processing your request' + err
+                    }
+                )
             } else {
                 console.log("results", results);
+                var country = results.country;
+                console.log("country", country);
+                var country_names = `SELECT shortname FROM countries WHERE id ="${country}"`;
+                if (country_names.length > 0) {
+                    var getcountry = country_names[0].shortname;
+                    console.log("getcountry", getcountry);
+                }
 
                 const categories = results.map((row) => ({
                     categoryId: row.category_id,
-                    categoryName: `${row.category_name}-${row.country_shortnames}`,
+                    categoryName: row.category_name,
                     category_slug: row.category_slug,
                     parentName: row.parent_name,
                     categoryImage: row.category_img,
                     countryNames: row.country_names.split(','),
-                    countryShortnames: row.country_shortnames.split(','),
-                    countryId: row.country_id,
+                    //country: row.country
                 }));
 
                 try {
@@ -1361,6 +1255,8 @@ router.get('/categories', checkCookieValue, async (req, res) => {
                         const placeholders = countryNames.map(() => '?').join(',');
                         const countryShortnamesQuery = `SELECT name, shortname FROM countries WHERE name IN (${placeholders})`;
                         const [countryShortnamesResults] = await db.promise().query(countryShortnamesQuery, countryNames);
+
+                        // Convert the array of shortnames to a single string
                         const countryCodes = countryShortnamesResults.map(row => row.shortname).join(', ');
                         category.countryCodes = countryCodes;
                     }
@@ -1377,12 +1273,18 @@ router.get('/categories', checkCookieValue, async (req, res) => {
                     return {
                         category_slug: category.category_slug,
                         categoryName: category.categoryName,
-                        categoryImage: category.categoryImage,
-                        countryCodes: category.countryCodes, 
+                        categoryImage: category.categoryImage
                     };
                 });
                 console.log("categories", categories);
 
+                // res.json({
+                //     menu_active_id: 'category-listing',
+                //     page_title: 'All Categories',
+                //     currentUserData,
+                //     globalPageMeta:globalPageMeta,
+                //     categories: categories 
+                // });    
                 res.render('front-end/category-listing', {
                     menu_active_id: 'category-listing',
                     page_title: 'All Categories',
@@ -1392,25 +1294,19 @@ router.get('/categories', checkCookieValue, async (req, res) => {
                     allCategories
                 });
             }
-        });
+
+        })
+
     } catch (err) {
         console.error(err);
         res.status(500).send('An error occurred');
     }
 });
 
-
-
-//category Company Listing page
-// router.get('/category/:category_slug', checkCookieValue, async (req, res) => {
-// router.get('/category/:category_slug/:country', checkCookieValue, async (req, res) => {
+// router.get('/categories', checkCookieValue, async (req, res) => {
 //     let currentUserData = JSON.parse(req.userData);
-//     const category_slug = req.params.category_slug;
-//     const country = req.params.country;
-//     const baseURL = process.env.MAIN_URL;
 //     const apiKey = process.env.GEO_LOCATION_API_KEY;
-//     console.log("apiKey",apiKey);
-
+//     console.log("apiKey", apiKey);
 
 //     let country_name = req.cookies.countryName || 'India';
 //     let country_code = req.cookies.countryCode || 'IN';
@@ -1418,65 +1314,96 @@ router.get('/categories', checkCookieValue, async (req, res) => {
 //     console.log("country_names", country_name);
 //     console.log("country_codes", country_code);
 
-//     const [globalPageMeta, getSubCategories, companyDetails, AllRatingTags, CategoryDetails] = await Promise.all([
+//     const getcountry_code = `SELECT id FROM countries WHERE shortname = "${country_code}"`;
+//     const getcountryval = await query(getcountry_code);
+//     if (getcountryval.length > 0) {
+//         var country_id = getcountryval[0].id;
+//         console.log("country_id", country_id);
+//     }
+
+//     const [globalPageMeta] = await Promise.all([
 //         comFunction2.getPageMetaValues('global'),
-//         comFunction2.getSubCategories(category_slug),
-//         comFunction2.getCompanyDetails(category_slug, country_code),
-//         comFunction.getAllRatingTags(),
-//         comFunction.getCategoryDetails(category_slug),
-//         //comFunction.getParentCategories(category_slug),
 //     ]);
-
-//     const categoryParentId = CategoryDetails[0].parent_id;
-//     const ParentCategories = await comFunction.getParentCategories(categoryParentId);
-
 //     try {
+//         const cat_query = `
+//         SELECT category.ID AS category_id, category.category_slug, category.category_name AS category_name, category.category_img AS category_img, c.category_name AS parent_name, GROUP_CONCAT(countries.name) AS country_names, GROUP_CONCAT(countries.shortname) AS country_shortnames, category_country_relation.country_id AS country_id
+//         FROM category
+//         JOIN category_country_relation ON category.id = category_country_relation.cat_id
+//         JOIN countries ON category_country_relation.country_id = countries.id
+//         LEFT JOIN category AS c ON c.ID = category.parent_id
+//         WHERE category.parent_id = 0
+//         GROUP BY category.category_name, category_country_relation.country_id `;
+        
+//         db.query(cat_query, async (err, results) => {
+//             if (err) {
+//                 return res.send({
+//                     status: 'err',
+//                     data: '',
+//                     message: 'An error occurred while processing your request' + err
+//                 });
+//             } else {
+//                 console.log("results", results);
 
-//         const subcategories = getSubCategories.map((row) => ({
-//             categoryName: row.category_name,
-//             categorySlug: row.category_slug,
-//             subCategoryNames: row.subcategories ? row.subcategories.split(',') : [],
-//             subCategorySlug: row.subcategoriesSlug ? row.subcategoriesSlug.split(',') : [],
-//         }));
+//                 const categories = results.map((row) => ({
+//                     categoryId: row.category_id,
+//                     categoryName: `${row.category_name}-${row.country_shortnames}`,
+//                     category_slug: row.category_slug,
+//                     parentName: row.parent_name,
+//                     categoryImage: row.category_img,
+//                     countryNames: row.country_names.split(','),
+//                     countryShortnames: row.country_shortnames.split(','),
+//                     countryId: row.country_id,
+//                 }));
 
-//         // res.json({
-//         //     menu_active_id: 'company-listing',
-//         //     page_title: subcategories[0].categoryName,
-//         //     currentUserData,
-//         //     globalPageMeta:globalPageMeta,
-//         //     subCategories:subcategories[0],
-//         //     companyDetails:companyDetails,
-//         //     AllRatingTags:AllRatingTags,
-//         //     baseURL:baseURL,
-//         //     filter_value:'',
-//         //     CategoryDetails,
-//         //     ParentCategories
-//         // });
-//         res.render('front-end/company-listing', {
-//             menu_active_id: 'company-listing',
-//             page_title: subcategories[0].categoryName,
-//             currentUserData,
-//             globalPageMeta: globalPageMeta,
-//             subCategories: subcategories[0],
-//             companyDetails: companyDetails,
-//             AllRatingTags: AllRatingTags,
-//             baseURL: baseURL,
-//             filter_value: '',
-//             CategoryDetails,
-//             ParentCategories
+//                 try {
+//                     for (const category of categories) {
+//                         const countryNames = category.countryNames;
+//                         const placeholders = countryNames.map(() => '?').join(',');
+//                         const countryShortnamesQuery = `SELECT name, shortname FROM countries WHERE name IN (${placeholders})`;
+//                         const [countryShortnamesResults] = await db.promise().query(countryShortnamesQuery, countryNames);
+//                         const countryCodes = countryShortnamesResults.map(row => row.shortname).join(', ');
+//                         category.countryCodes = countryCodes;
+//                     }
+//                 } catch (error) {
+//                     console.error('Error fetching country short names:', error);
+//                     return res.send({
+//                         status: 'err',
+//                         data: '',
+//                         message: 'An error occurred while fetching country short names' + error
+//                     });
+//                 }
+
+//                 var allCategories = categories.map(function (category) {
+//                     return {
+//                         category_slug: category.category_slug,
+//                         categoryName: category.categoryName,
+//                         categoryImage: category.categoryImage,
+//                         countryCodes: category.countryCodes, 
+//                     };
+//                 });
+//                 console.log("categories", categories);
+
+//                 res.render('front-end/category-listing', {
+//                     menu_active_id: 'category-listing',
+//                     page_title: 'All Categories',
+//                     currentUserData,
+//                     globalPageMeta: globalPageMeta,
+//                     categories: categories,
+//                     allCategories
+//                 });
+//             }
 //         });
 //     } catch (err) {
 //         console.error(err);
-//         res.render('front-end/404', {
-//             menu_active_id: '404',
-//             page_title: '404',
-//             currentUserData,
-//             globalPageMeta: globalPageMeta
-//         });
+//         res.status(500).send('An error occurred');
 //     }
 // });
 
-router.get('/category/:category_slug', checkCookieValue, async (req, res) => {
+
+
+//category Company Listing page
+// router.get('/category/:category_slug', checkCookieValue, async (req, res) => {
+router.get('/category/:category_slug/:country', checkCookieValue, async (req, res) => {
     let currentUserData = JSON.parse(req.userData);
     const category_slug = req.params.category_slug;
     const country = req.params.country;
@@ -1494,8 +1421,7 @@ router.get('/category/:category_slug', checkCookieValue, async (req, res) => {
     const [globalPageMeta, getSubCategories, companyDetails, AllRatingTags, CategoryDetails] = await Promise.all([
         comFunction2.getPageMetaValues('global'),
         comFunction2.getSubCategories(category_slug),
-        // comFunction2.getCompanyDetails(category_slug, country_code),
-        comFunction2.getCompanyDetails(category_slug),
+        comFunction2.getCompanyDetails(category_slug, country_code),
         comFunction.getAllRatingTags(),
         comFunction.getCategoryDetails(category_slug),
         //comFunction.getParentCategories(category_slug),
@@ -1549,6 +1475,80 @@ router.get('/category/:category_slug', checkCookieValue, async (req, res) => {
         });
     }
 });
+
+// router.get('/category/:category_slug', checkCookieValue, async (req, res) => {
+//     let currentUserData = JSON.parse(req.userData);
+//     const category_slug = req.params.category_slug;
+//     const country = req.params.country;
+//     const baseURL = process.env.MAIN_URL;
+//     const apiKey = process.env.GEO_LOCATION_API_KEY;
+//     console.log("apiKey",apiKey);
+
+
+//     let country_name = req.cookies.countryName || 'India';
+//     let country_code = req.cookies.countryCode || 'IN';
+
+//     console.log("country_names", country_name);
+//     console.log("country_codes", country_code);
+
+//     const [globalPageMeta, getSubCategories, companyDetails, AllRatingTags, CategoryDetails] = await Promise.all([
+//         comFunction2.getPageMetaValues('global'),
+//         comFunction2.getSubCategories(category_slug),
+//         // comFunction2.getCompanyDetails(category_slug, country_code),
+//         comFunction2.getCompanyDetails(category_slug),
+//         comFunction.getAllRatingTags(),
+//         comFunction.getCategoryDetails(category_slug),
+//         //comFunction.getParentCategories(category_slug),
+//     ]);
+
+//     const categoryParentId = CategoryDetails[0].parent_id;
+//     const ParentCategories = await comFunction.getParentCategories(categoryParentId);
+
+//     try {
+
+//         const subcategories = getSubCategories.map((row) => ({
+//             categoryName: row.category_name,
+//             categorySlug: row.category_slug,
+//             subCategoryNames: row.subcategories ? row.subcategories.split(',') : [],
+//             subCategorySlug: row.subcategoriesSlug ? row.subcategoriesSlug.split(',') : [],
+//         }));
+
+//         // res.json({
+//         //     menu_active_id: 'company-listing',
+//         //     page_title: subcategories[0].categoryName,
+//         //     currentUserData,
+//         //     globalPageMeta:globalPageMeta,
+//         //     subCategories:subcategories[0],
+//         //     companyDetails:companyDetails,
+//         //     AllRatingTags:AllRatingTags,
+//         //     baseURL:baseURL,
+//         //     filter_value:'',
+//         //     CategoryDetails,
+//         //     ParentCategories
+//         // });
+//         res.render('front-end/company-listing', {
+//             menu_active_id: 'company-listing',
+//             page_title: subcategories[0].categoryName,
+//             currentUserData,
+//             globalPageMeta: globalPageMeta,
+//             subCategories: subcategories[0],
+//             companyDetails: companyDetails,
+//             AllRatingTags: AllRatingTags,
+//             baseURL: baseURL,
+//             filter_value: '',
+//             CategoryDetails,
+//             ParentCategories
+//         });
+//     } catch (err) {
+//         console.error(err);
+//         res.render('front-end/404', {
+//             menu_active_id: '404',
+//             page_title: '404',
+//             currentUserData,
+//             globalPageMeta: globalPageMeta
+//         });
+//     }
+// });
 
 //category filter company Listing page
 // router.get('/category/:category_slug/:country/:filter', checkCookieValue, async (req, res) => {
