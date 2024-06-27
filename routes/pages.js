@@ -5069,22 +5069,47 @@ router.get('/companies', checkLoggedIn, async (req, res) => {
             comFunction2.getAllParentCompany(),
         ]);
 
+        console.log("allcompany",allcompany);
         let countries = [];
+        // await Promise.all(allcompany.map(async company => {
+        //     if (company.main_address_country && !countries.includes(company.main_address_country)) {
+        //         countries.push(company.main_address_country);
+
+        //         var company_country_query = `SELECT name FROM countries WHERE shortname= ?`;
+        //         var company_country_value = await query(company_country_query, [company.main_address_country]);
+        //         console.log("company_country_value[0].name;",company_country_value[0].name);
+
+        //         if (company_country_value.length > 0) {
+        //             company.country_name = company_country_value[0].name;
+        //         } else {
+        //             company.country_name = null;
+        //         }
+        //     }
+        // }));
+
         await Promise.all(allcompany.map(async company => {
-            if (company.main_address_country && !countries.includes(company.main_address_country)) {
-                countries.push(company.main_address_country);
-
-                var company_country_query = `SELECT name FROM countries WHERE shortname= ?`;
-                var company_country_value = await query(company_country_query, [company.main_address_country]);
-
-                if (company_country_value.length > 0) {
-                    company.country_name = company_country_value[0].name;
+            try {
+                if (company.main_address_country) {
+                    countries.push(company.main_address_country);
+        
+                    var company_country_query = `SELECT name FROM countries WHERE shortname = ?`;
+                    var company_country_value = await query(company_country_query, [company.main_address_country]);
+        
+                    if (company_country_value.length > 0) {
+                        company.country_name = company_country_value[0].name;
+                    } else {
+                        company.country_name = null; 
+                    }
                 } else {
                     company.country_name = null;
                 }
+            } catch (error) {
+                console.error(`Error fetching country name for company ID ${company.id}:`, error);
+                company.country_name = null; 
             }
         }));
-
+        
+        
         res.render('companies', {
             menu_active_id: 'company',
             page_title: 'Organizations',

@@ -105,7 +105,11 @@
                                        <% } else { %>
                                           <span><img src="/assets/media/avatars/blank.png" alt="img" width="20px"></span>
                                           <% } %>
-                                    <span><%= latestReview.alise_name %></span>
+                                          <% if (latestReview.alise_name) { %>
+                                            <span><%= latestReview.alise_name %></span>
+                                        <% } else { %>
+                                          <span><%= latestReview.first_name + ' ' + latestReview.last_name %></span>
+                                        <% } %>
                                     <% } else { %>
                                        <span><img src="front-end/images/blur-img.png" alt="img"></span>
                                        <span><img src="front-end/images/blur-name.png" alt="img"></span>
@@ -235,7 +239,11 @@
                                        <% } else { %>
                                           <span><img src="/assets/media/avatars/blank.png" alt="img" width="20px"></span>
                                           <% } %>
-                                    <span><%= TrendingReview.alise_name %></span>
+                                          <% if (TrendingReview.alise_name) { %>
+                                            <span><%= TrendingReview.alise_name %></span>
+                                        <% } else { %>
+                                          <span><%= TrendingReview.first_name + ' ' + TrendingReview.last_name %></span>
+                                        <% } %>
                                     <% } else { %>
                                        <span><img src="front-end/images/blur-img.png" alt="img"></span>
                                        <span><img src="front-end/images/blur-name.png" alt="img"></span>
@@ -366,7 +374,11 @@
                                        <% } else { %>
                                           <span><img src="/assets/media/avatars/blank.png" alt="img" width="20px"></span>
                                           <% } %>
-                                    <span><%= allReview.alise_name %></span>
+                                          <% if (allReview.alise_name) { %>
+                                            <span><%= allReview.alise_name %></span>
+                                        <% } else { %>
+                                          <span><%= allReview.first_name + ' ' + allReview.last_name %></span>
+                                        <% } %>
                                     <% } else { %>
                                        <span><img src="front-end/images/blur-img.png" alt="img"></span>
                                        <span><img src="front-end/images/blur-name.png" alt="img"></span>
