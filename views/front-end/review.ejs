@@ -1157,6 +1157,8 @@
          jsonData[field.name] = field.value;
        }
      });
+
+     console.log("jsonData",jsonData);
      $.ajax({
        url: '/auth/add-review',
        method: 'POST',
@@ -1167,9 +1169,9 @@
            $('#review_submit_frm')[0].reset();
            $('.submit-message').text(data.message);
            $('.submit-message').show();
-           setTimeout(function () {
-              location.reload(); 
-          }, 2000);
+          //  setTimeout(function () {
+          //     location.reload(); 
+          // }, 2000);
          } else {
            $('.submit-message').text(data.message);
            $('.submit-message').show();

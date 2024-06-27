@@ -1140,6 +1140,9 @@ async function createReview(reviewIfo, userId, comInfo) {
   // reviewIfo['tags[]'].forEach((tag) => {
   //   console.log(tag);
   // });
+
+  console.log("typeof reviewIfo['tags[]']",typeof reviewIfo['tags[]']);
+
   if (typeof reviewIfo['tags[]'] === 'string') {
     // Convert it to an array containing a single element
     reviewIfo['tags[]'] = [reviewIfo['tags[]']];
@@ -1381,6 +1384,8 @@ async function createreview(reviewIfo, userId, comInfo) {
   // reviewIfo['tags[]'].forEach((tag) => {
   //   console.log(tag);
   // });
+
+  console.log("typeof reviewIfo['tags[]']",typeof reviewIfo['tags[]']);
 
   const getcompanyidquery = `SELECT * FROM company WHERE company_name,main_address_country,main_address_state,main_address_city`
 
