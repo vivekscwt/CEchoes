@@ -3022,13 +3022,14 @@ exports.companyBulkUpload = async (req, res) => {
                 if (cleanedCompany[13] === null) {
                     cleanedCompany[13] = '';
                 }
+                cleanedCompany[21] = 0;
 
                 await connection.execute(
                     `
                     INSERT INTO company 
-                        (user_created_by, company_name, heading, about_company, comp_email, comp_phone, tollfree_number, main_address, main_address_pin_code, address_map_url, comp_registration_id, status, trending, created_date, updated_date, main_address_country, main_address_state, main_address_city, verified, slug) 
+                        (user_created_by, company_name, heading, about_company, comp_email, comp_phone, tollfree_number, main_address, main_address_pin_code, address_map_url, comp_registration_id, status, trending, created_date, updated_date, main_address_country, main_address_state, main_address_city, verified, slug,parent_id) 
                     VALUES 
-                        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) 
+                        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) 
                     ON DUPLICATE KEY UPDATE
                         user_created_by = VALUES(user_created_by),
                         company_name = VALUES(company_name), 
@@ -3049,7 +3050,8 @@ exports.companyBulkUpload = async (req, res) => {
                         main_address_state =  VALUES(main_address_state),
                         main_address_city =  VALUES(main_address_city),
                         verified =  VALUES(verified),
-                        slug =  VALUES(slug)
+                        slug =  VALUES(slug),
+                        parent_id = VALUES(parent_id)
                     `,
                     cleanedCompany
                 );
