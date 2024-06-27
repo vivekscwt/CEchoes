@@ -7389,6 +7389,7 @@ exports.getDiscussions = async (req, res) => {
 // }
 
 exports.addComment = async (req, res) => {
+    try{
     console.log('addComment', req.body);
     const { discussion_id, user_id, comment } = req.body;
     const currentDate = new Date();
@@ -7541,6 +7542,10 @@ exports.addComment = async (req, res) => {
             }
         }
     });
+}catch (error) {
+    console.error('Error:', error);
+    return res.status(500).json({ message: 'An error occurred.', error: error.message });
+}
 }
 
 
