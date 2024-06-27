@@ -553,10 +553,11 @@ router.get('/business', checkCookieValue, async (req, res) => {
         if (currentUserData) {
             var user_id = currentUserData.user_id;
             console.log("user_id", user_id);
+            var encryptedEmail = await comFunction2.encryptEmail(currentUserData.email);
+            console.log("encryptedEmail",encryptedEmail);
         }
 
-        const encryptedEmail = await comFunction2.encryptEmail(currentUserData.email);
-        console.log("encryptedEmail",encryptedEmail);
+
 
         const api_key = process.env.GEO_LOCATION_API_KEY;
 
