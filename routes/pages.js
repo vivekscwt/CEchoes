@@ -553,10 +553,11 @@ router.get('/business', checkCookieValue, async (req, res) => {
         if (currentUserData) {
             var user_id = currentUserData.user_id;
             console.log("user_id", user_id);
+            var encryptedEmail = await comFunction2.encryptEmail(currentUserData.email);
+            console.log("encryptedEmail",encryptedEmail);
         }
 
-        const encryptedEmail = await comFunction2.encryptEmail(currentUserData.email);
-        console.log("encryptedEmail",encryptedEmail);
+
 
         const api_key = process.env.GEO_LOCATION_API_KEY;
 
@@ -4689,12 +4690,14 @@ router.get('/add-category', checkLoggedIn, (req, res) => {
                 //console.log(results);
                 country_response = results;
                 let cat_data = [];
+                console.log("cat_data",cat_data);
                 const sql = "SELECT * FROM category"
                 db.query(sql, (error, cat_result) => {
                     if (error) {
                         console.log(error);
                     } else {
                         if (cat_result.length > 0) {
+                            console.log("cat_result",cat_result);
                             cat_data = cat_result;
                             res.render('add-category', { menu_active_id: 'company', page_title: 'Add New Category', currentUserData, country_response, cat_data });
 
@@ -4710,14 +4713,14 @@ router.get('/add-category', checkLoggedIn, (req, res) => {
 });
 
 //Edit Category
-router.get('/edit-category', checkLoggedIn, (req, res, next) => {
+router.get('/edit-category', checkLoggedIn, async (req, res, next) => {
 
     console.log(req.query.id);
     const cat_id = req.query.id;
     const country_id = req.query.country_id;
     const cat_name = req.query.cat_name;
-    console.log("country_id", country_id);
-    console.log("cat_name", cat_name);
+    // console.log("country_id", country_id);
+    // console.log("cat_name", cat_name);
 
     const encodedUserData = req.cookies.user;
     const currentUserData = JSON.parse(encodedUserData);
@@ -4725,6 +4728,28 @@ router.get('/edit-category', checkLoggedIn, (req, res, next) => {
     let accounts_response = [];
     let cat_data = [];
     let edit_data = [];
+
+    var getcountries = await comFunction.getCountries();
+    //console.log("getcountries",getcountries);
+
+    var getcategorycountry = `SELECT country_id FROM category_country_relation WHERE cat_id= "${cat_id}"`;
+    var getcountryvalue = await queryAsync(getcategorycountry);
+    var getcountriesval= getcountryvalue[0].country_id
+    //console.log("getcountryvalue",getcountriesval);
+
+    var getcategoryquery = `SELECT category.* FROM category LEFT JOIN category_country_relation ON category.ID = category_country_relation.cat_id  WHERE category.parent_id="0" AND category_country_relation.country_id="${getcountriesval}" AND category.ID!="null"`;
+    var getcategoryvalue = await queryAsync(getcategoryquery);
+    //console.log("getcategoryvalue",getcategoryvalue);
+
+    var filteredCategories = getcategoryvalue.filter(category => category.ID != cat_id);
+
+    //console.log("filteredCategories", filteredCategories);
+
+    var getparentcategoryquery = `SELECT parent_id FROM category WHERE ID="${cat_id}"`;
+    var getparentcategoryval = await queryAsync(getparentcategoryquery);
+    var parentcat = getparentcategoryval[0].parent_id;
+    //console.log("parentcat",parentcat);
+
     //-- Get Country List --/
     db.query('SELECT * FROM countries', (err, results) => {
 
@@ -4732,7 +4757,7 @@ router.get('/edit-category', checkLoggedIn, (req, res, next) => {
             console.log(err);
         } else {
             if (results.length > 0) {
-                //console.log(results);
+                console.log("results",results);
                 country_response = results;
                 const sql = "SELECT * FROM category"
                 db.query(sql, (cat_err, cat_res) => {
@@ -4762,11 +4787,11 @@ router.get('/edit-category', checkLoggedIn, (req, res, next) => {
                                     const country = edit_data.country_names.split(',');
                                     const country_id = edit_data.country_id.split(',');
                                     const country_arr = country;
-                                    //console.log(edit_data);
-                                    //console.log(country, country_id);
+                                    console.log(edit_data);
+                                    console.log(country, country_id);
                                     // res.json( { menu_active_id: 'company', page_title: 'Add New Category', currentUserData, country_response, cat_data, edit_data, country_arr, country_id });
 
-                                    res.render('edit-category', { menu_active_id: 'company', page_title: 'Add New Category', currentUserData, country_response, cat_data, edit_data, country_arr, country_id });
+                                    res.render('edit-category', { menu_active_id: 'company', page_title: 'Add New Category', currentUserData, country_response, cat_data, edit_data, country_arr, country_id, getcountries,getcountriesval,parentcat,getcategoryvalue: filteredCategories });
                                     //res.render('edit-category', { menu_active_id: 'category', page_title: 'Add New Category', currentUserData, 'ids': req.params.id });
                                 }
                             }
