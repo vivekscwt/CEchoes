@@ -4756,6 +4756,42 @@ router.get('/delete-category', checkLoggedIn, (req, res, next) => {
 
 });
 
+router.get('/fetch-parent-categories', async (req, res) => {
+    const { countryId } = req.query;
+    console.log("countryId",countryId);
+    const querys = `
+        SELECT 
+            category.ID AS category_id,
+            category.category_slug,
+            category.category_name AS category_name,
+            category.category_img AS category_img,
+            countries.shortname
+        FROM 
+            category
+        JOIN 
+            category_country_relation ON category.id = category_country_relation.cat_id
+        JOIN 
+            countries ON category_country_relation.country_id = countries.id
+        LEFT JOIN 
+            category AS c ON c.ID = category.parent_id
+        WHERE 
+            category.parent_id = 0
+            AND countries.id = ?
+        GROUP BY 
+            category.category_name`;
+
+    try {
+        const results= await queryAsync(querys, [countryId]);
+        console.log("results",results);
+
+        res.json(results);
+    } catch (error) {
+        console.error('Error fetching parent categories:', error);
+        res.status(500).json({ error: 'Error fetching parent categories' });
+    }
+});
+
+
 router.get('/edit-user/:id', checkLoggedIn, async (req, res) => {
     try {
         const encodedUserData = req.cookies.user;
