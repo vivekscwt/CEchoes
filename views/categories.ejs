@@ -645,7 +645,7 @@
                                                         }
                                                     }).then(function (result) {
                                                         if (result.isConfirmed) {
-                                                            window.location.href = "/categories";
+                                                            window.location.href = "/manage-categories";
                                                         }
                                                     });
                                                 } else {
@@ -914,6 +914,9 @@
                     var cat_id = $(this).data('cat-id');
                     console.log(cat_id);
 
+                    var selectedCountry = $('#main_address_country').val();
+                    console.log("selectedCountry",selectedCountry);
+
                     Swal.fire({
                         text: "Are you sure you want to delete?",
                         icon: "warning",
@@ -942,7 +945,8 @@
                                             }
                                         }).then(function (result) {
                                             if (result.isConfirmed) {
-                                                window.location.href = "/categories";
+                                                // window.location.href = "/categories";
+                                                window.location.href = `/manage-categories?country=${selectedCountry}`;
                                             }
                                         });
                                     } else {

@@ -1697,6 +1697,8 @@ async function searchCompany(keyword, country) {
   try {
     const get_company_results = await query(get_company_query, [country]);
 
+    console.log("get_company_results",get_company_results);
+
     if (get_company_results.length > 0) {
       const filteredCompanies = [];
 

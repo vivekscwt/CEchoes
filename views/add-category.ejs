@@ -88,25 +88,16 @@
                                     <!--end::Label-->
                                     <!--begin::Col-->
                                     <div class="col-lg-8 fv-row">
-                                        <select id="" name="cat_parent_id" aria-label="Select a Parent Category"
-                                            data-control="select2" data-placeholder="Select a Parent Category..."
+                                        <select id="cat_parent_id" name="cat_parent_id"
+                                            aria-label="Select a Parent Category" data-control="select2"
+                                            data-placeholder="Select a Parent Category..."
                                             class="form-select form-select-solid form-select-lg fw-bold">
                                             <option value="">Select a Parent Category...</option>
-                                            <% if(cat_data.length>0) { %>
-                                                <% cat_data.forEach( item=> { %>
-                                                    <option
-                                                        data-kt-flag="assets/media/flags/<%= item.category_name.toLowerCase().replace(/\s+/g, '-') %>.svg"
-                                                        value="<%= item.ID %>">
-                                                        <%= item.category_name %>
-                                                    </option>
-                                                    <% }) %>
-                                                        <% } else { %>
-                                                            <option value="">There is no Parent Category</option>
-                                                            <% } %>
                                         </select>
                                     </div>
                                     <!--end::Col-->
                                 </div>
+
                                 <!--end::Input group-->
                                 <!--begin::Input group-->
                                 <div class="row mb-6">
@@ -160,6 +151,32 @@
         <!--end::Post-->
     </div>
     <!--end::Content-->
+
+    <style>
+        /* Example CSS adjustments for Select2 dropdown */
+.select2-container--bootstrap .select2-selection--single {
+    height: 40px; /* Adjust height as needed */
+    border: 1px solid #ced4da; /* Ensure border matches your design */
+    border-radius: 4px; /* Rounded corners */
+}
+
+.select2-container--bootstrap .select2-selection--single .select2-selection__arrow {
+    height: 38px; /* Adjust arrow height */
+    top: 1px; /* Position arrow */
+}
+
+/* Example hover state */
+.select2-container--bootstrap .select2-selection--single:hover {
+    border-color: #b3b3b3; /* Adjust hover border color */
+}
+
+/* Example focus state */
+.select2-container--bootstrap .select2-selection--single:focus {
+    border-color: #80bdff; /* Adjust focus border color */
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Adjust focus box shadow */
+}
+    </style>
     <%- include('common/footer') -%>
         <script>
 /******/ (() => { // webpackBootstrap
@@ -198,7 +215,7 @@
                                             }
                                         }
                                     },
-                                    
+
                                     'country[]': {
                                         validators: {
                                             notEmpty: {
@@ -304,5 +321,51 @@
 
             })()
                 ;
-//# sourceMappingURL=profile-details.js.map    
+            //# sourceMappingURL=profile-details.js.map    
+        </script>
+
+        <script>
+            $(document).ready(function () {
+                function fetchParentCategories(countryId) {
+                    console.log("countryId", countryId);
+                    $.ajax({
+                        url: `/fetch-parent-categories?countryId=${countryId}`,
+                        type: 'GET',
+                        success: function (data) {
+                            console.log("data", data);
+                            $('#cat_parent_id').empty();
+                            $('#cat_parent_id').append('<option value="">Select a Parent Category...</option>');
+
+                            if (Array.isArray(data)) {
+                                data.forEach(function (item) {
+                                    $('#cat_parent_id').append(`<option value="${item.category_id}">${item.category_name}</option>`);
+                                });
+                            } else {
+                                console.error('Data is not an array:', data);
+                                $('#cat_parent_id').append('<option value="">No parent categories found</option>');
+                            }
+
+                            $('#cat_parent_id').select2({
+                                placeholder: "Select a Parent Category...",
+                                theme: 'bootstrap'
+                            });
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Error fetching data:', error);
+                            $('#cat_parent_id').empty();
+                            $('#cat_parent_id').append('<option value="">Error fetching data</option>');
+                        }
+                    });
+                }
+
+
+                $('#select_country').on('change', function () {
+                    var selectedCountry = $(this).val();
+                    if (selectedCountry) {
+                        fetchParentCategories(selectedCountry);
+                    } else {
+                        $('#cat_parent_id').empty().append(`<option value="">Select a Parent Category...</option>`);
+                    }
+                });
+            })
         </script>
