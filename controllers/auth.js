@@ -2983,17 +2983,8 @@ exports.companyBulkUpload = async (req, res) => {
                 await company.push(companySlug);
                 // Replace any undefined values with null
                 const cleanedCompany = company.map(value => (value !== undefined ? value : null));
-                // console.log(value,"VALUE");
+                //console.log(value);
                 //return false;
-
-                const index = cleanedCompany.findIndex((value) => value === null);
-
-                console.log(index);
-
-
-                // company.forEach(value => {
-                //     console.log(value, "VALUE");
-                // });
 
                 if (cleanedCompany[2] === null) {
                     cleanedCompany[2] = '';
@@ -3031,20 +3022,13 @@ exports.companyBulkUpload = async (req, res) => {
                 if (cleanedCompany[13] === null) {
                     cleanedCompany[13] = '';
                 }
-                if (cleanedCompany[20] === null) {
-                    cleanedCompany[20] = '';
-                }
-
-                cleanedCompany[21] = 0; // Default value
-
-
 
                 await connection.execute(
                     `
                     INSERT INTO company 
-                        (user_created_by, company_name, heading, about_company, comp_email, comp_phone, tollfree_number, main_address, main_address_pin_code, address_map_url, comp_registration_id, status, trending, created_date, updated_date, main_address_country, main_address_state, main_address_city, verified, slug, parent_id) 
+                        (user_created_by, company_name, heading, about_company, comp_email, comp_phone, tollfree_number, main_address, main_address_pin_code, address_map_url, comp_registration_id, status, trending, created_date, updated_date, main_address_country, main_address_state, main_address_city, verified, slug) 
                     VALUES 
-                        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) 
+                        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) 
                     ON DUPLICATE KEY UPDATE
                         user_created_by = VALUES(user_created_by),
                         company_name = VALUES(company_name), 
@@ -3065,15 +3049,10 @@ exports.companyBulkUpload = async (req, res) => {
                         main_address_state =  VALUES(main_address_state),
                         main_address_city =  VALUES(main_address_city),
                         verified =  VALUES(verified),
-                        slug =  VALUES(slug),
-                        parent_id = VALUES(parent_id)
+                        slug =  VALUES(slug)
                     `,
                     cleanedCompany
-
-                )
-
-
-
+                );
             } catch (error) {
                 console.error('Error:', error);
                 return res.send({
