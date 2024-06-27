@@ -3022,7 +3022,7 @@ exports.companyBulkUpload = async (req, res) => {
                 if (cleanedCompany[13] === null) {
                     cleanedCompany[13] = '';
                 }
-                cleanedCompany[21] = 0;
+                cleanedCompany[21] = '0';
 
                 await connection.execute(
                     `
