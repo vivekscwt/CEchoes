@@ -624,7 +624,9 @@ router.get('/stripe-payment', checkCookieValue, async (req, res) => {
         //console.log("apiKey",apiKey);
 
         let currentUserData = JSON.parse(req.userData);
-        //console.log("currentUserData", currentUserData);
+        console.log("currentUserData", currentUserData);
+        var user_id = currentUserData.user_id;
+        console.log("user_idsssss",user_id);
 
         const decryptedEmail = await comFunction2.decryptEmail(encryptedEmail);
         if (decryptedEmail !== currentUserData.email) {
@@ -656,7 +658,8 @@ router.get('/stripe-payment', checkCookieValue, async (req, res) => {
             total_price,
             country_code: country_code,
             exchangeRates: exchangeRates,
-            encryptedEmail
+            encryptedEmail,
+            user_id
         });
     } catch (err) {
         console.error(err);
