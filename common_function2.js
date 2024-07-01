@@ -1531,7 +1531,7 @@ async function getsubCategories(categorySlug) {
                LEFT JOIN category_country_relation ON category.ID = category_country_relation.cat_id
                LEFT JOIN countries ON category_country_relation.country_id = countries.id
                WHERE category.category_slug = '${categorySlug}'
-               GROUP BY category.category_name, category.category_slug, category_country_relation.country_id, country.country_name`;
+               GROUP BY category.category_name, category.category_slug, category_country_relation.country_id, countries.name`;
 
   const result = await query(sql);
   if (result.length > 0) {

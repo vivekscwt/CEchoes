@@ -3022,7 +3022,13 @@ exports.companyBulkUpload = async (req, res) => {
                 if (cleanedCompany[13] === null) {
                     cleanedCompany[13] = '';
                 }
-                cleanedCompany[21] = '0';
+                if (cleanedCompany[20] === null) {
+                    cleanedCompany[20] = '';
+                }
+
+                cleanedCompany[21] = 0; // Default value
+
+
 
                 await connection.execute(
                     `
@@ -12084,6 +12090,7 @@ exports.addingUsers = async (req, res) => {
 
 
 const getPlanFromDatabase = async (planId) => {
+    console.log("planferrg",planId);
     const sql = 'SELECT name, description, monthly_price, yearly_price, currency,per_user_price FROM plan_management WHERE id = ?';
     const result = await queryAsync(sql, [planId]);
     console.log(`Database query result for planId ${planId}:`, result);
@@ -12164,202 +12171,277 @@ const createStripeProductAndPrice = async (plan, billingCycle, memberCount) => {
 };
 
 //before subscription
-exports.createSubscription = async (req, res) => {
-    try {
-        const { name, email, address, city, state, zip, cardNum, expMonth, expYear, cvv, planId, billingCycle, memberCount } = req.body;
-        //console.log("createSubscriptionreq.body",req.body);
+// exports.createSubscription = async (req, res) => {
+//     try {
+//         const { name, email, address, city, state, zip, cardNum, expMonth, expYear, cvv, planId, billingCycle, memberCount } = req.body;
+//         //console.log("createSubscriptionreq.body",req.body);
 
-        const userQuery = 'SELECT user_id, email FROM users WHERE email = ?';
-        const userResult = await queryAsync(userQuery, [email]);
+//         const userQuery = 'SELECT user_id, email FROM users WHERE email = ?';
+//         const userResult = await queryAsync(userQuery, [email]);
 
-        if (userResult.length === 0) {
-            return res.status(404).send({ error: 'User not found' });
-        }
-        const userId = userResult[0].user_id;
-
-
-        const plan = await getPlanFromDatabase(planId);
-        if (!plan) {
-            return res.status(404).send({ error: 'Plan not found' });
-        }
-
-        const priceId = await createStripeProductAndPrice(plan, billingCycle, memberCount);
-        if (!priceId) {
-            return res.status(500).send({ error: 'Failed to create price for the plan' });
-        }
-
-        const customer = await stripe.customers.create({
-            email: email,
-            name: name,
-            address: {
-                line1: address,
-                city: city,
-                state: state,
-                postal_code: zip,
-            }
-        });
-
-        const paymentMethod = await stripe.paymentMethods.create({
-            type: 'card',
-            card: {
-                number: cardNum,
-                exp_month: expMonth,
-                exp_year: expYear,
-                cvc: cvv
-            },
-            billing_details: {
-                name: name,
-                address: {
-                    line1: address,
-                    city: city,
-                    state: state,
-                    postal_code: zip,
-                }
-            }
-        });
-        await stripe.paymentMethods.attach(paymentMethod.id, { customer: customer.id });
-
-        await stripe.customers.update(customer.id, {
-            invoice_settings: {
-                default_payment_method: paymentMethod.id,
-            }
-        });
+//         if (userResult.length === 0) {
+//             return res.status(404).send({ error: 'User not found' });
+//         }
+//         const userId = userResult[0].user_id;
 
 
-        // const subscription = await stripe.subscriptions.create({
-        //     customer: customer.id,
-        //     items: [{ price: priceId }],
-        //     expand: ['latest_invoice.payment_intent'],
-        // });
-        const startDate = new Date();  // Set the start date dynamically
-        const trialEndTimestamp = Math.floor(startDate.getTime() / 1000) + (365 * 24 * 60 * 60) + (30 * 24 * 60 * 60);
+//         const plan = await getPlanFromDatabase(planId);
+//         if (!plan) {
+//             return res.status(404).send({ error: 'Plan not found' });
+//         }
+
+//         const priceId = await createStripeProductAndPrice(plan, billingCycle, memberCount);
+//         if (!priceId) {
+//             return res.status(500).send({ error: 'Failed to create price for the plan' });
+//         }
+
+//         const customer = await stripe.customers.create({
+//             email: email,
+//             name: name,
+//             address: {
+//                 line1: address,
+//                 city: city,
+//                 state: state,
+//                 postal_code: zip,
+//             }
+//         });
+
+//         const paymentMethod = await stripe.paymentMethods.create({
+//             type: 'card',
+//             card: {
+//                 number: cardNum,
+//                 exp_month: expMonth,
+//                 exp_year: expYear,
+//                 cvc: cvv
+//             },
+//             billing_details: {
+//                 name: name,
+//                 address: {
+//                     line1: address,
+//                     city: city,
+//                     state: state,
+//                     postal_code: zip,
+//                 }
+//             }
+//         });
+//         await stripe.paymentMethods.attach(paymentMethod.id, { customer: customer.id });
+
+//         await stripe.customers.update(customer.id, {
+//             invoice_settings: {
+//                 default_payment_method: paymentMethod.id,
+//             }
+//         });
 
 
-
-        let subscriptionParams = {
-            customer: customer.id,
-            items: [{ price: priceId }],
-            expand: ['latest_invoice.payment_intent'],
-            //trial_end: trialEndTimestamp,
-        };
-
-        const subscription = await stripe.subscriptions.create(subscriptionParams);
-
-        console.log("createsubscription",subscription);
-
-        const invoice = await stripe.invoices.retrieve(subscription.latest_invoice.id);
-
-
-        const paymentIntent = invoice.payment_intent;
-        if (!paymentIntent) {
-            return res.status(500).send({ error: 'Payment intent not found in invoice' });
-        }
-
-        const paymentIntentStatus = await stripe.paymentIntents.retrieve(paymentIntent);
-
-       // console.log("paymentIntentStatus",paymentIntentStatus);
-
-        if (!paymentIntentStatus || !paymentIntentStatus.status) {
-            return res.status(500).send({ error: 'Failed to retrieve payment intent status' });
-        }
-
-        let paymentStatus = paymentIntentStatus.status;
-        if (paymentStatus === 'succeeded') {
-
-            const updatedSubscription = await stripe.subscriptions.retrieve(subscription.id);
-
-            //console.log("subscriptiondetails",updatedSubscription);
-            const invoiceUrl = invoice.invoice_pdf;
-
-            //const planInterval = updatedSubscription.plan.interval;
-
-            var planInterva =updatedSubscription.plan.interval_count;
-            if(planInterva == "13"){
-                var planInterval= 'year'
-            }else{
-                var planInterval= 'month'
-            }
-
-            console.log("Plan Interval:", planInterval);
-
-            const order_history_data={
-                user_id: userId,
-                stripe_subscription_id: subscription.id,
-                plan_id: planId,
-                payment_status: paymentIntentStatus.status,
-                subscription_details: JSON.stringify(subscription),
-                payment_details: JSON.stringify(paymentIntentStatus),
-                subscription_duration: planInterval,
-                subscription_start_date: new Date(subscription.current_period_start * 1000),
-                subscription_end_date: new Date(subscription.current_period_end * 1000),
-                added_user_number: memberCount
-            }
-
-            const order_history_query= `INSERT INTO order_history SET ?`;
-            const order_history_value = await queryAsync(order_history_query,[order_history_data])
-
-            const getcompany_query = `SELECT * FROM company LEFT JOIN company_claim_request ON company.ID = company_claim_request.company_id WHERE company_claim_request.claimed_by= "${userId}"`;
-            const getcompany_value  = await queryAsync(getcompany_query);
-            var companyID = getcompany_value[0].ID;
-            console.log("companyID",companyID);
-
-            const updatecompany_query = `UPDATE company SET membership_type_id = ? WHERE ID = "${companyID}"`;
-            const updatecompany_value = await queryAsync(updatecompany_query,[planId]);
-
-            console.log("updatecompany_value",updatecompany_value);
-
-            const mailOptions = {
-                from: process.env.MAIL_USER,
-                // to: email,
-                to: 'dev2.scwt@gmail.com',
-                subject: 'Your Subscription Invoice',
-                html: `<p>Hello ${name},</p>
-                       <p>Thank you for your subscription. You can view your invoice at the <a href="${invoiceUrl}">following link</a>.</p>
-                       <p>Kind Regards,</p>
-                       <p>CEchoes Technology Team</p>`
-            };
-
-            await mdlconfig.transporter.sendMail(mailOptions);
-
-            return res.send({
-                status: 'ok',
-                message: 'Your payment has been successfully processed.',
-                subscriptionId: updatedSubscription.id,
-                invoiceUrl: invoiceUrl
-            });
-        } else if (paymentStatus === 'requires_action') {
-            return res.status(400).send({
-                status: 'requires_action',
-                client_secret: paymentIntent.client_secret,
-                message: 'Payment requires additional actions.'
-            });
-        } else {
-            return res.status(400).send({
-                status: 'failed',
-                message: 'Payment failed or requires a new payment method.'
-            });
-        }
-
-    } catch (error) {
-        console.error('Error creating subscription:', error);
-        return res.status(500).send({ error: error.message });
-    }
-};
+//         // const subscription = await stripe.subscriptions.create({
+//         //     customer: customer.id,
+//         //     items: [{ price: priceId }],
+//         //     expand: ['latest_invoice.payment_intent'],
+//         // });
+//         const startDate = new Date();  // Set the start date dynamically
+//         const trialEndTimestamp = Math.floor(startDate.getTime() / 1000) + (365 * 24 * 60 * 60) + (30 * 24 * 60 * 60);
 
 
 
+//         let subscriptionParams = {
+//             customer: customer.id,
+//             items: [{ price: priceId }],
+//             expand: ['latest_invoice.payment_intent'],
+//             //trial_end: trialEndTimestamp,
+//         };
+
+//         const subscription = await stripe.subscriptions.create(subscriptionParams);
+
+//         console.log("createsubscription",subscription);
+
+//         const invoice = await stripe.invoices.retrieve(subscription.latest_invoice.id);
 
 
+//         const paymentIntent = invoice.payment_intent;
+//         if (!paymentIntent) {
+//             return res.status(500).send({ error: 'Payment intent not found in invoice' });
+//         }
+
+//         const paymentIntentStatus = await stripe.paymentIntents.retrieve(paymentIntent);
+
+//        // console.log("paymentIntentStatus",paymentIntentStatus);
+
+//         if (!paymentIntentStatus || !paymentIntentStatus.status) {
+//             return res.status(500).send({ error: 'Failed to retrieve payment intent status' });
+//         }
+
+//         let paymentStatus = paymentIntentStatus.status;
+//         if (paymentStatus === 'succeeded') {
+
+//             const updatedSubscription = await stripe.subscriptions.retrieve(subscription.id);
+
+//             //console.log("subscriptiondetails",updatedSubscription);
+//             const invoiceUrl = invoice.invoice_pdf;
+
+//             //const planInterval = updatedSubscription.plan.interval;
+
+//             var planInterva =updatedSubscription.plan.interval_count;
+//             if(planInterva == "13"){
+//                 var planInterval= 'year'
+//             }else{
+//                 var planInterval= 'month'
+//             }
+
+//             console.log("Plan Interval:", planInterval);
+
+//             const order_history_data={
+//                 user_id: userId,
+//                 stripe_subscription_id: subscription.id,
+//                 plan_id: planId,
+//                 payment_status: paymentIntentStatus.status,
+//                 subscription_details: JSON.stringify(subscription),
+//                 payment_details: JSON.stringify(paymentIntentStatus),
+//                 subscription_duration: planInterval,
+//                 subscription_start_date: new Date(subscription.current_period_start * 1000),
+//                 subscription_end_date: new Date(subscription.current_period_end * 1000),
+//                 added_user_number: memberCount
+//             }
+
+//             const order_history_query= `INSERT INTO order_history SET ?`;
+//             const order_history_value = await queryAsync(order_history_query,[order_history_data])
+
+//             const getcompany_query = `SELECT * FROM company LEFT JOIN company_claim_request ON company.ID = company_claim_request.company_id WHERE company_claim_request.claimed_by= "${userId}"`;
+//             const getcompany_value  = await queryAsync(getcompany_query);
+//             var companyID = getcompany_value[0].ID;
+//             console.log("companyID",companyID);
+
+//             const updatecompany_query = `UPDATE company SET membership_type_id = ? WHERE ID = "${companyID}"`;
+//             const updatecompany_value = await queryAsync(updatecompany_query,[planId]);
+
+//             console.log("updatecompany_value",updatecompany_value);
+
+//             const mailOptions = {
+//                 from: process.env.MAIL_USER,
+//                 // to: email,
+//                 to: 'dev2.scwt@gmail.com',
+//                 subject: 'Your Subscription Invoice',
+//                 html: `<p>Hello ${name},</p>
+//                        <p>Thank you for your subscription. You can view your invoice at the <a href="${invoiceUrl}">following link</a>.</p>
+//                        <p>Kind Regards,</p>
+//                        <p>CEchoes Technology Team</p>`
+//             };
+
+//             await mdlconfig.transporter.sendMail(mailOptions);
+
+//             return res.send({
+//                 status: 'ok',
+//                 message: 'Your payment has been successfully processed.',
+//                 subscriptionId: updatedSubscription.id,
+//                 invoiceUrl: invoiceUrl
+//             });
+//         } else if (paymentStatus === 'requires_action') {
+//             return res.status(400).send({
+//                 status: 'requires_action',
+//                 client_secret: paymentIntent.client_secret,
+//                 message: 'Payment requires additional actions.'
+//             });
+//         } else {
+//             return res.status(400).send({
+//                 status: 'failed',
+//                 message: 'Payment failed or requires a new payment method.'
+//             });
+//         }
+
+//     } catch (error) {
+//         console.error('Error creating subscription:', error);
+//         return res.status(500).send({ error: error.message });
+//     }
+// };
+
+
+// exports.createSubscription = async (req, res) => {
+//     try {
+//         const { name, email, address, city, state, zip, cardNum, expMonth, expYear, cvv, planId, billingCycle, memberCount, planData, priceData, subscriptionData } = req.body;
+
+//         let razorpayCustomer;
+
+//         try {
+//             // Check if customer already exists in Razorpay
+//             razorpayCustomer = await razorpay.customers.fetch({
+//                 email: email,
+//             });
+//             console.log("Customer already exists in Razorpay:", razorpayCustomer);
+//         } catch (error) {
+//             if (error.statusCode === 404) {
+//                 // Customer not found, create them
+//                 const customerParams = {
+//                     name: name,
+//                     email: email,
+//                     //contact: '+91xxxxxxxxxx', // Update with customer's contact number as needed
+//                     notes: {
+//                         address: address,
+//                         city: city,
+//                         state: state,
+//                         zip: zip
+//                     }
+//                 };
+
+//                 razorpayCustomer = await razorpay.customers.create(customerParams);
+//                 console.log("Created customer in Razorpay:", razorpayCustomer);
+//             } else {
+//                 throw error; // Rethrow error for other unexpected errors
+//             }
+//         }
+
+//         // Proceed with subscription creation using razorpayCustomer.id
+
+//         // Retrieve plan details from your database
+//         const plan = await getPlanFromDatabase(planId);
+//         if (!plan) {
+//             return res.status(404).send({ error: 'Plan not found' });
+//         }
+
+//         // Create Razorpay plan
+//         const priceId = await createRazorpayPlan(plan, billingCycle, memberCount);
+//         if (!priceId) {
+//             return res.status(500).send({ error: 'Failed to create price for the plan' });
+//         }
+//         console.log("Created Razorpay plan:", priceId);
+
+//         // Create subscription with customer ID
+//         const subscriptionParams = {
+//             plan_id: priceId.id,
+//             customer_id: razorpayCustomer.id, // Associate the customer with the subscription
+//             customer_notify: 1,
+//             // You can optionally specify start_at if needed
+//             // start_at: new Date().getTime() + (24 * 60 * 60 * 1000), // Example: Start subscription 1 day from now
+//             // Remove total_count and end_at for indefinite subscription
+//             // total_count: 12, // Remove for indefinite
+//             // end_at: new Date('2025-12-31').getTime(), // Remove for indefinite
+//             // Add any additional parameters as needed
+//         };
+
+//         const subscription = await razorpay.subscriptions.create(subscriptionParams);
+//         console.log("Created subscription:", subscription);
+
+//         // Optionally, initiate payment for the subscription (if required)
+//         const payment = await initiateRazorpayPayment({
+//             // amount: priceData.amount, // Uncomment if you need to specify the payment amount
+//             subscriptionId: subscription.id,
+//         });
+//         console.log("Initiated payment:", payment);
+
+//         // Send success response
+//         res.status(200).send({ message: 'Subscription created successfully', subscription });
+//     } catch (error) {
+//         console.error('Error creating subscription flow:', error);
+//         res.status(500).send({ error: error.message });
+//     }
+// };
 
 
 
 
 // exports.createSubscription = async (req, res) => {
 //     try {
-
-//         const { name, email, address, city, state, zip, cardNum, expMonth, expYear, cvv, planId, billingCycle, memberCount,planData, priceData, subscriptionData } = req.body;
-
-//         console.log("planData", planData);
+//        const { name, email, address, city, state, zip, cardNum, expMonth, expYear, cvv, planId, billingCycle, memberCount, planData, priceData, subscriptionData } = req.body;
+//         console.log("memberCount",memberCount);
+//         console.log("subscription_ req.body",req.body);
 
 //         const plan = await getPlanFromDatabase(planId);
 //         if (!plan) {
@@ -12370,43 +12452,34 @@ exports.createSubscription = async (req, res) => {
 //         if (!priceId) {
 //             return res.status(500).send({ error: 'Failed to create price for the plan' });
 //         }
-//         console.log("pricesss",priceId);
+//         console.log("Created Razorpay plan:", priceId);
 
-//         //const price = await createRazorpayPrice(plan.id, priceData);
+//         let customerId = await findOrCreateCustomer(email, name);
 
-//         var currentTimestamp = new Date().getTime();
-//         console.log("currentTimestamp",currentTimestamp);
-
-
-//         let subscriptionParams = {
+//         const subscriptionParams = {
 //             plan_id: priceId.id,
-//             customer_notify: 1,
-//             quantity: 5,
-//             total_count: 6,
-//             //start_at: currentTimestamp,
-//             // addons: [
-//             //   {
-//             //     item: {
-//             //       name: "Delivery charges",
-//             //       amount: 30000,
-//             //       currency: "INR"
-//             //     }
-//             //   }
-//             // ],
+//             total_count: 1200, 
+//             customer_id: customerId,
+//             //customer_notify: 1,
 //         };
-
 //         const subscription = await razorpay.subscriptions.create(subscriptionParams);
+//         console.log("Created subscription:", subscription);
 
-//         console.log("createsubscription",subscription);
+//         const orderOptions = {
+//             amount: plan.currency == 'USD' ? plan.monthly_price * 100 : plan.monthly_price * 100,
+//             currency: plan.currency == 'USD' ? 'USD' : 'INR',
+//             receipt: `order_${subscription.id}_${Date.now()}`,
+//             payment_capture: 1,
+//             //plan_id: priceId.id, 
+//         };
+//         const order = await razorpay.orders.create(orderOptions);
+//         console.log("Created order for subscription payment:", order);
 
-//         // const payment = await initiateRazorpayPayment({
-//         //     amount: priceData.amount,
-//         //     subscriptionId: subscription.id, // Pass subscription ID to correlate payment with subscription
-//         // });
-
-//         // console.log("Razorpay Payment initiated:", payment);
-
-//         res.status(200).send({ message: 'Subscription created successfully', subscription });
+//         res.status(200).send({
+//             message: 'Subscription created successfully',
+//             subscription: subscription,
+//             //order: order,
+//         });
 //     } catch (error) {
 //         console.error('Error creating subscription flow:', error);
 //         res.status(500).send({ error: error.message });
@@ -12415,56 +12488,168 @@ exports.createSubscription = async (req, res) => {
 
 
 
-// const createRazorpayPlan = async (plan, billingCycle, memberCount) => {
-//     try {
-//         memberCount = parseInt(memberCount);
-//         console.log("memberCount",memberCount);
-//         if (isNaN(memberCount) || memberCount < 0) {
-//             throw new Error('Invalid memberCount');
-//         }
 
-//         console.log("plan",plan);
-//         console.log("memberCount",memberCount);
-//         console.log("billingCycle",billingCycle);
+exports.createSubscription = async (req, res) => {
+    try {
+        const { name, email, address, city, state, zip, planId, billingCycle, memberCount } = req.body;
+        console.log("Subscription request body:", req.body);
 
-//         const basePrice = billingCycle === 'yearly' ? plan.yearly_price : plan.monthly_price;
-//         if (isNaN(basePrice) || basePrice <= 0) {
-//             throw new Error('Invalid base price');
-//         }
+        let customerId = await findOrCreateCustomer(email, name);
 
-//         let addonPrice = 0;
-//         if (memberCount > 0) {
-//             const userAddonPrice = plan.per_user_price;
-//             addonPrice = userAddonPrice * memberCount;
-//         }
+        const plan = await getPlanFromDatabase(planId);
+        if (!plan) {
+            return res.status(404).send({ error: 'Plan not found' });
+        }
 
-//         const totalPrice = parseFloat(basePrice) + parseFloat(addonPrice);
-//         if (isNaN(totalPrice) || totalPrice <= 0) {
-//             throw new Error('Invalid total price');
-//         }
+        const priceId = await createRazorpayPlan(plan, billingCycle, memberCount);
+        if (!priceId) {
+            return res.status(500).send({ error: 'Failed to create price for the plan' });
+        }
+        console.log("Created Razorpay plan:", priceId);
 
-//         const totalPriceInPaise = totalPrice * 100; 
+        const subscriptionParams = {
+            plan_id: priceId.id,
+            customer_id: customerId,
+            total_count: 12,  
+        };
+        const subscription = await razorpay.subscriptions.create(subscriptionParams);
+        console.log("Created subscription:", subscription);
 
-//         const interval = billingCycle === 'yearly' ? 13 : 1;
+        res.status(200).send({
+            message: 'Subscription created successfully',
+            subscription: subscription,
+        });
+    } catch (error) {
+        console.error('Error creating subscription flow:', error);
+        res.status(500).send({ error: error.message });
+    }
+};
 
-//         const razorpayPlan = await razorpay.plans.create({
-//             period: 'monthly',
-//             interval: interval,
-//             item: {
-//                 name: plan.name,
-//                 description: plan.description,
-//                 amount: totalPriceInPaise,
-//                 currency: 'INR'
-//             }
-//         });
-//         console.log("razorpayPlan",razorpayPlan);
-//         //return razorpayPlan.id;
-//         return razorpayPlan;
-//     } catch (error) {
-//         console.error('Error creating Razorpay plan:', error);
-//         throw error;
-//     }
-// };
+async function findOrCreateCustomer(email, name) {
+    try {
+        // Check if customer exists
+        const customers = await razorpay.customers.all({ email: email });
+        if (customers.items.length > 0) {
+            // Use the existing customer ID
+            console.log('Existing customer found:', customers.items[0].id);
+            return customers.items[0].id;
+        } else {
+            // Create a new customer
+            const customer = await razorpay.customers.create({
+                name: name,
+                email: email,
+            });
+            console.log('Created new customer:', customer.id);
+            return customer.id;
+        }
+    } catch (error) {
+        console.error('Error finding or creating customer:', error);
+        throw error;
+    }
+}
+
+
+const createRazorpayPlan = async (plan, billingCycle, memberCount) => {
+    try {
+        memberCount = parseInt(memberCount);
+        console.log("memberCount",memberCount);
+        if (isNaN(memberCount) || memberCount < 0) {
+            throw new Error('Invalid memberCount');
+        }
+
+        console.log("plan",plan);
+        console.log("memberCount",memberCount);
+        console.log("billingCycle",billingCycle);
+
+        const basePrice = billingCycle === 'yearly' ? plan.yearly_price : plan.monthly_price;
+        if (isNaN(basePrice) || basePrice <= 0) {
+            throw new Error('Invalid base price');
+        }
+
+        let addonPrice = 0;
+        if (memberCount > 0) {
+            const userAddonPrice = plan.per_user_price;
+            addonPrice = userAddonPrice * memberCount;
+        }
+
+        const totalPrice = parseFloat(basePrice) + parseFloat(addonPrice);
+        if (isNaN(totalPrice) || totalPrice <= 0) {
+            throw new Error('Invalid total price');
+        }
+
+        // const totalPriceInPaise = totalPrice * 100; 
+        const totalPriceInPaise = totalPrice * 100; 
+
+        // const interval = billingCycle === 'yearly' ? 13 : 1;
+
+        let period, interval;
+        if (billingCycle === 'yearly') {
+            period = 'monthly';
+            interval = 13; // 13 months
+        } else if (billingCycle === 'monthly') {
+            period = 'monthly';
+            interval = 1; // 1 month
+        } else if (billingCycle === 'daily') {
+            period = 'daily';
+            interval = 7; // 7 days
+        } else {
+            throw new Error('Invalid billing cycle');
+        }
+
+        const razorpayPlan = await razorpay.plans.create({
+            // period: 'monthly',
+            // interval: interval,
+            period: period,
+            interval: interval,
+            item: {
+                name: plan.name,
+                description: plan.description,
+                amount: totalPriceInPaise,
+                //amount: totalPrice,
+                currency: 'INR'
+            }
+        });
+        console.log("razorpayPlan",razorpayPlan);
+        //return razorpayPlan.id;
+        return razorpayPlan;
+    } catch (error) {
+        console.error('Error creating Razorpay plan:', error);
+        throw error;
+    }
+};
+
+
+async function findRazorpayCustomerByEmail(email) {
+    try {
+        const customers = await razorpay.customers.fetchAll({ query: { email: email } });
+        if (customers.items.length > 0) {
+            return customers.items[0];
+        }
+        return null;
+    } catch (error) {
+        console.error('Error fetching Razorpay customer:', error);
+        throw error;
+    }
+}
+const initiateRazorpayPayment = async ({ subscriptionId }) => {
+    try {
+
+        const paymentParams = {
+            subscription_id: subscriptionId, 
+            receipt: `payment_${subscriptionId}_${Date.now()}` 
+        };
+
+        // Create the payment in Razorpay
+        const payment = await razorpay.payments.create(paymentParams);
+        console.log("Payment initiated:", payment);
+
+        return payment; // Return the payment object
+    } catch (error) {
+        console.error('Error initiating payment:', error);
+        throw error;
+    }
+};
+
 
 
 // const handleRazorpaySubscription = async (subscriptionData) => {

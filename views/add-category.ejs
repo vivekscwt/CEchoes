@@ -241,6 +241,8 @@
                         // Handle form submit
                         submitButton.addEventListener('click', function (e) {
                             e.preventDefault();
+                            var selectedCountryId = $('#select_country').val();
+                            console.log("selectedCountryId",selectedCountryId);
 
                             validation.validate().then(function (status) {
                                 if (status == 'Valid') {
@@ -266,7 +268,8 @@
                                                     }
                                                 }).then(function (result) {
                                                     if (result.isConfirmed) {
-                                                        window.location.href = "/manage-categories";
+                                                        //window.location.href = "/manage-categories";
+                                                        window.location.href = "/manage-categories?country=" + selectedCountryId;
                                                     }
                                                 });
                                             } else {

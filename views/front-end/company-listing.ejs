@@ -28,7 +28,7 @@
                                         <div class="select_option">
                                             <p>Sort by</p>
                                             <div class="select_option_content">
-                                                <select class="form-select" aria-label="Default select example" onchange="document.location.href='<%= baseURL %>category/<%= subCategories.categorySlug %>'+'/'+this.options[this.selectedIndex].value;" >
+                                                <select class="form-select" aria-label="Default select example" onchange="document.location.href='<%= baseURL %>category/<%= subCategories.categorySlug %>/<%= subCategories.country %>/'+this.options[this.selectedIndex].value;">
                                                     <option <% if(!filter_value) { %>selected <% } %>>Select</option>
                                                     <option value="latest" <% if(filter_value == "latest" ) { %>selected <% } %>>Latest</option>
                                                     <option value="trending" <% if(filter_value == "trending" ) { %>selected <% } %>>Trending</option>

@@ -2511,52 +2511,54 @@
           });
         }
 
-        // Form submission handling
-        $("#review_submit_frm").on("submit", function (event) {
-          $('.submit-message').hide();
-          $('.submit-message').text('');
-          event.preventDefault();
-          const formData = $('#review_submit_frm').serializeArray();
-          const jsonData = {};
-          $(formData).each(function (index, field) {
-            if (field.name === 'tags') {
-              if (!jsonData.tags) {
-                jsonData.tags = [];
-              }
-              jsonData.tags.push(field.value);;
-            } else {
-              jsonData[field.name] = field.value;
-            }
-          });
 
-          // Add selected country to jsonData
-          jsonData.main_address_country = $('#country_review').val();
+  $("#review_submit_frm").on("submit", function(event) {
+    event.preventDefault(); 
 
-          $.ajax({
-            url: '/auth/add-review',
-            method: 'POST',
-            data: JSON.stringify(jsonData),
-            contentType: 'application/json',
-            success: function (data) {
-              if (data.status == 'ok') {
-                $('#review_submit_frm')[0].reset();
-                $('.submit-message').text(data.message);
-                $('.submit-message').show();
-                setTimeout(function () {
-                  $('.submit-message').hide();
-                  $('#all-review-hidden-btn').fadeIn();
-                  location.reload();
-                }, 2000);
-              } else {
-                $('.submit-message').text(data.message);
-                $('.submit-message').show();
-              }
-            },
-            error: function (error) {
-              console.log(error);
-            }
-          });
-        });
+
+    const formData = $('#review_submit_frm').serializeArray();
+    const jsonData = {};
+
+    $(formData).each(function(index, field) {
+      if (field.name === 'tags') {
+        if (!jsonData['tags[]']) {
+          jsonData['tags[]'] = [];
+        }
+        jsonData['tags[]'].push(field.value);
+      } else {
+        jsonData[field.name] = field.value;
+      }
+    });
+
+    jsonData.main_address_country = $('#country_review').val();
+
+    console.log("JSON.stringify(jsonData)", JSON.stringify(jsonData));
+
+    $.ajax({
+      url: '/auth/add-review',
+      method: 'POST',
+      data: JSON.stringify(jsonData), 
+      contentType: 'application/json', 
+      success: function(data) {
+        if (data.status === 'ok') {
+          $('#review_submit_frm')[0].reset();
+          $('.submit-message').text(data.message);
+          $('.submit-message').show();
+          setTimeout(function() {
+            $('.submit-message').hide();
+            $('#all-review-hidden-btn').fadeIn();
+            location.reload();
+          }, 2000);
+        } else {
+          $('.submit-message').text(data.message);
+          $('.submit-message').show();
+        }
+      },
+      error: function(error) {
+        console.log(error);
+      }
+    });
+  });
       });
 
       $(".review-voting").click(function (e) {

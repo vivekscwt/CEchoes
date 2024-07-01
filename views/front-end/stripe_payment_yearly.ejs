@@ -1,264 +1,309 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Online Payment-Page</title>
-	<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Payment-Page</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-	<div class="container">
-		<div class="row">
-			<div class="col">
-				<h3 class="title">Amount</h3>
-				<div id="amountDisplay">
-					<p>Total Amount: <span id="amount">$0.00</span></p>
-				</div>
-			</div>
-
-			<div class="col">
-				<form id="paymentForm">
-
-					<div class="row">
-
-						<div class="col">
-							<h3 class="title">
-								Billing Address
-							</h3>
-
-							<div class="inputBox">
-								<label for="name">
-									Full Name:
-								</label>
-								<input type="text" id="name" placeholder="Enter your full name" required>
-							</div>
-
-							<div class="inputBox">
-								<label for="address">
-									Address:
-								</label>
-								<input type="text" id="address" placeholder="Enter address" required>
-							</div>
-
-							<div class="inputBox">
-								<label for="city">
-									City:
-								</label>
-								<input type="text" id="city" placeholder="Enter city" required>
-							</div>
-
-							<div class="inputBox">
-								<label for="state">State:</label>
-								<select id="state" required>
-									<option value="">Select a state</option>
-									<% getstatevalue.forEach(function(state) { %>
-										<option value="<%= state.name %>">
-											<%= state.name %>
-										</option>
-										<% }); %>
-								</select>
-							</div>
-
-
-							<div class="inputBox">
-								<label for="zip">
-									Zip Code:
-								</label>
-								<input type="number" id="zip" placeholder="123 456" maxlength="6" required>
-							</div>
-
-						</div>
-						<div class="col">
-							<h3 class="title">Payment</h3>
-
-							<div class="inputBox">
-								<label for="name">
-									Card Accepted:
-								</label>
-								<img src="cards.png" alt="credit/debit card image">
-							</div>
-
-							<div class="inputBox">
-								<label for="cardName">
-									Name On Card:
-								</label>
-								<input type="text" id="cardName" placeholder="Enter card name" required>
-							</div>
-
-							<div class="inputBox">
-								<label for="cardNum">
-									Credit Card Number:
-								</label>
-								<input type="text" id="cardNum" placeholder="1111-2222-3333-4444" maxlength="19"
-									required>
-							</div>
-
-							<div class="inputBox">
-								<label for="">Exp Month:</label>
-								<select name="" id="expMonth">
-									<option value="">Choose month</option>
-									<option value="01">January</option>
-									<option value="02">February</option>
-									<option value="03">March</option>
-									<option value="04">April</option>
-									<option value="05">May</option>
-									<option value="06">June</option>
-									<option value="07">July</option>
-									<option value="08">August</option>
-									<option value="09">September</option>
-									<option value="10">October</option>
-									<option value="11">November</option>
-									<option value="12">December</option>
-								</select>
-							</div>
-
-
-
-							<div class="flex">
-								<div class="inputBox">
-									<label for="">Exp Year:</label>
-									<select name="" id="expYear">
-										<option value="">Choose Year</option>
-										<!-- <option value="2023">2023</option>
-										<option value="2024">2024</option>
-										<option value="2025">2025</option>
-										<option value="2026">2026</option>
-										<option value="2027">2027</option> -->
-									</select>
-								</div>
-
-								<div class="inputBox">
-									<label for="cvv">CVV</label>
-									<input type="number" id="cvv" placeholder="1234" required>
-								</div>
-							</div>
-
-						</div>
-
-					</div>
-
-					<input type="submit" value="Proceed to Checkout" class="submit_btn">
-				</form>
-			</div>
-		</div>
-	</div>
-	<script type="text/javascript" src="index.js"></script>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h3 class="title">Amount</h3>
+                <div id="amountDisplay">
+                    <p>Total Amount: <span id="amount">$0.00</span></p>
+                </div>
+            </div>
+            <div class="col">
+                <form id="paymentForm">
+                    <div class="row">
+                        <div class="col">
+                            <h3 class="title">Billing Address</h3>
+                            <div class="inputBox">
+                                <label for="name">Full Name:</label>
+                                <input type="text" id="name" placeholder="Enter your full name" required>
+                            </div>
+                            <div class="inputBox">
+                                <label for="address">Address:</label>
+                                <input type="text" id="address" placeholder="Enter address" required>
+                            </div>
+                            <div class="inputBox">
+                                <label for="city">City:</label>
+                                <input type="text" id="city" placeholder="Enter city" required>
+                            </div>
+                            <div class="inputBox">
+                                <label for="state">State:</label>
+                                <input type="text" id="state" placeholder="Enter state" required>
+                            </div>
+                            <div class="inputBox">
+                                <label for="zip">Zip Code:</label>
+                                <input type="number" id="zip" placeholder="123 456" required>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="submit" value="Proceed to Checkout" class="submit_btn" id="paymentButton">
+                </form>
+            </div>
+        </div>
+    </div>
 </body>
-
 </html>
 
+	<style>
+		@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600&display=swap');
+	
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+			border: none;
+			outline: none;
+			font-family: 'Poppins', sans-serif;
+			text-transform: capitalize;
+			transition: all 0.2s linear;
+		}
+	
+		.container {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			min-height: 100vh;
+			padding: 25px;
+			background: #d6eef1;
+		}
+	
+		.container form {
+			width: 700px;
+			padding: 20px;
+			background: #fff;
+			box-shadow: 5px 5px 30px rgba(0, 0, 0, 0.2);
+		}
+	
+		.container form .row {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 15px;
+		}
+	
+		.container form .row .col {
+			flex: 1 1 250px;
+		}
+	
+		.col .title {
+			font-size: 20px;
+			color: rgb(237, 55, 23);
+			padding-bottom: 5px;
+		}
+	
+		.col .inputBox {
+			margin: 15px 0;
+		}
+	
+		.col .inputBox label {
+			margin-bottom: 10px;
+			display: block;
+		}
+	
+		.col .inputBox input,
+		.col .inputBox select {
+			width: 100%;
+			border: 1px solid #ccc;
+			padding: 10px 15px;
+			font-size: 15px;
+		}
+	
+		.col .inputBox input:focus,
+		.col .inputBox select:focus {
+			border: 1px solid #000;
+		}
+	
+		.col .flex {
+			display: flex;
+			gap: 15px;
+		}
+	
+		.col .flex .inputBox {
+			flex: 1 1;
+			margin-top: 5px;
+		}
+	
+		.col .inputBox img {
+			height: 34px;
+			margin-top: 5px;
+			filter: drop-shadow(0 0 1px #000);
+		}
+	
+		.container form .submit_btn {
+			width: 100%;
+			padding: 12px;
+			font-size: 17px;
+			background: rgb(1, 143, 34);
+			color: #fff;
+			margin-top: 5px;
+			cursor: pointer;
+			letter-spacing: 1px;
+		}
+	
+		.container form .submit_btn:hover {
+			background: #3d17fb;
+		}
+	
+		input::-webkit-inner-spin-button,
+		input::-webkit-outer-spin-button {
+			display: none;
+		}
+	</style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script type="text/javascript">
+        let planid = '<%= planID%>';
+        console.log("planid", planid);
+        let user_email = '<%= currentUserData.email%>';
+        let user_id = '<%= currentUserData.user_id%>';
+        let memberval = '<%= memberCount%>';
+        let key = 'rzp_test_FUBQq7lujicpGo';
+		console.log("membercount",memberval);
 
-<style>
-	@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600&display=swap');
+        document.getElementById('paymentForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
 
-	* {
-		margin: 0;
-		padding: 0;
-		box-sizing: border-box;
-		border: none;
-		outline: none;
-		font-family: 'Poppins', sans-serif;
-		text-transform: capitalize;
-		transition: all 0.2s linear;
-	}
+            try {
+                const formData = {
+                    userId: user_id,
+                    name: document.getElementById('name').value,
+                    email: user_email,
+                    address: document.getElementById('address').value,
+                    city: document.getElementById('city').value,
+                    state: document.getElementById('state').value,
+                    zip: document.getElementById('zip').value,
+                    planId: planid,
+                    billingCycle: 'yearly',
+					//billingCycle: 'daily',
+                    memberCount: memberval
+                };
 
-	.container {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		min-height: 100vh;
-		padding: 25px;
-		background: #d6eef1;
-	}
+                const response = await axios.post('/auth/create-subscription', formData);
+                const { subscription } = response.data;
 
-	.container form {
-		width: 700px;
-		padding: 20px;
-		background: #fff;
-		box-shadow: 5px 5px 30px rgba(0, 0, 0, 0.2);
-	}
+                const options = {
+                    key: key,
+                    subscription_id: subscription.id,
+                    name: 'Subscription Payment',
+                    description: 'Subscription Payment',
+                    handler: function (response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Payment Successful!',
+                            text: 'Your payment was successful.',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            window.location.href = '/business';
+                        });
+                    },
+                    prefill: {
+                        name: formData.name,
+                        email: formData.email,
+                    },
+                    theme: {
+                        color: '#F37254'
+                    }
+                };
 
-	.container form .row {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 15px;
-	}
+                const rzp = new Razorpay(options);
+                rzp.open();
 
-	.container form .row .col {
-		flex: 1 1 250px;
-	}
+                rzp.on('payment.failed', function (response) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Payment Error',
+                        text: response.error.description || 'Unknown error occurred.',
+                        confirmButtonText: 'OK'
+                    });
+                });
+            } catch (error) {
+                console.error('Error initiating payment:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Payment Initiation Failed',
+                    text: 'Failed to initiate payment. Please try again later.',
+                    confirmButtonText: 'OK'
+                });
+            }
+        });
+    </script>
 
-	.col .title {
-		font-size: 20px;
-		color: rgb(237, 55, 23);
-		padding-bottom: 5px;
-	}
 
-	.col .inputBox {
-		margin: 15px 0;
-	}
 
-	.col .inputBox label {
-		margin-bottom: 10px;
-		display: block;
-	}
 
-	.col .inputBox input,
-	.col .inputBox select {
-		width: 100%;
-		border: 1px solid #ccc;
-		padding: 10px 15px;
-		font-size: 15px;
-	}
+<!-- <script>
+		let planid = '<%= planID%>'
+	console.log("planid", planid);
+	let user_email = '<%= currentUserData.email%>'
+	console.log("user_email", user_email);
+	let user_id = '<%= currentUserData.user_id%>'
+	console.log("user_id", user_id);
+	let memberval = '<%= memberCount%>'
+	console.log("memberval", memberval);
+	let key = 'rzp_test_FUBQq7lujicpGo'
 
-	.col .inputBox input:focus,
-	.col .inputBox select:focus {
-		border: 1px solid #000;
-	}
+	try {
+    const response = await axios.post('/auth/create-subscription', formData);
+    console.log("Response from server:", response.data);
+    const { subscription } = response.data;
 
-	.col .flex {
-		display: flex;
-		gap: 15px;
-	}
+    const options = {
+        key: key,
+        subscription_id: subscription.id,
+        name: 'Your Company Name',
+        description: 'Subscription Payment',
+        handler: function (response) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Payment Successful!',
+                text: 'Your payment was successful.',
+                confirmButtonText: 'OK'
+            }).then(() => {
+                window.location.href = '/business';
+            });
+        },
+        prefill: {
+            name: formData.name,
+            email: formData.email,
+            contact: '6294601754'
+        },
+        theme: {
+            color: '#F37254'
+        }
+    };
 
-	.col .flex .inputBox {
-		flex: 1 1;
-		margin-top: 5px;
-	}
+    const rzp = new Razorpay(options);
+    rzp.open();
 
-	.col .inputBox img {
-		height: 34px;
-		margin-top: 5px;
-		filter: drop-shadow(0 0 1px #000);
-	}
+    rzp.on('payment.failed', function (response) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Payment Error',
+            text: response.error.description || 'Unknown error occurred.',
+            confirmButtonText: 'OK'
+        });
+    });
+} catch (error) {
+    console.error('Error initiating payment:', error);
+    Swal.fire({
+        icon: 'error',
+        title: 'Payment Initiation Failed',
+        text: 'Failed to initiate payment. Please try again later.',
+        confirmButtonText: 'OK'
+    });
+}
 
-	.container form .submit_btn {
-		width: 100%;
-		padding: 12px;
-		font-size: 17px;
-		background: rgb(1, 143, 34);
-		color: #fff;
-		margin-top: 5px;
-		cursor: pointer;
-		letter-spacing: 1px;
-	}
+</script> -->
 
-	.container form .submit_btn:hover {
-		background: #3d17fb;
-	}
 
-	input::-webkit-inner-spin-button,
-	input::-webkit-outer-spin-button {
-		display: none;
-	}
-</style>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
-<script>
+<!-- <script>
 
 	let cardNumInput =
 		document.querySelector('#cardNum')
@@ -300,7 +345,7 @@
 			expYear: document.getElementById('expYear').value,
 			cvv: document.getElementById('cvv').value,
 			planId: planid,
-			billingCycle: 'yearly',
+			billingCycle: 'monthly',
 			//billingCycle: 'daily',
 			memberCount: memberval
 		};
@@ -330,6 +375,7 @@
 
 		const data = await response.json();
 		console.log(data);
+
 		if (response.ok) {
 			Swal.fire({
 				icon: 'success',
@@ -385,12 +431,10 @@
 
 	});
 
-
 	let countryCode = '<%= country_code %>';
 	//console.log("country_code", countryCode);
 	const exchangeRates = '<%- JSON.stringify(exchangeRates) %>';
 	console.log("Exchange Rates:", exchangeRates);
-
 	document.addEventListener('DOMContentLoaded', function () {
 		function getQueryParams() {
 			const params = {};
@@ -406,51 +450,52 @@
 		async function convertToUSD(totalPrice, countryCode) {
 			try {
 				let convertedPrice;
-
-				if (countryCode === 'IN' && exchangeRates['INR']) {
-					convertedPrice = totalPrice / exchangeRates['INR'];
-				} else if (countryCode === 'JP' && exchangeRates['JPY']) {
-					convertedPrice = totalPrice / exchangeRates['JPY'];
+				console.log("totalPricssse",totalPrice);
+				console.log("countryCodess",countryCode);
+				if (countryCode === 'IN') {
+					convertedPrice = totalPrice / parseFloat(exchangeRates['INR']);
+				} else if (countryCode === 'JP') {
+					convertedPrice = totalPrice / parseFloat(exchangeRates['JPY']);
 				} else {
-					console.log('Unsupported country code or missing exchange rate:', countryCode);
+					console.log('Unsupported country code:', countryCode);
 					return totalPrice;
 				}
-
+				console.log("convertedPrice",convertedPrice);
 				return convertedPrice.toFixed(2);
 			} catch (error) {
 				console.error('Error converting price:', error.message);
 				return totalPrice;
 			}
 		}
+		
 
 		const queryParams = getQueryParams();
 		const totalPrice = parseFloat(queryParams['total_price']);
-		const countryCode = '<%= country_code %>'; // Replace with actual country code
+		const countryCode = '<%= country_code %>';
 
 		const amountElement = document.getElementById('amount');
 
-		if (isNaN(totalPrice)) {
-			console.log('Invalid total price:', queryParams['total_price']);
-			amountElement.textContent = '0.00';
-			return;
-		}
-
-		convertToUSD(totalPrice, countryCode)
-			.then(convertedPrice => {
-				if (!isNaN(convertedPrice)) {
-					amountElement.textContent = '$' + convertedPrice;
-					console.log('Converted Total Price to USD:', convertedPrice);
-				} else {
+		if (!isNaN(totalPrice)) {
+			convertToUSD(totalPrice, countryCode)
+				.then(convertedPrice => {
+					if (!isNaN(convertedPrice)) {
+						amountElement.textContent = '$' + convertedPrice;
+						console.log('Converted Total Price to USD:', convertedPrice);
+					} else {
+						amountElement.textContent = '0.00';
+						console.log('Failed to convert total price to USD.');
+					}
+				})
+				.catch(error => {
+					console.error('Error converting total price to USD:', error.message);
 					amountElement.textContent = '0.00';
-					console.log('Failed to convert total price to USD.');
-				}
-			})
-			.catch(error => {
-				console.error('Error converting total price to USD:', error.message);
-				amountElement.textContent = '0.00';
-			});
+				});
+		} else {
+			amountElement.textContent = '0.00';
+			console.log('Invalid total price:', queryParams['total_price']);
+		}
 
 		console.log('Query Params:', queryParams);
 		console.log('Total Price:', totalPrice);
 	});
-</script>
+</script> -->

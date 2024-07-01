@@ -1140,6 +1140,9 @@ async function createReview(reviewIfo, userId, comInfo) {
   // reviewIfo['tags[]'].forEach((tag) => {
   //   console.log(tag);
   // });
+
+  console.log("typeof reviewIfo['tags[]']",typeof reviewIfo['tags[]']);
+
   if (typeof reviewIfo['tags[]'] === 'string') {
     // Convert it to an array containing a single element
     reviewIfo['tags[]'] = [reviewIfo['tags[]']];
@@ -1382,6 +1385,8 @@ async function createreview(reviewIfo, userId, comInfo) {
   //   console.log(tag);
   // });
 
+  console.log("typeof reviewIfo['tags[]']",typeof reviewIfo['tags[]']);
+
   const getcompanyidquery = `SELECT * FROM company WHERE company_name,main_address_country,main_address_state,main_address_city`
 
 
@@ -1473,7 +1478,7 @@ async function createreview(reviewIfo, userId, comInfo) {
       return null;
   }
 
-  
+
   const getcompanylocquery = `SELECT ID FROM company_location WHERE company_id = ?`;
   const getcompanylocvalue = await query(getcompanylocquery,[CompanyID]);
   console.log("getcompanylocvalue",getcompanylocvalue);
@@ -1481,22 +1486,19 @@ async function createreview(reviewIfo, userId, comInfo) {
       var CompanylocID = getcompanylocvalue[0].ID;
       console.log("CompanylocID",CompanylocID);
   }else{
-    var CompanylocID = "0";
-    console.log("CompanylocID",CompanylocID);
-  }
-
-
-
+    const addcompanylocquery = 'INSERT INTO company_location (company_id, address, country, state, city, zip, status) VALUES (?, ?, ?, ?, ?, ?, ?)';
+    const addcompanylocvalues = [CompanyID, concatenatedAddress, country_name, state_name, city_value, '', '2'];
+    const addcompanylocvalue = await query(addcompanylocquery, addcompanylocvalues);
+    var CompanylocID = addcompanylocvalue.insertId;
+    console.log("Inserted row IDa:",CompanylocID );
+    //var CompanylocID = '0';
+}
   // const country_name_query = `SELECT name FROM countries WHERE shortname = "${reviewIfo.main_address_country}"`;
   // const country_name_value = await query(country_name_query);
   // if(country_name_value.length>0){
   //   var country_name = country_name_value[0].name;
   //   console.log("country_name",country_name);
   // }
-
-  
-
-
   const create_review_query = 'INSERT INTO reviews (company_id, customer_id, company_location, company_location_id, review_title, rating, review_content, user_privacy, review_status, created_at, updated_at, labels, user_contact, category_id, product_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
   const create_review_values = [CompanyID, userId, concatenatedAddress, CompanylocID, reviewIfo.review_title, reviewIfo.rating, reviewIfo.review_content, reviewIfo.user_privacy, '2', formattedDate, formattedDate, reviewIfo.review_lable, reviewIfo.user_contact, reviewIfo.category_id, reviewIfo.product_id];
 
@@ -1691,6 +1693,8 @@ async function searchCompany(keyword, country) {
   
   try {
     const get_company_results = await query(get_company_query, [country]);
+
+    console.log("get_company_results",get_company_results);
 
     if (get_company_results.length > 0) {
       const filteredCompanies = [];
