@@ -1,0 +1,678 @@
+<!-- ============== Footer Start =============== -->
+<footer class="main_footer">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4 col-sm-6">
+          <div class="footer-part">
+            <a href="/" class="footer-logo">
+              <img src="/front-end/images/footer-logo.png" alt="Cechoes-logo">
+            </a>
+            <%- globalPageMeta.footer_contact_info %>
+              <!-- <h4>Contact Info</h4>
+            <div class="c-email"><span>Sales:</span> <a href="mailto:sales@CEchoesTechnology.com">Sales@CEchoesTechnology.com</a></div>
+            <div class="c-email"><span>Support:</span> <a href="mailto:support@CEchoesTechnology.com">Support@CEchoesTechnology.com</a></div>
+            <a href="/contact-us" class="c-link"><u>Contact Us</u></a> -->
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="footer-part">
+            <%- globalPageMeta.footer_quick_links -%>
+  
+          </div>
+        </div>
+        <div class="col-md-5 col-sm-12">
+          <div class="footer-part">
+            <%- globalPageMeta.footer_the_app_content %>
+              <!-- <h4>Get The App</h4>
+            <p>We are coming soon on Google Play and App Store.</p> -->
+              <div class="app-info">
+                <%- globalPageMeta.footer_apps_info %>
+                  <!-- <a href="#"><img src="/front-end/images/g-play.png" alt="img" width="183" height="56"></a>
+              <a href="#"><img src="/front-end/images/app-store.png" alt="img" width="178" height="56"></a> -->
+              </div>
+              <div class="social-icons">
+                <%- globalPageMeta.footer_socials_info %>
+                  <!-- <a href="https://www.facebook.com/profile.php?id=100094607193555" target="_blank"><i class="fa-brands fa-facebook-f"></i></a>
+              <a href="https://twitter.com/GrahakBolo" target="_blank"><i class="fa-brands fa-twitter"></i></a>
+              <a href="#" target="_blank"><i class="fa-brands fa-linkedin-in"></i></a>
+              <a href="#" target="_blank"><i class="fa-brands fa-instagram"></i></a>
+              <a href="https://www.youtube.com/@CEchoesTechnology" target="_blank"><i class="fa-brands fa-youtube"></i></a> -->
+              </div>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div class="footer-b-left">
+          <span>Copyright</span>
+          <%= new Date().getFullYear() %> <a href="#">CEchoes Technology Pvt Ltd</a>
+        </div>
+        <div class="footer-b-right">
+          <%- globalPageMeta.footer_bottom_right %>
+            <!-- <%#<a href="/disclaimer">Disclaimer</a> |#%> <a href="/privacy-policy">Privacy Policy</a> | <a href="/terms-of-service">Terms of Service</a> -->
+        </div>
+      </div>
+    </div>
+  </footer>
+  <!-- ============== Footer End =============== -->
+  <!-- <div class="floating-chat">
+    <a href="#">
+       <svg width="39" height="32" viewBox="0 0 39 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+       <path d="M16.36 2.78498C20.5782 2.78498 24.7965 2.78498 29.0159 2.78498C29.1502 2.78498 29.2858 2.77803 29.4201 2.78846C29.5316 2.79657 29.6876 2.73865 29.7343 2.8788C29.7775 3.00621 29.6372 3.07687 29.5568 3.15563C28.5122 4.16911 27.4651 5.18143 26.4192 6.19376C25.648 6.93968 24.878 7.68908 24.1032 8.43153C23.6223 8.89252 23.374 9.43227 23.3896 10.0983C23.41 11.0075 23.3896 11.9179 23.3956 12.8283C23.404 14.1001 24.2711 14.9282 25.5988 14.934C26.5416 14.9387 27.4843 14.9213 28.4258 14.9398C29.0987 14.9526 29.648 14.7174 30.1145 14.2669C30.9709 13.4387 31.8261 12.6105 32.6872 11.787C32.7856 11.6932 32.8707 11.5021 33.0375 11.5843C33.161 11.6446 33.101 11.8218 33.101 11.948C33.1034 16.0795 33.107 20.2111 33.0998 24.3426C33.0962 26.2885 31.5238 27.8116 29.5125 27.8128C23.2744 27.8197 17.0364 27.8232 10.7984 27.8024C10.2838 27.8012 10.0212 27.9691 9.7897 28.3826C9.22119 29.3984 8.6119 30.3945 8.01101 31.393C7.52645 32.1991 6.90037 32.2014 6.42541 31.4046C5.82092 30.3911 5.19604 29.3869 4.62633 28.3548C4.39725 27.9402 4.12739 27.7977 3.64523 27.8035C1.84735 27.8209 0.426071 26.6916 0.0614567 24.9959C0.00988296 24.7584 0.00388602 24.5082 0.00388602 24.2639C0.000287854 18.2837 -0.00211092 12.3024 0.00268663 6.32233C0.00388602 4.29073 1.55829 2.78962 3.65962 2.7873C7.89347 2.78151 12.1261 2.78498 16.36 2.78498ZM16.5243 21.5118C19.741 21.5118 22.9578 21.5118 26.1746 21.5118C26.9098 21.5118 27.2852 21.2767 27.2708 20.8319C27.2564 20.3999 26.899 20.1856 26.1853 20.1856C19.7662 20.1856 13.3471 20.1856 6.92796 20.1856C6.19273 20.1856 5.81732 20.4196 5.83172 20.8643C5.84611 21.2952 6.20473 21.5107 6.91716 21.5107C10.1195 21.513 13.3219 21.5118 16.5243 21.5118ZM12.1969 10.4145C14.0068 10.4145 15.8178 10.4156 17.6277 10.4145C18.2898 10.4133 18.6508 10.177 18.6508 9.75195C18.6508 9.32687 18.291 9.08942 17.6277 9.08942C14.0367 9.08826 10.4458 9.08826 6.8548 9.08942C6.19153 9.08942 5.83172 9.32571 5.83172 9.75195C5.83172 10.177 6.19273 10.4145 6.8548 10.4145C8.63589 10.4156 10.417 10.4145 12.1969 10.4145ZM12.2425 14.6375C10.447 14.6375 8.65148 14.6364 6.856 14.6375C6.19273 14.6387 5.83292 14.8738 5.83172 15.3C5.83172 15.7251 6.19273 15.9626 6.8548 15.9626C10.4458 15.9637 14.0367 15.9637 17.6277 15.9626C18.291 15.9626 18.6508 15.7251 18.6508 15.3C18.6508 14.8738 18.291 14.6387 17.6277 14.6375C15.8334 14.6364 14.0379 14.6375 12.2425 14.6375Z" fill="black"/>
+       <path d="M27.0171 13.6668C26.5542 13.6668 26.09 13.6761 25.627 13.6634C25.0297 13.6472 24.7179 13.3483 24.7095 12.7669C24.6963 11.8866 24.7083 11.0052 24.7047 10.1249C24.7035 9.81677 24.8198 9.57006 25.0453 9.35347C27.9994 6.50877 30.9415 3.65364 33.9064 0.819369C35.0614 -0.284457 36.8605 -0.261292 37.9879 0.817053C39.1309 1.91045 39.1609 3.66291 38.0047 4.79106C35.0806 7.64387 32.1337 10.4747 29.1988 13.3171C28.9505 13.558 28.6711 13.6773 28.3197 13.6703C27.8855 13.6611 27.4513 13.668 27.0171 13.6668Z" fill="black"/>
+       </svg>
+    </a>
+    </div> -->
+  
+  <!-- Css -->
+  <link href="/front-end/css/footer-style.css" rel="stylesheet" type="text/css">
+  <!-- Responsive Css -->
+  <link href="/front-end/responsive/default-style-responsive.css" rel="stylesheet"
+    media='screen and (max-width:1440.98px)' type="text/css">
+  <link href="/front-end/responsive/footer-responsive-style.css" media='screen and (max-width:1440.98px)' rel="stylesheet"
+    type="text/css">
+  <link href="/front-end/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+  <link href="/front-end/css/aos.css" rel="stylesheet" type="text/css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script src="/front-end/js/bootstrap.min.js"> </script>
+  <script src="/front-end/js/component.js"> </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"
+    integrity="sha512-0bEtK0USNd96MnO4XhH8jhv3nyRF0eK87pJke6pkYf3cM0uDIhNJy9ltuzqgypoIFXw3JSuiy04tVk4AjpZdZw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="/front-end/js/easy-responsive-tabs.js"> </script>
+  <script src="/front-end/js/edit-js.js"> </script>
+  <script type="text/javascript"
+    src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+  <script>
+    $(document).ready(function () {
+      $("#user-signup").submit(function (e) {
+        e.preventDefault();
+  
+        $('.frm-loading-register').show();
+        $('#kt_sign_up_submit').prop('disabled', true);
+        $('.frm-error-message-register').text('').hide();
+        var error_message = '';
+        var password = $("input[name='register_password']").val();
+        var confirmPassword = $("input[name='register_confirm_password']").val();
+        var signup_otp = $("input[name='signup_otp']").val();
+        console.log("signup_otp", signup_otp);
+  
+        // Password strength check
+        var passwordStrength = checkPasswordStrength(password);
+        if (passwordStrength === 'weak') {
+          error_message = "Password is weak. It should be at least 8 characters long and contain a combination of letters, numbers, and special characters.";
+        } else {
+          if (password !== confirmPassword) {
+            error_message = "Password and Confirm Password do not match.";
+          } else if (signup_otp == '') {
+  
+            const formData = $('#user-signup').serializeArray();
+            const jsonData = {};
+            $(formData).each(function (index, field) {
+              jsonData[field.name] = field.value;
+            });
+            jsonData['currentUrlPath'] = window.location.pathname;
+            //console.log(jsonData);
+            $.ajax({
+              url: '/auth/frontend-user-register-otp',
+              method: 'POST',
+              data: jsonData,
+              ContentType: 'application/json',
+              success: function (data) {
+                if (data.status == 'ok') {
+                  $('.frm-loading-register').hide();
+                  $('.frm-error-message-register').text(data.message).show();
+                  $('#signup_otp').removeClass('d-none');
+                  $('input[name="signup_otp"]').prop('required', true);
+                  $('#kt_sign_up_submit').prop('disabled', false);
+                  //$('#user-signup').trigger('reset');
+                  // setTimeout(function() {
+  
+                  // $('.frm-error-message-register').hide();
+                  // }, 2000 );             
+                } else {
+                  $('.frm-loading-register').hide();
+                  $('.frm-error-message-register').text(data.message).show();
+                  $('#kt_sign_up_submit').prop('disabled', false);
+                }
+              },
+              error: function (error) {
+                $('.frm-loading-register').hide();
+                $('.frm-error-message-register').text(error).show();
+                $('#kt_sign_up_submit').prop('disabled', false);
+              }
+            });
+          } else {
+            // Call ajax..
+            const formData = $('#user-signup').serializeArray();
+            const jsonData = {};
+            $(formData).each(function (index, field) {
+              jsonData[field.name] = field.value;
+            });
+            jsonData['currentUrlPath'] = window.location.pathname;
+            //console.log(jsonData);
+            $.ajax({
+              url: '/auth/frontend-user-register',
+              method: 'POST',
+              data: jsonData,
+              ContentType: 'application/json',
+              success: function (data) {
+                if (data.status == 'ok') {
+                  $('.frm-loading-register').hide();
+                  $('.frm-error-message-register').text(data.message).show();
+                  $('#user-signup').trigger('reset');
+                  setTimeout(function () {
+                    if (data.wp_user) {
+                      window.location.href = "<%= globalData.BLOG_URL %>?login_check=" + data.wp_user + "&currentUrlPath=" + data.currentUrlPath;
+  
+                    } else {
+                      //window.location.href="/";
+                      window.location.reload();
+                    }
+                  }, 2000);
+                } else {
+                  $('.frm-loading-register').hide();
+                  $('.frm-error-message-register').text(data.message).show();
+                  $('#kt_sign_up_submit').prop('disabled', false);
+                }
+              },
+              error: function (error) {
+                $('.frm-loading-register').hide();
+                $('.frm-error-message-register').text(error).show();
+                $('#kt_sign_up_submit').prop('disabled', false);
+              }
+            });
+  
+          }
+        }
+        if (error_message) {
+          $('.frm-loading-register').hide();
+          $('.frm-error-message-register').text(error_message).show();
+          $('#kt_sign_up_submit').prop('disabled', false);
+        }
+  
+      });
+  
+      $('#sign_up_otp').click(function () {
+  
+        var first_name = $("input[name='first_name']").val();
+        var last_name = $("input[name='last_name']").val();
+        var email = $("input[name='email']").val();
+        var password = $("input[name='register_password']").val();
+        var confirmPassword = $("input[name='register_confirm_password']").val();
+        var passwordStrength = checkPasswordStrength(password);
+        var validEmail = validateEmail(email);
+        alert(validEmail);
+  
+        if (first_name == '' || last_name == '' || email == '' || password == '' || confirmPassword == '') {
+          //alert('All field required');
+          $('.frm-error-message-register').text('All field required').show();
+          setTimeout(function () {
+            $('.frm-error-message-register').hide();
+          }, 2000);
+  
+        } else if (!validEmail) {
+          $('.frm-error-message-register').text('Email is not valid').show();
+          setTimeout(function () {
+            $('.frm-error-message-register').hide();
+          }, 2000);
+        } else if (passwordStrength === 'weak') {
+          $('.frm-error-message-register').text('Password is weak. It should be at least 8 characters long and contain a combination of letters, numbers, and special characters.').show();
+          setTimeout(function () {
+            $('.frm-error-message-register').hide();
+          }, 2000);
+        } else if (password !== confirmPassword) {
+          $('.frm-error-message-register').text('Password and Confirm Password does not match.').show();
+          setTimeout(function () {
+            $('.frm-error-message-register').hide();
+          }, 2000);
+        } else {
+          $('.frm-error-message-register').text('Ok').show();
+        }
+      })
+  
+      const storedEmail = localStorage.getItem('rememberedEmail');
+      const storedPass = localStorage.getItem('rememberedPass');
+      const storedRememberMe = localStorage.getItem('rememberMe') === 'true';
+      if (storedEmail) {
+        $('#login-email').val(storedEmail);
+        $('#login-pass').val(storedPass);
+      }
+      if (storedRememberMe) {
+        $('#exampleCheck1').prop('checked', true);
+      }
+  
+      $("#user-signin").submit(function (e) {
+        e.preventDefault();
+        const rememberMe = $('#exampleCheck1').is(':checked');
+        if (rememberMe) {
+          localStorage.setItem('rememberedEmail', $('#login-email').val());
+          localStorage.setItem('rememberedPass', $('#login-pass').val());
+          localStorage.setItem('rememberMe', true);
+        } else {
+          localStorage.removeItem('rememberedEmail');
+          localStorage.removeItem('rememberedPass');
+          localStorage.removeItem('rememberMe');
+        }
+  
+        $('.frm-loading').show();
+        $('#kt_sign_in_submit').prop('disabled', true);
+        $('.frm-error-message').text('').hide();
+  
+        // Call ajax..
+        const formData = $('#user-signin').serializeArray();
+        const jsonData = {};
+        $(formData).each(function (index, field) {
+          jsonData[field.name] = field.value;
+        });
+        jsonData['currentUrlPath'] = window.location.pathname;
+        //console.log(currentPath);
+        //console.log(jsonData);
+        $.ajax({
+          url: '/auth/frontend-user-login',
+          method: 'POST',
+          data: jsonData,
+          ContentType: 'application/json',
+          success: function (data) {
+            if (data.status == 'ok') {
+              $('.frm-loading').hide();
+              $('.frm-error-message').text(data.message).show();
+              $('#user-signin').trigger('reset');
+              if (data.wp_user) {
+                window.location.href = "<%= globalData.BLOG_URL %>?login_check=" + data.wp_user + "&currentUrlPath=" + data.currentUrlPath;
+  
+              } else {
+                //window.location.href="/";
+                console.log(data.currentUrlPath);
+                window.location.reload();
+              }
+            } else {
+              $('.frm-loading').hide();
+              $('.frm-error-message').text(data.message).show();
+              $('#kt_sign_in_submit').prop('disabled', false);
+            }
+          },
+          error: function (error) {
+            $('.frm-loading').hide();
+            $('.frm-error-message').text(error).show();
+            $('#kt_sign_in_submit').prop('disabled', false);
+          }
+        });
+  
+      });
+  
+  
+      $("#forgotPassword").submit(function (e) {
+        e.preventDefault();
+        $('#forgot_submit_btn').prop('disabled', true);
+        $('.frm-loading-forgot').show();
+        const formData = $('#forgotPassword').serialize();
+        //console.log(formData);
+        //return false;
+        $.ajax({
+          url: '/auth/frontend-forgot-password',
+          method: 'POST',
+          data: formData,
+          // processData: false,
+          // contentType: false,
+          success: function (data) {
+            if (data.status == 'ok') {
+              $('.frm-error-message-forgot').text(data.message).show();
+              $('#forgot_submit_btn').prop('disabled', false);
+              $('.frm-loading-forgot').hide();
+              $('#forgotPassword').trigger('reset');
+              setTimeout(function () {
+                $('#exampleModal').modal('hide');
+              }, 2000);
+            } else if (data.status == 'not found') {
+              $('.frm-error-message-forgot').text(data.message).show();
+              $('#forgot_submit_btn').prop('disabled', false);
+              $('.frm-loading-forgot').hide();
+              $('#forgotPassword').trigger('reset');
+            } else {
+              $('.frm-error-message-forgot').text(data.message).show();
+              $('#forgot_submit_btn').prop('disabled', false);
+              $('.frm-loading-forgot').hide();
+              $('#forgotPassword').trigger('reset');
+            }
+  
+          },
+          error: function (error) {
+            $('.frm-error-message-forgot').text(error).show();
+            $('#forgot_submit_btn').prop('disabled', false);
+            $('.frm-loading-forgot').hide();
+          }
+        });
+  
+      });
+  
+      // Function to check password strength
+      function checkPasswordStrength(password) {
+        var strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})");
+        var mediumRegex = new RegExp("^(?=.*[a-zA-Z])(?=.*[0-9])(?=.{6,})");
+  
+        if (strongRegex.test(password)) {
+          return 'strong';
+        } else if (mediumRegex.test(password)) {
+          return 'medium';
+        } else {
+          return 'weak';
+        }
+      }
+  
+      function validateEmail($email) {
+        var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+        return emailReg.test($email);
+      }
+  
+  
+      /*====================== loding persentage ====================*/
+  
+    });
+  
+  
+    // function googleTranslateElementInit() {
+    //                   new google.translate.TranslateElement({ pageLanguage: 'en' }, 'google_translate_element');
+    //                 }
+  
+    // async function fetchGeolocationAndSetCountryInfo() {
+    //   const countryName = getCookie('countryName');
+    //   const countryCode = getCookie('countryCode');
+  
+    //   if (countryName && countryCode) {
+    //     updateCountryInfo(countryName, countryCode);
+    //     await sendCountryInfoToServer(countryName, countryCode);
+    //     setDefaultLanguage(countryName);
+    //     return;
+    //   }
+  
+    //   if (navigator.geolocation) {
+    //     // console.log("oipreoiptr");
+    //     navigator.geolocation.getCurrentPosition(async (position) => {
+    //       const latitude = position.coords.latitude;
+    //       const longitude = position.coords.longitude;
+  
+    //       console.log("latitude", latitude);
+    //       console.log("longitude", longitude);
+    //       try {
+    //         const response = await fetch('/auth/getLocation', {
+    //           method: 'POST',
+    //           headers: {
+    //             'Content-Type': 'application/json'
+    //           },
+    //           body: JSON.stringify({ latitude, longitude })
+    //         });
+  
+    //         if (response.ok) {
+    //           const { countryName, countryCode } = await response.json();
+    //           console.log("Country details fetched:", { countryName, countryCode });
+    //           setCookie('countryName', countryName, 20);
+    //           setCookie('countryCode', countryCode, 20);
+  
+    //           updateCountryInfo(countryName, countryCode);
+    //           setDefaultLanguage(countryName);
+    //           await sendCountryInfoToServer(countryName, countryCode);
+    //           return {countryName,countryCode} 
+    //         } else {
+    //           console.error('Error fetching country details:', response.statusText);
+    //           useDefaultCountry();
+    //         }
+    //       } catch (error) {
+    //         console.error('Error fetching country details:', error);
+    //         useDefaultCountry();
+    //       }
+    //     }, (error) => {
+    //       if (error.code == error.PERMISSION_DENIED) {
+    //         console.error('User denied the request for Geolocation.');
+    //         useDefaultCountry();
+    //       } else {
+    //         console.error('Error getting geolocation:', error);
+    //       }
+    //     });
+    //   } else {
+    //     console.error('Geolocation is not supported by this browser.');
+    //     useDefaultCountry();
+    //   }
+    // }
+  
+    async function fetchGeolocationAndSetCountryInfo() {
+    return new Promise((resolve, reject) => {
+      const countryName = getCookie('countryName');
+      const countryCode = getCookie('countryCode');
+  
+      if (countryName && countryCode) {
+        updateCountryInfo(countryName, countryCode);
+        sendCountryInfoToServer(countryName, countryCode)
+          .then(() => {
+            setDefaultLanguage(countryName);
+            resolve({ countryName, countryCode });
+          })
+          .catch((error) => {
+            console.error('Error sending country info to server:', error);
+            reject(error);
+          });
+      } else if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          async (position) => {
+            const { latitude, longitude } = position.coords;
+            try {
+              const response = await fetch('/auth/getLocation', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ latitude, longitude })
+              });
+  
+              if (response.ok) {
+                const { countryName, countryCode } = await response.json();
+                console.log("Country details fetched:", { countryName, countryCode });
+                setCookie('countryName', countryName, 20);
+                setCookie('countryCode', countryCode, 20);
+  
+                updateCountryInfo(countryName, countryCode);
+                await sendCountryInfoToServer(countryName, countryCode);
+                setDefaultLanguage(countryName);
+  
+                resolve({ countryName, countryCode });
+              } else {
+                console.error('Error fetching country details:', response.statusText);
+                useDefaultCountry();
+                reject(new Error('Failed to fetch country details'));
+              }
+            } catch (error) {
+              console.error('Error fetching country details:', error);
+              useDefaultCountry();
+              reject(error);
+            }
+          },
+          (error) => {
+            if (error.code == error.PERMISSION_DENIED) {
+              console.error('User denied the request for Geolocation.');
+              useDefaultCountry();
+            } else {
+              console.error('Error getting geolocation:', error);
+            }
+            reject(error);
+          }
+        );
+      } else {
+        console.error('Geolocation is not supported by this browser.');
+        useDefaultCountry();
+        reject(new Error('Geolocation not supported'));
+      }
+    });
+  }
+  
+  
+  
+    function setDefaultLanguage(countryName) {
+      const countryToLanguageMap = {
+        'India': 'hi', 'Japan': 'ja', 'France': 'fr', 'Spain': 'es', 'Germany': 'de',
+        'Argentina': 'ar', 'Russia': 'ru', 'China': 'zh-CN', 'Taiwan': 'zh-TW', 'South Korea': 'ko',
+        'Italy': 'it', 'Portugal': 'pt', 'Netherlands': 'nl', 'Israel': 'iw', 'United States': 'en',
+        'Bangladesh': 'bn', 'Vietnam': 'vi', 'Thailand': 'th', 'Malaysia': 'ms', 'Indonesia': 'id',
+        'Turkey': 'tr', 'Poland': 'pl', 'Romania': 'ro', 'Ukraine': 'uk', 'Bulgaria': 'bg',
+        'Greece': 'el', 'Croatia': 'hr', 'Czech Republic': 'cs', 'Slovakia': 'sk', 'Slovenia': 'sl',
+        'Finland': 'fi', 'Sweden': 'sv', 'Norway': 'no', 'Denmark': 'da', 'Hungary': 'hu',
+        'Estonia': 'et', 'Lithuania': 'lt', 'Latvia': 'lv', 'Iceland': 'is', 'South Africa': 'af',
+        'Ethiopia': 'am', 'Azerbaijan': 'az', 'Basque Country': 'eu', 'Belarus': 'be', 'Armenia': 'hy',
+        'Bosnia': 'bs', 'Catalonia': 'ca', 'Philippines': 'ceb', 'Malawi': 'ny', 'Corsica': 'co',
+        'Maldives': 'dv', 'Esperanto': 'eo', 'Ghana': 'ee', 'Philippines': 'tl', 'Friesland': 'fy',
+        'Galicia': 'gl', 'Georgia': 'ka', 'Paraguay': 'gn', 'Haiti': 'ht', 'Nigeria': 'ha',
+        'Hawaii': 'haw', 'Hmong': 'hmn', 'Nigeria': 'ig', 'Philippines': 'ilo', 'Ireland': 'ga',
+        'Indonesia': 'jw', 'Kazakhstan': 'kk', 'Cambodia': 'km', 'Rwanda': 'rw', 'Sierra Leone': 'kri',
+        'Kurdish': 'ku', 'Kurdish': 'ckb', 'Kyrgyzstan': 'ky', 'Laos': 'lo', 'Latin': 'la',
+        'Congo': 'ln', 'Uganda': 'lg', 'Luxembourg': 'lb', 'Macedonia': 'mk', 'Madagascar': 'mg',
+        'Malta': 'mt', 'New Zealand': 'mi', 'Mongolia': 'mn', 'Myanmar': 'my', 'Nepal': 'ne',
+        'Ethiopia': 'om', 'Afghanistan': 'ps', 'Iran': 'fa', 'Peru': 'qu', 'Samoa': 'sm',
+        'Scotland': 'gd', 'South Africa': 'nso', 'Lesotho': 'st', 'Zimbabwe': 'sn', 'Pakistan': 'sd',
+        'Sri Lanka': 'si', 'Somalia': 'so', 'Indonesia': 'su', 'Tanzania': 'sw', 'Tajikistan': 'tg',
+        'Tatarstan': 'tt', 'Thailand': 'th', 'Eritrea': 'ti', 'South Africa': 'ts', 'Turkmenistan': 'tk',
+        'Ghana': 'ak', 'China': 'ug', 'Uzbekistan': 'uz', 'Wales': 'cy', 'South Africa': 'xh',
+        'Yiddish': 'yi', 'Nigeria': 'yo', 'South Africa': 'zu'
+      };
+  
+      const languageCode = countryToLanguageMap[countryName];
+      if (languageCode) {
+        setTimeout(function () {
+          var selectElement = $('select.goog-te-combo');
+          selectElement.val(languageCode);
+          selectElement[0].dispatchEvent(new Event('change', { bubbles: true }));
+  
+          var translateFrame = $('iframe.goog-te-banner-frame:first');
+          if (translateFrame.length > 0) {
+            translateFrame.contents().find('.goog-te-combo').val(languageCode).trigger('change');
+          } else {
+            $('select.goog-te-combo').val(languageCode).trigger('change');
+          }
+        }, 2000);
+      } else {
+        console.error('No language mapping found for country name:', countryName);
+      }
+    }
+  
+    function useDefaultCountry() {
+      const defaultCountryName = 'India';
+      const defaultCountryCode = 'IN';
+  
+      setCookie('countryName', defaultCountryName, 20);
+      setCookie('countryCode', defaultCountryCode, 20);
+  
+      updateCountryInfo(defaultCountryName, defaultCountryCode);
+      setDefaultLanguage(defaultCountryName);
+      sendCountryInfoToServer(defaultCountryName, defaultCountryCode);
+    }
+  
+    // function updateCountryInfo(countryName, countryCode) {
+    //   document.getElementById('country').innerText = `${countryName} (${countryCode})`;
+    // }
+  
+    function updateCountryInfo(countryName, countryCode) {
+      const countryElement = document.getElementById('country');
+      console.log("countryElement",countryElement);
+      if (countryElement) {
+        countryElement.innerText = `${countryName} (${countryCode})`;
+      } else {
+        console.error('Element with id "country" not found.');
+      }
+    }
+  
+    function setCookie(name, value, days) {
+      const expires = new Date();
+      expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+      document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
+    }
+  
+    function getCookie(name) {
+      const cookieValue = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+      return cookieValue ? cookieValue[2] : null;
+    }
+  
+    async function sendCountryInfoToServer(countryName, countryCode) {
+      try {
+        const response = await fetch('/setCountry', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ countryName, countryCode })
+        });
+  
+        if (response.ok) {
+          console.log('Country information sent to server successfully.');
+        } else {
+          console.error('Failed to send country information to the server.');
+        }
+      } catch (error) {
+        console.error('Error sending country information to the server:', error);
+      }
+    }
+  
+  
+    // async function getCountryDetails(latitude, longitude) {
+    //   const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${apiKey}`;
+    //   try {
+    //     const response = await fetch(url);
+    //     const data = await response.json();
+    //     const results = data.results;
+    //     if (results.length > 0) {
+    //       const addressComponents = results[0].address_components;
+    //       let countryName = 'Country not found';
+    //       let countryCode = 'Code not found';
+    //       for (let i = 0; i < addressComponents.length; i++) {
+    //         if (addressComponents[i].types.includes("country")) {
+    //           countryName = addressComponents[i].long_name;
+    //           countryCode = addressComponents[i].short_name;
+    //           break;
+    //         }
+    //       }
+    //       return { countryName, countryCode };
+    //     }
+    //     return { countryName: "Country not found", countryCode: "Code not found" };
+    //   } catch (error) {
+    //     console.error('Error fetching country details:', error);
+    //     return { countryName: 'Unable to get country name', countryCode: 'Unable to get country code' };
+    //   }
+    // }
+  
+    $(document).ready(function () {
+      fetchGeolocationAndSetCountryInfo();
+    });
+  
+//     document.addEventListener("DOMContentLoaded", async function() {
+//     console.log("DOM content loaded");
+  
+//     try {
+//       const { countryName, countryCode } = await fetchGeolocationAndSetCountryInfo();
+//       console.log("Initial CountryName:", countryName);
+//       console.log("Initial CountryCode:", countryCode);
+  
+//       const countryDropdown = document.querySelector('.country-dropdown');
+//       if (countryCode == 'UK') {
+//         countryDropdown.value = 'UK';
+//       } else if (countryCode == 'JP') {
+//         countryDropdown.value = 'JP';
+//       } else {
+//         countryDropdown.value = 'US';
+//       }
+//       // updateCountryInfo(countryName, countryCode);
+//       // setDefaultLanguage(countryName);
+//       // countryDropdown.addEventListener('change', function(event) {
+//       //   const selectedCountryCode = event.target.value;
+//       //   const selectedCountryName = event.target.options[event.target.selectedIndex].text;
+//       //   console.log("Selected country code:", selectedCountryCode);
+//       //   console.log("Selected country name:", selectedCountryName);
+  
+//       //   const redirectUrl = `/${selectedCountryCode}`;
+//       //         window.location.href = redirectUrl;
+//       // });
+//     } catch (error) {
+//       console.error('Error initializing country info:', error);
+//     }
+//   });
+  
+  
+  </script>
+  </body>
+  
+  </html>

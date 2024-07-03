@@ -615,44 +615,123 @@ function getMetaValue(pageID, page_meta_key) {
 }
 
 // Function to insert data into 'faq_pages' table
-async function insertIntoFaqPages(data) {
-  try {
-    const checkQuery = `SELECT * FROM faq_pages WHERE 1`;
-    db.query(checkQuery, async (checkErr, checkResult) => {
-      if (checkResult.length > 0) {
-        const updateQuery = `UPDATE faq_pages SET title=?, content = ?, meta_title = ?, meta_desc = ?, keyword = ?, app_banner_content = ? WHERE id = ${checkResult[0].id}`;
-        const results = await query(updateQuery, data);
-        return checkResult[0].id;
-      } else {
-        const insertQuery = 'INSERT INTO faq_pages (title, content, meta_title, meta_desc, keyword, app_banner_content) VALUES (?, ?, ?, ?, ?, ?)';
-        const results = await query(insertQuery, data);
-        return results.insertId;
-      }
-    })
+// async function insertIntoFaqPages(data) {
+//   try {
+//     const checkQuery = `SELECT * FROM faq_pages WHERE 1`;
+//     db.query(checkQuery, async (checkErr, checkResult) => {
+//       if (checkResult.length > 0) {
+//         const updateQuery = `UPDATE faq_pages SET title=?, content = ?, meta_title = ?, meta_desc = ?, keyword = ?, app_banner_content = ? WHERE id = ${checkResult[0].id}`;
+//         const results = await query(updateQuery, data);
+//         return checkResult[0].id;
+//       } else {
+//         const insertQuery = 'INSERT INTO faq_pages (title, content, meta_title, meta_desc, keyword, app_banner_content) VALUES (?, ?, ?, ?, ?, ?)';
+//         const results = await query(insertQuery, data);
+//         return results.insertId;
+//       }
+//     })
 
 
-  } catch (error) {
-    console.error('Error inserting data into faq_pages table:', error);
-    throw error;
-  }
+//   } catch (error) {
+//     console.error('Error inserting data into faq_pages table:', error);
+//     throw error;
+//   }
+// }
+
+async function insertIntoFaqPages(data, country) {
+  return new Promise((resolve, reject) => {
+    try {
+      const checkQuery = `SELECT * FROM faq_pages WHERE country = ?`;
+      db.query(checkQuery, [country], async (checkErr, checkResult) => {
+        if (checkErr) {
+          console.error('Error checking faq_pages:', checkErr);
+          reject(checkErr);
+        }
+
+        if (checkResult.length > 0) {
+          const updateQuery = `UPDATE faq_pages SET title=?, content=?, meta_title=?, meta_desc=?, keyword=?, app_banner_content=? WHERE id=? AND country=?`;
+          const updateValues = [...data, checkResult[0].id, country];
+          const results = await query(updateQuery, updateValues);
+          console.log('Data updated in faq_pages table');
+          resolve(checkResult[0].id);
+        } else {
+          const insertQuery = `INSERT INTO faq_pages (title, content, meta_title, meta_desc, keyword, app_banner_content, country) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+          const insertValues = [...data, country];
+          const results = await query(insertQuery, insertValues);
+          console.log('Data inserted into faq_pages table');
+          resolve(results.insertId);
+        }
+      });
+    } catch (error) {
+      console.error('Error inserting/updating data into faq_pages table:', error);
+      reject(error);
+    }
+  });
 }
 
+
+
 // Function to insert data into 'faq_categories' table
-async function insertIntoFaqCategories(categoryArray) {
+// async function insertIntoFaqCategories(categoryArray) {
+//   if (Array.isArray(categoryArray) && categoryArray.length > 0) {
+//     for (const categoryData of categoryArray) {
+
+//       try {
+//         const categoryTitle = Object.keys(categoryData)[0];
+//         const CatinsertQuery = `INSERT INTO faq_categories (category) VALUES (?)`;
+//         const Catinsertvalues = [categoryTitle];
+//         const results = await query(CatinsertQuery, Catinsertvalues);
+//         const categoryId = results.insertId;
+//         console.log('Data inserted into faq_categories table:', categoryId);
+
+//         // Insert data into 'faq_item' table for the current category
+//         if (categoryData[categoryTitle].length > 0) {
+//           await insertIntoFaqItems(categoryData[categoryTitle], categoryId);
+//         }
+//       } catch (error) {
+//         console.error('Error inserting data into faq_categories table:', error);
+//         throw error;
+//       }
+//     }
+//   }
+// }
+//ac
+// async function insertIntoFaqCategories(categoryArray, country) {
+//   if (Array.isArray(categoryArray) && categoryArray.length > 0) {
+//     for (const categoryData of categoryArray) {
+//       try {
+//         const categoryTitle = Object.keys(categoryData)[0];
+//         const CatinsertQuery = `INSERT INTO faq_categories (category, country) VALUES (?, ?)`;
+//         const Catinsertvalues = [categoryTitle, country];
+//         const results = await query(CatinsertQuery, Catinsertvalues);
+//         const categoryId = results.insertId;
+//         console.log('Data inserted into faq_categories table:', categoryId);
+
+//         if (categoryData[categoryTitle].length > 0) {
+//           await insertIntoFaqItems(categoryData[categoryTitle], categoryId, country);
+//         }
+//       } catch (error) {
+//         console.error('Error inserting data into faq_categories table:', error);
+//         throw error;
+//       }
+//     }
+//   }
+// }
+
+
+async function insertIntoFaqCategories(categoryArray, country) {
   if (Array.isArray(categoryArray) && categoryArray.length > 0) {
     for (const categoryData of categoryArray) {
-
       try {
         const categoryTitle = Object.keys(categoryData)[0];
-        const CatinsertQuery = `INSERT INTO faq_categories (category) VALUES (?)`;
-        const Catinsertvalues = [categoryTitle];
+        const CatinsertQuery = `INSERT INTO faq_categories (category, country) VALUES (?, ?)`;
+        const Catinsertvalues = [categoryTitle, country];
         const results = await query(CatinsertQuery, Catinsertvalues);
         const categoryId = results.insertId;
         console.log('Data inserted into faq_categories table:', categoryId);
 
         // Insert data into 'faq_item' table for the current category
         if (categoryData[categoryTitle].length > 0) {
-          await insertIntoFaqItems(categoryData[categoryTitle], categoryId);
+          await insertIntoFaqItems(categoryData[categoryTitle], categoryId, country);
         }
       } catch (error) {
         console.error('Error inserting data into faq_categories table:', error);
@@ -662,23 +741,46 @@ async function insertIntoFaqCategories(categoryArray) {
   }
 }
 
-// Function to insert data into 'faq_item' table
-async function insertIntoFaqItems(faqItemsArray, categoryId) {
-  if (Array.isArray(faqItemsArray) && faqItemsArray.length > 0) {
-    for (const faqItemData of faqItemsArray) {
-      try {
-        const FAQItenInsertquery = `INSERT INTO faq_item (category_id, question, answer) VALUES (?, ?, ?)`;
-        const FAQItenInsertvalues = [categoryId, faqItemData.Q, faqItemData.A];
 
-        const results = await query(FAQItenInsertquery, FAQItenInsertvalues);
-        console.log('Data inserted into faq_item table:', results.insertId);
-      } catch (error) {
-        console.error('Error inserting data into faq_item table:', error);
-        throw error;
+
+// Function to insert data into 'faq_item' table
+// async function insertIntoFaqItems(faqItemsArray, categoryId) {
+//   if (Array.isArray(faqItemsArray) && faqItemsArray.length > 0) {
+//     for (const faqItemData of faqItemsArray) {
+//       try {
+//         const FAQItenInsertquery = `INSERT INTO faq_item (category_id, question, answer) VALUES (?, ?, ?)`;
+//         const FAQItenInsertvalues = [categoryId, faqItemData.Q, faqItemData.A];
+
+//         const results = await query(FAQItenInsertquery, FAQItenInsertvalues);
+//         console.log('Data inserted into faq_item table:', results.insertId);
+//       } catch (error) {
+//         console.error('Error inserting data into faq_item table:', error);
+//         throw error;
+//       }
+//     }
+//   }
+// }
+
+async function insertIntoFaqItems(itemsArray, categoryId, country) {
+  try {
+    for (const category of itemsArray) {
+      for (const item of category[Object.keys(category)[0]]) {
+        const { Q, A } = item;
+        const itemInsertQuery = `INSERT INTO faq_item (question, answer, category_id, country) VALUES (?, ?, ?, ?)`;
+        const itemInsertValues = [Q, A, categoryId, country];
+        await query(itemInsertQuery, itemInsertValues);
+        console.log('Data inserted into faq_item table:', Q, A, categoryId, country);
       }
     }
+  } catch (error) {
+    console.error('Error inserting data into faq_item table:', error);
+    throw error;
   }
 }
+
+
+
+
 
 //-- Create New Company ----------//
 async function createCompany(comInfo, userId) {

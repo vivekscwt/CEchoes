@@ -22,11 +22,12 @@ const query = util.promisify(db.query).bind(db);
 async function getFaqPage() {
   try {
     // Check if the company Name already exists in the "company" table
-    const faq_pages_fetch_query = "SELECT * FROM faq_pages WHERE 1";
+    const faq_pages_fetch_query = "SELECT * FROM faq_pages";
     const faq_pages__results = await query(faq_pages_fetch_query);
     if (faq_pages__results.length > 0) {
       //return faq_pages info
-      return faq_pages__results[0];
+      //return faq_pages__results[0];
+      return faq_pages__results;
     } else {
 
     }
@@ -37,16 +38,16 @@ async function getFaqPage() {
 };
 
 //-- Fetch  faq_categories data --------//
-async function getFaqCategories() {
+async function getFaqCategories(country) {
   try {
     // Check if the company Name already exists in the "company" table
-    const faq_categories_fetch_query = "SELECT * FROM faq_categories WHERE 1";
+    const faq_categories_fetch_query = `SELECT * FROM faq_categories WHERE country = "${country}"`;
     const faq_categories__results = await query(faq_categories_fetch_query);
     if (faq_categories__results.length > 0) {
       //return faq_categories info
       return faq_categories__results;
     } else {
-
+      return [];
     }
   }
   catch (error) {
@@ -55,22 +56,24 @@ async function getFaqCategories() {
 };
 
 //-- Fetch  faq_item data --------//
-async function getFaqItems() {
+async function getFaqItems(country) {
   try {
     // Check if the company Name already exists in the "company" table
-    const faq_items_fetch_query = "SELECT * FROM faq_item WHERE 1";
+    const faq_items_fetch_query = `SELECT * FROM faq_item WHERE country = "${country}"`;
     const faq_items__results = await query(faq_items_fetch_query);
     if (faq_items__results.length > 0) {
       //return faq_categories info
       return faq_items__results;
     } else {
-
+      return [];
     }
   }
   catch (error) {
     console.error('Error during fetching faq_item:', error);
   }
 };
+
+
 
 //Insert Business Fature content
 function insertBusinessFeature(content, image) {
@@ -460,6 +463,20 @@ async function getPageInfo(pageName) {
 //Function to fetch Page Meta Values from the  page_meta table
 async function getPageMetaValues(pageName) {
   const sql = `SELECT * FROM page_info where secret_Key = '${pageName}' `;
+  const get_page_info_result = await query(sql);
+
+  const meta_sql = `SELECT * FROM page_meta where page_id = ${get_page_info_result[0].id}`;
+  const get_page_meta_result = await query(meta_sql);
+  let meta_values_array = {};
+  await get_page_meta_result.forEach((item) => {
+    meta_values_array[item.page_meta_key] = item.page_meta_value;
+  })
+  return meta_values_array;
+}
+
+//Function to fetch Page Meta Values from the  page_meta table
+async function getPageMetaValue(pageName,country) {
+  const sql = `SELECT * FROM page_info where secret_Key = '${pageName}' AND country= "${country}"`;
   const get_page_info_result = await query(sql);
 
   const meta_sql = `SELECT * FROM page_meta where page_id = ${get_page_info_result[0].id}`;
@@ -6878,6 +6895,7 @@ module.exports = {
   getAllReviews,
   getPageMetaValues,
   getPageInfo,
+  getPageMetaValue,//
   reviewApprovedEmail,
   reviewRejectdEmail,
   getPremiumCompanyData,

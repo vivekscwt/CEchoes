@@ -36,8 +36,8 @@
                         <form id="kt_account_profile_details_form" class="form" action="auth/update-business"
                             method="POST" enctype="multipart/form-data">
                             <!--begin::Card body-->
-                            <input type="hidden" name="business_id" id="" value="<%= common.id %>" />
-                            <input type="hidden" name="country_name" id="country_name2" value="<%= common.country %>" />
+                            <input type="hidden" name="business_id" id="" value="<%= common2.id %>" />
+                            <input type="hidden" name="country_name" id="country_name2" value="<%= common2.country %>" />
                             <div class="card-header border-0 cursor-pointer" role="button"
                                 data-bs-target="#kt_account_profile_details" aria-expanded="true"
                                 aria-controls="kt_account_profile_details">
@@ -58,7 +58,7 @@
                                     <div class="col-lg-8 fv-row">
                                         <input type="text" name="title" id="title"
                                             class="form-control form-control-lg form-control-solid" placeholder="Title"
-                                            value="<%= common.title %>" />
+                                            value="<%= common2.title %>" />
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -74,7 +74,7 @@
                                     <div class="col-lg-8 fv-row">
                                         <input type="text" name="meta_title" id="meta_title"
                                             class="form-control form-control-lg form-control-solid"
-                                            placeholder="Mata Title" value="<%= common.meta_title %>" />
+                                            placeholder="Mata Title" value="<%= common2.meta_title %>" />
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -90,7 +90,7 @@
                                     <div class="col-lg-8 fv-row">
                                         <input type="text" name="meta_desc" id="meta_desc"
                                             class="form-control form-control-lg form-control-solid"
-                                            placeholder="Meta Description" value="<%= common.meta_desc %>" />
+                                            placeholder="Meta Description" value="<%= common2.meta_desc %>" />
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -106,7 +106,7 @@
                                     <div class="col-lg-8 fv-row">
                                         <input type="text" name="meta_keyword" id="meta_keyword"
                                             class="form-control form-control-lg form-control-solid"
-                                            placeholder="Meta Keyword" value="<%= common.meta_keyword %>" />
+                                            placeholder="Meta Keyword" value="<%= common2.meta_keyword %>" />
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -133,7 +133,7 @@
                                     <div class="col-lg-8 fv-row">
                                         <textarea name="bannner_content" id="bannner_content"
                                             class="form-control form-control-lg form-control-solid"
-                                            placeholder="Banner Content"><%= meta_values_array.bannner_content %></textarea>
+                                            placeholder="Banner Content"><%= meta_values_array2.bannner_content %></textarea>
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -152,7 +152,7 @@
                                             value="" />
                                     </div>
                                     <div class="col-lg-1 fv-row">
-                                        <img src="/<%= meta_values_array.banner_img_1 %>" alt="img" width="50"
+                                        <img src="/<%= meta_values_array2.banner_img_1 %>" alt="img" width="50"
                                             height="50" loading="">
                                     </div>
                                     <!--end::Col-->
@@ -170,7 +170,7 @@
                                             value="" />
                                     </div>
                                     <div class="col-lg-1 fv-row">
-                                        <img src="/<%= meta_values_array.banner_img_2 %>" alt="img" width="50"
+                                        <img src="/<%= meta_values_array2.banner_img_2 %>" alt="img" width="50"
                                             height="50" loading="">
                                     </div>
                                     <!--end::Col-->
@@ -188,7 +188,7 @@
                                             value="" />
                                     </div>
                                     <div class="col-lg-1 fv-row">
-                                        <img src="/<%= meta_values_array.banner_img_3 %>" alt="img" width="50"
+                                        <img src="/<%= meta_values_array2.banner_img_3 %>" alt="img" width="50"
                                             height="50" loading="">
                                     </div>
                                     <!--end::Col-->
@@ -206,7 +206,7 @@
                                             value="" />
                                     </div>
                                     <div class="col-lg-1 fv-row">
-                                        <img src="/<%= meta_values_array.banner_img_4 %>" alt="img" width="50"
+                                        <img src="/<%= meta_values_array2.banner_img_4 %>" alt="img" width="50"
                                             height="50" loading="">
                                     </div>
                                     <!--end::Col-->
@@ -224,7 +224,7 @@
                                             value="" />
                                     </div>
                                     <div class="col-lg-1 fv-row">
-                                        <img src="/<%= meta_values_array.banner_img_5 %>" alt="img" width="50"
+                                        <img src="/<%= meta_values_array2.banner_img_5 %>" alt="img" width="50"
                                             height="50" loading="">
                                     </div>
                                     <!--end::Col-->
@@ -242,7 +242,7 @@
                                             value="" />
                                     </div>
                                     <div class="col-lg-1 fv-row">
-                                        <img src="/<%= meta_values_array.banner_img_6 %>" alt="img" width="50"
+                                        <img src="/<%= meta_values_array2.banner_img_6 %>" alt="img" width="50"
                                             height="50" loading="">
                                     </div>
                                     <!--end::Col-->
@@ -260,7 +260,7 @@
                                             value="" />
                                     </div>
                                     <div class="col-lg-1 fv-row">
-                                        <img src="/<%= meta_values_array.banner_img_7 %>" alt="img" width="50"
+                                        <img src="/<%= meta_values_array2.banner_img_7 %>" alt="img" width="50"
                                             height="50" loading="">
                                     </div>
                                     <!--end::Col-->
@@ -278,7 +278,7 @@
                                             value="" />
                                     </div>
                                     <div class="col-lg-1 fv-row">
-                                        <img src="/<%= meta_values_array.banner_img_8 %>" alt="img" width="50"
+                                        <img src="/<%= meta_values_array2.banner_img_8 %>" alt="img" width="50"
                                             height="50" loading="">
                                     </div>
                                     <!--end::Col-->
@@ -302,7 +302,7 @@
                                     <div class="col-lg-8 fv-row">
                                         <textarea name="app_bannner_content_title" id="bannner_content"
                                             class="form-control form-control-lg form-control-solid"
-                                            placeholder="Banner Content Title"><%= meta_values_array.app_bannner_content_title %></textarea>
+                                            placeholder="Banner Content Title"><%= meta_values_array2.app_bannner_content_title %></textarea>
                                     </div>
                                 </div>
                                 <div class="row mb-6">
@@ -312,7 +312,7 @@
                                     <div class="col-lg-8 fv-row">
                                         <textarea name="app_bannner_content_1" id=""
                                             class="form-control form-control-lg form-control-solid"
-                                            placeholder="Banner Content 1"><%= meta_values_array.app_bannner_content_1 %></textarea>
+                                            placeholder="Banner Content 1"><%= meta_values_array2.app_bannner_content_1 %></textarea>
                                     </div>
                                 </div>
                                 <div class="row mb-6">
@@ -322,7 +322,7 @@
                                     <div class="col-lg-8 fv-row">
                                         <textarea name="app_bannner_content_2" id=""
                                             class="form-control form-control-lg form-control-solid"
-                                            placeholder="Banner Content 2"><%= meta_values_array.app_bannner_content_2 %></textarea>
+                                            placeholder="Banner Content 2"><%= meta_values_array2.app_bannner_content_2 %></textarea>
                                     </div>
                                 </div>
                                 <div class="row mb-6">
@@ -338,7 +338,7 @@
                                             value="" />
                                     </div>
                                     <div class="col-lg-1 fv-row">
-                                        <img src="/<%= meta_values_array.app_banner_img_1 %>" alt="img" width="50"
+                                        <img src="/<%= meta_values_array2.app_banner_img_1 %>" alt="img" width="50"
                                             height="50" loading="">
                                     </div>
                                     <!--end::Col-->
@@ -356,7 +356,7 @@
                                             value="" />
                                     </div>
                                     <div class="col-lg-1 fv-row">
-                                        <img src="/<%= meta_values_array.app_banner_img_2 %>" alt="img" width="50"
+                                        <img src="/<%= meta_values_array2.app_banner_img_2 %>" alt="img" width="50"
                                             height="50" loading="">
                                     </div>
                                     <!--end::Col-->
@@ -383,7 +383,7 @@
                                     <div class="col-lg-8 fv-row">
                                         <input type="text" name="features_title" id=""
                                             class="form-control form-control-lg form-control-solid"
-                                            placeholder="Features Title" value="<%= meta_values_array.features_title %>" />
+                                            placeholder="Features Title" value="<%= meta_values_array2.features_title %>" />
                                     </div>
                                 </div>
                                 <div id="features_main_div">
@@ -448,7 +448,7 @@
                                     <div class="col-lg-8 fv-row">
                                         <input type="text" name="advantage_title" id=""
                                             class="form-control form-control-lg form-control-solid" placeholder="Title"
-                                            value="<%= meta_values_array.advantage_title %>" />
+                                            value="<%= meta_values_array2.advantage_title %>" />
                                     </div>
                                 </div>
                                 <div class="row mb-6">
@@ -461,7 +461,7 @@
                                     <div class="col-lg-8 fv-row">
                                         <textarea name="advantage_content" id="advantage_content"
                                             class="form-control form-control-lg form-control-solid"
-                                            placeholder="Banner Content"><%= meta_values_array.advantage_content %></textarea>
+                                            placeholder="Banner Content"><%= meta_values_array2.advantage_content %></textarea>
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -480,7 +480,7 @@
                                             value="" />
                                     </div>
                                     <div class="col-lg-1 fv-row">
-                                        <img src="/<%= meta_values_array.advantage_img_1 %>" alt="img" width="50"
+                                        <img src="/<%= meta_values_array2.advantage_img_1 %>" alt="img" width="50"
                                             height="50" loading="">
                                     </div>
                                     <!--end::Col-->
@@ -498,7 +498,7 @@
                                             value="" />
                                     </div>
                                     <div class="col-lg-1 fv-row">
-                                        <img src="/<%= meta_values_array.advantage_img_2 %>" alt="img" width="50"
+                                        <img src="/<%= meta_values_array2.advantage_img_2 %>" alt="img" width="50"
                                             height="50" loading="">
                                     </div>
                                     <!--end::Col-->
@@ -516,7 +516,7 @@
                                             value="" />
                                     </div>
                                     <div class="col-lg-1 fv-row">
-                                        <img src="/<%= meta_values_array.advantage_img_3 %>" alt="img" width="50"
+                                        <img src="/<%= meta_values_array2.advantage_img_3 %>" alt="img" width="50"
                                             height="50" loading="">
                                     </div>
                                     <!--end::Col-->
@@ -534,7 +534,7 @@
                                             value="" />
                                     </div>
                                     <div class="col-lg-1 fv-row">
-                                        <img src="/<%= meta_values_array.advantage_img_4 %>" alt="img" width="50"
+                                        <img src="/<%= meta_values_array2.advantage_img_4 %>" alt="img" width="50"
                                             height="50" loading="">
                                     </div>
                                     <!--end::Col-->
@@ -552,7 +552,7 @@
                                             value="" />
                                     </div>
                                     <div class="col-lg-1 fv-row">
-                                        <img src="/<%= meta_values_array.advantage_img_5 %>" alt="img" width="50"
+                                        <img src="/<%= meta_values_array2.advantage_img_5 %>" alt="img" width="50"
                                             height="50" loading="">
                                     </div>
                                     <!--end::Col-->
@@ -570,7 +570,7 @@
                                             value="" />
                                     </div>
                                     <div class="col-lg-1 fv-row">
-                                        <img src="/<%= meta_values_array.advantage_img_6 %>" alt="img" width="50"
+                                        <img src="/<%= meta_values_array2.advantage_img_6 %>" alt="img" width="50"
                                             height="50" loading="">
                                     </div>
                                     <!--end::Col-->
@@ -588,7 +588,7 @@
                                             value="" />
                                     </div>
                                     <div class="col-lg-1 fv-row">
-                                        <img src="/<%= meta_values_array.advantage_img_7 %>" alt="img" width="50"
+                                        <img src="/<%= meta_values_array2.advantage_img_7 %>" alt="img" width="50"
                                             height="50" loading="">
                                     </div>
                                     <!--end::Col-->
@@ -606,7 +606,7 @@
                                             value="" />
                                     </div>
                                     <div class="col-lg-1 fv-row">
-                                        <img src="/<%= meta_values_array.advantage_img_8 %>" alt="img" width="50"
+                                        <img src="/<%= meta_values_array2.advantage_img_8 %>" alt="img" width="50"
                                             height="50" loading="">
                                     </div>
                                     <!--end::Col-->
@@ -624,8 +624,8 @@
                             <div class="card-body border-top p-9">
                                 <% 
                                     let app_advantage_points = [];
-                                    if(typeof meta_values_array.app_advantage_points !== 'undefined'){
-                                        app_advantage_points =  JSON.parse(meta_values_array.app_advantage_points)
+                                    if(typeof meta_values_array2.app_advantage_points !== 'undefined'){
+                                        app_advantage_points =  JSON.parse(meta_values_array2.app_advantage_points)
                                     }
                                     
                                 %>
@@ -670,7 +670,7 @@
                                     <div class="col-lg-8 fv-row">
                                         <input type="text" name="dont_forget_title" id=""
                                             class="form-control form-control-lg form-control-solid" placeholder="Title"
-                                            value="<%= meta_values_array.dont_forget_title %>" />
+                                            value="<%= meta_values_array2.dont_forget_title %>" />
                                     </div>
                                 </div>
                                 <div class="row mb-6">
@@ -683,7 +683,7 @@
                                     <div class="col-lg-8 fv-row">
                                         <textarea name="dont_forget_content_1" id=""
                                             class="form-control form-control-lg form-control-solid"
-                                            placeholder="Content 1"><%= meta_values_array.dont_forget_content_1 %></textarea>
+                                            placeholder="Content 1"><%= meta_values_array2.dont_forget_content_1 %></textarea>
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -697,7 +697,7 @@
                                     <div class="col-lg-8 fv-row">
                                         <textarea name="dont_forget_content_2" id="for_business"
                                             class="form-control form-control-lg form-control-solid"
-                                            placeholder="Content 2"><%= meta_values_array.dont_forget_content_2 %></textarea>
+                                            placeholder="Content 2"><%= meta_values_array2.dont_forget_content_2 %></textarea>
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -722,7 +722,7 @@
                                     <div class="col-lg-8 fv-row">
                                         <input type="text" name="app_dont_forget_content_1_title" id=""
                                             class="form-control form-control-lg form-control-solid" placeholder="Content 1 Title"
-                                            value="<%= meta_values_array.app_dont_forget_content_1_title %>" />
+                                            value="<%= meta_values_array2.app_dont_forget_content_1_title %>" />
                                     </div>
                                 </div>
                                 <div class="row mb-6">
@@ -735,7 +735,7 @@
                                     <div class="col-lg-8 fv-row">
                                         <textarea name="app_dont_forget_content_1" id=""
                                             class="form-control form-control-lg form-control-solid"
-                                            placeholder="Content 1"><%= meta_values_array.app_dont_forget_content_1 %></textarea>
+                                            placeholder="Content 1"><%= meta_values_array2.app_dont_forget_content_1 %></textarea>
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -749,7 +749,7 @@
                                     <div class="col-lg-8 fv-row">
                                         <input type="text" name="app_dont_forget_content_2_title" id=""
                                             class="form-control form-control-lg form-control-solid" placeholder="Content 2 Title"
-                                            value="<%= meta_values_array.app_dont_forget_content_2_title %>" />
+                                            value="<%= meta_values_array2.app_dont_forget_content_2_title %>" />
                                     </div>
                                 </div>
                                 <div class="row mb-6">
@@ -762,7 +762,7 @@
                                     <div class="col-lg-8 fv-row">
                                         <textarea name="app_dont_forget_content_2" id=""
                                             class="form-control form-control-lg form-control-solid"
-                                            placeholder="Content 2"><%= meta_values_array.app_dont_forget_content_2 %></textarea>
+                                            placeholder="Content 2"><%= meta_values_array2.app_dont_forget_content_2 %></textarea>
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -787,7 +787,7 @@
                                     <div class="col-lg-8 fv-row">
                                         <input type="text" name="did_you_know_title" id=""
                                             class="form-control form-control-lg form-control-solid" placeholder=""
-                                            value="<%= meta_values_array.did_you_know_title %>" />
+                                            value="<%= meta_values_array2.did_you_know_title %>" />
                                     </div>
                                 </div>
                                 <div class="row mb-6">
@@ -800,7 +800,7 @@
                                     <div class="col-lg-8 fv-row">
                                         <textarea name="did_you_know_content_1" id=""
                                             class="form-control form-control-lg form-control-solid"
-                                            placeholder="Content 1"><%= meta_values_array.did_you_know_content_1 %></textarea>
+                                            placeholder="Content 1"><%= meta_values_array2.did_you_know_content_1 %></textarea>
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -814,7 +814,7 @@
                                     <div class="col-lg-8 fv-row">
                                         <textarea name="did_you_know_content_2" id="for_business"
                                             class="form-control form-control-lg form-control-solid"
-                                            placeholder="Content 2"><%= meta_values_array.did_you_know_content_2 %></textarea>
+                                            placeholder="Content 2"><%= meta_values_array2.did_you_know_content_2 %></textarea>
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -831,7 +831,7 @@
                                             value="" />
                                     </div>
                                     <div class="col-lg-1 fv-row">
-                                        <img src="/<%= meta_values_array.did_you_know_img %>" alt="img" width="50"
+                                        <img src="/<%= meta_values_array2.did_you_know_img %>" alt="img" width="50"
                                             height="50" loading="">
                                     </div>
                                     <!--end::Col-->
@@ -906,7 +906,7 @@
                                     <div class="col-lg-8 fv-row">
                                         <textarea name="basic_plan_content" id=""
                                             class="form-control form-control-lg form-control-solid"
-                                            placeholder="Basic Content"><%= meta_values_array.basic_plan_content %></textarea>
+                                            placeholder="Basic Content"><%= meta_values_array2.basic_plan_content %></textarea>
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -920,7 +920,7 @@
                                     <div class="col-lg-8 fv-row">
                                         <textarea name="standard_plan_content" id=""
                                             class="form-control form-control-lg form-control-solid"
-                                            placeholder="Standard Content"><%= meta_values_array.standard_plan_content %></textarea>
+                                            placeholder="Standard Content"><%= meta_values_array2.standard_plan_content %></textarea>
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -934,7 +934,7 @@
                                     <div class="col-lg-8 fv-row">
                                         <textarea name="advanced_plan_content" id=""
                                             class="form-control form-control-lg form-control-solid"
-                                            placeholder="Advanced Content"><%= meta_values_array.advanced_plan_content %></textarea>
+                                            placeholder="Advanced Content"><%= meta_values_array2.advanced_plan_content %></textarea>
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -948,7 +948,7 @@
                                     <div class="col-lg-8 fv-row">
                                         <textarea name="premium_plan_content" id=""
                                             class="form-control form-control-lg form-control-solid"
-                                            placeholder="Premium Content"><%= meta_values_array.premium_plan_content %></textarea>
+                                            placeholder="Premium Content"><%= meta_values_array2.premium_plan_content %></textarea>
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -962,7 +962,7 @@
                                     <div class="col-lg-8 fv-row">
                                         <textarea name="enterprice_plan_content" id=""
                                             class="form-control form-control-lg form-control-solid"
-                                            placeholder="Enterprise Content"><%= meta_values_array.enterprice_plan_content %></textarea>
+                                            placeholder="Enterprise Content"><%= meta_values_array2.enterprice_plan_content %></textarea>
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -987,7 +987,7 @@
                                     <div class="col-lg-8 fv-row">
                                         <textarea name="bottom_content" id=""
                                             class="form-control form-control-lg form-control-solid"
-                                            placeholder="Bottom Content"><%= meta_values_array.bottom_content %></textarea>
+                                            placeholder="Bottom Content"><%= meta_values_array2.bottom_content %></textarea>
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -1099,7 +1099,7 @@
                                                     }
                                                 }).then(function (result) {
                                                     if (result.isConfirmed) {
-                                                        window.location.href = "/edit-business";
+                                                        window.location.href = "/jp-edit-business";
                                                     }
                                                 });
                                             } else {

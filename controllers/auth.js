@@ -4082,45 +4082,103 @@ exports.createFAQ = async (req, res) => {
 }
 
 // Update FAQ
-exports.updateFAQ = async (req, res) => {
-    //console.log(req.body);
-    const faqArray = req.body.FAQ;
-    //console.log(faqArray[0]); 
+// exports.updateFAQ = async (req, res) => {
+//     //console.log(req.body);
+//     const faqArray = req.body.FAQ;
+//     //console.log(faqArray[0]); 
 
-    const Faq_Page_insert_values = [
-        req.body.title,
-        req.body.content,
-        req.body.meta_title,
-        req.body.meta_desc,
-        req.body.keyword,
-        req.body.app_content,
-    ];
+//     const Faq_Page_insert_values = [
+//         req.body.title,
+//         req.body.content,
+//         req.body.meta_title,
+//         req.body.meta_desc,
+//         req.body.keyword,
+//         req.body.app_content,
+//         req.body.countries_name
+//     ];
+//     try {
+//         db.query('DELETE  FROM faq_categories', (del_faq_cat_err, del_faq_cat_res) => {
+//             db.query('DELETE  FROM faq_item', async (del_faq_item_err, del_faq_item_res) => {
+//                 const faqPageId = await comFunction.insertIntoFaqPages(Faq_Page_insert_values);
+//                 console.log('ID:', faqPageId);
+//                 await comFunction.insertIntoFaqCategories(faqArray);
+//                 return res.send(
+//                     {
+//                         status: 'ok',
+//                         data: faqPageId,
+//                         message: 'FAQ Content successfully Updated'
+//                     }
+//                 )
+//             })
+//         });
+
+
+
+//     } catch (error) {
+//         console.error('Error during insertion:', error);
+//         return res.status(500).send({
+//             status: 'error',
+//             message: 'An error occurred while inserting FAQ data',
+//         });
+//     }
+// }
+
+exports.updateFAQ = async (req, res) => {
+    const { title, content, meta_title, meta_desc, keyword, app_content, countries_name, FAQ } = req.body;
+
+    const Faq_Page_insert_values = [title, content, meta_title, meta_desc, keyword, app_content, countries_name];
+
+    console.log("req.body.faq", req.body);
     try {
-        db.query('DELETE  FROM faq_categories', (del_faq_cat_err, del_faq_cat_res) => {
-            db.query('DELETE  FROM faq_item', async (del_faq_item_err, del_faq_item_res) => {
-                const faqPageId = await comFunction.insertIntoFaqPages(Faq_Page_insert_values);
-                console.log('ID:', faqPageId);
-                await comFunction.insertIntoFaqCategories(faqArray);
-                return res.send(
-                    {
+        // Delete existing FAQ categories and items for the given country
+        db.query('DELETE FROM faq_categories WHERE country = ?', [countries_name], (del_faq_cat_err, del_faq_cat_res) => {
+            if (del_faq_cat_err) {
+                console.error('Error deleting FAQ categories:', del_faq_cat_err);
+                return res.status(500).send({
+                    status: 'error',
+                    message: 'An error occurred while deleting FAQ categories',
+                });
+            }
+
+            db.query('DELETE FROM faq_item WHERE country = ?', [countries_name], async (del_faq_item_err, del_faq_item_res) => {
+                if (del_faq_item_err) {
+                    console.error('Error deleting FAQ items:', del_faq_item_err);
+                    return res.status(500).send({
+                        status: 'error',
+                        message: 'An error occurred while deleting FAQ items',
+                    });
+                }
+
+                try {
+                    const faqPageId = await comFunction.insertIntoFaqPages(Faq_Page_insert_values, countries_name);
+                    console.log('FAQ Page ID:', faqPageId);
+
+                    await comFunction.insertIntoFaqCategories(FAQ, countries_name);
+
+                    return res.send({
                         status: 'ok',
                         data: faqPageId,
-                        message: 'FAQ Content successfully Updated'
-                    }
-                )
-            })
+                        message: 'FAQ Content successfully Updated',
+                    });
+                } catch (insertError) {
+                    console.error('Error during insertion:', insertError);
+                    return res.status(500).send({
+                        status: 'error',
+                        message: 'An error occurred while inserting FAQ data',
+                    });
+                }
+            });
         });
-
-
-
     } catch (error) {
-        console.error('Error during insertion:', error);
+        console.error('Unexpected error:', error);
         return res.status(500).send({
             status: 'error',
-            message: 'An error occurred while inserting FAQ data',
+            message: 'An unexpected error occurred while updating FAQ data',
         });
     }
-}
+};
+
+  
 
 //Update FAQ Images
 exports.updateFAQImages = async (req, res) => {
@@ -4142,8 +4200,158 @@ exports.updateFAQImages = async (req, res) => {
 
 }
 // Update Home
+// exports.updateHome = async (req, res) => {
+//     // console.log('home', req.body);
+//     //     console.log('file', req.files);
+//     //return false;
+//     const form_data = req.body;
+
+//     const { home_id, title, meta_title, meta_desc, meta_keyword, bannner_content, for_business,
+//         for_customer, cus_right_content, cus_right_button_link, cus_right_button_text, youtube_link,
+//         youtube_1, youtube_2, youtube_3, youtube_4, youtube_5, youtube_6, youtube_7, youtube_8, youtube_9, youtube_10, fb_widget, twitter_widget,
+//         org_responsibility_content, org_responsibility_buttton_link, org_responsibility_buttton_text,
+//         about_us_content, about_us_button_link, about_us_button_text, bannner_content_2, bannner_hashtag, impression_number, impression_number_visibility, reviews_count, reviews_count_visibility, total_users_count, total_users_count_visibility, reviewers_guidelines_title, reviewers_guidelines_popup, review_form_demo_location, cus_right_facts_popup, org_responsibility_facts_popup, app_banner_title_1, app_banner_title_2, app_features_for_customer, app_review_content, app_features_hashtag, app_cus_right_content, app_cus_right_point, app_org_responsibility_content, app_org_responsibility_points, app_about_us_content_1, app_about_us_content_2, app_about_us_button_text, bannner_message } = req.body;
+
+//     const { banner_img_1, banner_img_2, banner_img_3, banner_img_4, banner_img_5, banner_img_6, cus_right_img_1, cus_right_img_2, cus_right_img_3, cus_right_img_4, cus_right_img_5,
+//         cus_right_img_6, cus_right_img_7, cus_right_img_8, org_responsibility_img_1, org_responsibility_img_2, org_responsibility_img_3,
+//         org_responsibility_img_4, org_responsibility_img_5, org_responsibility_img_6, org_responsibility_img_7, org_responsibility_img_8,
+//         about_us_img, review_img_1, review_img_2, review_img_3, review_img_4, map_img, app_cus_right_img, app_org_responsibility_img } = req.files;
+
+//     let app_features = [];
+//     if (typeof app_features_for_customer == 'string') {
+//         app_features.push(app_features_for_customer);
+//     } else {
+//         app_features = [...app_features_for_customer];
+//         //app_features = app_features.concat(app_features_for_customer);
+//     }
+//     const app_customer_feature = JSON.stringify(app_features);
+
+//     let app_hashtag = [];
+//     if (typeof app_features_hashtag == 'string') {
+//         app_hashtag.push(app_features_hashtag);
+//     } else {
+//         app_hashtag = [...app_features_hashtag];
+//     }
+//     const app_feature_hashtag = JSON.stringify(app_hashtag);
+
+//     let cus_right_point = [];
+//     if (typeof app_cus_right_point == 'string') {
+//         cus_right_point.push(app_cus_right_point);
+//     } else {
+//         cus_right_point = [...app_cus_right_point];
+//     }
+//     const app_cus_right_points = JSON.stringify(cus_right_point);
+
+//     let org_responsibility_point = [];
+//     if (typeof app_org_responsibility_points == 'string') {
+//         org_responsibility_point.push(app_org_responsibility_points);
+//     } else {
+//         org_responsibility_point = [...app_org_responsibility_points];
+//     }
+//     const app_org_responsibility_point = JSON.stringify(org_responsibility_point);
+
+//     const meta_value = [bannner_content, for_business,
+//         for_customer, cus_right_content, cus_right_button_link, cus_right_button_text, youtube_link,
+//         youtube_1, youtube_2, youtube_3, youtube_4, fb_widget, twitter_widget,
+//         org_responsibility_content, org_responsibility_buttton_link, org_responsibility_buttton_text,
+//         about_us_content, about_us_button_link, about_us_button_text, bannner_content_2, bannner_hashtag, impression_number, impression_number_visibility, reviews_count, reviews_count_visibility, total_users_count, total_users_count_visibility, reviewers_guidelines_title, reviewers_guidelines_popup, review_form_demo_location, cus_right_facts_popup, org_responsibility_facts_popup, youtube_5, youtube_6, youtube_7, youtube_8, youtube_9, youtube_10, app_banner_title_1, app_banner_title_2, app_review_content, app_customer_feature, app_feature_hashtag, app_cus_right_content, app_cus_right_points, app_org_responsibility_content, app_org_responsibility_point, app_about_us_content_1, app_about_us_content_2, app_about_us_button_text, bannner_message];
+
+//     const meta_key = ['bannner_content', 'for_business',
+//         'for_customer', 'cus_right_content', 'cus_right_button_link', 'cus_right_button_text', 'youtube_link', 'youtube_1', 'youtube_2', 'youtube_3', 'youtube_4', 'fb_widget', 'twitter_widget',
+//         'org_responsibility_content', 'org_responsibility_buttton_link', 'org_responsibility_buttton_text',
+//         'about_us_content', 'about_us_button_link', 'about_us_button_text', 'bannner_content_2', 'bannner_hashtag', 'impression_number', 'impression_number_visibility', 'reviews_count', 'reviews_count_visibility', 'total_users_count', 'total_users_count_visibility', 'reviewers_guidelines_title', 'reviewers_guidelines_popup', 'review_form_demo_location', 'cus_right_facts_popup', 'org_responsibility_facts_popup', 'youtube_5', 'youtube_6', 'youtube_7', 'youtube_8', 'youtube_9', 'youtube_10', 'app_banner_title_1', 'app_banner_title_2', 'app_review_content', 'app_customer_feature', 'app_feature_hashtag', 'app_cus_right_content', 'app_cus_right_points', 'app_org_responsibility_content', 'app_org_responsibility_point', 'app_about_us_content_1', 'app_about_us_content_2', 'app_about_us_button_text', 'bannner_message'];
+
+//     await meta_value.forEach((element, index) => {
+//         //console.log(element, index);
+//         const check_sql = `SELECT * FROM page_meta WHERE page_id = ? AND page_meta_key = ?`;
+//         const check_data = [home_id, meta_key[index]];
+//         db.query(check_sql, check_data, (check_err, check_result) => {
+//             if (check_err) {
+//                 return res.send(
+//                     {
+//                         status: 'err',
+//                         data: '',
+//                         message: 'An error occurred while processing your request'
+//                     }
+//                 )
+//             } else {
+//                 if (check_result.length > 0) {
+//                     const update_sql = `UPDATE page_meta SET page_meta_value = ? WHERE page_id = ? AND page_meta_key = ?`;
+//                     const update_data = [element, home_id, meta_key[index]];
+//                     db.query(update_sql, update_data, (update_err, update_result) => {
+//                         if (update_err) throw update_err;
+//                     })
+//                 } else {
+//                     const insert_sql = `INSERT INTO page_meta (page_id , page_meta_key, page_meta_value) VALUES (?,?,?)`;
+//                     const insert_data = [home_id, meta_key[index], element];
+//                     db.query(insert_sql, insert_data, (insert_err, insert_result) => {
+//                         if (insert_err) throw insert_err;
+//                     })
+//                 }
+//             }
+//         });
+//     });
+
+//     const file_meta_value = [banner_img_1, banner_img_2, banner_img_3, banner_img_4, banner_img_5, banner_img_6, cus_right_img_1, cus_right_img_2, cus_right_img_3, cus_right_img_4, cus_right_img_5,
+//         cus_right_img_6, cus_right_img_7, cus_right_img_8, org_responsibility_img_1, org_responsibility_img_2, org_responsibility_img_3,
+//         org_responsibility_img_4, org_responsibility_img_5, org_responsibility_img_6, org_responsibility_img_7, org_responsibility_img_8,
+//         about_us_img, review_img_1, review_img_2, review_img_3, review_img_4, map_img, app_cus_right_img, app_org_responsibility_img];
+
+//     const file_meta_key = ['banner_img_1', 'banner_img_2', 'banner_img_3', 'banner_img_4', 'banner_img_5', 'banner_img_6', 'cus_right_img_1', 'cus_right_img_2', 'cus_right_img_3', 'cus_right_img_4', 'cus_right_img_5',
+//         'cus_right_img_6', 'cus_right_img_7', 'cus_right_img_8', 'org_responsibility_img_1', 'org_responsibility_img_2', 'org_responsibility_img_3',
+//         'org_responsibility_img_4', 'org_responsibility_img_5', 'org_responsibility_img_6', 'org_responsibility_img_7', 'org_responsibility_img_8',
+//         'about_us_img', 'review_img_1', 'review_img_2', 'review_img_3', 'review_img_4', 'map_img', 'app_cus_right_img', 'app_org_responsibility_img'];
+
+//     await file_meta_key.forEach((item, key) => {
+//         //console.log(item, key);
+//         if (req.files[item]) {
+//             //console.log(file_meta_value[key][0].filename);
+//             const check_sql = `SELECT * FROM page_meta WHERE page_id = ? AND page_meta_key = ?`;
+//             const check_data = [home_id, item];
+//             db.query(check_sql, check_data, (check_err, check_result) => {
+//                 if (check_err) {
+//                     return res.send(
+//                         {
+//                             status: 'err',
+//                             data: '',
+//                             message: 'An error occurred while processing your request'
+//                         }
+//                     )
+//                 } else {
+//                     if (check_result.length > 0) {
+//                         const update_sql = `UPDATE page_meta SET page_meta_value = ? WHERE page_id = ? AND page_meta_key = ?`;
+//                         const update_data = [file_meta_value[key][0].filename, home_id, item];
+//                         db.query(update_sql, update_data, (update_err, update_result) => {
+//                             if (update_err) throw update_err;
+//                         })
+//                     } else {
+//                         const insert_sql = `INSERT INTO page_meta (page_id , page_meta_key, page_meta_value) VALUES (?,?,?)`;
+//                         const insert_data = [home_id, item, file_meta_value[key][0].filename];
+//                         db.query(insert_sql, insert_data, (insert_err, insert_result) => {
+//                             if (insert_err) throw insert_err;
+//                         })
+//                     }
+//                 }
+//             });
+//         }
+
+//     });
+
+//     const title_sql = `UPDATE page_info SET title = ?, meta_title = ?, meta_desc = ?, meta_keyword = ? WHERE id  = ?`;
+//     const title_data = [title, meta_title, meta_desc, meta_keyword, home_id];
+//     //console.log(title_data);
+//     db.query(title_sql, title_data, (title_err, title_result) => {
+//         return res.send(
+//             {
+//                 status: 'ok',
+//                 data: '',
+//                 message: ' Updated successfully'
+//             }
+//         )
+//     })
+// }
 exports.updateHome = async (req, res) => {
-    //  console.log('home', req.body);
+    console.log('home', req.body);
     //     console.log('file', req.files);
     //return false;
     const form_data = req.body;
@@ -4152,43 +4360,64 @@ exports.updateHome = async (req, res) => {
         for_customer, cus_right_content, cus_right_button_link, cus_right_button_text, youtube_link,
         youtube_1, youtube_2, youtube_3, youtube_4, youtube_5, youtube_6, youtube_7, youtube_8, youtube_9, youtube_10, fb_widget, twitter_widget,
         org_responsibility_content, org_responsibility_buttton_link, org_responsibility_buttton_text,
-        about_us_content, about_us_button_link, about_us_button_text, bannner_content_2, bannner_hashtag, impression_number, impression_number_visibility, reviews_count, reviews_count_visibility, total_users_count, total_users_count_visibility, reviewers_guidelines_title, reviewers_guidelines_popup, review_form_demo_location, cus_right_facts_popup, org_responsibility_facts_popup, app_banner_title_1, app_banner_title_2, app_features_for_customer, app_review_content, app_features_hashtag, app_cus_right_content, app_cus_right_point, app_org_responsibility_content, app_org_responsibility_points, app_about_us_content_1, app_about_us_content_2, app_about_us_button_text, bannner_message } = req.body;
+        about_us_content, about_us_button_link, about_us_button_text, bannner_content_2, bannner_hashtag, impression_number, impression_number_visibility, reviews_count, reviews_count_visibility, total_users_count, total_users_count_visibility, reviewers_guidelines_title, reviewers_guidelines_popup, review_form_demo_location, cus_right_facts_popup, org_responsibility_facts_popup, app_banner_title_1, app_banner_title_2, app_features_for_customer, app_review_content, app_features_hashtag, app_cus_right_content, app_cus_right_point, app_org_responsibility_content, app_org_responsibility_points, app_about_us_content_1, app_about_us_content_2, app_about_us_button_text, bannner_message, country_name} = req.body;
 
     const { banner_img_1, banner_img_2, banner_img_3, banner_img_4, banner_img_5, banner_img_6, cus_right_img_1, cus_right_img_2, cus_right_img_3, cus_right_img_4, cus_right_img_5,
         cus_right_img_6, cus_right_img_7, cus_right_img_8, org_responsibility_img_1, org_responsibility_img_2, org_responsibility_img_3,
         org_responsibility_img_4, org_responsibility_img_5, org_responsibility_img_6, org_responsibility_img_7, org_responsibility_img_8,
         about_us_img, review_img_1, review_img_2, review_img_3, review_img_4, map_img, app_cus_right_img, app_org_responsibility_img } = req.files;
 
+    // let app_features = [];
+    // if (typeof app_features_for_customer == 'string') {
+    //     app_features.push(app_features_for_customer);
+    // } else {
+    //     app_features = [...app_features_for_customer];
+    //     //app_features = app_features.concat(app_features_for_customer);
+    // }
+    // const app_customer_feature = JSON.stringify(app_features);
+
     let app_features = [];
+
     if (typeof app_features_for_customer == 'string') {
         app_features.push(app_features_for_customer);
-    } else {
+    } else if (Array.isArray(app_features_for_customer)) {
         app_features = [...app_features_for_customer];
-        //app_features = app_features.concat(app_features_for_customer);
+    } else if (app_features_for_customer !== null && typeof app_features_for_customer === 'object') {
+        console.error('app_features_for_customer is an object but not an array:', app_features_for_customer);
+    } else {
+        console.error('app_features_for_customer is null or undefined:', app_features_for_customer);
     }
     const app_customer_feature = JSON.stringify(app_features);
 
+
+
     let app_hashtag = [];
-    if (typeof app_features_hashtag == 'string') {
-        app_hashtag.push(app_features_hashtag);
-    } else {
-        app_hashtag = [...app_features_hashtag];
+    if (app_features_hashtag !== null && app_features_hashtag !== undefined) {
+        if (typeof app_features_hashtag === 'string') {
+            app_hashtag.push(app_features_hashtag);
+        } else {
+            app_hashtag = [...app_features_hashtag];
+        }
     }
     const app_feature_hashtag = JSON.stringify(app_hashtag);
 
     let cus_right_point = [];
-    if (typeof app_cus_right_point == 'string') {
-        cus_right_point.push(app_cus_right_point);
-    } else {
-        cus_right_point = [...app_cus_right_point];
+    if (app_cus_right_point !== null && app_cus_right_point !== undefined) {
+        if (typeof app_cus_right_point === 'string') {
+            cus_right_point.push(app_cus_right_point);
+        } else {
+            cus_right_point = [...app_cus_right_point];
+        }
     }
     const app_cus_right_points = JSON.stringify(cus_right_point);
 
     let org_responsibility_point = [];
-    if (typeof app_org_responsibility_points == 'string') {
-        org_responsibility_point.push(app_org_responsibility_points);
-    } else {
-        org_responsibility_point = [...app_org_responsibility_points];
+    if (app_org_responsibility_points !== null && app_org_responsibility_points !== undefined) {
+        if (typeof app_org_responsibility_points === 'string') {
+            org_responsibility_point.push(app_org_responsibility_points);
+        } else {
+            org_responsibility_point = [...app_org_responsibility_points];
+        }
     }
     const app_org_responsibility_point = JSON.stringify(org_responsibility_point);
 
@@ -4279,8 +4508,8 @@ exports.updateHome = async (req, res) => {
 
     });
 
-    const title_sql = `UPDATE page_info SET title = ?, meta_title = ?, meta_desc = ?, meta_keyword = ? WHERE id  = ?`;
-    const title_data = [title, meta_title, meta_desc, meta_keyword, home_id];
+    const title_sql = `UPDATE page_info SET title = ?, meta_title = ?, meta_desc = ?, meta_keyword = ?, country = ? WHERE id  = ?`;
+    const title_data = [title, meta_title, meta_desc, meta_keyword, country_name, home_id];
     //console.log(title_data);
     db.query(title_sql, title_data, (title_err, title_result) => {
         return res.send(
@@ -4292,7 +4521,6 @@ exports.updateHome = async (req, res) => {
         )
     })
 }
-
 
 //--Submit Review----//
 
@@ -4794,13 +5022,13 @@ exports.deleteReview = (req, res) => {
 
 // Upadte About
 exports.updateAbout = async (req, res) => {
-    // console.log('home', req.body);
+    console.log('updateAbout', req.body);
     // console.log('file', req.files);
     const form_data = req.body;
 
     const { about_id, title, meta_title, meta_desc, meta_keyword, banner_content, mission_title,
         mission_content, platform_content, CEchoesTechnology_would_content, customers_content,
-        service_providers_content, app_banner_content_1, app_banner_content_2, app_platform_content_1, app_platform_content_2 } = req.body;
+        service_providers_content, app_banner_content_1, app_banner_content_2, app_platform_content_1, app_platform_content_2, country_name } = req.body;
 
     const { banner_img_1, banner_img_2, banner_img_3, banner_img_4, banner_img_5, banner_img_6, banner_img_7, banner_img_8,
         platform_img_1, platform_img_2, platform_img_3, platform_img_4, platform_img_5, platform_img_6, platform_img_7,
@@ -4888,8 +5116,8 @@ exports.updateAbout = async (req, res) => {
 
     });
 
-    const title_sql = `UPDATE page_info SET title = ?, meta_title = ?, meta_desc = ?, meta_keyword = ? WHERE id  = ?`;
-    const title_data = [title, meta_title, meta_desc, meta_keyword, about_id];
+    const title_sql = `UPDATE page_info SET title = ?, meta_title = ?, meta_desc = ?, meta_keyword = ?, country = ? WHERE id  = ?`;
+    const title_data = [title, meta_title, meta_desc, meta_keyword,country_name, about_id];
     //console.log(title_data);
     db.query(title_sql, title_data, (title_err, title_result) => {
         return res.send(
@@ -4977,18 +5205,30 @@ exports.updateBusiness = async (req, res) => {
         app_bannner_content_title, app_bannner_content_1, app_bannner_content_2, app_advantage_point,
         app_dont_forget_content_1_title, app_dont_forget_content_1, app_dont_forget_content_2_title,
         app_dont_forget_content_2, basic_plan_content, standard_plan_content, advanced_plan_content,
-        premium_plan_content, enterprice_plan_content } = req.body;
+        premium_plan_content, enterprice_plan_content, country_name } = req.body;
 
     const { banner_img_1, banner_img_2, banner_img_3, banner_img_4, banner_img_5, banner_img_6, banner_img_7, banner_img_8, advantage_img_1, advantage_img_2, advantage_img_3, advantage_img_4, advantage_img_5, advantage_img_6, advantage_img_7, advantage_img_8, did_you_know_img, app_banner_img_1, app_banner_img_2 } = req.files;
 
 
+    // let advantage_point = [];
+    // if (typeof app_advantage_point == 'string') {
+    //     advantage_point.push(app_advantage_point);
+    // } else {
+    //     advantage_point = [...app_advantage_point];
+    // }
+    // const app_advantage_points = JSON.stringify(advantage_point);
+
+
     let advantage_point = [];
-    if (typeof app_advantage_point == 'string') {
-        advantage_point.push(app_advantage_point);
-    } else {
+    if (Array.isArray(app_advantage_point)) {
         advantage_point = [...app_advantage_point];
+    } else if (typeof app_advantage_point === 'string') {
+        advantage_point.push(app_advantage_point);
+    } else if (app_advantage_point != null) {
+        console.error('Unexpected type for app_advantage_point:', app_advantage_point);
     }
     const app_advantage_points = JSON.stringify(advantage_point);
+
 
     const meta_value = [bannner_content, features_title, advantage_title, advantage_content, dont_forget_title,
         dont_forget_content_1, dont_forget_content_2, did_you_know_title, did_you_know_content_1, did_you_know_content_2,
@@ -5072,7 +5312,6 @@ exports.updateBusiness = async (req, res) => {
                 }
             });
         }
-
     });
     await comFunction2.deleteBusinessFeature();
     await comFunction2.deleteBusinessUpcomingFeature();
@@ -5090,7 +5329,6 @@ exports.updateBusiness = async (req, res) => {
                 )
             }
         });
-
     } else {
         await feature_content.forEach((value, key) => {
             const insert_query = `INSERT INTO business_features ( content, image, existing_or_upcoming) VALUES (?, ?,'existing')`;
@@ -5108,7 +5346,6 @@ exports.updateBusiness = async (req, res) => {
             });
         });
     }
-
     if (typeof upcoming_features_content === 'string') {
         const insert_query = `INSERT INTO business_features ( content, existing_or_upcoming) VALUES (?,'upcoming')`;
         const insert_data = [upcoming_features_content];
@@ -5140,12 +5377,8 @@ exports.updateBusiness = async (req, res) => {
             });
         })
     }
-
-
-
-
-    const title_sql = `UPDATE page_info SET title = ?, meta_title = ?, meta_desc = ?, meta_keyword = ? WHERE id  = ?`;
-    const title_data = [title, meta_title, meta_desc, meta_keyword, business_id];
+    const title_sql = `UPDATE page_info SET title = ?, meta_title = ?, meta_desc = ?, meta_keyword = ?, country = ? WHERE id  = ?`;
+    const title_data = [title, meta_title, meta_desc, meta_keyword, country_name, business_id];
     //console.log(title_data);
     db.query(title_sql, title_data, (title_err, title_result) => {
         return res.send(
@@ -5162,7 +5395,8 @@ exports.updateBusiness = async (req, res) => {
 exports.updatePrivacy = (req, res) => {
     //console.log('Privacy', req.body);
 
-    const { common_id, title, meta_title, meta_desc, keyword, content } = req.body;
+    const { common_id, title, meta_title, meta_desc, keyword, content,country_name } = req.body;
+    console.log("updateprivacy",req.body);
 
     const check_sql = `SELECT * FROM page_meta WHERE page_id = ? AND page_meta_key = ?`;
     const check_data = [common_id, "content"];
@@ -5181,8 +5415,8 @@ exports.updatePrivacy = (req, res) => {
                 const update_data = [content, common_id, 'content'];
                 db.query(update_sql, update_data, (update_err, update_result) => {
                     if (update_err) throw update_err;
-                    const title_sql = `UPDATE page_info SET title = ?, meta_title = ?, meta_desc = ?, meta_keyword = ? WHERE id  = ?`;
-                    const title_data = [title, meta_title, meta_desc, keyword, common_id];
+                    const title_sql = `UPDATE page_info SET title = ?, meta_title = ?, meta_desc = ?, meta_keyword = ?, country = ? WHERE id  = ?`;
+                    const title_data = [title, meta_title, meta_desc, keyword,country_name, common_id];
                     //console.log(title_data);
                     db.query(title_sql, title_data, (title_err, title_result) => {
                         return res.send(
@@ -5199,9 +5433,10 @@ exports.updatePrivacy = (req, res) => {
                 const insert_data = [common_id, 'content', content];
                 db.query(insert_sql, insert_data, (insert_err, insert_result) => {
                     if (insert_err) throw insert_err;
-                    const title_sql = `UPDATE page_info SET title = ?, meta_title = ?, meta_desc = ?, meta_keyword = ? WHERE id  = ?`;
-                    const title_data = [title, meta_title, meta_desc, keyword, common_id];
-                    //console.log(title_data);
+                    const title_sql = `UPDATE page_info SET title = ?, meta_title = ?, meta_desc = ?, meta_keyword = ?, country = ? WHERE id  = ?`;
+                    const title_data = [title, meta_title, meta_desc, keyword,country_name, common_id];
+
+                    console.log("title_data",title_data);
                     db.query(title_sql, title_data, (title_err, title_result) => {
                         return res.send(
                             {
@@ -5223,7 +5458,7 @@ exports.updatePrivacy = (req, res) => {
 exports.updateDisclaimer = (req, res) => {
     //console.log('Privacy', req.body);
 
-    const { common_id, title, meta_title, meta_desc, keyword, content } = req.body;
+    const { common_id, title, meta_title, meta_desc, keyword, content, country_name } = req.body;
 
     const check_sql = `SELECT * FROM page_meta WHERE page_id = ? AND page_meta_key = ?`;
     const check_data = [common_id, "content"];
@@ -5242,8 +5477,8 @@ exports.updateDisclaimer = (req, res) => {
                 const update_data = [content, common_id, 'content'];
                 db.query(update_sql, update_data, (update_err, update_result) => {
                     if (update_err) throw update_err;
-                    const title_sql = `UPDATE page_info SET title = ?, meta_title = ?, meta_desc = ?, meta_keyword = ? WHERE id  = ?`;
-                    const title_data = [title, meta_title, meta_desc, keyword, common_id];
+                    const title_sql = `UPDATE page_info SET title = ?, meta_title = ?, meta_desc = ?, meta_keyword = ?,country = ? WHERE id  = ?`;
+                    const title_data = [title, meta_title, meta_desc, keyword, country_name, common_id];
                     //console.log(title_data);
                     db.query(title_sql, title_data, (title_err, title_result) => {
                         return res.send(
@@ -5260,8 +5495,8 @@ exports.updateDisclaimer = (req, res) => {
                 const insert_data = [common_id, 'content', content];
                 db.query(insert_sql, insert_data, (insert_err, insert_result) => {
                     if (insert_err) throw insert_err;
-                    const title_sql = `UPDATE page_info SET title = ?, meta_title = ?, meta_desc = ?, meta_keyword = ? WHERE id  = ?`;
-                    const title_data = [title, meta_title, meta_desc, keyword, common_id];
+                    const title_sql = `UPDATE page_info SET title = ?, meta_title = ?, meta_desc = ?, meta_keyword = ?,country = ? WHERE id  = ?`;
+                    const title_data = [title, meta_title, meta_desc, keyword, country_name, common_id];
                     //console.log(title_data);
                     db.query(title_sql, title_data, (title_err, title_result) => {
                         return res.send(

@@ -95,7 +95,8 @@
                   </div>
                 </div>
 
-                <% if (PositiveReviewsCompany && Array.isArray(PositiveReviewsCompany) && PositiveReviewsCompany.length > 0) { %>
+                <% if (PositiveReviewsCompany && Array.isArray(PositiveReviewsCompany) && PositiveReviewsCompany.length>
+                  0) { %>
                   <div class="banner-trending-scroll">
                     <div class="like-dislike-tren-label">
                       <i class="fa-solid fa-thumbs-up"></i>
@@ -103,40 +104,41 @@
                     <div class="like-dislike-company-scroll">
                       <marquee behavior="scroll" direction="left" onmouseover="this.stop();" onmouseout="this.start();">
                         <ul>
-                          <% PositiveReviewsCompany.forEach((company, index) => { %>
+                          <% PositiveReviewsCompany.forEach((company, index)=> { %>
                             <li><a href="/company/<%- company.slug %>"><%- company.company_name %></a></li>
-                          <% }); %>
-                        </ul>
-                      </marquee>
-                    </div>
-                  </div>
-                <% } else { %>
-                <% } %>
-                
-
-                <% if (NegativeReviewsCompany && NegativeReviewsCompany.length > 0) { %>
-                  <div class="banner-trending-scroll">
-                    <div class="like-dislike-tren-label">
-                      <i class="fa-solid fa-thumbs-down"></i>
-                    </div>
-                    <div class="like-dislike-company-scroll">
-                      <marquee behavior="scroll" direction="left" onmouseover="this.stop();" onmouseout="this.start();">
-                        <ul>
-                          <% NegativeReviewsCompany.forEach((company, index) => { %>
-                            <li><a href="/company/<%- company.slug %>"><%- company.company_name %></a></li>
-                          <% }); %>
+                            <% }); %>
                         </ul>
                       </marquee>
                     </div>
                   </div>
                   <% } else { %>
                     <% } %>
-                
+
+
+                      <% if (NegativeReviewsCompany && NegativeReviewsCompany.length> 0) { %>
+                        <div class="banner-trending-scroll">
+                          <div class="like-dislike-tren-label">
+                            <i class="fa-solid fa-thumbs-down"></i>
+                          </div>
+                          <div class="like-dislike-company-scroll">
+                            <marquee behavior="scroll" direction="left" onmouseover="this.stop();"
+                              onmouseout="this.start();">
+                              <ul>
+                                <% NegativeReviewsCompany.forEach((company, index)=> { %>
+                                  <li><a href="/company/<%- company.slug %>"><%- company.company_name %></a></li>
+                                  <% }); %>
+                              </ul>
+                            </marquee>
+                          </div>
+                        </div>
+                        <% } else { %>
+                          <% } %>
 
 
 
-                        <!-- <h3><span>#CustomerRightsMatterBG</span></h3> -->
-                        <!-- <p class="text-light"><span id="type-writing"><noscript>
+
+                            <!-- <h3><span>#CustomerRightsMatterBG</span></h3> -->
+                            <!-- <p class="text-light"><span id="type-writing"><noscript>
                     <%= meta_values_array.bannner_content_2 %>
                   </noscript></span></p>
               <h3><span id="type-writing2"><noscript>
@@ -413,22 +415,24 @@
                 <h4>Most Popular</h4>
                 <h2 class="main-head">Categories</h2>
                 <div class="row">
-                  <% PopularCategories.forEach(category => { %>
-                  <div class="col-lg-3 col-sm-6">
+                  <% PopularCategories.forEach(category=> { %>
+                    <div class="col-lg-3 col-sm-6">
                       <div class="popular-category-part">
-                          <a href="category/<%= category.category_slug %>/<%= category.country_shortnames %>">
-                              <% if(category.category_img) { %>
-                                  <img src="<%= category.category_img %>" alt="<%= category.category_name %>" loading="lazy" width="100" height="100">
-                              <% } else { %>
-                                  <img src="/front-end/images/company-placeholder-image.png" alt="<%= category.category_name %>" loading="lazy" width="100" height="100">
+                        <a href="category/<%= category.category_slug %>/<%= category.country_shortnames %>">
+                          <% if(category.category_img) { %>
+                            <img src="<%= category.category_img %>" alt="<%= category.category_name %>" loading="lazy"
+                              width="100" height="100">
+                            <% } else { %>
+                              <img src="/front-end/images/company-placeholder-image.png"
+                                alt="<%= category.category_name %>" loading="lazy" width="100" height="100">
                               <% } %>
-                          </a>
-                          <a href="category/<%= category.category_slug %>/<%= category.country_shortnames %>">
-                              <%= category.category_name %>
-                          </a>
+                        </a>
+                        <a href="category/<%= category.category_slug %>/<%= category.country_shortnames %>">
+                          <%= category.category_name %>
+                        </a>
                       </div>
-                  </div>
-              <% }) %>
+                    </div>
+                    <% }) %>
 
                 </div>
                 <div class="text-center">
@@ -539,14 +543,17 @@
                             </div>
                           </div>
                           <div class="col-md-12">
-                              <div class="custom-form">
-                                  <select name="main_address_country" id="country_review" class="form-control" required>
-                                      <option value="" disabled <% if (!countryname) { %>selected<% } %>>Select a country</option>
-                                        <% getCountries.forEach(function(country) { %>
-                                          <option value="<%= country.shortname %>" <%= country.shortname == countryname ? 'selected' : '' %>><%= country.name %></option>
-                                      <% }); %>
-                                  </select>
-                              </div>
+                            <div class="custom-form">
+                              <select name="main_address_country" id="country_review" class="form-control" required>
+                                <option value="" disabled <% if (!countryname) { %>selected<% } %>>Select a country
+                                </option>
+                                <% getCountries.forEach(function(country) { %>
+                                  <option value="<%= country.shortname %>" <%=country.shortname==countryname
+                                    ? 'selected' : '' %>><%= country.name %>
+                                  </option>
+                                  <% }); %>
+                              </select>
+                            </div>
                           </div>
 
 
@@ -979,14 +986,15 @@
                         <textarea name="topic" id="search-topic" class="form-control mb-4" required></textarea>
                       </div>
                       <div class="custom-form">
-                        <select name="location" id="country_discussion" class="form-select" aria-label="Default select example" required>
-                        <option value="Worldwide"selected>Worldwide</option>
-                        <% getCountries.forEach(function(country) { %>
+                        <select name="location" id="country_discussion" class="form-select"
+                          aria-label="Default select example" required>
+                          <option value="Worldwide" selected>Worldwide</option>
+                          <% getCountries.forEach(function(country) { %>
                             <option value="<%= country.name %>">
                               <%= country.name %>
                             </option>
                             <% }); %>
-                      </select>
+                        </select>
                       </div>
                       <div class="autofield-dropdown">
                       </div>
@@ -1969,8 +1977,8 @@
           var resulttitle = $(this).find('a').attr('data-resulttitle');
           var resultexcerpt = $(this).find('a').attr('data-resultexcerpt');
           var resultpermalink = $(this).find('a').attr('data-resultpermalink');
-          console.log("resultpermalink",resultpermalink);
-          
+          console.log("resultpermalink", resultpermalink);
+
           $('#dynamic-search-title').text(resulttitle);
           $('#dynamic-search-content').text(resultexcerpt);
           $('#dynamic-search-link').attr("href", resultpermalink);
@@ -2354,6 +2362,39 @@
 
       });
 
+      document.addEventListener("DOMContentLoaded", async function () {
+        console.log("DOM content loaded");
+
+        try {
+          const { countryName, countryCode } = await fetchGeolocationAndSetCountryInfo();
+          console.log("Initial CountryName:", countryName);
+          console.log("Initial CountryCode:", countryCode);
+
+          const countryDropdown = document.querySelector('.country-dropdown');
+          if (countryCode == 'UK') {
+            countryDropdown.value = 'UK';
+          } else if (countryCode == 'JP') {
+            countryDropdown.value = 'JP';
+          } else {
+            countryDropdown.value = 'US';
+          }
+          // updateCountryInfo(countryName, countryCode);
+          // setDefaultLanguage(countryName);
+          countryDropdown.addEventListener('change', function (event) {
+            const selectedCountryCode = event.target.value;
+            const selectedCountryName = event.target.options[event.target.selectedIndex].text;
+            console.log("Selected country code:", selectedCountryCode);
+            console.log("Selected country name:", selectedCountryName);
+
+            const redirectUrl = `/home/${selectedCountryCode}`;
+            window.location.href = redirectUrl;
+          });
+        } catch (error) {
+          console.error('Error initializing country info:', error);
+        }
+      });
+
+
     </script>
 
     <script>
@@ -2512,53 +2553,53 @@
         }
 
 
-  $("#review_submit_frm").on("submit", function(event) {
-    event.preventDefault(); 
+        $("#review_submit_frm").on("submit", function (event) {
+          event.preventDefault();
 
 
-    const formData = $('#review_submit_frm').serializeArray();
-    const jsonData = {};
+          const formData = $('#review_submit_frm').serializeArray();
+          const jsonData = {};
 
-    $(formData).each(function(index, field) {
-      if (field.name === 'tags') {
-        if (!jsonData['tags[]']) {
-          jsonData['tags[]'] = [];
-        }
-        jsonData['tags[]'].push(field.value);
-      } else {
-        jsonData[field.name] = field.value;
-      }
-    });
+          $(formData).each(function (index, field) {
+            if (field.name === 'tags') {
+              if (!jsonData['tags[]']) {
+                jsonData['tags[]'] = [];
+              }
+              jsonData['tags[]'].push(field.value);
+            } else {
+              jsonData[field.name] = field.value;
+            }
+          });
 
-    jsonData.main_address_country = $('#country_review').val();
+          jsonData.main_address_country = $('#country_review').val();
 
-    console.log("JSON.stringify(jsonData)", JSON.stringify(jsonData));
+          console.log("JSON.stringify(jsonData)", JSON.stringify(jsonData));
 
-    $.ajax({
-      url: '/auth/add-review',
-      method: 'POST',
-      data: JSON.stringify(jsonData), 
-      contentType: 'application/json', 
-      success: function(data) {
-        if (data.status === 'ok') {
-          $('#review_submit_frm')[0].reset();
-          $('.submit-message').text(data.message);
-          $('.submit-message').show();
-          setTimeout(function() {
-            $('.submit-message').hide();
-            $('#all-review-hidden-btn').fadeIn();
-            location.reload();
-          }, 2000);
-        } else {
-          $('.submit-message').text(data.message);
-          $('.submit-message').show();
-        }
-      },
-      error: function(error) {
-        console.log(error);
-      }
-    });
-  });
+          $.ajax({
+            url: '/auth/add-review',
+            method: 'POST',
+            data: JSON.stringify(jsonData),
+            contentType: 'application/json',
+            success: function (data) {
+              if (data.status === 'ok') {
+                $('#review_submit_frm')[0].reset();
+                $('.submit-message').text(data.message);
+                $('.submit-message').show();
+                setTimeout(function () {
+                  $('.submit-message').hide();
+                  $('#all-review-hidden-btn').fadeIn();
+                  location.reload();
+                }, 2000);
+              } else {
+                $('.submit-message').text(data.message);
+                $('.submit-message').show();
+              }
+            },
+            error: function (error) {
+              console.log(error);
+            }
+          });
+        });
       });
 
       $(".review-voting").click(function (e) {

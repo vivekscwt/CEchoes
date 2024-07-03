@@ -38,7 +38,6 @@
                     </div>
                     <div id="kt_account_profile_details" class="collapse show">
                         <form action="/auth/faq_images" method="POST" enctype="multipart/form-data">
-
                             <div class="card-body border-top p-9">
                                 <div class="row mb-6">
                                     <!--begin::Label-->
@@ -53,8 +52,8 @@
                                             value="" />
                                     </div>
                                     <div class="col-lg-1 fv-row">
-                                        <img src="/<%= faqPageData.banner_img_1 %>" alt="img" width="50" height="50"
-                                            loading="">
+                                        <img src="/<%= faqPageData1.banner_img_1 %>" alt="img" width="50"
+                                            height="50" loading="">
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -71,8 +70,8 @@
                                             value="" />
                                     </div>
                                     <div class="col-lg-1 fv-row">
-                                        <img src="/<%= faqPageData.banner_img_2 %>" alt="img" width="50" height="50"
-                                            loading="">
+                                        <img src="/<%= faqPageData1.banner_img_2 %>" alt="img" width="50"
+                                            height="50" loading="">
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -89,8 +88,8 @@
                                             value="" />
                                     </div>
                                     <div class="col-lg-1 fv-row">
-                                        <img src="/<%= faqPageData.banner_img_3 %>" alt="img" width="50" height="50"
-                                            loading="">
+                                        <img src="/<%= faqPageData1.banner_img_3 %>" alt="img" width="50"
+                                            height="50" loading="">
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -107,8 +106,8 @@
                                             value="" />
                                     </div>
                                     <div class="col-lg-1 fv-row">
-                                        <img src="/<%= faqPageData.banner_img_4 %>" alt="img" width="50" height="50"
-                                            loading="">
+                                        <img src="/<%= faqPageData1.banner_img_4 %>" alt="img" width="50"
+                                            height="50" loading="">
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -125,8 +124,8 @@
                                             value="" />
                                     </div>
                                     <div class="col-lg-1 fv-row">
-                                        <img src="/<%= faqPageData.banner_img_5 %>" alt="img" width="50" height="50"
-                                            loading="">
+                                        <img src="/<%= faqPageData1.banner_img_5 %>" alt="img" width="50"
+                                            height="50" loading="">
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -143,8 +142,8 @@
                                             value="" />
                                     </div>
                                     <div class="col-lg-1 fv-row">
-                                        <img src="/<%= faqPageData.banner_img_6 %>" alt="img" width="50" height="50"
-                                            loading="">
+                                        <img src="/<%= faqPageData1.banner_img_6 %>" alt="img" width="50"
+                                            height="50" loading="">
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -161,8 +160,8 @@
                                             value="" />
                                     </div>
                                     <div class="col-lg-1 fv-row">
-                                        <img src="/<%= faqPageData.banner_img_7 %>" alt="img" width="50" height="50"
-                                            loading="">
+                                        <img src="/<%= faqPageData1.banner_img_7 %>" alt="img" width="50"
+                                            height="50" loading="">
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -179,8 +178,8 @@
                                             value="" />
                                     </div>
                                     <div class="col-lg-1 fv-row">
-                                        <img src="/<%= faqPageData.banner_img_8 %>" alt="img" width="50" height="50"
-                                            loading="">
+                                        <img src="/<%= faqPageData1.banner_img_8 %>" alt="img" width="50"
+                                            height="50" loading="">
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -197,8 +196,8 @@
                                             value="" />
                                     </div>
                                     <div class="col-lg-1 fv-row">
-                                        <img src="/<%= faqPageData.app_banner_img %>" alt="img" width="50" height="50"
-                                            loading="">
+                                        <img src="/<%= faqPageData1.app_banner_img %>" alt="img" width="50"
+                                            height="50" loading="">
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -206,7 +205,8 @@
                             <div class="card-footer d-flex justify-content-end py-6 px-9">
                                 <button type="reset"
                                     class="btn btn-light btn-active-light-primary me-2">Discard</button>
-                                <button type="submit" class="btn btn-primary" id="">Submit</button>
+                                <button type="submit" class="btn btn-primary"
+                                    id="">Submit</button>
                             </div>
                         </form>
                     </div>
@@ -226,10 +226,10 @@
                     <!--begin::Content-->
                     <div id="kt_account_profile_details" class="collapse show">
                         <!--begin::Form-->
-                        <form id="kt_account_profile_details_form" class="form">
+                        <form id="kt_account_profile_details_form" class="form" >
                             <!--begin::Card body-->
                             <div class="card-body border-top p-9">
-                                <input type="text" name="countries_name" id="countries_name" class="form-control form-control-lg form-control-solid" placeholder="" value="US" />
+                                <input type="text" name="countries_name" id="countries_name1" class="form-control form-control-lg form-control-solid" placeholder="" value="UK" />
 
                                 <!--begin::Input group-->
                                 <div class="row mb-6">
@@ -242,7 +242,7 @@
                                     <div class="col-lg-8 fv-row">
                                         <input type="text" name="title" id="title"
                                             class="form-control form-control-lg form-control-solid" placeholder="Title"
-                                            value="<%= faqPageData.title %>" />
+                                            value="<%= faqPageData1.title %>" />
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -255,7 +255,7 @@
                                     <!--begin::Col-->
                                     <div class="col-lg-8 fv-row">
                                         <textarea name="content" class="content"
-                                            id="content-editor"><%= faqPageData.content %></textarea>
+                                            id="content-editor"><%= faqPageData1.content %></textarea>
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -267,10 +267,8 @@
                                     <!--end::Label-->
                                     <!--begin::Col-->
                                     <div class="col-lg-8 fv-row">
-                                        <textarea name="app_content"
-                                            class="form-control form-control-lg form-control-solid"
-                                            placeholder="App Content"
-                                            id=""><%- faqPageData.app_banner_content %></textarea>
+                                        <textarea name="app_content" class="form-control form-control-lg form-control-solid"
+                                          placeholder="App Content"  id=""><%- faqPageData1.app_banner_content %></textarea>
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -286,7 +284,7 @@
                                     <div class="col-lg-8 fv-row">
                                         <input type="longtext" name="meta_title" id="meta_title"
                                             class="form-control form-control-lg form-control-solid"
-                                            placeholder="Meta Title" value="<%= faqPageData.meta_title %>" />
+                                            placeholder="Meta Title" value="<%= faqPageData1.meta_title %>" />
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -302,7 +300,7 @@
                                     <div class="col-lg-8 fv-row">
                                         <input type="longtext" name="meta_desc" id="meta_desc"
                                             class="form-control form-control-lg form-control-solid"
-                                            placeholder="Meta Description" value="<%= faqPageData.meta_desc %>" />
+                                            placeholder="Meta Description" value="<%= faqPageData1.meta_desc %>" />
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -319,7 +317,7 @@
                                     <div class="col-lg-8 fv-row">
                                         <input type="text" name="keyword" id="keyword"
                                             class="form-control form-control-lg form-control-solid"
-                                            placeholder="Keyword" value="<%= faqPageData.keyword %>" />
+                                            placeholder="Keyword" value="<%= faqPageData1.keyword %>" />
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -335,7 +333,8 @@
                                 <!--end::Card title-->
                             </div>
                             <div class="card-body border-top p-9 main-repeater" id="main-repeater">
-                                <% faqCategoriesData.forEach( (category,index)=> { %>
+                                <% if (faqCategoriesData1 && faqCategoriesData1.length > 0) { %>
+                                <% faqCategoriesData1.forEach( (category,index)=> { %>
                                     <div class="main_full_area" id="full_area_category_id<%= index %>">
                                         <div class="category-repeter">
                                             <div class="category_name">
@@ -353,7 +352,7 @@
                                             </div>
                                             <% var count=0; %>
                                                 <div class="main_question_answer">
-                                                    <% faqItemsData.forEach( (qus_ans, key)=> { %>
+                                                    <% faqItemsData1.forEach( (qus_ans, key)=> { %>
                                                         <% if (qus_ans.category_id==category.id) { %>
                                                             <% count++ %>
                                                                 <div class="add_question_answer">
@@ -411,6 +410,11 @@
                                     </div>
 
                                     <% }) %>
+                                    <% } else { %>
+                                        <div class="no-data-message">
+                                            <p>No FAQ Categories available. Please add some categories.</p>
+                                        </div>
+                                    <% } %>
 
                                         <a id="add_category_btn" class="btn btn-primary" href="#">Add
                                             Category</a>
@@ -506,10 +510,9 @@
                                     jsonResponse.forEach(item => {
                                         const { name, value } = item;
 
-                                        if (name === 'title' || name === 'content' || name === 'meta_title' || name === 'meta_desc' || name === 'keyword' || name === 'app_content') {
+                                        if (name === 'title' || name === 'content' || name === 'meta_title' || name === 'meta_desc' || name === 'keyword' || name === 'app_content' || name === 'countries_name') {
                                             transformedResponse[name] = value;
                                         } else if (name === 'category_name') {
-                                            // If a new category is encountered, reset the currentFAQ and start a new one
                                             if (currentCategory !== value) {
                                                 currentCategory = value;
                                                 currentFAQ = [];
@@ -525,7 +528,7 @@
                                         }
                                     });
 
-                                    //console.log(transformedResponse);
+                                    console.log("transformedResponse",transformedResponse);
 
                                     $.ajax({
                                         url: '/auth/update-faq',
@@ -543,9 +546,9 @@
                                                         confirmButton: "btn btn-primary"
                                                     }
                                                 }).then(function (result) {
-                                                    if (result.isConfirmed) {
-                                                        window.location.href = "/edit-faq";
-                                                    }
+                                                    // if (result.isConfirmed) {
+                                                    //     window.location.href = "/uk-edit-faq";
+                                                    // }
                                                 });
                                             } else {
                                                 Swal.fire({
