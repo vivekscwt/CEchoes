@@ -106,244 +106,351 @@
                         <span class="menu-title">Pages</span>
                         <span class="menu-arrow"></span>
                      </span>
-                     
+
+                     <div class="menu-sub menu-sub-accordion menu-active-bg">
+
+                        <div data-kt-menu-trigger="click"
+                           class="menu-item menu-accordion <% if(menu_active_id === 'home'){ %>menu-active<% } %>">
+                           <span class="menu-link">
+                              <span class="menu-bullet">
+                                 <span class="bullet bullet-dot"></span>
+                              </span>
+                              <span class="menu-title">Home</span>
+                              <span class="menu-arrow"></span>
+                           </span>
+                           <div class="menu-sub menu-sub-accordion menu-active-bg">
+                              <div class="menu-item">
+                                 <a class="menu-link <%= menu_active_id === 'usa-home' ? 'menu-active' : '' %>"
+                                    href="/edit-home">
+                                    <span class="menu-bullet">
+                                       <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">USA Home</span>
+                                 </a>
+                              </div>
+                              <div class="menu-item">
+                                 <a class="menu-link <%= menu_active_id === 'uk-home' ? 'menu-active' : '' %>"
+                                    href="/uk-edit-home">
+                                    <span class="menu-bullet">
+                                       <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">UK Home</span>
+                                 </a>
+                              </div>
+                              <div class="menu-item">
+                                 <a class="menu-link <%= menu_active_id === 'japan-home' ? 'menu-active' : '' %>"
+                                    href="/jp-edit-home">
+                                    <span class="menu-bullet">
+                                       <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">Japan Home</span>
+                                 </a>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
                      <div class="menu-sub menu-sub-accordion menu-active-bg">
                         <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-                            <span class="menu-link">
-                                <span class="menu-bullet">
-                                    <span class="bullet bullet-dot"></span>
-                                </span>
-                                <span class="menu-title">Home</span>
-                                <span class="menu-arrow"></span>
-                            </span>
-                            <div class="menu-sub menu-sub-accordion menu-active-bg">
-                                <div class="menu-item">
-                                    <a class="menu-link" href="/edit-home">
-                                        <span class="menu-bullet">
-                                            <span class="bullet bullet-dot"></span>
-                                        </span>
-                                        <span class="menu-title">USA Home</span>
-                                    </a>
-                                </div>
-                                <div class="menu-item">
-                                    <a class="menu-link" href="/uk-edit-home">
-                                        <span class="menu-bullet">
-                                            <span class="bullet bullet-dot"></span>
-                                        </span>
-                                        <span class="menu-title">UK Home</span>
-                                    </a>
-                                </div>
-                                <div class="menu-item">
-                                    <a class="menu-link" href="/jp-edit-home">
-                                        <span class="menu-bullet">
-                                            <span class="bullet bullet-dot"></span>
-                                        </span>
-                                        <span class="menu-title">Japan Home</span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                     <div class="menu-sub menu-sub-accordion menu-active-bg">
-                        <div class="menu-item">
-                           <a class="menu-link" href="/edit-contacts">
+                           <span class="menu-link">
                               <span class="menu-bullet">
                                  <span class="bullet bullet-dot"></span>
                               </span>
                               <span class="menu-title">Contacts</span>
-                           </a>
+                              <span class="menu-arrow"></span>
+                           </span>
+                           <div class="menu-sub menu-sub-accordion menu-active-bg">
+                              <div class="menu-item">
+                                 <a class="menu-link" href="/edit-contacts">
+                                    <span class="menu-bullet">
+                                       <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">USA Contacts</span>
+                                 </a>
+                              </div>
+                              <div class="menu-item">
+                                 <a class="menu-link" href="/uk-edit-contacts">
+                                    <span class="menu-bullet">
+                                       <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">UK Contacts</span>
+                                 </a>
+                              </div>
+                              <div class="menu-item">
+                                 <a class="menu-link" href="/jp-edit-contacts">
+                                    <span class="menu-bullet">
+                                       <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">Japan Contacts</span>
+                                 </a>
+                              </div>
+                           </div>
                         </div>
                      </div>
                      <div class="menu-sub menu-sub-accordion menu-active-bg">
                         <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-                            <span class="menu-link">
-                                <span class="menu-bullet">
-                                    <span class="bullet bullet-dot"></span>
-                                </span>
-                                <span class="menu-title">About Us</span>
-                                <span class="menu-arrow"></span>
-                            </span>
-                            <div class="menu-sub menu-sub-accordion menu-active-bg">
-                                <div class="menu-item">
-                                    <a class="menu-link" href="/edit-about">
-                                        <span class="menu-bullet">
-                                            <span class="bullet bullet-dot"></span>
-                                        </span>
-                                        <span class="menu-title">USA About Us</span>
-                                    </a>
-                                </div>
-                                <div class="menu-item">
-                                    <a class="menu-link" href="/uk-edit-about">
-                                        <span class="menu-bullet">
-                                            <span class="bullet bullet-dot"></span>
-                                        </span>
-                                        <span class="menu-title">UK About Us</span>
-                                    </a>
-                                </div>
-                                <div class="menu-item">
-                                    <a class="menu-link" href="/jp-edit-about">
-                                        <span class="menu-bullet">
-                                            <span class="bullet bullet-dot"></span>
-                                        </span>
-                                        <span class="menu-title">Japan About Us</span>
-                                    </a>
-                                </div>
-                            </div>
+                           <span class="menu-link">
+                              <span class="menu-bullet">
+                                 <span class="bullet bullet-dot"></span>
+                              </span>
+                              <span class="menu-title">About Us</span>
+                              <span class="menu-arrow"></span>
+                           </span>
+                           <div class="menu-sub menu-sub-accordion menu-active-bg">
+                              <div class="menu-item">
+                                 <a class="menu-link" href="/edit-about">
+                                    <span class="menu-bullet">
+                                       <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">USA About Us</span>
+                                 </a>
+                              </div>
+                              <div class="menu-item">
+                                 <a class="menu-link" href="/uk-edit-about">
+                                    <span class="menu-bullet">
+                                       <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">UK About Us</span>
+                                 </a>
+                              </div>
+                              <div class="menu-item">
+                                 <a class="menu-link" href="/jp-edit-about">
+                                    <span class="menu-bullet">
+                                       <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">Japan About Us</span>
+                                 </a>
+                              </div>
+                           </div>
                         </div>
-                    </div>
+                     </div>
 
                      <div class="menu-sub menu-sub-accordion menu-active-bg">
                         <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-                            <span class="menu-link">
-                                <span class="menu-bullet">
-                                    <span class="bullet bullet-dot"></span>
-                                </span>
-                                <span class="menu-title">Business</span>
-                                <span class="menu-arrow"></span>
-                            </span>
-                            <div class="menu-sub menu-sub-accordion menu-active-bg">
-                                <div class="menu-item">
-                                    <a class="menu-link" href="/edit-business">
-                                        <span class="menu-bullet">
-                                            <span class="bullet bullet-dot"></span>
-                                        </span>
-                                        <span class="menu-title">USA Business</span>
-                                    </a>
-                                </div>
-                                <div class="menu-item">
-                                    <a class="menu-link" href="/uk-edit-business">
-                                        <span class="menu-bullet">
-                                            <span class="bullet bullet-dot"></span>
-                                        </span>
-                                        <span class="menu-title">UK Business</span>
-                                    </a>
-                                </div>
-                                <div class="menu-item">
-                                    <a class="menu-link" href="/jp-edit-business">
-                                        <span class="menu-bullet">
-                                            <span class="bullet bullet-dot"></span>
-                                        </span>
-                                        <span class="menu-title">Japan Business</span>
-                                    </a>
-                                </div>
-                            </div>
+                           <span class="menu-link">
+                              <span class="menu-bullet">
+                                 <span class="bullet bullet-dot"></span>
+                              </span>
+                              <span class="menu-title">Business</span>
+                              <span class="menu-arrow"></span>
+                           </span>
+                           <div class="menu-sub menu-sub-accordion menu-active-bg">
+                              <div class="menu-item">
+                                 <a class="menu-link" href="/edit-business">
+                                    <span class="menu-bullet">
+                                       <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">USA Business</span>
+                                 </a>
+                              </div>
+                              <div class="menu-item">
+                                 <a class="menu-link" href="/uk-edit-business">
+                                    <span class="menu-bullet">
+                                       <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">UK Business</span>
+                                 </a>
+                              </div>
+                              <div class="menu-item">
+                                 <a class="menu-link" href="/jp-edit-business">
+                                    <span class="menu-bullet">
+                                       <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">Japan Business</span>
+                                 </a>
+                              </div>
+                           </div>
                         </div>
-                    </div>
+                     </div>
                      <div class="menu-sub menu-sub-accordion menu-active-bg">
                         <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-                            <span class="menu-link">
-                                <span class="menu-bullet">
-                                    <span class="bullet bullet-dot"></span>
-                                </span>
-                                <span class="menu-title">FAQ</span>
-                                <span class="menu-arrow"></span>
-                            </span>
-                            <div class="menu-sub menu-sub-accordion menu-active-bg">
-                                <div class="menu-item">
-                                    <a class="menu-link" href="/edit-faq">
-                                        <span class="menu-bullet">
-                                            <span class="bullet bullet-dot"></span>
-                                        </span>
-                                        <span class="menu-title">US FAQ</span>
-                                    </a>
-                                </div>
-                                <div class="menu-item">
-                                    <a class="menu-link" href="/uk-edit-faq">
-                                        <span class="menu-bullet">
-                                            <span class="bullet bullet-dot"></span>
-                                        </span>
-                                        <span class="menu-title">UK FAQ</span>
-                                    </a>
-                                </div>
-                                <div class="menu-item">
-                                    <a class="menu-link" href="/JP-edit-faq">
-                                        <span class="menu-bullet">
-                                            <span class="bullet bullet-dot"></span>
-                                        </span>
-                                        <span class="menu-title">Japan FAQ</span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                     <div class="menu-sub menu-sub-accordion menu-active-bg">
-                        <div class="menu-item">
-                           <a class="menu-link" href="/edit-privacy-policy">
+                           <span class="menu-link">
                               <span class="menu-bullet">
                                  <span class="bullet bullet-dot"></span>
                               </span>
-                              <span class="menu-title">USA Privacy Policy</span>
-                           </a>
+                              <span class="menu-title">FAQ</span>
+                              <span class="menu-arrow"></span>
+                           </span>
+                           <div class="menu-sub menu-sub-accordion menu-active-bg">
+                              <div class="menu-item">
+                                 <a class="menu-link" href="/edit-faq">
+                                    <span class="menu-bullet">
+                                       <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">US FAQ</span>
+                                 </a>
+                              </div>
+                              <div class="menu-item">
+                                 <a class="menu-link" href="/uk-edit-faq">
+                                    <span class="menu-bullet">
+                                       <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">UK FAQ</span>
+                                 </a>
+                              </div>
+                              <div class="menu-item">
+                                 <a class="menu-link" href="/JP-edit-faq">
+                                    <span class="menu-bullet">
+                                       <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">Japan FAQ</span>
+                                 </a>
+                              </div>
+                           </div>
                         </div>
                      </div>
+
                      <div class="menu-sub menu-sub-accordion menu-active-bg">
-                        <div class="menu-item">
-                           <a class="menu-link" href="/uk-edit-privacy-policy">
+                        <div data-kt-menu-trigger="click"
+                           class="menu-item menu-accordion <% if(menu_active_id === 'privacy policy'){ %>menu-active<% } %>">
+                           <span class="menu-link">
                               <span class="menu-bullet">
                                  <span class="bullet bullet-dot"></span>
                               </span>
-                              <span class="menu-title">UK Privacy Policy</span>
-                           </a>
+                              <span class="menu-title">Privacy Policy</span>
+                              <span class="menu-arrow"></span>
+                           </span>
+                           <div class="menu-sub menu-sub-accordion menu-active-bg">
+                              <div class="menu-item">
+                                 <a class="menu-link" href="/edit-privacy-policy">
+                                    <span class="menu-bullet">
+                                       <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">USA Privacy Policy</span>
+                                 </a>
+                              </div>
+                              <div class="menu-item">
+                                 <a class="menu-link" href="/uk-edit-privacy-policy">
+                                    <span class="menu-bullet">
+                                       <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">UK Privacy Policy</span>
+                                 </a>
+                              </div>
+                              <div class="menu-item">
+                                 <a class="menu-link" href="/jp-edit-privacy-policy">
+                                    <span class="menu-bullet">
+                                       <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">JP Privacy Policy</span>
+                                 </a>
+                              </div>
+                           </div>
                         </div>
                      </div>
+
                      <div class="menu-sub menu-sub-accordion menu-active-bg">
-                        <div class="menu-item">
-                           <a class="menu-link" href="/jp-edit-privacy-policy">
+                        <div data-kt-menu-trigger="click"
+                           class="menu-item menu-accordion <% if(menu_active_id === 'Disclaimer'){ %>menu-active<% } %>">
+                           <span class="menu-link">
                               <span class="menu-bullet">
                                  <span class="bullet bullet-dot"></span>
                               </span>
-                              <span class="menu-title">JP Privacy Policy</span>
-                           </a>
+                              <span class="menu-title">Disclaimer</span>
+                              <span class="menu-arrow"></span>
+                           </span>
+                           <div class="menu-sub menu-sub-accordion menu-active-bg">
+                              <div class="menu-item">
+                                 <a class="menu-link" href="/edit-disclaimer">
+                                    <span class="menu-bullet">
+                                       <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">USA Disclaimer</span>
+                                 </a>
+                              </div>
+                              <div class="menu-item">
+                                 <a class="menu-link" href="/uk-edit-disclaimer">
+                                    <span class="menu-bullet">
+                                       <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">UK Disclaimer</span>
+                                 </a>
+                              </div>
+                              <div class="menu-item">
+                                 <a class="menu-link" href="/jp-edit-disclaimer">
+                                    <span class="menu-bullet">
+                                       <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">JP Disclaimer</span>
+                                 </a>
+                              </div>
+                           </div>
                         </div>
                      </div>
                      <div class="menu-sub menu-sub-accordion menu-active-bg">
-                        <div class="menu-item">
-                           <a class="menu-link" href="/edit-disclaimer">
-                              <span class="menu-bullet">
-                                 <span class="bullet bullet-dot"></span>
-                              </span>
-                              <span class="menu-title">USA Disclaimer</span>
-                           </a>
-                        </div>
-                     </div>
-                     <div class="menu-sub menu-sub-accordion menu-active-bg">
-                        <div class="menu-item">
-                           <a class="menu-link" href="/uk-edit-disclaimer">
-                              <span class="menu-bullet">
-                                 <span class="bullet bullet-dot"></span>
-                              </span>
-                              <span class="menu-title">UK Disclaimer</span>
-                           </a>
-                        </div>
-                     </div>
-                     <div class="menu-sub menu-sub-accordion menu-active-bg">
-                        <div class="menu-item">
-                           <a class="menu-link" href="/jp-edit-disclaimer">
-                              <span class="menu-bullet">
-                                 <span class="bullet bullet-dot"></span>
-                              </span>
-                              <span class="menu-title">JP Disclaimer</span>
-                           </a>
-                        </div>
-                     </div>
-                     <div class="menu-sub menu-sub-accordion menu-active-bg">
-                        <div class="menu-item">
-                           <a class="menu-link" href="/edit-terms-of-service">
+                        <div data-kt-menu-trigger="click"
+                           class="menu-item menu-accordion <% if(menu_active_id === 'Terms of Service'){ %>menu-active<% } %>">
+                           <span class="menu-link">
                               <span class="menu-bullet">
                                  <span class="bullet bullet-dot"></span>
                               </span>
                               <span class="menu-title">Terms of Service</span>
-                           </a>
+                              <span class="menu-arrow"></span>
+                           </span>
+                           <div class="menu-sub menu-sub-accordion menu-active-bg">
+                              <div class="menu-item">
+                                 <a class="menu-link" href="/edit-terms-of-service">
+                                    <span class="menu-bullet">
+                                       <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">USA Terms of Service</span>
+                                 </a>
+                              </div>
+                              <div class="menu-item">
+                                 <a class="menu-link" href="/uk-edit-terms-of-service">
+                                    <span class="menu-bullet">
+                                       <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">UK Terms of Service</span>
+                                 </a>
+                              </div>
+                              <div class="menu-item">
+                                 <a class="menu-link" href="/jp-edit-terms-of-service">
+                                    <span class="menu-bullet">
+                                       <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">JP Terms of Service</span>
+                                 </a>
+                              </div>
+                           </div>
                         </div>
                      </div>
+
                      <div class="menu-sub menu-sub-accordion menu-active-bg">
-                        <div class="menu-item">
-                           <a class="menu-link" href="/edit-complaint">
+                        <div data-kt-menu-trigger="click"
+                           class="menu-item menu-accordion <% if(menu_active_id === 'Terms of Service'){ %>menu-active<% } %>">
+                           <span class="menu-link">
                               <span class="menu-bullet">
                                  <span class="bullet bullet-dot"></span>
                               </span>
                               <span class="menu-title">Complaint Register</span>
-                           </a>
+                              <span class="menu-arrow"></span>
+                           </span>
+                           <div class="menu-sub menu-sub-accordion menu-active-bg">
+                              <div class="menu-item">
+                                 <a class="menu-link" href="/edit-complaint">
+                                    <span class="menu-bullet">
+                                       <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">USA Complaint Register</span>
+                                 </a>
+                              </div>
+                              <div class="menu-item">
+                                 <a class="menu-link" href="/uk-edit-complaint">
+                                    <span class="menu-bullet">
+                                       <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">UK Complaint Register</span>
+                                 </a>
+                              </div>
+                              <div class="menu-item">
+                                 <a class="menu-link" href="/jp-edit-complaint">
+                                    <span class="menu-bullet">
+                                       <span class="bullet bullet-dot"></span>
+                                    </span>
+                                    <span class="menu-title">JP Terms of Service</span>
+                                 </a>
+                              </div>
+                           </div>
                         </div>
                      </div>
                      <div class="menu-sub menu-sub-accordion menu-active-bg">
@@ -620,5 +727,5 @@
 <style>
    .home-subnav {
       padding-left: 35px;
-   } 
+   }
 </style>

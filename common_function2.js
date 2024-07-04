@@ -37,6 +37,25 @@ async function getFaqPage() {
   }
 };
 
+async function getFaqPages(country) {
+  try {
+    // Check if the company Name already exists in the "company" table
+    const faq_pages_fetch_query = `SELECT * FROM faq_pages WHERE country = "${country}"`;
+    const faq_pages__results = await query(faq_pages_fetch_query);
+    if (faq_pages__results.length > 0) {
+      //return faq_pages info
+      //return faq_pages__results[0];
+      return faq_pages__results;
+    } else {
+
+    }
+  }
+  catch (error) {
+    console.error('Error during fetching faq_pages:', error);
+  }
+};
+
+
 //-- Fetch  faq_categories data --------//
 async function getFaqCategories(country) {
   try {
@@ -478,6 +497,8 @@ async function getPageMetaValues(pageName) {
 async function getPageMetaValue(pageName,country) {
   const sql = `SELECT * FROM page_info where secret_Key = '${pageName}' AND country= "${country}"`;
   const get_page_info_result = await query(sql);
+
+  console.log("get_page_info_resultsfsdf",get_page_info_result);
 
   const meta_sql = `SELECT * FROM page_meta where page_id = ${get_page_info_result[0].id}`;
   const get_page_meta_result = await query(meta_sql);
@@ -6878,6 +6899,7 @@ function decryptEmail(encryptedEmail) {
 
 module.exports = {
   getFaqPage,
+  getFaqPages,
   getFaqCategories,
   getFaqItems,
   insertBusinessFeature,

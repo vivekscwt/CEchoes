@@ -744,39 +744,39 @@ async function insertIntoFaqCategories(categoryArray, country) {
 
 
 // Function to insert data into 'faq_item' table
-// async function insertIntoFaqItems(faqItemsArray, categoryId) {
-//   if (Array.isArray(faqItemsArray) && faqItemsArray.length > 0) {
-//     for (const faqItemData of faqItemsArray) {
-//       try {
-//         const FAQItenInsertquery = `INSERT INTO faq_item (category_id, question, answer) VALUES (?, ?, ?)`;
-//         const FAQItenInsertvalues = [categoryId, faqItemData.Q, faqItemData.A];
+async function insertIntoFaqItems(faqItemsArray, categoryId, country) {
+  if (Array.isArray(faqItemsArray) && faqItemsArray.length > 0) {
+    for (const faqItemData of faqItemsArray) {
+      try {
+        const FAQItenInsertquery = `INSERT INTO faq_item (category_id, country, question, answer) VALUES (?, ?, ?, ?)`;
+        const FAQItenInsertvalues = [categoryId, country, faqItemData.Q, faqItemData.A];
 
-//         const results = await query(FAQItenInsertquery, FAQItenInsertvalues);
-//         console.log('Data inserted into faq_item table:', results.insertId);
-//       } catch (error) {
-//         console.error('Error inserting data into faq_item table:', error);
-//         throw error;
-//       }
-//     }
-//   }
-// }
-
-async function insertIntoFaqItems(itemsArray, categoryId, country) {
-  try {
-    for (const category of itemsArray) {
-      for (const item of category[Object.keys(category)[0]]) {
-        const { Q, A } = item;
-        const itemInsertQuery = `INSERT INTO faq_item (question, answer, category_id, country) VALUES (?, ?, ?, ?)`;
-        const itemInsertValues = [Q, A, categoryId, country];
-        await query(itemInsertQuery, itemInsertValues);
-        console.log('Data inserted into faq_item table:', Q, A, categoryId, country);
+        const results = await query(FAQItenInsertquery, FAQItenInsertvalues);
+        console.log('Data inserted into faq_item table:', results.insertId);
+      } catch (error) {
+        console.error('Error inserting data into faq_item table:', error);
+        throw error;
       }
     }
-  } catch (error) {
-    console.error('Error inserting data into faq_item table:', error);
-    throw error;
   }
 }
+
+// async function insertIntoFaqItems(itemsArray, categoryId, country) {
+//   try {
+//     for (const category of itemsArray) {
+//       for (const item of category[Object.keys(category)[0]]) {
+//         const { Q, A } = item;
+//         const itemInsertQuery = `INSERT INTO faq_item (question, answer, category_id, country) VALUES (?, ?, ?, ?)`;
+//         const itemInsertValues = [Q, A, categoryId, country];
+//         await query(itemInsertQuery, itemInsertValues);
+//         console.log('Data inserted into faq_item table:', Q, A, categoryId, country);
+//       }
+//     }
+//   } catch (error) {
+//     console.error('Error inserting data into faq_item table:', error);
+//     throw error;
+//   }
+// }
 
 
 

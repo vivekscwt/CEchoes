@@ -11,36 +11,36 @@
                <div class="about-50-right">
                   <div class="gr-slider3">
                      <div class="item">
-                        <img src="/<%= faqPageData.banner_img_1 %>" alt="img" width="298" height="434">
+                        <img src="/<%= faqPageData[0].banner_img_1 %>" alt="img" width="298" height="434">
                      </div>
                      <div class="item">
-                        <img src="/<%= faqPageData.banner_img_2 %>" alt="img" width="298" height="434">
+                        <img src="/<%= faqPageData[0].banner_img_2 %>" alt="img" width="298" height="434">
                      </div>
                   </div>
                   <div class="gr-slider4">
                      <div class="item">
-                        <img src="/<%= faqPageData.banner_img_3 %>" alt="img" width="252" height="250">
+                        <img src="/<%= faqPageData[0].banner_img_3 %>" alt="img" width="252" height="250">
                      </div>
                      <div class="item">
-                        <img src="/<%= faqPageData.banner_img_4 %>" alt="img" width="252" height="250">
+                        <img src="/<%= faqPageData[0].banner_img_4 %>" alt="img" width="252" height="250">
                      </div>
                   </div>
                </div>
                <div class="about-50-left">
                   <div class="gr-slider1">
                      <div class="item">
-                        <img src="/<%= faqPageData.banner_img_5 %>" alt="img" width="194" height="228">
+                        <img src="/<%= faqPageData[0].banner_img_5 %>" alt="img" width="194" height="228">
                      </div>
                      <div class="item">
-                        <img src="/<%= faqPageData.banner_img_6 %>" alt="img" width="194" height="228">
+                        <img src="/<%= faqPageData[0].banner_img_6 %>" alt="img" width="194" height="228">
                      </div>
                   </div>
                   <div class="gr-slider2">
                      <div class="item">
-                        <img src="/<%= faqPageData.banner_img_7 %>" alt="img" width="212" height="312">
+                        <img src="/<%= faqPageData[0].banner_img_7 %>" alt="img" width="212" height="312">
                      </div>
                      <div class="item">
-                        <img src="/<%= faqPageData.banner_img_8 %>" alt="img" width="212" height="312">
+                        <img src="/<%= faqPageData[0].banner_img_8 %>" alt="img" width="212" height="312">
                      </div>
                   </div>
                </div>
@@ -49,7 +49,7 @@
          </div>
          <div class="col-md-6 my-auto">
             <div class="about-right text-md-start text-center my-3" data-aos="fade-right">
-               <%- faqPageData.content %>
+               <%- faqPageData[0].content %>
             </div>
          </div>
       </div>
@@ -99,3 +99,37 @@
 </section>
 <!-- ============== Section2 End =============== -->
 <%- include('common/footer') -%>
+
+<script>
+   document.addEventListener("DOMContentLoaded", async function () {
+console.log("DOM content loaded");
+
+try {
+const { countryName, countryCode } = await fetchGeolocationAndSetCountryInfo();
+console.log("Initial CountryName:", countryName);
+console.log("Initial CountryCode:", countryCode);
+
+const countryDropdown = document.querySelector('.country-dropdown');
+if (countryCode == 'UK') {
+countryDropdown.value = 'UK';
+} else if (countryCode == 'JP') {
+countryDropdown.value = 'JP';
+} else {
+countryDropdown.value = 'US';
+}
+
+countryDropdown.addEventListener('change', function (event) {
+const selectedCountryCode = event.target.value;
+const selectedCountryName = event.target.options[event.target.selectedIndex].text;
+console.log("Selected country code:", selectedCountryCode);
+console.log("Selected country name:", selectedCountryName);
+
+const redirectUrl = `/${selectedCountryCode}/faq`;
+window.location.href = redirectUrl;
+});
+} catch (error) {
+console.error('Error initializing country info:', error);
+}
+});
+
+</script>

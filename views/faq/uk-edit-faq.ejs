@@ -229,7 +229,7 @@
                         <form id="kt_account_profile_details_form" class="form" >
                             <!--begin::Card body-->
                             <div class="card-body border-top p-9">
-                                <input type="text" name="countries_name" id="countries_name1" class="form-control form-control-lg form-control-solid" placeholder="" value="UK" />
+                                <input type="text" name="countries_name" id="countries_name1" class="form-control form-control-lg form-control-solid" placeholder=""value="<%= faqPageData1.country%>" />
 
                                 <!--begin::Input group-->
                                 <div class="row mb-6">
@@ -546,9 +546,9 @@
                                                         confirmButton: "btn btn-primary"
                                                     }
                                                 }).then(function (result) {
-                                                    // if (result.isConfirmed) {
-                                                    //     window.location.href = "/uk-edit-faq";
-                                                    // }
+                                                    if (result.isConfirmed) {
+                                                        window.location.href = "/uk-edit-faq";
+                                                    }
                                                 });
                                             } else {
                                                 Swal.fire({

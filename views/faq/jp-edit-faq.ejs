@@ -507,10 +507,9 @@
                                     jsonResponse.forEach(item => {
                                         const { name, value } = item;
 
-                                        if (name === 'title' || name === 'content' || name === 'meta_title' || name === 'meta_desc' || name === 'keyword' || name === 'app_content') {
+                                        if (name === 'title' || name === 'content' || name === 'meta_title' || name === 'meta_desc' || name === 'keyword' || name === 'app_content' || name === 'countries_name') {
                                             transformedResponse[name] = value;
                                         } else if (name === 'category_name') {
-                                            // If a new category is encountered, reset the currentFAQ and start a new one
                                             if (currentCategory !== value) {
                                                 currentCategory = value;
                                                 currentFAQ = [];
@@ -526,7 +525,7 @@
                                         }
                                     });
 
-                                    //console.log(transformedResponse);
+                                    console.log("transformedResponse",transformedResponse);
 
                                     $.ajax({
                                         url: '/auth/update-faq',
@@ -545,7 +544,7 @@
                                                     }
                                                 }).then(function (result) {
                                                     if (result.isConfirmed) {
-                                                        window.location.href = "/edit-faq";
+                                                        window.location.href = "/jp-edit-faq";
                                                     }
                                                 });
                                             } else {

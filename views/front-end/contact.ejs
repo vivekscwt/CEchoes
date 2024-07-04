@@ -157,3 +157,37 @@
           });
         });
       </script>
+            <script>
+              document.addEventListener("DOMContentLoaded", async function () {
+       console.log("DOM content loaded");
+
+       try {
+         const { countryName, countryCode } = await fetchGeolocationAndSetCountryInfo();
+         console.log("Initial CountryName:", countryName);
+         console.log("Initial CountryCode:", countryCode);
+
+         const countryDropdown = document.querySelector('.country-dropdown');
+         if (countryCode == 'UK') {
+           countryDropdown.value = 'UK';
+         } else if (countryCode == 'JP') {
+           countryDropdown.value = 'JP';
+         } else {
+           countryDropdown.value = 'US';
+         }
+         // updateCountryInfo(countryName, countryCode);
+         // setDefaultLanguage(countryName);
+         countryDropdown.addEventListener('change', function (event) {
+           const selectedCountryCode = event.target.value;
+           const selectedCountryName = event.target.options[event.target.selectedIndex].text;
+           console.log("Selected country code:", selectedCountryCode);
+           console.log("Selected country name:", selectedCountryName);
+
+           const redirectUrl = `/${selectedCountryCode}/contact-us`;
+           window.location.href = redirectUrl;
+         });
+       } catch (error) {
+         console.error('Error initializing country info:', error);
+       }
+     });
+
+     </script>

@@ -229,7 +229,7 @@
                         <form id="kt_account_profile_details_form" class="form">
                             <!--begin::Card body-->
                             <div class="card-body border-top p-9">
-                                <input type="text" name="countries_name" id="countries_name" class="form-control form-control-lg form-control-solid" placeholder="" value="US" />
+                                <input type="text" name="countries_name" id="countries_name" class="form-control form-control-lg form-control-solid" placeholder="" value="<%= faqPageData.country%>" />
 
                                 <!--begin::Input group-->
                                 <div class="row mb-6">
@@ -506,10 +506,9 @@
                                     jsonResponse.forEach(item => {
                                         const { name, value } = item;
 
-                                        if (name === 'title' || name === 'content' || name === 'meta_title' || name === 'meta_desc' || name === 'keyword' || name === 'app_content') {
+                                        if (name === 'title' || name === 'content' || name === 'meta_title' || name === 'meta_desc' || name === 'keyword' || name === 'app_content' || name === 'countries_name') {
                                             transformedResponse[name] = value;
                                         } else if (name === 'category_name') {
-                                            // If a new category is encountered, reset the currentFAQ and start a new one
                                             if (currentCategory !== value) {
                                                 currentCategory = value;
                                                 currentFAQ = [];
@@ -517,15 +516,13 @@
                                                 transformedResponse.FAQ.push({ [currentCategory]: currentFAQ });
                                             }
                                         } else if (name === 'question' && currentCategory) {
-                                            // Add a new FAQ entry to the current category
                                             currentFAQ.push({ Q: value });
                                         } else if (name === 'answer' && currentCategory && currentFAQ.length > 0) {
-                                            // Add the answer to the last FAQ entry
                                             currentFAQ[currentFAQ.length - 1].A = value;
                                         }
                                     });
 
-                                    //console.log(transformedResponse);
+                                    console.log("transformedResponse",transformedResponse);
 
                                     $.ajax({
                                         url: '/auth/update-faq',

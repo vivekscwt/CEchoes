@@ -3886,13 +3886,13 @@ exports.editCustomerReviewReply = async (req, res) => {
 // Update Contacts
 exports.updateContacts = async (req, res) => {
     //const formdata = JSON.parse(req.body.formData);
-    console.log('Request Form DATA:', req.body.whatsapp_no);
-    const { contacts_id, social_id, whatsapp_no, phone_no, email, title, meta_title, meta_desc, meta_keyword, fb_link, twitter_link, linkedin_link, instagram_link, youtube_link } = req.body
-    const contact_sql = `UPDATE contacts SET whatsapp_no=?,phone_no=?,email=?,title=?,meta_title=?,meta_desc=?,meta_keyword=? WHERE id = ?`;
-    const contact_data = [whatsapp_no, phone_no, email, title, meta_title, meta_desc, meta_keyword, contacts_id];
+    console.log('Request Form DATA:', req.body);
+    const { contacts_id, social_id, whatsapp_no, phone_no, email, title, meta_title, meta_desc, meta_keyword, fb_link, twitter_link, linkedin_link, instagram_link, youtube_link, country_name } = req.body
+    const contact_sql = `UPDATE contacts SET whatsapp_no=?,phone_no=?,email=?,title=?,meta_title=?,meta_desc=?,meta_keyword=?,country =? WHERE id = ?`;
+    const contact_data = [whatsapp_no, phone_no, email, title, meta_title, meta_desc, meta_keyword, country_name, contacts_id];
     db.query(contact_sql, contact_data, (err, result) => {
-        const socials_sql = `UPDATE socials SET facabook=?,linkedin=?,instagram=?,youtube=?,twitter=? WHERE id=?`;
-        const socials_data = [fb_link, linkedin_link, instagram_link, youtube_link, twitter_link, social_id];
+        const socials_sql = `UPDATE socials SET facabook=?,linkedin=?,instagram=?,youtube=?,twitter=?,country=? WHERE id=?`;
+        const socials_data = [fb_link, linkedin_link, instagram_link, youtube_link, twitter_link, country_name, social_id];
         db.query(socials_sql, socials_data, (socials_err, socials_result) => {
             // Return success response
             return res.send({
@@ -3902,6 +3902,8 @@ exports.updateContacts = async (req, res) => {
         })
     })
 }
+
+
 
 // Contacts Feedback
 exports.contactFeedback = (req, res) => {
@@ -5517,9 +5519,9 @@ exports.updateDisclaimer = (req, res) => {
 
 // Update Terms Of Service
 exports.updateTermsOfService = (req, res) => {
-    //console.log('Privacy', req.body);
+    console.log('updateTermsOfService', req.body);
 
-    const { common_id, title, meta_title, meta_desc, keyword, content } = req.body;
+    const { common_id, title, meta_title, meta_desc, keyword, content,country_name } = req.body;
 
     const check_sql = `SELECT * FROM page_meta WHERE page_id = ? AND page_meta_key = ?`;
     const check_data = [common_id, "content"];
@@ -5538,8 +5540,8 @@ exports.updateTermsOfService = (req, res) => {
                 const update_data = [content, common_id, 'content'];
                 db.query(update_sql, update_data, (update_err, update_result) => {
                     if (update_err) throw update_err;
-                    const title_sql = `UPDATE page_info SET title = ?, meta_title = ?, meta_desc = ?, meta_keyword = ? WHERE id  = ?`;
-                    const title_data = [title, meta_title, meta_desc, keyword, common_id];
+                    const title_sql = `UPDATE page_info SET title = ?, meta_title = ?, meta_desc = ?, meta_keyword = ?, country = ? WHERE id  = ?`;
+                    const title_data = [title, meta_title, meta_desc, keyword, country_name, common_id];
                     //console.log(title_data);
                     db.query(title_sql, title_data, (title_err, title_result) => {
                         return res.send(
@@ -5556,8 +5558,8 @@ exports.updateTermsOfService = (req, res) => {
                 const insert_data = [common_id, 'content', content];
                 db.query(insert_sql, insert_data, (insert_err, insert_result) => {
                     if (insert_err) throw insert_err;
-                    const title_sql = `UPDATE page_info SET title = ?, meta_title = ?, meta_desc = ?, meta_keyword = ? WHERE id  = ?`;
-                    const title_data = [title, meta_title, meta_desc, keyword, common_id];
+                    const title_sql = `UPDATE page_info SET title = ?, meta_title = ?, meta_desc = ?, meta_keyword = ?, country = ? WHERE id  = ?`;
+                    const title_data = [title, meta_title, meta_desc, keyword, country_name, common_id];
                     //console.log(title_data);
                     db.query(title_sql, title_data, (title_err, title_result) => {
                         return res.send(
@@ -5580,7 +5582,7 @@ exports.updateComplaint = async (req, res) => {
     //console.log('updateComplaint', req.body);
     //console.log('updateComplaint', req.files);
     const form_data = req.body;
-    const { common_id, title, meta_title, meta_desc, meta_keyword } = req.body;
+    const { common_id, title, meta_title, meta_desc, meta_keyword, country_name} = req.body;
     const { banner_img_1, banner_img_2, banner_img_3, banner_img_4, banner_img_5, banner_img_6, banner_img_7, banner_img_8 } = req.files;
     const file_meta_value = [banner_img_1, banner_img_2, banner_img_3, banner_img_4, banner_img_5, banner_img_6, banner_img_7, banner_img_8];
     const file_meta_key = ['banner_img_1', 'banner_img_2', 'banner_img_3', 'banner_img_4', 'banner_img_5', 'banner_img_6', 'banner_img_7', 'banner_img_8'];
@@ -5617,8 +5619,8 @@ exports.updateComplaint = async (req, res) => {
             });
         }
     });
-    const title_sql = `UPDATE page_info SET title = ?, meta_title = ?, meta_desc = ?, meta_keyword = ? WHERE id  = ?`;
-    const title_data = [title, meta_title, meta_desc, meta_keyword, common_id];
+    const title_sql = `UPDATE page_info SET title = ?, meta_title = ?, meta_desc = ?, meta_keyword = ?, country = ? WHERE id  = ?`;
+    const title_data = [title, meta_title, meta_desc, meta_keyword, country_name, common_id];
     //console.log(title_data);
     db.query(title_sql, title_data, (title_err, title_result) => {
         return res.send(
