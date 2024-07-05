@@ -1400,12 +1400,75 @@ router.get('/:getcountryname/disclaimer', checkCookieValue, async (req, res) => 
 router.get('/terms-of-service', checkCookieValue, async (req, res) => {
     let currentUserData = JSON.parse(req.userData);
     const apiKey = process.env.GEO_LOCATION_API_KEY;
+    const country_name = req.cookies.countryName
+    || 'India';
+   let country_code = req.cookies.countryCode 
+   || 'IN';
+   console.log("country_namesprivacy", country_name);
+   console.log("country_codesprivacy", country_code);
+
+   if (country_code != 'UK' && country_code != 'JP') {
+       country_code = 'US';
+   }
+
     console.log("apiKey",apiKey);
     const [globalPageMeta] = await Promise.all([
         comFunction2.getPageMetaValues('global'),
     ]);
     try {
-        const sql = `SELECT * FROM page_info where secret_Key = 'terms_of_service' `;
+        const sql = `SELECT * FROM page_info where secret_Key = 'terms_of_service' AND country="${country_code}"`;
+        db.query(sql, (err, results, fields) => {
+            if (err) throw err;
+            const common = results[0];
+            const meta_sql = `SELECT * FROM page_meta where page_id = ${common.id}`;
+            db.query(meta_sql, async (meta_err, _meta_result) => {
+                if (meta_err) throw meta_err;
+
+                const meta_values = _meta_result;
+                let meta_values_array = {};
+                await meta_values.forEach((item) => {
+                    meta_values_array[item.page_meta_key] = item.page_meta_value;
+                })
+                console.log(meta_values_array);
+                res.render('front-end/terms-of-service', {
+                    menu_active_id: 'terms-of-service',
+                    page_title: common.title,
+                    currentUserData,
+                    common,
+                    meta_values_array,
+                    globalPageMeta: globalPageMeta
+                });
+            })
+
+        })
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('An error occurred');
+    }
+    //res.render('front-end/terms-of-service', { menu_active_id: 'terms-of-service', page_title: 'Terms Of Service', currentUserData });
+});
+
+router.get('/:getcountryname/terms-of-service', checkCookieValue, async (req, res) => {
+    let currentUserData = JSON.parse(req.userData);
+    const apiKey = process.env.GEO_LOCATION_API_KEY;
+    const getcountryname = req.params.getcountryname;
+    const country_name = req.cookies.countryName
+    || 'India';
+   let country_code = req.cookies.countryCode 
+   || 'IN';
+   console.log("country_namesprivacy", country_name);
+   console.log("country_codesprivacy", country_code);
+
+   if (country_code != 'UK' && country_code != 'JP') {
+       country_code = 'US';
+   }
+
+    console.log("apiKey",apiKey);
+    const [globalPageMeta] = await Promise.all([
+        comFunction2.getPageMetaValues('global'),
+    ]);
+    try {
+        const sql = `SELECT * FROM page_info where secret_Key = 'terms_of_service' AND country="${getcountryname}"`;
         db.query(sql, (err, results, fields) => {
             if (err) throw err;
             const common = results[0];
@@ -9034,7 +9097,6 @@ router.get('/:getcountryname/register-cechoes-complaint', checkFrontEndLoggedIn,
         console.error(err);
         res.status(500).send('An error occurred');
     }
-    //res.render('front-end/terms-of-service', { menu_active_id: 'terms-of-service', page_title: 'Terms Of Service', currentUserData });
 });
 
 //user complain listing page
@@ -9098,7 +9160,6 @@ router.get('/my-complaints', checkFrontEndLoggedIn, async (req, res) => {
         console.error(err);
         res.status(500).send('An error occurred');
     }
-    //res.render('front-end/terms-of-service', { menu_active_id: 'terms-of-service', page_title: 'Terms Of Service', currentUserData });
 });
 
 //basic register complain page
@@ -9141,7 +9202,6 @@ router.get('/user-compnaint-details/:complainId', checkFrontEndLoggedIn, async (
         console.error(err);
         res.status(500).send('An error occurred');
     }
-    //res.render('front-end/terms-of-service', { menu_active_id: 'terms-of-service', page_title: 'Terms Of Service', currentUserData });
 });
 
 router.get('/getCountryIdByShortName', async (req, res) => {
