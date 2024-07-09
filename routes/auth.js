@@ -257,6 +257,9 @@ router.post('/update-disclaimer', authController.updateDisclaimer);
 //Update terms-of-service
 router.post('/update-terms-of-service', authController.updateTermsOfService);
 
+//updateRefundPolicy
+router.post('/update-refund-policy', authController.updateRefundPolicy);
+
 //Update Complaint register Page
 router.post('/update-complaint', upload.fields([
     { name: 'banner_img_1', maxCount: 1 },

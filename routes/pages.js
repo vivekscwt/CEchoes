@@ -867,6 +867,46 @@ router.get('/terms-of-service', checkCookieValue, async (req, res) => {
     //res.render('front-end/terms-of-service', { menu_active_id: 'terms-of-service', page_title: 'Terms Of Service', currentUserData });
 });
 
+router.get('/refund-policy', checkCookieValue, async (req, res) => {
+    let currentUserData = JSON.parse(req.userData);
+    const apiKey = process.env.GEO_LOCATION_API_KEY;
+    console.log("apiKey",apiKey);
+    const [globalPageMeta] = await Promise.all([
+        comFunction2.getPageMetaValues('global'),
+    ]);
+    try {
+        const sql = `SELECT * FROM page_info where secret_Key = 'cancellation_refund_policy' `;
+        db.query(sql, (err, results, fields) => {
+            if (err) throw err;
+            const common = results[0];
+            const meta_sql = `SELECT * FROM page_meta where page_id = ${common.id}`;
+            db.query(meta_sql, async (meta_err, _meta_result) => {
+                if (meta_err) throw meta_err;
+
+                const meta_values = _meta_result;
+                let meta_values_array = {};
+                await meta_values.forEach((item) => {
+                    meta_values_array[item.page_meta_key] = item.page_meta_value;
+                })
+                console.log(meta_values_array);
+                res.render('front-end/refund-policy', {
+                    menu_active_id: 'cancellation refund policy',
+                    page_title: common.title,
+                    currentUserData,
+                    common,
+                    meta_values_array,
+                    globalPageMeta: globalPageMeta
+                });
+            })
+
+        })
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('An error occurred');
+    }
+    //res.render('front-end/terms-of-service', { menu_active_id: 'terms-of-service', page_title: 'Terms Of Service', currentUserData });
+});
+
 router.get('/company/:slug', checkCookieValue, async (req, res) => {
     const slug = req.params.slug;
     console.log("slug",slug);
@@ -6280,6 +6320,40 @@ router.get('/edit-terms-of-service', checkLoggedIn, (req, res) => {
                 res.render('pages/update-terms-of-service', {
                     menu_active_id: 'pages',
                     page_title: 'Update Terms of Service',
+                    currentUserData,
+                    common,
+                    meta_values_array,
+                });
+            })
+
+        })
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('An error occurred');
+    }
+});
+//
+router.get('/edit-cancellation-refund-policy', checkLoggedIn, (req, res) => {
+    try {
+        const encodedUserData = req.cookies.user;
+        const currentUserData = JSON.parse(encodedUserData);
+        const sql = `SELECT * FROM page_info where secret_Key = 'cancellation_refund_policy' `;
+        db.query(sql, (err, results, fields) => {
+            if (err) throw err;
+            const common = results[0];
+            const meta_sql = `SELECT * FROM page_meta where page_id = ${common.id}`;
+            db.query(meta_sql, async (meta_err, _meta_result) => {
+                if (meta_err) throw meta_err;
+
+                const meta_values = _meta_result;
+                let meta_values_array = {};
+                await meta_values.forEach((item) => {
+                    meta_values_array[item.page_meta_key] = item.page_meta_value;
+                })
+                console.log(meta_values_array);
+                res.render('pages/update-refund-policy', {
+                    menu_active_id: 'pages',
+                    page_title: 'Update Refund Policy',
                     currentUserData,
                     common,
                     meta_values_array,

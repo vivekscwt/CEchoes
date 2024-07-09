@@ -5340,6 +5340,67 @@ exports.updateTermsOfService = (req, res) => {
 
 
 }
+//ipdate cancellation and refund policy
+exports.updateRefundPolicy = (req, res) => {
+    //console.log('updateRefundPolicy', req.body);
+
+    const { common_id, title, meta_title, meta_desc, keyword, content } = req.body;
+
+    const check_sql = `SELECT * FROM page_meta WHERE page_id = ? AND page_meta_key = ?`;
+    const check_data = [common_id, "content"];
+    db.query(check_sql, check_data, (check_err, check_result) => {
+        if (check_err) {
+            return res.send(
+                {
+                    status: 'err',
+                    data: '',
+                    message: 'An error occurred while processing your request'
+                }
+            )
+        } else {
+            if (check_result.length > 0) {
+                const update_sql = `UPDATE page_meta SET page_meta_value = ? WHERE page_id = ? AND page_meta_key = ?`;
+                const update_data = [content, common_id, 'content'];
+                db.query(update_sql, update_data, (update_err, update_result) => {
+                    if (update_err) throw update_err;
+                    const title_sql = `UPDATE page_info SET title = ?, meta_title = ?, meta_desc = ?, meta_keyword = ? WHERE id  = ?`;
+                    const title_data = [title, meta_title, meta_desc, keyword, common_id];
+                    //console.log(title_data);
+                    db.query(title_sql, title_data, (title_err, title_result) => {
+                        return res.send(
+                            {
+                                status: 'ok',
+                                data: '',
+                                message: 'Cancellation and Refund Policy updated successfully.'
+                            }
+                        )
+                    })
+                })
+            } else {
+                const insert_sql = `INSERT INTO page_meta (page_id , page_meta_key, page_meta_value) VALUES (?,?,?)`;
+                const insert_data = [common_id, 'content', content];
+                db.query(insert_sql, insert_data, (insert_err, insert_result) => {
+                    if (insert_err) throw insert_err;
+                    const title_sql = `UPDATE page_info SET title = ?, meta_title = ?, meta_desc = ?, meta_keyword = ? WHERE id  = ?`;
+                    const title_data = [title, meta_title, meta_desc, keyword, common_id];
+                    //console.log(title_data);
+                    db.query(title_sql, title_data, (title_err, title_result) => {
+                        return res.send(
+                            {
+                                status: 'ok',
+                                data: '',
+                                message: 'Cancellation and Refund Policy updated successfully.'
+                            }
+                        )
+                    })
+                })
+            }
+        }
+    });
+
+
+}
+
 // Update complaint
 exports.updateComplaint = async (req, res) => {
     //console.log('updateComplaint', req.body);
