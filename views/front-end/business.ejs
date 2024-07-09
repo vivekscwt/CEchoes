@@ -330,176 +330,171 @@
       <!-- ============== Section6 Start =============== -->
       <section class="main-content business-choose-your-plan-content" data-aos="fade-up">
          <div class="container">
-            <h2 class="text-center inner-main-head">Choose Your <span>Plan</span></h2>
-            <div class="choose-your-plan-box">
-               <% function hasAnySubscription() {
-                   return getSubscribedUsers.some(sub => sub.user_id === currentUserData.user_id);
-               } %>
-           
-               <% function isSubscribed(planName, duration) {
-                   return getSubscribedUsers.some(sub => sub.user_id === currentUserData.user_id && sub.plan_name === planName && sub.subscription_duration === duration);
-               } %>
-           
-               <% const userHasSubscription = hasAnySubscription(); %>
-           
-               <!-- Basic Plan -->
-               <div class="choose-your-plan-box-step">
-                   <input type="hidden" name="plan_name" value="<%- getplans.basic_val.name %>">
-                   <%- getplans.basic_val.description %>
-                   <% if (currentUserData && currentUserData.claimed_comp_id != null) { %>
-                       <div class="member-control">
-                           <label for="basic-member-count">Members:</label>
-                           <input type="number" min="0" name="memberCount" id="basic-member-count" value="">
-                           <input type="hidden" id="basic-per-user-price" value="<%= getplans.basic_val.per_user_price_local %>">
-                           <input type="hidden" name="userId" value="<%= currentUserData.user_id %>">
-                           <input type="hidden" name="email" value="<%= currentUserData.email %>">
-                       </div>
-                       <% if (country_name === "India") { %>
-                           <div class="total-price-display">
-                               Monthly Subscription Amount: ₹<span id="basic-total-monthly-price">
-                                   <%= getplans.basic_val.monthly_price_local %>
-                               </span>
-                           </div>
-                       <% } else if (country_name === "Japan") { %>
-                           <div class="total-price-display">
-                               Monthly Subscription Amount: ¥<span id="basic-total-monthly-price">
-                                   <%= getplans.basic_val.monthly_price_local %>
-                               </span>
-                           </div>
-                       <% } else { %>
-                           <div class="total-price-display">
-                               Monthly Subscription Amount: $<span id="basic-total-monthly-price">
-                                   <%= getplans.basic_val.monthly_price_local %>
-                               </span>
-                           </div>
-                       <% } %>
-           
-                       <% if (isSubscribed('basic', 'month')) { %>
-                           <button id="subscribe-basic-monthly" disabled>Subscribed</button>
-                       <% } else if (userHasSubscription) { %>
-                           <button id="subscribe-basic-monthly" disabled>Subscribe Monthly</button>
-                       <% } else { %>
-                           <button id="subscribe-basic-monthly"
-                               onclick="redirectToStripePayment('<%= getplans.basic_val.name %>', '<%= getplans.basic_val.monthly_price %>', 'monthly')">
-                               Subscribe Monthly
-                           </button>
-                       <% } %>
-           
-                       <% if (country_name === "India") { %>
-                           <div class="total-price-display">
-                               Yearly Subscription Amount: ₹<span id="basic-total-yearly-price">
-                                   <%= getplans.basic_val.yearly_price_local %>
-                               </span>
-                           </div>
-                       <% } else if (country_name === "Japan") { %>
-                           <div class="total-price-display">
-                               Yearly Subscription Amount: ¥<span id="basic-total-yearly-price">
-                                   <%= getplans.basic_val.yearly_price_local %>
-                               </span>
-                           </div>
-                       <% } else { %>
-                           <div class="total-price-display">
-                               Yearly Subscription Amount: $<span id="basic-total-yearly-price">
-                                   <%= getplans.basic_val.yearly_price_local %>
-                               </span>
-                           </div>
-                       <% } %>
-           
-                       <% if (isSubscribed('basic', 'year')) { %>
-                           <button id="subscribe-basic-yearly" disabled>Subscribed</button>
-                       <% } else if (userHasSubscription) { %>
-                           <button id="subscribe-basic-yearly" disabled>Subscribe Yearly</button>
-                       <% } else { %>
-                           <button id="subscribe-basic-yearly"
-                               onclick="redirectToYearlyStripePayment('<%= getplans.basic_val.name %>', '<%= getplans.basic_val.yearly_price %>', 'yearly')">
-                               Subscribe Yearly
-                           </button>
-                       <% } %>
-                   <% } %>
-               </div>
-           
-               <!-- Repeat the same structure for other plans (Standard, Advanced, Premium, Enterprise) -->
-               <% ['standard', 'advanced', 'premium', 'enterprise'].forEach(plan => { %>
-                   <div class="choose-your-plan-box-step">
-                       <%- getplans[plan + '_val'].description %>
-                       <% if (currentUserData && currentUserData.claimed_comp_id != null) { %>
-                           <div class="member-control">
-                               <label for="<%= plan %>-member-count">Members:</label>
-                               <input type="number" min="0" name="memberCount" id="<%= plan %>-member-count" value="">
-                               <input type="hidden" id="<%= plan %>-per-user-price" value="<%= getplans[plan + '_val'].per_user_price_local %>">
-                               <input type="hidden" name="userId" value="<%= currentUserData.user_id %>">
-                               <input type="hidden" name="email" value="<%= currentUserData.email %>">
-                           </div>
-                           <% if (country_name === "India") { %>
-                               <div class="total-price-display">
-                                   Monthly Subscription Amount: ₹<span id="<%= plan %>-total-monthly-price">
-                                       <%= getplans[plan + '_val'].monthly_price_local %>
-                                   </span>
-                               </div>
-                           <% } else if (country_name === "Japan") { %>
-                               <div class="total-price-display">
-                                   Monthly Subscription Amount: ¥<span id="<%= plan %>-total-monthly-price">
-                                       <%= getplans[plan + '_val'].monthly_price_local %>
-                                   </span>
-                               </div>
-                           <% } else { %>
-                               <div class="total-price-display">
-                                   Monthly Subscription Amount: $<span id="<%= plan %>-total-monthly-price">
-                                       <%= getplans[plan + '_val'].monthly_price_local %>
-                                   </span>
-                               </div>
-                           <% } %>
-           
-                           <% if (isSubscribed(plan, 'month')) { %>
-                               <button id="subscribe-<%= plan %>-monthly" disabled>Subscribed</button>
-                           <% } else if (userHasSubscription) { %>
-                               <button id="subscribe-<%= plan %>-monthly" disabled>Subscribe Monthly</button>
-                           <% } else { %>
-                               <button id="subscribe-<%= plan %>-monthly"
-                                   onclick="redirectToStripePayment('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].monthly_price %>', 'monthly')">
-                                   Subscribe Monthly
-                               </button>
-                           <% } %>
-           
-                           <% if (country_name === "India") { %>
-                               <div class="total-price-display">
-                                   Yearly Subscription Amount: ₹<span id="<%= plan %>-total-yearly-price">
-                                       <%= getplans[plan + '_val'].yearly_price_local %>
-                                   </span>
-                               </div>
-                           <% } else if (country_name === "Japan") { %>
-                               <div class="total-price-display">
-                                   Yearly Subscription Amount: ¥<span id="<%= plan %>-total-yearly-price">
-                                       <%= getplans[plan + '_val'].yearly_price_local %>
-                                   </span>
-                               </div>
-                           <% } else { %>
-                               <div class="total-price-display">
-                                   Yearly Subscription Amount: $<span id="<%= plan %>-total-yearly-price">
-                                       <%= getplans[plan + '_val'].yearly_price_local %>
-                                   </span>
-                               </div>
-                           <% } %>
-           
-                           <% if (isSubscribed(plan, 'year')) { %>
-                               <button id="subscribe-<%= plan %>-yearly" disabled>Subscribed</button>
-                           <% } else if (userHasSubscription) { %>
-                               <button id="subscribe-<%= plan %>-yearly" disabled>Subscribe Yearly</button>
-                           <% } else { %>
-                               <button id="subscribe-<%= plan %>-yearly"
-                                   onclick="redirectToYearlyStripePayment('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].yearly_price %>', 'yearly')">
-                                   Subscribe Yearly
-                               </button>
-                           <% } %>
-                       <% } %>
-                   </div>
-               <% }) %>
-           </div>
-           
-           
+             <h2 class="text-center inner-main-head">Choose Your <span>Plan</span></h2>
+             <div class="choose-your-plan-box">
+                 <% function hasAnySubscription() {
+                     return getSubscribedUsers.some(sub => sub.user_id === currentUserData.user_id);
+                 } %>
+     
+                 <% function isSubscribed(planName, duration) {
+                     return getSubscribedUsers.some(sub => sub.user_id === currentUserData.user_id && sub.plan_name === planName && sub.subscription_duration === duration);
+                 } %>
+     
+                 <% const userHasSubscription = hasAnySubscription(); %>
+     
+                 <% ['basic', 'standard', 'advanced', 'premium', 'enterprise'].forEach(plan => { %>
+                     <div class="choose-your-plan-box-step">
+                         <input type="hidden" name="" value="<%- getplans[plan + '_val'].name %>">
+                         <%- getplans[plan + '_val'].description %>
+                         
+                         <% if (currentUserData && currentUserData.claimed_comp_id != null) { %>
+                             <div class="member-control">
+                                 <label for="<%= plan %>-member-count">Members:</label>
+                                 <input type="number" min="0" name="memberCount" id="<%= plan %>-member-count" value="">
+                                 <input type="hidden" id="<%= plan %>-per-user-price" value="<%= getplans[plan + '_val'].per_user_price_local %>">
+                                 <input type="hidden" name="userId" value="<%= currentUserData.user_id %>">
+                                 <input type="hidden" name="email" value="<%= currentUserData.email %>">
+                             </div>
+                             
+                             <% if (country_name === "India") { %>
+                                 <div class="total-price-display">
+                                     Monthly Subscription Amount: ₹<span id="<%= plan %>-total-monthly-price">
+                                         <%= getplans[plan + '_val'].monthly_price_local %>
+                                     </span>
+                                 </div>
+                             <% } else if (country_name === "Japan") { %>
+                                 <div class="total-price-display">
+                                     Monthly Subscription Amount: ¥<span id="<%= plan %>-total-monthly-price">
+                                         <%= getplans[plan + '_val'].monthly_price_local %>
+                                     </span>
+                                 </div>
+                             <% } else { %>
+                                 <div class="total-price-display">
+                                     Monthly Subscription Amount: $<span id="<%= plan %>-total-monthly-price">
+                                         <%= getplans[plan + '_val'].monthly_price_local %>
+                                     </span>
+                                 </div>
+                             <% } %>
+                             
+                             <% if (isSubscribed(plan, 'month')) { %>
+                                 <button id="subscribe-<%= plan %>-monthly" disabled>Subscribed</button>
+                             <% } else if (userHasSubscription) { %>
+                                 <button id="subscribe-<%= plan %>-monthly" disabled>Subscribe Monthly</button>
+                             <% } else { %>
+                                 <button id="subscribe-<%= plan %>-monthly"
+                                     onclick="redirectToStripePayment('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].monthly_price %>', 'monthly')">
+                                     Subscribe Monthly
+                                 </button>
+                             <% } %>
+                             
+                             <% if (country_name === "India") { %>
+                                 <div class="total-price-display">
+                                     Yearly Subscription Amount: ₹<span id="<%= plan %>-total-yearly-price">
+                                         <%= getplans[plan + '_val'].yearly_price_local %>
+                                     </span>
+                                 </div>
+                             <% } else if (country_name === "Japan") { %>
+                                 <div class="total-price-display">
+                                     Yearly Subscription Amount: ¥<span id="<%= plan %>-total-yearly-price">
+                                         <%= getplans[plan + '_val'].yearly_price_local %>
+                                     </span>
+                                 </div>
+                             <% } else { %>
+                                 <div class="total-price-display">
+                                     Yearly Subscription Amount: $<span id="<%= plan %>-total-yearly-price">
+                                         <%= getplans[plan + '_val'].yearly_price_local %>
+                                     </span>
+                                 </div>
+                             <% } %>
+                             
+                             <% if (isSubscribed(plan, 'year')) { %>
+                                 <button id="subscribe-<%= plan %>-yearly" disabled>Subscribed</button>
+                             <% } else if (userHasSubscription) { %>
+                                 <button id="subscribe-<%= plan %>-yearly" disabled>Subscribe Yearly</button>
+                             <% } else { %>
+                                 <button id="subscribe-<%= plan %>-yearly"
+                                     onclick="redirectToYearlyStripePayment('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].yearly_price %>', 'yearly')">
+                                     Subscribe Yearly
+                                 </button>
+                             <% } %>
+                             
+                         <% } else { %>
+                             <div class="member-control">
+                                 <label for="<%= plan %>-member-count">Members:</label>
+                                 <input type="number" min="0" name="memberCount" id="<%= plan %>-member-count" value="">
+                                 <input type="hidden" id="<%= plan %>-per-user-price" value="<%= getplans[plan + '_val'].per_user_price_local %>">
+                                 <input type="hidden" name="email" value="">
+                             </div>
+                             
+                             <% if (country_name === "India") { %>
+                                 <div class="total-price-display">
+                                     Monthly Subscription Amount: ₹<span id="<%= plan %>-total-monthly-price">
+                                         <%= getplans[plan + '_val'].monthly_price_local %>
+                                     </span>
+                                 </div>
+                             <% } else if (country_name === "Japan") { %>
+                                 <div class="total-price-display">
+                                     Monthly Subscription Amount: ¥<span id="<%= plan %>-total-monthly-price">
+                                         <%= getplans[plan + '_val'].monthly_price_local %>
+                                     </span>
+                                 </div>
+                             <% } else { %>
+                                 <div class="total-price-display">
+                                     Monthly Subscription Amount: $<span id="<%= plan %>-total-monthly-price">
+                                         <%= getplans[plan + '_val'].monthly_price_local %>
+                                     </span>
+                                 </div>
+                             <% } %>
 
+
+                             <% if (isSubscribed(plan, 'month')) { %>
+                              <button id="subscribe-<%= plan %>-monthly" disabled>Subscribed</button>
+                          <% } else if (userHasSubscription) { %>
+                              <button id="subscribe-<%= plan %>-monthly" disabled>Subscribe Monthly</button>
+                          <% } else { %>
+                              <button id="subscribe-<%= plan %>-monthly"
+                                  onclick="redirectToSubscriptionPage('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].monthly_price %>', 'monthly')">
+                                  Subscribe Monthly
+                              </button>
+                          <% } %>
+                             
+                             <% if (country_name === "India") { %>
+                                 <div class="total-price-display">
+                                     Yearly Subscription Amount: ₹<span id="<%= plan %>-total-yearly-price">
+                                         <%= getplans[plan + '_val'].yearly_price_local %>
+                                     </span>
+                                 </div>
+                             <% } else if (country_name === "Japan") { %>
+                                 <div class="total-price-display">
+                                     Yearly Subscription Amount: ¥<span id="<%= plan %>-total-yearly-price">
+                                         <%= getplans[plan + '_val'].yearly_price_local %>
+                                     </span>
+                                 </div>
+                             <% } else { %>
+                                 <div class="total-price-display">
+                                     Yearly Subscription Amount: $<span id="<%= plan %>-total-yearly-price">
+                                         <%= getplans[plan + '_val'].yearly_price_local %>
+                                     </span>
+                                 </div>
+                             <% } %>
+                             
+                             <% if (isSubscribed(plan, 'year')) { %>
+                              <button id="subscribe-<%= plan %>-yearly" disabled>Subscribed</button>
+                          <% } else if (userHasSubscription) { %>
+                              <button id="subscribe-<%= plan %>-yearly" disabled>Subscribe Yearly</button>
+                          <% } else { %>
+                              <button id="subscribe-<%= plan %>-yearly"
+                                  onclick="redirectToyearlySubscriptionPage('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].yearly_price %>', 'yearly')">
+                                  Subscribe Yearly
+                              </button>
+                          <% } %>
+                         <% } %>
+                     </div>
+                 <% }) %>
+             </div>
          </div>
-      </section>
+     </section>
+     
 
       <!-- <section class="main-content business-choose-your-plan-content" data-aos="fade-up">
          <div class="container">
@@ -668,10 +663,8 @@
                console.log("memberCount", memberCount);
                console.log("total_price", total_price);
 
-               // Construct redirect URL with all parameters
                const redirectURL = `/stripe-year-payment?planId=${encodeURIComponent(planId)}&planPrice=${encodeURIComponent(planPrice)}&billingCycle=${encodeURIComponent(billingCycle)}&memberCount=${encodeURIComponent(memberCount)}&total_price=${encodeURIComponent(total_price.toFixed(2))}&encryptedEmail=${encodeURIComponent(encryptedemail)}`;
 
-               // Redirect to the URL
                window.location.href = redirectURL;
             }
 
@@ -679,11 +672,65 @@
                window.location.href = '/'; 
             }
 
+            function redirectToSubscriptionPage(planId, planPrice, billingCycle, memberCount, totalPrice) {
+               const memberCountValue = document.getElementById(`${planId}-member-count`).value || 0;
+               const perUserPriceElement = document.getElementById(`${planId}-per-user-price`);
+               const perUserPrice = perUserPriceElement ? parseFloat(perUserPriceElement.value) : null;
 
-  
+               const monthlyTotalPriceSpan = document.getElementById(`${planId}-total-monthly-price`);
+               const yearlyTotalPriceSpan = document.getElementById(`${planId}-total-yearly-price`);
+
+               const updatedMonthlyTotalPrice = monthlyTotalPriceSpan ? parseFloat(monthlyTotalPriceSpan.textContent) : parseFloat(planPrice);
+               const updatedYearlyTotalPrice = yearlyTotalPriceSpan ? parseFloat(yearlyTotalPriceSpan.textContent) : parseFloat(planPrice);
+
+               let total_price;
+               if (perUserPrice) {
+                  total_price = updatedMonthlyTotalPrice;
+               } else {
+                  total_price = updatedMonthlyTotalPrice;
+               }
+
+               const redirectURL = `/create-user-company-subscription?planName=${encodeURIComponent(planId)}&monthlyPrice=${encodeURIComponent(planPrice)}&subscriptionType=${encodeURIComponent(billingCycle)}&memberCount=${encodeURIComponent(memberCountValue)}&total_price=${encodeURIComponent(total_price.toFixed(2))}`;
+
+               window.location.href = redirectURL;
+               }
+
+               
+            function redirectToyearlySubscriptionPage(planId, planPrice, billingCycle, memberCount, totalPrice) {
+               const memberCountValue = document.getElementById(`${planId}-member-count`).value || 0;
+               const perUserPriceElement = document.getElementById(`${planId}-per-user-price`);
+               const perUserPrice = perUserPriceElement ? parseFloat(perUserPriceElement.value) : null;
+
+               const monthlyTotalPriceSpan = document.getElementById(`${planId}-total-monthly-price`);
+               const yearlyTotalPriceSpan = document.getElementById(`${planId}-total-yearly-price`);
+
+               console.log("monthlyTotalPriceSpan", monthlyTotalPriceSpan);
+               console.log("yearlyTotalPriceSpan", yearlyTotalPriceSpan);
+
+               const updatedMonthlyTotalPrice = monthlyTotalPriceSpan ? parseFloat(monthlyTotalPriceSpan.textContent) : parseFloat(planPrice);
+               const updatedYearlyTotalPrice = yearlyTotalPriceSpan ? parseFloat(yearlyTotalPriceSpan.textContent) : parseFloat(planPrice);
+
+
+               console.log("updatedMonthlyTotalPrice", updatedMonthlyTotalPrice);
+               console.log("updatedYearlyTotalPrice", updatedYearlyTotalPrice);
+
+
+               let total_price;
+               if (perUserPrice) {
+                  total_price = updatedYearlyTotalPrice;
+               } else {
+                  total_price = updatedYearlyTotalPrice;
+               }
+
+               console.log("memberCount", memberCount);
+               console.log("total_price", total_price);
+               const redirectURL = `/create-user-company-subscription?planName=${encodeURIComponent(planId)}&monthlyPrice=${encodeURIComponent(planPrice)}&subscriptionType=${encodeURIComponent(billingCycle)}&memberCount=${encodeURIComponent(memberCountValue)}&total_price=${encodeURIComponent(total_price.toFixed(2))}`;
+
+               window.location.href = redirectURL;
+               }
          </script>
          <script>
-                  document.addEventListener("DOMContentLoaded", async function () {
+         document.addEventListener("DOMContentLoaded", async function () {
          console.log("DOM content loaded");
 
          try {
@@ -714,5 +761,4 @@
             console.error('Error initializing country info:', error);
          }
          });
-
          </script>

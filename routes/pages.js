@@ -1060,14 +1060,16 @@ router.get('/stripe-payment', checkCookieValue, async (req, res) => {
 
         let currentUserData = JSON.parse(req.userData);
         console.log("currentUserData", currentUserData);
-        var user_id = currentUserData.user_id;
-        console.log("user_idsssss",user_id);
 
-        const decryptedEmail = await comFunction2.decryptEmail(encryptedEmail);
-        if (decryptedEmail !== currentUserData.email) {
-            return res.status(500).send('You are not authorized to access the payment page.');
+        if(currentUserData != null){
+            var user_id = currentUserData.user_id;
+            console.log("user_idsssss",user_id);
+    
+            const decryptedEmail = await comFunction2.decryptEmail(encryptedEmail);
+            if (decryptedEmail !== currentUserData.email) {
+                return res.status(500).send('You are not authorized to access the payment page.');
+            }
         }
-
 
         let country_name = req.cookies.countryName || 'India';
         let country_code = req.cookies.countryCode || 'IN';
@@ -1153,6 +1155,74 @@ router.get('/stripe-year-payment', checkCookieValue, async (req, res) => {
     }
 });
 
+router.get('/create-user-company-subscription', checkCookieValue, async(req, res)=>{
+    try {
+        const { planName, planPrice, monthly, memberCount, total_price, encryptedEmail } = req.query;
+        console.log("req.query-monthly", req.query);
+        const apiKey = process.env.GEO_LOCATION_API_KEY;
+        //console.log("apiKey",apiKey);
+
+        let currentUserData = JSON.parse(req.userData);
+        console.log("currentUserData", currentUserData);
+        if(currentUserData != null){
+            var user_id = currentUserData.user_id;
+            console.log("user_idsssss",user_id);
+    
+            // const decryptedEmail = await comFunction2.decryptEmail(encryptedEmail);
+            // if (decryptedEmail !== currentUserData.email) {
+            //     return res.status(500).send('You are not authorized to access the payment page.');
+            // }
+        }
+
+        let country_name = req.cookies.countryName || 'India';
+        let country_code = req.cookies.countryCode || 'IN';
+
+        console.log("country_names", country_name);
+        console.log("country_codes", country_code);
+
+        const planids = `SELECT * FROM plan_management WHERE name = "${planName}"`;
+        const planidvalue = await queryAsync(planids);
+        //console.log("planidvalue", planidvalue[0].id);
+        if(planidvalue.length>0){
+            var planID = planidvalue[0].id;
+        }
+        
+        const exchangeRates = await comFunction2.getCurrency();
+        //console.log("exchangeRates",exchangeRates);
+
+        const [globalPageMeta, getplans,] = await Promise.all([
+            comFunction2.getPageMetaValues('global'),
+            comFunction2.getplans(country_name),
+        ]);
+
+        res.render('front-end/company-subscription-monthly', {
+            menu_active_id: 'Subscription',
+            page_title: 'Company creation',
+            planName,
+            //planId,
+            planPrice,
+            monthly,
+            planID,
+            currentUserData,
+            memberCount,
+            total_price,
+            country_code: country_code,
+            exchangeRates: exchangeRates,
+            encryptedEmail,
+            user_id,
+            globalPageMeta
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('An error occurred');
+    }
+})
+
+
+
+
+
+
 
 router.post('/create-subscription', async (req, res) => {
     try {
@@ -1179,8 +1249,6 @@ router.post('/create-subscription', async (req, res) => {
         res.status(500).json({ error: 'Failed to create subscription' });
     }
 });
-
-
 
 router.get('/privacy-policy', checkCookieValue, async (req, res) => {
     let currentUserData = JSON.parse(req.userData);

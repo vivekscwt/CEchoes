@@ -12725,56 +12725,794 @@ const createStripeProductAndPrice = async (plan, billingCycle, memberCount) => {
 
 
 
+// const getPlanFromDatabase = async (planId) => {
+//     console.log("planferrg", planId);
+//     const sql = 'SELECT name, description, monthly_price, yearly_price, currency,per_user_price FROM plan_management WHERE id = ?';
+//     const result = await queryAsync(sql, [planId]);
+//     console.log(`Database query result for planId ${planId}:`, result);
+
+//     if (result.length === 0) {
+//         throw new Error(`Plan with ID ${planId} not found`);
+//     }
+
+//     return result[0];
+// };
 
 exports.createSubscription = async (req, res) => {
     try {
-        const { name, email, address, city, state, zip, planId, billingCycle, memberCount } = req.body;
+        const { name, email,phone, address, city, state, zip, planId, billingCycle, memberCount } = req.body;
         console.log("Subscription request body:", req.body);
 
-        let customerId = await findOrCreateCustomer(email, name);
+
+        let customerId = await findOrCreateCustomer(email, name,phone, address, city, state, zip);
+        console.log("customerId", customerId);
+
+        let country_name = req.cookies.countryName 
+        //|| 'India';
+        let country_code = req.cookies.countryCode 
+        //|| 'IN';
+        console.log("country_codesdf",country_code);
+        console.log("country_namesdf",country_name);
+
+        // const customerId = customer.id.startsWith('cust_') ? customer.id : `cust_${customer.id}`;
+        // console.log('Formatted Customer ID:', customerId);
+
+        // const customerId = "cust_" + customer.id;
+        // console.log("Formatted Customer ID:", customerId);
 
         const plan = await getPlanFromDatabase(planId);
         if (!plan) {
             return res.status(404).send({ error: 'Plan not found' });
         }
 
-        const priceId = await createRazorpayPlan(plan, billingCycle, memberCount);
+        const priceId = await createRazorpayPlan(plan, billingCycle, memberCount, country_code);
         if (!priceId) {
             return res.status(500).send({ error: 'Failed to create price for the plan' });
         }
         console.log("Created Razorpay plan:", priceId);
 
+        var amountss=  priceId.item.amount;
+        console.log("amountss",amountss);
+
         const subscriptionParams = {
             plan_id: priceId.id,
             customer_id: customerId,
-            total_count: 12,  
+            total_count: 12,
+            // shipping_address: {
+            //     name: name,
+            //     phone: phone,
+            //     address: address,
+            //     city: city,
+            //     state: state,
+            //     zip: zip
+            // }
         };
+
+        console.log("subscriptionParams",subscriptionParams);
         const subscription = await razorpay.subscriptions.create(subscriptionParams);
         console.log("Created subscription:", subscription);
+
+        // const itemss_id = priceId.item.id;
+        // console.log("itemss_id",itemss_id);
+
+        // const invoiceParams = {
+        //     type: 'invoice',
+        //     date: Math.floor(Date.now() / 1000),
+        //     customer_id: customerId,
+        //     subscription_id: subscription.id, 
+        //     line_items: [
+        //         {
+        //             item_id: itemss_id, 
+        //             amount: amountss,
+        //             currency: 'INR', 
+        //             description: 'Subscription Invoice', 
+        //             quantity: 1 
+        //         }
+        //     ]
+        // };
+        // const invoice = await razorpay.invoices.create(invoiceParams);
+        // console.log('Invoice created successfully:', invoice);
+
+        const invoices = await razorpay.invoices.all({
+            'subscription_id': subscription.id
+        });
+        console.log('Invoices for subscription:', invoices);
 
         res.status(200).send({
             message: 'Subscription created successfully',
             subscription: subscription,
+            amount
+            :amountss
         });
     } catch (error) {
         console.error('Error creating subscription flow:', error);
         res.status(500).send({ error: error.message });
+    } 
+};
+
+const getInvoicesForSubscription = async (subscriptionId) => {
+    try {
+        // Retrieve all invoices associated with the subscription
+        const invoices = await razorpay.invoices.all({
+            'subscription_id': subscriptionId
+        });
+
+        // Print or process the invoices
+        console.log('Invoices:', invoices);
+
+        return invoices;
+    } catch (error) {
+        console.error('Error fetching invoices:', error);
+        throw error;
     }
 };
 
-async function findOrCreateCustomer(email, name) {
+// exports.externalRegistration = async (req, res) => {
+//     console.log("externalRegistration", req.body);
+
+//     const { first_name, last_name, email, register_password, register_confirm_password, company_name, main_address_country, parent_id } = req.body;
+
+//     if (register_password !== register_confirm_password) {
+//         return res.status(400).json({ status: 'err', message: 'Passwords do not match.' });
+//     }
+
+//     try {
+//         // Check if email already exists
+//         const emailExists = await new Promise((resolve, reject) => {
+//             db.query('SELECT email, register_from FROM users WHERE email = ?', [email], (err, results) => {
+//                 if (err) return reject(err);
+//                 if (results.length > 0) {
+//                     const register_from = results[0].register_from;
+//                     let message = register_from === 'web' 
+//                         ? 'Email ID already exists, Please login with your email-ID and password' 
+//                         : `Email ID already exists, login with ${register_from === 'gmail' ? 'google' : register_from}`;
+//                     return res.status(400).json({ status: 'err', message });
+//                 }
+//                 resolve(false);
+//             });
+//         });
+
+//         const hashedPassword = await bcrypt.hash(register_password, 8);
+//         const formattedDate = new Date().toISOString().slice(0, 19).replace('T', ' ');
+
+//         // Insert user into the "users" table
+//         const userInsertQuery = 'INSERT INTO users (first_name, last_name, email, password, register_from, user_registered, user_status, user_type_id, alise_name) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+//         const userResults = await new Promise((resolve, reject) => {
+//             db.query(userInsertQuery, [first_name, last_name, email, hashedPassword, 'web', formattedDate, 1, 2, `${first_name}${last_name}`], (err, results) => {
+//                 if (err) return reject(err);
+//                 resolve(results);
+//             });
+//         });
+
+//         // Send welcome email
+//         const mailOptions = {
+//             from: process.env.MAIL_USER,
+//             to: email,
+//             subject: 'Welcome e-mail',
+//             html: ""
+//         };
+//         await new Promise((resolve, reject) => {
+//             mdlconfig.transporter.sendMail(mailOptions, (err, info) => {
+//                 if (err) return reject(err);
+//                 console.log('Mail Send: ', info.response);
+//                 resolve(info);
+//             });
+//         });
+
+//         // Company creation
+//         if (parent_id == 0) {
+//             const companyQuery = 'SELECT * FROM company WHERE company_name = ? AND main_address_country = ?';
+//             const companyValue = await new Promise((resolve, reject) => {
+//                 db.query(companyQuery, [company_name, main_address_country], (err, results) => {
+//                     if (err) return reject(err);
+//                     if (results.length > 0) {
+//                         return res.status(400).json({ status: 'err', message: 'Organization name already exists.' });
+//                     }
+//                     resolve(results);
+//                 });
+//             });
+//         }
+
+//         const resolvedParentId = parent_id === "Select Parent" ? 0 : parent_id;
+//         const companySlug = await new Promise((resolve, reject) => {
+//             comFunction2.generateUniqueSlug(company_name, (err, slug) => {
+//                 if (err) return reject(err);
+//                 resolve(slug);
+//             });
+//         });
+
+//         const companyInsertValues = [
+//             userResults.insertId,
+//             company_name,
+//             req.body.heading || '',
+//             req.file ? req.file.filename : '',
+//             req.body.about_company || '',
+//             req.body.comp_phone || '',
+//             req.body.comp_email || '',
+//             req.body.comp_registration_id || '',
+//             req.body.status || 1,
+//             req.body.trending || 0,
+//             formattedDate,
+//             formattedDate,
+//             req.body.tollfree_number || '',
+//             req.body.main_address || '',
+//             req.body.main_address_pin_code || '',
+//             req.body.address_map_url || '',
+//             main_address_country || '',
+//             req.body.main_address_state || '',
+//             req.body.main_address_city || '',
+//             0,
+//             'free',
+//             companySlug,
+//             resolvedParentId
+//         ];
+
+//         const insertCompanyQuery = 'INSERT INTO company (user_created_by, company_name, heading, logo, about_company, comp_phone, comp_email, comp_registration_id, status, trending, created_date, updated_date, tollfree_number, main_address, main_address_pin_code, address_map_url, main_address_country, main_address_state, main_address_city, verified, paid_status, slug, parent_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+//         const companyResults = await new Promise((resolve, reject) => {
+//             db.query(insertCompanyQuery, companyInsertValues, (err, results) => {
+//                 if (err) return reject(err);
+//                 resolve(results);
+//             });
+//         });
+
+//         const companyId = companyResults.insertId;
+//         const categoryArray = Array.isArray(req.body.category) ? req.body.category.filter(categoryID => categoryID !== undefined) : [req.body.category];
+
+//         if (categoryArray.length > 0) {
+//             const companyCategoryData = categoryArray.map(categoryID => [companyId, categoryID]);
+//             const insertCategoryQuery = 'INSERT INTO company_category_relation (company_id, category_id) VALUES ?';
+//             await new Promise((resolve, reject) => {
+//                 db.query(insertCategoryQuery, [companyCategoryData], (err, results) => {
+//                     if (err) return reject(err);
+//                     resolve(results);
+//                 });
+//             });
+//         }
+
+//         // Insert user into "user_customer_meta"
+//         const userMetaInsertQuery = 'INSERT INTO user_customer_meta (user_id, review_count) VALUES (?, ?)';
+//         await new Promise((resolve, reject) => {
+//             db.query(userMetaInsertQuery, [userResults.insertId, 0], (err, results) => {
+//                 if (err) return reject(err);
+//                 resolve(results);
+//             });
+//         });
+
+//         // Register user to another service
+//         const userRegistrationData = {
+//             username: email,
+//             email: email,
+//             password: register_password,
+//             first_name: first_name,
+//             last_name: last_name,
+//         };
+//         await axios.post(`${process.env.BLOG_API_ENDPOINT}/register`, userRegistrationData);
+
+//         // Automatically log in the user
+//         const userAgent = req.headers['user-agent'];
+//         const agent = useragent.parse(userAgent);
+
+//         const userData = {
+//             user_id: userResults.insertId,
+//             first_name: first_name,
+//             last_name: last_name,
+//             email: email,
+//             user_type_id: 2
+//         };
+//         const encodedUserData = JSON.stringify(userData);
+//         res.cookie('user', encodedUserData);
+
+//         const userLoginData = {
+//             email: email,
+//             password: register_password,
+//         };
+//         const loginResponse = await axios.post(`${process.env.BLOG_API_ENDPOINT}/login`, userLoginData);
+//         const wpUserData = loginResponse.data.data;
+
+//         const deviceQuery = 'SELECT * FROM user_device_info WHERE user_id = ?';
+//         const deviceQueryResults = await new Promise((resolve, reject) => {
+//             db.query(deviceQuery, [userResults.insertId], (err, results) => {
+//                 if (err) return reject(err);
+//                 resolve(results);
+//             });
+//         });
+
+//         const ipAddress = requestIp.getClientIp(req);
+//         const deviceInfo = `${agent.toAgent()} ${agent.os.toString()}`;
+
+//         if (deviceQueryResults.length > 0) {
+//             const deviceUpdateQuery = 'UPDATE user_device_info SET device_id = ?, IP_address = ?, last_logged_in = ? WHERE user_id = ?';
+//             const values = [deviceInfo, ipAddress, formattedDate, userResults.insertId];
+//             await new Promise((resolve, reject) => {
+//                 db.query(deviceUpdateQuery, values, (err, results) => {
+//                     if (err) return reject(err);
+//                     resolve(results);
+//                 });
+//             });
+//         } else {
+//             const deviceInsertQuery = 'INSERT INTO user_device_info (user_id, device_id, device_token, imei_no, model_name, make_name, IP_address, last_logged_in, created_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+//             const values = [userResults.insertId, deviceInfo, '', '', '', '', ipAddress, formattedDate, formattedDate];
+//             await new Promise((resolve, reject) => {
+//                 db.query(deviceInsertQuery, values, (err, results) => {
+//                     if (err) return reject(err);
+//                     resolve(results);
+//                 });
+//             });
+//         }
+
+//         return res.status(200).json({
+//             status: 'ok',
+//             data: userData,
+//             wp_user: wpUserData,
+//             currentUrlPath: req.body.currentUrlPath,
+//             message: 'Registration successful. You are automatically logged in to your dashboard.'
+//         });
+//     } catch (error) {
+//         console.error('Error during user registration:', error);
+//         return res.status(500).json({ status: 'err', message: 'An error occurred while processing your request.' });
+//     }
+// };
+
+exports.externalRegistration = async (req, res) =>{
+    console.log("externalRegistration",req.body);
+    const { first_name, last_name, email, register_password, register_confirm_password,phone,address, city, state, zip, planId, billingCycle, memberCount } = req.body;
+
+    console.log("externalRegistrationbody",req.body);
+
+    console.log("planIdexternal",planId);
+
+    if (register_password !== register_confirm_password) {
+        return res.status(400).json({ status: 'err', message: 'Passwords does not match.' });
+    }
     try {
-        // Check if customer exists
-        const customers = await razorpay.customers.all({ email: email });
+        const emailExists = await new Promise((resolve, reject) => {
+            db.query('SELECT email, register_from FROM users WHERE email = ?', [email], (err, results) => {
+                if (err) reject(err);
+                console.log("emailsbody",results);
+                if (results.length > 0) {
+                    var register_from = results[0].register_from;
+                    if (register_from == 'web') {
+                        var message = 'Email ID already exists, Please login with your email-ID and password';
+                    } else if (register_from == 'facebook'){
+                        var message = 'Email ID already exists, login with ' + register_from;
+                    }
+                    else {
+                        if (register_from == 'gmail') {
+                            register_from = 'google';
+                        }
+                        var message = 'Email ID already exists, login with ' + register_from;
+                    }
+                    return res.send(
+                        {
+                            status: 'err',
+                            data: '',
+                            message: message
+                        }
+                    )
+                }
+                resolve(results.length > 0);
+            });
+        });
+        const hashedPassword = await bcrypt.hash(register_password, 8);
+        const currentDate = new Date();
+        const year = currentDate.getFullYear();
+        const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+        const day = String(currentDate.getDate()).padStart(2, '0');
+        const hours = String(currentDate.getHours()).padStart(2, '0');
+        const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+        const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+        const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        const userInsertQuery = 'INSERT INTO users (first_name, last_name, email, password, register_from, user_registered, user_status, user_type_id, alise_name) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+        db.query(userInsertQuery, [first_name, last_name, email, hashedPassword, 'web', formattedDate, 1, 2, first_name + last_name], async (err, userResults) => {
+            if (err) {
+                console.error('Error inserting user into "users" table:', err);
+                return res.send(
+                    {
+                        status: 'err',
+                        data: '',
+                        message: 'An error occurred while processing your request' + err
+                    }
+                )
+            }
+            var user_new_id = userResults.insertId;
+            console.log("user_new_id",user_new_id);
+
+            var mailOptions = {
+                from: process.env.MAIL_USER,
+                //to: 'pranab@scwebtech.com',
+                to: email,
+                subject: 'Welcome e-mail',
+                html: ""
+            }
+            await mdlconfig.transporter.sendMail(mailOptions, function (err, info) {
+                if (err) {
+                    console.log(err);
+                    return res.send({
+                        status: 'not ok',
+                        message: 'Something went wrong'
+                    });
+                } else {
+                    console.log('Mail Send: ', info.response);
+                    return res.send({
+                        status: 'ok',
+                        message: ''
+                    });
+                }
+            })
+
+            //company creation
+
+
+            // var name= first_name + last_name;
+            // console.log("First_last_name:", name);
+    
+            // let customerId = await CreateCustomer(email, name,phone, address, city, state, zip);
+            // console.log("customerId", customerId);
+    
+            // let country_name = req.cookies.countryName 
+            // //|| 'India';
+            // let country_code = req.cookies.countryCode 
+            // //|| 'IN';
+            // console.log("country_codesdf",country_code);
+            // console.log("country_namesdf",country_name);
+    
+            // // const customerId = customer.id.startsWith('cust_') ? customer.id : `cust_${customer.id}`;
+            // // console.log('Formatted Customer ID:', customerId);
+    
+            // // const customerId = "cust_" + customer.id;
+            // // console.log("Formatted Customer ID:", customerId);
+    
+            // const plan = await getPlanFromDatabase(planId);
+            // if (!plan) {
+            //     return res.status(404).send({ error: 'Plan not found' });
+            // }
+    
+            // const priceId = await createRazorpayPlan(plan, billingCycle, memberCount, country_code);
+            // if (!priceId) {
+            //     return res.status(500).send({ error: 'Failed to create price for the plan' });
+            // }
+            // console.log("Created Razorpay plan:", priceId);
+    
+            // var amountss=  priceId.item.amount;
+            // console.log("amountss",amountss);
+    
+            // const subscriptionParams = {
+            //     plan_id: priceId.id,
+            //     customer_id: customerId,
+            //     total_count: 12,
+            // };
+            // const subscription = await razorpay.subscriptions.create(subscriptionParams);
+            // console.log("Created subscription:", subscription);
+            // const invoices = await razorpay.invoices.all({
+            //     'subscription_id': subscription.id
+            // });
+            // console.log('Invoices for subscription:', invoices);
+
+            if (req.body.parent_id == 0) {
+                const companyquery = `SELECT * FROM company WHERE company_name = ? AND main_address_country =? `;
+                const companyvalue = await query(companyquery, [req.body.company_name, req.body.main_address_country]);
+                console.log("companyvalue", companyvalue);
+                if (companyvalue.length > 0) {
+                    return res.send(
+                        {
+                            status: 'err',
+                            data: '',
+                            message: 'Organization name already exist.'
+                        }
+                    )
+                }
+            }
+            if (!req.body.parent_id || req.body.parent_id === "Select Parent") {
+                req.body.parent_id = 0;
+            }
+            comFunction2.generateUniqueSlug(req.body.company_name, (error, companySlug) => {
+                // comFunction2.generateUniqueSlug(req.body.company_name, main_address_country, (err, companySlug) => {
+                if (error) {
+                    console.log('Err: ', error.message);
+                } else {
+                    console.log('companySlug', companySlug);
+                    var insert_values = [];
+                    if (req.file) {
+                        insert_values = [user_new_id, req.body.company_name, req.body.heading, req.file.filename, req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, req.body.status, req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.main_address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug, req.body.parent_id];
+                    } else {
+                        insert_values = [user_new_id, req.body.company_name, req.body.heading, '', req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, req.body.status, req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.main_address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug, req.body.parent_id];
+                    }
+    
+                    const insertQuery = 'INSERT INTO company (user_created_by, company_name, heading, logo, about_company, comp_phone, comp_email, comp_registration_id, status, trending, created_date, updated_date, tollfree_number, main_address, main_address_pin_code, address_map_url, main_address_country, main_address_state, main_address_city, verified, paid_status, slug,parent_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)';
+                    db.query(insertQuery, insert_values, (err, results, fields) => {
+                        if (err) {
+                            return res.send(
+                                {
+                                    status: 'err',
+                                    data: '',
+                                    message: 'An error occurred while processing your request' + err
+                                }
+                            )
+                        } else {
+                            console.log("company results", results);
+    
+                            var companyId = results.insertId;
+                            const categoryArray = Array.isArray(req.body.category) ? req.body.category : [req.body.category];
+    
+                            // Filter out undefined values from categoryArray
+                            const validCategoryArray = categoryArray.filter(categoryID => categoryID !== undefined);
+    
+                            console.log('categoryArray:', categoryArray);
+                            if (validCategoryArray.length > 0) {
+                                const companyCategoryData = validCategoryArray.map((categoryID) => [companyId, categoryID]);
+                                db.query('INSERT INTO company_cactgory_relation (company_id, category_id) VALUES ?', [companyCategoryData], function (error, results) {
+                                    if (error) {
+                                        console.log(error);
+                                        res.status(400).json({
+                                            status: 'err',
+                                            message: 'Error while creating company category'
+                                        });
+                                    }
+                                    else {
+                                        return res.send(
+                                            {
+                                                status: 'ok',
+                                                data: companyId,
+                                                message: 'New company created'
+                                            }
+                                        )
+                                    }
+                                });
+                            } else {
+                                return res.send(
+                                    {
+                                        status: 'ok',
+                                        data: companyId,
+                                        message: 'New company created without any category.'
+                                    }
+                                )
+                            }
+                        }
+                    })
+    
+                }
+            });
+
+            //
+            // Insert the user into the "user_customer_meta" table
+            const userMetaInsertQuery = 'INSERT INTO user_customer_meta (user_id, review_count) VALUES (?, ?)';
+            db.query(userMetaInsertQuery, [userResults.insertId, 0], (err, metaResults) => {
+                if (err) {
+                    return res.send(
+                        {
+                            status: 'err',
+                            data: '',
+                            message: 'An error occurred while processing your request' + err
+                        }
+                    )
+                }
+                const userRegistrationData = {
+                    username: email,
+                    email: email,
+                    password: register_password,
+                    first_name: first_name,
+                    last_name: last_name,
+                };
+                axios.post(process.env.BLOG_API_ENDPOINT + '/register', userRegistrationData)
+                    .then((response) => {
+                        //console.log('User registration successful. User ID:', response.data.user_id);
+
+                        //-------User Auto Login --------------//
+                        const userAgent = req.headers['user-agent'];
+                        const agent = useragent.parse(userAgent);
+
+                        // Set a cookie
+                        const userData = {
+                            user_id: userResults.insertId,
+                            first_name: first_name,
+                            last_name: last_name,
+                            email: email,
+                            user_type_id: 2
+                        };
+                        const encodedUserData = JSON.stringify(userData);
+                        res.cookie('user', encodedUserData);
+
+                        (async () => {
+                            //---- Login to Wordpress Blog-----//
+                            //let wp_user_data;
+                            try {
+                                const userLoginData = {
+                                    email: email,
+                                    password: register_password,
+                                };
+                                const response = await axios.post(process.env.BLOG_API_ENDPOINT + '/login', userLoginData);
+                                const wp_user_data = response.data.data;
+
+                                //-- check last Login Info-----//
+                                const device_query = "SELECT * FROM user_device_info WHERE user_id = ?";
+                                db.query(device_query, [userResults.insertId], async (err, device_query_results) => {
+                                    const currentDate = new Date();
+                                    const year = currentDate.getFullYear();
+                                    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+                                    const day = String(currentDate.getDate()).padStart(2, '0');
+                                    const hours = String(currentDate.getHours()).padStart(2, '0');
+                                    const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+                                    const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+                                    const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+                                    if (device_query_results.length > 0) {
+                                        // User exist update info
+                                        const device_update_query = 'UPDATE user_device_info SET device_id = ?, IP_address = ?, last_logged_in = ? WHERE user_id = ?';
+                                        const values = [agent.toAgent() + ' ' + agent.os.toString(), requestIp.getClientIp(req), formattedDate, userResults.insertId];
+                                        db.query(device_update_query, values, (err, device_update_query_results) => {
+                                            return res.send(
+                                                            {
+                                                                status: 'ok',
+                                                                data: userData,
+                                                                wp_user: wp_user_data,
+                                                                currentUrlPath: req.body.currentUrlPath,
+                                                                message: 'Registration successful you are automatically login to your dashboard'
+                                                            })
+                                        })
+                                    } else {
+                                        // User doesnot exist Insert New Row.
+                                        const device_insert_query = 'INSERT INTO user_device_info (user_id, device_id, device_token, imei_no, model_name, make_name, IP_address, last_logged_in, created_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+                                        const values = [userResults.insertId, agent.toAgent() + ' ' + agent.os.toString(), '', '', '', '', requestIp.getClientIp(req), formattedDate, formattedDate];
+                                        return res.send(
+                                                            {
+                                                                status: 'ok',
+                                                                data: userData,
+                                                                wp_user: wp_user_data,
+                                                                currentUrlPath: req.body.currentUrlPath,
+                                                                message: 'Registration successful you are automatically login to your dashboard'
+                                                            }
+                                                        )
+                                    }
+                                })
+                            } catch (error) {
+                                console.error('User login failed. Error:', error);
+                                if (error.response && error.response.data) {
+                                    console.log('Error response data:', error.response.data);
+                                }
+                            }
+                        })();
+                    })
+                    .catch((error) => {
+                        //console.error('User registration failed:', );
+                        return res.send(
+                            {
+                                status: 'err',
+                                data: '',
+                                message: error.response.data
+                            }
+                        )
+                    });
+            })
+        })
+    }
+    catch (error) {
+        console.error('Error during user registration:', error);
+        return res.status(500).json({ status: 'err', message: 'An error occurred while processing your request.' });
+    }
+}
+
+
+exports.createexternalSubscription = async (req, res) => {
+    try {
+        const { name, email,phone, address, city, state, zip, planId, billingCycle, memberCount } = req.body;
+        console.log("Subscription request body:", req.body);
+
+
+        let customerId = await CreateCustomer(email, name,phone, address, city, state, zip);
+        console.log("customerId", customerId);
+
+        let country_name = req.cookies.countryName 
+        //|| 'India';
+        let country_code = req.cookies.countryCode 
+        //|| 'IN';
+        console.log("country_codesdf",country_code);
+        console.log("country_namesdf",country_name);
+
+
+        const plan = await getPlanFromDatabase(planId);
+        if (!plan) {
+            return res.status(404).send({ error: 'Plan not found' });
+        }
+
+        const priceId = await createRazorpayPlan(plan, billingCycle, memberCount, country_code);
+        if (!priceId) {
+            return res.status(500).send({ error: 'Failed to create price for the plan' });
+        }
+        console.log("Created Razorpay plan:", priceId);
+
+        var amountss=  priceId.item.amount;
+        console.log("amountss",amountss);
+
+        const subscriptionParams = {
+            plan_id: priceId.id,
+            customer_id: customerId,
+            total_count: 12,
+        };
+        const subscription = await razorpay.subscriptions.create(subscriptionParams);
+        console.log("Created subscription:", subscription);
+        const invoices = await razorpay.invoices.all({
+            'subscription_id': subscription.id
+        });
+        console.log('Invoices for subscription:', invoices);
+
+        res.status(200).send({
+            message: 'Subscription created successfully',
+            subscription: subscription,
+            amount
+            :amountss
+        });
+    } catch (error) {
+        console.error('Error creating subscription flow:', error);
+        res.status(500).send({ error: error.message });
+    } 
+};
+
+
+async function findOrCreateCustomer(email, name, name, address, city, state, zip) {
+    try {
+        console.log("email:", email);
+        const customers = await razorpay.customers.all();
+        console.log("customerslist:", customers);
+        console.log("address",address);
+        console.log("name",name);
+        console.log("city",city);
+        console.log("state",state);
+        console.log("zip",zip);
+
         if (customers.items.length > 0) {
-            // Use the existing customer ID
-            console.log('Existing customer found:', customers.items[0].id);
-            return customers.items[0].id;
+            const foundCustomer = customers.items.find(customer => customer.email === email);
+            if (foundCustomer) {
+                console.log('Found customer:', foundCustomer);
+
+                //const foundCustomerId = "cust_" + foundCustomer.id;
+                const foundCustomerId = foundCustomer.id;
+                console.log("Concatenated Customer ID:", foundCustomerId);
+
+                let updatedCustomer = await razorpay.customers.edit(foundCustomerId, {
+                    name: name,
+                    email: email,
+                    //contact: phone,
+                    // shipping_address: {
+                    //     line1: address,
+                    //     city: city,
+                    //     state: state,
+                    //     //zip: zip,
+                    //     country: 'IN'
+                    // }
+                });
+
+                console.log('Updated customer:', updatedCustomer);
+
+                return foundCustomerId;
+            } else {
+                console.log(`Customer with email ${email} not found.`);
+                const customer = await razorpay.customers.create({
+                    name: name,
+                    email: email,
+                    //contact: phone,
+                    // shipping_address: {
+                    //     line1: address,
+                    //     city: city,
+                    //     state: state,
+                    //     //zip: zip,
+                    //     country: 'IN'
+                    // }
+                });
+                console.log('Created new customer:', customer.id);
+                return customer.id;
+            }
         } else {
-            // Create a new customer
             const customer = await razorpay.customers.create({
                 name: name,
                 email: email,
+                contact: phone,
+                // shipping_address: {
+                //     line1: address,
+                //     city: city,
+                //     state: state,
+                //     //zip: zip,
+                //     country: 'IN'
+                // }
             });
             console.log('Created new customer:', customer.id);
             return customer.id;
@@ -12785,18 +13523,79 @@ async function findOrCreateCustomer(email, name) {
     }
 }
 
+async function CreateCustomer(email, name, name, address, city, state, zip) {
+    try {
+        console.log("email:", email);
+        const customers = await razorpay.customers.all();
+        console.log("customerslist:", customers);
+        console.log("address",address);
+        console.log("name",name);
+        console.log("city",city);
+        console.log("state",state);
+        console.log("zip",zip);
 
-const createRazorpayPlan = async (plan, billingCycle, memberCount) => {
+        if (customers.items.length > 0) {
+            const foundCustomer = customers.items.find(customer => customer.email == email);
+            if (foundCustomer) {
+                console.log('Found customer:', foundCustomer);
+
+                // //const foundCustomerId = "cust_" + foundCustomer.id;
+                // const foundCustomerId = foundCustomer.id;
+                // console.log("Concatenated Customer ID:", foundCustomerId);
+
+                // let updatedCustomer = await razorpay.customers.edit(foundCustomerId, {
+                //     name: name,
+                //     email: email,
+                //     //contact: phone,
+                //     // shipping_address: {
+                //     //     line1: address,
+                //     //     city: city,
+                //     //     state: state,
+                //     //     //zip: zip,
+                //     //     country: 'IN'
+                //     // }
+                // });
+
+                // console.log('Updated customer:', updatedCustomer);
+
+                // return foundCustomerId;
+            } else {
+                console.log(`Customer with email ${email} not found.`);
+                const customer = await razorpay.customers.create({
+                    name: name,
+                    email: email,
+                });
+                console.log('Created new customer:', customer.id);
+                return customer.id;
+            }
+        } else {
+            const customer = await razorpay.customers.create({
+                name: name,
+                email: email,
+                contact: phone,
+            });
+            console.log('Created new customer:', customer.id);
+            return customer.id;
+        }
+    } catch (error) {
+        console.error('Error finding or creating customer:', error);
+        throw error;
+    }
+}
+
+const createRazorpayPlan = async (plan, billingCycle, memberCount, country_code) => {
     try {
         memberCount = parseInt(memberCount);
-        console.log("memberCount",memberCount);
+        console.log("memberCount", memberCount);
         if (isNaN(memberCount) || memberCount < 0) {
             throw new Error('Invalid memberCount');
         }
 
-        console.log("plan",plan);
-        console.log("memberCount",memberCount);
-        console.log("billingCycle",billingCycle);
+        console.log("countrycodenumm",country_code);
+
+        console.log("plan", plan);
+        console.log("memberCount", memberCount);
+        console.log("billingCycle", billingCycle);
 
         const basePrice = billingCycle === 'yearly' ? plan.yearly_price : plan.monthly_price;
         if (isNaN(basePrice) || basePrice <= 0) {
@@ -12813,9 +13612,20 @@ const createRazorpayPlan = async (plan, billingCycle, memberCount) => {
         if (isNaN(totalPrice) || totalPrice <= 0) {
             throw new Error('Invalid total price');
         }
+        console.log("totalPrice",totalPrice);
 
         // const totalPriceInPaise = totalPrice * 100; 
-        const totalPriceInPaise = totalPrice * 100; 
+        //const totalPriceInPaise = totalPrice * 100;
+        let totalPriceInPaise;
+        if (country_code === "IN") {
+            totalPriceInPaise = totalPrice * 100;
+        } else if (country_code === "JP") {
+            totalPriceInPaise = totalPrice * 100 * 1.23; // Convert to paise then apply conversion rate
+        } else {
+            totalPriceInPaise = totalPrice * 100; // Default conversion to paise
+        }
+
+        console.log("totalPriceInPaise",totalPriceInPaise);
 
         // const interval = billingCycle === 'yearly' ? 13 : 1;
 
@@ -12846,7 +13656,7 @@ const createRazorpayPlan = async (plan, billingCycle, memberCount) => {
                 currency: 'INR'
             }
         });
-        console.log("razorpayPlan",razorpayPlan);
+        console.log("razorpayPlan", razorpayPlan);
         //return razorpayPlan.id;
         return razorpayPlan;
     } catch (error) {
@@ -12854,446 +13664,6 @@ const createRazorpayPlan = async (plan, billingCycle, memberCount) => {
         throw error;
     }
 };
-
-
-async function findRazorpayCustomerByEmail(email) {
-    try {
-        const customers = await razorpay.customers.fetchAll({ query: { email: email } });
-        if (customers.items.length > 0) {
-            return customers.items[0];
-        }
-        return null;
-    } catch (error) {
-        console.error('Error fetching Razorpay customer:', error);
-        throw error;
-    }
-}
-const initiateRazorpayPayment = async ({ subscriptionId }) => {
-    try {
-
-        const paymentParams = {
-            subscription_id: subscriptionId, 
-            receipt: `payment_${subscriptionId}_${Date.now()}` 
-        };
-
-        // Create the payment in Razorpay
-        const payment = await razorpay.payments.create(paymentParams);
-        console.log("Payment initiated:", payment);
-
-        return payment; // Return the payment object
-    } catch (error) {
-        console.error('Error initiating payment:', error);
-        throw error;
-    }
-};
-
-
-
-// const handleRazorpaySubscription = async (subscriptionData) => {
-//     try {
-
-//       const subscriptionOptions = {
-//         plan_id: subscriptionData.planId,
-//         total_count: subscriptionData.totalCount, 
-//         customer_notify: 1,
-//         notes: {
-//           member_count: subscriptionData.memberCount, 
-//         },
-//       };
-
-//       console.log("subscriptionOptions",subscriptionOptions);
-
-//       const subscription = await razorpayInstance.subscriptions.create(subscriptionOptions);
-
-//       console.log('Created Razorpay subscription:', subscription);
-
-//       return subscription; 
-//     } catch (error) {
-//       console.error('Error creating Razorpay subscription:', error);
-//       throw error;
-//     }
-//   };
-
-
-  // exports.createSubscription = async (req, res) => {
-//   try {
-//     const { name, email, address, city, state, zip, cardNum, expMonth, expYear, cvv, planId, billingCycle, memberCount, paymentGateway } = req.body;
-
-//     const userQuery = 'SELECT user_id, email FROM users WHERE email = ?';
-//     const userResult = await queryAsync(userQuery, [email]);
-
-//     if (userResult.length === 0) {
-//       return res.status(404).send({ error: 'User not found' });
-//     }
-//     const userId = userResult[0].user_id;
-
-//     const plan = await getPlanFromDatabase(planId);
-//     if (!plan) {
-//       return res.status(404).send({ error: 'Plan not found' });
-//     }
-
-//     // if (paymentGateway === 'stripe') {
-//     //   await handleStripeSubscription(req, res, { name, email, address, city, state, zip, cardNum, expMonth, expYear, cvv, plan, billingCycle, memberCount, userId });
-//     // } 
-
-//     // else if (paymentGateway === 'razorpay') {
-//       await handleRazorpaySubscription(req, res, { name, email, address, city, state, zip, plan, billingCycle, memberCount, userId });
-//     // } else {
-//     //   return res.status(400).send({ error: 'Invalid payment gateway' });
-//     // }
-//   } catch (error) {
-//     console.error('Error creating subscription:', error);
-//     return res.status(500).send({ error: error.message });
-//   }
-// };
-
-// // Example usage:
-// const plan = {
-//     name: 'Pro Plan',
-//     description: 'Pro subscription plan',
-//     monthly_price: 1000, // in INR
-//     yearly_price: 10000, // in INR
-//     per_user_price: 200 // in INR
-// };
-
-// createRazorpayPlan(plan, 'yearly', 5)
-//     .then(planId => {
-//         console.log('Razorpay Plan ID:', planId);
-//     })
-//     .catch(error => {
-//         console.error('Error:', error);
-//     });
-
-
-
-// const handleStripeSubscription = async (req, res, { name, email, address, city, state, zip, cardNum, expMonth, expYear, cvv, plan, billingCycle, memberCount, userId }) => {
-//   try {
-//     const priceId = await createStripeProductAndPrice(plan, billingCycle, memberCount);
-//     if (!priceId) {
-//       return res.status(500).send({ error: 'Failed to create price for the plan' });
-//     }
-
-//     const customer = await stripe.customers.create({
-//       email: email,
-//       name: name,
-//       address: {
-//         line1: address,
-//         city: city,
-//         state: state,
-//         postal_code: zip,
-//       }
-//     });
-
-//     const paymentMethod = await stripe.paymentMethods.create({
-//       type: 'card',
-//       card: {
-//         number: cardNum,
-//         exp_month: expMonth,
-//         exp_year: expYear,
-//         cvc: cvv
-//       },
-//       billing_details: {
-//         name: name,
-//         address: {
-//           line1: address,
-//           city: city,
-//           state: state,
-//           postal_code: zip,
-//         }
-//       }
-//     });
-
-//     await stripe.paymentMethods.attach(paymentMethod.id, { customer: customer.id });
-
-//     await stripe.customers.update(customer.id, {
-//       invoice_settings: {
-//         default_payment_method: paymentMethod.id,
-//       }
-//     });
-
-//     let subscriptionParams = {
-//       customer: customer.id,
-//       items: [{ price: priceId }],
-//       expand: ['latest_invoice.payment_intent'],
-//     };
-
-//     const subscription = await stripe.subscriptions.create(subscriptionParams);
-
-//     const invoice = await stripe.invoices.retrieve(subscription.latest_invoice.id);
-//     const paymentIntent = invoice.payment_intent;
-//     if (!paymentIntent) {
-//       return res.status(500).send({ error: 'Payment intent not found in invoice' });
-//     }
-
-//     const paymentIntentStatus = await stripe.paymentIntents.retrieve(paymentIntent);
-
-//     if (!paymentIntentStatus || !paymentIntentStatus.status) {
-//       return res.status(500).send({ error: 'Failed to retrieve payment intent status' });
-//     }
-
-//     let paymentStatus = paymentIntentStatus.status;
-//     if (paymentStatus === 'succeeded') {
-//       await handleSubscriptionSuccess(req, res, { subscription, paymentIntentStatus, userId, planId, memberCount, invoice });
-//     } else if (paymentStatus === 'requires_action') {
-//       return res.status(400).send({
-//         status: 'requires_action',
-//         client_secret: paymentIntent.client_secret,
-//         message: 'Payment requires additional actions.'
-//       });
-//     } else {
-//       return res.status(400).send({
-//         status: 'failed',
-//         message: 'Payment failed or requires a new payment method.'
-//       });
-//     }
-//   } catch (error) {
-//     console.error('Error creating Stripe subscription:', error);
-//     return res.status(500).send({ error: error.message });
-//   }
-// };
-
-
-
-const handleSubscriptionSuccess = async (req, res, { subscription, paymentIntentStatus, userId, planId, memberCount, invoice }) => {
-    const updatedSubscription = await stripe.subscriptions.retrieve(subscription.id);
-    const invoiceUrl = invoice.invoice_pdf;
-    const planInterval = updatedSubscription.plan.interval_count === 13 ? 'year' : 'month';
-
-    const order_history_data = {
-        user_id: userId,
-        stripe_subscription_id: subscription.id,
-        plan_id: planId,
-        payment_status: paymentIntentStatus.status,
-        subscription_details: JSON.stringify(subscription),
-        payment_details: JSON.stringify(paymentIntentStatus),
-        subscription_duration: planInterval,
-        subscription_start_date: new Date(subscription.current_period_start * 1000),
-        subscription_end_date: new Date(subscription.current_period_end * 1000),
-        added_user_number: memberCount
-    };
-
-    const order_history_query = 'INSERT INTO order_history SET ?';
-    await queryAsync(order_history_query, [order_history_data]);
-
-    const getcompany_query = `SELECT * FROM company LEFT JOIN company_claim_request ON company.ID = company_claim_request.company_id WHERE company_claim_request.claimed_by= "${userId}"`;
-    const getcompany_value = await queryAsync(getcompany_query);
-    const companyID = getcompany_value[0].ID;
-
-    const updatecompany_query = `UPDATE company SET membership_type_id = ? WHERE ID = "${companyID}"`;
-    await queryAsync(updatecompany_query, [planId]);
-
-    const mailOptions = {
-        from: process.env.MAIL_USER,
-        to: 'dev2.scwt@gmail.com',
-        subject: 'Your Subscription Invoice',
-        html: `<p>Hello ${name},</p>
-           <p>Thank you for your subscription. You can view your invoice at the <a href="${invoiceUrl}">following link</a>.</p>
-           <p>Kind Regards,</p>
-           <p>CEchoes Technology Team</p>`
-    };
-
-    await mdlconfig.transporter.sendMail(mailOptions);
-
-    return res.send({
-        status: 'ok',
-        message: 'Your payment has been successfully processed.',
-        subscriptionId: updatedSubscription.id,
-        invoiceUrl: invoiceUrl
-    });
-};
-
-
-
-// const createSubscriptionParams = (customer, priceId, billingCycle, billingAnchorTimestamp) => ({
-//     customer: customer.id,
-//     items: [{ price: priceId }],
-//     billing_cycle_anchor: billingAnchorTimestamp,
-//     expand: ['latest_invoice.payment_intent'],
-// });
-
-
-// const calculateBillingAnchor = (currentDate, billingCycle) => {
-//     const billingAnchorDate = new Date(currentDate);
-//     if (billingCycle === 'yearly') {
-//         const nextBillingDate = new Date(currentDate);
-//         nextBillingDate.setMonth(nextBillingDate.getMonth() + 13); // Move to 13 months ahead
-//         return Math.floor(nextBillingDate.getTime() / 1000);
-//     } else if (billingCycle === 'monthly') {
-//         billingAnchorDate.setMonth(billingAnchorDate.getMonth() + 1);
-//     }
-//     return Math.floor(billingAnchorDate.getTime() / 1000);
-// };
-
-
-
-// exports.createSubscription = async (req, res) => {
-//     try {
-//         const { name, email, address, city, state, zip, cardNum, expMonth, expYear, cvv, planId, billingCycle, memberCount } = req.body;
-
-//         // Check if the user exists
-//         const userQuery = 'SELECT user_id, email FROM users WHERE email = ?';
-//         const userResult = await queryAsync(userQuery, [email]);
-
-//         if (userResult.length === 0) {
-//             return res.status(404).send({ error: 'User not found' });
-//         }
-//         const userId = userResult[0].user_id;
-
-//         // Get the plan details from the database
-//         const plan = await getPlanFromDatabase(planId);
-//         if (!plan) {
-//             return res.status(404).send({ error: 'Plan not found' });
-//         }
-
-//         // Create a Stripe Product and Price
-//         const priceId = await createStripeProductAndPrice(plan, billingCycle, memberCount);
-//         if (!priceId) {
-//             return res.status(500).send({ error: 'Failed to create price for the plan' });
-//         }
-
-//         // Create a new customer in Stripe
-//         const customer = await stripe.customers.create({
-//             email: email,
-//             name: name,
-//             address: {
-//                 line1: address,
-//                 city: city,
-//                 state: state,
-//                 postal_code: zip,
-//             }
-//         });
-
-//         // Create a payment method
-//         const paymentMethod = await stripe.paymentMethods.create({
-//             type: 'card',
-//             card: {
-//                 number: cardNum,
-//                 exp_month: expMonth,
-//                 exp_year: expYear,
-//                 cvc: cvv
-//             },
-//             billing_details: {
-//                 name: name,
-//                 address: {
-//                     line1: address,
-//                     city: city,
-//                     state: state,
-//                     postal_code: zip,
-//                 }
-//             }
-//         });
-
-//         // Attach payment method to customer
-//         await stripe.paymentMethods.attach(paymentMethod.id, { customer: customer.id });
-
-//         // Update customer's default payment method
-//         await stripe.customers.update(customer.id, {
-//             invoice_settings: {
-//                 default_payment_method: paymentMethod.id,
-//             }
-//         });
-
-//         // Calculate billing cycle anchor
-//         const billingAnchorTimestamp = calculateBillingAnchor(new Date(), billingCycle);
-
-//         // Create subscription parameters including billing cycle anchor
-//         const subscriptionParams = {
-//             customer: customer.id,
-//             items: [{ price: priceId }],
-//             billing_cycle_anchor: billingAnchorTimestamp,
-//         };
-
-//         // Apply trial period for yearly subscription
-//         if (billingCycle === 'yearly') {
-//             subscriptionParams.trial_period_days = 30; // 1-month free trial
-//         }
-
-//         // Create the subscription in Stripe
-//         const subscription = await stripe.subscriptions.create(subscriptionParams);
-
-//         console.log("subscriptiondf",subscription);
-
-//         // Retrieve the latest invoice associated with the subscription
-//         const invoice = await stripe.invoices.retrieve(subscription.latest_invoice);
-//         console.log("Retrieved invoice:", invoice);
-
-//         // Retrieve the payment intent
-//         const paymentIntent = await retrievePaymentIntentWithRetry(invoice.id);
-//         console.log('Retrieved payment intent:', paymentIntent);
-
-//         if (!invoice || !invoice.payment_intent) {
-//             return res.status(500).send({ error: 'Payment intent not found in invoice' });
-//         }
-
-//         const paymentIntentStatus = await stripe.paymentIntents.retrieve(invoice.payment_intent);
-
-//         if (!paymentIntentStatus || !paymentIntentStatus.status) {
-//             return res.status(500).send({ error: 'Failed to retrieve payment intent status' });
-//         }
-
-//         const paymentStatus = paymentIntentStatus.status;
-//         if (paymentStatus === 'succeeded') {
-//             const updatedSubscription = await stripe.subscriptions.retrieve(subscription.id);
-//             const invoiceUrl = invoice.invoice_pdf;
-
-//             const planInterval = updatedSubscription.plan.interval;
-
-//             const order_history_data = {
-//                 user_id: userId,
-//                 stripe_subscription_id: subscription.id,
-//                 plan_id: planId,
-//                 payment_status: paymentIntentStatus.status,
-//                 subscription_details: JSON.stringify(subscription),
-//                 payment_details: JSON.stringify(paymentIntentStatus),
-//                 subscription_duration: planInterval,
-//                 subscription_start_date: new Date(subscription.current_period_start * 1000),
-//                 subscription_end_date: new Date(subscription.current_period_end * 1000),
-//                 added_user_number: memberCount
-//             };
-
-//             const order_history_query = `INSERT INTO order_history SET ?`;
-//             await queryAsync(order_history_query, [order_history_data]);
-
-//             const mailOptions = {
-//                 from: process.env.MAIL_USER,
-//                 to: email,
-//                 subject: 'Your Subscription Invoice',
-//                 html: `<p>Hello ${name},</p>
-//                        <p>Thank you for your subscription. You can view your invoice at the <a href="${invoiceUrl}">following link</a>.</p>
-//                        <p>Kind Regards,</p>
-//                        <p>Your Company Name Team</p>`
-//             };
-
-//             // Assuming mdlconfig.transporter.sendMail is correctly set up elsewhere
-//             await mdlconfig.transporter.sendMail(mailOptions);
-
-//             return res.send({
-//                 status: 'ok',
-//                 message: 'Your payment has been successfully processed.',
-//                 subscriptionId: updatedSubscription.id,
-//                 invoiceUrl: invoiceUrl
-//             });
-//         } else if (paymentStatus === 'requires_action') {
-//             // Handle additional actions required for payment
-//             return res.status(400).send({
-//                 status: 'requires_action',
-//                 client_secret: paymentIntentStatus.client_secret,
-//                 message: 'Payment requires additional actions.'
-//             });
-//         } else {
-//             // Handle payment failure scenarios
-//             return res.status(400).send({
-//                 status: 'failed',
-//                 message: 'Payment failed or requires a new payment method.'
-//             });
-//         }
-
-//     } catch (error) {
-//         console.error('Error creating subscription:', error);
-//         return res.status(500).send({ error: error.message });
-//     }
-// };
-
 
 
 async function retrievePaymentIntentWithRetry(invoiceId, maxAttempts = 3) {
@@ -13314,10 +13684,6 @@ async function retrievePaymentIntentWithRetry(invoiceId, maxAttempts = 3) {
     }
     throw new Error('Failed to retrieve payment intent');
 }
-
-
-
-
 
 
 const fetchActiveSubscriptionsFromStripe = async () => {
@@ -13517,36 +13883,6 @@ exports.createSubscriptionCheckoutSession = async (req, res) => {
         res.status(500).send({ error: error.message });
     }
 };
-
-
-
-// exports.createSession = async (req, res) => {
-
-// try{
-//     const session = await stripe.checkout.sessions.create({
-//         success_url: `${CLIENT_URL}`,
-//         cancel_url: `${CLIENT_URL}`,
-//         line_items: [
-//           {
-//             price: 'STRIPE_PRICE_ID',
-//             quantity: 2,
-//           },
-//         ],
-//         mode: 'subscription',
-//       });
-//     // const{plan,customerId}= req.body;
-//     // let planId = null;
-//     console.log("session: ",session.id, session.url, session);
-
-//     const sessionId= session.id;
-//     console.log("sessionId",sessionId);
-
-//     res.json({url: session.url})
-
-// } catch(error){
-//     res.status(500).send({ error: error.message });
-// };
-// }
 
 exports.createSession = async (req, res) => {
     // anoth 

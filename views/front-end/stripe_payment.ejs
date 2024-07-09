@@ -157,7 +157,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-    <script type="text/javascript">
+    <!-- <script type="text/javascript">
         let planid = '<%= planID%>';
         console.log("planid", planid);
         let user_email = '<%= currentUserData.email%>';
@@ -185,6 +185,7 @@
 
                 const response = await axios.post('/auth/create-subscription', formData);
                 const { subscription } = response.data;
+				console.log("subscription",subscription);
 
                 const options = {
                     key: key,
@@ -231,7 +232,93 @@
                 });
             }
         });
-    </script>
+    </script> -->
+
+
+
+	<script type="text/javascript">
+		let planid = '<%= planID %>';
+		let user_email = '<%= currentUserData.email %>';
+		let user_id = '<%= currentUserData.user_id %>';
+		let memberval = '<%= memberCount %>';
+		let key = 'rzp_test_FUBQq7lujicpGo';
+	
+		document.getElementById('paymentForm').addEventListener('submit', async function(event) {
+			event.preventDefault();
+	
+			try {
+				const formData = {
+					userId: user_id,
+					name: document.getElementById('name').value,
+					email: user_email,
+					address: document.getElementById('address').value,
+					city: document.getElementById('city').value,
+					state: document.getElementById('state').value,
+					zip: document.getElementById('zip').value,
+					planId: planid,
+					billingCycle: 'daily',
+					memberCount: memberval
+				};
+	
+				const response = await axios.post('/auth/create-subscription', formData);
+				const { subscription, amount } = response.data;
+	
+				console.log("Amount from backend (in paise):", amount);
+	
+				// Convert amount to rupees for display
+				const amountInRupees = (amount / 100).toFixed(2);
+	
+				const options = {
+					key: key,
+					subscription_id: subscription.id,
+					name: 'Subscription Payment',
+					description: `Subscription Payment: ₹${amountInRupees}`, // Display amount in rupees
+					amount: amount, // Pass the amount in paise for Razorpay
+					handler: function (response) {
+						Swal.fire({
+							icon: 'success',
+							title: 'Payment Successful!',
+							text: 'Your payment was successful.',
+							confirmButtonText: 'OK'
+						}).then(() => {
+							window.location.href = '/business';
+						});
+					},
+					prefill: {
+						name: formData.name,
+						email: formData.email,
+					},
+					theme: {
+						color: '#F37254'
+					}
+				};
+	
+				const rzp = new Razorpay(options);
+				rzp.open();
+	
+				rzp.on('payment.failed', function (response) {
+					Swal.fire({
+						icon: 'error',
+						title: 'Payment Error',
+						text: response.error.description || 'Unknown error occurred.',
+						confirmButtonText: 'OK'
+					});
+				});
+			} catch (error) {
+				console.error('Error initiating payment:', error);
+				Swal.fire({
+					icon: 'error',
+					title: 'Payment Initiation Failed',
+					text: 'Failed to initiate payment. Please try again later.',
+					confirmButtonText: 'OK'
+				});
+			}
+		});
+	</script>
+	
+	
+	
+
 
 
 

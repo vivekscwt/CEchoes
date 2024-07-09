@@ -495,6 +495,11 @@ router.post('create-product',authController.createproduct);
 router.post('/adding-users',authController.addingUsers);
 
 router.post('/create-subscription',authController.createSubscription);
+
+router.post('/externalRegistration',authController.externalRegistration);
+
+router.post('/createexternalSubscription',authController.createexternalSubscription)
+
 //create-subscription-checkout-session
 router.post('/create-subscription-checkout-session',authController.createSubscriptionCheckoutSession);
 
