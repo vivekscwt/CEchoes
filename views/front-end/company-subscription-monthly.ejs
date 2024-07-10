@@ -62,7 +62,7 @@
                 </div>
                 <div>
                     <label for="companyEmail" class="formbold-form-label">Company Email</label>
-                    <input type="email" name="companyEmail" id="companyEmail" placeholder="Enter your company email" class="formbold-form-input" required />
+                    <input type="email" name="comp_email" id="comp_email" placeholder="Enter your company email" class="formbold-form-input" required />
                 </div>
                 <div>
                     <label for="comp_phone" class="formbold-form-label">Company Phone</label>
@@ -150,8 +150,12 @@
                         last_name: document.getElementById('last_name').value,
                         email: document.getElementById('email').value,
                         address: document.getElementById('main_address').value,
-                        city: 'Default City', // Change as per your form fields
-                        state: 'Default State', // Change as per your form fields
+                        main_address_country: document.getElementById('main_address_country').value,
+                        company_name: document.getElementById('company_name').value,
+                        parent_id:  document.getElementById('parent_id').value,
+                        comp_email: document.getElementById('comp_email').value,
+                        city: 'Default City', 
+                        state: 'Default State', 
                         zip: document.getElementById('main_address_pin_code').value,
                         planId: '<%= planID %>',
                         billingCycle: 'daily',

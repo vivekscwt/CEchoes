@@ -920,6 +920,16 @@ router.get('/business', checkCookieValue, async (req, res) => {
             var encryptedEmail = await comFunction2.encryptEmail(currentUserData.email);
             console.log("encryptedEmail",encryptedEmail);
         }
+
+        const getbusinessquery = `SELECT * FROM users WHERE user_id= "${user_id}"`;
+        const getbusinessvalue = await queryAsync(getbusinessquery);
+        console.log("getbusinessvalue",getbusinessvalue);
+        if(getbusinessvalue.length>0){
+            console.log("getbusinessvalue",getbusinessvalue);
+            var user_status = getbusinessvalue[0].user_status;
+            console.log("user_status",user_status);
+        }
+        
         const api_key = process.env.GEO_LOCATION_API_KEY;
         let country_name = req.cookies.countryName || 'India';
         let country_code = req.cookies.countryCode || 'IN';
@@ -3464,6 +3474,8 @@ router.get('/company-dashboard/:slug', checkClientClaimedCompany, async (req, re
     //let currentUserData = JSON.parse(req.userData);
     const slug = req.params.slug;
     console.log("slugs",slug);
+    console.log("currentUserData",currentUserData);
+
     const comp_res = await comFunction2.getCompanyIdBySlug(slug);
     const userId = currentUserData.user_id;
     const companyId = comp_res.ID;
@@ -8399,6 +8411,8 @@ router.get('/user_payment_history', checkCookieValue, async (req, res) => {
     try {
         let currentUserData = JSON.parse(req.userData);
         var userId = currentUserData.user_id;
+
+        console.log("currentUserData",currentUserData);
 
         // Fetch all the required data asynchronously
         const [getAllPayments, getUser, getUserMeta, globalPageMeta, AllCompaniesReviews] = await Promise.all([
