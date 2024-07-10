@@ -62,7 +62,7 @@
             </div>
             <div class="env-contact-info">
               <div class="row justify-content-center">
-                <div class="col-sm-4 my-auto">
+                <div class="col-md-4 col-sm-6 my-auto">
                   <div class="env-contact-info-in">
                     <span><i class="fa-brands fa-whatsapp"></i></span>
                     <a href="tel:<%= contacts.whatsapp_no %>">
@@ -70,7 +70,7 @@
                     </a>
                   </div>
                 </div>
-                <div class="col-sm-4 my-auto">
+                <div class="col-md-4 col-sm-6 my-auto">
                   <div class="env-contact-info-in">
                     <span><i class="fa-solid fa-mobile-screen-button"></i></span>
                     <a href="tel:<%= contacts.phone_no %>">
@@ -78,11 +78,31 @@
                     </a>
                   </div>
                 </div>
-                <div class="col-sm-4 my-auto">
+                <div class="col-md-4 col-sm-6 my-auto">
                   <div class="env-contact-info-in">
                     <span><i class="fa-solid fa-envelope"></i></span>
                     <a href="mailto:<%= contacts.email %>">
                       <%= contacts.email %>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="env-contact-info">
+              <div class="row justify-content-center">
+                <div class="col-md-6 my-auto">
+                  <div class="env-contact-info-in">
+                    <span><i class="fa-solid fa-location-dot"></i></span>
+                    <a href="tel:<%= address.address1%>" style="max-width: 250px; text-align: left;">
+                      <%= address.address1 %>
+                    </a>
+                  </div>
+                </div>
+                <div class="col-md-6 my-auto">
+                  <div class="env-contact-info-in">
+                    <span><i class="fa-solid fa-location-dot"></i></span>
+                    <a href="tel:<%= address.address2 %>" style="max-width: 250px; text-align: left;">
+                      <%= address.address2%>
                     </a>
                   </div>
                 </div>
@@ -111,6 +131,29 @@
           loading="lazy"></div>
     </section>
     <!-- ============== Section2 End =============== -->
+     <style>
+      @media (max-width: 991.98px) {
+      .env-contact-info a {
+          font-size: 13px;
+      }
+      }
+    @media (max-width: 767.98px) {
+      .env-contact-info-in {
+          margin: 10px 0;
+      }
+    }
+      @media (max-width: 575.98px) {
+        .env-contact-info-in {
+            display: flex;
+            gap: 10px;
+        }
+        .env-contact-info-in {
+          margin: 0 0;
+      }
+        
+      }
+      
+     </style>
     <%- include('common/footer') -%>
       <script>
         $(document).ready(function () {
@@ -157,3 +200,8 @@
           });
         });
       </script>
+<script>
+  function nl2br(str) {
+    return str.replace(/\r\n|\r|\n/g, '<br>');
+  }
+</script>

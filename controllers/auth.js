@@ -3884,24 +3884,76 @@ exports.editCustomerReviewReply = async (req, res) => {
     }
 }
 // Update Contacts
+// exports.updateContacts = async (req, res) => {
+//     //const formdata = JSON.parse(req.body.formData);
+//     console.log('Request Form DATA:', req.body.whatsapp_no);
+//     const { contacts_id, social_id, whatsapp_no, phone_no, email, title, meta_title, meta_desc, meta_keyword, fb_link, twitter_link, linkedin_link, instagram_link, youtube_link } = req.body
+//     const contact_sql = `UPDATE contacts SET whatsapp_no=?,phone_no=?,email=?,title=?,meta_title=?,meta_desc=?,meta_keyword=? WHERE id = ?`;
+//     const contact_data = [whatsapp_no, phone_no, email, title, meta_title, meta_desc, meta_keyword, contacts_id];
+//     db.query(contact_sql, contact_data, (err, result) => {
+//         const socials_sql = `UPDATE socials SET facabook=?,linkedin=?,instagram=?,youtube=?,twitter=? WHERE id=?`;
+//         const socials_data = [fb_link, linkedin_link, instagram_link, youtube_link, twitter_link, social_id];
+//         db.query(socials_sql, socials_data, (socials_err, socials_result) => {
+//             // Return success response
+//             return res.send({
+//                 status: 'ok',
+//                 message: 'Contact details and social links updated successfully'
+//             });
+//         })
+//     })
+// }
+
 exports.updateContacts = async (req, res) => {
-    //const formdata = JSON.parse(req.body.formData);
-    console.log('Request Form DATA:', req.body.whatsapp_no);
-    const { contacts_id, social_id, whatsapp_no, phone_no, email, title, meta_title, meta_desc, meta_keyword, fb_link, twitter_link, linkedin_link, instagram_link, youtube_link } = req.body
-    const contact_sql = `UPDATE contacts SET whatsapp_no=?,phone_no=?,email=?,title=?,meta_title=?,meta_desc=?,meta_keyword=? WHERE id = ?`;
+    // Extract data from request body
+    //console.log('Request Form DATA:', req.body.whatsapp_no);
+    console.log('Request Form DATA:', req.body);
+    const { contacts_id, social_id, whatsapp_no, phone_no, email, title, meta_title, meta_desc, meta_keyword, fb_link, twitter_link, linkedin_link, instagram_link, youtube_link, address_id, address1, address2} = req.body;
+
+    // Update contacts query
+    const contact_sql = `UPDATE contacts SET whatsapp_no=?, phone_no=?, email=?, title=?, meta_title=?, meta_desc=?, meta_keyword=? WHERE id=?`;
     const contact_data = [whatsapp_no, phone_no, email, title, meta_title, meta_desc, meta_keyword, contacts_id];
-    db.query(contact_sql, contact_data, (err, result) => {
-        const socials_sql = `UPDATE socials SET facabook=?,linkedin=?,instagram=?,youtube=?,twitter=? WHERE id=?`;
-        const socials_data = [fb_link, linkedin_link, instagram_link, youtube_link, twitter_link, social_id];
-        db.query(socials_sql, socials_data, (socials_err, socials_result) => {
-            // Return success response
+
+    // Update socials query
+    const socials_sql = `UPDATE socials SET facabook=?, linkedin=?, instagram=?, youtube=?, twitter=? WHERE id=?`;
+    const socials_data = [fb_link, linkedin_link, instagram_link, youtube_link, twitter_link, social_id];
+
+    // Update contact_address query
+    const address_sql = `UPDATE contact_address SET address1=?, address2=? WHERE id=?`;
+    const address_data = [address1, address2, address_id];
+
+    // Execute all queries
+    db.query(contact_sql, contact_data, (contact_err, contact_result) => {
+        if (contact_err) {
             return res.send({
-                status: 'ok',
-                message: 'Contact details and social links updated successfully'
+                status: 'err',
+                message: 'Error updating contact details: ' + contact_err
             });
-        })
-    })
-}
+        }
+        db.query(socials_sql, socials_data, (socials_err, socials_result) => {
+            if (socials_err) {
+                return res.send({
+                    status: 'err',
+                    message: 'Error updating social links: ' + socials_err
+                });
+            }
+            db.query(address_sql, address_data, (address_err, address_result) => {
+                if (address_err) {
+                    return res.send({
+                        status: 'err',
+                        message: 'Error updating address: ' + address_err
+                    });
+                }
+                // Return success response
+                return res.send({
+                    status: 'ok',
+                    message: 'Contact details, social links, and address updated successfully'
+                });
+            });
+        });
+    });
+};
+
+
 
 // Contacts Feedback
 exports.contactFeedback = (req, res) => {

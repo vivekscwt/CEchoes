@@ -46,6 +46,7 @@
                             <div class="card-body border-top p-9">
                                 <input type="hidden" name="contacts_id" id="contacts_id" value="<%= contacts.id %>" />
                                 <input type="hidden" name="social_id" id="social_id" value="<%= socials.id %>" />
+                                <input type="hidden" name="address_id" id="address_id" value="<%= address.id %>" />
 
                                 <div class="card-header border-0 cursor-pointer" role="button"
                                     data-bs-target="#kt_account_profile_details" aria-expanded="true"
@@ -174,6 +175,32 @@
                                     <!--end::Col-->
                                 </div>
                                 <!--end::Input group-->
+
+                                <div class="card-header border-0 cursor-pointer" role="button"
+                                data-bs-target="#kt_account_profile_details" aria-expanded="true"
+                                aria-controls="kt_account_profile_details">
+                                <div class="card-title m-0">
+                                    <h3 class="fw-bolder m-0">Address Section</h3>
+                                </div>
+                                </div>
+
+                                <div class="row mb-6">
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span>Address 1</span>
+                                    </label>
+                                    <div class="col-lg-8 fv-row">
+                                        <textarea name="address1" id="address1" class="form-control form-control-lg form-control-solid tinymce-editor" placeholder="Address 1"><%= address.address1 %></textarea>
+                                    </div>
+                                </div>
+                                <div class="row mb-6">
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span>Address 2</span>
+                                    </label>
+                                    <div class="col-lg-8 fv-row">
+                                        <textarea name="address2" id="address2" class="form-control form-control-lg form-control-solid tinymce-editor" placeholder="Address 2"><%= address.address2 %></textarea>
+                                    </div>
+                                </div>
+
                                 <div class="card-header border-0 cursor-pointer" role="button"
                                     data-bs-target="#kt_account_profile_details" aria-expanded="true"
                                     aria-controls="kt_account_profile_details">
@@ -260,6 +287,9 @@
     </div>
     <!--end::Content-->
     <%- include('../common/footer') -%>
+
+    <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+
         <script>
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
@@ -307,6 +337,7 @@
                                     $(formData).each(function (index, field) {
                                         jsonData[field.name] = field.value;
                                     });
+                                    console.log("jsonData",jsonData);
 
                                     $.ajax({
                                         url: '/auth/update-contact', // URL for your API endpoint
@@ -382,3 +413,4 @@
                 ;
 //# sourceMappingURL=profile-details.js.map    
         </script>
+

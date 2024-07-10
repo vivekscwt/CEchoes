@@ -361,12 +361,21 @@ router.get('/contact-us', checkCookieValue, async (req, res) => {
             const contacts = results[0];
             const page_title = results[0].title;
             const socials = social_results[0];
+
+            const contact_address_sql= `SELECT * FROM contact_address`;
+            db.query(contact_address_sql, (errors, address_results, fieldss) => {
+                const address = address_results[0];
+                console.log("address",address);
+                console.log("socials",socials);
+
+
             res.render('front-end/contact', {
-                menu_active_id: 'contact', page_title: page_title, currentUserData, contacts, socials,
+                menu_active_id: 'contact', page_title: page_title, currentUserData, contacts, socials, address,
                 globalPageMeta: globalPageMeta
             });
 
         })
+    })
     })
 
 });
@@ -5982,13 +5991,23 @@ router.get('/edit-contacts', checkLoggedIn, (req, res) => {
                 const contacts = results[0];
                 const socials = social_results[0];
                 //Render the 'update-contact' EJS view and pass the data
+
+                const contact_address_sql= `SELECT * FROM contact_address`;
+                db.query(contact_address_sql, (errors, address_results, fieldss) => {
+                    const address = address_results[0];
+                    console.log("address",address);
+                    console.log("socials",socials);
+
+
                 res.render('pages/update-contact', {
                     menu_active_id: 'pages',
                     page_title: 'Update Contacts',
                     currentUserData,
                     contacts,
-                    socials
+                    socials,
+                    address
                 });
+            })
             })
         })
 
