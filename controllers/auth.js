@@ -13379,9 +13379,7 @@ const getInvoicesForSubscription = async (subscriptionId) => {
 exports.externalRegistration = async  (req, res) => {
     //const { name, email, address, city, state, zip, planId, billingCycle, memberCount } = req.body;
         const { first_name, last_name, email, register_password, register_confirm_password,phone,address, city, state, zip, planId, billingCycle, memberCount } = req.body;
-
         console.log("externalRegistration",req.body);
-
     try {
         const emailExists = await new Promise((resolve, reject) => {
             db.query('SELECT email, register_from FROM users WHERE email = ?', [email], (err, results) => {

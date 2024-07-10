@@ -3463,6 +3463,7 @@ router.get('/company-dashboard/:slug', checkClientClaimedCompany, async (req, re
     const currentUserData = JSON.parse(encodedUserData);
     //let currentUserData = JSON.parse(req.userData);
     const slug = req.params.slug;
+    console.log("slugs",slug);
     const comp_res = await comFunction2.getCompanyIdBySlug(slug);
     const userId = currentUserData.user_id;
     const companyId = comp_res.ID;
