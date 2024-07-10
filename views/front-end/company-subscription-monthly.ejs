@@ -21,12 +21,12 @@
             <div class="formbold-form-step-1 form-step active">
                 <div class="formbold-input-flex">
                     <div>
-                        <label for="firstname" class="formbold-form-label">First name</label>
-                        <input type="text" name="firstname" placeholder="Andrio" id="firstname" class="formbold-form-input" required />
+                        <label for="first_name" class="formbold-form-label">First name</label>
+                        <input type="text" name="first_name" placeholder="Andrio" id="first_name" class="formbold-form-input" required />
                     </div>
                     <div>
-                        <label for="lastname" class="formbold-form-label">Last name</label>
-                        <input type="text" name="lastname" placeholder="Dolee" id="lastname" class="formbold-form-input" required />
+                        <label for="last_name" class="formbold-form-label">Last name</label>
+                        <input type="text" name="last_name" placeholder="Dolee" id="last_name" class="formbold-form-input" required />
                     </div>
                 </div>
                 <div class="formbold-input-flex">
@@ -145,7 +145,9 @@
                 // Redirect to the checkout page
                 try {
                     const formData = {
-                        name: document.getElementById('firstname').value + ' ' + document.getElementById('lastname').value,
+                        name: document.getElementById('first_name').value + ' ' + document.getElementById('last_name').value,
+                        first_name: document.getElementById('first_name').value,
+                        last_name: document.getElementById('last_name').value,
                         email: document.getElementById('email').value,
                         address: document.getElementById('main_address').value,
                         city: 'Default City', // Change as per your form fields
@@ -153,7 +155,8 @@
                         zip: document.getElementById('main_address_pin_code').value,
                         planId: '<%= planID %>',
                         billingCycle: 'daily',
-                        memberCount: '<%= memberCount %>'
+                        memberCount: '<%= memberCount %>',
+                        register_password : document.getElementById('register_password').value,
                     };
 
                     const response = await axios.post('/auth/createexternalSubscription', formData);
@@ -210,16 +213,23 @@
 
         async function createUserAndCompany(formData) {
             try {
-                console.log("externalRegistrationformData",formData);
+                console.log("externalRegistrationformData", formData);
                 const response = await axios.post('/auth/externalRegistration', formData);
-                if (response.data.message) {
+                if (response.data.status === 'ok') {
                     Swal.fire({
                         icon: 'success',
                         title: 'Success',
-                        text: 'User and company created successfully.',
+                        text: response.data.message || 'User and company created successfully.',
                         confirmButtonText: 'OK'
                     }).then(() => {
                         window.location.href = '/business';
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: response.data.message || 'Failed to create user and company. Please try again later.',
+                        confirmButtonText: 'OK'
                     });
                 }
             } catch (error) {
@@ -227,11 +237,12 @@
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: 'Failed to create user and company. Please try again later.',
+                    text: error.response.data.message || 'Failed to create user and company. Please try again later.',
                     confirmButtonText: 'OK'
                 });
             }
         }
+
     </script>
 
 <style>

@@ -13053,238 +13053,455 @@ const getInvoicesForSubscription = async (subscriptionId) => {
 //     }
 // };
 
-exports.externalRegistration = async (req, res) =>{
-    console.log("externalRegistration",req.body);
-    const { first_name, last_name, email, register_password, register_confirm_password,phone,address, city, state, zip, planId, billingCycle, memberCount } = req.body;
 
-    console.log("externalRegistrationbody",req.body);
+//ac
+// exports.externalRegistration = async (req, res) =>{
+//     console.log("externalRegistration",req.body);
+//     const { first_name, last_name, email, register_password, register_confirm_password,phone,address, city, state, zip, planId, billingCycle, memberCount } = req.body;
 
-    console.log("planIdexternal",planId);
+//     console.log("externalRegistrationbody",req.body);
 
-    if (register_password !== register_confirm_password) {
-        return res.status(400).json({ status: 'err', message: 'Passwords does not match.' });
-    }
+//     console.log("planIdexternal",planId);
+
+//     if (register_password !== register_confirm_password) {
+//         return res.status(400).json({ status: 'err', message: 'Passwords does not match.' });
+//     }
+//     try {
+//         const emailExists = await new Promise((resolve, reject) => {
+//             db.query('SELECT email, register_from FROM users WHERE email = ?', [email], (err, results) => {
+//                 if (err) reject(err);
+//                 console.log("emailsbody",results);
+//                 if (results.length > 0) {
+//                     var register_from = results[0].register_from;
+//                     if (register_from == 'web') {
+//                         var message = 'Email ID already exists, Please login with your email-ID and password';
+//                         return res.status(500).json(
+//                             {
+//                                 status: 'err',
+//                                 data: '',
+//                                 message: message
+//                             }
+//                         )
+//                     } else if (register_from == 'facebook'){
+//                         console.log("pppppp");
+//                         var message = 'Email ID already exists, login with ' + register_from;
+//                         return res.status(500).json(
+//                             {
+//                                 status: 'err',
+//                                 data: '',
+//                                 message: message
+//                             }
+//                         )
+//                     }
+//                     else {
+//                         if (register_from == 'gmail') {
+//                             register_from = 'google';
+//                         }
+//                         var message = 'Email ID already exists, login with ' + register_from;
+//                         return res.status(500).json(
+//                             {
+//                                 status: 'err',
+//                                 data: '',
+//                                 message: message
+//                             }
+//                         )
+//                     }
+//                     return res.send(
+//                         {
+//                             status: 'err',
+//                             data: '',
+//                             message: message
+//                         }
+//                     )
+//                 }
+//                 //resolve(results.length > 0);
+//             });
+//         });
+//         if (emailExists) {
+//             console.log("ppwfgfdgdfrwer");
+//             return;
+//         }
+//         console.log("ppwrwer");
+
+//         const hashedPassword = await bcrypt.hash(register_password, 8);
+//         const currentDate = new Date();
+//         const year = currentDate.getFullYear();
+//         const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+//         const day = String(currentDate.getDate()).padStart(2, '0');
+//         const hours = String(currentDate.getHours()).padStart(2, '0');
+//         const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+//         const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+//         const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+//         const userInsertQuery = 'INSERT INTO users (first_name, last_name, email, password, register_from, user_registered, user_status, user_type_id, alise_name) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+//         db.query(userInsertQuery, [first_name, last_name, email, hashedPassword, 'web', formattedDate, 1, 2, first_name + last_name], async (err, userResults) => {
+//             if (err) {
+//                 console.error('Error inserting user into "users" table:', err);
+//                 return res.send(
+//                     {
+//                         status: 'err',
+//                         data: '',
+//                         message: 'An error occurred while processing your request' + err
+//                     }
+//                 )
+//             }
+//             var user_new_id = userResults.insertId;
+//             console.log("user_new_id",user_new_id);
+
+//             var mailOptions = {
+//                 from: process.env.MAIL_USER,
+//                 //to: 'pranab@scwebtech.com',
+//                 to: email,
+//                 subject: 'Welcome e-mail',
+//                 html: ""
+//             }
+//             await mdlconfig.transporter.sendMail(mailOptions, function (err, info) {
+//                 if (err) {
+//                     console.log(err);
+//                     return res.send({
+//                         status: 'not ok',
+//                         message: 'Something went wrong'
+//                     });
+//                 } else {
+//                     console.log('Mail Send: ', info.response);
+//                     return res.send({
+//                         status: 'ok',
+//                         message: ''
+//                     });
+//                 }
+//             })
+
+//             //company creation
+
+//             if (req.body.parent_id == 0) {
+//                 const companyquery = `SELECT * FROM company WHERE company_name = ? AND main_address_country =? `;
+//                 const companyvalue = await query(companyquery, [req.body.company_name, req.body.main_address_country]);
+//                 console.log("companyvalue", companyvalue);
+//                 if (companyvalue.length > 0) {
+//                     return res.send(
+//                         {
+//                             status: 'err',
+//                             data: '',
+//                             message: 'Organization name already exist.'
+//                         }
+//                     )
+//                 }
+//             }
+//             if (!req.body.parent_id || req.body.parent_id === "Select Parent") {
+//                 req.body.parent_id = 0;
+//             }
+//             comFunction2.generateUniqueSlug(req.body.company_name, (error, companySlug) => {
+//                 // comFunction2.generateUniqueSlug(req.body.company_name, main_address_country, (err, companySlug) => {
+//                 if (error) {
+//                     console.log('Err: ', error.message);
+//                 } else {
+//                     console.log('companySlug', companySlug);
+//                     var insert_values = [];
+//                     if (req.file) {
+//                         insert_values = [user_new_id, req.body.company_name, req.body.heading, req.file.filename, req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, req.body.status, req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.main_address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug, req.body.parent_id];
+//                     } else {
+//                         insert_values = [user_new_id, req.body.company_name, req.body.heading, '', req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, req.body.status, req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.main_address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug, req.body.parent_id];
+//                     }
+    
+//                     const insertQuery = 'INSERT INTO company (user_created_by, company_name, heading, logo, about_company, comp_phone, comp_email, comp_registration_id, status, trending, created_date, updated_date, tollfree_number, main_address, main_address_pin_code, address_map_url, main_address_country, main_address_state, main_address_city, verified, paid_status, slug,parent_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)';
+//                     db.query(insertQuery, insert_values, (err, results, fields) => {
+//                         if (err) {
+//                             return res.send(
+//                                 {
+//                                     status: 'err',
+//                                     data: '',
+//                                     message: 'An error occurred while processing your request' + err
+//                                 }
+//                             )
+//                         } else {
+//                             console.log("company results", results);
+    
+//                             var companyId = results.insertId;
+//                             const categoryArray = Array.isArray(req.body.category) ? req.body.category : [req.body.category];
+    
+//                             // Filter out undefined values from categoryArray
+//                             const validCategoryArray = categoryArray.filter(categoryID => categoryID !== undefined);
+    
+//                             console.log('categoryArray:', categoryArray);
+//                             if (validCategoryArray.length > 0) {
+//                                 const companyCategoryData = validCategoryArray.map((categoryID) => [companyId, categoryID]);
+//                                 db.query('INSERT INTO company_cactgory_relation (company_id, category_id) VALUES ?', [companyCategoryData], function (error, results) {
+//                                     if (error) {
+//                                         console.log(error);
+//                                         res.status(400).json({
+//                                             status: 'err',
+//                                             message: 'Error while creating company category'
+//                                         });
+//                                     }
+//                                     else {
+//                                         return res.send(
+//                                             {
+//                                                 status: 'ok',
+//                                                 data: companyId,
+//                                                 message: 'New company created'
+//                                             }
+//                                         )
+//                                     }
+//                                 });
+//                             } else {
+//                                 return res.send(
+//                                     {
+//                                         status: 'ok',
+//                                         data: companyId,
+//                                         message: 'New company created without any category.'
+//                                     }
+//                                 )
+//                             }
+//                         }
+//                     })
+    
+//                 }
+//             });
+
+//             //
+//             // Insert the user into the "user_customer_meta" table
+//             const userMetaInsertQuery = 'INSERT INTO user_customer_meta (user_id, review_count) VALUES (?, ?)';
+//             db.query(userMetaInsertQuery, [userResults.insertId, 0], (err, metaResults) => {
+//                 if (err) {
+//                     return res.send(
+//                         {
+//                             status: 'err',
+//                             data: '',
+//                             message: 'An error occurred while processing your request' + err
+//                         }
+//                     )
+//                 }
+//                 const userRegistrationData = {
+//                     username: email,
+//                     email: email,
+//                     password: register_password,
+//                     first_name: first_name,
+//                     last_name: last_name,
+//                 };
+//                 axios.post(process.env.BLOG_API_ENDPOINT + '/register', userRegistrationData)
+//                     .then((response) => {
+//                         //console.log('User registration successful. User ID:', response.data.user_id);
+
+//                         //-------User Auto Login --------------//
+//                         const userAgent = req.headers['user-agent'];
+//                         const agent = useragent.parse(userAgent);
+
+//                         // Set a cookie
+//                         const userData = {
+//                             user_id: userResults.insertId,
+//                             first_name: first_name,
+//                             last_name: last_name,
+//                             email: email,
+//                             user_type_id: 2
+//                         };
+//                         const encodedUserData = JSON.stringify(userData);
+//                         res.cookie('user', encodedUserData);
+
+//                         (async () => {
+//                             //---- Login to Wordpress Blog-----//
+//                             //let wp_user_data;
+//                             try {
+//                                 const userLoginData = {
+//                                     email: email,
+//                                     password: register_password,
+//                                 };
+//                                 const response = await axios.post(process.env.BLOG_API_ENDPOINT + '/login', userLoginData);
+//                                 const wp_user_data = response.data.data;
+
+//                                 //-- check last Login Info-----//
+//                                 const device_query = "SELECT * FROM user_device_info WHERE user_id = ?";
+//                                 db.query(device_query, [userResults.insertId], async (err, device_query_results) => {
+//                                     const currentDate = new Date();
+//                                     const year = currentDate.getFullYear();
+//                                     const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+//                                     const day = String(currentDate.getDate()).padStart(2, '0');
+//                                     const hours = String(currentDate.getHours()).padStart(2, '0');
+//                                     const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+//                                     const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+//                                     const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+//                                     if (device_query_results.length > 0) {
+//                                         // User exist update info
+//                                         const device_update_query = 'UPDATE user_device_info SET device_id = ?, IP_address = ?, last_logged_in = ? WHERE user_id = ?';
+//                                         const values = [agent.toAgent() + ' ' + agent.os.toString(), requestIp.getClientIp(req), formattedDate, userResults.insertId];
+//                                         db.query(device_update_query, values, (err, device_update_query_results) => {
+//                                             return res.send(
+//                                                             {
+//                                                                 status: 'ok',
+//                                                                 data: userData,
+//                                                                 wp_user: wp_user_data,
+//                                                                 currentUrlPath: req.body.currentUrlPath,
+//                                                                 message: 'Registration successful you are automatically login to your dashboard'
+//                                                             })
+//                                         })
+//                                     } else {
+//                                         // User doesnot exist Insert New Row.
+//                                         const device_insert_query = 'INSERT INTO user_device_info (user_id, device_id, device_token, imei_no, model_name, make_name, IP_address, last_logged_in, created_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+//                                         const values = [userResults.insertId, agent.toAgent() + ' ' + agent.os.toString(), '', '', '', '', requestIp.getClientIp(req), formattedDate, formattedDate];
+//                                         return res.send(
+//                                                             {
+//                                                                 status: 'ok',
+//                                                                 data: userData,
+//                                                                 wp_user: wp_user_data,
+//                                                                 currentUrlPath: req.body.currentUrlPath,
+//                                                                 message: 'Registration successful you are automatically login to your dashboard'
+//                                                             }
+//                                                         )
+//                                     }
+//                                 })
+//                             } catch (error) {
+//                                 console.error('User login failed. Error:', error);
+//                                 if (error.response && error.response.data) {
+//                                     console.log('Error response data:', error.response.data);
+//                                 }
+//                             }
+//                         })();
+//                     })
+//                     .catch((error) => {
+//                         //console.error('User registration failed:', );
+//                         return res.send(
+//                             {
+//                                 status: 'err',
+//                                 data: '',
+//                                 message: error.response.data
+//                             }
+//                         )
+//                     });
+//             })
+//         })
+//     }
+//     catch (error) {
+//         console.error('Error during user registration:', error);
+//         return res.status(500).json({ status: 'err', message: 'An error occurred while processing your request.' });
+//     }
+// }
+
+
+exports.externalRegistration = async  (req, res) => {
+    //const { name, email, address, city, state, zip, planId, billingCycle, memberCount } = req.body;
+        const { first_name, last_name, email, register_password, register_confirm_password,phone,address, city, state, zip, planId, billingCycle, memberCount } = req.body;
+
+        console.log("externalRegistration",req.body);
+
     try {
         const emailExists = await new Promise((resolve, reject) => {
             db.query('SELECT email, register_from FROM users WHERE email = ?', [email], (err, results) => {
-                if (err) reject(err);
-                console.log("emailsbody",results);
+                if (err) return reject(err);
+                console.log("emailsbody", results);
                 if (results.length > 0) {
                     var register_from = results[0].register_from;
+                    var message = '';
                     if (register_from == 'web') {
-                        var message = 'Email ID already exists, Please login with your email-ID and password';
-                    } else if (register_from == 'facebook'){
-                        var message = 'Email ID already exists, login with ' + register_from;
+                        message = 'Email ID already exists, Please login with your email-ID and password';
+                    } else if (register_from == 'facebook') {
+                        message = 'Email ID already exists, login with ' + register_from;
+                    } else if (register_from == 'gmail') {
+                        register_from = 'google';
+                        message = 'Email ID already exists, login with ' + register_from;
+                    } else {
+                        message = 'Email ID already exists, login with ' + register_from;
                     }
-                    else {
-                        if (register_from == 'gmail') {
-                            register_from = 'google';
-                        }
-                        var message = 'Email ID already exists, login with ' + register_from;
-                    }
-                    return res.send(
-                        {
-                            status: 'err',
-                            data: '',
-                            message: message
-                        }
-                    )
+                    return res.status(500).json({ status: 'err', data: '', message: message });
+                } else {
+                    resolve(false);
                 }
-                resolve(results.length > 0);
             });
         });
+
+        if (emailExists) {
+            console.log("Email already exists.");
+            return;
+        }
+
+        console.log("Email does not exist, proceeding to create user.");
+
         const hashedPassword = await bcrypt.hash(register_password, 8);
         const currentDate = new Date();
-        const year = currentDate.getFullYear();
-        const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-        const day = String(currentDate.getDate()).padStart(2, '0');
-        const hours = String(currentDate.getHours()).padStart(2, '0');
-        const minutes = String(currentDate.getMinutes()).padStart(2, '0');
-        const seconds = String(currentDate.getSeconds()).padStart(2, '0');
-        const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ');
+
         const userInsertQuery = 'INSERT INTO users (first_name, last_name, email, password, register_from, user_registered, user_status, user_type_id, alise_name) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
         db.query(userInsertQuery, [first_name, last_name, email, hashedPassword, 'web', formattedDate, 1, 2, first_name + last_name], async (err, userResults) => {
             if (err) {
                 console.error('Error inserting user into "users" table:', err);
-                return res.send(
-                    {
-                        status: 'err',
-                        data: '',
-                        message: 'An error occurred while processing your request' + err
-                    }
-                )
+                return res.status(500).json({ status: 'err', data: '', message: 'An error occurred while processing your request' });
             }
             var user_new_id = userResults.insertId;
-            console.log("user_new_id",user_new_id);
+            console.log("user_new_id", user_new_id);
 
             var mailOptions = {
                 from: process.env.MAIL_USER,
-                //to: 'pranab@scwebtech.com',
                 to: email,
                 subject: 'Welcome e-mail',
                 html: ""
-            }
+            };
+
             await mdlconfig.transporter.sendMail(mailOptions, function (err, info) {
                 if (err) {
                     console.log(err);
-                    return res.send({
-                        status: 'not ok',
-                        message: 'Something went wrong'
-                    });
+                    return res.status(500).json({ status: 'err', message: 'Something went wrong while sending email' });
                 } else {
-                    console.log('Mail Send: ', info.response);
-                    return res.send({
-                        status: 'ok',
-                        message: ''
-                    });
+                    console.log('Mail sent: ', info.response);
                 }
-            })
+            });
 
-            //company creation
-
-
-            // var name= first_name + last_name;
-            // console.log("First_last_name:", name);
-    
-            // let customerId = await CreateCustomer(email, name,phone, address, city, state, zip);
-            // console.log("customerId", customerId);
-    
-            // let country_name = req.cookies.countryName 
-            // //|| 'India';
-            // let country_code = req.cookies.countryCode 
-            // //|| 'IN';
-            // console.log("country_codesdf",country_code);
-            // console.log("country_namesdf",country_name);
-    
-            // // const customerId = customer.id.startsWith('cust_') ? customer.id : `cust_${customer.id}`;
-            // // console.log('Formatted Customer ID:', customerId);
-    
-            // // const customerId = "cust_" + customer.id;
-            // // console.log("Formatted Customer ID:", customerId);
-    
-            // const plan = await getPlanFromDatabase(planId);
-            // if (!plan) {
-            //     return res.status(404).send({ error: 'Plan not found' });
-            // }
-    
-            // const priceId = await createRazorpayPlan(plan, billingCycle, memberCount, country_code);
-            // if (!priceId) {
-            //     return res.status(500).send({ error: 'Failed to create price for the plan' });
-            // }
-            // console.log("Created Razorpay plan:", priceId);
-    
-            // var amountss=  priceId.item.amount;
-            // console.log("amountss",amountss);
-    
-            // const subscriptionParams = {
-            //     plan_id: priceId.id,
-            //     customer_id: customerId,
-            //     total_count: 12,
-            // };
-            // const subscription = await razorpay.subscriptions.create(subscriptionParams);
-            // console.log("Created subscription:", subscription);
-            // const invoices = await razorpay.invoices.all({
-            //     'subscription_id': subscription.id
-            // });
-            // console.log('Invoices for subscription:', invoices);
-
+            // Company creation logic
             if (req.body.parent_id == 0) {
-                const companyquery = `SELECT * FROM company WHERE company_name = ? AND main_address_country =? `;
-                const companyvalue = await query(companyquery, [req.body.company_name, req.body.main_address_country]);
-                console.log("companyvalue", companyvalue);
-                if (companyvalue.length > 0) {
-                    return res.send(
-                        {
-                            status: 'err',
-                            data: '',
-                            message: 'Organization name already exist.'
-                        }
-                    )
+                const companyQuery = `SELECT * FROM company WHERE company_name = ? AND main_address_country =? `;
+                const companyValue = await query(companyQuery, [req.body.company_name, req.body.main_address_country]);
+                console.log("companyvalue", companyValue);
+                if (companyValue.length > 0) {
+                    return res.status(500).json({ status: 'err', data: '', message: 'Organization name already exists.' });
                 }
             }
             if (!req.body.parent_id || req.body.parent_id === "Select Parent") {
                 req.body.parent_id = 0;
             }
+
             comFunction2.generateUniqueSlug(req.body.company_name, (error, companySlug) => {
-                // comFunction2.generateUniqueSlug(req.body.company_name, main_address_country, (err, companySlug) => {
                 if (error) {
                     console.log('Err: ', error.message);
                 } else {
                     console.log('companySlug', companySlug);
-                    var insert_values = [];
+                    var insertValues = [];
                     if (req.file) {
-                        insert_values = [user_new_id, req.body.company_name, req.body.heading, req.file.filename, req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, req.body.status, req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.main_address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug, req.body.parent_id];
+                        insertValues = [user_new_id, req.body.company_name, req.body.heading, req.file.filename, req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, req.body.status, req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.main_address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug, req.body.parent_id];
                     } else {
-                        insert_values = [user_new_id, req.body.company_name, req.body.heading, '', req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, req.body.status, req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.main_address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug, req.body.parent_id];
+                        insertValues = [user_new_id, req.body.company_name, req.body.heading, '', req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, req.body.status, req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.main_address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug, req.body.parent_id];
                     }
-    
-                    const insertQuery = 'INSERT INTO company (user_created_by, company_name, heading, logo, about_company, comp_phone, comp_email, comp_registration_id, status, trending, created_date, updated_date, tollfree_number, main_address, main_address_pin_code, address_map_url, main_address_country, main_address_state, main_address_city, verified, paid_status, slug,parent_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)';
-                    db.query(insertQuery, insert_values, (err, results, fields) => {
+
+                    const insertQuery = 'INSERT INTO company (user_created_by, company_name, heading, logo, about_company, comp_phone, comp_email, comp_registration_id, status, trending, created_date, updated_date, tollfree_number, main_address, main_address_pin_code, address_map_url, main_address_country, main_address_state, main_address_city, verified, paid_status, slug, parent_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)';
+                    db.query(insertQuery, insertValues, (err, results, fields) => {
                         if (err) {
-                            return res.send(
-                                {
-                                    status: 'err',
-                                    data: '',
-                                    message: 'An error occurred while processing your request' + err
-                                }
-                            )
+                            return res.status(500).json({ status: 'err', data: '', message: 'An error occurred while processing your request' });
                         } else {
                             console.log("company results", results);
-    
                             var companyId = results.insertId;
                             const categoryArray = Array.isArray(req.body.category) ? req.body.category : [req.body.category];
-    
-                            // Filter out undefined values from categoryArray
                             const validCategoryArray = categoryArray.filter(categoryID => categoryID !== undefined);
-    
                             console.log('categoryArray:', categoryArray);
+
                             if (validCategoryArray.length > 0) {
                                 const companyCategoryData = validCategoryArray.map((categoryID) => [companyId, categoryID]);
-                                db.query('INSERT INTO company_cactgory_relation (company_id, category_id) VALUES ?', [companyCategoryData], function (error, results) {
+                                db.query('INSERT INTO company_category_relation (company_id, category_id) VALUES ?', [companyCategoryData], function (error, results) {
                                     if (error) {
                                         console.log(error);
-                                        res.status(400).json({
-                                            status: 'err',
-                                            message: 'Error while creating company category'
-                                        });
-                                    }
-                                    else {
-                                        return res.send(
-                                            {
-                                                status: 'ok',
-                                                data: companyId,
-                                                message: 'New company created'
-                                            }
-                                        )
+                                        return res.status(500).json({ status: 'err', message: 'Error while creating company category' });
+                                    } else {
+                                        return res.status(200).json({ status: 'ok', data: companyId, message: 'New company created' });
                                     }
                                 });
                             } else {
-                                return res.send(
-                                    {
-                                        status: 'ok',
-                                        data: companyId,
-                                        message: 'New company created without any category.'
-                                    }
-                                )
+                                return res.status(200).json({ status: 'ok', data: companyId, message: 'New company created without any category.' });
                             }
                         }
-                    })
-    
+                    });
                 }
             });
 
-            //
-            // Insert the user into the "user_customer_meta" table
+            // Insert user into "user_customer_meta" table
             const userMetaInsertQuery = 'INSERT INTO user_customer_meta (user_id, review_count) VALUES (?, ?)';
             db.query(userMetaInsertQuery, [userResults.insertId, 0], (err, metaResults) => {
                 if (err) {
-                    return res.send(
-                        {
-                            status: 'err',
-                            data: '',
-                            message: 'An error occurred while processing your request' + err
-                        }
-                    )
+                    return res.status(500).json({ status: 'err', data: '', message: 'An error occurred while processing your request' });
                 }
                 const userRegistrationData = {
                     username: email,
@@ -13293,103 +13510,16 @@ exports.externalRegistration = async (req, res) =>{
                     first_name: first_name,
                     last_name: last_name,
                 };
-                axios.post(process.env.BLOG_API_ENDPOINT + '/register', userRegistrationData)
-                    .then((response) => {
-                        //console.log('User registration successful. User ID:', response.data.user_id);
-
-                        //-------User Auto Login --------------//
-                        const userAgent = req.headers['user-agent'];
-                        const agent = useragent.parse(userAgent);
-
-                        // Set a cookie
-                        const userData = {
-                            user_id: userResults.insertId,
-                            first_name: first_name,
-                            last_name: last_name,
-                            email: email,
-                            user_type_id: 2
-                        };
-                        const encodedUserData = JSON.stringify(userData);
-                        res.cookie('user', encodedUserData);
-
-                        (async () => {
-                            //---- Login to Wordpress Blog-----//
-                            //let wp_user_data;
-                            try {
-                                const userLoginData = {
-                                    email: email,
-                                    password: register_password,
-                                };
-                                const response = await axios.post(process.env.BLOG_API_ENDPOINT + '/login', userLoginData);
-                                const wp_user_data = response.data.data;
-
-                                //-- check last Login Info-----//
-                                const device_query = "SELECT * FROM user_device_info WHERE user_id = ?";
-                                db.query(device_query, [userResults.insertId], async (err, device_query_results) => {
-                                    const currentDate = new Date();
-                                    const year = currentDate.getFullYear();
-                                    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-                                    const day = String(currentDate.getDate()).padStart(2, '0');
-                                    const hours = String(currentDate.getHours()).padStart(2, '0');
-                                    const minutes = String(currentDate.getMinutes()).padStart(2, '0');
-                                    const seconds = String(currentDate.getSeconds()).padStart(2, '0');
-                                    const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-
-                                    if (device_query_results.length > 0) {
-                                        // User exist update info
-                                        const device_update_query = 'UPDATE user_device_info SET device_id = ?, IP_address = ?, last_logged_in = ? WHERE user_id = ?';
-                                        const values = [agent.toAgent() + ' ' + agent.os.toString(), requestIp.getClientIp(req), formattedDate, userResults.insertId];
-                                        db.query(device_update_query, values, (err, device_update_query_results) => {
-                                            return res.send(
-                                                            {
-                                                                status: 'ok',
-                                                                data: userData,
-                                                                wp_user: wp_user_data,
-                                                                currentUrlPath: req.body.currentUrlPath,
-                                                                message: 'Registration successful you are automatically login to your dashboard'
-                                                            })
-                                        })
-                                    } else {
-                                        // User doesnot exist Insert New Row.
-                                        const device_insert_query = 'INSERT INTO user_device_info (user_id, device_id, device_token, imei_no, model_name, make_name, IP_address, last_logged_in, created_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
-                                        const values = [userResults.insertId, agent.toAgent() + ' ' + agent.os.toString(), '', '', '', '', requestIp.getClientIp(req), formattedDate, formattedDate];
-                                        return res.send(
-                                                            {
-                                                                status: 'ok',
-                                                                data: userData,
-                                                                wp_user: wp_user_data,
-                                                                currentUrlPath: req.body.currentUrlPath,
-                                                                message: 'Registration successful you are automatically login to your dashboard'
-                                                            }
-                                                        )
-                                    }
-                                })
-                            } catch (error) {
-                                console.error('User login failed. Error:', error);
-                                if (error.response && error.response.data) {
-                                    console.log('Error response data:', error.response.data);
-                                }
-                            }
-                        })();
-                    })
-                    .catch((error) => {
-                        //console.error('User registration failed:', );
-                        return res.send(
-                            {
-                                status: 'err',
-                                data: '',
-                                message: error.response.data
-                            }
-                        )
-                    });
-            })
-        })
-    }
-    catch (error) {
-        console.error('Error during user registration:', error);
-        return res.status(500).json({ status: 'err', message: 'An error occurred while processing your request.' });
+                // Code to handle user registration (if any) should be placed here
+                return res.status(200).json({ status: 'ok', data: userResults.insertId, message: 'New user created' });
+            });
+        });
+    } catch (error) {
+        console.error('Error creating user and company:', error);
+        return res.status(500).json({ status: 'err', data: '', message: 'An error occurred while processing your request' });
     }
 }
+
 
 
 exports.createexternalSubscription = async (req, res) => {
