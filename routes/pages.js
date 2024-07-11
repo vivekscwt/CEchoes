@@ -5302,6 +5302,43 @@ router.get('/trashed-users', checkLoggedInAdministrator, (req, res) => {
     })
 });
 
+router.get('/pending-users', checkLoggedInAdministrator, (req, res) => {
+    const encodedUserData = req.cookies.user;
+    const currentUserData = JSON.parse(encodedUserData);
+    //res.render('users', { menu_active_id: 'user', page_title: 'Users', currentUserData });
+
+    const user_query = `
+                    SELECT users.*, user_customer_meta.*, user_account_type.role_name, user_device_info.last_logged_in
+                    FROM users
+                    JOIN user_customer_meta ON users.user_id = user_customer_meta.user_id
+                    JOIN user_account_type ON users.user_type_id = user_account_type.ID
+                    LEFT JOIN user_device_info ON users.user_id = user_device_info.user_id
+                    WHERE users.user_status = '3'
+                    `;
+    db.query(user_query, (err, results) => {
+        if (err) {
+            return res.send(
+                {
+                    status: 'err',
+                    data: '',
+                    message: 'An error occurred while processing your request' + err
+                }
+            )
+        } else {
+            if (results.length > 0) {
+                const users = results.map((user) => ({
+                    ...user,
+                    registered_date: moment(user.last_logged_in).format('Do MMMM YYYY, h:mm:ss a'),
+                }));
+                //res.json({ currentUserData, 'allusers': users });
+                res.render('pending-users', { menu_active_id: 'user', page_title: 'Pending Users', currentUserData, 'allusers': users });
+            } else {
+                res.render('pending-users', { menu_active_id: 'user', page_title: 'Pending Users', currentUserData, 'allusers': [] });
+            }
+        }
+    })
+});
+
 router.get('/add-user', checkLoggedIn, (req, res) => {
     const encodedUserData = req.cookies.user;
     const currentUserData = JSON.parse(encodedUserData);

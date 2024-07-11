@@ -134,15 +134,8 @@
             currentStep--;
             showStep(currentStep);
         }
-
-        function validateStep(step) {
-            // Implement validation for each step here
-            return true;
-        }
-
         async function handleConfirmation(confirmed) {
             if (confirmed) {
-                // Redirect to the checkout page
                 try {
                     const formData = {
                         name: document.getElementById('first_name').value + ' ' + document.getElementById('last_name').value,
@@ -165,6 +158,8 @@
 
                     const response = await axios.post('/auth/createexternalSubscription', formData);
                     const { subscription, amount } = response.data;
+
+                    formData.subscriptionId = subscription.id;
 
                     const options = {
                         key: 'rzp_test_FUBQq7lujicpGo',
@@ -214,6 +209,12 @@
                 }
             }
         }
+
+        function validateStep(step) {
+            // Implement validation for each step here
+            return true;
+        }
+
 
         async function createUserAndCompany(formData) {
             try {
