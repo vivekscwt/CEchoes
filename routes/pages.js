@@ -821,6 +821,26 @@ router.get('/get-country', async (req, res) => {
     }
 });
 
+router.get('/getStates', async (req, res) => {
+    try {
+    const country = req.query.country;
+    console.log("countryname",country);
+
+    const getcountryquery = `SELECT * FROM countries WHERE shortname = "${country}" `;
+    const getcountryval = await queryAsync(getcountryquery);
+
+    console.log("getcountryval",getcountryval);
+
+    const states = comFunction.getStatesByCountryID(country);
+    console.log("newstates",states);
+
+    return res.json(states);
+    }catch(error){
+        console.error("error",error);
+        res.status(500).send('An error occurred');
+    }
+});
+
 router.get('/faq', checkCookieValue, async (req, res) => {
     try {
         let currentUserData = JSON.parse(req.userData);

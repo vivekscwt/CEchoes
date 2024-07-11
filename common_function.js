@@ -148,7 +148,20 @@ function getStatesByUserID(userId) {
 function getStatesByCountryID(countryId) {
   return new Promise((resolve, reject) => {
     db.query('SELECT * FROM states WHERE country_id = ?', [countryId], async (err, result) => {
-      console.log(result);
+      console.log("result",result);
+      if (err) {
+        reject(err);
+      } else {
+        resolve(result);
+      }
+    })
+  });
+}
+
+function getStatesByCountryshortname(countryId) {
+  return new Promise((resolve, reject) => {
+    db.query('SELECT * FROM states WHERE country_id = ?', [countryId], async (err, result) => {
+      console.log("result",result);
       if (err) {
         reject(err);
       } else {
