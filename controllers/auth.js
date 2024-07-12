@@ -761,7 +761,7 @@ exports.frontendUserLogin = (req, res) => {
                                 let userData = {};
                                 if (results.length > 0) {
                                     const user_meta = results[0];
-                                    //console.log(user_meta,'aaaaaaaa');
+                                    console.log(user_meta,'aaaaaaaa');
                                     // Set a cookie
                                     const dateString = user_meta.date_of_birth;
                                     const date_of_birth_date = new Date(dateString);
@@ -2120,7 +2120,7 @@ exports.createCompany = async (req, res) => {
                     {
                         status: 'err',
                         data: '',
-                        message: 'Organization name already exist.'
+                        message: 'tion name already exist.Organiza'
                     }
                 )
             }
@@ -12284,6 +12284,60 @@ exports.addingUsers = async (req, res) => {
 }
 
 
+exports.confirmUser = async (req, res) => {
+    try {
+      const id = req.body.id;
+      const activationId = 1;
+      const isUserQuery = `SELECT * FROM users WHERE user_id = ?`;
+      const result = await query(isUserQuery, [id]);
+  
+      const userDetails = {
+        fullName : result[0].first_name + ' ' + result[0].last_name ,
+        email : result[0].email,
+        phone : result[0].phone 
+      }
+      const adminMail = process.env.MAIL_USER
+  
+      if (result && result.length > 0) {
+        const updateQuery = `UPDATE users SET user_status = ? WHERE user_id = ?`;
+        const updateResult = await query(updateQuery, [activationId, id]);
+  
+        // Check if the update was successful
+        if (updateResult && updateResult.affectedRows > 0) {
+  
+          const userActivationHtml = comFunction2.userActivation(userDetails.fullName, userDetails.email) ;
+  
+          const userActivationHtmlForAdmin = comFunction2.userActivationmailtoAdmin(userDetails.fullName, userDetails.email, userDetails.phone) ;
+  
+        //   const emailSentToUser = await sendEmail(userDetails.email, 'Welcome to CEchoes! 🎉', userActivationHtml); // User
+        //   const emailSentToAdmin = await sendEmail(adminMail, 'Registration at CEchoes', userActivationHtmlForAdmin); // Admin
+  
+          if (userActivationHtml && userActivationHtmlForAdmin ) {
+            return res.status(200).json({
+              status: "ok",
+              message: 'Account activation has been successful, and activation emails have been forwarded to the user and the admin.',
+            });
+          } else {
+            return res.status(500).json({
+              status: "error",
+              message: "Failed to send activation email",
+            });
+          }
+  
+        } else {
+          
+          return res.status(400).json({ message: 'Activation failed' }); 
+        }
+      } else {
+        // User not found
+        return res.status(404).json({ message: 'User not found' });
+      }
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ message: 'Internal Server Error' });
+    }
+  };
+
 //actual
 
 // const getPlanFromDatabase = async (planId) => {
@@ -12783,11 +12837,106 @@ const createStripeProductAndPrice = async (plan, billingCycle, memberCount) => {
 //     return result[0];
 // };
 
+
+exports.updateOrderHistory = async (req, res) => {
+    try {
+        const { name, email,phone, address, city, state, zip, planId, billingCycle, memberCount, subscriptionId } = req.body;
+        console.log("updateOrderHistory:", req.body);
+
+
+        const getidquery = `SELECT * FROM users WHERE email = "${email}"`;
+        const getidvalue = await queryAsync(getidquery);
+        var userId = getidvalue[0].user_id;
+        console.log("userId",userId);
+
+        let customerId = await findOrCreateCustomer(email, name,phone, address, city, state, zip);
+        console.log("customerId", customerId);
+
+        let country_name = req.cookies.countryName 
+        //|| 'India';
+        let country_code = req.cookies.countryCode 
+        //|| 'IN';
+        console.log("country_codesdf",country_code);
+        console.log("country_namesdf",country_name);
+
+        const getcompanyquery = `SELECT company.* FROM company LEFT JOIN company_claim_request ON company.ID = company_claim_request.company_id WHERE company_claim_request.claimed_by=?`;
+        const getcompanyvalue = await queryAsync(getcompanyquery,[userId]);
+        console.log("getcompanyvaluea",getcompanyvalue);
+        var companyID = getcompanyvalue[0] .ID;
+        console.log("companyID",companyID);
+
+        const updatecompany_query = `UPDATE company SET membership_type_id = ? WHERE ID = "${companyID}"`;
+        const updatecompany_value = await queryAsync(updatecompany_query, [planId]);
+        console.log("updatecompany_value", updatecompany_value);
+
+        const subscriptionDetails = await razorpay.subscriptions.fetch(subscriptionId);
+        console.log('Subscription details:', subscriptionDetails);
+
+        const invoices = await razorpay.invoices.all({
+            'subscription_id': subscriptionId
+        });
+        console.log('Invoices for subscriptions:', invoices);
+
+        const invoiceId = invoices.items.length > 0 ? invoices.items[0].id : null;
+        console.log('Invoice IDs:', invoiceId);
+
+        // const getpayments= fetchPaymentsByInvoiceId(invoiceId);
+        // console.log("getpayments",getpayments);
+
+        console.log("Subscription current start timestamp:", subscriptionDetails.current_start);
+        console.log("Subscription charge at timestamp:", subscriptionDetails.charge_at);
+        
+        const subscriptionStartDate = new Date(subscriptionDetails.current_start * 1000);
+        const subscriptionEndDate = new Date(subscriptionDetails.charge_at * 1000);
+        
+        console.log("Subscription start date:", subscriptionStartDate);
+        console.log("Subscription end date:", subscriptionEndDate);
+        
+        
+        const order_history_data = {
+            // user_id: userID,
+            payment_status: 'success',
+            subscription_details: JSON.stringify(subscriptionDetails),
+            subscription_start_date: new Date(subscriptionDetails.current_start * 1000),
+            subscription_end_date: new Date(subscriptionDetails.charge_at * 1000),
+          };
+          
+          const update_order_history_query = `
+            UPDATE order_history
+            SET user_id = ?, payment_status = ?, subscription_details = ?, subscription_start_date = ?, subscription_end_date = ?
+            WHERE stripe_subscription_id = ?
+          `;
+          
+          const update_values = [
+            order_history_data.user_id,
+            order_history_data.payment_status,
+            order_history_data.subscription_details,
+            order_history_data.subscription_start_date,
+            order_history_data.subscription_end_date,
+            subscriptionId
+          ];
+          try {
+            const update_result = await queryAsync(update_order_history_query, update_values);
+            console.log(`Order history updated for subscription ID ${subscriptionId}`);
+          } catch (error) {
+            console.error('Failed to update order history:', error);
+          }
+    } catch (error) {
+        console.error('Error creating subscription flow:', error);
+        res.status(500).send({ error: error.message });
+    } 
+};
+
 exports.createSubscription = async (req, res) => {
     try {
-        const { name, email,phone, address, city, state, zip, planId, billingCycle, memberCount } = req.body;
+        const { name, email,phone, address, city, state, zip, planId, billingCycle, memberCount,} = req.body;
         console.log("Subscription request body:", req.body);
 
+
+        const getidquery = `SELECT * FROM users WHERE email = "${email}"`;
+        const getidvalue = await queryAsync(getidquery);
+        var userId = getidvalue[0].user_id;
+        console.log("userId",userId);
 
         let customerId = await findOrCreateCustomer(email, name,phone, address, city, state, zip);
         console.log("customerId", customerId);
@@ -12862,6 +13011,31 @@ exports.createSubscription = async (req, res) => {
             'subscription_id': subscription.id
         });
         console.log('Invoices for subscription:', invoices);
+
+        req.subscriptionId = subscription.id;
+
+        console.log("Subscription current start timestamp:", subscription.current_start);
+        console.log("Subscription charge at timestamp:", subscription.charge_at);
+
+        const subscriptionStartDate = new Date(subscription.current_start * 1000);
+        const subscriptionEndDate = new Date(subscription.charge_at * 1000);
+
+        console.log("Subscription start date:", subscriptionStartDate);
+        console.log("Subscription end date:", subscriptionEndDate);
+
+        const order_history_data = {
+            user_id: userId,
+            stripe_subscription_id: subscription.id,
+            plan_id: planId,
+            payment_status: 'pending',
+            subscription_details: JSON.stringify(subscription),
+            subscription_duration: billingCycle,
+            subscription_start_date: new Date(subscription.current_start * 1000),
+            subscription_end_date: new Date(subscription.charge_at * 1000),
+            added_user_number: memberCount
+        };
+        const order_history_query = `INSERT INTO order_history SET ?`;
+        await queryAsync(order_history_query, [order_history_data]);
 
         res.status(200).send({
             message: 'Subscription created successfully',
@@ -12968,10 +13142,13 @@ exports.createexternalSubscription = async (req, res) => {
 
 
 exports.externalRegistration = async (req, res) => {
-    const { first_name, last_name, email, register_password, phone, address, city, state, zip, planId, billingCycle, memberCount, subscriptionId  } = req.body;
+    const { first_name, last_name, email, register_password, phone, address, city, state, zip, planId, billingCycle, memberCount, subscriptionId,user_state, user_country, register_confirm_password  } = req.body;
     console.log("externalRegistration", req.body);
 
     try {
+        if (register_password !== register_confirm_password) {
+            return res.status(400).json({ status: 'err', message: 'Passwords does not match.' });
+        }
         const emailExists = await new Promise((resolve, reject) => {
             db.query('SELECT email, register_from FROM users WHERE email = ?', [email], (err, results) => {
                 if (err) return reject(err);
@@ -13262,7 +13439,7 @@ exports.externalRegistration = async (req, res) => {
                     console.log('companySlug', companySlug);
                     var insertValues = [];
                     if (req.file) {
-                        insertValues = [userResults.insertId, req.body.company_name, req.body.heading, req.file.filename, req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, '2', req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.main_address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug, req.body.parent_id];
+                        insertValues = [userResults.insertId, req.body.company_name, req.body.heading, req.file.filename, req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, '2', req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug, req.body.parent_id];
                     } else {
                         insertValues = [userResults.insertId, req.body.company_name, req.body.heading, '', req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, '2', req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.main_address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug, req.body.parent_id];
                     }
@@ -13336,8 +13513,8 @@ exports.externalRegistration = async (req, res) => {
                               
 
                             // Insert user meta
-                            const userMetaInsertQuery = 'INSERT INTO user_customer_meta (user_id, review_count) VALUES (?, ?)';
-                            await queryAsync(userMetaInsertQuery, [userResults.insertId, 0]);
+                            const userMetaInsertQuery = 'INSERT INTO user_customer_meta (user_id, review_count, country, state) VALUES (?, ?, ?, ?)';
+                            await queryAsync(userMetaInsertQuery, [userResults.insertId, 0,user_country, user_state]);
 
                             // Register user in blog API
                             // const userRegistrationData = {

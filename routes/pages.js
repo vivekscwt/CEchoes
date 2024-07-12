@@ -829,10 +829,32 @@ router.get('/getStates', async (req, res) => {
     const getcountryquery = `SELECT * FROM countries WHERE shortname = "${country}" `;
     const getcountryval = await queryAsync(getcountryquery);
 
-    console.log("getcountryval",getcountryval);
+    var coun= getcountryval[0].id;
+    console.log("getcountryval",getcountryval[0].id);
 
-    const states = comFunction.getStatesByCountryID(country);
-    console.log("newstates",states);
+    const states = await comFunction.getStatesByCountryID(coun);
+    //console.log("States:", states);
+
+    return res.json(states);
+    }catch(error){
+        console.error("error",error);
+        res.status(500).send('An error occurred');
+    }
+});
+
+router.get('/getStatesbycountryid', async (req, res) => {
+    try {
+    const country = req.query.country;
+    console.log("countryid",country);
+
+    // const getcountryquery = `SELECT * FROM countries WHERE id = "${country}" `;
+    // const getcountryval = await queryAsync(getcountryquery);
+
+    // var coun= getcountryval[0].id;
+    // console.log("getcountryval",getcountryval[0].id);
+
+    const states = await comFunction.getStatesByCountryID(country);
+    //console.log("States:", states);
 
     return res.json(states);
     }catch(error){
@@ -1115,6 +1137,12 @@ router.get('/stripe-payment', checkCookieValue, async (req, res) => {
         const exchangeRates = await comFunction2.getCurrency();
         //console.log("exchangeRates",exchangeRates);
 
+        const [latestReviews,getCountries] = await Promise.all([
+            comFunction2.getlatestReviews(20),
+            comFunction.getCountries(),
+        ]);
+        console.log("getCountries",getCountries);
+
         res.render('front-end/stripe_payment', {
             planId,
             planPrice,
@@ -1126,7 +1154,8 @@ router.get('/stripe-payment', checkCookieValue, async (req, res) => {
             country_code: country_code,
             exchangeRates: exchangeRates,
             encryptedEmail,
-            user_id
+            user_id,
+            getCountries
         });
     } catch (err) {
         console.error(err);
@@ -1166,6 +1195,11 @@ router.get('/stripe-year-payment', checkCookieValue, async (req, res) => {
         const getstatevalue = await queryAsync(getstatesquery,[country_no]);
         //console.log("getstatevalue",getstatevalue);
 
+        const [latestReviews,getCountries] = await Promise.all([
+            comFunction2.getlatestReviews(20),
+            comFunction.getCountries(),
+        ]);
+        console.log("getCountries",getCountries);
 
         res.render('front-end/stripe_payment_yearly', {
             planId,
@@ -1177,7 +1211,8 @@ router.get('/stripe-year-payment', checkCookieValue, async (req, res) => {
             total_price,
             country_code: country_code,
             exchangeRates: exchangeRates,
-            getstatevalue: getstatevalue
+            getstatevalue: getstatevalue,
+            getCountries: getCountries
         });
     } catch (err) {
         console.error(err);
@@ -1220,10 +1255,13 @@ router.get('/create-user-company-subscription', checkCookieValue, async(req, res
         const exchangeRates = await comFunction2.getCurrency();
         //console.log("exchangeRates",exchangeRates);
 
-        const [globalPageMeta, getplans,] = await Promise.all([
+        const [globalPageMeta, getplans,getCountries,getCountriesList] = await Promise.all([
             comFunction2.getPageMetaValues('global'),
             comFunction2.getplans(country_name),
+            comFunction.getCountries(),
+            comFunction.getCountriesList()
         ]);
+        //console.log("getCountriesList",getCountriesList);
 
         res.render('front-end/company-subscription-monthly', {
             menu_active_id: 'Subscription',
@@ -1240,7 +1278,9 @@ router.get('/create-user-company-subscription', checkCookieValue, async(req, res
             exchangeRates: exchangeRates,
             encryptedEmail,
             user_id,
-            globalPageMeta
+            globalPageMeta,
+            getCountries,
+            getCountriesList
         });
     } catch (err) {
         console.error(err);
@@ -1249,8 +1289,54 @@ router.get('/create-user-company-subscription', checkCookieValue, async(req, res
 })
 
 
+router.get('/checkEmailAvailability', async (req, res) => {
+    const { email } = req.query;
+    console.log("email",email);
 
+    try {
+        const emailExists = await new Promise((resolve, reject) => {
+            db.query('SELECT email, register_from FROM users WHERE email = ?', [email], (err, results) => {
+                if (err) {
+                    console.error('Database query error:', err);
+                    reject(err);
+                } else {
 
+                    console.log("dfgdfg");
+                    if (results.length > 0) {
+                        const register_from = results[0].register_from;
+                        resolve({ status: 'error', message: 'Email already exists.' });
+                    } else {
+                        reject({ status: 'success', message: 'Email available.' });
+                    }
+                }
+            });
+        });
+
+        res.json(emailExists);
+    } catch (error) {
+        console.error('Error checking email availability:', error);
+        res.status(500).json({ message: 'Failed to check email availability' });
+    }
+});
+
+router.get('/checkCompanyAvailability', async (req, res) => {
+    const { company_name, country, parent_id } = req.query;
+
+    try {
+        if (parent_id == 0) {
+            const companyQuery = 'SELECT * FROM company WHERE company_name = ? AND main_address_country = ?';
+            const companyValue = await query(companyQuery, [company_name, country]);
+
+            if (companyValue.length > 0) {
+                return res.status(400).json({ status: 'error', message: 'Organization name already exists.' });
+            }
+        }
+        res.json({ status: 'success', message: 'Company name is available.' });
+    } catch (error) {
+        console.error('Error checking company availability:', error);
+        res.status(500).json({ message: 'Failed to check company availability' });
+    }
+});
 
 
 
@@ -5278,6 +5364,8 @@ router.get('/users', checkLoggedInAdministrator, (req, res) => {
                     ...user,
                     registered_date: moment(user.last_logged_in).format('Do MMMM YYYY, h:mm:ss a'),
                 }));
+
+                
                 //res.json({ currentUserData, 'allusers': users });
                 res.render('users', { menu_active_id: 'user', page_title: 'Users', currentUserData, 'allusers': users });
             }
@@ -5351,6 +5439,7 @@ router.get('/pending-users', checkLoggedInAdministrator, (req, res) => {
                     registered_date: moment(user.last_logged_in).format('Do MMMM YYYY, h:mm:ss a'),
                 }));
                 //res.json({ currentUserData, 'allusers': users });
+                console.log("usersss",users);
                 res.render('pending-users', { menu_active_id: 'user', page_title: 'Pending Users', currentUserData, 'allusers': users });
             } else {
                 res.render('pending-users', { menu_active_id: 'user', page_title: 'Pending Users', currentUserData, 'allusers': [] });

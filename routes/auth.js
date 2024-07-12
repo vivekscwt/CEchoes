@@ -494,11 +494,16 @@ router.post('create-product',authController.createproduct);
 //addingUsers
 router.post('/adding-users',authController.addingUsers);
 
+router.put('/active-users',authController.confirmUser);
+
+
 router.post('/create-subscription',authController.createSubscription);
 
 router.post('/externalRegistration',authController.externalRegistration);
 
-router.post('/createexternalSubscription',authController.createexternalSubscription)
+router.post('/createexternalSubscription',authController.createexternalSubscription);
+
+router.post('/update-order-history',authController.updateOrderHistory);
 
 //create-subscription-checkout-session
 router.post('/create-subscription-checkout-session',authController.createSubscriptionCheckoutSession);

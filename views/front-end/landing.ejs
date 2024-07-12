@@ -2313,6 +2313,7 @@
             keyword: keyword,
             country: country_name
           };
+          console.log("datasdd", data);
           $.ajax({
             url: 'api/search-company',
             method: 'POST',
@@ -2504,6 +2505,7 @@
             keyword: keyword,
             country: country_name
           };
+          console.log("performdata", data);
 
           $.ajax({
             url: '/api/search-company',
@@ -2653,7 +2655,83 @@
         }
       });
 
+      $('#country_review').on('change', function () {
+        var country = $(this).val();
+        console.log("country_review_val", country);
+        if (country) {
+          $.ajax({
+            url: '/getStates',
+            type: 'GET',
+            data: { country: country },
+            success: function (response) {
+              console.log('Response:', response);
+              var states = response.states || response;
+              if (Array.isArray(states)) {
+                var $stateDropdown = $('#state');
+                $stateDropdown.empty();
+                $stateDropdown.append('<option value="" selected disabled>Select State</option>');
 
+                states.forEach(function (state) {
+                  $stateDropdown.append('<option value="' + state.shortname + '">' + state.name + '</option>');
+                });
+              } else {
+                console.error('States is not an array:', states);
+              }
+            },
+            error: function (xhr, status, error) {
+              console.error('Error fetching states:', status, error);
+              alert('Error fetching states. Please try again.');
+            }
+          });
+        } else {
+          $('#state').empty();
+          $('#state').append('<option value="" selected disabled>Select State</option>');
+        }
+      });
+
+
+
+    </script>
+
+    <script>
+      $(document).ready(function () {
+        function loadStates(country) {
+          if (country) {
+            $.ajax({
+              url: '/getStates',
+              type: 'GET',
+              data: { country: country },
+              success: function (response) {
+                console.log('Response:', response);
+                var states = response.states || response;
+                if (Array.isArray(states)) {
+                  var $stateDropdown = $('#state');
+                  $stateDropdown.empty();
+                  $stateDropdown.append('<option value="" selected disabled>Select State</option>');
+                  states.forEach(function (state) {
+                    $stateDropdown.append('<option value="' + state.shortname + '">' + state.name + '</option>');
+                  });
+                } else {
+                  console.error('States is not an array:', states);
+                }
+              },
+              error: function (xhr, status, error) {
+                console.error('Error fetching states:', status, error);
+                alert('Error fetching states. Please try again.');
+              }
+            });
+          } else {
+            $('#state').empty();
+            $('#state').append('<option value="" selected disabled>Select State</option>');
+          }
+        }
+
+        var selectedCountry = $('#country_review').val();
+        console.log("selectedCountry", selectedCountry);
+        if (selectedCountry) {
+          loadStates(selectedCountry);
+        }
+      });
 
     </script>
 
