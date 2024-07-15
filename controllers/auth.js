@@ -12995,12 +12995,12 @@ exports.updateOrderHistory = async (req, res) => {
           
           const update_order_history_query = `
             UPDATE order_history
-            SET user_id = ?, payment_status = ?, subscription_details = ?, subscription_start_date = ?, subscription_end_date = ?
+            SET payment_status = ?, subscription_details = ?, subscription_start_date = ?, subscription_end_date = ?
             WHERE stripe_subscription_id = ?
           `;
           
           const update_values = [
-            order_history_data.user_id,
+            //order_history_data.user_id,
             order_history_data.payment_status,
             order_history_data.subscription_details,
             order_history_data.subscription_start_date,
