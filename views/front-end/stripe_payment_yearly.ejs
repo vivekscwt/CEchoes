@@ -172,6 +172,8 @@
 
 
 	<script>
+		var razorpay_key = '<%= razorpay_key%>';
+		console.log("razorpay_key",razorpay_key);
 		document.addEventListener('DOMContentLoaded', function() {
 			const paymentForm = document.getElementById('paymentForm');
 			if (!paymentForm) {
@@ -206,7 +208,8 @@
 					const amountInRupees = (amount / 100).toFixed(2);
 	
 					const options = {
-						key: 'rzp_test_FUBQq7lujicpGo',
+						//key: 'rzp_test_FUBQq7lujicpGo',
+						key: razorpay_key,
 						subscription_id: subscription.id,
 						name: 'Subscription Payment',
 						description: `Subscription Payment: ₹${amountInRupees}`,
@@ -309,6 +312,20 @@
 				}
 			}
 		});
+		document.getElementById('zip').addEventListener('input', function (e) {
+            const value = e.target.value;
+            if (value.length > 6) {
+                e.target.value = value.slice(0, 6);
+            }
+        });
+
+        document.getElementById('zip').addEventListener('blur', function (e) {
+            const value = e.target.value;
+            if (value.length !== 6) {
+                alert('Zip Code must be exactly 6 digits.');
+                e.target.focus();
+            }
+        });
 	</script>
 
 

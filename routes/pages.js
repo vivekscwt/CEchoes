@@ -988,7 +988,7 @@ router.get('/business', checkCookieValue, async (req, res) => {
             comFunction2.getSubscribedUsers(user_id)
         ]);
         console.log("getplans", getplans);
-        console.log("getSubscribedUsers", getSubscribedUsers);
+        console.log("getSubscribedUserssss", getSubscribedUsers);
 
         const sql = `SELECT * FROM page_info where secret_Key = 'business' AND country = "${country_code}"`;
         db.query(sql, (err, results, fields) => {
@@ -1113,6 +1113,8 @@ router.get('/stripe-payment', checkCookieValue, async (req, res) => {
         let currentUserData = JSON.parse(req.userData);
         console.log("currentUserData", currentUserData);
 
+        const razorpay_key = process.env.RAZORPAY_KEY_ID;
+
         if(currentUserData != null){
             var user_id = currentUserData.user_id;
             console.log("user_idsssss",user_id);
@@ -1155,7 +1157,8 @@ router.get('/stripe-payment', checkCookieValue, async (req, res) => {
             exchangeRates: exchangeRates,
             encryptedEmail,
             user_id,
-            getCountries
+            getCountries,
+            razorpay_key: razorpay_key
         });
     } catch (err) {
         console.error(err);
@@ -1168,6 +1171,8 @@ router.get('/stripe-year-payment', checkCookieValue, async (req, res) => {
         console.log("req.query-yearly", req.query);
         const apiKey = process.env.GEO_LOCATION_API_KEY;
         console.log("apiKey",apiKey);
+
+        const razorpay_key = process.env.RAZORPAY_KEY_ID;
 
         let country_name = req.cookies.countryName || 'India';
         let country_code = req.cookies.countryCode || 'IN';
@@ -1212,7 +1217,8 @@ router.get('/stripe-year-payment', checkCookieValue, async (req, res) => {
             country_code: country_code,
             exchangeRates: exchangeRates,
             getstatevalue: getstatevalue,
-            getCountries: getCountries
+            getCountries: getCountries,
+            razorpay_key: razorpay_key
         });
     } catch (err) {
         console.error(err);
@@ -1226,6 +1232,7 @@ router.get('/create-user-company-subscription', checkCookieValue, async(req, res
         console.log("req.query-monthly", req.query);
         const apiKey = process.env.GEO_LOCATION_API_KEY;
         //console.log("apiKey",apiKey);
+        const razorpay_key = process.env.RAZORPAY_KEY_ID;
 
         let currentUserData = JSON.parse(req.userData);
         console.log("currentUserData", currentUserData);
@@ -1280,7 +1287,8 @@ router.get('/create-user-company-subscription', checkCookieValue, async(req, res
             user_id,
             globalPageMeta,
             getCountries,
-            getCountriesList
+            getCountriesList,
+            razorpay_key: razorpay_key
         });
     } catch (err) {
         console.error(err);
@@ -1305,9 +1313,10 @@ router.get('/checkEmailAvailability', async (req, res) => {
                     if (results.length > 0) {
                         const register_from = results[0].register_from;
                         resolve({ status: 'error', message: 'Email already exists.' });
-                    } else {
-                        reject({ status: 'success', message: 'Email available.' });
-                    }
+                    } 
+                    // else {
+                    //     reject({ status: 'success', message: 'Email available.' });
+                    // }
                 }
             });
         });

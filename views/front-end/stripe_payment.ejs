@@ -14,7 +14,7 @@
 			<div class="col">
 				<h3 class="title">Amount</h3>
 				<div id="amountDisplay">
-					<p>Total Amount: <span id="amount">$0.00</span></p>
+					<p>Total Amount: <span id="amount">₹<%= total_price%></span></p>
 				</div>
 			</div>
 			<div class="col">
@@ -49,10 +49,10 @@
 									<option value="">Select a state</option>
 								</select>
 							</div>
-                            <div class="inputBox">
-                                <label for="zip">Zip Code:</label>
-                                <input type="number" name="zip" id="zip" placeholder="123 456" required>
-                            </div>
+							<div class="inputBox">
+								<label for="zip">Zip Code:</label>
+								<input type="number" name="zip" id="zip" placeholder="123456" minlength="6" maxlength="6" required>
+							</div>
                         </div>
                     </div>
                     <input type="submit" value="Proceed to Checkout" class="submit_btn" id="paymentButton">
@@ -251,6 +251,11 @@
 
 
 	<script>
+		var razorpay_key = '<%= razorpay_key%>';
+		console.log("razorpay_key",razorpay_key);
+		var total_price = '<%= total_price%>';
+		// console.log("total_price",total_price);
+		
 		document.addEventListener('DOMContentLoaded', function() {
 			const paymentForm = document.getElementById('paymentForm');
 			if (!paymentForm) {
@@ -286,7 +291,8 @@
 					const amountInRupees = (amount / 100).toFixed(2);
 	
 					const options = {
-						key: 'rzp_test_FUBQq7lujicpGo',
+						//key: 'rzp_test_FUBQq7lujicpGo',
+						key: razorpay_key,
 						subscription_id: subscription.id,
 						name: 'Subscription Payment',
 						description: `Subscription Payment: ₹${amountInRupees}`,
@@ -389,6 +395,21 @@
 				}
 			}
 		});
+
+		document.getElementById('zip').addEventListener('input', function (e) {
+            const value = e.target.value;
+            if (value.length > 6) {
+                e.target.value = value.slice(0, 6);
+            }
+        });
+
+        document.getElementById('zip').addEventListener('blur', function (e) {
+            const value = e.target.value;
+            if (value.length !== 6) {
+                alert('Zip Code must be exactly 6 digits.');
+                e.target.focus();
+            }
+        });
 	</script>
 	
 
