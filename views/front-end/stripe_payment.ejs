@@ -278,8 +278,8 @@
 						state: document.getElementById('stripe_month_state').value,
 						zip: document.getElementById('zip').value,
 						planId: '<%= planID %>',
-						//billingCycle: 'monthly',
-						billingCycle: 'daily',
+						billingCycle: 'monthly',
+						//billingCycle: 'daily',
 						memberCount: '<%= memberCount %>'
 					};
 	
@@ -376,7 +376,7 @@
 							text: response.data.message || 'Subscribed successfully.',
 							confirmButtonText: 'OK'
 						}).then(() => {
-							window.location.href = '/business';
+							//window.location.href = '/staging-business';
 						});
 					} else {
 						Swal.fire({
