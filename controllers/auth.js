@@ -13063,7 +13063,7 @@ exports.createSubscription = async (req, res) => {
         const subscriptionParams = {
             plan_id: priceId.id,
             customer_id: customerId,
-            total_count: 10000,
+            total_count: 1200,
             // shipping_address: {
             //     name: name,
             //     phone: phone,
@@ -13192,7 +13192,7 @@ exports.createexternalSubscription = async (req, res) => {
         const subscriptionParams = {
             plan_id: priceId.id,
             customer_id: customerId,
-            total_count: 10000,
+            total_count: 1200,
         };
         const subscription = await razorpay.subscriptions.create(subscriptionParams);
         console.log("Created subscription:", subscription);
