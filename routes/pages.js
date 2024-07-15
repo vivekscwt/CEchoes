@@ -1006,7 +1006,7 @@ router.get('/staging-business', checkCookieValue, async (req, res) => {
                 const UpcomingBusinessFeature = await comFunction2.getUpcomingBusinessFeature();
                 const BusinessFeature = await comFunction2.getBusinessFeature();
                 //console.log(meta_values_array);
-                res.render('front-end/business', {
+                res.render('front-end/staging-business', {
                     menu_active_id: 'business',
                     page_title: common.title,
                     currentUserData,
