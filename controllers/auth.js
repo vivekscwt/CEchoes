@@ -13616,66 +13616,66 @@ exports.externalRegistration = async (req, res) => {
                             await queryAsync(userMetaInsertQuery, [userResults.insertId, 0,user_country, user_state]);
 
                             // Register user in blog API
-                            // const userRegistrationData = {
-                            //     username: email,
-                            //     email: email,
-                            //     password: register_password,
-                            //     first_name: first_name,
-                            //     last_name: last_name,
-                            // };
-                            // await axios.post(`${process.env.BLOG_API_ENDPOINT}/register`, userRegistrationData);
+                             const userRegistrationData = {
+                                username: email,
+                                email: email,
+                                password: register_password,
+                                first_name: first_name,
+                                last_name: last_name,
+                            };
+                            await axios.post(`${process.env.BLOG_API_ENDPOINT}/register`, userRegistrationData);
 
-                            // // Log user in blog API
-                            // const userData = {
-                            //     user_id: userResults.insertId,
-                            //     first_name: first_name,
-                            //     last_name: last_name,
-                            //     email: email,
-                            //     user_type_id: 2
-                            // };
-                            // const encodedUserData = JSON.stringify(userData);
-                            // res.cookie('user', encodedUserData);
+                            // Log user in blog API
+                            const userData = {
+                                user_id: userResults.insertId,
+                                first_name: first_name,
+                                last_name: last_name,
+                                email: email,
+                                user_type_id: 2
+                            };
+                            const encodedUserData = JSON.stringify(userData);
+                            res.cookie('user', encodedUserData);
 
-                            // const userLoginData = {
-                            //     email: email,
-                            //     password: register_password,
-                            // };
-                            // const loginResponse = await axios.post(`${process.env.BLOG_API_ENDPOINT}/login`, userLoginData);
-                            // const wpUserData = loginResponse.data.data;
+                            const userLoginData = {
+                                email: email,
+                                password: register_password,
+                            };
+                            const loginResponse = await axios.post(`${process.env.BLOG_API_ENDPOINT}/login`, userLoginData);
+                            const wpUserData = loginResponse.data.data;
 
-                            // // Fetch device info
-                            // const userAgent = req.headers['user-agent'];
-                            // const agent = useragent.parse(userAgent);
-                            // const deviceQuery = 'SELECT * FROM user_device_info WHERE user_id = ?';
-                            // const deviceQueryResults = await new Promise((resolve, reject) => {
-                            //     db.query(deviceQuery, [userResults.insertId], (err, results) => {
-                            //         if (err) return reject(err);
-                            //         resolve(results);
-                            //     });
-                            // });
+                            // Fetch device info
+                            const userAgent = req.headers['user-agent'];
+                            const agent = useragent.parse(userAgent);
+                            const deviceQuery = 'SELECT * FROM user_device_info WHERE user_id = ?';
+                            const deviceQueryResults = await new Promise((resolve, reject) => {
+                                db.query(deviceQuery, [userResults.insertId], (err, results) => {
+                                    if (err) return reject(err);
+                                    resolve(results);
+                                });
+                            });
 
-                            // // Insert or update device info
-                            // const ipAddress = requestIp.getClientIp(req);
-                            // const deviceInfo = `${agent.toAgent()} ${agent.os.toString()}`;
-                            // if (deviceQueryResults.length > 0) {
-                            //     const deviceUpdateQuery = 'UPDATE user_device_info SET device_id = ?, IP_address = ?, last_logged_in = ? WHERE user_id = ?';
-                            //     const values = [deviceInfo, ipAddress, formattedDate, userResults.insertId];
-                            //     await new Promise((resolve, reject) => {
-                            //         db.query(deviceUpdateQuery, values, (err, results) => {
-                            //             if (err) return reject(err);
-                            //             resolve(results);
-                            //         });
-                            //     });
-                            // } else {
-                            //     const deviceInsertQuery = 'INSERT INTO user_device_info (user_id, device_id, device_token, imei_no, model_name, make_name, IP_address, last_logged_in, created_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
-                            //     const values = [userResults.insertId, deviceInfo, '', '', '', '', ipAddress, formattedDate, formattedDate];
-                            //     await new Promise((resolve, reject) => {
-                            //         db.query(deviceInsertQuery, values, (err, results) => {
-                            //             if (err) return reject(err);
-                            //             resolve(results);
-                            //         });
-                            //     });
-                            // }
+                            // Insert or update device info
+                            const ipAddress = requestIp.getClientIp(req);
+                            const deviceInfo = `${agent.toAgent()} ${agent.os.toString()}`;
+                            if (deviceQueryResults.length > 0) {
+                                const deviceUpdateQuery = 'UPDATE user_device_info SET device_id = ?, IP_address = ?, last_logged_in = ? WHERE user_id = ?';
+                                const values = [deviceInfo, ipAddress, formattedDate, userResults.insertId];
+                                await new Promise((resolve, reject) => {
+                                    db.query(deviceUpdateQuery, values, (err, results) => {
+                                        if (err) return reject(err);
+                                        resolve(results);
+                                    });
+                                });
+                            } else {
+                                const deviceInsertQuery = 'INSERT INTO user_device_info (user_id, device_id, device_token, imei_no, model_name, make_name, IP_address, last_logged_in, created_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+                                const values = [userResults.insertId, deviceInfo, '', '', '', '', ipAddress, formattedDate, formattedDate];
+                                await new Promise((resolve, reject) => {
+                                    db.query(deviceInsertQuery, values, (err, results) => {
+                                        if (err) return reject(err);
+                                        resolve(results);
+                                    });
+                                });
+                            }
 
                             // Respond with success message
                             return res.status(200).json({ status: 'ok', data: userResults.insertId, message: 'New user created' });
