@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -134,7 +135,7 @@
                     <div>
                         <button type="button" class="formbold-confirm-btn active"
                             onclick="handleConfirmation(true)">Yes</button>
-                        <button type="button" class="formbold-confirm-btn" onclick="handleConfirmation(false)">No</button>
+                        <!-- <button type="button" class="formbold-confirm-btn" onclick="handleConfirmation(false)">No</button> -->
                     </div>
                 </div>
             </div>
@@ -164,7 +165,8 @@
         var razorpay_key = '<%= razorpay_key%>';
 		console.log("razorpay_key",razorpay_key);
         var planID = '<%= planID %>';
-        var memberCount='<%= memberCount %>'
+        var memberCount='<%= memberCount %>';
+        var subscriptionType = '<%= subscriptionType%>'
         let currentStep = 1;
 
         function showStep(step) {
@@ -254,7 +256,8 @@
                         state: 'Default State',
                         zip: document.getElementById('main_address_pin_code').value,
                         planId: planID,
-                        billingCycle: 'daily',
+                        //billingCycle: 'daily',
+                        billingCycle:subscriptionType,
                         memberCount: memberCount,
                         register_password: document.getElementById('register_password').value,
                         register_confirm_password: document.getElementById('register_confirm_password').value,
@@ -521,7 +524,7 @@
                     // title: 'Failed to load states',
                     text: 'Pincode Code must be exactly 6 digits.'
                 });
-                //e.target.focus();
+                e.target.focus();
             }
         });
         document.getElementById('register_password').addEventListener('blur', function (e) {
@@ -533,7 +536,7 @@
                     // title: 'Failed to load states',
                     text: 'Password must be between 8 and 30 characters.'
                 });
-                //e.target.focus();
+                e.target.focus();
             }
         });
         
@@ -547,7 +550,7 @@
                     // title: 'Failed to load states',
                     text: 'Password must be between 8 and 30 characters.'
                 });
-                //e.target.focus();
+                e.target.focus();
             }
         });
         
@@ -559,7 +562,7 @@
                     text: 'Please enter a valid email address.',
                     confirmButtonText: 'OK'
                 });
-                //this.focus();
+                this.focus();
             }
         });
         document.getElementById('email').addEventListener('blur', function () {
@@ -570,7 +573,7 @@
                     text: 'Please enter a valid email address.',
                     confirmButtonText: 'OK'
                 });
-                //this.focus();
+                this.focus();
             }
         });
         document.getElementById('comp_phone').addEventListener('input', function (e) {

@@ -1146,6 +1146,8 @@ router.get('/stripe-payment', checkCookieValue, async (req, res) => {
         console.log("getCountries",getCountries);
 
         res.render('front-end/stripe_payment', {
+            page_title :"Monthly Subscription",
+            menu_active_id : "Monthly Subscription",
             planId,
             planPrice,
             monthly,
@@ -1228,7 +1230,7 @@ router.get('/stripe-year-payment', checkCookieValue, async (req, res) => {
 
 router.get('/create-user-company-subscription', checkCookieValue, async(req, res)=>{
     try {
-        const { planName, planPrice, monthly, memberCount, total_price, encryptedEmail } = req.query;
+        const { planName, planPrice, monthly, memberCount, total_price, encryptedEmail,subscriptionType } = req.query;
         console.log("req.query-monthly", req.query);
         const apiKey = process.env.GEO_LOCATION_API_KEY;
         //console.log("apiKey",apiKey);
@@ -1288,7 +1290,8 @@ router.get('/create-user-company-subscription', checkCookieValue, async(req, res
             globalPageMeta,
             getCountries,
             getCountriesList,
-            razorpay_key: razorpay_key
+            razorpay_key: razorpay_key,
+            subscriptionType: subscriptionType
         });
     } catch (err) {
         console.error(err);

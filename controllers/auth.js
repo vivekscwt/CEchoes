@@ -14478,146 +14478,229 @@ const createRazorpayPlan = async (plan, billingCycle, memberCount, country_code)
 };
 
 
-const fetchActiveSubscriptionsFromStripe = async () => {
-    const subscriptions = [];
-    let hasMore = true;
-    let startingAfter = null;
+// const fetchActiveSubscriptionsFromStripe = async () => {
+//     const subscriptions = [];
+//     let hasMore = true;
+//     let startingAfter = null;
 
-    while (hasMore) {
-        const response = await stripe.subscriptions.list({
-            status: 'active',
-            limit: 100,
-            ...(startingAfter && { starting_after: startingAfter })
-        });
+//     while (hasMore) {
+//         const response = await stripe.subscriptions.list({
+//             status: 'active',
+//             limit: 100,
+//             ...(startingAfter && { starting_after: startingAfter })
+//         });
 
-        subscriptions.push(...response.data);
-        hasMore = response.has_more;
-        if (hasMore) {
-            startingAfter = response.data[response.data.length - 1].id;
-        }
-    }
+//         subscriptions.push(...response.data);
+//         hasMore = response.has_more;
+//         if (hasMore) {
+//             startingAfter = response.data[response.data.length - 1].id;
+//         }
+//     }
 
-    return subscriptions;
-};
+//     return subscriptions;
+// };
 
-const fetchSubscriptionsFromDatabase = async () => {
-    const query1 = `SELECT 
-    stripe_subscription_id, 
-    subscription_start_date, 
-    subscription_end_date, 
-    UNIX_TIMESTAMP(subscription_start_date) AS subscription_start_timestamp, 
-    UNIX_TIMESTAMP(subscription_end_date) AS subscription_end_timestamp 
-FROM 
-    order_history;
-`;
-    const results = await queryAsync(query1);
-    return results;
-};
+// const fetchSubscriptionsFromDatabase = async () => {
+//     const query1 = `SELECT 
+//     stripe_subscription_id, 
+//     subscription_start_date, 
+//     subscription_end_date, 
+//     UNIX_TIMESTAMP(subscription_start_date) AS subscription_start_timestamp, 
+//     UNIX_TIMESTAMP(subscription_end_date) AS subscription_end_timestamp 
+// FROM 
+//     order_history;
+// `;
+//     const results = await queryAsync(query1);
+//     return results;
+// };
 
-const insertOrUpdateOrderHistory = async (subscription, customerId) => {
+// const insertOrUpdateOrderHistory = async (subscription, customerId) => {
+//     try {
+
+//         console.log("subscriptionId", subscription.id);
+//         //console.log("customerId",customerId);
+
+//         const subscriptions = await stripe.subscriptions.retrieve(subscription.id);
+
+//         const invoice = await stripe.invoices.retrieve(subscription.latest_invoice);
+
+//         let payment_status = invoice.status === 'paid' ? 'succeeded' : 'failed';
+
+//         const getSubQuery = `SELECT * FROM order_history WHERE stripe_subscription_id = "${subscriptions.id}"`;
+//         const subqueryval = await queryAsync(getSubQuery);
+
+//         let customerid;
+//         let planid = subscription.plan.id;
+
+//         if (subqueryval.length > 0) {
+//             customerid = subqueryval[0].user_id;
+//             planid = subqueryval[0].plan_id;
+
+//             console.log("customerid", customerid);
+//             console.log("planid", planid);
+//         }
+
+//         const orderHistoryData = {
+//             user_id: customerid,
+//             stripe_subscription_id: subscriptions.id,
+//             plan_id: planid,
+//             payment_status: payment_status,
+//             subscription_details: JSON.stringify(subscription),
+//             payment_details: JSON.stringify(invoice),
+//             subscription_start_date: new Date(subscription.current_period_start * 1000),
+//             subscription_end_date: new Date(subscription.current_period_end * 1000),
+//             subscription_duration: subscription.plan.interval
+//         };
+
+//         const orderHistoryQuery = `INSERT INTO order_history SET ? ON DUPLICATE KEY UPDATE ?`;
+//         await queryAsync(orderHistoryQuery, [orderHistoryData, orderHistoryData]);
+
+//     } catch (error) {
+//         console.error('Error inserting or updating order history:', error);
+//     }
+// };
+
+
+// const updateOrderHistory = async () => {
+//     try {
+//         const stripeSubscriptions = await fetchActiveSubscriptionsFromStripe();
+//         const dbSubscriptions = await fetchSubscriptionsFromDatabase();
+
+//         const dbSubscriptionsMap = new Map();
+//         dbSubscriptions.forEach(sub => {
+//             const startDate = new Date(sub.subscription_start_date);
+//             const endDate = new Date(sub.subscription_end_date);
+//             dbSubscriptionsMap.set(sub.stripe_subscription_id, {
+//                 subscription_start_date: startDate,
+//                 subscription_end_date: endDate
+//             });
+//         });
+
+//         for (let subscription of stripeSubscriptions) {
+//             const subscriptionId = subscription.id;
+//             const customerId = subscription.customer;
+//             const currentStartDate = new Date(subscription.current_period_start * 1000);
+//             const currentEndDate = new Date(subscription.current_period_end * 1000);
+
+//             if (dbSubscriptionsMap.has(subscriptionId)) {
+//                 const dbSubscriptionDates = dbSubscriptionsMap.get(subscriptionId);
+//                 const dbStartDate = dbSubscriptionDates.subscription_start_date;
+//                 const dbEndDate = dbSubscriptionDates.subscription_end_date;
+
+//                 // console.log("dbStartDate",dbStartDate);
+//                 // console.log("dbEndDate",dbEndDate);
+//                 // console.log("currentStartDate",currentStartDate);
+//                 // console.log("currentEndDate",currentEndDate);
+
+//                 if (!dbStartDate || !dbEndDate || dbStartDate.getTime() !== currentStartDate.getTime() || dbEndDate.getTime() !== currentEndDate.getTime()) {
+//                     // Update the order history with the new dates
+//                     await insertOrUpdateOrderHistory(subscription, customerId);
+//                 }
+//             } else {
+//                 // New subscription, insert it into the order history
+//                 await insertOrUpdateOrderHistory(subscription, customerId);
+//             }
+//         }
+
+//         console.log('Order history update completed.');
+//     } catch (error) {
+//         console.error('Error updating order history:', error);
+//     }
+// };
+
+
+
+async function fetchActiveSubscriptions() {
     try {
-
-        console.log("subscriptionId", subscription.id);
-        //console.log("customerId",customerId);
-
-        const subscriptions = await stripe.subscriptions.retrieve(subscription.id);
-
-        const invoice = await stripe.invoices.retrieve(subscription.latest_invoice);
-
-        let payment_status = invoice.status === 'paid' ? 'succeeded' : 'failed';
-
-        const getSubQuery = `SELECT * FROM order_history WHERE stripe_subscription_id = "${subscriptions.id}"`;
-        const subqueryval = await queryAsync(getSubQuery);
-
-        let customerid;
-        let planid = subscription.plan.id;
-
-        if (subqueryval.length > 0) {
-            customerid = subqueryval[0].user_id;
-            planid = subqueryval[0].plan_id;
-
-            console.log("customerid", customerid);
-            console.log("planid", planid);
-        }
-
-        const orderHistoryData = {
-            user_id: customerid,
-            stripe_subscription_id: subscriptions.id,
-            plan_id: planid,
-            payment_status: payment_status,
-            subscription_details: JSON.stringify(subscription),
-            payment_details: JSON.stringify(invoice),
-            subscription_start_date: new Date(subscription.current_period_start * 1000),
-            subscription_end_date: new Date(subscription.current_period_end * 1000),
-            subscription_duration: subscription.plan.interval
+        const auth = {
+            // username: "rzp_test_ivrp5LlA1gQXAT",
+            // password: "iLxMcGESxvq5ZHGk8DJUqrpj"
+            username: process.env.RAZORPAY_KEY_ID,
+            password: process.env.RAZORPAY_KEY_SECRET
         };
-
-        const orderHistoryQuery = `INSERT INTO order_history SET ? ON DUPLICATE KEY UPDATE ?`;
-        await queryAsync(orderHistoryQuery, [orderHistoryData, orderHistoryData]);
-
+        const response = await axios.get('https://api.razorpay.com/v1/subscriptions?status=active', { auth });
+        console.log('Active Subscriptions:', response.data.items);
+        return response.data.items;  
     } catch (error) {
-        console.error('Error inserting or updating order history:', error);
+        console.error('Error fetching active subscriptions:', error.response ? error.response.data : error.message);
+        throw error;
     }
-};
+}
 
-
-const updateOrderHistory = async () => {
+async function fetchSubscriptionsFromDB() {
     try {
-        const stripeSubscriptions = await fetchActiveSubscriptionsFromStripe();
-        const dbSubscriptions = await fetchSubscriptionsFromDatabase();
+        const query = 'SELECT stripe_subscription_id, subscription_start_date, subscription_end_date FROM order_history';
+        const subscriptionsData = await queryAsync(query);
+        console.log("subscriptionsData",subscriptionsData);
+        return subscriptionsData;
+    } catch (error) {
+        console.error('Error fetching subscriptions from database:', error);
+        throw error;
+    }
+}
+async function insertIntoOrderHistory(subscription) {
+    try {
+        const insertQuery = `INSERT INTO order_history (stripe_subscription_id, subscription_start_date, subscription_end_date) VALUES (?, ?, ?)`;
+        const values = [
+            subscription.id,
+            new Date(subscription.start_at * 1000),
+            new Date(subscription.charge_at * 1000)
+        ];
 
-        const dbSubscriptionsMap = new Map();
-        dbSubscriptions.forEach(sub => {
-            const startDate = new Date(sub.subscription_start_date);
-            const endDate = new Date(sub.subscription_end_date);
-            dbSubscriptionsMap.set(sub.stripe_subscription_id, {
-                subscription_start_date: startDate,
-                subscription_end_date: endDate
-            });
-        });
+        if (subscription.start_at !== subscription.charge_at) {
+            await queryAsync(insertQuery, values);
+            console.log(`Subscription ${subscription.id} inserted into order history.`);
+        } else {
+            console.log(`Subscription ${subscription.id} has identical start_at and charge_at. Not inserting.`);
+        }
+    } catch (error) {
+        console.error(`Error inserting subscription ${subscription.id} into order history:`, error);
+        throw error;
+    }
+}
 
-        for (let subscription of stripeSubscriptions) {
-            const subscriptionId = subscription.id;
-            const customerId = subscription.customer;
-            const currentStartDate = new Date(subscription.current_period_start * 1000);
-            const currentEndDate = new Date(subscription.current_period_end * 1000);
 
-            if (dbSubscriptionsMap.has(subscriptionId)) {
-                const dbSubscriptionDates = dbSubscriptionsMap.get(subscriptionId);
-                const dbStartDate = dbSubscriptionDates.subscription_start_date;
-                const dbEndDate = dbSubscriptionDates.subscription_end_date;
+async function syncSubscriptions() {
+    try {
+        const activeSubscriptions = await fetchActiveSubscriptions();
+        const dbSubscriptions = await fetchSubscriptionsFromDB();
 
-                // console.log("dbStartDate",dbStartDate);
-                // console.log("dbEndDate",dbEndDate);
-                // console.log("currentStartDate",currentStartDate);
-                // console.log("currentEndDate",currentEndDate);
+        for (const subscription of activeSubscriptions) {
+            const existingSubscription = dbSubscriptions.find(dbSub => dbSub.stripe_subscription_id == subscription.id);
 
-                if (!dbStartDate || !dbEndDate || dbStartDate.getTime() !== currentStartDate.getTime() || dbEndDate.getTime() !== currentEndDate.getTime()) {
-                    // Update the order history with the new dates
-                    await insertOrUpdateOrderHistory(subscription, customerId);
+            if (existingSubscription) {
+                const existingStart = new Date(existingSubscription.subscription_start_date).getTime();
+                const existingEnd = new Date(existingSubscription.subscription_end_date).getTime();
+                const razorpayStart = new Date(subscription.start_at * 1000).getTime();
+                const razorpayEnd = new Date(subscription.charge_at * 1000).getTime();
+
+                const startAtChanged = existingStart != razorpayStart;
+                const chargeAtChanged = existingEnd != razorpayEnd;
+
+                if (startAtChanged || chargeAtChanged) {
+                    await insertIntoOrderHistory(subscription);
+                    console.log(`Subscription ${subscription.id} updated in order history.`);
+                } else {
+                    console.log(`Subscription ${subscription.id} exists in database with the same start_at and charge_at. Skipping.`);
                 }
             } else {
-                // New subscription, insert it into the order history
-                await insertOrUpdateOrderHistory(subscription, customerId);
+                console.log("No existingSubscription found in database.");
+                //await insertIntoOrderHistory(subscription);
+                //console.log(`Subscription ${subscription.id} inserted into order history.`);
             }
         }
 
-        console.log('Order history update completed.');
+        console.log('Subscription sync completed.');
     } catch (error) {
-        console.error('Error updating order history:', error);
+        console.error('Error syncing subscriptions:', error);
     }
-};
+}
 
-
-
-cron.schedule('0 0 * * *', async () => {
-    await updateOrderHistory();
-});
-
-// // Optionally, run the check immediately on startup
-//updateOrderHistory();
-
-
+// syncSubscriptions().then(() => {
+//     console.log('Subscription sync completed.');
+// }).catch((error) => {
+//     console.error('Subscription sync failed:', error);
+// });
 
 
 exports.createSubscriptionCheckoutSession = async (req, res) => {
@@ -14773,3 +14856,12 @@ cron.schedule('0 5 * * *', async () => {
     await comFunction2.duscussionQueryAlert();
     await comFunction2.complaintLevelUpdate();
 })
+
+cron.schedule('0 0 * * *', async () => {
+    try {
+        await syncSubscriptions();
+        console.log('Subscription sync job completed successfully.');
+    } catch (error) {
+        console.error('Error syncing subscriptions:', error);
+    }
+});
