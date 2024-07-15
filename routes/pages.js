@@ -7024,28 +7024,23 @@ router.get('/edit-contacts', checkLoggedIn, (req, res) => {
     try {
         const encodedUserData = req.cookies.user;
         const currentUserData = JSON.parse(encodedUserData);
-        const sql = `SELECT * FROM contacts`;
+        let country_name = req.cookies.countryName
+        || 'India';
+        let country_code = req.cookies.countryCode 
+        || 'IN';
+        console.log("country_namesfaq", country_name);
+        console.log("country_codesfaq", country_code);
+    
+        if (country_code != 'UK' && country_code != 'JP') {
+            country_code = 'US';
+        }
+        const sql = `SELECT * FROM contacts WHERE country = "${country_code}"`;
         db.query(sql, (err, results, fields) => {
             if (err) throw err;
             const social_sql = `SELECT * FROM socials`;
             db.query(social_sql, (error, social_results, fields) => {
                 const contacts = results[0];
                 const socials = social_results[0];
-
-                const contacts1 = results[1];
-                const socials1 = social_results[1];
-
-                const contacts2 = results[2];
-                const socials2 = social_results[2];
-
-                // console.log("contacts",contacts);
-                // console.log("contacts1",contacts1);
-                // console.log("contacts2",contacts2);
-                
-                // console.log("socials",socials);
-                // console.log("socials1",socials1);
-                // console.log("socials2",socials2);
-
                 //Render the 'update-contact' EJS view and pass the data
 
                 const contact_address_sql= `SELECT * FROM contact_address`;
@@ -7060,15 +7055,13 @@ router.get('/edit-contacts', checkLoggedIn, (req, res) => {
                     page_title: 'Update Contacts',
                     currentUserData,
                     contacts,
-                    contacts1,
-                    contacts2,
                     socials,
-                    socials1,
-                    socials2
+                    address
                 });
             })
+            })
         })
-    })
+
     } catch (err) {
         console.error(err);
         res.status(500).send('An error occurred');
