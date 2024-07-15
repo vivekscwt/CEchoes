@@ -1271,8 +1271,10 @@ router.get('/stripe-year-payment', checkCookieValue, async (req, res) => {
 
         const getcountrcodequery = `SELECT * FROM countries WHERE shortname= "${country_code}"`;
         const getcountrycodeval = await queryAsync(getcountrcodequery);
-        const country_no = getcountrycodeval[0].id;
-        console.log("country_no",country_no);
+        if(getcountrycodeval.length>0){
+            var country_no = getcountrycodeval[0].id;
+            console.log("country_no",country_no);
+        }
 
         let currentUserData = JSON.parse(req.userData);
         const planids = `SELECT * FROM plan_management WHERE name = "${planId}"`;
