@@ -543,22 +543,10 @@ router.get('/contact-us', checkCookieValue, async (req, res) => {
     let currentUserData = JSON.parse(req.userData);
     const apiKey = process.env.GEO_LOCATION_API_KEY;
     console.log("apiKey",apiKey);
-
-    const country_name = req.cookies.countryName
-    || 'India';
-   let country_code = req.cookies.countryCode 
-   || 'IN';
-   console.log("country_namesland", country_name);
-   console.log("country_codesland", country_code);
-
-   if (country_code != 'UK' && country_code != 'JP') {
-       country_code = 'US';
-   }
-
     const [globalPageMeta] = await Promise.all([
         comFunction2.getPageMetaValues('global'),
     ]);
-    const sql = `SELECT * FROM contacts WHERE country="${country_code}"`;
+    const sql = `SELECT * FROM contacts`;
     db.query(sql, (err, results, fields) => {
         if (err) throw err;
         const social_sql = `SELECT * FROM socials`;
@@ -567,12 +555,21 @@ router.get('/contact-us', checkCookieValue, async (req, res) => {
             const contacts = results[0];
             const page_title = results[0].title;
             const socials = social_results[0];
+
+            const contact_address_sql= `SELECT * FROM contact_address`;
+            db.query(contact_address_sql, (errors, address_results, fieldss) => {
+                const address = address_results[0];
+                console.log("address",address);
+                console.log("socials",socials);
+
+
             res.render('front-end/contact', {
-                menu_active_id: 'contact', page_title: page_title, currentUserData, contacts, socials,
+                menu_active_id: 'contact', page_title: page_title, currentUserData, contacts, socials, address,
                 globalPageMeta: globalPageMeta
             });
 
         })
+    })
     })
 
 });
