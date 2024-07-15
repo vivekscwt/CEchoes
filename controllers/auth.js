@@ -721,7 +721,7 @@ exports.frontendUserLogin = (req, res) => {
 
     const { email, password } = req.body;
 
-    db.query('SELECT * FROM users WHERE email = ?', [email], async (err, results) => {
+    db.query(`SELECT * FROM users WHERE email = ?`, [email], async (err, results) => {
         if (err) {
             return res.send(
                 {
@@ -733,7 +733,7 @@ exports.frontendUserLogin = (req, res) => {
         } else {
             if (results.length > 0) {
                 const user = results[0];
-                //console.log(user);
+                console.log("usersaas",user);
                 // Compare the provided password with the stored hashed password
                 bcrypt.compare(password, user.password, (err, result) => {
                     if (err) {
@@ -761,7 +761,7 @@ exports.frontendUserLogin = (req, res) => {
                                 let userData = {};
                                 if (results.length > 0) {
                                     const user_meta = results[0];
-                                    //console.log(user_meta,'aaaaaaaa');
+                                    console.log(user_meta,'aaaaaaaa');
                                     // Set a cookie
                                     const dateString = user_meta.date_of_birth;
                                     const date_of_birth_date = new Date(dateString);
@@ -774,6 +774,7 @@ exports.frontendUserLogin = (req, res) => {
                                         email: user.email,
                                         phone: user.phone,
                                         user_type_id: user.user_type_id,
+                                        user_status: user.user_status,
                                         address: user_meta.address,
                                         country: user_meta.country,
                                         country_name: user_meta.country_name,
@@ -887,7 +888,7 @@ exports.frontendUserLogin = (req, res) => {
                             })
                         } else {
                             let err_msg = '';
-                            if (user.user_status == 0) {
+                            if (user.user_status == 0 || user.user_status == 3 ) {
                                 err_msg = 'your account is inactive, please contact with administrator.';
                             } else {
                                 err_msg = 'Do you want to login as administrator, then please go to proper route';
@@ -987,6 +988,7 @@ exports.login = (req, res) => {
                                         email: user.email,
                                         phone: user.phone,
                                         user_type_id: user.user_type_id,
+                                        user_status: user.user_status,
                                         address: user_meta.address,
                                         country: user_meta.country,
                                         country_name: user_meta.country_name,
@@ -2118,7 +2120,7 @@ exports.createCompany = async (req, res) => {
                     {
                         status: 'err',
                         data: '',
-                        message: 'Organization name already exist.'
+                        message: 'tion name already exist.Organiza'
                     }
                 )
             }
@@ -3659,6 +3661,7 @@ exports.trashCompany = async (req, res) => {
 exports.trashCompanies = async (req, res) => {
     console.log("companyid", req.body.companyid);
     console.log("aaaaa");
+    // sql = `UPDATE company SET status = '3' WHERE ID = ?`;
     sql = `UPDATE company SET status = '3' WHERE ID = ?`;
     const data = [req.body.companyid];
     db.query(sql, data, (err, result) => {
@@ -3676,6 +3679,47 @@ exports.trashCompanies = async (req, res) => {
         }
     })
 }
+
+
+// exports.trashCompanies = async (req, res) => {
+//     console.log("companyid", req.body.companyid);
+//     console.log("aaaaa");
+//     // sql = `UPDATE company SET status = '3' WHERE ID = ?`;
+//     sql = `UPDATE company SET status = '3' WHERE ID = ?`;
+//     const data = [req.body.companyid];
+//     db.query(sql, data, (err, result) => {
+//         if (err) {
+//             console.log("error", err);
+//             return res.send({
+//                 status: 'error',
+//                 message: 'Something went wrong'
+//             });
+//         } else {
+//             // return res.send({
+//             //     status: 'ok',
+//             //     message: 'Company successfully move to trash'
+//             // });
+//             console.log("pppppp");
+//             const updateLogSql = `DELETE FROM company_claim_request WHERE company_id = ?`;
+//             const updateLogData = [req.body.companyid];
+            
+//             db.query(updateLogSql, updateLogData, (err, result) => {
+//                 if (err) {
+//                     console.log("Error updating company_log:", err);
+//                     return res.send({
+//                         status: 'error',
+//                         message: 'Company status updated, but failed to log the update'
+//                     });
+//                 } else {
+//                     return res.send({
+//                         status: 'ok',
+//                         message: 'Company successfully moved to trash and logged'
+//                     });
+//                 }
+//             });
+//         }
+//     })
+// }
 
 //--- Restore Company ----//
 exports.restoreCompany = (req, res) => {
@@ -3696,6 +3740,7 @@ exports.restoreCompany = (req, res) => {
         }
     })
 }
+
 
 // Assuming Express.js
 exports.getparentcompany = (req, res) => {
@@ -3904,31 +3949,14 @@ exports.editCustomerReviewReply = async (req, res) => {
 // }
 
 exports.updateContacts = async (req, res) => {
-    // Extract data from request body
-    //console.log('Request Form DATA:', req.body.whatsapp_no);
-    console.log('Request Form DATA:', req.body);
-    const { contacts_id, social_id, whatsapp_no, phone_no, email, title, meta_title, meta_desc, meta_keyword, fb_link, twitter_link, linkedin_link, instagram_link, youtube_link, address_id, address1, address2} = req.body;
-
-    // Update contacts query
-    const contact_sql = `UPDATE contacts SET whatsapp_no=?, phone_no=?, email=?, title=?, meta_title=?, meta_desc=?, meta_keyword=? WHERE id=?`;
+    //const formdata = JSON.parse(req.body.formData);
+    console.log('Request Form DATA:', req.body.whatsapp_no);
+    const { contacts_id, social_id, whatsapp_no, phone_no, email, title, meta_title, meta_desc, meta_keyword, fb_link, twitter_link, linkedin_link, instagram_link, youtube_link } = req.body
+    const contact_sql = `UPDATE contacts SET whatsapp_no=?,phone_no=?,email=?,title=?,meta_title=?,meta_desc=?,meta_keyword=? WHERE id = ?`;
     const contact_data = [whatsapp_no, phone_no, email, title, meta_title, meta_desc, meta_keyword, contacts_id];
-
-    // Update socials query
-    const socials_sql = `UPDATE socials SET facabook=?, linkedin=?, instagram=?, youtube=?, twitter=? WHERE id=?`;
-    const socials_data = [fb_link, linkedin_link, instagram_link, youtube_link, twitter_link, social_id];
-
-    // Update contact_address query
-    const address_sql = `UPDATE contact_address SET address1=?, address2=? WHERE id=?`;
-    const address_data = [address1, address2, address_id];
-
-    // Execute all queries
-    db.query(contact_sql, contact_data, (contact_err, contact_result) => {
-        if (contact_err) {
-            return res.send({
-                status: 'err',
-                message: 'Error updating contact details: ' + contact_err
-            });
-        }
+    db.query(contact_sql, contact_data, (err, result) => {
+        const socials_sql = `UPDATE socials SET facabook=?,linkedin=?,instagram=?,youtube=?,twitter=? WHERE id=?`;
+        const socials_data = [fb_link, linkedin_link, instagram_link, youtube_link, twitter_link, social_id];
         db.query(socials_sql, socials_data, (socials_err, socials_result) => {
             if (socials_err) {
                 return res.send({
@@ -3949,11 +3977,9 @@ exports.updateContacts = async (req, res) => {
                     message: 'Contact details, social links, and address updated successfully'
                 });
             });
-        });
-    });
-};
-
-
+        })
+    })
+}
 
 // Contacts Feedback
 exports.contactFeedback = (req, res) => {
@@ -4134,45 +4160,103 @@ exports.createFAQ = async (req, res) => {
 }
 
 // Update FAQ
-exports.updateFAQ = async (req, res) => {
-    //console.log(req.body);
-    const faqArray = req.body.FAQ;
-    //console.log(faqArray[0]); 
+// exports.updateFAQ = async (req, res) => {
+//     //console.log(req.body);
+//     const faqArray = req.body.FAQ;
+//     //console.log(faqArray[0]); 
 
-    const Faq_Page_insert_values = [
-        req.body.title,
-        req.body.content,
-        req.body.meta_title,
-        req.body.meta_desc,
-        req.body.keyword,
-        req.body.app_content,
-    ];
+//     const Faq_Page_insert_values = [
+//         req.body.title,
+//         req.body.content,
+//         req.body.meta_title,
+//         req.body.meta_desc,
+//         req.body.keyword,
+//         req.body.app_content,
+//         req.body.countries_name
+//     ];
+//     try {
+//         db.query('DELETE  FROM faq_categories', (del_faq_cat_err, del_faq_cat_res) => {
+//             db.query('DELETE  FROM faq_item', async (del_faq_item_err, del_faq_item_res) => {
+//                 const faqPageId = await comFunction.insertIntoFaqPages(Faq_Page_insert_values);
+//                 console.log('ID:', faqPageId);
+//                 await comFunction.insertIntoFaqCategories(faqArray);
+//                 return res.send(
+//                     {
+//                         status: 'ok',
+//                         data: faqPageId,
+//                         message: 'FAQ Content successfully Updated'
+//                     }
+//                 )
+//             })
+//         });
+
+
+
+//     } catch (error) {
+//         console.error('Error during insertion:', error);
+//         return res.status(500).send({
+//             status: 'error',
+//             message: 'An error occurred while inserting FAQ data',
+//         });
+//     }
+// }
+
+exports.updateFAQ = async (req, res) => {
+    const { title, content, meta_title, meta_desc, keyword, app_content, countries_name, FAQ } = req.body;
+
+    const Faq_Page_insert_values = [title, content, meta_title, meta_desc, keyword, app_content, countries_name];
+
+    console.log("req.body.faq", req.body);
     try {
-        db.query('DELETE  FROM faq_categories', (del_faq_cat_err, del_faq_cat_res) => {
-            db.query('DELETE  FROM faq_item', async (del_faq_item_err, del_faq_item_res) => {
-                const faqPageId = await comFunction.insertIntoFaqPages(Faq_Page_insert_values);
-                console.log('ID:', faqPageId);
-                await comFunction.insertIntoFaqCategories(faqArray);
-                return res.send(
-                    {
+        // Delete existing FAQ categories and items for the given country
+        db.query('DELETE FROM faq_categories WHERE country = ?', [countries_name], (del_faq_cat_err, del_faq_cat_res) => {
+            if (del_faq_cat_err) {
+                console.error('Error deleting FAQ categories:', del_faq_cat_err);
+                return res.status(500).send({
+                    status: 'error',
+                    message: 'An error occurred while deleting FAQ categories',
+                });
+            }
+
+            db.query('DELETE FROM faq_item WHERE country = ?', [countries_name], async (del_faq_item_err, del_faq_item_res) => {
+                if (del_faq_item_err) {
+                    console.error('Error deleting FAQ items:', del_faq_item_err);
+                    return res.status(500).send({
+                        status: 'error',
+                        message: 'An error occurred while deleting FAQ items',
+                    });
+                }
+
+                try {
+                    const faqPageId = await comFunction.insertIntoFaqPages(Faq_Page_insert_values, countries_name);
+                    console.log('FAQ Page ID:', faqPageId);
+
+                    await comFunction.insertIntoFaqCategories(FAQ, countries_name);
+
+                    return res.send({
                         status: 'ok',
                         data: faqPageId,
-                        message: 'FAQ Content successfully Updated'
-                    }
-                )
-            })
+                        message: 'FAQ Content successfully Updated',
+                    });
+                } catch (insertError) {
+                    console.error('Error during insertion:', insertError);
+                    return res.status(500).send({
+                        status: 'error',
+                        message: 'An error occurred while inserting FAQ data',
+                    });
+                }
+            });
         });
-
-
-
     } catch (error) {
-        console.error('Error during insertion:', error);
+        console.error('Unexpected error:', error);
         return res.status(500).send({
             status: 'error',
-            message: 'An error occurred while inserting FAQ data',
+            message: 'An unexpected error occurred while updating FAQ data',
         });
     }
-}
+};
+
+  
 
 //Update FAQ Images
 exports.updateFAQImages = async (req, res) => {
@@ -4194,8 +4278,158 @@ exports.updateFAQImages = async (req, res) => {
 
 }
 // Update Home
+// exports.updateHome = async (req, res) => {
+//     // console.log('home', req.body);
+//     //     console.log('file', req.files);
+//     //return false;
+//     const form_data = req.body;
+
+//     const { home_id, title, meta_title, meta_desc, meta_keyword, bannner_content, for_business,
+//         for_customer, cus_right_content, cus_right_button_link, cus_right_button_text, youtube_link,
+//         youtube_1, youtube_2, youtube_3, youtube_4, youtube_5, youtube_6, youtube_7, youtube_8, youtube_9, youtube_10, fb_widget, twitter_widget,
+//         org_responsibility_content, org_responsibility_buttton_link, org_responsibility_buttton_text,
+//         about_us_content, about_us_button_link, about_us_button_text, bannner_content_2, bannner_hashtag, impression_number, impression_number_visibility, reviews_count, reviews_count_visibility, total_users_count, total_users_count_visibility, reviewers_guidelines_title, reviewers_guidelines_popup, review_form_demo_location, cus_right_facts_popup, org_responsibility_facts_popup, app_banner_title_1, app_banner_title_2, app_features_for_customer, app_review_content, app_features_hashtag, app_cus_right_content, app_cus_right_point, app_org_responsibility_content, app_org_responsibility_points, app_about_us_content_1, app_about_us_content_2, app_about_us_button_text, bannner_message } = req.body;
+
+//     const { banner_img_1, banner_img_2, banner_img_3, banner_img_4, banner_img_5, banner_img_6, cus_right_img_1, cus_right_img_2, cus_right_img_3, cus_right_img_4, cus_right_img_5,
+//         cus_right_img_6, cus_right_img_7, cus_right_img_8, org_responsibility_img_1, org_responsibility_img_2, org_responsibility_img_3,
+//         org_responsibility_img_4, org_responsibility_img_5, org_responsibility_img_6, org_responsibility_img_7, org_responsibility_img_8,
+//         about_us_img, review_img_1, review_img_2, review_img_3, review_img_4, map_img, app_cus_right_img, app_org_responsibility_img } = req.files;
+
+//     let app_features = [];
+//     if (typeof app_features_for_customer == 'string') {
+//         app_features.push(app_features_for_customer);
+//     } else {
+//         app_features = [...app_features_for_customer];
+//         //app_features = app_features.concat(app_features_for_customer);
+//     }
+//     const app_customer_feature = JSON.stringify(app_features);
+
+//     let app_hashtag = [];
+//     if (typeof app_features_hashtag == 'string') {
+//         app_hashtag.push(app_features_hashtag);
+//     } else {
+//         app_hashtag = [...app_features_hashtag];
+//     }
+//     const app_feature_hashtag = JSON.stringify(app_hashtag);
+
+//     let cus_right_point = [];
+//     if (typeof app_cus_right_point == 'string') {
+//         cus_right_point.push(app_cus_right_point);
+//     } else {
+//         cus_right_point = [...app_cus_right_point];
+//     }
+//     const app_cus_right_points = JSON.stringify(cus_right_point);
+
+//     let org_responsibility_point = [];
+//     if (typeof app_org_responsibility_points == 'string') {
+//         org_responsibility_point.push(app_org_responsibility_points);
+//     } else {
+//         org_responsibility_point = [...app_org_responsibility_points];
+//     }
+//     const app_org_responsibility_point = JSON.stringify(org_responsibility_point);
+
+//     const meta_value = [bannner_content, for_business,
+//         for_customer, cus_right_content, cus_right_button_link, cus_right_button_text, youtube_link,
+//         youtube_1, youtube_2, youtube_3, youtube_4, fb_widget, twitter_widget,
+//         org_responsibility_content, org_responsibility_buttton_link, org_responsibility_buttton_text,
+//         about_us_content, about_us_button_link, about_us_button_text, bannner_content_2, bannner_hashtag, impression_number, impression_number_visibility, reviews_count, reviews_count_visibility, total_users_count, total_users_count_visibility, reviewers_guidelines_title, reviewers_guidelines_popup, review_form_demo_location, cus_right_facts_popup, org_responsibility_facts_popup, youtube_5, youtube_6, youtube_7, youtube_8, youtube_9, youtube_10, app_banner_title_1, app_banner_title_2, app_review_content, app_customer_feature, app_feature_hashtag, app_cus_right_content, app_cus_right_points, app_org_responsibility_content, app_org_responsibility_point, app_about_us_content_1, app_about_us_content_2, app_about_us_button_text, bannner_message];
+
+//     const meta_key = ['bannner_content', 'for_business',
+//         'for_customer', 'cus_right_content', 'cus_right_button_link', 'cus_right_button_text', 'youtube_link', 'youtube_1', 'youtube_2', 'youtube_3', 'youtube_4', 'fb_widget', 'twitter_widget',
+//         'org_responsibility_content', 'org_responsibility_buttton_link', 'org_responsibility_buttton_text',
+//         'about_us_content', 'about_us_button_link', 'about_us_button_text', 'bannner_content_2', 'bannner_hashtag', 'impression_number', 'impression_number_visibility', 'reviews_count', 'reviews_count_visibility', 'total_users_count', 'total_users_count_visibility', 'reviewers_guidelines_title', 'reviewers_guidelines_popup', 'review_form_demo_location', 'cus_right_facts_popup', 'org_responsibility_facts_popup', 'youtube_5', 'youtube_6', 'youtube_7', 'youtube_8', 'youtube_9', 'youtube_10', 'app_banner_title_1', 'app_banner_title_2', 'app_review_content', 'app_customer_feature', 'app_feature_hashtag', 'app_cus_right_content', 'app_cus_right_points', 'app_org_responsibility_content', 'app_org_responsibility_point', 'app_about_us_content_1', 'app_about_us_content_2', 'app_about_us_button_text', 'bannner_message'];
+
+//     await meta_value.forEach((element, index) => {
+//         //console.log(element, index);
+//         const check_sql = `SELECT * FROM page_meta WHERE page_id = ? AND page_meta_key = ?`;
+//         const check_data = [home_id, meta_key[index]];
+//         db.query(check_sql, check_data, (check_err, check_result) => {
+//             if (check_err) {
+//                 return res.send(
+//                     {
+//                         status: 'err',
+//                         data: '',
+//                         message: 'An error occurred while processing your request'
+//                     }
+//                 )
+//             } else {
+//                 if (check_result.length > 0) {
+//                     const update_sql = `UPDATE page_meta SET page_meta_value = ? WHERE page_id = ? AND page_meta_key = ?`;
+//                     const update_data = [element, home_id, meta_key[index]];
+//                     db.query(update_sql, update_data, (update_err, update_result) => {
+//                         if (update_err) throw update_err;
+//                     })
+//                 } else {
+//                     const insert_sql = `INSERT INTO page_meta (page_id , page_meta_key, page_meta_value) VALUES (?,?,?)`;
+//                     const insert_data = [home_id, meta_key[index], element];
+//                     db.query(insert_sql, insert_data, (insert_err, insert_result) => {
+//                         if (insert_err) throw insert_err;
+//                     })
+//                 }
+//             }
+//         });
+//     });
+
+//     const file_meta_value = [banner_img_1, banner_img_2, banner_img_3, banner_img_4, banner_img_5, banner_img_6, cus_right_img_1, cus_right_img_2, cus_right_img_3, cus_right_img_4, cus_right_img_5,
+//         cus_right_img_6, cus_right_img_7, cus_right_img_8, org_responsibility_img_1, org_responsibility_img_2, org_responsibility_img_3,
+//         org_responsibility_img_4, org_responsibility_img_5, org_responsibility_img_6, org_responsibility_img_7, org_responsibility_img_8,
+//         about_us_img, review_img_1, review_img_2, review_img_3, review_img_4, map_img, app_cus_right_img, app_org_responsibility_img];
+
+//     const file_meta_key = ['banner_img_1', 'banner_img_2', 'banner_img_3', 'banner_img_4', 'banner_img_5', 'banner_img_6', 'cus_right_img_1', 'cus_right_img_2', 'cus_right_img_3', 'cus_right_img_4', 'cus_right_img_5',
+//         'cus_right_img_6', 'cus_right_img_7', 'cus_right_img_8', 'org_responsibility_img_1', 'org_responsibility_img_2', 'org_responsibility_img_3',
+//         'org_responsibility_img_4', 'org_responsibility_img_5', 'org_responsibility_img_6', 'org_responsibility_img_7', 'org_responsibility_img_8',
+//         'about_us_img', 'review_img_1', 'review_img_2', 'review_img_3', 'review_img_4', 'map_img', 'app_cus_right_img', 'app_org_responsibility_img'];
+
+//     await file_meta_key.forEach((item, key) => {
+//         //console.log(item, key);
+//         if (req.files[item]) {
+//             //console.log(file_meta_value[key][0].filename);
+//             const check_sql = `SELECT * FROM page_meta WHERE page_id = ? AND page_meta_key = ?`;
+//             const check_data = [home_id, item];
+//             db.query(check_sql, check_data, (check_err, check_result) => {
+//                 if (check_err) {
+//                     return res.send(
+//                         {
+//                             status: 'err',
+//                             data: '',
+//                             message: 'An error occurred while processing your request'
+//                         }
+//                     )
+//                 } else {
+//                     if (check_result.length > 0) {
+//                         const update_sql = `UPDATE page_meta SET page_meta_value = ? WHERE page_id = ? AND page_meta_key = ?`;
+//                         const update_data = [file_meta_value[key][0].filename, home_id, item];
+//                         db.query(update_sql, update_data, (update_err, update_result) => {
+//                             if (update_err) throw update_err;
+//                         })
+//                     } else {
+//                         const insert_sql = `INSERT INTO page_meta (page_id , page_meta_key, page_meta_value) VALUES (?,?,?)`;
+//                         const insert_data = [home_id, item, file_meta_value[key][0].filename];
+//                         db.query(insert_sql, insert_data, (insert_err, insert_result) => {
+//                             if (insert_err) throw insert_err;
+//                         })
+//                     }
+//                 }
+//             });
+//         }
+
+//     });
+
+//     const title_sql = `UPDATE page_info SET title = ?, meta_title = ?, meta_desc = ?, meta_keyword = ? WHERE id  = ?`;
+//     const title_data = [title, meta_title, meta_desc, meta_keyword, home_id];
+//     //console.log(title_data);
+//     db.query(title_sql, title_data, (title_err, title_result) => {
+//         return res.send(
+//             {
+//                 status: 'ok',
+//                 data: '',
+//                 message: ' Updated successfully'
+//             }
+//         )
+//     })
+// }
 exports.updateHome = async (req, res) => {
-    //  console.log('home', req.body);
+    console.log('home', req.body);
     //     console.log('file', req.files);
     //return false;
     const form_data = req.body;
@@ -4204,43 +4438,64 @@ exports.updateHome = async (req, res) => {
         for_customer, cus_right_content, cus_right_button_link, cus_right_button_text, youtube_link,
         youtube_1, youtube_2, youtube_3, youtube_4, youtube_5, youtube_6, youtube_7, youtube_8, youtube_9, youtube_10, fb_widget, twitter_widget,
         org_responsibility_content, org_responsibility_buttton_link, org_responsibility_buttton_text,
-        about_us_content, about_us_button_link, about_us_button_text, bannner_content_2, bannner_hashtag, impression_number, impression_number_visibility, reviews_count, reviews_count_visibility, total_users_count, total_users_count_visibility, reviewers_guidelines_title, reviewers_guidelines_popup, review_form_demo_location, cus_right_facts_popup, org_responsibility_facts_popup, app_banner_title_1, app_banner_title_2, app_features_for_customer, app_review_content, app_features_hashtag, app_cus_right_content, app_cus_right_point, app_org_responsibility_content, app_org_responsibility_points, app_about_us_content_1, app_about_us_content_2, app_about_us_button_text, bannner_message } = req.body;
+        about_us_content, about_us_button_link, about_us_button_text, bannner_content_2, bannner_hashtag, impression_number, impression_number_visibility, reviews_count, reviews_count_visibility, total_users_count, total_users_count_visibility, reviewers_guidelines_title, reviewers_guidelines_popup, review_form_demo_location, cus_right_facts_popup, org_responsibility_facts_popup, app_banner_title_1, app_banner_title_2, app_features_for_customer, app_review_content, app_features_hashtag, app_cus_right_content, app_cus_right_point, app_org_responsibility_content, app_org_responsibility_points, app_about_us_content_1, app_about_us_content_2, app_about_us_button_text, bannner_message, country_name} = req.body;
 
     const { banner_img_1, banner_img_2, banner_img_3, banner_img_4, banner_img_5, banner_img_6, cus_right_img_1, cus_right_img_2, cus_right_img_3, cus_right_img_4, cus_right_img_5,
         cus_right_img_6, cus_right_img_7, cus_right_img_8, org_responsibility_img_1, org_responsibility_img_2, org_responsibility_img_3,
         org_responsibility_img_4, org_responsibility_img_5, org_responsibility_img_6, org_responsibility_img_7, org_responsibility_img_8,
         about_us_img, review_img_1, review_img_2, review_img_3, review_img_4, map_img, app_cus_right_img, app_org_responsibility_img } = req.files;
 
+    // let app_features = [];
+    // if (typeof app_features_for_customer == 'string') {
+    //     app_features.push(app_features_for_customer);
+    // } else {
+    //     app_features = [...app_features_for_customer];
+    //     //app_features = app_features.concat(app_features_for_customer);
+    // }
+    // const app_customer_feature = JSON.stringify(app_features);
+
     let app_features = [];
+
     if (typeof app_features_for_customer == 'string') {
         app_features.push(app_features_for_customer);
-    } else {
+    } else if (Array.isArray(app_features_for_customer)) {
         app_features = [...app_features_for_customer];
-        //app_features = app_features.concat(app_features_for_customer);
+    } else if (app_features_for_customer !== null && typeof app_features_for_customer === 'object') {
+        console.error('app_features_for_customer is an object but not an array:', app_features_for_customer);
+    } else {
+        console.error('app_features_for_customer is null or undefined:', app_features_for_customer);
     }
     const app_customer_feature = JSON.stringify(app_features);
 
+
+
     let app_hashtag = [];
-    if (typeof app_features_hashtag == 'string') {
-        app_hashtag.push(app_features_hashtag);
-    } else {
-        app_hashtag = [...app_features_hashtag];
+    if (app_features_hashtag !== null && app_features_hashtag !== undefined) {
+        if (typeof app_features_hashtag === 'string') {
+            app_hashtag.push(app_features_hashtag);
+        } else {
+            app_hashtag = [...app_features_hashtag];
+        }
     }
     const app_feature_hashtag = JSON.stringify(app_hashtag);
 
     let cus_right_point = [];
-    if (typeof app_cus_right_point == 'string') {
-        cus_right_point.push(app_cus_right_point);
-    } else {
-        cus_right_point = [...app_cus_right_point];
+    if (app_cus_right_point !== null && app_cus_right_point !== undefined) {
+        if (typeof app_cus_right_point === 'string') {
+            cus_right_point.push(app_cus_right_point);
+        } else {
+            cus_right_point = [...app_cus_right_point];
+        }
     }
     const app_cus_right_points = JSON.stringify(cus_right_point);
 
     let org_responsibility_point = [];
-    if (typeof app_org_responsibility_points == 'string') {
-        org_responsibility_point.push(app_org_responsibility_points);
-    } else {
-        org_responsibility_point = [...app_org_responsibility_points];
+    if (app_org_responsibility_points !== null && app_org_responsibility_points !== undefined) {
+        if (typeof app_org_responsibility_points === 'string') {
+            org_responsibility_point.push(app_org_responsibility_points);
+        } else {
+            org_responsibility_point = [...app_org_responsibility_points];
+        }
     }
     const app_org_responsibility_point = JSON.stringify(org_responsibility_point);
 
@@ -4331,8 +4586,8 @@ exports.updateHome = async (req, res) => {
 
     });
 
-    const title_sql = `UPDATE page_info SET title = ?, meta_title = ?, meta_desc = ?, meta_keyword = ? WHERE id  = ?`;
-    const title_data = [title, meta_title, meta_desc, meta_keyword, home_id];
+    const title_sql = `UPDATE page_info SET title = ?, meta_title = ?, meta_desc = ?, meta_keyword = ?, country = ? WHERE id  = ?`;
+    const title_data = [title, meta_title, meta_desc, meta_keyword, country_name, home_id];
     //console.log(title_data);
     db.query(title_sql, title_data, (title_err, title_result) => {
         return res.send(
@@ -4344,7 +4599,6 @@ exports.updateHome = async (req, res) => {
         )
     })
 }
-
 
 //--Submit Review----//
 
@@ -4846,13 +5100,13 @@ exports.deleteReview = (req, res) => {
 
 // Upadte About
 exports.updateAbout = async (req, res) => {
-    // console.log('home', req.body);
+    console.log('updateAbout', req.body);
     // console.log('file', req.files);
     const form_data = req.body;
 
     const { about_id, title, meta_title, meta_desc, meta_keyword, banner_content, mission_title,
         mission_content, platform_content, CEchoesTechnology_would_content, customers_content,
-        service_providers_content, app_banner_content_1, app_banner_content_2, app_platform_content_1, app_platform_content_2 } = req.body;
+        service_providers_content, app_banner_content_1, app_banner_content_2, app_platform_content_1, app_platform_content_2, country_name } = req.body;
 
     const { banner_img_1, banner_img_2, banner_img_3, banner_img_4, banner_img_5, banner_img_6, banner_img_7, banner_img_8,
         platform_img_1, platform_img_2, platform_img_3, platform_img_4, platform_img_5, platform_img_6, platform_img_7,
@@ -4940,8 +5194,8 @@ exports.updateAbout = async (req, res) => {
 
     });
 
-    const title_sql = `UPDATE page_info SET title = ?, meta_title = ?, meta_desc = ?, meta_keyword = ? WHERE id  = ?`;
-    const title_data = [title, meta_title, meta_desc, meta_keyword, about_id];
+    const title_sql = `UPDATE page_info SET title = ?, meta_title = ?, meta_desc = ?, meta_keyword = ?, country = ? WHERE id  = ?`;
+    const title_data = [title, meta_title, meta_desc, meta_keyword,country_name, about_id];
     //console.log(title_data);
     db.query(title_sql, title_data, (title_err, title_result) => {
         return res.send(
@@ -5029,18 +5283,30 @@ exports.updateBusiness = async (req, res) => {
         app_bannner_content_title, app_bannner_content_1, app_bannner_content_2, app_advantage_point,
         app_dont_forget_content_1_title, app_dont_forget_content_1, app_dont_forget_content_2_title,
         app_dont_forget_content_2, basic_plan_content, standard_plan_content, advanced_plan_content,
-        premium_plan_content, enterprice_plan_content } = req.body;
+        premium_plan_content, enterprice_plan_content, country_name } = req.body;
 
     const { banner_img_1, banner_img_2, banner_img_3, banner_img_4, banner_img_5, banner_img_6, banner_img_7, banner_img_8, advantage_img_1, advantage_img_2, advantage_img_3, advantage_img_4, advantage_img_5, advantage_img_6, advantage_img_7, advantage_img_8, did_you_know_img, app_banner_img_1, app_banner_img_2 } = req.files;
 
 
+    // let advantage_point = [];
+    // if (typeof app_advantage_point == 'string') {
+    //     advantage_point.push(app_advantage_point);
+    // } else {
+    //     advantage_point = [...app_advantage_point];
+    // }
+    // const app_advantage_points = JSON.stringify(advantage_point);
+
+
     let advantage_point = [];
-    if (typeof app_advantage_point == 'string') {
-        advantage_point.push(app_advantage_point);
-    } else {
+    if (Array.isArray(app_advantage_point)) {
         advantage_point = [...app_advantage_point];
+    } else if (typeof app_advantage_point === 'string') {
+        advantage_point.push(app_advantage_point);
+    } else if (app_advantage_point != null) {
+        console.error('Unexpected type for app_advantage_point:', app_advantage_point);
     }
     const app_advantage_points = JSON.stringify(advantage_point);
+
 
     const meta_value = [bannner_content, features_title, advantage_title, advantage_content, dont_forget_title,
         dont_forget_content_1, dont_forget_content_2, did_you_know_title, did_you_know_content_1, did_you_know_content_2,
@@ -5124,7 +5390,6 @@ exports.updateBusiness = async (req, res) => {
                 }
             });
         }
-
     });
     await comFunction2.deleteBusinessFeature();
     await comFunction2.deleteBusinessUpcomingFeature();
@@ -5142,7 +5407,6 @@ exports.updateBusiness = async (req, res) => {
                 )
             }
         });
-
     } else {
         await feature_content.forEach((value, key) => {
             const insert_query = `INSERT INTO business_features ( content, image, existing_or_upcoming) VALUES (?, ?,'existing')`;
@@ -5160,7 +5424,6 @@ exports.updateBusiness = async (req, res) => {
             });
         });
     }
-
     if (typeof upcoming_features_content === 'string') {
         const insert_query = `INSERT INTO business_features ( content, existing_or_upcoming) VALUES (?,'upcoming')`;
         const insert_data = [upcoming_features_content];
@@ -5192,12 +5455,8 @@ exports.updateBusiness = async (req, res) => {
             });
         })
     }
-
-
-
-
-    const title_sql = `UPDATE page_info SET title = ?, meta_title = ?, meta_desc = ?, meta_keyword = ? WHERE id  = ?`;
-    const title_data = [title, meta_title, meta_desc, meta_keyword, business_id];
+    const title_sql = `UPDATE page_info SET title = ?, meta_title = ?, meta_desc = ?, meta_keyword = ?, country = ? WHERE id  = ?`;
+    const title_data = [title, meta_title, meta_desc, meta_keyword, country_name, business_id];
     //console.log(title_data);
     db.query(title_sql, title_data, (title_err, title_result) => {
         return res.send(
@@ -5214,7 +5473,8 @@ exports.updateBusiness = async (req, res) => {
 exports.updatePrivacy = (req, res) => {
     //console.log('Privacy', req.body);
 
-    const { common_id, title, meta_title, meta_desc, keyword, content } = req.body;
+    const { common_id, title, meta_title, meta_desc, keyword, content,country_name } = req.body;
+    console.log("updateprivacy",req.body);
 
     const check_sql = `SELECT * FROM page_meta WHERE page_id = ? AND page_meta_key = ?`;
     const check_data = [common_id, "content"];
@@ -5233,8 +5493,8 @@ exports.updatePrivacy = (req, res) => {
                 const update_data = [content, common_id, 'content'];
                 db.query(update_sql, update_data, (update_err, update_result) => {
                     if (update_err) throw update_err;
-                    const title_sql = `UPDATE page_info SET title = ?, meta_title = ?, meta_desc = ?, meta_keyword = ? WHERE id  = ?`;
-                    const title_data = [title, meta_title, meta_desc, keyword, common_id];
+                    const title_sql = `UPDATE page_info SET title = ?, meta_title = ?, meta_desc = ?, meta_keyword = ?, country = ? WHERE id  = ?`;
+                    const title_data = [title, meta_title, meta_desc, keyword,country_name, common_id];
                     //console.log(title_data);
                     db.query(title_sql, title_data, (title_err, title_result) => {
                         return res.send(
@@ -5251,9 +5511,10 @@ exports.updatePrivacy = (req, res) => {
                 const insert_data = [common_id, 'content', content];
                 db.query(insert_sql, insert_data, (insert_err, insert_result) => {
                     if (insert_err) throw insert_err;
-                    const title_sql = `UPDATE page_info SET title = ?, meta_title = ?, meta_desc = ?, meta_keyword = ? WHERE id  = ?`;
-                    const title_data = [title, meta_title, meta_desc, keyword, common_id];
-                    //console.log(title_data);
+                    const title_sql = `UPDATE page_info SET title = ?, meta_title = ?, meta_desc = ?, meta_keyword = ?, country = ? WHERE id  = ?`;
+                    const title_data = [title, meta_title, meta_desc, keyword,country_name, common_id];
+
+                    console.log("title_data",title_data);
                     db.query(title_sql, title_data, (title_err, title_result) => {
                         return res.send(
                             {
@@ -5275,7 +5536,7 @@ exports.updatePrivacy = (req, res) => {
 exports.updateDisclaimer = (req, res) => {
     //console.log('Privacy', req.body);
 
-    const { common_id, title, meta_title, meta_desc, keyword, content } = req.body;
+    const { common_id, title, meta_title, meta_desc, keyword, content, country_name } = req.body;
 
     const check_sql = `SELECT * FROM page_meta WHERE page_id = ? AND page_meta_key = ?`;
     const check_data = [common_id, "content"];
@@ -5294,8 +5555,8 @@ exports.updateDisclaimer = (req, res) => {
                 const update_data = [content, common_id, 'content'];
                 db.query(update_sql, update_data, (update_err, update_result) => {
                     if (update_err) throw update_err;
-                    const title_sql = `UPDATE page_info SET title = ?, meta_title = ?, meta_desc = ?, meta_keyword = ? WHERE id  = ?`;
-                    const title_data = [title, meta_title, meta_desc, keyword, common_id];
+                    const title_sql = `UPDATE page_info SET title = ?, meta_title = ?, meta_desc = ?, meta_keyword = ?,country = ? WHERE id  = ?`;
+                    const title_data = [title, meta_title, meta_desc, keyword, country_name, common_id];
                     //console.log(title_data);
                     db.query(title_sql, title_data, (title_err, title_result) => {
                         return res.send(
@@ -5312,8 +5573,8 @@ exports.updateDisclaimer = (req, res) => {
                 const insert_data = [common_id, 'content', content];
                 db.query(insert_sql, insert_data, (insert_err, insert_result) => {
                     if (insert_err) throw insert_err;
-                    const title_sql = `UPDATE page_info SET title = ?, meta_title = ?, meta_desc = ?, meta_keyword = ? WHERE id  = ?`;
-                    const title_data = [title, meta_title, meta_desc, keyword, common_id];
+                    const title_sql = `UPDATE page_info SET title = ?, meta_title = ?, meta_desc = ?, meta_keyword = ?,country = ? WHERE id  = ?`;
+                    const title_data = [title, meta_title, meta_desc, keyword, country_name, common_id];
                     //console.log(title_data);
                     db.query(title_sql, title_data, (title_err, title_result) => {
                         return res.send(
@@ -5334,9 +5595,9 @@ exports.updateDisclaimer = (req, res) => {
 
 // Update Terms Of Service
 exports.updateTermsOfService = (req, res) => {
-    //console.log('Privacy', req.body);
+    console.log('updateTermsOfService', req.body);
 
-    const { common_id, title, meta_title, meta_desc, keyword, content } = req.body;
+    const { common_id, title, meta_title, meta_desc, keyword, content,country_name } = req.body;
 
     const check_sql = `SELECT * FROM page_meta WHERE page_id = ? AND page_meta_key = ?`;
     const check_data = [common_id, "content"];
@@ -5355,8 +5616,8 @@ exports.updateTermsOfService = (req, res) => {
                 const update_data = [content, common_id, 'content'];
                 db.query(update_sql, update_data, (update_err, update_result) => {
                     if (update_err) throw update_err;
-                    const title_sql = `UPDATE page_info SET title = ?, meta_title = ?, meta_desc = ?, meta_keyword = ? WHERE id  = ?`;
-                    const title_data = [title, meta_title, meta_desc, keyword, common_id];
+                    const title_sql = `UPDATE page_info SET title = ?, meta_title = ?, meta_desc = ?, meta_keyword = ?, country = ? WHERE id  = ?`;
+                    const title_data = [title, meta_title, meta_desc, keyword, country_name, common_id];
                     //console.log(title_data);
                     db.query(title_sql, title_data, (title_err, title_result) => {
                         return res.send(
@@ -5373,8 +5634,8 @@ exports.updateTermsOfService = (req, res) => {
                 const insert_data = [common_id, 'content', content];
                 db.query(insert_sql, insert_data, (insert_err, insert_result) => {
                     if (insert_err) throw insert_err;
-                    const title_sql = `UPDATE page_info SET title = ?, meta_title = ?, meta_desc = ?, meta_keyword = ? WHERE id  = ?`;
-                    const title_data = [title, meta_title, meta_desc, keyword, common_id];
+                    const title_sql = `UPDATE page_info SET title = ?, meta_title = ?, meta_desc = ?, meta_keyword = ?, country = ? WHERE id  = ?`;
+                    const title_data = [title, meta_title, meta_desc, keyword, country_name, common_id];
                     //console.log(title_data);
                     db.query(title_sql, title_data, (title_err, title_result) => {
                         return res.send(
@@ -5458,7 +5719,7 @@ exports.updateComplaint = async (req, res) => {
     //console.log('updateComplaint', req.body);
     //console.log('updateComplaint', req.files);
     const form_data = req.body;
-    const { common_id, title, meta_title, meta_desc, meta_keyword } = req.body;
+    const { common_id, title, meta_title, meta_desc, meta_keyword, country_name} = req.body;
     const { banner_img_1, banner_img_2, banner_img_3, banner_img_4, banner_img_5, banner_img_6, banner_img_7, banner_img_8 } = req.files;
     const file_meta_value = [banner_img_1, banner_img_2, banner_img_3, banner_img_4, banner_img_5, banner_img_6, banner_img_7, banner_img_8];
     const file_meta_key = ['banner_img_1', 'banner_img_2', 'banner_img_3', 'banner_img_4', 'banner_img_5', 'banner_img_6', 'banner_img_7', 'banner_img_8'];
@@ -5495,8 +5756,8 @@ exports.updateComplaint = async (req, res) => {
             });
         }
     });
-    const title_sql = `UPDATE page_info SET title = ?, meta_title = ?, meta_desc = ?, meta_keyword = ? WHERE id  = ?`;
-    const title_data = [title, meta_title, meta_desc, meta_keyword, common_id];
+    const title_sql = `UPDATE page_info SET title = ?, meta_title = ?, meta_desc = ?, meta_keyword = ?, country = ? WHERE id  = ?`;
+    const title_data = [title, meta_title, meta_desc, meta_keyword, country_name, common_id];
     //console.log(title_data);
     db.query(title_sql, title_data, (title_err, title_result) => {
         return res.send(
@@ -12115,6 +12376,60 @@ exports.addingUsers = async (req, res) => {
 }
 
 
+exports.confirmUser = async (req, res) => {
+    try {
+      const id = req.body.id;
+      const activationId = 1;
+      const isUserQuery = `SELECT * FROM users WHERE user_id = ?`;
+      const result = await query(isUserQuery, [id]);
+  
+      const userDetails = {
+        fullName : result[0].first_name + ' ' + result[0].last_name ,
+        email : result[0].email,
+        phone : result[0].phone 
+      }
+      const adminMail = process.env.MAIL_USER
+  
+      if (result && result.length > 0) {
+        const updateQuery = `UPDATE users SET user_status = ? WHERE user_id = ?`;
+        const updateResult = await query(updateQuery, [activationId, id]);
+  
+        // Check if the update was successful
+        if (updateResult && updateResult.affectedRows > 0) {
+  
+          const userActivationHtml = comFunction2.userActivation(userDetails.fullName, userDetails.email) ;
+  
+          const userActivationHtmlForAdmin = comFunction2.userActivationmailtoAdmin(userDetails.fullName, userDetails.email, userDetails.phone) ;
+  
+        //   const emailSentToUser = await sendEmail(userDetails.email, 'Welcome to CEchoes! 🎉', userActivationHtml); // User
+        //   const emailSentToAdmin = await sendEmail(adminMail, 'Registration at CEchoes', userActivationHtmlForAdmin); // Admin
+  
+          if (userActivationHtml && userActivationHtmlForAdmin ) {
+            return res.status(200).json({
+              status: "ok",
+              message: 'Account activation has been successful, and activation emails have been forwarded to the user and the admin.',
+            });
+          } else {
+            return res.status(500).json({
+              status: "error",
+              message: "Failed to send activation email",
+            });
+          }
+  
+        } else {
+          
+          return res.status(400).json({ message: 'Activation failed' }); 
+        }
+      } else {
+        // User not found
+        return res.status(404).json({ message: 'User not found' });
+      }
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ message: 'Internal Server Error' });
+    }
+  };
+
 //actual
 
 // const getPlanFromDatabase = async (planId) => {
@@ -12601,33 +12916,313 @@ const createStripeProductAndPrice = async (plan, billingCycle, memberCount) => {
 
 
 
+// const getPlanFromDatabase = async (planId) => {
+//     console.log("planferrg", planId);
+//     const sql = 'SELECT name, description, monthly_price, yearly_price, currency,per_user_price FROM plan_management WHERE id = ?';
+//     const result = await queryAsync(sql, [planId]);
+//     console.log(`Database query result for planId ${planId}:`, result);
+
+//     if (result.length === 0) {
+//         throw new Error(`Plan with ID ${planId} not found`);
+//     }
+
+//     return result[0];
+// };
+
+
+exports.updateOrderHistory = async (req, res) => {
+    try {
+        const { name, email,phone, address, city, state, zip, planId, billingCycle, memberCount, subscriptionId } = req.body;
+        console.log("updateOrderHistory:", req.body);
+
+
+        const getidquery = `SELECT * FROM users WHERE email = "${email}"`;
+        const getidvalue = await queryAsync(getidquery);
+        var userId = getidvalue[0].user_id;
+        console.log("userId",userId);
+
+        let customerId = await findOrCreateCustomer(email, name,phone, address, city, state, zip);
+        console.log("customerId", customerId);
+
+        let country_name = req.cookies.countryName 
+        //|| 'India';
+        let country_code = req.cookies.countryCode 
+        //|| 'IN';
+        console.log("country_codesdf",country_code);
+        console.log("country_namesdf",country_name);
+
+        const getcompanyquery = `SELECT company.* FROM company LEFT JOIN company_claim_request ON company.ID = company_claim_request.company_id WHERE company_claim_request.claimed_by=?`;
+        const getcompanyvalue = await queryAsync(getcompanyquery,[userId]);
+        console.log("getcompanyvaluea",getcompanyvalue);
+        var companyID = getcompanyvalue[0] .ID;
+        console.log("companyID",companyID);
+
+        const updatecompany_query = `UPDATE company SET membership_type_id = ? WHERE ID = "${companyID}"`;
+        const updatecompany_value = await queryAsync(updatecompany_query, [planId]);
+        console.log("updatecompany_value", updatecompany_value);
+
+        const subscriptionDetails = await razorpay.subscriptions.fetch(subscriptionId);
+        console.log('Subscription details:', subscriptionDetails);
+
+        const invoices = await razorpay.invoices.all({
+            'subscription_id': subscriptionId
+        });
+        console.log('Invoices for subscriptions:', invoices);
+
+        const invoiceId = invoices.items.length > 0 ? invoices.items[0].id : null;
+        console.log('Invoice IDs:', invoiceId);
+
+        // const getpayments= fetchPaymentsByInvoiceId(invoiceId);
+        // console.log("getpayments",getpayments);
+
+        console.log("Subscription current start timestamp:", subscriptionDetails.current_start);
+        console.log("Subscription charge at timestamp:", subscriptionDetails.charge_at);
+        
+        const subscriptionStartDate = new Date(subscriptionDetails.current_start * 1000);
+        const subscriptionEndDate = new Date(subscriptionDetails.charge_at * 1000);
+        
+        console.log("Subscription start date:", subscriptionStartDate);
+        console.log("Subscription end date:", subscriptionEndDate);
+        
+        
+        const order_history_data = {
+            // user_id: userID,
+            payment_status: 'success',
+            subscription_details: JSON.stringify(subscriptionDetails),
+            subscription_start_date: new Date(subscriptionDetails.current_start * 1000),
+            subscription_end_date: new Date(subscriptionDetails.charge_at * 1000),
+          };
+          
+          const update_order_history_query = `
+            UPDATE order_history
+            SET user_id = ?, payment_status = ?, subscription_details = ?, subscription_start_date = ?, subscription_end_date = ?
+            WHERE stripe_subscription_id = ?
+          `;
+          
+          const update_values = [
+            order_history_data.user_id,
+            order_history_data.payment_status,
+            order_history_data.subscription_details,
+            order_history_data.subscription_start_date,
+            order_history_data.subscription_end_date,
+            subscriptionId
+          ];
+          try {
+            const update_result = await queryAsync(update_order_history_query, update_values);
+            console.log(`Order history updated for subscription ID ${subscriptionId}`);
+          } catch (error) {
+            console.error('Failed to update order history:', error);
+          }
+    } catch (error) {
+        console.error('Error creating subscription flow:', error);
+        res.status(500).send({ error: error.message });
+    } 
+};
 
 exports.createSubscription = async (req, res) => {
     try {
-        const { name, email, address, city, state, zip, planId, billingCycle, memberCount } = req.body;
+        const { name, email,phone, address, city, state, zip, planId, billingCycle, memberCount,} = req.body;
         console.log("Subscription request body:", req.body);
 
-        let customerId = await findOrCreateCustomer(email, name);
+
+        const getidquery = `SELECT * FROM users WHERE email = "${email}"`;
+        const getidvalue = await queryAsync(getidquery);
+        var userId = getidvalue[0].user_id;
+        console.log("userId",userId);
+
+        let customerId = await findOrCreateCustomer(email, name,phone, address, city, state, zip);
+        console.log("customerId", customerId);
+
+        let country_name = req.cookies.countryName 
+        //|| 'India';
+        let country_code = req.cookies.countryCode 
+        //|| 'IN';
+        console.log("country_codesdf",country_code);
+        console.log("country_namesdf",country_name);
+
+        // const customerId = customer.id.startsWith('cust_') ? customer.id : `cust_${customer.id}`;
+        // console.log('Formatted Customer ID:', customerId);
+
+        // const customerId = "cust_" + customer.id;
+        // console.log("Formatted Customer ID:", customerId);
 
         const plan = await getPlanFromDatabase(planId);
         if (!plan) {
             return res.status(404).send({ error: 'Plan not found' });
         }
 
-        const priceId = await createRazorpayPlan(plan, billingCycle, memberCount);
+        const priceId = await createRazorpayPlan(plan, billingCycle, memberCount, country_code);
         if (!priceId) {
             return res.status(500).send({ error: 'Failed to create price for the plan' });
         }
         console.log("Created Razorpay plan:", priceId);
 
+        var amountss=  priceId.item.amount;
+        console.log("amountss",amountss);
+
         const subscriptionParams = {
             plan_id: priceId.id,
             customer_id: customerId,
-            total_count: 12,  
+            total_count: 10000,
+            // shipping_address: {
+            //     name: name,
+            //     phone: phone,
+            //     address: address,
+            //     city: city,
+            //     state: state,
+            //     zip: zip
+            // }
+        };
+
+        console.log("subscriptionParams",subscriptionParams);
+        const subscription = await razorpay.subscriptions.create(subscriptionParams);
+        console.log("Created subscription:", subscription);
+
+        // const itemss_id = priceId.item.id;
+        // console.log("itemss_id",itemss_id);
+
+        // const invoiceParams = {
+        //     type: 'invoice',
+        //     date: Math.floor(Date.now() / 1000),
+        //     customer_id: customerId,
+        //     subscription_id: subscription.id, 
+        //     line_items: [
+        //         {
+        //             item_id: itemss_id, 
+        //             amount: amountss,
+        //             currency: 'INR', 
+        //             description: 'Subscription Invoice', 
+        //             quantity: 1 
+        //         }
+        //     ]
+        // };
+        // const invoice = await razorpay.invoices.create(invoiceParams);
+        // console.log('Invoice created successfully:', invoice);
+
+        const invoices = await razorpay.invoices.all({
+            'subscription_id': subscription.id
+        });
+        console.log('Invoices for subscription:', invoices);
+
+        req.subscriptionId = subscription.id;
+
+        console.log("Subscription current start timestamp:", subscription.current_start);
+        console.log("Subscription charge at timestamp:", subscription.charge_at);
+
+        const subscriptionStartDate = new Date(subscription.current_start * 1000);
+        const subscriptionEndDate = new Date(subscription.charge_at * 1000);
+
+        console.log("Subscription start date:", subscriptionStartDate);
+        console.log("Subscription end date:", subscriptionEndDate);
+
+        const order_history_data = {
+            user_id: userId,
+            stripe_subscription_id: subscription.id,
+            plan_id: planId,
+            payment_status: 'pending',
+            subscription_details: JSON.stringify(subscription),
+            subscription_duration: billingCycle,
+            subscription_start_date: new Date(subscription.current_start * 1000),
+            subscription_end_date: new Date(subscription.charge_at * 1000),
+            added_user_number: memberCount
+        };
+        const order_history_query = `INSERT INTO order_history SET ?`;
+        await queryAsync(order_history_query, [order_history_data]);
+
+        res.status(200).send({
+            message: 'Subscription created successfully',
+            subscription: subscription,
+            amount
+            :amountss
+        });
+    } catch (error) {
+        console.error('Error creating subscription flow:', error);
+        res.status(500).send({ error: error.message });
+    } 
+};
+
+const getInvoicesForSubscription = async (subscriptionId) => {
+    try {
+        // Retrieve all invoices associated with the subscription
+        const invoices = await razorpay.invoices.all({
+            'subscription_id': subscriptionId
+        });
+
+        // Print or process the invoices
+        console.log('Invoices:', invoices);
+
+        return invoices;
+    } catch (error) {
+        console.error('Error fetching invoices:', error);
+        throw error;
+    }
+};
+
+
+
+exports.createexternalSubscription = async (req, res) => {
+    try {
+        const { name, email, phone, address, city, state, zip, planId, billingCycle, memberCount } = req.body;
+        console.log("Subscription request body:", req.body);
+
+        let customerId = await CreateCustomer(email, name, phone, address, city, state, zip);
+        console.log("customerId", customerId);
+
+        // Fetch country details from cookies
+        let country_name = req.cookies.countryName;
+        let country_code = req.cookies.countryCode;
+        console.log("Country Code:", country_code);
+        console.log("Country Name:", country_name);
+
+        // Fetch plan details from database
+        const plan = await getPlanFromDatabase(planId);
+        console.log("planss",plan);
+        if (!plan) {
+            return res.status(404).send({ error: 'Plan not found' });
+        }
+
+        // Create Razorpay plan
+        const priceId = await createRazorpayPlan(plan, billingCycle, memberCount, country_code);
+        if (!priceId) {
+            return res.status(500).send({ error: 'Failed to create price for the plan' });
+        }
+        console.log("Created Razorpay plan:", priceId);
+
+        // Create subscription with Razorpay
+        const subscriptionParams = {
+            plan_id: priceId.id,
+            customer_id: customerId,
+            total_count: 10000,
         };
         const subscription = await razorpay.subscriptions.create(subscriptionParams);
         console.log("Created subscription:", subscription);
 
+        // Store subscription ID in a variable accessible outside this function
+        req.subscriptionId = subscription.id;
+
+        console.log("Subscription current start timestamp:", subscription.current_start);
+        console.log("Subscription charge at timestamp:", subscription.charge_at);
+
+        const subscriptionStartDate = new Date(subscription.current_start * 1000);
+        const subscriptionEndDate = new Date(subscription.charge_at * 1000);
+
+        console.log("Subscription start date:", subscriptionStartDate);
+        console.log("Subscription end date:", subscriptionEndDate);
+
+        const order_history_data = {
+            stripe_subscription_id: subscription.id,
+            plan_id: planId,
+            payment_status: 'pending',
+            subscription_details: JSON.stringify(subscription),
+            subscription_duration: billingCycle,
+            subscription_start_date: new Date(subscription.current_start * 1000),
+            subscription_end_date: new Date(subscription.charge_at * 1000),
+            added_user_number: memberCount
+        };
+        const order_history_query = `INSERT INTO order_history SET ?`;
+        await queryAsync(order_history_query, [order_history_data]);
+
+        // Send response
         res.status(200).send({
             message: 'Subscription created successfully',
             subscription: subscription,
@@ -12638,19 +13233,1115 @@ exports.createSubscription = async (req, res) => {
     }
 };
 
-async function findOrCreateCustomer(email, name) {
+
+exports.externalRegistration = async (req, res) => {
+    const { first_name, last_name, email, register_password, phone, address, city, state, zip, planId, billingCycle, memberCount, subscriptionId,user_state, user_country, register_confirm_password  } = req.body;
+    console.log("externalRegistration", req.body);
+
     try {
-        // Check if customer exists
-        const customers = await razorpay.customers.all({ email: email });
+        if (register_password !== register_confirm_password) {
+            return res.status(400).json({ status: 'err', message: 'Passwords does not match.' });
+        }
+        const emailExists = await new Promise((resolve, reject) => {
+            db.query('SELECT email, register_from FROM users WHERE email = ?', [email], (err, results) => {
+                if (err) return reject(err);
+                if (results.length > 0) {
+                    var register_from = results[0].register_from;
+                    var message = '';
+                    // Handle existing email scenarios
+                    if (register_from == 'web') {
+                        message = 'Email ID already exists, Please login with your email-ID and password';
+                    } else if (register_from == 'facebook') {
+                        message = 'Email ID already exists, login with ' + register_from;
+                    } else if (register_from == 'gmail') {
+                        register_from = 'google';
+                        message = 'Email ID already exists, login with ' + register_from;
+                    } else {
+                        message = 'Email ID already exists, login with ' + register_from;
+                    }
+                    return res.status(500).json({ status: 'err', data: '', message: message });
+                } else {
+                    resolve(false);
+                }
+            });
+        });
+
+        if (emailExists) {
+            console.log("Email already exists.");
+            return;
+        }
+
+        console.log("Email does not exist, proceeding to create user.");
+
+        const hashedPassword = await bcrypt.hash(register_password, 8);
+        const currentDate = new Date();
+        const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ');
+
+        // Insert user into users table
+        const userInsertQuery = 'INSERT INTO users (first_name, last_name, email, password, register_from, user_registered, user_status, user_type_id, alise_name) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+        db.query(userInsertQuery, [first_name, last_name, email, hashedPassword, 'web', formattedDate, 3, 2, first_name + last_name], async (err, userResults) => {
+            if (err) {
+                console.error('Error inserting user into "users" table:', err);
+                return res.status(500).json({ status: 'err', data: '', message: 'An error occurred while processing your request' });
+            }
+
+            var userID = userResults.insertId;
+            console.log("userID",userID);
+
+            // Send welcome email
+            var mailOptions = {
+                from: process.env.MAIL_USER,
+                to: email,
+                subject: 'Welcome e-mail',
+                html:`<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+                <style>
+                body, table, td, p, a, h1, h2, h3, h4, h5, h6, div {
+                    font-family: Calibri, 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif !important;
+                }
+                </style>
+                <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
+                 <tbody>
+                  <tr>
+                   <td align="center" valign="top">
+                     <div id="template_header_image"><p style="margin-top: 0;"></p></div>
+                     <table id="template_container" style="box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important; background-color: #fdfdfd; border: 1px solid #dcdcdc; border-radius: 3px !important;" border="0" cellpadding="0" cellspacing="0" width="600">
+                      <tbody>
+                        <tr>
+                         <td align="center" valign="top">
+                           <!-- Header -->
+                           <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
+                             <tbody>
+                               <tr>
+                               <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/email-template-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+                                <td id="header_wrapper" style="padding: 36px 48px; display: block;">
+                                   <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Welcome</h1>
+                                </td>
+          
+                               </tr>
+                             </tbody>
+                           </table>
+                     <!-- End Header -->
+                     </td>
+                        </tr>
+                        <tr>
+                         <td align="center" valign="top">
+                           <!-- Body -->
+                           <table id="template_body" border="0" cellpadding="0" cellspacing="0" width="600">
+                             <tbody>
+                               <tr>
+                                <td id="body_content" style="background-color: #fdfdfd;" valign="top">
+                                  <!-- Content -->
+                                  <table border="0" cellpadding="20" cellspacing="0" width="100%">
+                                   <tbody>
+                                    <tr>
+                                     <td style="padding: 48px;" valign="top">
+                                       <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
+                                        
+                                        <table border="0" cellpadding="4" cellspacing="0" width="90%">
+                                          <tr>
+                                            <td colspan="2">
+                                                <strong>Hello ${first_name},</strong>
+                                                <p style="font-size:15px; line-height:20px">Your account and company has created successfully.</p>
+                                                <p style="font-size:15px; line-height:20px">Please wait for Admin approval.</p>
+                                                <p style="font-size:15px; line-height:20px"><br><p style="font-size:15px; line-height:20px">Kind Regards,</p><p style="font-size:15px; line-height:20px">CEchoes Technology Team</p><br>
+                                            </td>
+                                          </tr>
+                                        </table>
+                                       </div>
+                                     </td>
+                                    </tr>
+                                   </tbody>
+                                  </table>
+                                <!-- End Content -->
+                                </td>
+                               </tr>
+                             </tbody>
+                           </table>
+                         <!-- End Body -->
+                         </td>
+                        </tr>
+                        <tr>
+                         <td align="center" valign="top">
+                           <!-- Footer -->
+                           <table id="template_footer" border="0" cellpadding="10" cellspacing="0" width="600">
+                            <tbody>
+                             <tr>
+                              <td style="padding: 0; -webkit-border-radius: 6px;" valign="top">
+                               <table border="0" cellpadding="10" cellspacing="0" width="100%">
+                                 <tbody>
+                                   <tr>
+                                    <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
+                                         <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology</a></p>
+                                    </td>
+                                   </tr>
+                                 </tbody>
+                               </table>
+                              </td>
+                             </tr>
+                            </tbody>
+                           </table>
+                         <!-- End Footer -->
+                         </td>
+                        </tr>
+                      </tbody>
+                     </table>
+                   </td>
+                  </tr>
+                 </tbody>
+                </table>
+               </div>`
+            };
+            await mdlconfig.transporter.sendMail(mailOptions, function (err, info) {
+                if (err) {
+                    console.log(err);
+                    return res.status(500).json({ status: 'err', message: 'Something went wrong while sending email' });
+                } else {
+                    console.log('Mail sent: ', info.response);
+                }
+            });
+
+            var mailOptions1 = {
+                from: process.env.MAIL_USER,
+                to: process.env.MAIL_USER,
+                subject: 'New Registration at CEchoes',
+                html:`<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+                <style>
+                body, table, td, p, a, h1, h2, h3, h4, h5, h6, div {
+                    font-family: Calibri, 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif !important;
+                }
+                </style>
+                <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
+                 <tbody>
+                  <tr>
+                   <td align="center" valign="top">
+                     <div id="template_header_image"><p style="margin-top: 0;"></p></div>
+                     <table id="template_container" style="box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important; background-color: #fdfdfd; border: 1px solid #dcdcdc; border-radius: 3px !important;" border="0" cellpadding="0" cellspacing="0" width="600">
+                      <tbody>
+                        <tr>
+                         <td align="center" valign="top">
+                           <!-- Header -->
+                           <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
+                             <tbody>
+                               <tr>
+                               <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/email-template-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+                                <td id="header_wrapper" style="padding: 36px 48px; display: block;">
+                                   <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Welcome</h1>
+                                </td>
+          
+                               </tr>
+                             </tbody>
+                           </table>
+                     <!-- End Header -->
+                     </td>
+                        </tr>
+                        <tr>
+                         <td align="center" valign="top">
+                           <!-- Body -->
+                           <table id="template_body" border="0" cellpadding="0" cellspacing="0" width="600">
+                             <tbody>
+                               <tr>
+                                <td id="body_content" style="background-color: #fdfdfd;" valign="top">
+                                  <!-- Content -->
+                                  <table border="0" cellpadding="20" cellspacing="0" width="100%">
+                                   <tbody>
+                                    <tr>
+                                     <td style="padding: 48px;" valign="top">
+                                       <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
+                                        
+                                        <table border="0" cellpadding="4" cellspacing="0" width="90%">
+                                          <tr>
+                                            <td colspan="2">
+                                                <strong>Hello ${first_name},</strong>
+                                                <p style="font-size:15px; line-height:20px">User1 has been register at CEchoes.com</p>
+                                                <p style="font-size:15px; line-height:20px">Please verify the <a href="http://localhost:2000">user</a>.</p>
+                                                <p style="font-size:15px; line-height:20px"><br><p style="font-size:15px; line-height:20px">Kind Regards,</p><p style="font-size:15px; line-height:20px">CEchoes Technology Team</p><br>
+                                            </td>
+                                          </tr>
+                                        </table>
+                                       </div>
+                                     </td>
+                                    </tr>
+                                   </tbody>
+                                  </table>
+                                <!-- End Content -->
+                                </td>
+                               </tr>
+                             </tbody>
+                           </table>
+                         <!-- End Body -->
+                         </td>
+                        </tr>
+                        <tr>
+                         <td align="center" valign="top">
+                           <!-- Footer -->
+                           <table id="template_footer" border="0" cellpadding="10" cellspacing="0" width="600">
+                            <tbody>
+                             <tr>
+                              <td style="padding: 0; -webkit-border-radius: 6px;" valign="top">
+                               <table border="0" cellpadding="10" cellspacing="0" width="100%">
+                                 <tbody>
+                                   <tr>
+                                    <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
+                                         <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology</a></p>
+                                    </td>
+                                   </tr>
+                                 </tbody>
+                               </table>
+                              </td>
+                             </tr>
+                            </tbody>
+                           </table>
+                         <!-- End Footer -->
+                         </td>
+                        </tr>
+                      </tbody>
+                     </table>
+                   </td>
+                  </tr>
+                 </tbody>
+                </table>
+               </div>`
+            };
+            await mdlconfig.transporter.sendMail(mailOptions1, function (err, info) {
+                if (err) {
+                    console.log(err);
+                    return res.status(500).json({ status: 'err', message: 'Something went wrong while sending email' });
+                } else {
+                    console.log('Mail sent to admin: ', info.response);
+                }
+            });
+
+            // Create company logic
+            // Check if company exists
+            if (req.body.parent_id == 0) {
+                const companyQuery = `SELECT * FROM company WHERE company_name = ? AND main_address_country = ? `;
+                const companyValue = await query(companyQuery, [req.body.company_name, req.body.main_address_country]);
+                if (companyValue.length > 0) {
+                    return res.status(500).json({ status: 'err', data: '', message: 'Organization name already exists.' });
+                }
+            }
+            if (!req.body.parent_id || req.body.parent_id === "Select Parent") {
+                req.body.parent_id = 0;
+            }
+
+            comFunction2.generateUniqueSlug(req.body.company_name, async (error, companySlug) => {
+                if (error) {
+                    console.log('Err: ', error.message);
+                    return res.status(500).json({ status: 'err', data: '', message: 'Error generating company slug' });
+                } else {
+                    console.log('companySlug', companySlug);
+                    var insertValues = [];
+                    if (req.file) {
+                        insertValues = [userResults.insertId, req.body.company_name, req.body.heading, req.file.filename, req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, '2', req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug, req.body.parent_id];
+                    } else {
+                        insertValues = [userResults.insertId, req.body.company_name, req.body.heading, '', req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, '2', req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.main_address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug, req.body.parent_id];
+                    }
+
+                    const insertQuery = 'INSERT INTO company (user_created_by, company_name, heading, logo, about_company, comp_phone, comp_email, comp_registration_id, status, trending, created_date, updated_date, tollfree_number, main_address, main_address_pin_code, address_map_url, main_address_country, main_address_state, main_address_city, verified, paid_status, slug, parent_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+                    db.query(insertQuery, insertValues, async (err, results, fields) => {
+                        if (err) {
+                            return res.status(500).json({ status: 'err', data: '', message: 'An error occurred while processing your request' });
+                        } else {
+                            console.log("company results", results);
+                            var companyId = results.insertId;
+
+                            const updatecompany_query = `UPDATE company SET membership_type_id = ? WHERE ID = "${companyId}"`;
+                            const updatecompany_value = await queryAsync(updatecompany_query, [planId]);
+                            console.log("updatecompany_value", updatecompany_value);
+
+                            const updatecompanyclaim_query = `INSERT INTO company_claim_request SET company_id = ?, claimed_by = ?, status = ?, claimed_date = ?`;
+                            const updatecompanyclaim_values = [companyId, userID, '1', formattedDate];
+                            const updatecompanyclaim_result = await queryAsync(updatecompanyclaim_query, updatecompanyclaim_values);                         
+                            console.log("Company claim request inserted successfully:", updatecompanyclaim_result);
+
+                            const subscriptionDetails = await razorpay.subscriptions.fetch(subscriptionId);
+                            console.log('Subscription details:', subscriptionDetails);
+
+                            const invoices = await razorpay.invoices.all({
+                                'subscription_id': subscriptionId
+                            });
+                            console.log('Invoices for subscriptions:', invoices);
+                    
+                            const invoiceId = invoices.items.length > 0 ? invoices.items[0].id : null;
+                            console.log('Invoice IDs:', invoiceId);
+
+                            // const getpayments= fetchPaymentsByInvoiceId(invoiceId);
+                            // console.log("getpayments",getpayments);
+
+                            console.log("Subscription current start timestamp:", subscriptionDetails.current_start);
+                            console.log("Subscription charge at timestamp:", subscriptionDetails.charge_at);
+                            
+                            const subscriptionStartDate = new Date(subscriptionDetails.current_start * 1000);
+                            const subscriptionEndDate = new Date(subscriptionDetails.charge_at * 1000);
+                            
+                            console.log("Subscription start date:", subscriptionStartDate);
+                            console.log("Subscription end date:", subscriptionEndDate);
+                            
+                            
+                            const order_history_data = {
+                                user_id: userID,
+                                payment_status: 'success',
+                                subscription_details: JSON.stringify(subscriptionDetails),
+                                subscription_start_date: new Date(subscriptionDetails.current_start * 1000),
+                                subscription_end_date: new Date(subscriptionDetails.charge_at * 1000),
+                              };
+                              
+                              const update_order_history_query = `
+                                UPDATE order_history
+                                SET user_id = ?, payment_status = ?, subscription_details = ?, subscription_start_date = ?, subscription_end_date = ?
+                                WHERE stripe_subscription_id = ?
+                              `;
+                              
+                              const update_values = [
+                                order_history_data.user_id,
+                                order_history_data.payment_status,
+                                order_history_data.subscription_details,
+                                order_history_data.subscription_start_date,
+                                order_history_data.subscription_end_date,
+                                subscriptionId
+                              ];
+                              
+                              // Execute the query
+                              try {
+                                const update_result = await queryAsync(update_order_history_query, update_values);
+                                console.log(`Order history updated for subscription ID ${subscriptionId}`);
+                              } catch (error) {
+                                console.error('Failed to update order history:', error);
+                              }
+                              
+
+                            // Insert user meta
+                            const userMetaInsertQuery = 'INSERT INTO user_customer_meta (user_id, review_count, country, state) VALUES (?, ?, ?, ?)';
+                            await queryAsync(userMetaInsertQuery, [userResults.insertId, 0,user_country, user_state]);
+
+                            // Register user in blog API
+                            // const userRegistrationData = {
+                            //     username: email,
+                            //     email: email,
+                            //     password: register_password,
+                            //     first_name: first_name,
+                            //     last_name: last_name,
+                            // };
+                            // await axios.post(`${process.env.BLOG_API_ENDPOINT}/register`, userRegistrationData);
+
+                            // // Log user in blog API
+                            // const userData = {
+                            //     user_id: userResults.insertId,
+                            //     first_name: first_name,
+                            //     last_name: last_name,
+                            //     email: email,
+                            //     user_type_id: 2
+                            // };
+                            // const encodedUserData = JSON.stringify(userData);
+                            // res.cookie('user', encodedUserData);
+
+                            // const userLoginData = {
+                            //     email: email,
+                            //     password: register_password,
+                            // };
+                            // const loginResponse = await axios.post(`${process.env.BLOG_API_ENDPOINT}/login`, userLoginData);
+                            // const wpUserData = loginResponse.data.data;
+
+                            // // Fetch device info
+                            // const userAgent = req.headers['user-agent'];
+                            // const agent = useragent.parse(userAgent);
+                            // const deviceQuery = 'SELECT * FROM user_device_info WHERE user_id = ?';
+                            // const deviceQueryResults = await new Promise((resolve, reject) => {
+                            //     db.query(deviceQuery, [userResults.insertId], (err, results) => {
+                            //         if (err) return reject(err);
+                            //         resolve(results);
+                            //     });
+                            // });
+
+                            // // Insert or update device info
+                            // const ipAddress = requestIp.getClientIp(req);
+                            // const deviceInfo = `${agent.toAgent()} ${agent.os.toString()}`;
+                            // if (deviceQueryResults.length > 0) {
+                            //     const deviceUpdateQuery = 'UPDATE user_device_info SET device_id = ?, IP_address = ?, last_logged_in = ? WHERE user_id = ?';
+                            //     const values = [deviceInfo, ipAddress, formattedDate, userResults.insertId];
+                            //     await new Promise((resolve, reject) => {
+                            //         db.query(deviceUpdateQuery, values, (err, results) => {
+                            //             if (err) return reject(err);
+                            //             resolve(results);
+                            //         });
+                            //     });
+                            // } else {
+                            //     const deviceInsertQuery = 'INSERT INTO user_device_info (user_id, device_id, device_token, imei_no, model_name, make_name, IP_address, last_logged_in, created_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+                            //     const values = [userResults.insertId, deviceInfo, '', '', '', '', ipAddress, formattedDate, formattedDate];
+                            //     await new Promise((resolve, reject) => {
+                            //         db.query(deviceInsertQuery, values, (err, results) => {
+                            //             if (err) return reject(err);
+                            //             resolve(results);
+                            //         });
+                            //     });
+                            // }
+
+                            // Respond with success message
+                            return res.status(200).json({ status: 'ok', data: userResults.insertId, message: 'New user created' });
+                        }
+                    });
+                }
+            });
+        });
+    } catch (error) {
+        console.error('Error:', error);
+        return res.status(500).json({ status: 'err', data: '', message: 'An error occurred while processing your request' });
+    }
+};
+
+
+// exports.externalRegistration = async (req, res) => {
+//     const { first_name, last_name, email, register_password, phone, address, city, state, zip, planId, billingCycle, memberCount, subscriptionId,user_state, user_country, register_confirm_password  } = req.body;
+//     console.log("externalRegistration", req.body);
+
+//     try {
+//         if (register_password !== register_confirm_password) {
+//             return res.status(400).json({ status: 'err', message: 'Passwords does not match.' });
+//         }
+//         const emailExists = await new Promise((resolve, reject) => {
+//             db.query('SELECT email, register_from FROM users WHERE email = ?', [email], (err, results) => {
+//                 if (err) return reject(err);
+//                 if (results.length > 0) {
+//                     var register_from = results[0].register_from;
+//                     var message = '';
+//                     // Handle existing email scenarios
+//                     if (register_from == 'web') {
+//                         message = 'Email ID already exists, Please login with your email-ID and password';
+//                     } else if (register_from == 'facebook') {
+//                         message = 'Email ID already exists, login with ' + register_from;
+//                     } else if (register_from == 'gmail') {
+//                         register_from = 'google';
+//                         message = 'Email ID already exists, login with ' + register_from;
+//                     } else {
+//                         message = 'Email ID already exists, login with ' + register_from;
+//                     }
+//                     return res.status(500).json({ status: 'err', data: '', message: message });
+//                 } else {
+//                     resolve(false);
+//                 }
+//             });
+//         });
+
+//         if (emailExists) {
+//             console.log("Email already exists.");
+//             return;
+//         }
+
+//         console.log("Email does not exist, proceeding to create user.");
+
+//         const hashedPassword = await bcrypt.hash(register_password, 8);
+//         const currentDate = new Date();
+//         const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ');
+
+//         // Insert user into users table
+//         const userInsertQuery = 'INSERT INTO users (first_name, last_name, email, password, register_from, user_registered, user_status, user_type_id, alise_name) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+//         db.query(userInsertQuery, [first_name, last_name, email, hashedPassword, 'web', formattedDate, 3, 2, first_name + last_name], async (err, userResults) => {
+//             if (err) {
+//                 console.error('Error inserting user into "users" table:', err);
+//                 return res.status(500).json({ status: 'err', data: '', message: 'An error occurred while processing your request' });
+//             }
+
+//             var userID = userResults.insertId;
+//             console.log("userID",userID);
+
+//             // Send welcome email
+//             var mailOptions = {
+//                 from: process.env.MAIL_USER,
+//                 to: email,
+//                 subject: 'Welcome e-mail',
+//                 html:`<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+//                 <style>
+//                 body, table, td, p, a, h1, h2, h3, h4, h5, h6, div {
+//                     font-family: Calibri, 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif !important;
+//                 }
+//                 </style>
+//                 <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
+//                  <tbody>
+//                   <tr>
+//                    <td align="center" valign="top">
+//                      <div id="template_header_image"><p style="margin-top: 0;"></p></div>
+//                      <table id="template_container" style="box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important; background-color: #fdfdfd; border: 1px solid #dcdcdc; border-radius: 3px !important;" border="0" cellpadding="0" cellspacing="0" width="600">
+//                       <tbody>
+//                         <tr>
+//                          <td align="center" valign="top">
+//                            <!-- Header -->
+//                            <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
+//                              <tbody>
+//                                <tr>
+//                                <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/email-template-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+//                                 <td id="header_wrapper" style="padding: 36px 48px; display: block;">
+//                                    <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Welcome</h1>
+//                                 </td>
+          
+//                                </tr>
+//                              </tbody>
+//                            </table>
+//                      <!-- End Header -->
+//                      </td>
+//                         </tr>
+//                         <tr>
+//                          <td align="center" valign="top">
+//                            <!-- Body -->
+//                            <table id="template_body" border="0" cellpadding="0" cellspacing="0" width="600">
+//                              <tbody>
+//                                <tr>
+//                                 <td id="body_content" style="background-color: #fdfdfd;" valign="top">
+//                                   <!-- Content -->
+//                                   <table border="0" cellpadding="20" cellspacing="0" width="100%">
+//                                    <tbody>
+//                                     <tr>
+//                                      <td style="padding: 48px;" valign="top">
+//                                        <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
+                                        
+//                                         <table border="0" cellpadding="4" cellspacing="0" width="90%">
+//                                           <tr>
+//                                             <td colspan="2">
+//                                                 <strong>Hello ${first_name},</strong>
+//                                                 <p style="font-size:15px; line-height:20px">Your account and company has created successfully.</p>
+//                                                 <p style="font-size:15px; line-height:20px">Please wait for Admin approval</p>
+//                                                 <p style="font-size:15px; line-height:20px"><br><p style="font-size:15px; line-height:20px">Kind Regards,</p><p style="font-size:15px; line-height:20px">CEchoes Technology Team</p><br>
+//                                             </td>
+//                                           </tr>
+//                                         </table>
+//                                        </div>
+//                                      </td>
+//                                     </tr>
+//                                    </tbody>
+//                                   </table>
+//                                 <!-- End Content -->
+//                                 </td>
+//                                </tr>
+//                              </tbody>
+//                            </table>
+//                          <!-- End Body -->
+//                          </td>
+//                         </tr>
+//                         <tr>
+//                          <td align="center" valign="top">
+//                            <!-- Footer -->
+//                            <table id="template_footer" border="0" cellpadding="10" cellspacing="0" width="600">
+//                             <tbody>
+//                              <tr>
+//                               <td style="padding: 0; -webkit-border-radius: 6px;" valign="top">
+//                                <table border="0" cellpadding="10" cellspacing="0" width="100%">
+//                                  <tbody>
+//                                    <tr>
+//                                     <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
+//                                          <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology</a></p>
+//                                     </td>
+//                                    </tr>
+//                                  </tbody>
+//                                </table>
+//                               </td>
+//                              </tr>
+//                             </tbody>
+//                            </table>
+//                          <!-- End Footer -->
+//                          </td>
+//                         </tr>
+//                       </tbody>
+//                      </table>
+//                    </td>
+//                   </tr>
+//                  </tbody>
+//                 </table>
+//                </div>`
+//             };
+//             await mdlconfig.transporter.sendMail(mailOptions, function (err, info) {
+//                 if (err) {
+//                     console.log(err);
+//                     return res.status(500).json({ status: 'err', message: 'Something went wrong while sending email' });
+//                 } else {
+//                     console.log('Mail sent: ', info.response);
+//                 }
+//             });
+
+//             var mailOptions1 = {
+//                 from: process.env.MAIL_USER,
+//                 to: process.env.MAIL_USER,
+//                 subject: 'New Registration at CEchoes',
+//                 html:`<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+//                 <style>
+//                 body, table, td, p, a, h1, h2, h3, h4, h5, h6, div {
+//                     font-family: Calibri, 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif !important;
+//                 }
+//                 </style>
+//                 <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
+//                  <tbody>
+//                   <tr>
+//                    <td align="center" valign="top">
+//                      <div id="template_header_image"><p style="margin-top: 0;"></p></div>
+//                      <table id="template_container" style="box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important; background-color: #fdfdfd; border: 1px solid #dcdcdc; border-radius: 3px !important;" border="0" cellpadding="0" cellspacing="0" width="600">
+//                       <tbody>
+//                         <tr>
+//                          <td align="center" valign="top">
+//                            <!-- Header -->
+//                            <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
+//                              <tbody>
+//                                <tr>
+//                                <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/email-template-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+//                                 <td id="header_wrapper" style="padding: 36px 48px; display: block;">
+//                                    <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Welcome</h1>
+//                                 </td>
+          
+//                                </tr>
+//                              </tbody>
+//                            </table>
+//                      <!-- End Header -->
+//                      </td>
+//                         </tr>
+//                         <tr>
+//                          <td align="center" valign="top">
+//                            <!-- Body -->
+//                            <table id="template_body" border="0" cellpadding="0" cellspacing="0" width="600">
+//                              <tbody>
+//                                <tr>
+//                                 <td id="body_content" style="background-color: #fdfdfd;" valign="top">
+//                                   <!-- Content -->
+//                                   <table border="0" cellpadding="20" cellspacing="0" width="100%">
+//                                    <tbody>
+//                                     <tr>
+//                                      <td style="padding: 48px;" valign="top">
+//                                        <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
+                                        
+//                                         <table border="0" cellpadding="4" cellspacing="0" width="90%">
+//                                           <tr>
+//                                             <td colspan="2">
+//                                                 <strong>Hello ${first_name},</strong>
+//                                                 <p style="font-size:15px; line-height:20px">User1 has been register at CEchoes.com</p>
+//                                                 <p style="font-size:15px; line-height:20px">Please verify the <a href="http://localhost:2000">user</a>.</p>
+//                                                 <p style="font-size:15px; line-height:20px"><br><p style="font-size:15px; line-height:20px">Kind Regards,</p><p style="font-size:15px; line-height:20px">CEchoes Technology Team</p><br>
+//                                             </td>
+//                                           </tr>
+//                                         </table>
+//                                        </div>
+//                                      </td>
+//                                     </tr>
+//                                    </tbody>
+//                                   </table>
+//                                 <!-- End Content -->
+//                                 </td>
+//                                </tr>
+//                              </tbody>
+//                            </table>
+//                          <!-- End Body -->
+//                          </td>
+//                         </tr>
+//                         <tr>
+//                          <td align="center" valign="top">
+//                            <!-- Footer -->
+//                            <table id="template_footer" border="0" cellpadding="10" cellspacing="0" width="600">
+//                             <tbody>
+//                              <tr>
+//                               <td style="padding: 0; -webkit-border-radius: 6px;" valign="top">
+//                                <table border="0" cellpadding="10" cellspacing="0" width="100%">
+//                                  <tbody>
+//                                    <tr>
+//                                     <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
+//                                          <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology</a></p>
+//                                     </td>
+//                                    </tr>
+//                                  </tbody>
+//                                </table>
+//                               </td>
+//                              </tr>
+//                             </tbody>
+//                            </table>
+//                          <!-- End Footer -->
+//                          </td>
+//                         </tr>
+//                       </tbody>
+//                      </table>
+//                    </td>
+//                   </tr>
+//                  </tbody>
+//                 </table>
+//                </div>`
+//             };
+//             await mdlconfig.transporter.sendMail(mailOptions1, function (err, info) {
+//                 if (err) {
+//                     console.log(err);
+//                     return res.status(500).json({ status: 'err', message: 'Something went wrong while sending email' });
+//                 } else {
+//                     console.log('Mail sent to admin: ', info.response);
+//                 }
+//             });
+
+//             // Create company logic
+//             // Check if company exists
+//             if (req.body.parent_id == 0) {
+//                 const companyQuery = `SELECT * FROM company WHERE company_name = ? AND main_address_country = ? `;
+//                 const companyValue = await query(companyQuery, [req.body.company_name, req.body.main_address_country]);
+//                 if (companyValue.length > 0) {
+//                     return res.status(500).json({ status: 'err', data: '', message: 'Organization name already exists.' });
+//                 }
+//             }
+//             if (!req.body.parent_id || req.body.parent_id === "Select Parent") {
+//                 req.body.parent_id = 0;
+//             }
+
+//             comFunction2.generateUniqueSlug(req.body.company_name, async (error, companySlug) => {
+//                 if (error) {
+//                     console.log('Err: ', error.message);
+//                     return res.status(500).json({ status: 'err', data: '', message: 'Error generating company slug' });
+//                 } else {
+//                     console.log('companySlug', companySlug);
+//                     var insertValues = [];
+//                     if (req.file) {
+//                         insertValues = [userResults.insertId, req.body.company_name, req.body.heading, req.file.filename, req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, '2', req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug, req.body.parent_id];
+//                     } else {
+//                         insertValues = [userResults.insertId, req.body.company_name, req.body.heading, '', req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, '2', req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.main_address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug, req.body.parent_id];
+//                     }
+
+//                     const insertQuery = 'INSERT INTO company (user_created_by, company_name, heading, logo, about_company, comp_phone, comp_email, comp_registration_id, status, trending, created_date, updated_date, tollfree_number, main_address, main_address_pin_code, address_map_url, main_address_country, main_address_state, main_address_city, verified, paid_status, slug, parent_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+//                     db.query(insertQuery, insertValues, async (err, results, fields) => {
+//                         if (err) {
+//                             return res.status(500).json({ status: 'err', data: '', message: 'An error occurred while processing your request' });
+//                         } else {
+//                             console.log("company results", results);
+//                             var companyId = results.insertId;
+
+//                             const updatecompany_query = `UPDATE company SET membership_type_id = ? WHERE ID = "${companyId}"`;
+//                             const updatecompany_value = await queryAsync(updatecompany_query, [planId]);
+//                             console.log("updatecompany_value", updatecompany_value);
+
+//                             const subscriptionDetails = await razorpay.subscriptions.fetch(subscriptionId);
+//                             console.log('Subscription details:', subscriptionDetails);
+
+//                             const invoices = await razorpay.invoices.all({
+//                                 'subscription_id': subscriptionId
+//                             });
+//                             console.log('Invoices for subscriptions:', invoices);
+                    
+//                             const invoiceId = invoices.items.length > 0 ? invoices.items[0].id : null;
+//                             console.log('Invoice IDs:', invoiceId);
+
+//                             // const getpayments= fetchPaymentsByInvoiceId(invoiceId);
+//                             // console.log("getpayments",getpayments);
+
+//                             console.log("Subscription current start timestamp:", subscriptionDetails.current_start);
+//                             console.log("Subscription charge at timestamp:", subscriptionDetails.charge_at);
+                            
+//                             const subscriptionStartDate = new Date(subscriptionDetails.current_start * 1000);
+//                             const subscriptionEndDate = new Date(subscriptionDetails.charge_at * 1000);
+                            
+//                             console.log("Subscription start date:", subscriptionStartDate);
+//                             console.log("Subscription end date:", subscriptionEndDate);
+                            
+                            
+//                             const order_history_data = {
+//                                 user_id: userID,
+//                                 payment_status: 'success',
+//                                 subscription_details: JSON.stringify(subscriptionDetails),
+//                                 subscription_start_date: new Date(subscriptionDetails.current_start * 1000),
+//                                 subscription_end_date: new Date(subscriptionDetails.charge_at * 1000),
+//                               };
+                              
+//                               const update_order_history_query = `
+//                                 UPDATE order_history
+//                                 SET user_id = ?, payment_status = ?, subscription_details = ?, subscription_start_date = ?, subscription_end_date = ?
+//                                 WHERE stripe_subscription_id = ?
+//                               `;
+                              
+//                               const update_values = [
+//                                 order_history_data.user_id,
+//                                 order_history_data.payment_status,
+//                                 order_history_data.subscription_details,
+//                                 order_history_data.subscription_start_date,
+//                                 order_history_data.subscription_end_date,
+//                                 subscriptionId
+//                               ];
+                              
+//                               // Execute the query
+//                               try {
+//                                 const update_result = await queryAsync(update_order_history_query, update_values);
+//                                 console.log(`Order history updated for subscription ID ${subscriptionId}`);
+//                               } catch (error) {
+//                                 console.error('Failed to update order history:', error);
+//                               }
+                              
+
+//                             // Insert user meta
+//                             const userMetaInsertQuery = 'INSERT INTO user_customer_meta (user_id, review_count, country, state) VALUES (?, ?, ?, ?)';
+//                             await queryAsync(userMetaInsertQuery, [userResults.insertId, 0,user_country, user_state]);
+
+//                             // Register user in blog API
+//                             const userRegistrationData = {
+//                                 username: email,
+//                                 email: email,
+//                                 password: register_password,
+//                                 first_name: first_name,
+//                                 last_name: last_name,
+//                             };
+//                             await axios.post(`${process.env.BLOG_API_ENDPOINT}/register`, userRegistrationData);
+
+//                             // Log user in blog API
+//                             const userData = {
+//                                 user_id: userResults.insertId,
+//                                 first_name: first_name,
+//                                 last_name: last_name,
+//                                 email: email,
+//                                 user_type_id: 2
+//                             };
+//                             const encodedUserData = JSON.stringify(userData);
+//                             res.cookie('user', encodedUserData);
+
+//                             const userLoginData = {
+//                                 email: email,
+//                                 password: register_password,
+//                             };
+//                             const loginResponse = await axios.post(`${process.env.BLOG_API_ENDPOINT}/login`, userLoginData);
+//                             const wpUserData = loginResponse.data.data;
+
+//                             // Fetch device info
+//                             const userAgent = req.headers['user-agent'];
+//                             const agent = useragent.parse(userAgent);
+//                             const deviceQuery = 'SELECT * FROM user_device_info WHERE user_id = ?';
+//                             const deviceQueryResults = await new Promise((resolve, reject) => {
+//                                 db.query(deviceQuery, [userResults.insertId], (err, results) => {
+//                                     if (err) return reject(err);
+//                                     resolve(results);
+//                                 });
+//                             });
+
+//                             // Insert or update device info
+//                             const ipAddress = requestIp.getClientIp(req);
+//                             const deviceInfo = `${agent.toAgent()} ${agent.os.toString()}`;
+//                             if (deviceQueryResults.length > 0) {
+//                                 const deviceUpdateQuery = 'UPDATE user_device_info SET device_id = ?, IP_address = ?, last_logged_in = ? WHERE user_id = ?';
+//                                 const values = [deviceInfo, ipAddress, formattedDate, userResults.insertId];
+//                                 await new Promise((resolve, reject) => {
+//                                     db.query(deviceUpdateQuery, values, (err, results) => {
+//                                         if (err) return reject(err);
+//                                         resolve(results);
+//                                     });
+//                                 });
+//                             } else {
+//                                 const deviceInsertQuery = 'INSERT INTO user_device_info (user_id, device_id, device_token, imei_no, model_name, make_name, IP_address, last_logged_in, created_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+//                                 const values = [userResults.insertId, deviceInfo, '', '', '', '', ipAddress, formattedDate, formattedDate];
+//                                 await new Promise((resolve, reject) => {
+//                                     db.query(deviceInsertQuery, values, (err, results) => {
+//                                         if (err) return reject(err);
+//                                         resolve(results);
+//                                     });
+//                                 });
+//                             }
+
+//                             // Respond with success message
+//                             return res.status(200).json({ status: 'ok', data: userResults.insertId, message: 'New user created' });
+//                         }
+//                     });
+//                 }
+//             });
+//         });
+//     } catch (error) {
+//         console.error('Error:', error);
+//         return res.status(500).json({ status: 'err', data: '', message: 'An error occurred while processing your request' });
+//     }
+// };
+
+// const userRegistrationData = {
+//     username: email,
+//     email: email,
+//     password: register_password,
+//     first_name: first_name,
+//     last_name: last_name,
+// };
+// axios.post(process.env.BLOG_API_ENDPOINT + '/register', userRegistrationData)
+//     .then((response) => {
+//         //console.log('User registration successful. User ID:', response.data.user_id);
+
+//         //-------User Auto Login --------------//
+//         const userAgent = req.headers['user-agent'];
+//         const agent = useragent.parse(userAgent);
+
+//         // Set a cookie
+//         const userData = {
+//             user_id: userResults.insertId,
+//             first_name: first_name,
+//             last_name: last_name,
+//             email: email,
+//             user_type_id: 2
+//         };
+//         const encodedUserData = JSON.stringify(userData);
+//         res.cookie('user', encodedUserData);
+
+//         (async () => {
+//             //---- Login to Wordpress Blog-----//
+//             //let wp_user_data;
+//             try {
+//                 const userLoginData = {
+//                     email: email,
+//                     password: register_password,
+//                 };
+//                 const response = await axios.post(process.env.BLOG_API_ENDPOINT + '/login', userLoginData);
+//                 const wp_user_data = response.data.data;
+
+
+
+//                 //-- check last Login Info-----//
+//                 const device_query = "SELECT * FROM user_device_info WHERE user_id = ?";
+//                 db.query(device_query, [userResults.insertId], async (err, device_query_results) => {
+//                     const currentDate = new Date();
+//                     const year = currentDate.getFullYear();
+//                     const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+//                     const day = String(currentDate.getDate()).padStart(2, '0');
+//                     const hours = String(currentDate.getHours()).padStart(2, '0');
+//                     const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+//                     const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+//                     const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+//                     if (device_query_results.length > 0) {
+//                         // User exist update info
+//                         const device_update_query = 'UPDATE user_device_info SET device_id = ?, IP_address = ?, last_logged_in = ? WHERE user_id = ?';
+//                         const values = [agent.toAgent() + ' ' + agent.os.toString(), requestIp.getClientIp(req), formattedDate, userResults.insertId];
+//                         db.query(device_update_query, values, (err, device_update_query_results) => {
+//                         })
+//                     } else {
+//                         // User doesnot exist Insert New Row.
+
+//                         const device_insert_query = 'INSERT INTO user_device_info (user_id, device_id, device_token, imei_no, model_name, make_name, IP_address, last_logged_in, created_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+//                         const values = [userResults.insertId, agent.toAgent() + ' ' + agent.os.toString(), '', '', '', '', requestIp.getClientIp(req), formattedDate, formattedDate];
+
+//                         db.query(device_insert_query, values, (err, device_insert_query_results) => {
+//                             const OTPdelQuery = `DELETE FROM signup_otp_veryfy WHERE email = '${email}' `;
+//                             db.query(OTPdelQuery, (OTPdelErr, TOPdelRes) => {
+//                                 if (OTPdelErr) {
+//                                     console.log(OTPdelErr);
+//                                     return res.send({
+//                                         status: 'not ok',
+//                                         message: 'Something went wrong'
+//                                     });
+//                                 } else {
+//                                     console.log('otp deleted')
+//                                     return res.send(
+//                                         {
+//                                             status: 'ok',
+//                                             data: userData,
+//                                             wp_user: wp_user_data,
+//                                             currentUrlPath: req.body.currentUrlPath,
+//                                             message: 'Registration successful you are automatically login to your dashboard'
+//                                         }
+//                                     )
+//                                 }
+
+//                             })
+
+//                         })
+
+//                     }
+//                 })
+//             } catch (error) {
+//                 console.error('User login failed. Error:', error);
+//                 if (error.response && error.response.data) {
+//                     console.log('Error response data:', error.response.data);
+//                 }
+//             }
+//         })();
+//     })
+//     .catch((error) => {
+//         //console.error('User registration failed:', );
+//         return res.send(
+//             {
+//                 status: 'err',
+//                 data: '',
+//                 message: error.response.data
+//             }
+//         )
+//     });
+
+const fetchPaymentsByInvoiceId = async (invoiceId) => {
+    try {
+        // Fetch all payments from Razorpay
+        const response = await razorpay.payments.all();
+
+        // Extract payments from the response
+        const payments = response.items;
+
+        console.log("payments",payments);
+
+        // Filter payments by invoiceId
+        const matchingPayments = payments.filter(payment => payment.invoice_id === invoiceId);
+
+        console.log('Payments for invoice:', matchingPayments);
+        if(matchingPayments.length>0){
+            return matchingPayments; 
+        } else{
+            return [];
+        }
+    } catch (error) {
+        console.error('Error fetching payments for invoice:', error);
+        throw error; // Throw error for higher-level error handling
+    }
+};
+
+ //fetchPaymentsByInvoiceId('inv_OXHIwBbIbje4gl');
+
+async function findOrCreateCustomer(email, name, phone, address, city, state, zip) {
+    try {
+        console.log("email:", email);
+        const customers = await razorpay.customers.all();
+        console.log("customerslist:", customers);
+        console.log("address",address);
+        console.log("name",name);
+        console.log("city",city);
+        console.log("state",state);
+        console.log("zip",zip);
+
         if (customers.items.length > 0) {
-            // Use the existing customer ID
-            console.log('Existing customer found:', customers.items[0].id);
-            return customers.items[0].id;
+            const foundCustomer = customers.items.find(customer => customer.email === email);
+            if (foundCustomer) {
+                console.log('Found customer:', foundCustomer);
+
+                //const foundCustomerId = "cust_" + foundCustomer.id;
+                const foundCustomerId = foundCustomer.id;
+                console.log("Concatenated Customer ID:", foundCustomerId);
+
+                let updatedCustomer = await razorpay.customers.edit(foundCustomerId, {
+                    name: name,
+                    email: email,
+                    //contact: phone,
+                    // shipping_address: {
+                    //     line1: address,
+                    //     city: city,
+                    //     state: state,
+                    //     //zip: zip,
+                    //     country: 'IN'
+                    // }
+                });
+
+                console.log('Updated customer:', updatedCustomer);
+
+                return foundCustomerId;
+            } else {
+                console.log(`Customer with email ${email} not found.`);
+                const customer = await razorpay.customers.create({
+                    name: name,
+                    email: email,
+                    //contact: phone,
+                    // shipping_address: {
+                    //     line1: address,
+                    //     city: city,
+                    //     state: state,
+                    //     //zip: zip,
+                    //     country: 'IN'
+                    // }
+                });
+                console.log('Created new customer:', customer.id);
+                return customer.id;
+            }
         } else {
-            // Create a new customer
             const customer = await razorpay.customers.create({
                 name: name,
                 email: email,
+                contact: phone,
+                // shipping_address: {
+                //     line1: address,
+                //     city: city,
+                //     state: state,
+                //     //zip: zip,
+                //     country: 'IN'
+                // }
             });
             console.log('Created new customer:', customer.id);
             return customer.id;
@@ -12661,18 +14352,159 @@ async function findOrCreateCustomer(email, name) {
     }
 }
 
+async function CreateCustomer(email, name, phone, address, city, state, zip) {
+    try {
+        console.log("email:", email);
+        const customers = await razorpay.customers.all();
+        console.log("customerslist:", customers);
+        console.log("address",address);
+        console.log("name",name);
+        console.log("city",city);
+        console.log("state",state);
+        console.log("zip",zip);
 
-const createRazorpayPlan = async (plan, billingCycle, memberCount) => {
+        if (customers.items.length > 0) {
+            const foundCustomer = customers.items.find(customer => customer.email == email);
+            if (foundCustomer) {
+                console.log('Found customerss:', foundCustomer);
+
+                // //const foundCustomerId = "cust_" + foundCustomer.id;
+                // const foundCustomerId = foundCustomer.id;
+                // console.log("Concatenated Customer ID:", foundCustomerId);
+
+                // let updatedCustomer = await razorpay.customers.edit(foundCustomerId, {
+                //     name: name,
+                //     email: email,
+                //     //contact: phone,
+                //     // shipping_address: {
+                //     //     line1: address,
+                //     //     city: city,
+                //     //     state: state,
+                //     //     //zip: zip,
+                //     //     country: 'IN'
+                //     // }
+                // });
+
+                // console.log('Updated customer:', updatedCustomer);
+
+                // return foundCustomerId;
+            } else {
+                console.log(`Customer with email ${email} not found.`);
+                const customer = await razorpay.customers.create({
+                    name: name,
+                    email: email,
+                });
+                console.log('Created new customer:', customer.id);
+                return customer.id;
+            }
+        } else {
+            const customer = await razorpay.customers.create({
+                name: name,
+                email: email,
+                contact: phone,
+            });
+            console.log('Created new customer:', customer.id);
+            return customer.id;
+        }
+    } catch (error) {
+        console.error('Error finding or creating customer:', error);
+        throw error;
+    }
+}
+
+// const createRazorpayPlan = async (plan, billingCycle, memberCount, country_code) => {
+//     try {
+//         memberCount = parseInt(memberCount);
+//         console.log("memberCount", memberCount);
+//         if (isNaN(memberCount) || memberCount < 0) {
+//             throw new Error('Invalid memberCount');
+//         }
+
+//         console.log("countrycodenumm",country_code);
+
+//         console.log("plan", plan);
+//         console.log("memberCount", memberCount);
+//         console.log("billingCycle", billingCycle);
+
+//         const basePrice = billingCycle === 'yearly' ? plan.yearly_price : plan.monthly_price;
+//         if (isNaN(basePrice) || basePrice <= 0) {
+//             throw new Error('Invalid base price');
+//         }
+
+//         let addonPrice = 0;
+//         if (memberCount > 0) {
+//             const userAddonPrice = plan.per_user_price;
+//             addonPrice = userAddonPrice * memberCount;
+//         }
+
+//         const totalPrice = parseFloat(basePrice) + parseFloat(addonPrice);
+//         if (isNaN(totalPrice) || totalPrice <= 0) {
+//             throw new Error('Invalid total price');
+//         }
+//         console.log("totalPrice",totalPrice);
+
+//         // const totalPriceInPaise = totalPrice * 100; 
+//         //const totalPriceInPaise = totalPrice * 100;
+//         let totalPriceInPaise;
+//         if (country_code === "IN") {
+//             totalPriceInPaise = totalPrice * 100;
+//         } else if (country_code === "JP") {
+//             totalPriceInPaise = totalPrice * 100 * 1.23; // Convert to paise then apply conversion rate
+//         } else {
+//             totalPriceInPaise = totalPrice * 100; // Default conversion to paise
+//         }
+
+//         console.log("totalPriceInPaise",totalPriceInPaise);
+
+//         // const interval = billingCycle === 'yearly' ? 13 : 1;
+
+//         let period, interval;
+//         if (billingCycle === 'yearly') {
+//             period = 'monthly';
+//             interval = 13; // 13 months
+//         } else if (billingCycle === 'monthly') {
+//             period = 'monthly';
+//             interval = 1; // 1 month
+//         } else if (billingCycle === 'daily') {
+//             period = 'daily';
+//             interval = 7; // 7 days
+//         } else {
+//             throw new Error('Invalid billing cycle');
+//         }
+
+//         const razorpayPlan = await razorpay.plans.create({
+//             // period: 'monthly',
+//             // interval: interval,
+//             period: period,
+//             interval: interval,
+//             item: {
+//                 name: plan.name,
+//                 description: plan.description,
+//                 amount: totalPriceInPaise,
+//                 //amount: totalPrice,
+//                 currency: 'INR'
+//             }
+//         });
+//         console.log("razorpayPlan", razorpayPlan);
+//         //return razorpayPlan.id;
+//         return razorpayPlan;
+//     } catch (error) {
+//         console.error('Error creating Razorpay plan:', error);
+//         throw error;
+//     }
+// };
+
+const createRazorpayPlan = async (plan, billingCycle, memberCount, country_code) => {
     try {
         memberCount = parseInt(memberCount);
-        console.log("memberCount",memberCount);
+        console.log("memberCount", memberCount);
         if (isNaN(memberCount) || memberCount < 0) {
             throw new Error('Invalid memberCount');
         }
 
-        console.log("plan",plan);
-        console.log("memberCount",memberCount);
-        console.log("billingCycle",billingCycle);
+        console.log("country_code", country_code);
+        console.log("plan", plan);
+        console.log("billingCycle", billingCycle);
 
         const basePrice = billingCycle === 'yearly' ? plan.yearly_price : plan.monthly_price;
         if (isNaN(basePrice) || basePrice <= 0) {
@@ -12689,11 +14521,17 @@ const createRazorpayPlan = async (plan, billingCycle, memberCount) => {
         if (isNaN(totalPrice) || totalPrice <= 0) {
             throw new Error('Invalid total price');
         }
+        console.log("totalPrice", totalPrice);
 
-        // const totalPriceInPaise = totalPrice * 100; 
-        const totalPriceInPaise = totalPrice * 100; 
-
-        // const interval = billingCycle === 'yearly' ? 13 : 1;
+        let totalPriceInPaise;
+        if (country_code === "IN") {
+            totalPriceInPaise = totalPrice * 100;
+        } else if (country_code === "JP") {
+            totalPriceInPaise = totalPrice * 100 * 1.23; // Convert to paise then apply conversion rate
+        } else {
+            totalPriceInPaise = totalPrice * 100; // Default conversion to paise
+        }
+        console.log("totalPriceInPaise", totalPriceInPaise);
 
         let period, interval;
         if (billingCycle === 'yearly') {
@@ -12708,22 +14546,22 @@ const createRazorpayPlan = async (plan, billingCycle, memberCount) => {
         } else {
             throw new Error('Invalid billing cycle');
         }
+        console.log("period",period);
+        console.log("interval",interval);
+        console.log("plan.name",plan.name);
+        console.log("plan.description",plan.description);
 
         const razorpayPlan = await razorpay.plans.create({
-            // period: 'monthly',
-            // interval: interval,
             period: period,
             interval: interval,
             item: {
                 name: plan.name,
                 description: plan.description,
                 amount: totalPriceInPaise,
-                //amount: totalPrice,
                 currency: 'INR'
             }
         });
-        console.log("razorpayPlan",razorpayPlan);
-        //return razorpayPlan.id;
+        console.log("razorpayPlan", razorpayPlan);
         return razorpayPlan;
     } catch (error) {
         console.error('Error creating Razorpay plan:', error);
@@ -12732,646 +14570,229 @@ const createRazorpayPlan = async (plan, billingCycle, memberCount) => {
 };
 
 
-async function findRazorpayCustomerByEmail(email) {
-    try {
-        const customers = await razorpay.customers.fetchAll({ query: { email: email } });
-        if (customers.items.length > 0) {
-            return customers.items[0];
-        }
-        return null;
-    } catch (error) {
-        console.error('Error fetching Razorpay customer:', error);
-        throw error;
-    }
-}
-const initiateRazorpayPayment = async ({ subscriptionId }) => {
-    try {
+// const fetchActiveSubscriptionsFromStripe = async () => {
+//     const subscriptions = [];
+//     let hasMore = true;
+//     let startingAfter = null;
 
-        const paymentParams = {
-            subscription_id: subscriptionId, 
-            receipt: `payment_${subscriptionId}_${Date.now()}` 
-        };
-
-        // Create the payment in Razorpay
-        const payment = await razorpay.payments.create(paymentParams);
-        console.log("Payment initiated:", payment);
-
-        return payment; // Return the payment object
-    } catch (error) {
-        console.error('Error initiating payment:', error);
-        throw error;
-    }
-};
-
-
-
-// const handleRazorpaySubscription = async (subscriptionData) => {
-//     try {
-
-//       const subscriptionOptions = {
-//         plan_id: subscriptionData.planId,
-//         total_count: subscriptionData.totalCount, 
-//         customer_notify: 1,
-//         notes: {
-//           member_count: subscriptionData.memberCount, 
-//         },
-//       };
-
-//       console.log("subscriptionOptions",subscriptionOptions);
-
-//       const subscription = await razorpayInstance.subscriptions.create(subscriptionOptions);
-
-//       console.log('Created Razorpay subscription:', subscription);
-
-//       return subscription; 
-//     } catch (error) {
-//       console.error('Error creating Razorpay subscription:', error);
-//       throw error;
-//     }
-//   };
-
-
-  // exports.createSubscription = async (req, res) => {
-//   try {
-//     const { name, email, address, city, state, zip, cardNum, expMonth, expYear, cvv, planId, billingCycle, memberCount, paymentGateway } = req.body;
-
-//     const userQuery = 'SELECT user_id, email FROM users WHERE email = ?';
-//     const userResult = await queryAsync(userQuery, [email]);
-
-//     if (userResult.length === 0) {
-//       return res.status(404).send({ error: 'User not found' });
-//     }
-//     const userId = userResult[0].user_id;
-
-//     const plan = await getPlanFromDatabase(planId);
-//     if (!plan) {
-//       return res.status(404).send({ error: 'Plan not found' });
-//     }
-
-//     // if (paymentGateway === 'stripe') {
-//     //   await handleStripeSubscription(req, res, { name, email, address, city, state, zip, cardNum, expMonth, expYear, cvv, plan, billingCycle, memberCount, userId });
-//     // } 
-
-//     // else if (paymentGateway === 'razorpay') {
-//       await handleRazorpaySubscription(req, res, { name, email, address, city, state, zip, plan, billingCycle, memberCount, userId });
-//     // } else {
-//     //   return res.status(400).send({ error: 'Invalid payment gateway' });
-//     // }
-//   } catch (error) {
-//     console.error('Error creating subscription:', error);
-//     return res.status(500).send({ error: error.message });
-//   }
-// };
-
-// // Example usage:
-// const plan = {
-//     name: 'Pro Plan',
-//     description: 'Pro subscription plan',
-//     monthly_price: 1000, // in INR
-//     yearly_price: 10000, // in INR
-//     per_user_price: 200 // in INR
-// };
-
-// createRazorpayPlan(plan, 'yearly', 5)
-//     .then(planId => {
-//         console.log('Razorpay Plan ID:', planId);
-//     })
-//     .catch(error => {
-//         console.error('Error:', error);
-//     });
-
-
-
-// const handleStripeSubscription = async (req, res, { name, email, address, city, state, zip, cardNum, expMonth, expYear, cvv, plan, billingCycle, memberCount, userId }) => {
-//   try {
-//     const priceId = await createStripeProductAndPrice(plan, billingCycle, memberCount);
-//     if (!priceId) {
-//       return res.status(500).send({ error: 'Failed to create price for the plan' });
-//     }
-
-//     const customer = await stripe.customers.create({
-//       email: email,
-//       name: name,
-//       address: {
-//         line1: address,
-//         city: city,
-//         state: state,
-//         postal_code: zip,
-//       }
-//     });
-
-//     const paymentMethod = await stripe.paymentMethods.create({
-//       type: 'card',
-//       card: {
-//         number: cardNum,
-//         exp_month: expMonth,
-//         exp_year: expYear,
-//         cvc: cvv
-//       },
-//       billing_details: {
-//         name: name,
-//         address: {
-//           line1: address,
-//           city: city,
-//           state: state,
-//           postal_code: zip,
-//         }
-//       }
-//     });
-
-//     await stripe.paymentMethods.attach(paymentMethod.id, { customer: customer.id });
-
-//     await stripe.customers.update(customer.id, {
-//       invoice_settings: {
-//         default_payment_method: paymentMethod.id,
-//       }
-//     });
-
-//     let subscriptionParams = {
-//       customer: customer.id,
-//       items: [{ price: priceId }],
-//       expand: ['latest_invoice.payment_intent'],
-//     };
-
-//     const subscription = await stripe.subscriptions.create(subscriptionParams);
-
-//     const invoice = await stripe.invoices.retrieve(subscription.latest_invoice.id);
-//     const paymentIntent = invoice.payment_intent;
-//     if (!paymentIntent) {
-//       return res.status(500).send({ error: 'Payment intent not found in invoice' });
-//     }
-
-//     const paymentIntentStatus = await stripe.paymentIntents.retrieve(paymentIntent);
-
-//     if (!paymentIntentStatus || !paymentIntentStatus.status) {
-//       return res.status(500).send({ error: 'Failed to retrieve payment intent status' });
-//     }
-
-//     let paymentStatus = paymentIntentStatus.status;
-//     if (paymentStatus === 'succeeded') {
-//       await handleSubscriptionSuccess(req, res, { subscription, paymentIntentStatus, userId, planId, memberCount, invoice });
-//     } else if (paymentStatus === 'requires_action') {
-//       return res.status(400).send({
-//         status: 'requires_action',
-//         client_secret: paymentIntent.client_secret,
-//         message: 'Payment requires additional actions.'
-//       });
-//     } else {
-//       return res.status(400).send({
-//         status: 'failed',
-//         message: 'Payment failed or requires a new payment method.'
-//       });
-//     }
-//   } catch (error) {
-//     console.error('Error creating Stripe subscription:', error);
-//     return res.status(500).send({ error: error.message });
-//   }
-// };
-
-
-
-const handleSubscriptionSuccess = async (req, res, { subscription, paymentIntentStatus, userId, planId, memberCount, invoice }) => {
-    const updatedSubscription = await stripe.subscriptions.retrieve(subscription.id);
-    const invoiceUrl = invoice.invoice_pdf;
-    const planInterval = updatedSubscription.plan.interval_count === 13 ? 'year' : 'month';
-
-    const order_history_data = {
-        user_id: userId,
-        stripe_subscription_id: subscription.id,
-        plan_id: planId,
-        payment_status: paymentIntentStatus.status,
-        subscription_details: JSON.stringify(subscription),
-        payment_details: JSON.stringify(paymentIntentStatus),
-        subscription_duration: planInterval,
-        subscription_start_date: new Date(subscription.current_period_start * 1000),
-        subscription_end_date: new Date(subscription.current_period_end * 1000),
-        added_user_number: memberCount
-    };
-
-    const order_history_query = 'INSERT INTO order_history SET ?';
-    await queryAsync(order_history_query, [order_history_data]);
-
-    const getcompany_query = `SELECT * FROM company LEFT JOIN company_claim_request ON company.ID = company_claim_request.company_id WHERE company_claim_request.claimed_by= "${userId}"`;
-    const getcompany_value = await queryAsync(getcompany_query);
-    const companyID = getcompany_value[0].ID;
-
-    const updatecompany_query = `UPDATE company SET membership_type_id = ? WHERE ID = "${companyID}"`;
-    await queryAsync(updatecompany_query, [planId]);
-
-    const mailOptions = {
-        from: process.env.MAIL_USER,
-        to: 'dev2.scwt@gmail.com',
-        subject: 'Your Subscription Invoice',
-        html: `<p>Hello ${name},</p>
-           <p>Thank you for your subscription. You can view your invoice at the <a href="${invoiceUrl}">following link</a>.</p>
-           <p>Kind Regards,</p>
-           <p>CEchoes Technology Team</p>`
-    };
-
-    await mdlconfig.transporter.sendMail(mailOptions);
-
-    return res.send({
-        status: 'ok',
-        message: 'Your payment has been successfully processed.',
-        subscriptionId: updatedSubscription.id,
-        invoiceUrl: invoiceUrl
-    });
-};
-
-
-
-// const createSubscriptionParams = (customer, priceId, billingCycle, billingAnchorTimestamp) => ({
-//     customer: customer.id,
-//     items: [{ price: priceId }],
-//     billing_cycle_anchor: billingAnchorTimestamp,
-//     expand: ['latest_invoice.payment_intent'],
-// });
-
-
-// const calculateBillingAnchor = (currentDate, billingCycle) => {
-//     const billingAnchorDate = new Date(currentDate);
-//     if (billingCycle === 'yearly') {
-//         const nextBillingDate = new Date(currentDate);
-//         nextBillingDate.setMonth(nextBillingDate.getMonth() + 13); // Move to 13 months ahead
-//         return Math.floor(nextBillingDate.getTime() / 1000);
-//     } else if (billingCycle === 'monthly') {
-//         billingAnchorDate.setMonth(billingAnchorDate.getMonth() + 1);
-//     }
-//     return Math.floor(billingAnchorDate.getTime() / 1000);
-// };
-
-
-
-// exports.createSubscription = async (req, res) => {
-//     try {
-//         const { name, email, address, city, state, zip, cardNum, expMonth, expYear, cvv, planId, billingCycle, memberCount } = req.body;
-
-//         // Check if the user exists
-//         const userQuery = 'SELECT user_id, email FROM users WHERE email = ?';
-//         const userResult = await queryAsync(userQuery, [email]);
-
-//         if (userResult.length === 0) {
-//             return res.status(404).send({ error: 'User not found' });
-//         }
-//         const userId = userResult[0].user_id;
-
-//         // Get the plan details from the database
-//         const plan = await getPlanFromDatabase(planId);
-//         if (!plan) {
-//             return res.status(404).send({ error: 'Plan not found' });
-//         }
-
-//         // Create a Stripe Product and Price
-//         const priceId = await createStripeProductAndPrice(plan, billingCycle, memberCount);
-//         if (!priceId) {
-//             return res.status(500).send({ error: 'Failed to create price for the plan' });
-//         }
-
-//         // Create a new customer in Stripe
-//         const customer = await stripe.customers.create({
-//             email: email,
-//             name: name,
-//             address: {
-//                 line1: address,
-//                 city: city,
-//                 state: state,
-//                 postal_code: zip,
-//             }
+//     while (hasMore) {
+//         const response = await stripe.subscriptions.list({
+//             status: 'active',
+//             limit: 100,
+//             ...(startingAfter && { starting_after: startingAfter })
 //         });
 
-//         // Create a payment method
-//         const paymentMethod = await stripe.paymentMethods.create({
-//             type: 'card',
-//             card: {
-//                 number: cardNum,
-//                 exp_month: expMonth,
-//                 exp_year: expYear,
-//                 cvc: cvv
-//             },
-//             billing_details: {
-//                 name: name,
-//                 address: {
-//                     line1: address,
-//                     city: city,
-//                     state: state,
-//                     postal_code: zip,
-//                 }
-//             }
-//         });
-
-//         // Attach payment method to customer
-//         await stripe.paymentMethods.attach(paymentMethod.id, { customer: customer.id });
-
-//         // Update customer's default payment method
-//         await stripe.customers.update(customer.id, {
-//             invoice_settings: {
-//                 default_payment_method: paymentMethod.id,
-//             }
-//         });
-
-//         // Calculate billing cycle anchor
-//         const billingAnchorTimestamp = calculateBillingAnchor(new Date(), billingCycle);
-
-//         // Create subscription parameters including billing cycle anchor
-//         const subscriptionParams = {
-//             customer: customer.id,
-//             items: [{ price: priceId }],
-//             billing_cycle_anchor: billingAnchorTimestamp,
-//         };
-
-//         // Apply trial period for yearly subscription
-//         if (billingCycle === 'yearly') {
-//             subscriptionParams.trial_period_days = 30; // 1-month free trial
+//         subscriptions.push(...response.data);
+//         hasMore = response.has_more;
+//         if (hasMore) {
+//             startingAfter = response.data[response.data.length - 1].id;
 //         }
-
-//         // Create the subscription in Stripe
-//         const subscription = await stripe.subscriptions.create(subscriptionParams);
-
-//         console.log("subscriptiondf",subscription);
-
-//         // Retrieve the latest invoice associated with the subscription
-//         const invoice = await stripe.invoices.retrieve(subscription.latest_invoice);
-//         console.log("Retrieved invoice:", invoice);
-
-//         // Retrieve the payment intent
-//         const paymentIntent = await retrievePaymentIntentWithRetry(invoice.id);
-//         console.log('Retrieved payment intent:', paymentIntent);
-
-//         if (!invoice || !invoice.payment_intent) {
-//             return res.status(500).send({ error: 'Payment intent not found in invoice' });
-//         }
-
-//         const paymentIntentStatus = await stripe.paymentIntents.retrieve(invoice.payment_intent);
-
-//         if (!paymentIntentStatus || !paymentIntentStatus.status) {
-//             return res.status(500).send({ error: 'Failed to retrieve payment intent status' });
-//         }
-
-//         const paymentStatus = paymentIntentStatus.status;
-//         if (paymentStatus === 'succeeded') {
-//             const updatedSubscription = await stripe.subscriptions.retrieve(subscription.id);
-//             const invoiceUrl = invoice.invoice_pdf;
-
-//             const planInterval = updatedSubscription.plan.interval;
-
-//             const order_history_data = {
-//                 user_id: userId,
-//                 stripe_subscription_id: subscription.id,
-//                 plan_id: planId,
-//                 payment_status: paymentIntentStatus.status,
-//                 subscription_details: JSON.stringify(subscription),
-//                 payment_details: JSON.stringify(paymentIntentStatus),
-//                 subscription_duration: planInterval,
-//                 subscription_start_date: new Date(subscription.current_period_start * 1000),
-//                 subscription_end_date: new Date(subscription.current_period_end * 1000),
-//                 added_user_number: memberCount
-//             };
-
-//             const order_history_query = `INSERT INTO order_history SET ?`;
-//             await queryAsync(order_history_query, [order_history_data]);
-
-//             const mailOptions = {
-//                 from: process.env.MAIL_USER,
-//                 to: email,
-//                 subject: 'Your Subscription Invoice',
-//                 html: `<p>Hello ${name},</p>
-//                        <p>Thank you for your subscription. You can view your invoice at the <a href="${invoiceUrl}">following link</a>.</p>
-//                        <p>Kind Regards,</p>
-//                        <p>Your Company Name Team</p>`
-//             };
-
-//             // Assuming mdlconfig.transporter.sendMail is correctly set up elsewhere
-//             await mdlconfig.transporter.sendMail(mailOptions);
-
-//             return res.send({
-//                 status: 'ok',
-//                 message: 'Your payment has been successfully processed.',
-//                 subscriptionId: updatedSubscription.id,
-//                 invoiceUrl: invoiceUrl
-//             });
-//         } else if (paymentStatus === 'requires_action') {
-//             // Handle additional actions required for payment
-//             return res.status(400).send({
-//                 status: 'requires_action',
-//                 client_secret: paymentIntentStatus.client_secret,
-//                 message: 'Payment requires additional actions.'
-//             });
-//         } else {
-//             // Handle payment failure scenarios
-//             return res.status(400).send({
-//                 status: 'failed',
-//                 message: 'Payment failed or requires a new payment method.'
-//             });
-//         }
-
-//     } catch (error) {
-//         console.error('Error creating subscription:', error);
-//         return res.status(500).send({ error: error.message });
 //     }
+
+//     return subscriptions;
 // };
 
-
-
-async function retrievePaymentIntentWithRetry(invoiceId, maxAttempts = 3) {
-    let attempt = 0;
-    while (attempt < maxAttempts) {
-        try {
-            const invoice = await stripe.invoices.retrieve(invoiceId);
-            if (!invoice || !invoice.payment_intent) {
-                throw new Error('Payment intent not found in invoice');
-            }
-            const paymentIntent = await stripe.paymentIntents.retrieve(invoice.payment_intent);
-            return paymentIntent;
-        } catch (error) {
-            console.error(`Attempt ${attempt + 1} failed:`, error.message);
-            attempt++;
-            await delay(Math.pow(2, attempt) * 1000); // Exponential backoff
-        }
-    }
-    throw new Error('Failed to retrieve payment intent');
-}
-
-
-
-
-
-
-const fetchActiveSubscriptionsFromStripe = async () => {
-    const subscriptions = [];
-    let hasMore = true;
-    let startingAfter = null;
-
-    while (hasMore) {
-        const response = await stripe.subscriptions.list({
-            status: 'active',
-            limit: 100,
-            ...(startingAfter && { starting_after: startingAfter })
-        });
-
-        subscriptions.push(...response.data);
-        hasMore = response.has_more;
-        if (hasMore) {
-            startingAfter = response.data[response.data.length - 1].id;
-        }
-    }
-
-    return subscriptions;
-};
-
-const fetchSubscriptionsFromDatabase = async () => {
-    const query1 = `SELECT 
-    stripe_subscription_id, 
-    subscription_start_date, 
-    subscription_end_date, 
-    UNIX_TIMESTAMP(subscription_start_date) AS subscription_start_timestamp, 
-    UNIX_TIMESTAMP(subscription_end_date) AS subscription_end_timestamp 
-FROM 
-    order_history;
-`;
-    const results = await queryAsync(query1);
-    return results;
-};
+// const fetchSubscriptionsFromDatabase = async () => {
+//     const query1 = `SELECT 
+//     stripe_subscription_id, 
+//     subscription_start_date, 
+//     subscription_end_date, 
+//     UNIX_TIMESTAMP(subscription_start_date) AS subscription_start_timestamp, 
+//     UNIX_TIMESTAMP(subscription_end_date) AS subscription_end_timestamp 
+// FROM 
+//     order_history;
+// `;
+//     const results = await queryAsync(query1);
+//     return results;
+// };
 
 // const insertOrUpdateOrderHistory = async (subscription, customerId) => {
-//     const invoice = await stripe.invoices.retrieve(subscription.latest_invoice);
+//     try {
 
-//     if(invoice.status == 'paid'){
-//         var payment_status= 'succeeded'
-//     }else{
-//         var payment_status= 'failed'
+//         console.log("subscriptionId", subscription.id);
+//         //console.log("customerId",customerId);
+
+//         const subscriptions = await stripe.subscriptions.retrieve(subscription.id);
+
+//         const invoice = await stripe.invoices.retrieve(subscription.latest_invoice);
+
+//         let payment_status = invoice.status === 'paid' ? 'succeeded' : 'failed';
+
+//         const getSubQuery = `SELECT * FROM order_history WHERE stripe_subscription_id = "${subscriptions.id}"`;
+//         const subqueryval = await queryAsync(getSubQuery);
+
+//         let customerid;
+//         let planid = subscription.plan.id;
+
+//         if (subqueryval.length > 0) {
+//             customerid = subqueryval[0].user_id;
+//             planid = subqueryval[0].plan_id;
+
+//             console.log("customerid", customerid);
+//             console.log("planid", planid);
+//         }
+
+//         const orderHistoryData = {
+//             user_id: customerid,
+//             stripe_subscription_id: subscriptions.id,
+//             plan_id: planid,
+//             payment_status: payment_status,
+//             subscription_details: JSON.stringify(subscription),
+//             payment_details: JSON.stringify(invoice),
+//             subscription_start_date: new Date(subscription.current_period_start * 1000),
+//             subscription_end_date: new Date(subscription.current_period_end * 1000),
+//             subscription_duration: subscription.plan.interval
+//         };
+
+//         const orderHistoryQuery = `INSERT INTO order_history SET ? ON DUPLICATE KEY UPDATE ?`;
+//         await queryAsync(orderHistoryQuery, [orderHistoryData, orderHistoryData]);
+
+//     } catch (error) {
+//         console.error('Error inserting or updating order history:', error);
 //     }
-
-//     const getsubquery = `SELECT * FROM order_history WHERE stripe_subscription_id= "${subscription.id}"`;
-//     const subqueryval = await queryAsync(getsubquery);
-//     console.log("subqueryval",subqueryval);
-//     if(subqueryval.length>0){
-//         var customerid= subqueryval.user_id
-//         var planid = subqueryval.plan_id
-//     }
-
-
-//     const orderHistoryData = {
-//         user_id: customerid, 
-//         stripe_subscription_id: subscription.id,
-//         plan_id: planid,
-//         payment_status: payment_status,
-//         subscription_details: JSON.stringify(subscription),
-//         payment_details: JSON.stringify(invoice),
-//         subscription_start_date: new Date(subscription.current_period_start * 1000),
-//         subscription_end_date: new Date(subscription.current_period_end * 1000),
-//         // subscription_start_date: subscription.current_period_start ,
-//         // subscription_end_date: subscription.current_period_end,
-//         subscription_duration: subscription.plan.interval
-//     };
-
-//     const orderHistoryQuery = `INSERT INTO order_history SET ? ON DUPLICATE KEY UPDATE ?`;
-//     await queryAsync(orderHistoryQuery, [orderHistoryData, orderHistoryData]);
 // };
 
-const insertOrUpdateOrderHistory = async (subscription, customerId) => {
+
+// const updateOrderHistory = async () => {
+//     try {
+//         const stripeSubscriptions = await fetchActiveSubscriptionsFromStripe();
+//         const dbSubscriptions = await fetchSubscriptionsFromDatabase();
+
+//         const dbSubscriptionsMap = new Map();
+//         dbSubscriptions.forEach(sub => {
+//             const startDate = new Date(sub.subscription_start_date);
+//             const endDate = new Date(sub.subscription_end_date);
+//             dbSubscriptionsMap.set(sub.stripe_subscription_id, {
+//                 subscription_start_date: startDate,
+//                 subscription_end_date: endDate
+//             });
+//         });
+
+//         for (let subscription of stripeSubscriptions) {
+//             const subscriptionId = subscription.id;
+//             const customerId = subscription.customer;
+//             const currentStartDate = new Date(subscription.current_period_start * 1000);
+//             const currentEndDate = new Date(subscription.current_period_end * 1000);
+
+//             if (dbSubscriptionsMap.has(subscriptionId)) {
+//                 const dbSubscriptionDates = dbSubscriptionsMap.get(subscriptionId);
+//                 const dbStartDate = dbSubscriptionDates.subscription_start_date;
+//                 const dbEndDate = dbSubscriptionDates.subscription_end_date;
+
+//                 // console.log("dbStartDate",dbStartDate);
+//                 // console.log("dbEndDate",dbEndDate);
+//                 // console.log("currentStartDate",currentStartDate);
+//                 // console.log("currentEndDate",currentEndDate);
+
+//                 if (!dbStartDate || !dbEndDate || dbStartDate.getTime() !== currentStartDate.getTime() || dbEndDate.getTime() !== currentEndDate.getTime()) {
+//                     // Update the order history with the new dates
+//                     await insertOrUpdateOrderHistory(subscription, customerId);
+//                 }
+//             } else {
+//                 // New subscription, insert it into the order history
+//                 await insertOrUpdateOrderHistory(subscription, customerId);
+//             }
+//         }
+
+//         console.log('Order history update completed.');
+//     } catch (error) {
+//         console.error('Error updating order history:', error);
+//     }
+// };
+
+
+
+async function fetchActiveSubscriptions() {
     try {
-
-        console.log("subscriptionId", subscription.id);
-        //console.log("customerId",customerId);
-
-        const subscriptions = await stripe.subscriptions.retrieve(subscription.id);
-
-        const invoice = await stripe.invoices.retrieve(subscription.latest_invoice);
-
-        let payment_status = invoice.status === 'paid' ? 'succeeded' : 'failed';
-
-        const getSubQuery = `SELECT * FROM order_history WHERE stripe_subscription_id = "${subscriptions.id}"`;
-        const subqueryval = await queryAsync(getSubQuery);
-
-        let customerid;
-        let planid = subscription.plan.id;
-
-        if (subqueryval.length > 0) {
-            customerid = subqueryval[0].user_id;
-            planid = subqueryval[0].plan_id;
-
-            console.log("customerid", customerid);
-            console.log("planid", planid);
-        }
-
-        const orderHistoryData = {
-            user_id: customerid,
-            stripe_subscription_id: subscriptions.id,
-            plan_id: planid,
-            payment_status: payment_status,
-            subscription_details: JSON.stringify(subscription),
-            payment_details: JSON.stringify(invoice),
-            subscription_start_date: new Date(subscription.current_period_start * 1000),
-            subscription_end_date: new Date(subscription.current_period_end * 1000),
-            subscription_duration: subscription.plan.interval
+        const auth = {
+            // username: "rzp_test_ivrp5LlA1gQXAT",
+            // password: "iLxMcGESxvq5ZHGk8DJUqrpj"
+            username: process.env.RAZORPAY_KEY_ID,
+            password: process.env.RAZORPAY_KEY_SECRET
         };
-
-        const orderHistoryQuery = `INSERT INTO order_history SET ? ON DUPLICATE KEY UPDATE ?`;
-        await queryAsync(orderHistoryQuery, [orderHistoryData, orderHistoryData]);
-
+        const response = await axios.get('https://api.razorpay.com/v1/subscriptions?status=active', { auth });
+        console.log('Active Subscriptions:', response.data.items);
+        return response.data.items;  
     } catch (error) {
-        console.error('Error inserting or updating order history:', error);
+        console.error('Error fetching active subscriptions:', error.response ? error.response.data : error.message);
+        throw error;
     }
-};
+}
 
-
-const updateOrderHistory = async () => {
+async function fetchSubscriptionsFromDB() {
     try {
-        const stripeSubscriptions = await fetchActiveSubscriptionsFromStripe();
-        const dbSubscriptions = await fetchSubscriptionsFromDatabase();
+        const query = 'SELECT stripe_subscription_id, subscription_start_date, subscription_end_date FROM order_history';
+        const subscriptionsData = await queryAsync(query);
+        console.log("subscriptionsData",subscriptionsData);
+        return subscriptionsData;
+    } catch (error) {
+        console.error('Error fetching subscriptions from database:', error);
+        throw error;
+    }
+}
+async function insertIntoOrderHistory(subscription) {
+    try {
+        const insertQuery = `INSERT INTO order_history (stripe_subscription_id, subscription_start_date, subscription_end_date) VALUES (?, ?, ?)`;
+        const values = [
+            subscription.id,
+            new Date(subscription.start_at * 1000),
+            new Date(subscription.charge_at * 1000)
+        ];
 
-        const dbSubscriptionsMap = new Map();
-        dbSubscriptions.forEach(sub => {
-            const startDate = new Date(sub.subscription_start_date);
-            const endDate = new Date(sub.subscription_end_date);
-            dbSubscriptionsMap.set(sub.stripe_subscription_id, {
-                subscription_start_date: startDate,
-                subscription_end_date: endDate
-            });
-        });
+        if (subscription.start_at !== subscription.charge_at) {
+            await queryAsync(insertQuery, values);
+            console.log(`Subscription ${subscription.id} inserted into order history.`);
+        } else {
+            console.log(`Subscription ${subscription.id} has identical start_at and charge_at. Not inserting.`);
+        }
+    } catch (error) {
+        console.error(`Error inserting subscription ${subscription.id} into order history:`, error);
+        throw error;
+    }
+}
 
-        for (let subscription of stripeSubscriptions) {
-            const subscriptionId = subscription.id;
-            const customerId = subscription.customer;
-            const currentStartDate = new Date(subscription.current_period_start * 1000);
-            const currentEndDate = new Date(subscription.current_period_end * 1000);
 
-            if (dbSubscriptionsMap.has(subscriptionId)) {
-                const dbSubscriptionDates = dbSubscriptionsMap.get(subscriptionId);
-                const dbStartDate = dbSubscriptionDates.subscription_start_date;
-                const dbEndDate = dbSubscriptionDates.subscription_end_date;
+async function syncSubscriptions() {
+    try {
+        const activeSubscriptions = await fetchActiveSubscriptions();
+        const dbSubscriptions = await fetchSubscriptionsFromDB();
 
-                // console.log("dbStartDate",dbStartDate);
-                // console.log("dbEndDate",dbEndDate);
-                // console.log("currentStartDate",currentStartDate);
-                // console.log("currentEndDate",currentEndDate);
+        for (const subscription of activeSubscriptions) {
+            const existingSubscription = dbSubscriptions.find(dbSub => dbSub.stripe_subscription_id == subscription.id);
 
-                if (!dbStartDate || !dbEndDate || dbStartDate.getTime() !== currentStartDate.getTime() || dbEndDate.getTime() !== currentEndDate.getTime()) {
-                    // Update the order history with the new dates
-                    await insertOrUpdateOrderHistory(subscription, customerId);
+            if (existingSubscription) {
+                const existingStart = new Date(existingSubscription.subscription_start_date).getTime();
+                const existingEnd = new Date(existingSubscription.subscription_end_date).getTime();
+                const razorpayStart = new Date(subscription.start_at * 1000).getTime();
+                const razorpayEnd = new Date(subscription.charge_at * 1000).getTime();
+
+                const startAtChanged = existingStart != razorpayStart;
+                const chargeAtChanged = existingEnd != razorpayEnd;
+
+                if (startAtChanged || chargeAtChanged) {
+                    await insertIntoOrderHistory(subscription);
+                    console.log(`Subscription ${subscription.id} updated in order history.`);
+                } else {
+                    console.log(`Subscription ${subscription.id} exists in database with the same start_at and charge_at. Skipping.`);
                 }
             } else {
-                // New subscription, insert it into the order history
-                await insertOrUpdateOrderHistory(subscription, customerId);
+                console.log("No existingSubscription found in database.");
+                //await insertIntoOrderHistory(subscription);
+                //console.log(`Subscription ${subscription.id} inserted into order history.`);
             }
         }
 
-        console.log('Order history update completed.');
+        console.log('Subscription sync completed.');
     } catch (error) {
-        console.error('Error updating order history:', error);
+        console.error('Error syncing subscriptions:', error);
     }
-};
+}
 
-
-
-cron.schedule('0 0 * * *', async () => {
-    await updateOrderHistory();
-});
-
-// // Optionally, run the check immediately on startup
-//updateOrderHistory();
-
-
+// syncSubscriptions().then(() => {
+//     console.log('Subscription sync completed.');
+// }).catch((error) => {
+//     console.error('Subscription sync failed:', error);
+// });
 
 
 exports.createSubscriptionCheckoutSession = async (req, res) => {
@@ -13393,36 +14814,6 @@ exports.createSubscriptionCheckoutSession = async (req, res) => {
         res.status(500).send({ error: error.message });
     }
 };
-
-
-
-// exports.createSession = async (req, res) => {
-
-// try{
-//     const session = await stripe.checkout.sessions.create({
-//         success_url: `${CLIENT_URL}`,
-//         cancel_url: `${CLIENT_URL}`,
-//         line_items: [
-//           {
-//             price: 'STRIPE_PRICE_ID',
-//             quantity: 2,
-//           },
-//         ],
-//         mode: 'subscription',
-//       });
-//     // const{plan,customerId}= req.body;
-//     // let planId = null;
-//     console.log("session: ",session.id, session.url, session);
-
-//     const sessionId= session.id;
-//     console.log("sessionId",sessionId);
-
-//     res.json({url: session.url})
-
-// } catch(error){
-//     res.status(500).send({ error: error.message });
-// };
-// }
 
 exports.createSession = async (req, res) => {
     // anoth 
@@ -13557,3 +14948,12 @@ cron.schedule('0 5 * * *', async () => {
     await comFunction2.duscussionQueryAlert();
     await comFunction2.complaintLevelUpdate();
 })
+
+cron.schedule('0 0 * * *', async () => {
+    try {
+        await syncSubscriptions();
+        console.log('Subscription sync job completed successfully.');
+    } catch (error) {
+        console.error('Error syncing subscriptions:', error);
+    }
+});

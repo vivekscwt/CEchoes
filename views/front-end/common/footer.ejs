@@ -8,7 +8,7 @@
             <img src="/front-end/images/footer-logo.png" alt="Cechoes-logo">
           </a>
           <%- globalPageMeta.footer_contact_info %>
-          <!-- <h4>Contact Info</h4>
+            <!-- <h4>Contact Info</h4>
           <div class="c-email"><span>Sales:</span> <a href="mailto:sales@CEchoesTechnology.com">Sales@CEchoesTechnology.com</a></div>
           <div class="c-email"><span>Support:</span> <a href="mailto:support@CEchoesTechnology.com">Support@CEchoesTechnology.com</a></div>
           <a href="/contact-us" class="c-link"><u>Contact Us</u></a> -->
@@ -17,37 +17,38 @@
       <div class="col-md-3 col-sm-6">
         <div class="footer-part">
           <%- globalPageMeta.footer_quick_links -%>
-        
+
         </div>
       </div>
       <div class="col-md-5 col-sm-12">
         <div class="footer-part">
           <%- globalPageMeta.footer_the_app_content %>
-          <!-- <h4>Get The App</h4>
+            <!-- <h4>Get The App</h4>
           <p>We are coming soon on Google Play and App Store.</p> -->
-          <div class="app-info">
-            <%- globalPageMeta.footer_apps_info %>
-            <!-- <a href="#"><img src="/front-end/images/g-play.png" alt="img" width="183" height="56"></a>
+            <div class="app-info">
+              <%- globalPageMeta.footer_apps_info %>
+                <!-- <a href="#"><img src="/front-end/images/g-play.png" alt="img" width="183" height="56"></a>
             <a href="#"><img src="/front-end/images/app-store.png" alt="img" width="178" height="56"></a> -->
-          </div>
-          <div class="social-icons">
-            <%- globalPageMeta.footer_socials_info %>
-            <!-- <a href="https://www.facebook.com/profile.php?id=100094607193555" target="_blank"><i class="fa-brands fa-facebook-f"></i></a>
+            </div>
+            <div class="social-icons">
+              <%- globalPageMeta.footer_socials_info %>
+                <!-- <a href="https://www.facebook.com/profile.php?id=100094607193555" target="_blank"><i class="fa-brands fa-facebook-f"></i></a>
             <a href="https://twitter.com/GrahakBolo" target="_blank"><i class="fa-brands fa-twitter"></i></a>
             <a href="#" target="_blank"><i class="fa-brands fa-linkedin-in"></i></a>
             <a href="#" target="_blank"><i class="fa-brands fa-instagram"></i></a>
             <a href="https://www.youtube.com/@CEchoesTechnology" target="_blank"><i class="fa-brands fa-youtube"></i></a> -->
-          </div>
+            </div>
         </div>
       </div>
     </div>
     <div class="footer-bottom">
       <div class="footer-b-left">
-        <span>Copyright</span> <%= new Date().getFullYear() %> <a href="#">CEchoes Technology Pvt Ltd</a>
+        <span>Copyright</span>
+        <%= new Date().getFullYear() %> <a href="#">CEchoes Technology Pvt Ltd</a>
       </div>
       <div class="footer-b-right">
         <%- globalPageMeta.footer_bottom_right %>
-        <!-- <%#<a href="/disclaimer">Disclaimer</a> |#%> <a href="/privacy-policy">Privacy Policy</a> | <a href="/terms-of-service">Terms of Service</a> -->
+          <!-- <%#<a href="/disclaimer">Disclaimer</a> |#%> <a href="/privacy-policy">Privacy Policy</a> | <a href="/terms-of-service">Terms of Service</a> -->
       </div>
     </div>
   </div>
@@ -65,21 +66,25 @@
 <!-- Css -->
 <link href="/front-end/css/footer-style.css" rel="stylesheet" type="text/css">
 <!-- Responsive Css -->
-<link href="/front-end/responsive/default-style-responsive.css" rel="stylesheet" media='screen and (max-width:1440.98px)' type="text/css">
-<link href="/front-end/responsive/footer-responsive-style.css" media='screen and (max-width:1440.98px)' rel="stylesheet" type="text/css">
+<link href="/front-end/responsive/default-style-responsive.css" rel="stylesheet"
+  media='screen and (max-width:1440.98px)' type="text/css">
+<link href="/front-end/responsive/footer-responsive-style.css" media='screen and (max-width:1440.98px)' rel="stylesheet"
+  type="text/css">
 <link href="/front-end/css/bootstrap.min.css" rel="stylesheet" type="text/css">
 <link href="/front-end/css/aos.css" rel="stylesheet" type="text/css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script src="/front-end/js/bootstrap.min.js"> </script>
 <script src="/front-end/js/component.js"> </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js" integrity="sha512-0bEtK0USNd96MnO4XhH8jhv3nyRF0eK87pJke6pkYf3cM0uDIhNJy9ltuzqgypoIFXw3JSuiy04tVk4AjpZdZw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"
+  integrity="sha512-0bEtK0USNd96MnO4XhH8jhv3nyRF0eK87pJke6pkYf3cM0uDIhNJy9ltuzqgypoIFXw3JSuiy04tVk4AjpZdZw=="
+  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="/front-end/js/easy-responsive-tabs.js"> </script>
 <script src="/front-end/js/edit-js.js"> </script>
 <script type="text/javascript"
-src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+  src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 <script>
-  $( document ).ready(function() {
-    $("#user-signup").submit(function(e){
+  $(document).ready(function () {
+    $("#user-signup").submit(function (e) {
       e.preventDefault();
 
       $('.frm-loading-register').show();
@@ -89,16 +94,16 @@ src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit
       var password = $("input[name='register_password']").val();
       var confirmPassword = $("input[name='register_confirm_password']").val();
       var signup_otp = $("input[name='signup_otp']").val();
-      console.log("signup_otp",signup_otp);
+      console.log("signup_otp", signup_otp);
 
       // Password strength check
       var passwordStrength = checkPasswordStrength(password);
       if (passwordStrength === 'weak') {
         error_message = "Password is weak. It should be at least 8 characters long and contain a combination of letters, numbers, and special characters.";
-      }  else{
+      } else {
         if (password !== confirmPassword) {
           error_message = "Password and Confirm Password do not match.";
-        } else if(signup_otp == ''){
+        } else if (signup_otp == '') {
 
           const formData = $('#user-signup').serializeArray();
           const jsonData = {};
@@ -121,7 +126,7 @@ src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit
                 $('#kt_sign_up_submit').prop('disabled', false);
                 //$('#user-signup').trigger('reset');
                 // setTimeout(function() {
-                  
+
                 // $('.frm-error-message-register').hide();
                 // }, 2000 );             
               } else {
@@ -135,8 +140,8 @@ src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit
               $('.frm-error-message-register').text(error).show();
               $('#kt_sign_up_submit').prop('disabled', false);
             }
-          }); 
-        }else{
+          });
+        } else {
           // Call ajax..
           const formData = $('#user-signup').serializeArray();
           const jsonData = {};
@@ -155,15 +160,15 @@ src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit
                 $('.frm-loading-register').hide();
                 $('.frm-error-message-register').text(data.message).show();
                 $('#user-signup').trigger('reset');
-                setTimeout(function() {
-                  if(data.wp_user){
-                    window.location.href="<%= globalData.BLOG_URL %>?login_check="+data.wp_user+"&currentUrlPath="+data.currentUrlPath;
-              
-                  }else{
+                setTimeout(function () {
+                  if (data.wp_user) {
+                    window.location.href = "<%= globalData.BLOG_URL %>?login_check=" + data.wp_user + "&currentUrlPath=" + data.currentUrlPath;
+
+                  } else {
                     //window.location.href="/";
                     window.location.reload();
                   }
-                }, 2000 );             
+                }, 2000);
               } else {
                 $('.frm-loading-register').hide();
                 $('.frm-error-message-register').text(data.message).show();
@@ -175,20 +180,20 @@ src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit
               $('.frm-error-message-register').text(error).show();
               $('#kt_sign_up_submit').prop('disabled', false);
             }
-          });          
-          
+          });
+
         }
       }
-      if(error_message){
+      if (error_message) {
         $('.frm-loading-register').hide();
         $('.frm-error-message-register').text(error_message).show();
         $('#kt_sign_up_submit').prop('disabled', false);
       }
 
-    }); 
+    });
 
-    $('#sign_up_otp').click(function (){
-      
+    $('#sign_up_otp').click(function () {
+
       var first_name = $("input[name='first_name']").val();
       var last_name = $("input[name='last_name']").val();
       var email = $("input[name='email']").val();
@@ -198,28 +203,28 @@ src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit
       var validEmail = validateEmail(email);
       alert(validEmail);
 
-      if (first_name == '' || last_name == '' || email == '' || password == '' || confirmPassword == '' ) {
-      //alert('All field required');
+      if (first_name == '' || last_name == '' || email == '' || password == '' || confirmPassword == '') {
+        //alert('All field required');
         $('.frm-error-message-register').text('All field required').show();
-        setTimeout(function() {
+        setTimeout(function () {
           $('.frm-error-message-register').hide();
-        }, 2000 );
-        
-      }else if(!validEmail){
+        }, 2000);
+
+      } else if (!validEmail) {
         $('.frm-error-message-register').text('Email is not valid').show();
-        setTimeout(function() {
+        setTimeout(function () {
           $('.frm-error-message-register').hide();
-        }, 2000 );
-      } else if(passwordStrength === 'weak') {
+        }, 2000);
+      } else if (passwordStrength === 'weak') {
         $('.frm-error-message-register').text('Password is weak. It should be at least 8 characters long and contain a combination of letters, numbers, and special characters.').show();
-        setTimeout(function() {
+        setTimeout(function () {
           $('.frm-error-message-register').hide();
-        }, 2000 );
-      } else if(password !== confirmPassword){
+        }, 2000);
+      } else if (password !== confirmPassword) {
         $('.frm-error-message-register').text('Password and Confirm Password does not match.').show();
-        setTimeout(function() {
+        setTimeout(function () {
           $('.frm-error-message-register').hide();
-        }, 2000 );
+        }, 2000);
       } else {
         $('.frm-error-message-register').text('Ok').show();
       }
@@ -236,7 +241,7 @@ src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit
       $('#exampleCheck1').prop('checked', true);
     }
 
-    $("#user-signin").submit(function(e){
+    $("#user-signin").submit(function (e) {
       e.preventDefault();
       const rememberMe = $('#exampleCheck1').is(':checked');
       if (rememberMe) {
@@ -272,10 +277,10 @@ src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit
             $('.frm-loading').hide();
             $('.frm-error-message').text(data.message).show();
             $('#user-signin').trigger('reset');
-            if(data.wp_user){
-              window.location.href="<%= globalData.BLOG_URL %>?login_check="+data.wp_user+"&currentUrlPath="+data.currentUrlPath;
-              
-            }else{
+            if (data.wp_user) {
+              window.location.href = "<%= globalData.BLOG_URL %>?login_check=" + data.wp_user + "&currentUrlPath=" + data.currentUrlPath;
+
+            } else {
               //window.location.href="/";
               console.log(data.currentUrlPath);
               window.location.reload();
@@ -291,12 +296,12 @@ src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit
           $('.frm-error-message').text(error).show();
           $('#kt_sign_in_submit').prop('disabled', false);
         }
-      }); 
+      });
 
-    }); 
-    
+    });
 
-    $("#forgotPassword").submit(function(e){
+
+    $("#forgotPassword").submit(function (e) {
       e.preventDefault();
       $('#forgot_submit_btn').prop('disabled', true);
       $('.frm-loading-forgot').show();
@@ -315,10 +320,10 @@ src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit
             $('#forgot_submit_btn').prop('disabled', false);
             $('.frm-loading-forgot').hide();
             $('#forgotPassword').trigger('reset');
-            setTimeout(function() {
+            setTimeout(function () {
               $('#exampleModal').modal('hide');
-            }, 2000 );             
-          } else if (data.status == 'not found'){
+            }, 2000);
+          } else if (data.status == 'not found') {
             $('.frm-error-message-forgot').text(data.message).show();
             $('#forgot_submit_btn').prop('disabled', false);
             $('.frm-loading-forgot').hide();
@@ -336,9 +341,9 @@ src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit
           $('#forgot_submit_btn').prop('disabled', false);
           $('.frm-loading-forgot').hide();
         }
-      });          
-      
-    }); 
+      });
+
+    });
 
     // Function to check password strength
     function checkPasswordStrength(password) {
@@ -356,202 +361,328 @@ src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit
 
     function validateEmail($email) {
       var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
-      return emailReg.test( $email );
+      return emailReg.test($email);
     }
-    
+
 
     /*====================== loding persentage ====================*/
-    
-  });    
+
+  });
 
 
   // function googleTranslateElementInit() {
   //                   new google.translate.TranslateElement({ pageLanguage: 'en' }, 'google_translate_element');
   //                 }
 
-                  async function fetchGeolocationAndSetCountryInfo() {
-                    const countryName = getCookie('countryName');
-                    const countryCode = getCookie('countryCode');
+  // async function fetchGeolocationAndSetCountryInfo() {
+  //   const countryName = getCookie('countryName');
+  //   const countryCode = getCookie('countryCode');
 
-                    if (countryName && countryCode) {
-                      updateCountryInfo(countryName, countryCode);
-                      await sendCountryInfoToServer(countryName, countryCode);
-                      setDefaultLanguage(countryName); 
-                      return;
-                    }
+  //   if (countryName && countryCode) {
+  //     updateCountryInfo(countryName, countryCode);
+  //     await sendCountryInfoToServer(countryName, countryCode);
+  //     setDefaultLanguage(countryName);
+  //     return;
+  //   }
 
-                    if (navigator.geolocation) {
-                      // console.log("oipreoiptr");
-                      navigator.geolocation.getCurrentPosition(async (position) => {
-                        const latitude = position.coords.latitude;
-                        const longitude = position.coords.longitude;
+  //   if (navigator.geolocation) {
+  //     // console.log("oipreoiptr");
+  //     navigator.geolocation.getCurrentPosition(async (position) => {
+  //       const latitude = position.coords.latitude;
+  //       const longitude = position.coords.longitude;
 
-                        console.log("latitude",latitude);
-                        console.log("longitude",longitude);
-                        try {
-                          const response = await fetch('/auth/getLocation', {
-                            method: 'POST',
-                            headers: {
-                              'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({ latitude, longitude })
-                          });
+  //       console.log("latitude", latitude);
+  //       console.log("longitude", longitude);
+  //       try {
+  //         const response = await fetch('/auth/getLocation', {
+  //           method: 'POST',
+  //           headers: {
+  //             'Content-Type': 'application/json'
+  //           },
+  //           body: JSON.stringify({ latitude, longitude })
+  //         });
 
-                          if (response.ok) {
-                            const { countryName, countryCode } = await response.json();
-                            console.log("Country details fetched:", { countryName, countryCode });
-                            setCookie('countryName', countryName, 20);
-                            setCookie('countryCode', countryCode, 20);
+  //         if (response.ok) {
+  //           const { countryName, countryCode } = await response.json();
+  //           console.log("Country details fetched:", { countryName, countryCode });
+  //           setCookie('countryName', countryName, 20);
+  //           setCookie('countryCode', countryCode, 20);
 
-                            updateCountryInfo(countryName, countryCode);
-                            setDefaultLanguage(countryName);
-                            await sendCountryInfoToServer(countryName, countryCode);
-                          } else {
-                            console.error('Error fetching country details:', response.statusText);
-                            useDefaultCountry();
-                          }
-                        } catch (error) {
-                          console.error('Error fetching country details:', error);
-                          useDefaultCountry();
-                        }
-                      }, (error) => {
-                        if (error.code == error.PERMISSION_DENIED) {
-                          console.error('User denied the request for Geolocation.');
-                          useDefaultCountry();
-                        } else {
-                          console.error('Error getting geolocation:', error);
-                        }
-                      });
-                    } else {
-                      console.error('Geolocation is not supported by this browser.');
-                      useDefaultCountry();
-                    }
-                  }
+  //           updateCountryInfo(countryName, countryCode);
+  //           setDefaultLanguage(countryName);
+  //           await sendCountryInfoToServer(countryName, countryCode);
+  //           return {countryName,countryCode} 
+  //         } else {
+  //           console.error('Error fetching country details:', response.statusText);
+  //           useDefaultCountry();
+  //         }
+  //       } catch (error) {
+  //         console.error('Error fetching country details:', error);
+  //         useDefaultCountry();
+  //       }
+  //     }, (error) => {
+  //       if (error.code == error.PERMISSION_DENIED) {
+  //         console.error('User denied the request for Geolocation.');
+  //         useDefaultCountry();
+  //       } else {
+  //         console.error('Error getting geolocation:', error);
+  //       }
+  //     });
+  //   } else {
+  //     console.error('Geolocation is not supported by this browser.');
+  //     useDefaultCountry();
+  //   }
+  // }
 
-                  function setDefaultLanguage(countryName) {
-                    const countryToLanguageMap = {
-                      'India': 'hi', 'Japan': 'ja', 'France': 'fr', 'Spain': 'es', 'Germany': 'de',
-                      'Argentina': 'ar', 'Russia': 'ru', 'China': 'zh-CN', 'Taiwan': 'zh-TW', 'South Korea': 'ko',
-                      'Italy': 'it', 'Portugal': 'pt', 'Netherlands': 'nl', 'Israel': 'iw', 'United States': 'en',
-                      'Bangladesh': 'bn', 'Vietnam': 'vi', 'Thailand': 'th', 'Malaysia': 'ms', 'Indonesia': 'id',
-                      'Turkey': 'tr', 'Poland': 'pl', 'Romania': 'ro', 'Ukraine': 'uk', 'Bulgaria': 'bg',
-                      'Greece': 'el', 'Croatia': 'hr', 'Czech Republic': 'cs', 'Slovakia': 'sk', 'Slovenia': 'sl',
-                      'Finland': 'fi', 'Sweden': 'sv', 'Norway': 'no', 'Denmark': 'da', 'Hungary': 'hu',
-                      'Estonia': 'et', 'Lithuania': 'lt', 'Latvia': 'lv', 'Iceland': 'is', 'South Africa': 'af',
-                      'Ethiopia': 'am', 'Azerbaijan': 'az', 'Basque Country': 'eu', 'Belarus': 'be', 'Armenia': 'hy',
-                      'Bosnia': 'bs', 'Catalonia': 'ca', 'Philippines': 'ceb', 'Malawi': 'ny', 'Corsica': 'co',
-                      'Maldives': 'dv', 'Esperanto': 'eo', 'Ghana': 'ee', 'Philippines': 'tl', 'Friesland': 'fy',
-                      'Galicia': 'gl', 'Georgia': 'ka', 'Paraguay': 'gn', 'Haiti': 'ht', 'Nigeria': 'ha',
-                      'Hawaii': 'haw', 'Hmong': 'hmn', 'Nigeria': 'ig', 'Philippines': 'ilo', 'Ireland': 'ga',
-                      'Indonesia': 'jw', 'Kazakhstan': 'kk', 'Cambodia': 'km', 'Rwanda': 'rw', 'Sierra Leone': 'kri',
-                      'Kurdish': 'ku', 'Kurdish': 'ckb', 'Kyrgyzstan': 'ky', 'Laos': 'lo', 'Latin': 'la',
-                      'Congo': 'ln', 'Uganda': 'lg', 'Luxembourg': 'lb', 'Macedonia': 'mk', 'Madagascar': 'mg',
-                      'Malta': 'mt', 'New Zealand': 'mi', 'Mongolia': 'mn', 'Myanmar': 'my', 'Nepal': 'ne',
-                      'Ethiopia': 'om', 'Afghanistan': 'ps', 'Iran': 'fa', 'Peru': 'qu', 'Samoa': 'sm',
-                      'Scotland': 'gd', 'South Africa': 'nso', 'Lesotho': 'st', 'Zimbabwe': 'sn', 'Pakistan': 'sd',
-                      'Sri Lanka': 'si', 'Somalia': 'so', 'Indonesia': 'su', 'Tanzania': 'sw', 'Tajikistan': 'tg',
-                      'Tatarstan': 'tt', 'Thailand': 'th', 'Eritrea': 'ti', 'South Africa': 'ts', 'Turkmenistan': 'tk',
-                      'Ghana': 'ak', 'China': 'ug', 'Uzbekistan': 'uz', 'Wales': 'cy', 'South Africa': 'xh',
-                      'Yiddish': 'yi', 'Nigeria': 'yo', 'South Africa': 'zu'
-                    };
+  async function fetchGeolocationAndSetCountryInfo() {
+  return new Promise((resolve, reject) => {
+    const countryName = getCookie('countryName');
+    const countryCode = getCookie('countryCode');
 
-                    const languageCode = countryToLanguageMap[countryName];
-                    if (languageCode) {
-                      setTimeout(function () {
-                        var selectElement = $('select.goog-te-combo');
-                        selectElement.val(languageCode);
-                        selectElement[0].dispatchEvent(new Event('change', { bubbles: true }));
+    if (countryName && countryCode) {
+      updateCountryInfo(countryName, countryCode);
+      sendCountryInfoToServer(countryName, countryCode)
+        .then(() => {
+          setDefaultLanguage(countryName);
+          resolve({ countryName, countryCode });
+        })
+        .catch((error) => {
+          console.error('Error sending country info to server:', error);
+          reject(error);
+        });
+    } else if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const { latitude, longitude } = position.coords;
+          try {
+            const response = await fetch('/auth/getLocation', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ latitude, longitude })
+            });
 
-                        var translateFrame = $('iframe.goog-te-banner-frame:first');
-                        if (translateFrame.length > 0) {
-                          translateFrame.contents().find('.goog-te-combo').val(languageCode).trigger('change');
-                        } else {
-                          $('select.goog-te-combo').val(languageCode).trigger('change');
-                        }
-                      }, 2000);
-                    } else {
-                      console.error('No language mapping found for country name:', countryName);
-                    }
-                  }
+            if (response.ok) {
+              const { countryName, countryCode } = await response.json();
+              console.log("Country details fetched:", { countryName, countryCode });
+              setCookie('countryName', countryName, 20);
+              setCookie('countryCode', countryCode, 20);
 
-                  function useDefaultCountry() {
-                    const defaultCountryName = 'India';
-                    const defaultCountryCode = 'IN';
+              updateCountryInfo(countryName, countryCode);
+              await sendCountryInfoToServer(countryName, countryCode);
+              setDefaultLanguage(countryName);
 
-                    setCookie('countryName', defaultCountryName, 20);
-                    setCookie('countryCode', defaultCountryCode, 20);
+              resolve({ countryName, countryCode });
+            } else {
+              console.error('Error fetching country details:', response.statusText);
+              useDefaultCountry();
+              reject(new Error('Failed to fetch country details'));
+            }
+          } catch (error) {
+            console.error('Error fetching country details:', error);
+            useDefaultCountry();
+            reject(error);
+          }
+        },
+        (error) => {
+          if (error.code == error.PERMISSION_DENIED) {
+            console.error('User denied the request for Geolocation.');
+            useDefaultCountry();
+          } else {
+            console.error('Error getting geolocation:', error);
+          }
+          reject(error);
+        }
+      );
+    } else {
+      console.error('Geolocation is not supported by this browser.');
+      useDefaultCountry();
+      reject(new Error('Geolocation not supported'));
+    }
+  });
+}
 
-                    updateCountryInfo(defaultCountryName, defaultCountryCode);
-                    setDefaultLanguage(defaultCountryName); 
-                    sendCountryInfoToServer(defaultCountryName, defaultCountryCode);
-                  }
 
-                  function updateCountryInfo(countryName, countryCode) {
-                    document.getElementById('country').innerText = `${countryName} (${countryCode})`;
-                  }
 
-                  function setCookie(name, value, days) {
-                    const expires = new Date();
-                    expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
-                    document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
-                  }
+  function setDefaultLanguage(countryName) {
+    const countryToLanguageMap = {
+      'India': 'hi', 'Japan': 'ja', 'France': 'fr', 'Spain': 'es', 'Germany': 'de',
+      'Argentina': 'ar', 'Russia': 'ru', 'China': 'zh-CN', 'Taiwan': 'zh-TW', 'South Korea': 'ko',
+      'Italy': 'it', 'Portugal': 'pt', 'Netherlands': 'nl', 'Israel': 'iw', 'United States': 'en',
+      'Bangladesh': 'bn', 'Vietnam': 'vi', 'Thailand': 'th', 'Malaysia': 'ms', 'Indonesia': 'id',
+      'Turkey': 'tr', 'Poland': 'pl', 'Romania': 'ro', 'Ukraine': 'uk', 'Bulgaria': 'bg',
+      'Greece': 'el', 'Croatia': 'hr', 'Czech Republic': 'cs', 'Slovakia': 'sk', 'Slovenia': 'sl',
+      'Finland': 'fi', 'Sweden': 'sv', 'Norway': 'no', 'Denmark': 'da', 'Hungary': 'hu',
+      'Estonia': 'et', 'Lithuania': 'lt', 'Latvia': 'lv', 'Iceland': 'is', 'South Africa': 'af',
+      'Ethiopia': 'am', 'Azerbaijan': 'az', 'Basque Country': 'eu', 'Belarus': 'be', 'Armenia': 'hy',
+      'Bosnia': 'bs', 'Catalonia': 'ca', 'Philippines': 'ceb', 'Malawi': 'ny', 'Corsica': 'co',
+      'Maldives': 'dv', 'Esperanto': 'eo', 'Ghana': 'ee', 'Philippines': 'tl', 'Friesland': 'fy',
+      'Galicia': 'gl', 'Georgia': 'ka', 'Paraguay': 'gn', 'Haiti': 'ht', 'Nigeria': 'ha',
+      'Hawaii': 'haw', 'Hmong': 'hmn', 'Nigeria': 'ig', 'Philippines': 'ilo', 'Ireland': 'ga',
+      'Indonesia': 'jw', 'Kazakhstan': 'kk', 'Cambodia': 'km', 'Rwanda': 'rw', 'Sierra Leone': 'kri',
+      'Kurdish': 'ku', 'Kurdish': 'ckb', 'Kyrgyzstan': 'ky', 'Laos': 'lo', 'Latin': 'la',
+      'Congo': 'ln', 'Uganda': 'lg', 'Luxembourg': 'lb', 'Macedonia': 'mk', 'Madagascar': 'mg',
+      'Malta': 'mt', 'New Zealand': 'mi', 'Mongolia': 'mn', 'Myanmar': 'my', 'Nepal': 'ne',
+      'Ethiopia': 'om', 'Afghanistan': 'ps', 'Iran': 'fa', 'Peru': 'qu', 'Samoa': 'sm',
+      'Scotland': 'gd', 'South Africa': 'nso', 'Lesotho': 'st', 'Zimbabwe': 'sn', 'Pakistan': 'sd',
+      'Sri Lanka': 'si', 'Somalia': 'so', 'Indonesia': 'su', 'Tanzania': 'sw', 'Tajikistan': 'tg',
+      'Tatarstan': 'tt', 'Thailand': 'th', 'Eritrea': 'ti', 'South Africa': 'ts', 'Turkmenistan': 'tk',
+      'Ghana': 'ak', 'China': 'ug', 'Uzbekistan': 'uz', 'Wales': 'cy', 'South Africa': 'xh',
+      'Yiddish': 'yi', 'Nigeria': 'yo', 'South Africa': 'zu'
+    };
 
-                  function getCookie(name) {
-                    const cookieValue = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
-                    return cookieValue ? cookieValue[2] : null;
-                  }
+    const languageCode = countryToLanguageMap[countryName];
+    if (languageCode) {
+      setTimeout(function () {
+        var selectElement = $('select.goog-te-combo');
+        selectElement.val(languageCode);
+        selectElement[0].dispatchEvent(new Event('change', { bubbles: true }));
 
-                  async function sendCountryInfoToServer(countryName, countryCode) {
-                    try {
-                      const response = await fetch('/setCountry', {
-                        method: 'POST',
-                        headers: {
-                          'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ countryName, countryCode })
-                      });
+        var translateFrame = $('iframe.goog-te-banner-frame:first');
+        if (translateFrame.length > 0) {
+          translateFrame.contents().find('.goog-te-combo').val(languageCode).trigger('change');
+        } else {
+          $('select.goog-te-combo').val(languageCode).trigger('change');
+        }
+      }, 2000);
+    } else {
+      console.error('No language mapping found for country name:', countryName);
+    }
+  }
 
-                      if (response.ok) {
-                        console.log('Country information sent to server successfully.');
-                      } else {
-                        console.error('Failed to send country information to the server.');
-                      }
-                    } catch (error) {
-                      console.error('Error sending country information to the server:', error);
-                    }
-                  }
+  function useDefaultCountry() {
+    const defaultCountryName = 'India';
+    const defaultCountryCode = 'IN';
 
-                  
-                  // async function getCountryDetails(latitude, longitude) {
-                  //   const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${apiKey}`;
-                  //   try {
-                  //     const response = await fetch(url);
-                  //     const data = await response.json();
-                  //     const results = data.results;
-                  //     if (results.length > 0) {
-                  //       const addressComponents = results[0].address_components;
-                  //       let countryName = 'Country not found';
-                  //       let countryCode = 'Code not found';
-                  //       for (let i = 0; i < addressComponents.length; i++) {
-                  //         if (addressComponents[i].types.includes("country")) {
-                  //           countryName = addressComponents[i].long_name;
-                  //           countryCode = addressComponents[i].short_name;
-                  //           break;
-                  //         }
-                  //       }
-                  //       return { countryName, countryCode };
-                  //     }
-                  //     return { countryName: "Country not found", countryCode: "Code not found" };
-                  //   } catch (error) {
-                  //     console.error('Error fetching country details:', error);
-                  //     return { countryName: 'Unable to get country name', countryCode: 'Unable to get country code' };
-                  //   }
-                  // }
+    setCookie('countryName', defaultCountryName, 20);
+    setCookie('countryCode', defaultCountryCode, 20);
 
-                  $(document).ready(function () {
-                    fetchGeolocationAndSetCountryInfo();
-                  });
+    updateCountryInfo(defaultCountryName, defaultCountryCode);
+    setDefaultLanguage(defaultCountryName);
+    sendCountryInfoToServer(defaultCountryName, defaultCountryCode);
+  }
+
+  // function updateCountryInfo(countryName, countryCode) {
+  //   document.getElementById('country').innerText = `${countryName} (${countryCode})`;
+  // }
+
+  function updateCountryInfo(countryName, countryCode) {
+    const countryElement = document.getElementById('country');
+    console.log("countryElement",countryElement);
+    if (countryElement) {
+      countryElement.innerText = `${countryName} (${countryCode})`;
+    } else {
+      console.error('Element with id "country" not found.');
+    }
+  }
+
+  function setCookie(name, value, days) {
+    const expires = new Date();
+    expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+    document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
+  }
+
+  function getCookie(name) {
+    const cookieValue = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+    return cookieValue ? cookieValue[2] : null;
+  }
+
+  async function sendCountryInfoToServer(countryName, countryCode) {
+    try {
+      const response = await fetch('/setCountry', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ countryName, countryCode })
+      });
+
+      if (response.ok) {
+        console.log('Country information sent to server successfully.');
+      } else {
+        console.error('Failed to send country information to the server.');
+      }
+    } catch (error) {
+      console.error('Error sending country information to the server:', error);
+    }
+  }
+
+
+  // async function getCountryDetails(latitude, longitude) {
+  //   const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${apiKey}`;
+  //   try {
+  //     const response = await fetch(url);
+  //     const data = await response.json();
+  //     const results = data.results;
+  //     if (results.length > 0) {
+  //       const addressComponents = results[0].address_components;
+  //       let countryName = 'Country not found';
+  //       let countryCode = 'Code not found';
+  //       for (let i = 0; i < addressComponents.length; i++) {
+  //         if (addressComponents[i].types.includes("country")) {
+  //           countryName = addressComponents[i].long_name;
+  //           countryCode = addressComponents[i].short_name;
+  //           break;
+  //         }
+  //       }
+  //       return { countryName, countryCode };
+  //     }
+  //     return { countryName: "Country not found", countryCode: "Code not found" };
+  //   } catch (error) {
+  //     console.error('Error fetching country details:', error);
+  //     return { countryName: 'Unable to get country name', countryCode: 'Unable to get country code' };
+  //   }
+  // }
+
+  $(document).ready(function () {
+    fetchGeolocationAndSetCountryInfo();
+  });
+
+  document.addEventListener("DOMContentLoaded", async function() {
+  console.log("DOM content loaded");
+
+  try {
+    const { countryName, countryCode } = await fetchGeolocationAndSetCountryInfo();
+    console.log("Initial CountryName:", countryName);
+    console.log("Initial CountryCode:", countryCode);
+
+    const countryDropdown = document.querySelector('.country-dropdown');
+    if (countryCode == 'UK') {
+      countryDropdown.value = 'UK';
+    } else if (countryCode == 'JP') {
+      countryDropdown.value = 'JP';
+    } else {
+      countryDropdown.value = 'US';
+    }
+
+    function setCookie(name, value, days) {
+      const d = new Date();
+      d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+      const expires = "expires=" + d.toUTCString();
+      document.cookie = name + "=" + value + ";" + expires + ";path=/";
+    }
+
+    countryDropdown.addEventListener('change', function(event) {
+      const selectedCountryCode = event.target.value;
+      const selectedCountryName = event.target.options[event.target.selectedIndex].text;
+      console.log("Selected country code:", selectedCountryCode);
+      console.log("Selected country name:", selectedCountryName);
+
+      // Update the cookie with the selected country code
+      setCookie('countryCode', selectedCountryCode, 365);
+
+      // Redirect if needed
+      const redirectUrl = `/${selectedCountryCode}`;
+      window.location.href = redirectUrl;
+    });
+  } catch (error) {
+    console.error('Error initializing country info:', error);
+  }
+});
+
 
 </script>
 </body>
+
 </html>

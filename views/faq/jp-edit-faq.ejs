@@ -38,7 +38,6 @@
                     </div>
                     <div id="kt_account_profile_details" class="collapse show">
                         <form action="/auth/faq_images" method="POST" enctype="multipart/form-data">
-
                             <div class="card-body border-top p-9">
                                 <div class="row mb-6">
                                     <!--begin::Label-->
@@ -53,8 +52,8 @@
                                             value="" />
                                     </div>
                                     <div class="col-lg-1 fv-row">
-                                        <img src="/<%= faqPageData.banner_img_1 %>" alt="img" width="50" height="50"
-                                            loading="">
+                                        <img src="/<%= faqPageData2.banner_img_1 %>" alt="img" width="50"
+                                            height="50" loading="">
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -71,8 +70,8 @@
                                             value="" />
                                     </div>
                                     <div class="col-lg-1 fv-row">
-                                        <img src="/<%= faqPageData.banner_img_2 %>" alt="img" width="50" height="50"
-                                            loading="">
+                                        <img src="/<%= faqPageData2.banner_img_2 %>" alt="img" width="50"
+                                            height="50" loading="">
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -89,8 +88,8 @@
                                             value="" />
                                     </div>
                                     <div class="col-lg-1 fv-row">
-                                        <img src="/<%= faqPageData.banner_img_3 %>" alt="img" width="50" height="50"
-                                            loading="">
+                                        <img src="/<%= faqPageData2.banner_img_3 %>" alt="img" width="50"
+                                            height="50" loading="">
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -107,8 +106,8 @@
                                             value="" />
                                     </div>
                                     <div class="col-lg-1 fv-row">
-                                        <img src="/<%= faqPageData.banner_img_4 %>" alt="img" width="50" height="50"
-                                            loading="">
+                                        <img src="/<%= faqPageData2.banner_img_4 %>" alt="img" width="50"
+                                            height="50" loading="">
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -125,8 +124,8 @@
                                             value="" />
                                     </div>
                                     <div class="col-lg-1 fv-row">
-                                        <img src="/<%= faqPageData.banner_img_5 %>" alt="img" width="50" height="50"
-                                            loading="">
+                                        <img src="/<%= faqPageData2.banner_img_5 %>" alt="img" width="50"
+                                            height="50" loading="">
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -143,8 +142,8 @@
                                             value="" />
                                     </div>
                                     <div class="col-lg-1 fv-row">
-                                        <img src="/<%= faqPageData.banner_img_6 %>" alt="img" width="50" height="50"
-                                            loading="">
+                                        <img src="/<%= faqPageData2.banner_img_6 %>" alt="img" width="50"
+                                            height="50" loading="">
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -161,8 +160,8 @@
                                             value="" />
                                     </div>
                                     <div class="col-lg-1 fv-row">
-                                        <img src="/<%= faqPageData.banner_img_7 %>" alt="img" width="50" height="50"
-                                            loading="">
+                                        <img src="/<%= faqPageData2.banner_img_7 %>" alt="img" width="50"
+                                            height="50" loading="">
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -179,8 +178,8 @@
                                             value="" />
                                     </div>
                                     <div class="col-lg-1 fv-row">
-                                        <img src="/<%= faqPageData.banner_img_8 %>" alt="img" width="50" height="50"
-                                            loading="">
+                                        <img src="/<%= faqPageData2.banner_img_8 %>" alt="img" width="50"
+                                            height="50" loading="">
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -197,8 +196,8 @@
                                             value="" />
                                     </div>
                                     <div class="col-lg-1 fv-row">
-                                        <img src="/<%= faqPageData.app_banner_img %>" alt="img" width="50" height="50"
-                                            loading="">
+                                        <img src="/<%= faqPageData2.app_banner_img %>" alt="img" width="50"
+                                            height="50" loading="">
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -206,7 +205,8 @@
                             <div class="card-footer d-flex justify-content-end py-6 px-9">
                                 <button type="reset"
                                     class="btn btn-light btn-active-light-primary me-2">Discard</button>
-                                <button type="submit" class="btn btn-primary" id="">Submit</button>
+                                <button type="submit" class="btn btn-primary"
+                                    id="">Submit</button>
                             </div>
                         </form>
                     </div>
@@ -226,11 +226,10 @@
                     <!--begin::Content-->
                     <div id="kt_account_profile_details" class="collapse show">
                         <!--begin::Form-->
-                        <form id="kt_account_profile_details_form" class="form">
+                        <form id="kt_account_profile_details_form" class="form" >
                             <!--begin::Card body-->
                             <div class="card-body border-top p-9">
-                                <input type="text" name="countries_name" id="countries_name" class="form-control form-control-lg form-control-solid" placeholder="" value="<%= faqPageData.country%>" />
-
+                                <input type="text" name="countries_name" id="countries_name2" class="form-control form-control-lg form-control-solid" placeholder="" value="<%= faqPageData2.country%>" />
                                 <!--begin::Input group-->
                                 <div class="row mb-6">
                                     <!--begin::Label-->
@@ -242,7 +241,7 @@
                                     <div class="col-lg-8 fv-row">
                                         <input type="text" name="title" id="title"
                                             class="form-control form-control-lg form-control-solid" placeholder="Title"
-                                            value="<%= faqPageData.title %>" />
+                                            value="<%= faqPageData2.title %>" />
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -255,7 +254,7 @@
                                     <!--begin::Col-->
                                     <div class="col-lg-8 fv-row">
                                         <textarea name="content" class="content"
-                                            id="content-editor"><%= faqPageData.content %></textarea>
+                                            id="content-editor"><%= faqPageData2.content %></textarea>
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -267,10 +266,8 @@
                                     <!--end::Label-->
                                     <!--begin::Col-->
                                     <div class="col-lg-8 fv-row">
-                                        <textarea name="app_content"
-                                            class="form-control form-control-lg form-control-solid"
-                                            placeholder="App Content"
-                                            id=""><%- faqPageData.app_banner_content %></textarea>
+                                        <textarea name="app_content" class="form-control form-control-lg form-control-solid"
+                                          placeholder="App Content"  id=""><%- faqPageData2.app_banner_content %></textarea>
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -286,7 +283,7 @@
                                     <div class="col-lg-8 fv-row">
                                         <input type="longtext" name="meta_title" id="meta_title"
                                             class="form-control form-control-lg form-control-solid"
-                                            placeholder="Meta Title" value="<%= faqPageData.meta_title %>" />
+                                            placeholder="Meta Title" value="<%= faqPageData2.meta_title %>" />
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -302,7 +299,7 @@
                                     <div class="col-lg-8 fv-row">
                                         <input type="longtext" name="meta_desc" id="meta_desc"
                                             class="form-control form-control-lg form-control-solid"
-                                            placeholder="Meta Description" value="<%= faqPageData.meta_desc %>" />
+                                            placeholder="Meta Description" value="<%= faqPageData2.meta_desc %>" />
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -319,7 +316,7 @@
                                     <div class="col-lg-8 fv-row">
                                         <input type="text" name="keyword" id="keyword"
                                             class="form-control form-control-lg form-control-solid"
-                                            placeholder="Keyword" value="<%= faqPageData.keyword %>" />
+                                            placeholder="Keyword" value="<%= faqPageData2.keyword %>" />
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -335,82 +332,86 @@
                                 <!--end::Card title-->
                             </div>
                             <div class="card-body border-top p-9 main-repeater" id="main-repeater">
-                                <% faqCategoriesData.forEach( (category,index)=> { %>
-                                    <div class="main_full_area" id="full_area_category_id<%= index %>">
-                                        <div class="category-repeter">
-                                            <div class="category_name">
-                                                <div class="row mb-6">
-                                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
-                                                        <span class="required">Category Name</span>
-                                                    </label>
-                                                    <div class="col-lg-8 fv-row">
-                                                        <input type="text" name="category_name" id="category_name"
-                                                            class="form-control form-control-lg form-control-solid"
-                                                            placeholder="Category Name"
-                                                            value="<%= category.category %>" />
+                                <div class="card-body border-top p-9 main-repeater" id="main-repeater">
+
+                                    <% if (typeof faqCategoriesData2 !== 'undefined' && faqCategoriesData2.length > 0) { %>
+                                        <% faqCategoriesData2.forEach((category, index) => { %>
+                                            <div class="main_full_area" id="full_area_category_id<%= index %>">
+                                                <div class="category-repeter">
+                                                    <div class="category_name">
+                                                        <div class="row mb-6">
+                                                            <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                                                <span class="required">Category Name</span>
+                                                            </label>
+                                                            <div class="col-lg-8 fv-row">
+                                                                <input type="text" name="category_name" id="category_name"
+                                                                    class="form-control form-control-lg form-control-solid"
+                                                                    placeholder="Category Name"
+                                                                    value="<%= category.category %>" />
+                                                            </div>
+                                                        </div>
                                                     </div>
+                                                    <% var count = 0; %>
+                                                    <div class="main_question_answer">
+                                                        <% if (typeof faqItemsData2 !== 'undefined' && faqItemsData2.length > 0) { %>
+                                                            <% faqItemsData2.forEach((qus_ans, key) => { %>
+                                                                <% if (qus_ans.category_id == category.id) { %>
+                                                                    <% count++ %>
+                                                                    <div class="add_question_answer">
+                                                                        <div class="each_question_answer">
+                                                                            <div class="add_question">
+                                                                                <div class="row mb-6">
+                                                                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                                                                        <span class="">Question</span>
+                                                                                    </label>
+                                                                                    <div class="col-lg-8 fv-row">
+                                                                                        <input type="text" name="question" id="question"
+                                                                                            class="form-control form-control-lg form-control-solid"
+                                                                                            placeholder="Question"
+                                                                                            value="<%= qus_ans.question %>" />
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="add_answer">
+                                                                                <div class="row mb-6">
+                                                                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                                                                        <span class="">Answer</span>
+                                                                                    </label>
+                                                                                    <div class="col-lg-8 fv-row">
+                                                                                        <textarea name="answer"
+                                                                                            class="form-control form-control-lg form-control-solid answer-editor"
+                                                                                            id=""><%= qus_ans.answer %></textarea>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <% if (count > 1) { %>
+                                                                                <button type="button"
+                                                                                    class="btn btn-danger remove-QA"
+                                                                                    style="float: right;"><i
+                                                                                        class="fa fa-minus"></i></button>
+                                                                            <% } %>
+                                                                        </div>
+                                                                    </div>
+                                                                <% } %>
+                                                            <% }) %>
+                                                        <% } %>
+                                                        <a href="#" class="btn btn-primary add_question_answer_btn">Add question answer</a>
+                                                    </div>
+                                                    <% if (index != 0) { %>
+                                                        <button type="button" class="btn btn-danger remove-btn" style="float: left;"><i
+                                                                class="fa fa-minus"></i>Category</button>
+                                                    <% } %>
                                                 </div>
                                             </div>
-                                            <% var count=0; %>
-                                                <div class="main_question_answer">
-                                                    <% faqItemsData.forEach( (qus_ans, key)=> { %>
-                                                        <% if (qus_ans.category_id==category.id) { %>
-                                                            <% count++ %>
-                                                                <div class="add_question_answer">
-                                                                    <div class="each_question_answer">
-                                                                        <div class="add_question">
-                                                                            <div class="row mb-6">
-                                                                                <label
-                                                                                    class="col-lg-4 col-form-label fw-bold fs-6">
-                                                                                    <span class="">Question</span>
-                                                                                </label>
-                                                                                <div class="col-lg-8 fv-row">
-                                                                                    <input type="text" name="question"
-                                                                                        id="question"
-                                                                                        class="form-control form-control-lg form-control-solid"
-                                                                                        placeholder="Question"
-                                                                                        value="<%= qus_ans.question %>" />
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="add_answer">
-                                                                            <div class="row mb-6">
-                                                                                <label
-                                                                                    class="col-lg-4 col-form-label fw-bold fs-6">
-                                                                                    <span class="">Answer</span>
-                                                                                </label>
-                                                                                <div class="col-lg-8 fv-row">
-                                                                                    <textarea name="answer"
-                                                                                        class="form-control form-control-lg form-control-solid answer-editor"
-                                                                                        id=""><%= qus_ans.answer %></textarea>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <% if(count> 1) { %>
-                                                                            <button type="button"
-                                                                                class="btn btn-danger remove-QA"
-                                                                                class="" id="" style="float: right;"><i
-                                                                                    class="fa fa-minus"></i></button>
-                                                                            <% } %>
-                                                                    </div>
-                                                                </div>
-
-                                                                <% } %>
-                                                                    <% }) %>
-                                                                        <a href="#"
-                                                                            class="btn btn-primary add_question_answer_btn">Add
-                                                                            question
-                                                                            answer</a>
-                                                </div>
-                                                <% if(index !=0) { %>
-                                                    <button type="button" class="btn btn-danger remove-btn" id=""
-                                                        style="float: left;"><i
-                                                            class="fa fa-minus"></i>Category</button>
-                                                    <% } %>
+                                        <% }) %>
+                                    <% } else { %>
+                                        <div class="no-data-message">
+                                            <p>No FAQ Categories available. Please add some categories.</p>
                                         </div>
-                                    </div>
-
-                                    <% }) %>
+                                    <% } %>
+                                
+                                </div>
+                                
 
                                         <a id="add_category_btn" class="btn btn-primary" href="#">Add
                                             Category</a>
@@ -516,8 +517,10 @@
                                                 transformedResponse.FAQ.push({ [currentCategory]: currentFAQ });
                                             }
                                         } else if (name === 'question' && currentCategory) {
+                                            // Add a new FAQ entry to the current category
                                             currentFAQ.push({ Q: value });
                                         } else if (name === 'answer' && currentCategory && currentFAQ.length > 0) {
+                                            // Add the answer to the last FAQ entry
                                             currentFAQ[currentFAQ.length - 1].A = value;
                                         }
                                     });
@@ -541,7 +544,7 @@
                                                     }
                                                 }).then(function (result) {
                                                     if (result.isConfirmed) {
-                                                        window.location.href = "/edit-faq";
+                                                        window.location.href = "/jp-edit-faq";
                                                     }
                                                 });
                                             } else {

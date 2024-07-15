@@ -1,163 +1,179 @@
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Online Payment-Page</title>
-    <link rel="stylesheet" href="style.css">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Online Payment-Page</title>
+	<link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-    <div class="container">
-        <div class="row">
-            <div class="col">
-                <h3 class="title">Amount</h3>
-                <div id="amountDisplay">
-                    <p>Total Amount: <span id="amount">$0.00</span></p>
-                </div>
-            </div>
-            <div class="col">
+	<div class="container">
+		<div class="row">
+			<div class="col">
+				<h3 class="title">Amount</h3>
+				<div id="amountDisplay">
+					<p>Total Amount: <span id="amount">₹<%= total_price%></span></p>
+				</div>
+			</div>
+			<div class="col">
                 <form id="paymentForm">
                     <div class="row">
                         <div class="col">
                             <h3 class="title">Billing Address</h3>
                             <div class="inputBox">
                                 <label for="name">Full Name:</label>
-                                <input type="text" id="name" placeholder="Enter your full name" required>
+                                <input type="text" id="name" name="name" placeholder="Enter your full name" required>
                             </div>
                             <div class="inputBox">
                                 <label for="address">Address:</label>
-                                <input type="text" id="address" placeholder="Enter address" required>
+                                <input type="text" name="address" id="address" placeholder="Enter address" required>
                             </div>
                             <div class="inputBox">
                                 <label for="city">City:</label>
-                                <input type="text" id="city" placeholder="Enter city" required>
+                                <input type="text" name="city" id="city" placeholder="Enter city" required>
                             </div>
-                            <div class="inputBox">
-                                <label for="state">State:</label>
-                                <input type="text" id="state" placeholder="Enter state" required>
-                            </div>
-                            <div class="inputBox">
-                                <label for="zip">Zip Code:</label>
-                                <input type="number" id="zip" placeholder="123 456" required>
-                            </div>
+							<div class="inputBox">
+								<label for="country">Country:</label>
+								<select name="country" id="stripe_month_country" required>
+									<option value="">Select a country</option>
+									<% getCountries.forEach(country => { %>
+										<option value="<%= country.shortname %>"><%= country.name %></option>
+									<% }); %>
+								</select>
+							</div>
+							<div class="inputBox">
+								<label for="state">State:</label>
+								<select name="state" id="stripe_month_state" required>
+									<option value="">Select a state</option>
+								</select>
+							</div>
+							<div class="inputBox">
+								<label for="zip">Zip Code:</label>
+								<input type="number" name="zip" id="zip" placeholder="123456" minlength="6" maxlength="6" required>
+							</div>
                         </div>
                     </div>
                     <input type="submit" value="Proceed to Checkout" class="submit_btn" id="paymentButton">
                 </form>
-            </div>
-        </div>
-    </div>
+			</div>
+		</div>
+	</div>
 </body>
+
 </html>
 
-	<style>
-		@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600&display=swap');
-	
-		* {
-			margin: 0;
-			padding: 0;
-			box-sizing: border-box;
-			border: none;
-			outline: none;
-			font-family: 'Poppins', sans-serif;
-			text-transform: capitalize;
-			transition: all 0.2s linear;
-		}
-	
-		.container {
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			min-height: 100vh;
-			padding: 25px;
-			background: #d6eef1;
-		}
-	
-		.container form {
-			width: 700px;
-			padding: 20px;
-			background: #fff;
-			box-shadow: 5px 5px 30px rgba(0, 0, 0, 0.2);
-		}
-	
-		.container form .row {
-			display: flex;
-			flex-wrap: wrap;
-			gap: 15px;
-		}
-	
-		.container form .row .col {
-			flex: 1 1 250px;
-		}
-	
-		.col .title {
-			font-size: 20px;
-			color: rgb(237, 55, 23);
-			padding-bottom: 5px;
-		}
-	
-		.col .inputBox {
-			margin: 15px 0;
-		}
-	
-		.col .inputBox label {
-			margin-bottom: 10px;
-			display: block;
-		}
-	
-		.col .inputBox input,
-		.col .inputBox select {
-			width: 100%;
-			border: 1px solid #ccc;
-			padding: 10px 15px;
-			font-size: 15px;
-		}
-	
-		.col .inputBox input:focus,
-		.col .inputBox select:focus {
-			border: 1px solid #000;
-		}
-	
-		.col .flex {
-			display: flex;
-			gap: 15px;
-		}
-	
-		.col .flex .inputBox {
-			flex: 1 1;
-			margin-top: 5px;
-		}
-	
-		.col .inputBox img {
-			height: 34px;
-			margin-top: 5px;
-			filter: drop-shadow(0 0 1px #000);
-		}
-	
-		.container form .submit_btn {
-			width: 100%;
-			padding: 12px;
-			font-size: 17px;
-			background: rgb(1, 143, 34);
-			color: #fff;
-			margin-top: 5px;
-			cursor: pointer;
-			letter-spacing: 1px;
-		}
-	
-		.container form .submit_btn:hover {
-			background: #3d17fb;
-		}
-	
-		input::-webkit-inner-spin-button,
-		input::-webkit-outer-spin-button {
-			display: none;
-		}
-	</style>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-    <script type="text/javascript">
+<style>
+	@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600&display=swap');
+
+	* {
+		margin: 0;
+		padding: 0;
+		box-sizing: border-box;
+		border: none;
+		outline: none;
+		font-family: 'Poppins', sans-serif;
+		text-transform: capitalize;
+		transition: all 0.2s linear;
+	}
+
+	.container {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		min-height: 100vh;
+		padding: 25px;
+		background: #d6eef1;
+	}
+
+	.container form {
+		width: 700px;
+		padding: 20px;
+		background: #fff;
+		box-shadow: 5px 5px 30px rgba(0, 0, 0, 0.2);
+	}
+
+	.container form .row {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 15px;
+	}
+
+	.container form .row .col {
+		flex: 1 1 250px;
+	}
+
+	.col .title {
+		font-size: 20px;
+		color: rgb(237, 55, 23);
+		padding-bottom: 5px;
+	}
+
+	.col .inputBox {
+		margin: 15px 0;
+	}
+
+	.col .inputBox label {
+		margin-bottom: 10px;
+		display: block;
+	}
+
+	.col .inputBox input,
+	.col .inputBox select {
+		width: 100%;
+		border: 1px solid #ccc;
+		padding: 10px 15px;
+		font-size: 15px;
+	}
+
+	.col .inputBox input:focus,
+	.col .inputBox select:focus {
+		border: 1px solid #000;
+	}
+
+	.col .flex {
+		display: flex;
+		gap: 15px;
+	}
+
+	.col .flex .inputBox {
+		flex: 1 1;
+		margin-top: 5px;
+	}
+
+	.col .inputBox img {
+		height: 34px;
+		margin-top: 5px;
+		filter: drop-shadow(0 0 1px #000);
+	}
+
+	.container form .submit_btn {
+		width: 100%;
+		padding: 12px;
+		font-size: 17px;
+		background: rgb(1, 143, 34);
+		color: #fff;
+		margin-top: 5px;
+		cursor: pointer;
+		letter-spacing: 1px;
+	}
+
+	.container form .submit_btn:hover {
+		background: #3d17fb;
+	}
+
+	input::-webkit-inner-spin-button,
+	input::-webkit-outer-spin-button {
+		display: none;
+	}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<link rel="stylesheet" href="style.css">
+<!-- <script type="text/javascript">
         let planid = '<%= planID%>';
         console.log("planid", planid);
         let user_email = '<%= currentUserData.email%>';
@@ -185,6 +201,7 @@
 
                 const response = await axios.post('/auth/create-subscription', formData);
                 const { subscription } = response.data;
+				console.log("subscription",subscription);
 
                 const options = {
                     key: key,
@@ -231,7 +248,177 @@
                 });
             }
         });
-    </script>
+    </script> -->
+
+
+
+	<script>
+		var razorpay_key = '<%= razorpay_key%>';
+		console.log("razorpay_key",razorpay_key);
+		var total_price = '<%= total_price%>';
+		// console.log("total_price",total_price);
+		
+		document.addEventListener('DOMContentLoaded', function() {
+			const paymentForm = document.getElementById('paymentForm');
+			if (!paymentForm) {
+				console.error('Element with ID paymentForm not found');
+				return;
+			}
+	
+			paymentForm.addEventListener('submit', async function (event) {
+				event.preventDefault();
+	
+				try {
+					const formData = {
+						userId: '<%= currentUserData.user_id %>',
+						name: document.getElementById('name').value,
+						email: '<%= currentUserData.email %>',
+						address: document.getElementById('address').value,
+						city: document.getElementById('city').value,
+						state: document.getElementById('stripe_month_state').value,
+						zip: document.getElementById('zip').value,
+						planId: '<%= planID %>',
+						//billingCycle: 'monthly',
+						billingCycle: 'daily',
+						memberCount: '<%= memberCount %>'
+					};
+	
+					const response = await axios.post('/auth/create-subscription', formData);
+					const { subscription, amount } = response.data;
+	
+					console.log("Amount from backend (in paise):", amount);
+	
+					formData.subscriptionId = subscription.id;
+	
+					const amountInRupees = (amount / 100).toFixed(2);
+	
+					const options = {
+						//key: 'rzp_test_FUBQq7lujicpGo',
+						key: razorpay_key,
+						subscription_id: subscription.id,
+						name: 'Subscription Payment',
+						description: `Subscription Payment: ₹${amountInRupees}`,
+						amount: amount,
+						handler: function (response) {
+							Swal.fire({
+								icon: 'success',
+								title: 'Payment Successful!',
+								text: 'Your payment was successful.',
+								confirmButtonText: 'OK'
+							}).then(() => {
+								OrderAPI(formData); 
+								window.location.href = '/business';
+							});
+						},
+						prefill: {
+							name: formData.name,
+							email: formData.email,
+						},
+						theme: {
+							color: '#F37254'
+						}
+					};
+	
+					const rzp = new Razorpay(options);
+					rzp.open();
+	
+					rzp.on('payment.failed', function (response) {
+						Swal.fire({
+							icon: 'error',
+							title: 'Payment Error',
+							text: response.error.description || 'Unknown error occurred.',
+							confirmButtonText: 'OK'
+						});
+					});
+				} catch (error) {
+					console.error('Error initiating payment:', error);
+					Swal.fire({
+						icon: 'error',
+						title: 'Payment Initiation Failed',
+						text: 'Failed to initiate payment. Please try again later.',
+						confirmButtonText: 'OK'
+					});
+				}
+			});
+	
+			document.getElementById('stripe_month_country').addEventListener('change', async function() {
+				const countryCode = this.value;
+				const stateDropdown = document.getElementById('stripe_month_state');
+				stateDropdown.innerHTML = '<option value="">Select a state</option>';
+	
+				if (countryCode) {
+					try {
+						const response = await axios.get(`/getStates?country=${countryCode}`);
+						const states = response.data;
+	
+						states.forEach(state => {
+							const option = document.createElement('option');
+							option.value = state.name;
+							option.textContent = state.name;
+							stateDropdown.appendChild(option);
+						});
+					} catch (error) {
+						console.error('Error fetching states:', error);
+						alert('Failed to load states. Please try again.');
+					}
+				}
+			});
+	
+			async function OrderAPI(formData) {
+				try {
+					console.log("OrderAPI", formData);
+					const response = await axios.post('/auth/update-order-history', formData);
+					console.log("OrderAPI Response", response.data); 
+					if (response.data.status === 'ok') {
+						Swal.fire({
+							icon: 'success',
+							title: 'Success',
+							text: response.data.message || 'Subscribed successfully.',
+							confirmButtonText: 'OK'
+						}).then(() => {
+							window.location.href = '/business';
+						});
+					} else {
+						Swal.fire({
+							icon: 'error',
+							title: 'Error',
+							text: response.data.message || 'Failed to subscribe. Please try again later.',
+							confirmButtonText: 'OK'
+						});
+					}
+				} catch (error) {
+					console.error('Error creating user and company:', error);
+					Swal.fire({
+						icon: 'error',
+						title: 'Error',
+						text: error.response.data.message || 'Failed to subscribe. Please try again later.',
+						confirmButtonText: 'OK'
+					});
+				}
+			}
+		});
+
+		document.getElementById('zip').addEventListener('input', function (e) {
+            const value = e.target.value;
+            if (value.length > 6) {
+                e.target.value = value.slice(0, 6);
+            }
+        });
+
+        document.getElementById('zip').addEventListener('blur', function (e) {
+            const value = e.target.value;
+            if (value.length !== 6) {
+                alert('Zip Code must be exactly 6 digits.');
+                e.target.focus();
+            }
+        });
+	</script>
+	
+
+
+
+
+
 
 
 

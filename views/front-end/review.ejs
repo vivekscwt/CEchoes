@@ -619,6 +619,9 @@
   #review_country option {
     color: black;
 }
+  #state option {
+          color: black;
+        }
   </style>
 
 <%- include('common/footer') -%>
@@ -803,6 +806,41 @@
         $('#city').val('');
         $('#search-input-review').val('');
     });
+    
+    $('#review_country').on('change', function() {
+            var country = $(this).val();
+            console.log("country_review_val",country);
+            if (country) {
+                $.ajax({
+                    url: '/getStates', // Change this to your actual endpoint
+                    type: 'GET',
+                    data: { country: country },
+                    success: function(response) {
+                        console.log('Response:', response); // Debugging line
+                        var states = response.states || response; // Adjust based on the structure of your response
+                        if (Array.isArray(states)) {
+                            var $stateDropdown = $('#state');
+                            $stateDropdown.empty(); // Clear existing options
+                            $stateDropdown.append('<option value="" selected disabled>Select State</option>'); // Add default option
+                            
+                            states.forEach(function(state) {
+                                $stateDropdown.append('<option value="' + state.shortname + '">' + state.name + '</option>');
+                            });
+                        } else {
+                            console.error('States is not an array:', states); // Debugging line
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error fetching states:', status, error); // Debugging line
+                        alert('Error fetching states. Please try again.');
+                    }
+                });
+            } else {
+                $('#state').empty();
+                $('#state').append('<option value="" selected disabled>Select State</option>'); // Reset to default if no country is selected
+            }
+        });
+    
 
 
      function performSearch(keyword) {
@@ -1196,3 +1234,45 @@
      });
    });
  </script>
+
+ <script>
+      $(document).ready(function () {
+        function loadStates(country) {
+          if (country) {
+            $.ajax({
+              url: '/getStates',
+              type: 'GET',
+              data: { country: country },
+              success: function (response) {
+                console.log('Response:', response);
+                var states = response.states || response;
+                if (Array.isArray(states)) {
+                  var $stateDropdown = $('#state');
+                  $stateDropdown.empty();
+                  $stateDropdown.append('<option value="" selected disabled>Select State</option>');
+                  states.forEach(function (state) {
+                    $stateDropdown.append('<option value="' + state.shortname + '">' + state.name + '</option>');
+                  });
+                } else {
+                  console.error('States is not an array:', states);
+                }
+              },
+              error: function (xhr, status, error) {
+                console.error('Error fetching states:', status, error);
+                alert('Error fetching states. Please try again.');
+              }
+            });
+          } else {
+            $('#state').empty();
+            $('#state').append('<option value="" selected disabled>Select State</option>');
+          }
+        }
+
+        var selectedCountry = $('#review_country').val();
+        console.log("selectedCountry", selectedCountry);
+        if (selectedCountry) {
+          loadStates(selectedCountry);
+        }
+      });
+
+    </script>

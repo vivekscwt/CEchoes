@@ -33,7 +33,7 @@
                         aria-controls="kt_account_profile_details">
                         <!--begin::Card title-->
                         <div class="card-title m-0">
-                            <h3 class="fw-bolder m-0">Terms of Service Details</h3>
+                            <h3 class="fw-bolder m-0">Disclaimer Details</h3>
                         </div>
                         <!--end::Card title-->
                     </div>
@@ -45,8 +45,8 @@
                             <!--begin::Card body-->
                             <div class="card-body border-top p-9">
                                 <input type="hidden" name="common_id" 
-                                            value="<%= common.id %>" />
-                                <input type="hidden" name="country_name" id="country_name" value="<%= common.country %>" />
+                                            value="<%= common1.id %>" />
+                                <input type="text" name="country_name" id="country_name" value="<%= common1.country %>" />
                                 <!--begin::Input group-->
                                 <div class="row mb-6">
                                     <!--begin::Label-->
@@ -58,7 +58,7 @@
                                     <div class="col-lg-8 fv-row">
                                         <input type="text" name="title" id="title"
                                             class="form-control form-control-lg form-control-solid" placeholder="Title"
-                                            value="<%= common.title %>" />
+                                            value="<%= common1.title %>" />
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -76,7 +76,7 @@
                                     <div class="col-lg-8 fv-row">
                                         <input type="longtext" name="meta_title" id="meta_title"
                                             class="form-control form-control-lg form-control-solid"
-                                            placeholder="Meta Title" value="<%= common.meta_title %>" />
+                                            placeholder="Meta Title" value="<%= common1.meta_title %>" />
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -92,7 +92,7 @@
                                     <div class="col-lg-8 fv-row">
                                         <input type="longtext" name="meta_desc" id="meta_desc"
                                             class="form-control form-control-lg form-control-solid"
-                                            placeholder="Meta Description" value="<%= common.meta_desc %>" />
+                                            placeholder="Meta Description" value="<%= common1.meta_desc %>" />
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -109,7 +109,7 @@
                                     <div class="col-lg-8 fv-row">
                                         <input type="text" name="keyword" id="keyword"
                                             class="form-control form-control-lg form-control-solid"
-                                            placeholder="Keyword" value="<%= common.meta_keyword %>" />
+                                            placeholder="Keyword" value="<%= common1.meta_keyword %>" />
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -124,7 +124,7 @@
                                     <!--begin::Col-->
                                     <div class="col-lg-8 fv-row">
                                         <textarea name="content" class="content"
-                                            id="content-editor"><%= meta_values_array.content %></textarea>
+                                            id="content-editor"><%= meta_values_array1.content %></textarea>
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -216,7 +216,7 @@
                                     //return false;
 
                                     $.ajax({
-                                        url: '/auth/update-terms-of-service',
+                                        url: '/auth/update-disclaimer',
                                         method: 'POST',
                                         data: JSON.stringify(transformedResponse),
                                         contentType: 'application/json',
@@ -232,7 +232,7 @@
                                                     }
                                                 }).then(function (result) {
                                                     if (result.isConfirmed) {
-                                                        window.location.href = "/edit-terms-of-service";
+                                                        window.location.href = "/edit-disclaimer";
                                                     }
                                                 });
                                             } else {

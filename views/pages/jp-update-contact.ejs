@@ -33,7 +33,7 @@
                         aria-controls="kt_account_profile_details">
                         <!--begin::Card title-->
                         <div class="card-title m-0">
-                            <h3 class="fw-bolder m-0">Terms of Service Details</h3>
+                            <h3 class="fw-bolder m-0">Contacts</h3>
                         </div>
                         <!--end::Card title-->
                     </div>
@@ -41,42 +41,49 @@
                     <!--begin::Content-->
                     <div id="kt_account_profile_details" class="collapse show">
                         <!--begin::Form-->
-                        <form id="kt_account_profile_details_form" class="form">
+                        <form id="kt_account_profile_details_form" class="form" action="#" method="POST">
                             <!--begin::Card body-->
                             <div class="card-body border-top p-9">
-                                <input type="hidden" name="common_id" 
-                                            value="<%= common.id %>" />
-                                <input type="hidden" name="country_name" id="country_name" value="<%= common.country %>" />
+                                <input type="hidden" name="contacts_id" id="contacts_id" value="<%= contacts2.id %>" />
+                                <input type="hidden" name="social_id" id="social_id" value="<%= socials2.id %>" />
+                                <input type="hidden" name="country_name" id="country_name" value="<%= contacts2.country %>" />
+
+                                <div class="card-header border-0 cursor-pointer" role="button"
+                                    data-bs-target="#kt_account_profile_details" aria-expanded="true"
+                                    aria-controls="kt_account_profile_details">
+                                    <div class="card-title m-0">
+                                        <h3 class="fw-bolder m-0">Title Section</h3>
+                                    </div>
+                                </div>
+
                                 <!--begin::Input group-->
                                 <div class="row mb-6">
                                     <!--begin::Label-->
                                     <label class="col-lg-4 col-form-label fw-bold fs-6">
-                                        <span class="required">Title</span>
+                                        <span class="">Title</span>
                                     </label>
                                     <!--end::Label-->
                                     <!--begin::Col-->
                                     <div class="col-lg-8 fv-row">
                                         <input type="text" name="title" id="title"
                                             class="form-control form-control-lg form-control-solid" placeholder="Title"
-                                            value="<%= common.title %>" />
+                                            value="<%= contacts2.title %>" />
                                     </div>
                                     <!--end::Col-->
                                 </div>
                                 <!--end::Input group-->
-
-                               
                                 <!--begin::Input group-->
                                 <div class="row mb-6">
                                     <!--begin::Label-->
                                     <label class="col-lg-4 col-form-label fw-bold fs-6">
-                                        <span class="">Meta Title</span>
+                                        <span class="">Mata Title</span>
                                     </label>
                                     <!--end::Label-->
                                     <!--begin::Col-->
                                     <div class="col-lg-8 fv-row">
-                                        <input type="longtext" name="meta_title" id="meta_title"
+                                        <input type="text" name="meta_title" id="meta_title"
                                             class="form-control form-control-lg form-control-solid"
-                                            placeholder="Meta Title" value="<%= common.meta_title %>" />
+                                            placeholder="Mata Title" value="<%= contacts2.meta_title %>" />
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -90,47 +97,148 @@
                                     <!--end::Label-->
                                     <!--begin::Col-->
                                     <div class="col-lg-8 fv-row">
-                                        <input type="longtext" name="meta_desc" id="meta_desc"
+                                        <input type="text" name="meta_desc" id="meta_desc"
                                             class="form-control form-control-lg form-control-solid"
-                                            placeholder="Meta Description" value="<%= common.meta_desc %>" />
+                                            placeholder="Meta Description" value="<%= contacts2.meta_desc %>" />
                                     </div>
                                     <!--end::Col-->
                                 </div>
                                 <!--end::Input group-->
-
                                 <!--begin::Input group-->
                                 <div class="row mb-6">
                                     <!--begin::Label-->
                                     <label class="col-lg-4 col-form-label fw-bold fs-6">
-                                        <span class="">Keyword</span>
+                                        <span class="">Meta Keyword</span>
                                     </label>
                                     <!--end::Label-->
                                     <!--begin::Col-->
                                     <div class="col-lg-8 fv-row">
-                                        <input type="text" name="keyword" id="keyword"
+                                        <input type="text" name="meta_keyword" id="meta_keyword"
                                             class="form-control form-control-lg form-control-solid"
-                                            placeholder="Keyword" value="<%= common.meta_keyword %>" />
+                                            placeholder="Meta Keyword" value="<%= contacts2.meta_keyword %>" />
                                     </div>
                                     <!--end::Col-->
                                 </div>
                                 <!--end::Input group-->
-                                 <!--begin::Input group-->
-                                 <div class="row mb-6">
+                                <div class="card-header border-0 cursor-pointer" role="button"
+                                    data-bs-target="#kt_account_profile_details" aria-expanded="true"
+                                    aria-controls="kt_account_profile_details">
+                                    <div class="card-title m-0">
+                                        <h3 class="fw-bolder m-0">Contacts Section</h3>
+                                    </div>
+                                </div>
+                                <!--begin::Input group-->
+                                <div class="row mb-6">
                                     <!--begin::Label-->
                                     <label class="col-lg-4 col-form-label fw-bold fs-6">
-                                        <span class="">Content</span>
+                                        <span>WhatsApp No</span>
                                     </label>
                                     <!--end::Label-->
                                     <!--begin::Col-->
                                     <div class="col-lg-8 fv-row">
-                                        <textarea name="content" class="content"
-                                            id="content-editor"><%= meta_values_array.content %></textarea>
+                                        <input type="text" name="whatsapp_no" id="whatsapp_no"
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="WhatsApp No" value="<%= contacts2.whatsapp_no %>" />
                                     </div>
                                     <!--end::Col-->
                                 </div>
                                 <!--end::Input group-->
+                                <!--begin::Input group-->
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Phone No</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <input type="text" name="phone_no" id="phone_no"
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Phone No" value="<%= contacts2.phone_no %>" />
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <!--end::Input group-->
+                                <!--begin::Input group-->
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Email</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <input type="email" name="email" id="email"
+                                            class="form-control form-control-lg form-control-solid" placeholder="Email"
+                                            value="<%= contacts2.email %>" />
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <!--end::Input group-->
+                                <div class="card-header border-0 cursor-pointer" role="button"
+                                    data-bs-target="#kt_account_profile_details" aria-expanded="true"
+                                    aria-controls="kt_account_profile_details">
+                                    <div class="card-title m-0">
+                                        <h3 class="fw-bolder m-0">Socials Section</h3>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-6">
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span>Facebook Link</span>
+                                    </label>
+                                    <div class="col-lg-8 fv-row">
+                                        <input type="text" name="fb_link" id="fb_link"
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Facebook Link" value="<%= socials2.facabook %>" />
+                                    </div>
+                                </div>
+                                <div class="row mb-6">
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span>Twitter Link</span>
+                                    </label>
+                                    <div class="col-lg-8 fv-row">
+                                        <input type="text" name="twitter_link" id="twitter_link"
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Twitter Link" value="<%= socials2.twitter %>" />
+                                    </div>
+                                </div>
+                                <div class="row mb-6">
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span>Linkedin Link</span>
+                                    </label>
+                                    <div class="col-lg-8 fv-row">
+                                        <input type="text" name="linkedin_link" id="linkedin_link"
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Linkedin Link" value="<%= socials2.linkedin %>" />
+                                    </div>
+                                </div>
+                                <div class="row mb-6">
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span>Instagram Link</span>
+                                    </label>
+                                    <div class="col-lg-8 fv-row">
+                                        <input type="text" name="instagram_link" id="instagram_link"
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Instagram Link" value="<%= socials2.instagram %>" />
+                                    </div>
+                                </div>
+                                <div class="row mb-6">
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span>Youtube Link</span>
+                                    </label>
+                                    <div class="col-lg-8 fv-row">
+                                        <input type="text" name="youtube_link" id="youtube_link"
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Youtube Link" value="<%= socials2.youtube %>" />
+                                    </div>
+                                </div>
+
+
+
                             </div>
-                          
+                            <!--end::Card body-->
+                            <!--begin::Actions-->
                             <div class="card-footer d-flex justify-content-end py-6 px-9">
                                 <button type="reset"
                                     class="btn btn-light btn-active-light-primary me-2">Discard</button>
@@ -139,6 +247,7 @@
                             </div>
                             <!--end::Actions-->
                         </form>
+                        <!--end::Form-->
                     </div>
                     <!--end::Content-->
                 </div>
@@ -149,12 +258,11 @@
             <!--end::Container-->
         </div>
         <!--end::Post-->
-
     </div>
     <!--end::Content-->
     <%- include('../common/footer') -%>
         <script>
-/******/ (() => { // webpackBootstrap 
+/******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
                 var __webpack_exports__ = {};
                 /*!*********************************************************************************************!*\
@@ -175,16 +283,7 @@
                         validation = FormValidation.formValidation(
                             form,
                             {
-                                fields: {
-                                    'title': {
-                                        validators: {
-                                            notEmpty: {
-                                                message: 'Title is required'
-                                            }
-                                        }
-                                    }
 
-                                },
                                 plugins: {
                                     trigger: new FormValidation.plugins.Trigger(),
                                     submitButton: new FormValidation.plugins.SubmitButton(),
@@ -201,25 +300,20 @@
                         // Handle form submit
                         submitButton.addEventListener('click', function (e) {
                             e.preventDefault();
-                            tinymce.get('content-editor').save();
-                            //alert("aaaaaaaa");
+
                             validation.validate().then(function (status) {
                                 if (status == 'Valid') {
-                                    const jsonResponse = $('#kt_account_profile_details_form').serializeArray();
-                                    //console.log(jsonResponse);
-                                    const transformedResponse = {};
-                                    jsonResponse.forEach(item => {
-                                        const { name, value } = item;
-                                        transformedResponse[name] = value;
+                                    const formData = $('#kt_account_profile_details_form').serializeArray();
+                                    const jsonData = {};
+                                    $(formData).each(function (index, field) {
+                                        jsonData[field.name] = field.value;
                                     });
-                                    //console.log(transformedResponse);
-                                    //return false;
 
                                     $.ajax({
-                                        url: '/auth/update-terms-of-service',
-                                        method: 'POST',
-                                        data: JSON.stringify(transformedResponse),
-                                        contentType: 'application/json',
+                                        url: '/auth/update-contact', // URL for your API endpoint
+                                        type: 'POST',
+                                        data: jsonData,
+                                        ContentType: 'application/json',
                                         success: function (data) {
                                             if (data.status == 'ok') {
                                                 Swal.fire({
@@ -232,7 +326,7 @@
                                                     }
                                                 }).then(function (result) {
                                                     if (result.isConfirmed) {
-                                                        window.location.href = "/edit-terms-of-service";
+                                                        window.location.href = "/edit-contacts";
                                                     }
                                                 });
                                             } else {
@@ -285,19 +379,7 @@
                     KTAccountSettingsProfileDetails.init();
                 });
 
-            })();
-            //# sourceMappingURL=profile-details.js.map    
-
-            $(document).ready(function () {
-
-                
-                tinymce.init({
-                    selector: "#content-editor",
-                    menubar: false,
-                    toolbar: ["styleselect fontselect fontsizeselect",
-                        "undo redo | cut copy paste | bold italic | link image | alignleft aligncenter alignright alignjustify",
-                        "bullist numlist | outdent indent | blockquote subscript superscript | advlist | autolink | lists charmap | print preview |  code"],
-                    plugins: "advlist autolink link image lists charmap print preview code"
-                });
-            });
+            })()
+                ;
+//# sourceMappingURL=profile-details.js.map    
         </script>
