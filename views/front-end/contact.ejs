@@ -200,13 +200,6 @@
           });
         });
       </script>
-<<<<<<< HEAD
-<script>
-  function nl2br(str) {
-    return str.replace(/\r\n|\r|\n/g, '<br>');
-  }
-</script>
-=======
             <script>
               document.addEventListener("DOMContentLoaded", async function () {
        console.log("DOM content loaded");
@@ -232,7 +225,7 @@
            console.log("Selected country code:", selectedCountryCode);
            console.log("Selected country name:", selectedCountryName);
 
-           const redirectUrl = `/${selectedCountryCode}/contact-us`;
+           const redirectUrl = `/contact-us/${selectedCountryCode}`;
            window.location.href = redirectUrl;
          });
        } catch (error) {
@@ -241,4 +234,3 @@
      });
 
      </script>
->>>>>>> moumita-1-7-24

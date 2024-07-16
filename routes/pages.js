@@ -574,7 +574,7 @@ router.get('/contact-us', checkCookieValue, async (req, res) => {
 
 });
 
-router.get('/:getcountryname/contact-us', checkCookieValue, async (req, res) => {
+router.get('/contact-us/:getcountryname', checkCookieValue, async (req, res) => {
     //resp.sendFile(`${publicPath}/index.html`)
     let currentUserData = JSON.parse(req.userData);
     const apiKey = process.env.GEO_LOCATION_API_KEY;
@@ -671,7 +671,7 @@ router.get('/about-us', checkCookieValue, async (req, res) => {
     //res.render('front-end/about', { menu_active_id: 'about', page_title: 'About Us', currentUserData });
 });
 
-router.get('/:getcountryname/about-us', checkCookieValue, async (req, res) => {
+router.get('/about-us/:getcountryname', checkCookieValue, async (req, res) => {
     let currentUserData = JSON.parse(req.userData);
     const apiKey = process.env.GEO_LOCATION_API_KEY;
     console.log("apiKey",apiKey);
@@ -922,7 +922,7 @@ router.get('/faq', checkCookieValue, async (req, res) => {
     //res.render('front-end/faq', { menu_active_id: 'faq', page_title: 'FAQ', currentUserData });
 });
 
-router.get('/:getcountryname/faq', checkCookieValue, async (req, res) => {
+router.get('/faq/:getcountryname', checkCookieValue, async (req, res) => {
     try {
         let currentUserData = JSON.parse(req.userData);
         // const faqPageData = await comFunction2.getFaqPage();
@@ -1117,7 +1117,7 @@ router.get('/business', checkCookieValue, async (req, res) => {
     }
 });
 
-router.get('/:getcountryname/business', checkCookieValue, async (req, res) => {
+router.get('/business/:getcountryname', checkCookieValue, async (req, res) => {
     try {
         let currentUserData = JSON.parse(req.userData);
         console.log("currentUserData", currentUserData);
@@ -1521,7 +1521,7 @@ router.get('/privacy-policy', checkCookieValue, async (req, res) => {
         res.status(500).send('An error occurred');
     }
 });
-router.get('/:getcountryname/privacy-policy', checkCookieValue, async (req, res) => {
+router.get('/privacy-policy/:getcountryname', checkCookieValue, async (req, res) => {
     let currentUserData = JSON.parse(req.userData);
     const apiKey = process.env.GEO_LOCATION_API_KEY;
     console.log("apiKey",apiKey);
@@ -1629,7 +1629,7 @@ router.get('/disclaimer', checkCookieValue, async (req, res) => {
     }
     //res.render('front-end/disclaimer', { menu_active_id: 'disclaimer', page_title: 'Disclaimer', currentUserData });
 });
-router.get('/:getcountryname/disclaimer', checkCookieValue, async (req, res) => {
+router.get('/disclaimer/:getcountryname', checkCookieValue, async (req, res) => {
     let currentUserData = JSON.parse(req.userData);
     const apiKey = process.env.GEO_LOCATION_API_KEY;
     console.log("apiKey",apiKey);
@@ -1733,7 +1733,7 @@ router.get('/terms-of-service', checkCookieValue, async (req, res) => {
     //res.render('front-end/terms-of-service', { menu_active_id: 'terms-of-service', page_title: 'Terms Of Service', currentUserData });
 });
 
-router.get('/:getcountryname/terms-of-service', checkCookieValue, async (req, res) => {
+router.get('/terms-of-service/:getcountryname', checkCookieValue, async (req, res) => {
     let currentUserData = JSON.parse(req.userData);
     const apiKey = process.env.GEO_LOCATION_API_KEY;
     const getcountryname = req.params.getcountryname;

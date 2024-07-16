@@ -124,7 +124,7 @@ const selectedCountryName = event.target.options[event.target.selectedIndex].tex
 console.log("Selected country code:", selectedCountryCode);
 console.log("Selected country name:", selectedCountryName);
 
-const redirectUrl = `/${selectedCountryCode}/faq`;
+const redirectUrl = `/faq/${selectedCountryCode}`;
 window.location.href = redirectUrl;
 });
 } catch (error) {
