@@ -334,7 +334,7 @@ router.get('', checkCookieValue, async (req, res) => {
         })
     }
 });
-router.get('/home/:getcountryhome', checkCookieValue, async (req, res) => {
+router.get('/:getcountryhome', checkCookieValue, async (req, res) => {
     let currentUserData = JSON.parse(req.userData);
     let userId = '';
     if (currentUserData) {
