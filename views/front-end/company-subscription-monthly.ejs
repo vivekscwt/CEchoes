@@ -1,19 +1,5 @@
-
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Multi-Step Form with Razorpay</title>
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-
-</head>
-
-<body>
+<%- include('common/header') -%>
+<link href="/front-end/css/company-profile-dashboard.css" rel="stylesheet" type="text/css">
     <div class="formbold-form-wrapper">
         <form id="multiStepForm">
             <div class="formbold-steps">
@@ -42,13 +28,14 @@
                 <div class="formbold-input-flex">
                     <div>
                         <label for="dob" class="formbold-form-label">Date of Birth</label>
-                        <input type="date" name="dob" id="dob" class="formbold-form-input" required />
+                        <input type="date" name="dob" id="dob" class="formbold-form-input"/>
                     </div>
                     <div>
                         <label for="email" class="formbold-form-label">Email Address</label>
-                        <input type="email" name="email" placeholder="example@mail.com" id="email"
-                            class="formbold-form-input" required />
-                    </div>
+                        <input type="email" name="email" placeholder="example@mail.com" id="email" class="formbold-form-input" required />
+                        <span id="emailError" style="color: red; display: none;">Invalid email address.</span>
+                        <span id="emailAvailabilityError" style="display: none; color: red;">This email is already registered. Please use a different email address.</span>
+                    </div>                    
                 </div>
                 <div class="formbold-input-flex">
                     <div>
@@ -73,16 +60,22 @@
                 <div class="formbold-input-flex">
                     <div>
                         <label for="register_password" class="formbold-form-label">Password</label>
-                        <input type="password" name="register_password" placeholder="Please enter 8 characters password"
-                            id="register_password" class="formbold-form-input" required />
+                        <div class="input-with-icon">
+                            <input type="password" name="register_password" placeholder="Please enter a password" id="register_password" class="formbold-form-input" required />
+                            <div class="input-icon"><i class="fa-solid fa-eye-slash eye-change"></i></div>
+                        </div>
+                        <span id="passwordLengthError" style="color: red; display: none;">Password must be between 8 and 30 characters.</span>
                     </div>
                     <div>
                         <label for="register_confirm_password" class="formbold-form-label">Confirm Password</label>
-                        <input type="password" name="register_confirm_password"
-                            placeholder="Please enter 8 characters password" id="register_confirm_password"
-                            class="formbold-form-input" required />
+                        <div class="input-with-icon">
+                            <input type="password" name="register_confirm_password" placeholder="Please confirm your password" id="register_confirm_password" class="formbold-form-input" required />
+                            <div class="input-icon"><i class="fa-solid fa-eye-slash eye-change"></i></div>
+                        </div>
+                        <span id="passwordMismatchError" style="color: red; display: none;">Passwords do not match.</span>
                     </div>
                 </div>
+                               
             </div>
             <div class="formbold-form-step-2 form-step">
                 <input type="text" name="parent_id" id="parent_id" placeholder="parent company" value="0"
@@ -91,6 +84,7 @@
                     <label for="company_name" class="formbold-form-label">Company Name</label>
                     <input type="text" name="company_name" id="company_name" placeholder="Enter your company name"
                         class="formbold-form-input" required />
+                    <span id="companyCheckResult" class="result-message"></span>
                 </div>
                 <div>
                     <label for="main_address" class="formbold-form-label">Company Address</label>
@@ -141,7 +135,7 @@
             </div>
             <div class="formbold-form-btn-wrapper">
                 <button type="button" class="formbold-back-btn" onclick="prevStep()">Back</button>
-                <button type="button" class="formbold-btn" onclick="nextStep()">Next Step
+                <button type="button" id="nextStepBtn" class="formbold-btn" onclick="nextStep()">Next Step
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <g clip-path="url(#clip0_1675_1807)">
                             <path
@@ -161,6 +155,14 @@
 
 
 
+    <%- include('common/footer') -%>
+    
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
     <script>
         var razorpay_key = '<%= razorpay_key%>';
 		console.log("razorpay_key",razorpay_key);
@@ -170,75 +172,77 @@
         console.log("subscriptionType",subscriptionType);
         let currentStep = 1;
 
+
         function showStep(step) {
-            document.querySelectorAll('.form-step').forEach((el, index) => {
-                el.classList.remove('active');
-                if (index + 1 === step) {
-                    el.classList.add('active');
-                }
-            });
+        document.querySelectorAll('.form-step').forEach((el, index) => {
+            el.classList.toggle('active', index + 1 === step);
+        });
 
-            document.querySelectorAll('.formbold-step-menu1, .formbold-step-menu2, .formbold-step-menu3').forEach((el, index) => {
-                el.classList.remove('active');
-                if (index + 1 === step) {
-                    el.classList.add('active');
-                }
-            });
+        document.querySelectorAll('.formbold-step-menu1, .formbold-step-menu2, .formbold-step-menu3').forEach((el, index) => {
+            el.classList.toggle('active', index + 1 === step);
+        });
 
+        const backButton = document.querySelector('.formbold-back-btn');
+        backButton.style.display = step === 1 ? 'none' : 'block';
+    }
 
-            const backButton = document.querySelector('.formbold-back-btn');
-            if (step === 1) {
-                backButton.style.display = 'none'; 
-            } else {
-                backButton.style.display = 'block'; 
-            }
-        }
-
-        function nextStep() {
-            if (validateStep(currentStep)) {
-                currentStep++;
-                showStep(currentStep);
-            } else {
-                //alert('Please fill out all required fields correctly before proceeding.');
-                Swal.fire({
-                    icon: 'error',
-                    // title: 'Failed to load states',
-                    text: 'Please fill out all required fields correctly before proceeding.'
-                });
-            }
-        }
-
-        function prevStep() {
-            currentStep--;
+    function nextStep() {
+        if (validateStep(currentStep)) {
+            currentStep++;
             showStep(currentStep);
+        } else {
+            Swal.fire({
+                icon: 'error',
+                text: 'Please fill out all required fields correctly before proceeding.'
+            });
         }
+    }
 
-        function validateStep(step) {
-                    if (step === 1) {
-                        const email = document.getElementById('email').value.trim();
-                        if (!email) {
-                            return false;
-                        }
-                        return true;
-                    } else if (step === 2) {
-                        const password = document.getElementById('register_password').value;
-                        if (password.length < 8 || password.length > 30) {
-                            return false;
-                        }
-                        return true;
-                    } else if (step === 3) {
-                        const confirmPassword = document.getElementById('register_confirm_password').value;
-                        if (confirmPassword.length < 8 || confirmPassword.length > 30) {
-                            return false;
-                        }
-                        const password = document.getElementById('register_password').value;
-                        if (confirmPassword !== password) {
-                            return false;
-                        }
-                        return true;
-                    }
-                    return true; 
-                }
+    function prevStep() {
+        currentStep--;
+        showStep(currentStep);
+    }
+
+    function validateStep(step) {
+        if (step === 1) {
+            const email = document.getElementById('email').value.trim();
+            if (!email) return false;
+
+            const password = document.getElementById('register_password').value;
+            const confirmPassword = document.getElementById('register_confirm_password').value;
+            if (password.length < 8 || password.length > 30 || password !== confirmPassword) {
+                document.getElementById('passwordMismatchError').style.display = 'block';
+                return false;
+            } else {
+                document.getElementById('passwordMismatchError').style.display = 'none';
+            }
+            return true;
+        } else if (step === 2) {
+            return document.getElementById('company_name').value.trim() &&
+                   document.getElementById('main_address').value.trim() &&
+                   document.getElementById('comp_email').value.trim() &&
+                   document.getElementById('comp_phone').value.trim() &&
+                   document.getElementById('main_address_country').value &&
+                   document.getElementById('main_address_pin_code').value.trim();
+        }
+        return true;
+    }
+
+    // document.getElementById('email').addEventListener('blur', async function () {
+    //     const email = this.value.trim();
+    //     if (email) {
+    //         try {
+    //             const response = await axios.get(`/checkEmailAvailability?email=${email}`);
+    //             if (!response.data.available) {
+    //                 document.getElementById('emailExistsError').style.display = 'block';
+    //             } else {
+    //                 document.getElementById('emailExistsError').style.display = 'none';
+    //             }
+    //         } catch (error) {
+    //             console.error('Error checking email:', error);
+    //         }
+    //     }
+    // });
 
         async function handleConfirmation(confirmed) {
             if (confirmed) {
@@ -331,97 +335,6 @@
             }
         }
 
-//         async function handleConfirmation(confirmed) {
-//     if (confirmed) {
-//         try {
-//             const formData = {
-//                 name: document.getElementById('first_name').value + ' ' + document.getElementById('last_name').value,
-//                 first_name: document.getElementById('first_name').value,
-//                 last_name: document.getElementById('last_name').value,
-//                 email: document.getElementById('email').value,
-//                 address: document.getElementById('main_address').value,
-//                 main_address_country: document.getElementById('main_address_country').value,
-//                 company_name: document.getElementById('company_name').value,
-//                 parent_id: document.getElementById('parent_id').value,
-//                 comp_email: document.getElementById('comp_email').value,
-//                 city: 'Default City',
-//                 state: 'Default State',
-//                 zip: document.getElementById('main_address_pin_code').value,
-//                 planId: planID,
-//                 billingCycle: 'daily',
-//                 memberCount: memberCount,
-//                 register_password: document.getElementById('register_password').value,
-//                 register_confirm_password: document.getElementById('register_confirm_password').value,
-//                 user_country: document.getElementById('user_country').value,
-//                 user_state: document.getElementById('user_state').value,
-//             };
-
-//             const response = await axios.post('/auth/createexternalSubscription', formData);
-//             const { subscription, amount } = response.data;
-
-//             formData.subscriptionId = subscription.id;
-
-//             const options = {
-//                 key: razorpay_key,
-//                 //key: 'rzp_test_ivrp5LlA1gQXAT',
-//                 subscription_id: subscription.id,
-//                 name: 'Subscription Payment',
-//                 description: `Subscription Payment: ₹${(amount / 100).toFixed(2)}`, // Display amount in rupees
-//                 amount: amount, // Amount in paise
-//                 handler: function (response) {
-//                     Swal.fire({
-//                         icon: 'success',
-//                         title: 'Payment Successful!',
-//                         text: 'Your payment was successful.',
-//                         confirmButtonText: 'OK'
-//                     }).then(() => {
-//                         // Post payment success, create user and company
-//                         createUserAndCompany(formData);
-//                     });
-//                 },
-//                 prefill: {
-//                     name: formData.name,
-//                     email: formData.email
-//                 },
-//                 theme: {
-//                     color: '#F37254'
-//                 }
-//             };
-
-//             // Open Razorpay Checkout
-//             const rzp = new Razorpay(options);
-//             rzp.open();
-
-//             rzp.on('payment.failed', function (response) {
-//                 Swal.fire({
-//                     icon: 'error',
-//                     title: 'Payment Error',
-//                     text: response.error.description || 'Unknown error occurred.',
-//                     confirmButtonText: 'OK'
-//                 });
-//             });
-//         } catch (error) {
-//             console.error('Error initiating payment:', error);
-//             let errorMessage = 'Failed to initiate payment. Please try again later.';
-
-//             if (error.response) {
-//                 errorMessage = error.response.data.message || errorMessage;
-//             } else if (error.message) {
-//                 errorMessage = error.message;
-//             }
-
-//             Swal.fire({
-//                 icon: 'error',
-//                 title: 'Payment Initiation Failed',
-//                 text: errorMessage,
-//                 confirmButtonText: 'OK'
-//             });
-//         }
-//     }
-// }
-
-
-
         async function createUserAndCompany(formData) {
             try {
                 console.log("externalRegistrationformData", formData);
@@ -453,33 +366,6 @@
                 });
             }
         }
-
-
-
-        document.getElementById('email').addEventListener('blur', async function () {
-            const email = this.value.trim();
-            if (email) {
-                try {
-                    const response = await axios.get(`/checkEmailAvailability?email=${email}`);
-                    if (!response.data.available) {
-                        Swal.fire({
-                            icon: 'warning',
-                            title: 'Email Already Exists',
-                            text: 'This email is already registered. Please use a different email address.',
-                            confirmButtonText: 'OK'
-                        });
-                    }
-                } catch (error) {
-                    console.error('Error checking email availability:', error);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: error.response.data.message || 'Failed to check email availability. Please try again later.',
-                        confirmButtonText: 'OK'
-                    });
-                }
-            }
-        });
 
         document.getElementById('user_country').addEventListener('change', async function () {
             const countryCode = this.value;
@@ -528,61 +414,128 @@
                 e.target.focus();
             }
         });
-        document.getElementById('register_password').addEventListener('blur', function (e) {
-            const value = e.target.value;
-            if (value.length < 8 || value.length > 30) {
-                //alert('Password must be between 8 and 30 characters.');
-                Swal.fire({
-                    icon: 'error',
-                    // title: 'Failed to load states',
-                    text: 'Password must be between 8 and 30 characters.'
-                });
-                e.target.focus();
+        
+        document.getElementById('register_password').addEventListener('input', function (e) {
+            const password = e.target.value;
+            const confirmPassword = document.getElementById('register_confirm_password').value;
+            const passwordLengthError = document.getElementById('passwordLengthError');
+            const passwordMismatchError = document.getElementById('passwordMismatchError');
+
+            if (password.length < 8 || password.length > 30) {
+                passwordLengthError.style.display = 'block';
+            } else {
+                passwordLengthError.style.display = 'none';
+            }
+
+            if (confirmPassword && password !== confirmPassword) {
+                passwordMismatchError.style.display = 'block';
+            } else {
+                passwordMismatchError.style.display = 'none';
             }
         });
-        
-    
-        document.getElementById('register_confirm_password').addEventListener('blur', function (e) {
-            const value = e.target.value;
-            if (value.length < 8 || value.length > 30) {
-                //alert('Password must be between 8 and 30 characters.');
-                Swal.fire({
-                    icon: 'error',
-                    // title: 'Failed to load states',
-                    text: 'Password must be between 8 and 30 characters.'
-                });
-                e.target.focus();
+
+        document.getElementById('register_confirm_password').addEventListener('input', function (e) {
+            const confirmPassword = e.target.value;
+            const password = document.getElementById('register_password').value;
+            const passwordLengthError = document.getElementById('passwordLengthError');
+            const passwordMismatchError = document.getElementById('passwordMismatchError');
+
+            if (confirmPassword.length < 8 || confirmPassword.length > 30) {
+                passwordLengthError.style.display = 'block';
+            } else {
+                passwordLengthError.style.display = 'none';
+            }
+
+            if (password && password !== confirmPassword) {
+                passwordMismatchError.style.display = 'block';
+            } else {
+                passwordMismatchError.style.display = 'none';
             }
         });
-        
+
+
         document.getElementById('comp_email').addEventListener('blur', function () {
-            if (!this.checkValidity()) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Invalid Email',
-                    text: 'Please enter a valid email address.',
-                    confirmButtonText: 'OK'
-                });
+            const email = this.value.trim();
+            if (email && !isValidEmail(email)) {
+                // Invalid email format
+                // You can handle this programmatically, for example:
+                this.setCustomValidity('Please enter a valid email address.');
+                this.reportValidity();
                 this.focus();
             }
         });
-        document.getElementById('email').addEventListener('blur', function () {
-            if (!this.checkValidity()) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Invalid Email',
-                    text: 'Please enter a valid email address.',
-                    confirmButtonText: 'OK'
-                });
-                this.focus();
+        
+        
+        document.getElementById('email').addEventListener('blur', async function () {
+    const email = this.value.trim();
+    const emailError = document.getElementById('emailError');
+    const emailAvailabilityError = document.getElementById('emailAvailabilityError');
+    const nextStepBtn = document.getElementById('nextStepBtn');
+
+    // Reset error messages and validation flags
+    emailError.style.display = 'none';
+    emailAvailabilityError.style.display = 'none';
+    this.classList.remove('invalid');
+    isEmailValid = false;
+    isEmailAvailable = false;
+
+    // Disable the next button initially
+    nextStepBtn.disabled = true;
+
+    // Basic email validation
+    if (email && !isValidEmail(email)) {
+        emailError.style.display = 'block';
+        this.classList.add('invalid');
+    } else {
+        isEmailValid = true;
+        try {
+            const response = await axios.get(`/checkEmailAvailability?email=${email}`);
+            if (!response.data.available) {
+                emailAvailabilityError.style.display = 'block';
+                this.classList.add('invalid');
+            } else {
+                isEmailAvailable = true;
             }
-        });
+        } catch (error) {
+            console.error('Error checking email availability:', error);
+        }
+    }
+
+    console.log("isEmailValid", isEmailValid);
+    console.log("isEmailAvailable", isEmailAvailable);
+
+    // Enable the Next Step button if email is valid and available
+    if (isEmailValid && isEmailAvailable) {
+        nextStepBtn.disabled = false;
+    }
+});
+
+function isValidEmail($email) {
+      var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+      return emailReg.test($email);
+    }
+
+        
         document.getElementById('comp_phone').addEventListener('input', function (e) {
             const value = e.target.value;
             if (value.length > 6) {
                 e.target.value = value.slice(0, 10);
             }
         });
+        const userCountrySelect = document.getElementById('user_country');
+const userStateSelect = document.getElementById('user_state');
+const nextStepBtn = document.getElementById('nextStepBtn');
+
+function validateAndNext() {
+    const isCountryValid = userCountrySelect.checkValidity();
+    const isStateValid = userStateSelect.checkValidity();
+    
+    if (isCountryValid && isStateValid) {
+        nextStep();
+    } else {
+        alert('Please select both a country and a state.');
+    }
+}
         
     </script>
 

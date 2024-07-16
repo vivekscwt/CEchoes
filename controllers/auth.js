@@ -2091,6 +2091,36 @@ exports.restoreUser = (req, res) => {
 
 
 // }
+exports.getExistCompany =async (req, res)=>{
+    try{
+        const{company_name,main_address_country,parent_id}= req.query;
+        if (parent_id == 0) {
+            const companyquery = `SELECT * FROM company WHERE company_name = ? AND main_address_country =? `;
+            const companyvalue = await query(companyquery, [company_name, main_address_country]);
+
+            console.log("companyvalue", companyvalue);
+
+            if (companyvalue.length > 0) {
+                return res.send(
+                    {
+                        status: 'err',
+                        data: '',
+                        message: 'Organization name already exist.'
+                    }
+                )
+            }
+        }
+    }catch(error){
+            console.error('Error:', error);
+            return res.send({
+                status: 'err',
+                //data: companyId,
+                message: error.message
+            }); 
+        }
+    }
+
+
 
 exports.createCompany = async (req, res) => {
     try {

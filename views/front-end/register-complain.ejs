@@ -56,7 +56,7 @@
                         <div class="col-md-12">
                            <div class="custom-form">
                              <select name="main_address_country" id="country"class="form-control" required>
-                                 <option value="" disabled selected>Select a country</option>
+                                 <option value="" disabled selected>Select Country</option>
                                      <% getCountries.forEach(function(country) { %>
                                      <option value="<%= country.shortname %>"><%= country.name %></option>
                                      <% }); %>
@@ -78,7 +78,7 @@
                          <div class="col-md-12">
                            <div class="custom-form">
                              <input type="text" class="form-control" id="city" name="review-address"
-                               placeholder="City Name" autocomplete="off">
+                               placeholder="City/Town" autocomplete="off">
                              <div class="autofield-dropdown-review">
                              </div>
                            </div>
@@ -88,7 +88,7 @@
                       <div class="col-md-12">
                          <div class="custom-form">
                              <select class="form-control" id="companyDropdown" name="company_id" required>
-                                 <option value="" selected disabled>Business/Institute/Establishment Name</option>
+                                 <option value="" selected disabled>Name of Organisation/Company/Institute</option>
                                  <!-- Options will be dynamically populated via JavaScript -->
                              </select>
                              <div class="autofield-dropdown-review"></div>
@@ -117,7 +117,7 @@
                         </div>
                         <div class="col-sm-12">
                            <div class="custom-form">
-                              <input type="text" name="model_no" class="form-control" placeholder="Enter the Model Number">
+                              <input type="text" name="model_no" class="form-control" placeholder="Product Model / Serial No">
                            </div>
                         </div>
                         <div class="col-sm-12">
@@ -133,7 +133,7 @@
                         </div>
                         <div class="col-sm-12">
                            <div class="custom-form">
-                              <textarea name="message" id="" class="form-control" placeholder="Your Message" required></textarea>
+                              <textarea name="message" id="" class="form-control" placeholder="Describe the Issue faced" required></textarea>
                            </div>
                         </div>
                      </div>
