@@ -2150,7 +2150,7 @@ exports.createCompany = async (req, res) => {
                     {
                         status: 'err',
                         data: '',
-                        message: 'tion name already exist.Organiza'
+                        message: 'Organization name already exist.'
                     }
                 )
             }
