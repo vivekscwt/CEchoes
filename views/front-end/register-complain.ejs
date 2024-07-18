@@ -55,16 +55,16 @@
                      <div class="row">
                         <div class="col-md-12">
                            <div class="custom-form">
-                             <select name="main_address_country" id="country"class="form-control" required>
-                                 <option value="" disabled selected>Select Country</option>
-                                     <% getCountries.forEach(function(country) { %>
-                                     <option value="<%= country.shortname %>"><%= country.name %></option>
-                                     <% }); %>
-                             </select>
-                             <div class="autofield-dropdown-review">
-                             </div>
+                               <select name="main_address_country" id="register_country" class="form-control" required>
+                                   <option value="" disabled selected>Select Country*</option>
+                                   <% getCountries.forEach(function(country) { %>
+                                       <option value="<%= country.shortname %>"><%= country.name %></option>
+                                   <% }); %>
+                               </select>
+                               <div class="autofield-dropdown-review"></div>
                            </div>
-                         </div>
+                       </div>
+                       
                          <div class="col-md-12">
                            <div class="custom-form">
                                <select class="form-control" id="state" name="main_address_state">
@@ -163,7 +163,7 @@
  #state option {
      color: black;
  }
- #country option {
+ #register_country option {
      color: black;
  }
  
@@ -328,7 +328,7 @@ var countryId;
     var state;
     console.log("maincountryId",countryId);
     $(document).ready(function() {
-    $('#country').on('change', function() {
+    $('#register_country').on('change', function() {
       country = $(this).val(); 
       console.log("country_IDcountry",country);
 
@@ -538,17 +538,17 @@ $('#companyDropdown').on('change', function() {
 
   $(document).ready(function() {
   $('#companyDropdown').select2({
-    placeholder: "Select a for a company",
+    placeholder: "Name of Organisation/Company/Institute",
     allowClear: true, 
     width: '100%' 
   });
   $('#state').select2({
-    placeholder: "Select a state",
+    placeholder: " Select State*",
     allowClear: true, 
    //  width: '100%'
   });
-  $('#country').select2({
-    placeholder: "Select a country",
+  $('#register_country').select2({
+    placeholder: "Select Country*,",
     allowClear: true, 
    //  width: '100%'
   });

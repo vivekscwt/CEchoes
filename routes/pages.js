@@ -9563,6 +9563,7 @@ router.get('/register-complaint', checkFrontEndLoggedIn, async (req, res) => {
         comFunction2.getAllPremiumCompany(),
         comFunction.getCountries()
     ]);
+    console.log("getCountries",getCountries);
     try {
 
         res.render('front-end/register-complain', {
