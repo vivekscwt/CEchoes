@@ -352,7 +352,7 @@
                            <% if (currentUserData && currentUserData.claimed_comp_id !=null) { %>
                               <div class="member-control">
                                  <label for="<%= plan %>-member-count">Members:</label>
-                                 <input type="number" min="0" name="memberCount" id="<%= plan %>-member-count" value="">
+                                 <input type="hidden" min="0" name="memberCount" id="<%= plan %>-member-count" value="">
                                  <input type="hidden" id="<%= plan %>-per-user-price"
                                     value="<%= getplans[plan + '_val'].per_user_price_local %>">
                                  <input type="hidden" name="userId" value="<%= currentUserData.user_id %>">
@@ -373,19 +373,24 @@
                                              <%= getplans[plan + '_val' ].monthly_price_local %>
                                           </span>
                                           <% } %>
-                              </div>
-
-                              <% if (isSubscribed(plan, 'monthly' )) { %>
-                                 <button id="subscribe-<%= plan %>-monthly" disabled>Subscribed</button>
-                                 <% } else if (userHasSubscription) { %>
-                                    <button id="subscribe-<%= plan %>-monthly" disabled>Subscribe Monthly</button>
-                                    <% } else { %>
-                                       <button id="subscribe-<%= plan %>-monthly"
-                                          onclick="redirectToStripePayment('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].monthly_price %>', 'monthly')">
-                                          Subscribe Monthly
-                                       </button>
+                                       </div>
+                                          <% if (isSubscribed(plan, 'monthly')) { %>
+                                             <label>
+                                                <input type="radio" id="subscribe-<%= plan %>-monthly" name="subscriptionType" value="monthly" disabled checked>
+                                                Subscribed
+                                             </label>
+                                       <% } else if (userHasSubscription) { %>
+                                             <label>
+                                                <input type="radio" id="subscribe-<%= plan %>-monthly" name="subscriptionType" value="monthly" disabled>
+                                                Subscribe Monthly
+                                             </label>
+                                       <% } else { %>
+                                             <label>
+                                                <input type="radio" id="subscribe-<%= plan %>-monthly" name="subscriptionType" value="monthly" onclick="redirectToStripePayment('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].monthly_price %>', 'monthly')">
+                                                Subscribe Monthly
+                                             </label>
                                        <% } %>
-
+                                       
                                           <div class="total-price-display">
                                              <% if (country_name==="India" ) { %>
                                                 Yearly Subscription Amount: ₹<span id="<%= plan %>-total-yearly-price">
@@ -403,23 +408,26 @@
                                                       </span>
                                                       <% } %>
                                           </div>
-
-                                          <% if (isSubscribed(plan, 'yearly' )) { %>
-                                             <button id="subscribe-<%= plan %>-yearly" disabled>Subscribed</button>
-                                             <% } else if (userHasSubscription) { %>
-                                                <button id="subscribe-<%= plan %>-yearly" disabled>Subscribe
-                                                   Yearly</button>
-                                                <% } else { %>
-                                                   <button id="subscribe-<%= plan %>-yearly"
-                                                      onclick="redirectToYearlyStripePayment('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].yearly_price %>', 'yearly')">
-                                                      Subscribe Yearly
-                                                   </button>
-                                                   <% } %>
-
+                                          <% if (isSubscribed(plan, 'yearly')) { %>
+                                             <label>
+                                                 <input type="radio" id="subscribe-<%= plan %>-yearly" name="subscriptionType" value="yearly" disabled checked>
+                                                 Subscribed
+                                             </label>
+                                         <% } else if (userHasSubscription) { %>
+                                             <label>
+                                                 <input type="radio" id="subscribe-<%= plan %>-yearly" name="subscriptionType" value="yearly" disabled>
+                                                 Subscribe Yearly
+                                             </label>
+                                         <% } else { %>
+                                             <label>
+                                                 <input type="radio" id="subscribe-<%= plan %>-yearly" name="subscriptionType" value="yearly" onclick="redirectToYearlyStripePayment('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].yearly_price %>', 'yearly')">
+                                                 Subscribe Yearly
+                                             </label>
+                                         <% } %>                                               
                                                       <% } else if (!currentUserData) { %>
                                                          <div class="member-control">
                                                             <label for="<%= plan %>-member-count">Members:</label>
-                                                            <input type="number" min="0" name="memberCount"
+                                                            <input type="hidden" min="0" name="memberCount"
                                                                id="<%= plan %>-member-count" value="">
                                                             <input type="hidden" id="<%= plan %>-per-user-price"
                                                                value="<%= getplans[plan + '_val'].per_user_price_local %>">
@@ -446,19 +454,22 @@
                                                                      <% } %>
                                                          </div>
 
-                                                         <% if (isSubscribed(plan, 'monthly' )) { %>
-                                                            <button id="subscribe-<%= plan %>-monthly"
-                                                               disabled>Subscribed</button>
-                                                            <% } else if (userHasSubscription) { %>
-                                                               <button id="subscribe-<%= plan %>-monthly"
-                                                                  disabled>Subscribe Monthly</button>
-                                                               <% } else { %>
-                                                                  <button id="subscribe-<%= plan %>-monthly"
-                                                                     onclick="redirectToSubscriptionPage('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].monthly_price %>', 'monthly')">
-                                                                     Subscribe Monthly
-                                                                  </button>
-                                                                  <% } %>
-
+                                                         <% if (isSubscribed(plan, 'monthly')) { %>
+                                                            <label>
+                                                                <input type="radio" id="subscribe-<%= plan %>-monthly" name="subscriptionType" value="monthly" disabled checked>
+                                                                Subscribed
+                                                            </label>
+                                                        <% } else if (userHasSubscription) { %>
+                                                            <label>
+                                                                <input type="radio" id="subscribe-<%= plan %>-monthly" name="subscriptionType" value="monthly" disabled>
+                                                                Subscribe Monthly
+                                                            </label>
+                                                        <% } else { %>
+                                                            <label>
+                                                                <input type="radio" id="subscribe-<%= plan %>-monthly" name="subscriptionType" value="monthly" onclick="redirectToSubscriptionPage('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].monthly_price %>', 'monthly')">
+                                                                Subscribe Monthly
+                                                            </label>
+                                                        <% } %>                                                              
                                                                      <div class="total-price-display">
                                                                         <% if (country_name==="India" ) { %>
                                                                            Yearly Subscription Amount: ₹<span
@@ -481,20 +492,25 @@
                                                                                  <% } %>
                                                                      </div>
 
-                                                                     <% if (isSubscribed(plan, 'yearly' )) { %>
-                                                                        <button id="subscribe-<%= plan %>-yearly"
-                                                                           disabled>Subscribed</button>
-                                                                        <% } else if (userHasSubscription) { %>
-                                                                           <button id="subscribe-<%= plan %>-yearly"
-                                                                              disabled>Subscribe Yearly</button>
-                                                                           <% } else { %>
-                                                                              <button id="subscribe-<%= plan %>-yearly"
-                                                                                 onclick="redirectToYearlySubscriptionPage('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].yearly_price %>', 'yearly')">
-                                                                                 Subscribe Yearly
-                                                                              </button>
-                                                                              <% } %>
-                                                                              <% } else { %>
-                                                                             <% } %>
+                                                                     <% if (isSubscribed(plan, 'yearly')) { %>
+                                                                        <label>
+                                                                            <input type="radio" id="subscribe-<%= plan %>-yearly" name="subscriptionType" value="yearly" disabled checked>
+                                                                            Subscribed
+                                                                        </label>
+                                                                    <% } else if (userHasSubscription) { %>
+                                                                        <label>
+                                                                            <input type="radio" id="subscribe-<%= plan %>-yearly" name="subscriptionType" value="yearly" disabled>
+                                                                            Subscribe Yearly
+                                                                        </label>
+                                                                    <% } else { %>
+                                                                        <label>
+                                                                            <input type="radio" id="subscribe-<%= plan %>-yearly" name="subscriptionType" value="yearly" onclick="redirectToYearlySubscriptionPage('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].yearly_price %>', 'yearly')">
+                                                                            Subscribe Yearly
+                                                                        </label>
+                                                                    <% } %>
+                                                                           
+                                                                     <% } else { %>
+                                                                     <% } %>
                      </div>
                      <% }) %>
             </div>
@@ -563,6 +579,9 @@
             text-align: center;
             color: #ffffff;
             transition: all ease-in-out 0.5s;
+         }
+         .choose-your-plan-box-step>* {
+            margin-bottom: 25px;
          }
       </style>
 

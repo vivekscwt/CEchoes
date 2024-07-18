@@ -1,5 +1,5 @@
 <%- include('common/header') -%>
-<link href="/front-end/css/company-profile-dashboard.css" rel="stylesheet" type="text/css">
+    <link href="/front-end/css/company-profile-dashboard.css" rel="stylesheet" type="text/css">
     <div class="formbold-form-wrapper">
         <form id="multiStepForm">
             <div class="formbold-steps">
@@ -10,9 +10,6 @@
                 </ul>
             </div>
             <div class="formbold-form-step-1 form-step active">
-                <div>
-                    <label for="member_count" class="formbold-form-label">Add On users<%= memberCount%></label>
-                </div>
                 <div class="formbold-input-flex">
                     <div>
                         <label for="first_name" class="formbold-form-label">First name</label>
@@ -28,14 +25,25 @@
                 <div class="formbold-input-flex">
                     <div>
                         <label for="dob" class="formbold-form-label">Date of Birth</label>
-                        <input type="date" name="dob" id="dob" class="formbold-form-input"/>
+                        <input type="date" name="dob" id="dob" class="formbold-form-input" />
                     </div>
                     <div>
                         <label for="email" class="formbold-form-label">Email Address</label>
-                        <input type="email" name="email" placeholder="example@mail.com" id="email" class="formbold-form-input" required />
+                        <input type="email" name="email" placeholder="example@mail.com" id="email"
+                            class="formbold-form-input" required />
                         <span id="emailError" style="color: red; display: none;">Invalid email address.</span>
-                        <span id="emailAvailabilityError" style="display: none; color: red;">This email is already registered. Please use a different email address.</span>
-                    </div>                    
+                        <span id="emailAvailabilityError" style="display: none; color: red;">This email is already
+                            registered. Please use a different email address.</span>
+                    </div>
+                </div>
+                <div class="formbold-input">
+                    <div>
+                        <label for="phone" class="formbold-form-label">Phone</label>
+                        <input type="number" name="phone" placeholder="9654354544" id="phone"
+                            class="formbold-form-input" required />
+                        <span id="phoneavailabilityerror" style="display: none; color: red;">This Phone is already
+                            registered. Please use a different Phone number.</span>
+                    </div>
                 </div>
                 <div class="formbold-input-flex">
                     <div>
@@ -61,41 +69,51 @@
                     <div>
                         <label for="register_password" class="formbold-form-label">Password</label>
                         <div class="input-with-icon">
-                            <input type="password" name="register_password" placeholder="Please enter a password" id="register_password" class="formbold-form-input" required />
-                            <div class="input-icon"><i class="fa-solid fa-eye-slash eye-change"></i></div>
+                            <input type="password" name="register_password" placeholder="Please enter a password"
+                                id="register_password" class="formbold-form-input" required />
+                            <div class="input-icon"><i class="fa-solid fa-eye-slash eye-change" id="togglePassword"></i></div>
                         </div>
-                        <span id="passwordLengthError" style="color: red; display: none;">Password must be between 8 and 30 characters.</span>
+                        <span id="passwordLengthError" style="color: red; display: none;">Password must be between 8 and
+                            30 characters.</span>
                     </div>
                     <div>
                         <label for="register_confirm_password" class="formbold-form-label">Confirm Password</label>
                         <div class="input-with-icon">
-                            <input type="password" name="register_confirm_password" placeholder="Please confirm your password" id="register_confirm_password" class="formbold-form-input" required />
-                            <div class="input-icon"><i class="fa-solid fa-eye-slash eye-change"></i></div>
+                            <input type="password" name="register_confirm_password"
+                                placeholder="Please confirm your password" id="register_confirm_password"
+                                class="formbold-form-input" required />
+                            <div class="input-icon"><i class="fa-solid fa-eye-slash eye-change" id="toggleConfirmPassword"></i></div>
                         </div>
-                        <span id="passwordMismatchError" style="color: red; display: none;">Passwords do not match.</span>
+                        <span id="passwordMismatchError" style="color: red; display: none;">Passwords do not
+                            match.</span>
                     </div>
                 </div>
-                               
+
             </div>
             <div class="formbold-form-step-2 form-step">
-                <input type="text" name="parent_id" id="parent_id" placeholder="parent company" value="0"
+                <input type="hidden" name="parent_id" id="parent_id" placeholder="parent company" value="0"
                     class="formbold-form-input" />
-                    <div>
-                        <label for="main_address_country" class="formbold-form-label">Select a Country</label>
-                        <select name="main_address_country" id="main_address_country" class="formbold-form-input" required>
-                            <option value="">Select a country</option>
-                            <% getCountriesList.forEach(country=> { %>
-                                <option value="<%= country.shortname %>">
-                                    <%= country.name %>
-                                </option>
-                                <% }); %>
-                        </select>
-                    </div>
+                <div>
+                    <label for="memberCounts" class="formbold-form-label">Add On Users</label>
+                    <input type="number" min="1" name="memberCount" id="member-count"
+                        placeholder="Enter the number of add-on users" class="formbold-form-input" required />
+                </div>
+                <div>
+                    <label for="main_address_country" class="formbold-form-label">Select a Country</label>
+                    <select name="main_address_country" id="main_address_country" class="formbold-form-input" required>
+                        <option value="">Select a country</option>
+                        <% getCountriesList.forEach(country=> { %>
+                            <option value="<%= country.shortname %>">
+                                <%= country.name %>
+                            </option>
+                            <% }); %>
+                    </select>
+                </div>
                 <div>
                     <label for="company_name" class="formbold-form-label">Company Name</label>
                     <input type="text" name="company_name" id="company_name" placeholder="Enter your company name"
                         class="formbold-form-input" required />
-                        <span id="companyCheckResult" class="result-message" style="color: red;"></span>
+                    <span id="companyCheckResult" class="result-message" style="color: red;"></span>
                 </div>
                 <div>
                     <label for="main_address" class="formbold-form-label">Company Address</label>
@@ -106,13 +124,14 @@
                     <label for="companyEmail" class="formbold-form-label">Company Email</label>
                     <input type="email" name="comp_email" id="comp_email" placeholder="Enter your company email"
                         class="formbold-form-input" required />
-                        <span id="companyemailAvailabilityError" style="color: red; display: none;"></span>
+                    <span id="companyemailAvailabilityError" style="color: red; display: none;"></span>
                 </div>
-                
+
                 <div>
                     <label for="comp_phone" class="formbold-form-label">Company Phone</label>
-                    <input type="tel" name="comp_phone" id="comp_phone" placeholder="Enter your company phone"
+                    <input type="number" name="comp_phone" id="comp_phone" placeholder="Enter your company phone"
                         class="formbold-form-input" required />
+                    <span id="companyphoneAvailabilityError" style="color: red; display: none;"></span>
                 </div>
                 <!-- <div>
                     <label for="main_address_country" class="formbold-form-label">Country</label>
@@ -121,23 +140,25 @@
                 </div> -->
                 <div>
                     <label for="main_address_pin_code" class="formbold-form-label">Pincode</label>
-                    <input type="text" name="main_address_pin_code" id="main_address_pin_code"
+                    <input type="number" name="main_address_pin_code" id="main_address_pin_code"
                         placeholder="Enter the pincode" class="formbold-form-input" required />
                 </div>
             </div>
             <div class="formbold-form-step-3 form-step">
-                <div class="formbold-form-confirm">
-                    <p>Are you sure!You want to submit the form?</p>
+                <div class="formbold-form-confirm" id="confirmed">
+                    <p>Number of added users: <span id="member-count-display">0</span></p>
+                    <p>Total Amount: <span id="amount-count-display"><%= total_price%></span></p>
+                    <p>Are you sure you want to submit the form?</p>
                     <div>
                         <button type="button" class="formbold-confirm-btn active"
-                            onclick="handleConfirmation(true)">Yes</button>
+                            onclick="handleConfirmation(true)">Proceed</button>
                         <!-- <button type="button" class="formbold-confirm-btn" onclick="handleConfirmation(false)">No</button> -->
                     </div>
                 </div>
             </div>
             <div class="formbold-form-btn-wrapper">
                 <button type="button" class="formbold-back-btn" onclick="prevStep()">Back</button>
-                <button type="button" id="nextStepBtn" class="formbold-btn" onclick="nextStep()">Next Step
+                <button type="button" id="nextStepBtn" class="formbold-btn" onclick="nextStep()">Next
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <g clip-path="url(#clip0_1675_1807)">
                             <path
@@ -158,970 +179,999 @@
 
 
     <%- include('common/footer') -%>
-    
-
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-
-    <script>
-        var razorpay_key = '<%= razorpay_key%>';
-		console.log("razorpay_key",razorpay_key);
-        var planID = '<%= planID %>';
-        var memberCount='<%= memberCount %>';
-        var subscriptionType = '<%= subscriptionType%>';
-        console.log("subscriptionType",subscriptionType);
-        let currentStep = 1;
 
 
-        function showStep(step) {
-        document.querySelectorAll('.form-step').forEach((el, index) => {
-            el.classList.toggle('active', index + 1 === step);
-        });
+        <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+        <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
-        document.querySelectorAll('.formbold-step-menu1, .formbold-step-menu2, .formbold-step-menu3').forEach((el, index) => {
-            el.classList.toggle('active', index + 1 === step);
-        });
+        <script>
+            var razorpay_key = '<%= razorpay_key%>';
+            console.log("razorpay_key", razorpay_key);
+            var planID = '<%= planID %>';
+            // var memberCount = '<%= memberCount %>';
+            var subscriptionType = '<%= subscriptionType%>';
+            console.log("subscriptionType", subscriptionType);
+            let currentStep = 1;
 
-        const backButton = document.querySelector('.formbold-back-btn');
-        backButton.style.display = step === 1 ? 'none' : 'block';
-    }
 
-    function nextStep() {
-        if (validateStep(currentStep)) {
-            currentStep++;
-            showStep(currentStep);
-        } else {
-            Swal.fire({
-                icon: 'error',
-                text: 'Please fill out all required fields correctly before proceeding.'
-            });
-        }
-    }
 
-    function prevStep() {
-        currentStep--;
-        showStep(currentStep);
-    }
 
-    function validateStep(step) {
-        if (step === 1) {
-            const email = document.getElementById('email').value.trim();
-            if (!email) return false;
+            function showStep(step) {
+                document.querySelectorAll('.form-step').forEach((el, index) => {
+                    el.classList.toggle('active', index + 1 === step);
+                });
 
-            const password = document.getElementById('register_password').value;
-            const confirmPassword = document.getElementById('register_confirm_password').value;
-            if (password.length < 8 || password.length > 30 || password !== confirmPassword) {
-                document.getElementById('passwordMismatchError').style.display = 'block';
-                return false;
-            } else {
-                document.getElementById('passwordMismatchError').style.display = 'none';
+                document.querySelectorAll('.formbold-step-menu1, .formbold-step-menu2, .formbold-step-menu3').forEach((el, index) => {
+                    el.classList.toggle('active', index + 1 === step);
+                });
+
+                const backButton = document.querySelector('.formbold-back-btn');
+                backButton.style.display = step === 1 ? 'none' : 'block';
+
+                const nextButton = document.getElementById('nextStepBtn');
+                nextButton.style.display = step === 3 ? 'none' : 'block';
             }
-            return true;
-        } else if (step === 2) {
-            return document.getElementById('company_name').value.trim() &&
-                   document.getElementById('main_address').value.trim() &&
-                   document.getElementById('comp_email').value.trim() &&
-                   document.getElementById('comp_phone').value.trim() &&
-                   document.getElementById('main_address_country').value &&
-                   document.getElementById('main_address_pin_code').value.trim();
-        }
-        return true;
-    }
 
-    // document.getElementById('email').addEventListener('blur', async function () {
-    //     const email = this.value.trim();
-    //     if (email) {
-    //         try {
-    //             const response = await axios.get(`/checkEmailAvailability?email=${email}`);
-    //             if (!response.data.available) {
-    //                 document.getElementById('emailExistsError').style.display = 'block';
-    //             } else {
-    //                 document.getElementById('emailExistsError').style.display = 'none';
-    //             }
-    //         } catch (error) {
-    //             console.error('Error checking email:', error);
-    //         }
-    //     }
-    // });
-
-        async function handleConfirmation(confirmed) {
-            if (confirmed) {
-                try {
-                    const formData = {
-                        name: document.getElementById('first_name').value + ' ' + document.getElementById('last_name').value,
-                        first_name: document.getElementById('first_name').value,
-                        last_name: document.getElementById('last_name').value,
-                        email: document.getElementById('email').value,
-                        address: document.getElementById('main_address').value,
-                        main_address_country: document.getElementById('main_address_country').value,
-                        company_name: document.getElementById('company_name').value,
-                        parent_id: document.getElementById('parent_id').value,
-                        comp_email: document.getElementById('comp_email').value,
-                        city: 'Default City',
-                        state: 'Default State',
-                        zip: document.getElementById('main_address_pin_code').value,
-                        planId: planID,
-                        //billingCycle: 'daily',
-                        billingCycle:subscriptionType,
-                        memberCount: memberCount,
-                        register_password: document.getElementById('register_password').value,
-                        register_confirm_password: document.getElementById('register_confirm_password').value,
-                        user_country: document.getElementById('user_country').value,
-                        user_state: document.getElementById('user_state').value,
-                    };
-
-                    const response = await axios.post('/auth/createexternalSubscription', formData);
-                    const { subscription, amount } = response.data;
-
-                    formData.subscriptionId = subscription.id;
-
-                    const options = {
-                        //key: 'rzp_test_ivrp5LlA1gQXAT',
-                        key: razorpay_key,
-                        subscription_id: subscription.id,
-                        name: 'Subscription Payment',
-                        description: `Subscription Payment: ₹${(amount / 100).toFixed(2)}`, // Display amount in rupees
-                        amount: amount, // Amount in paise
-                        handler: function (response) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Payment Successful!',
-                                text: 'Your payment was successful.',
-                                confirmButtonText: 'OK'
-                            }).then(() => {
-                                // Post payment success, create user and company
-                                createUserAndCompany(formData);
-                            });
-                        },
-                        prefill: {
-                            name: formData.name,
-                            email: formData.email
-                        },
-                        theme: {
-                            color: '#F37254'
-                        }
-                    };
-
-                    const rzp = new Razorpay(options);
-                    rzp.open();
-
-                    rzp.on('payment.failed', function (response) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Payment Error',
-                            text: response.error.description || 'Unknown error occurred.',
-                            confirmButtonText: 'OK'
-                        });
-                    });
-                } catch (error) {
-                    console.error('Error initiating payment:', error);
-                    let errorMessage = 'Failed to initiate payment. Please try again later.';
-
-                    if (error.response) {
-                        // If error.response exists, use its data
-                        errorMessage = error.response.data.message || errorMessage;
-                    } else if (error.message) {
-                        // If error.message exists, use it
-                        errorMessage = error.message;
-                    }
-
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Payment Initiation Failed',
-                        text: errorMessage,
-                        confirmButtonText: 'OK'
-                    });
-                }
-            }
-        }
-
-        async function createUserAndCompany(formData) {
-            try {
-                console.log("externalRegistrationformData", formData);
-                const response = await axios.post('/auth/externalRegistration', formData);
-                if (response.data.status === 'ok') {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Success',
-                        text: response.data.message || 'User and company created successfully.',
-                        confirmButtonText: 'OK'
-                    }).then(() => {
-                        window.location.href = '/business';
-                    });
+            function nextStep() {
+                if (validateStep(currentStep)) {
+                    currentStep++;
+                    showStep(currentStep);
                 } else {
                     Swal.fire({
                         icon: 'error',
-                        title: 'Error',
-                        text: response.data.message || 'Failed to create user and company. Please try again later.',
-                        confirmButtonText: 'OK'
-                    });
-                }
-            } catch (error) {
-                console.error('Error creating user and company:', error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: error.response.data.message || 'Failed to create user and company. Please try again later.',
-                    confirmButtonText: 'OK'
-                });
-            }
-        }
-
-        document.getElementById('user_country').addEventListener('change', async function () {
-            const countryCode = this.value;
-            const stateDropdown = document.getElementById('user_state');
-            stateDropdown.innerHTML = '<option value="">Select a state</option>';
-
-            if (countryCode) {
-                try {
-                    const response = await axios.get(`/getStatesbycountryid?country=${countryCode}`);
-                    const states = response.data;
-
-                    states.forEach(state => {
-                        const option = document.createElement('option');
-                        option.value = state.id;
-                        option.textContent = state.name;
-                        stateDropdown.appendChild(option);
-                    });
-                } catch (error) {
-                    console.error('Error fetching states:', error);
-                    // alert('Failed to load states. Please try again.');
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Failed to load states',
-                        text: 'Please try again.'
+                        text: 'Please fill out all required fields correctly before proceeding.'
                     });
                 }
             }
-        });
 
-        document.getElementById('main_address_pin_code').addEventListener('input', function (e) {
-            const value = e.target.value;
-            if (value.length > 6) {
-                e.target.value = value.slice(0, 6);
-            }
-        });
-
-        document.getElementById('main_address_pin_code').addEventListener('blur', function (e) {
-            const value = e.target.value;
-            if (value.length !== 6) {
-                // alert('Pincode Code must be exactly 6 digits.');
-                Swal.fire({
-                    icon: 'error',
-                    // title: 'Failed to load states',
-                    text: 'Pincode Code must be exactly 6 digits.'
-                });
-                e.target.focus();
-            }
-        });
-        
-        document.getElementById('register_password').addEventListener('input', function (e) {
-            const password = e.target.value;
-            const confirmPassword = document.getElementById('register_confirm_password').value;
-            const passwordLengthError = document.getElementById('passwordLengthError');
-            const passwordMismatchError = document.getElementById('passwordMismatchError');
-
-            if (password.length < 8 || password.length > 30) {
-                passwordLengthError.style.display = 'block';
-            } else {
-                passwordLengthError.style.display = 'none';
-            }
-
-            if (confirmPassword && password !== confirmPassword) {
-                passwordMismatchError.style.display = 'block';
-            } else {
-                passwordMismatchError.style.display = 'none';
-            }
-        });
-
-        document.getElementById('register_confirm_password').addEventListener('input', function (e) {
-            const confirmPassword = e.target.value;
-            const password = document.getElementById('register_password').value;
-            const passwordLengthError = document.getElementById('passwordLengthError');
-            const passwordMismatchError = document.getElementById('passwordMismatchError');
-
-            if (confirmPassword.length < 8 || confirmPassword.length > 30) {
-                passwordLengthError.style.display = 'none';
-            } else {
-                passwordLengthError.style.display = 'none';
-            }
-
-            if (password && password !== confirmPassword) {
-                passwordMismatchError.style.display = 'block';
-            } else {
-                passwordMismatchError.style.display = 'none';
-            }
-        });
-
-
-        document.getElementById('comp_email').addEventListener('blur', function () {
-            const email = this.value.trim();
-            if (email && !isValidEmail(email)) {
-                // Invalid email format
-                // You can handle this programmatically, for example:
-                this.setCustomValidity('Please enter a valid email address.');
-                this.reportValidity();
-                this.focus();
-            }
-        });
-        
-        
-        document.getElementById('email').addEventListener('blur', async function () {
-    const email = this.value.trim();
-    const emailError = document.getElementById('emailError');
-    const emailAvailabilityError = document.getElementById('emailAvailabilityError');
-    const nextStepBtn = document.getElementById('nextStepBtn');
-
-    // Reset error messages and validation flags
-    emailError.style.display = 'none';
-    emailAvailabilityError.style.display = 'none';
-    this.classList.remove('invalid');
-    isEmailValid = false;
-    isEmailAvailable = false;
-
-    // Disable the next button initially
-    nextStepBtn.disabled = true;
-
-    // Basic email validation
-    if (email && !isValidEmail(email)) {
-        emailError.style.display = 'block';
-        this.classList.add('invalid');
-    } else {
-        isEmailValid = true;
-        try {
-            const response = await axios.get(`/checkEmailAvailability?email=${email}`);
-            if (!response.data.available) {
-                emailAvailabilityError.style.display = 'block';
-                this.classList.add('invalid');
-            } else {
-                isEmailAvailable = true;
-            }
-        } catch (error) {
-            console.error('Error checking email availability:', error);
-        }
-    }
-
-    console.log("isEmailValid", isEmailValid);
-    console.log("isEmailAvailable", isEmailAvailable);
-
-    // Enable the Next Step button if email is valid and available
-    if (isEmailValid && isEmailAvailable) {
-        nextStepBtn.disabled = false;
-    }
-});
-
-function isValidEmail($email) {
-      var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
-      return emailReg.test($email);
-    }
-
-        
-        document.getElementById('comp_phone').addEventListener('input', function (e) {
-            const value = e.target.value;
-            if (value.length > 6) {
-                e.target.value = value.slice(0, 10);
-            }
-        });
-        const userCountrySelect = document.getElementById('user_country');
-const userStateSelect = document.getElementById('user_state');
-const nextStepBtn = document.getElementById('nextStepBtn');
-
-function validateAndNext() {
-    const isCountryValid = userCountrySelect.checkValidity();
-    const isStateValid = userStateSelect.checkValidity();
-    
-    if (isCountryValid && isStateValid) {
-        nextStep();
-    } else {
-        alert('Please select both a country and a state.');
-    }
-}
-        
-    </script>
-
-
-<script>
-    $(document).ready(function() {
-        // Function to enable/disable Next button based on form validity
-        function validateForm() {
-            const firstName = $('#first_name').val().trim();
-            const lastName = $('#last_name').val().trim();
-            const dob = $('#dob').val().trim();
-            const email = $('#email').val().trim();
-            const country = $('#user_country').val();
-            const state = $('#user_state').val();
-            const password = $('#register_password').val().trim();
-            const confirmPassword = $('#register_confirm_password').val().trim();
-    
-            // Validate individual fields if required
-            const isFirstNameValid = firstName.length > 0;
-            const isLastNameValid = lastName.length > 0;
-            const isEmailValid = isValidEmail(email); // You can implement isValidEmail function
-            const isCountryValid = country.length > 0;
-            const isStateValid = state.length > 0;
-            const isPasswordValid = password.length >= 8 && password.length <= 30;
-            const doPasswordsMatch = password === confirmPassword;
-    
-            // Display errors if any field is invalid
-            $('#first_name').toggleClass('invalid', !isFirstNameValid);
-            $('#last_name').toggleClass('invalid', !isLastNameValid);
-            $('#email').toggleClass('invalid', !isEmailValid);
-            $('#user_country').toggleClass('invalid', !isCountryValid);
-            $('#user_state').toggleClass('invalid', !isStateValid);
-            $('#register_password').toggleClass('invalid', !isPasswordValid);
-            $('#register_confirm_password').toggleClass('invalid', !doPasswordsMatch);
-    
-            // Enable Next button if all fields are valid
-            const isFormValid = isFirstNameValid && isLastNameValid && isEmailValid &&
-                                isCountryValid && isStateValid && isPasswordValid && doPasswordsMatch;
-            $('#nextStepBtn').prop('disabled', !isFormValid);
-        }
-    
-        // Event listeners for input change in form fields
-        $('#first_name, #last_name, #dob, #email, #user_country, #user_state, #register_password, #register_confirm_password').on('input change', function() {
-            validateForm(); // Check form validity after input changes
-        });
-    
-        // Basic email validation function
-        function isValidEmail(email) {
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return emailRegex.test(email);
-        }
-    });
-
-    $(document).ready(function() {
-    // Function to enable/disable Next button based on form validity
-    function validateForm1() {
-        const parentId = $('#parent_id').val().trim();
-        const companyName = $('#company_name').val().trim();
-        const mainAddress = $('#main_address').val().trim();
-        const companyEmail = $('#comp_email').val().trim();
-        const companyPhone = $('#comp_phone').val().trim();
-        const mainAddressCountry = $('#main_address_country').val().trim();
-        const mainAddressPinCode = $('#main_address_pin_code').val().trim();
-
-        // Validate individual fields if required
-        const isParentIdValid = parentId.length > 0;
-        const isCompanyNameValid = companyName.length > 0;
-        const isMainAddressValid = mainAddress.length > 0;
-        const isCompanyEmailValid = isValidEmail(companyEmail); // Implement isValidEmail function
-        const isCompanyPhoneValid = companyPhone.length > 0;
-        const isMainAddressCountryValid = mainAddressCountry.length > 0;
-        const isMainAddressPinCodeValid = mainAddressPinCode.length > 0;
-
-        // Display errors if any field is invalid
-        $('#parent_id').toggleClass('invalid', !isParentIdValid);
-        $('#company_name').toggleClass('invalid', !isCompanyNameValid);
-        $('#main_address').toggleClass('invalid', !isMainAddressValid);
-        $('#comp_email').toggleClass('invalid', !isCompanyEmailValid);
-        $('#comp_phone').toggleClass('invalid', !isCompanyPhoneValid);
-        $('#main_address_country').toggleClass('invalid', !isMainAddressCountryValid);
-        $('#main_address_pin_code').toggleClass('invalid', !isMainAddressPinCodeValid);
-
-        // Enable Next button if all fields are valid
-        const isFormValid = isParentIdValid && isCompanyNameValid && isMainAddressValid &&
-                            isCompanyEmailValid && isCompanyPhoneValid && isMainAddressCountryValid && isMainAddressPinCodeValid;
-        $('#nextStepBtn').prop('disabled', !isFormValid);
-    }
-
-    $('#parent_id, #company_name, #main_address, #comp_email, #comp_phone, #main_address_country, #main_address_pin_code').on('input change', function() {
-        validateForm1(); 
-    });
-
-    $('#company_name').on('input', function() {
-        const companyName = $(this).val().trim();
-        const mainAddressCountry = $('#main_address_country').val().trim();
-
-        // Call backend to check if company name exists for selected country
-        if (companyName.length > 0 && mainAddressCountry.length > 0) {
-            const parentId = $('#parent_id').val().trim(); // Define parentId here
-            checkCompanyExistence(parentId, companyName, mainAddressCountry);
-        }
-    });
-
-    // Function to check if company exists asynchronously
-    async function checkCompanyExistence(parentId, companyName, mainAddressCountry) {
-        try {
-            const response = await $.ajax({
-                url: '/get-exist-company',
-                method: 'GET',
-                data: {
-                    parent_id: parentId,
-                    company_name: companyName,
-                    main_address_country: mainAddressCountry
-                }
-            });
-            console.log("responsesss", response);
-            console.log("responsesssstatus", response.status);
-
-            if (response.status == 'err') {
-                console.log("errr");
-                $('#companyCheckResult').text(response.message).show();
-                $('#nextStepBtn').prop('disabled', true); // Disable next button if company exists
-            } else {
-                console.log("rightttt");
-                $('#companyCheckResult').hide();
-                validateForm1(); // Re-validate form after company check
-            }
-        } catch (error) {
-            console.error('Error checking company existence:', error);
-            // Handle error scenario if needed
-        }
-    }
-
-    // Basic email validation function
-    function isValidEmail(email) {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
-    }
-    $('#comp_email').on('input', function() {
-        const email = $(this).val().trim();
-
-        if (email.length > 0) {
-            if (!isValidEmail(email)) {
-                $('#companyemailAvailabilityError').text('Invalid email format').show();
-                $('#nextStepBtn').prop('disabled', true); // Disable next button if email is invalid
-            } else {
-                $.ajax({
-                    url: '/checkcompanyEmailAvailability',
-                    method: 'GET',
-                    data: { email: email },
-                    success: function(response) {
-                        console.log('Response from server:', response);
-                        if (!response.available) {
-                            $('#companyemailAvailabilityError').text(response.message).show();
-                            $('#nextStepBtn').prop('disabled', true); // Disable next button if email exists
-                        } else {
-                            $('#companyemailAvailabilityError').hide();
-                            validateForm1(); // Re-validate form after email check
-                        }
-                    },
-                    error: function(error) {
-                        console.error('Error checking email availability:', error);
-                    }
-                });
-            }
-        } else {
-            $('#companyemailAvailabilityError').hide();
-        }
-    });
-});
-
-
-</script>
-
-
-
-    <!-- <script>
-        let currentStep = 1;
-
-        function showStep(step) {
-            document.querySelectorAll('.form-step').forEach((el, index) => {
-                el.classList.remove('active');
-                if (index + 1 === step) {
-                    el.classList.add('active');
-                }
-            });
-
-            document.querySelectorAll('.formbold-step-menu1, .formbold-step-menu2, .formbold-step-menu3').forEach((el, index) => {
-                el.classList.remove('active');
-                if (index + 1 === step) {
-                    el.classList.add('active');
-                }
-            });
-        }
-
-        function nextStep() {
-            if (validateStep(currentStep)) {
-                currentStep++;
+            function prevStep() {
+                currentStep--;
                 showStep(currentStep);
             }
-        }
 
-        function prevStep() {
-            currentStep--;
-            showStep(currentStep);
-        }
-        async function handleConfirmation(confirmed) {
-            if (confirmed) {
-                try {
-                    const formData = {
-                        name: document.getElementById('first_name').value + ' ' + document.getElementById('last_name').value,
-                        first_name: document.getElementById('first_name').value,
-                        last_name: document.getElementById('last_name').value,
-                        email: document.getElementById('email').value,
-                        address: document.getElementById('main_address').value,
-                        main_address_country: document.getElementById('main_address_country').value,
-                        company_name: document.getElementById('company_name').value,
-                        parent_id: document.getElementById('parent_id').value,
-                        comp_email: document.getElementById('comp_email').value,
-                        city: 'Default City',
-                        state: 'Default State',
-                        zip: document.getElementById('main_address_pin_code').value,
-                        planId: '<%= planID %>',
-                        billingCycle: 'daily',
-                        memberCount: '<%= memberCount %>',
-                        register_password: document.getElementById('register_password').value,
-                        register_confirm_password: document.getElementById('register_confirm_password').value,
-                        user_country:  document.getElementById('user_country').value,
-                        user_state:  document.getElementById('user_state').value,
-                    };
+            function validateStep(step) {
+                if (step === 1) {
+                    const email = document.getElementById('email').value.trim();
+                    if (!email) return false;
 
-                    const response = await axios.post('/auth/createexternalSubscription', formData);
-                    const { subscription, amount } = response.data;
+                    const password = document.getElementById('register_password').value;
+                    const confirmPassword = document.getElementById('register_confirm_password').value;
+                    if (password.length < 8 || password.length > 30 || password !== confirmPassword) {
+                        document.getElementById('passwordMismatchError').style.display = 'block';
+                        return false;
+                    } else {
+                        document.getElementById('passwordMismatchError').style.display = 'none';
+                    }
+                    return true;
+                } else if (step === 2) {
+                    return document.getElementById('company_name').value.trim() &&
+                        document.getElementById('main_address').value.trim() &&
+                        document.getElementById('comp_email').value.trim() &&
+                        document.getElementById('comp_phone').value.trim() &&
+                        document.getElementById('main_address_country').value &&
+                        document.getElementById('main_address_pin_code').value.trim();
+                }
+                return true;
+            }
 
-                    formData.subscriptionId = subscription.id;
 
-                    const options = {
-                        key: 'rzp_test_FUBQq7lujicpGo',
-                        subscription_id: subscription.id,
-                        name: 'Subscription Payment',
-                        description: `Subscription Payment: ₹${(amount / 100).toFixed(2)}`, // Display amount in rupees
-                        amount: amount, // Amount in paise
-                        handler: function (response) {
+
+
+
+            
+            // document.getElementById('email').addEventListener('blur', async function () {
+            //     const email = this.value.trim();
+            //     if (email) {
+            //         try {
+            //             const response = await axios.get(`/checkEmailAvailability?email=${email}`);
+            //             if (!response.data.available) {
+            //                 document.getElementById('emailExistsError').style.display = 'block';
+            //             } else {
+            //                 document.getElementById('emailExistsError').style.display = 'none';
+            //             }
+            //         } catch (error) {
+            //             console.error('Error checking email:', error);
+            //         }
+            //     }
+            // });
+
+            async function handleConfirmation(confirmed) {
+                if (confirmed) {
+                    try {
+                        const memberCountt = document.getElementById('member-count').value;
+                        console.log('Member Count:', memberCountt);
+                        const formData = {
+                            name: document.getElementById('first_name').value + ' ' + document.getElementById('last_name').value,
+                            first_name: document.getElementById('first_name').value,
+                            last_name: document.getElementById('last_name').value,
+                            email: document.getElementById('email').value,
+                            phone: document.getElementById('phone').value,
+                            address: document.getElementById('main_address').value,
+                            main_address_country: document.getElementById('main_address_country').value,
+                            company_name: document.getElementById('company_name').value,
+                            parent_id: document.getElementById('parent_id').value,
+                            comp_email: document.getElementById('comp_email').value,
+                            city: 'Default City',
+                            state: 'Default State',
+                            zip: document.getElementById('main_address_pin_code').value,
+                            planId: planID,
+                            //billingCycle: 'daily',
+                            billingCycle: subscriptionType,
+                            memberCount: memberCountt,
+                            register_password: document.getElementById('register_password').value,
+                            register_confirm_password: document.getElementById('register_confirm_password').value,
+                            user_country: document.getElementById('user_country').value,
+                            user_state: document.getElementById('user_state').value,
+                        };
+
+                        const response = await axios.post('/auth/createexternalSubscription', formData);
+                        const { subscription, amount } = response.data;
+
+                        formData.subscriptionId = subscription.id;
+
+                        const options = {
+                            //key: 'rzp_test_ivrp5LlA1gQXAT',
+                            key: razorpay_key,
+                            subscription_id: subscription.id,
+                            name: 'Subscription Payment',
+                            description: `Subscription Payment: ₹${(amount / 100).toFixed(2)}`, // Display amount in rupees
+                            amount: amount, // Amount in paise
+                            handler: function (response) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Payment Successful!',
+                                    text: 'Your payment was successful.',
+                                    confirmButtonText: 'OK'
+                                }).then(() => {
+                                    // Post payment success, create user and company
+                                    createUserAndCompany(formData);
+                                });
+                            },
+                            prefill: {
+                                name: formData.name,
+                                email: formData.email
+                            },
+                            theme: {
+                                color: '#F37254'
+                            }
+                        };
+
+                        const rzp = new Razorpay(options);
+                        rzp.open();
+
+                        rzp.on('payment.failed', function (response) {
                             Swal.fire({
-                                icon: 'success',
-                                title: 'Payment Successful!',
-                                text: 'Your payment was successful.',
+                                icon: 'error',
+                                title: 'Payment Error',
+                                text: response.error.description || 'Unknown error occurred.',
                                 confirmButtonText: 'OK'
-                            }).then(() => {
-                                // Post payment success, create user and company
-                                createUserAndCompany(formData);
                             });
-                        },
-                        prefill: {
-                            name: formData.name,
-                            email: formData.email
-                        },
-                        theme: {
-                            color: '#F37254'
+                        });
+                    } catch (error) {
+                        console.error('Error initiating payment:', error);
+                        let errorMessage = 'Failed to initiate payment. Please try again later.';
+
+                        if (error.response) {
+                            // If error.response exists, use its data
+                            errorMessage = error.response.data.message || errorMessage;
+                        } else if (error.message) {
+                            // If error.message exists, use it
+                            errorMessage = error.message;
                         }
-                    };
 
-                    const rzp = new Razorpay(options);
-                    rzp.open();
-
-                    rzp.on('payment.failed', function (response) {
                         Swal.fire({
                             icon: 'error',
-                            title: 'Payment Error',
-                            text: response.error.description || 'Unknown error occurred.',
+                            title: 'Payment Initiation Failed',
+                            text: errorMessage,
                             confirmButtonText: 'OK'
                         });
-                    });
-                } catch (error) {
-                    console.error('Error initiating payment:', error);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Payment Initiation Failed',
-                        text: 'Failed to initiate payment. Please try again later.',
-                        confirmButtonText: 'OK'
-                    });
+                    }
                 }
             }
-        }
 
-        function validateStep(step) {
-            // Implement validation for each step here
-            return true;
-        }
-
-
-        async function createUserAndCompany(formData) {
-            try {
-                console.log("externalRegistrationformData", formData);
-                const response = await axios.post('/auth/externalRegistration', formData);
-                if (response.data.status === 'ok') {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Success',
-                        text: response.data.message || 'User and company created successfully.',
-                        confirmButtonText: 'OK'
-                    }).then(() => {
-                        window.location.href = '/business';
-                    });
-                } else {
+            async function createUserAndCompany(formData) {
+                try {
+                    console.log("externalRegistrationformData", formData);
+                    const response = await axios.post('/auth/externalRegistration', formData);
+                    if (response.data.status === 'ok') {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: response.data.message || 'User and company created successfully.',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            //window.location.href = '/business';
+                            window.location.href = '/staging-business';
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: response.data.message || 'Failed to create user and company. Please try again later.',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                } catch (error) {
+                    console.error('Error creating user and company:', error);
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
-                        text: response.data.message || 'Failed to create user and company. Please try again later.',
+                        text: error.response.data.message || 'Failed to create user and company. Please try again later.',
                         confirmButtonText: 'OK'
                     });
                 }
-            } catch (error) {
-                console.error('Error creating user and company:', error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: error.response.data.message || 'Failed to create user and company. Please try again later.',
-                    confirmButtonText: 'OK'
-                });
             }
+
+
+            document.getElementById('user_country').addEventListener('change', async function () {
+                const countryCode = this.value;
+                const stateDropdown = document.getElementById('user_state');
+                stateDropdown.innerHTML = '<option value="">Select a state</option>';
+
+                if (countryCode) {
+                    try {
+                        const response = await axios.get(`/getStatesbycountryid?country=${countryCode}`);
+                        const states = response.data;
+
+                        states.forEach(state => {
+                            const option = document.createElement('option');
+                            option.value = state.id;
+                            option.textContent = state.name;
+                            stateDropdown.appendChild(option);
+                        });
+                    } catch (error) {
+                        console.error('Error fetching states:', error);
+                        // alert('Failed to load states. Please try again.');
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Failed to load states',
+                            text: 'Please try again.'
+                        });
+                    }
+                }
+            });
+
+            document.getElementById('main_address_pin_code').addEventListener('input', function (e) {
+                const value = e.target.value;
+                if (value.length > 6) {
+                    e.target.value = value.slice(0, 6);
+                }
+            });
+
+            document.getElementById('main_address_pin_code').addEventListener('blur', function (e) {
+                const value = e.target.value;
+                if (value.length !== 6) {
+                    // alert('Pincode Code must be exactly 6 digits.');
+                    Swal.fire({
+                        icon: 'error',
+                        // title: 'Failed to load states',
+                        text: 'Pincode Code must be exactly 6 digits.'
+                    });
+                    e.target.focus();
+                }
+            });
+
+            document.getElementById('register_password').addEventListener('input', function (e) {
+                const password = e.target.value;
+                const confirmPassword = document.getElementById('register_confirm_password').value;
+                const passwordLengthError = document.getElementById('passwordLengthError');
+                const passwordMismatchError = document.getElementById('passwordMismatchError');
+
+                if (password.length < 8 || password.length > 30) {
+                    passwordLengthError.style.display = 'block';
+                } else {
+                    passwordLengthError.style.display = 'none';
+                }
+
+                if (confirmPassword && password !== confirmPassword) {
+                    passwordMismatchError.style.display = 'block';
+                } else {
+                    passwordMismatchError.style.display = 'none';
+                }
+            });
+
+            document.getElementById('register_confirm_password').addEventListener('input', function (e) {
+                const confirmPassword = e.target.value;
+                const password = document.getElementById('register_password').value;
+                const passwordLengthError = document.getElementById('passwordLengthError');
+                const passwordMismatchError = document.getElementById('passwordMismatchError');
+
+                if (confirmPassword.length < 8 || confirmPassword.length > 30) {
+                    passwordLengthError.style.display = 'none';
+                } else {
+                    passwordLengthError.style.display = 'none';
+                }
+
+                if (password && password !== confirmPassword) {
+                    passwordMismatchError.style.display = 'block';
+                } else {
+                    passwordMismatchError.style.display = 'none';
+                }
+            });
+
+
+            document.getElementById('comp_email').addEventListener('blur', function () {
+                const email = this.value.trim();
+                if (email && !isValidEmail(email)) {
+                    // Invalid email format
+                    // You can handle this programmatically, for example:
+                    this.setCustomValidity('Please enter a valid email address.');
+                    this.reportValidity();
+                    this.focus();
+                }
+            });
+
+
+            document.getElementById('email').addEventListener('blur', async function () {
+                const email = this.value.trim();
+                const emailError = document.getElementById('emailError');
+                const emailAvailabilityError = document.getElementById('emailAvailabilityError');
+                const nextStepBtn = document.getElementById('nextStepBtn');
+
+                // Reset error messages and validation flags
+                emailError.style.display = 'none';
+                emailAvailabilityError.style.display = 'none';
+                this.classList.remove('invalid');
+                isEmailValid = false;
+                isEmailAvailable = false;
+
+                // Disable the next button initially
+                nextStepBtn.disabled = true;
+
+                // Basic email validation
+                if (email && !isValidEmail(email)) {
+                    emailError.style.display = 'block';
+                    this.classList.add('invalid');
+                } else {
+                    isEmailValid = true;
+                    try {
+                        const response = await axios.get(`/checkEmailAvailability?email=${email}`);
+                        if (!response.data.available) {
+                            emailAvailabilityError.style.display = 'block';
+                            this.classList.add('invalid');
+                        } else {
+                            isEmailAvailable = true;
+                        }
+                    } catch (error) {
+                        console.error('Error checking email availability:', error);
+                    }
+                }
+
+                console.log("isEmailValid", isEmailValid);
+                console.log("isEmailAvailable", isEmailAvailable);
+
+                // Enable the Next Step button if email is valid and available
+                if (isEmailValid && isEmailAvailable) {
+                    nextStepBtn.disabled = false;
+                }
+            });
+
+            function isValidEmail($email) {
+                var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+                return emailReg.test($email);
+            }
+
+
+            document.getElementById('comp_phone').addEventListener('input', function (e) {
+                const value = e.target.value;
+                if (value.length > 6) {
+                    e.target.value = value.slice(0, 10);
+                }
+            });
+            const userCountrySelect = document.getElementById('user_country');
+            const userStateSelect = document.getElementById('user_state');
+            const nextStepBtn = document.getElementById('nextStepBtn');
+
+            function validateAndNext() {
+                const isCountryValid = userCountrySelect.checkValidity();
+                const isStateValid = userStateSelect.checkValidity();
+
+                if (isCountryValid && isStateValid) {
+                    nextStep();
+                } else {
+                    alert('Please select both a country and a state.');
+                }
+            }
+
+        </script>
+
+
+        <script>
+            $(document).ready(function () {
+                var memberCount = document.getElementById('member-count').value;
+                console.log('Member Countsd:', memberCount);
+
+                function validateForm() {
+                    const firstName = $('#first_name').val().trim();
+                    const lastName = $('#last_name').val().trim();
+                    const dob = $('#dob').val().trim();
+                    const phone = $('#phone').val().trim();
+                    const email = $('#email').val().trim();
+                    const country = $('#user_country').val();
+                    const state = $('#user_state').val();
+                    const password = $('#register_password').val().trim();
+                    const confirmPassword = $('#register_confirm_password').val().trim();
+
+                    // Validate individual fields if required
+                    const isFirstNameValid = firstName.length > 0;
+                    const isLastNameValid = lastName.length > 0;
+                    const isEmailValid = isValidEmail(email); // You can implement isValidEmail function
+                    const isCountryValid = country.length > 0;
+                    const isStateValid = state.length > 0;
+                    const isPasswordValid = password.length >= 8 && password.length <= 30;
+                    const doPasswordsMatch = password === confirmPassword;
+
+                    // Display errors if any field is invalid
+                    $('#first_name').toggleClass('invalid', !isFirstNameValid);
+                    $('#last_name').toggleClass('invalid', !isLastNameValid);
+                    $('#email').toggleClass('invalid', !isEmailValid);
+                    $('#user_country').toggleClass('invalid', !isCountryValid);
+                    $('#user_state').toggleClass('invalid', !isStateValid);
+                    $('#register_password').toggleClass('invalid', !isPasswordValid);
+                    $('#register_confirm_password').toggleClass('invalid', !doPasswordsMatch);
+
+                    const isFormValid = isFirstNameValid && isLastNameValid && isEmailValid &&
+                        isCountryValid && isStateValid && isPasswordValid && doPasswordsMatch;
+                    $('#nextStepBtn').prop('disabled', !isFormValid);
+                }
+
+                $('#first_name, #last_name, #dob,#phone, #email, #user_country, #user_state, #register_password, #register_confirm_password').on('input change', function () {
+                    validateForm();
+                });
+
+                // Basic email validation function
+                function isValidEmail(email) {
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    return emailRegex.test(email);
+                }
+            });
+
+            $(document).ready(function () {
+
+                const urlParams = new URLSearchParams(window.location.search);
+                const subscriptionTypeparams = urlParams.get('subscriptionType');
+                console.log("subscriptionTypeparams", subscriptionTypeparams);
+
+                const total_prices = urlParams.get('total_price');
+                console.log("total_prices", total_prices);
+
+                const monthly_price = '<%= monthly_plan_price%>'; 
+                const yearly_price = '<%= yearly_price%>'; 
+                const per_user_price = '<%= per_user_price%>'
+
+
+                console.log("Subscription Type:", subscriptionType);
+                console.log("Monthly Price:", monthly_price);
+                console.log("Yearly Price:", yearly_price);
+                console.log("per_user_price:", per_user_price);
+
+                let pricePerUser;
+
+                if (subscriptionType === 'monthly') {
+                    pricePerUser = parseFloat(per_user_price);
+                } else if (subscriptionType === 'yearly') {
+                    pricePerUser = parseFloat(per_user_price); 
+                } else {
+                    console.error('Invalid subscription type');
+                    return;
+                }
+
+                console.log("Price per User:", pricePerUser);
+
+                function validateForm1() {
+                    const parentId = $('#parent_id').val().trim();
+                    const companyName = $('#company_name').val().trim();
+                    const mainAddress = $('#main_address').val().trim();
+                    const companyEmail = $('#comp_email').val().trim();
+                    const companyPhone = $('#comp_phone').val().trim();
+                    const mainAddressCountry = $('#main_address_country').val().trim();
+                    const mainAddressPinCode = $('#main_address_pin_code').val().trim();
+
+                    // Validate individual fields if required
+                    const isParentIdValid = parentId.length > 0;
+                    const isCompanyNameValid = companyName.length > 0;
+                    const isMainAddressValid = mainAddress.length > 0;
+                    const isCompanyEmailValid = isValidEmail(companyEmail); // Implement isValidEmail function
+                    const isCompanyPhoneValid = companyPhone.length > 0;
+                    const isMainAddressCountryValid = mainAddressCountry.length > 0;
+                    const isMainAddressPinCodeValid = mainAddressPinCode.length > 0;
+
+                    // Display errors if any field is invalid
+                    $('#parent_id').toggleClass('invalid', !isParentIdValid);
+                    $('#company_name').toggleClass('invalid', !isCompanyNameValid);
+                    $('#main_address').toggleClass('invalid', !isMainAddressValid);
+                    $('#comp_email').toggleClass('invalid', !isCompanyEmailValid);
+                    $('#comp_phone').toggleClass('invalid', !isCompanyPhoneValid);
+                    $('#main_address_country').toggleClass('invalid', !isMainAddressCountryValid);
+                    $('#main_address_pin_code').toggleClass('invalid', !isMainAddressPinCodeValid);
+
+                    // Enable Next button if all fields are valid
+                    const isFormValid = isParentIdValid && isCompanyNameValid && isMainAddressValid &&
+                        isCompanyEmailValid && isCompanyPhoneValid && isMainAddressCountryValid && isMainAddressPinCodeValid;
+                    $('#nextStepBtn').prop('disabled', !isFormValid);
+                }
+
+                $('#parent_id, #company_name, #main_address, #comp_email, #comp_phone, #main_address_country, #main_address_pin_code').on('input change', function () {
+                    validateForm1();
+                });
+
+                $('#company_name').on('input', function () {
+                    const companyName = $(this).val().trim();
+                    const mainAddressCountry = $('#main_address_country').val().trim();
+
+                    // Call backend to check if company name exists for selected country
+                    if (companyName.length > 0 && mainAddressCountry.length > 0) {
+                        const parentId = $('#parent_id').val().trim(); // Define parentId here
+                        checkCompanyExistence(parentId, companyName, mainAddressCountry);
+                    }
+                });
+
+                // Function to check if company exists asynchronously
+                async function checkCompanyExistence(parentId, companyName, mainAddressCountry) {
+                    try {
+                        const response = await $.ajax({
+                            url: '/get-exist-company',
+                            method: 'GET',
+                            data: {
+                                parent_id: parentId,
+                                company_name: companyName,
+                                main_address_country: mainAddressCountry
+                            }
+                        });
+                        console.log("responsesss", response);
+                        console.log("responsesssstatus", response.status);
+
+                        if (response.status == 'err') {
+                            console.log("errr");
+                            $('#companyCheckResult').text(response.message).show();
+                            $('#nextStepBtn').prop('disabled', true); // Disable next button if company exists
+                        } else {
+                            console.log("rightttt");
+                            $('#companyCheckResult').hide();
+                            validateForm1(); // Re-validate form after company check
+                        }
+                    } catch (error) {
+                        console.error('Error checking company existence:', error);
+                        // Handle error scenario if needed
+                    }
+                }
+
+                // Basic email validation function
+                function isValidEmail(email) {
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    return emailRegex.test(email);
+                }
+                $('#comp_email').on('input', function () {
+                    const email = $(this).val().trim();
+
+                    if (email.length > 0) {
+                        if (!isValidEmail(email)) {
+                            $('#companyemailAvailabilityError').text('Invalid email format').show();
+                            $('#nextStepBtn').prop('disabled', true); 
+                        } else {
+                            $.ajax({
+                                url: '/checkcompanyEmailAvailability',
+                                method: 'GET',
+                                data: { email: email },
+                                success: function (response) {
+                                    console.log('Response from server:', response);
+                                    if (!response.available) {
+                                        $('#companyemailAvailabilityError').text(response.message).show();
+                                        $('#nextStepBtn').prop('disabled', true);
+                                    } else {
+                                        $('#companyemailAvailabilityError').hide();
+                                        validateForm1(); // Re-validate form after email check
+                                    }
+                                },
+                                error: function (error) {
+                                    console.error('Error checking email availability:', error);
+                                }
+                            });
+                        }
+                    } else {
+                        $('#companyemailAvailabilityError').hide();
+                    }
+                });
+
+                $('#comp_phone').on('input', function () {
+                    const comp_phone = $(this).val().trim();
+
+                    if (comp_phone.length > 0) {
+                            $.ajax({
+                                url: '/checkcompanyPhoneAvailability',
+                                method: 'GET',
+                                data: { comp_phone: comp_phone },
+                                success: function (response) {
+                                    console.log('Response from server:', response);
+                                    if (!response.available) {
+                                        $('#companyphoneAvailabilityError').text(response.message).show();
+                                        $('#nextStepBtn').prop('disabled', true);
+                                    } else {
+                                        $('#companyphoneAvailabilityError').hide();
+                                        validateForm1(); // Re-validate form after email check
+                                    }
+                                },
+                                error: function (error) {
+                                    console.error('Error checking email availability:', error);
+                                }
+                            });
+                        
+                    } else {
+                        $('#companyphoneAvailabilityError').hide();
+                    }
+                });
+
+                $('#phone').on('input', function () {
+                    let phone = $(this).val().trim();
+                    if (phone.length > 10) {
+                        phone = phone.slice(0, 10); 
+                        $(this).val(phone); 
+                    }
+
+                    if (phone.length === 10 && /^\d+$/.test(phone)) {
+                            $.ajax({
+                                url: '/checkuserPhoneAvailability',
+                                method: 'GET',
+                                data: { phone: phone },
+                                success: function (response) {
+                                    console.log('Response from server:', response);
+                                    if (!response.available) {
+                                        $('#phoneavailabilityerror').text(response.message).show();
+                                        $('#nextStepBtn').prop('disabled', true);
+                                    } else {
+                                        $('#phoneavailabilityerror').hide();
+                                        validateForm1(); // Re-validate form after email check
+                                    }
+                                },
+                                error: function (error) {
+                                    console.error('Error checking email availability:', error);
+                                }
+                            });
+                        
+                    } else {
+                        $('#phoneavailabilityerror').hide();
+                    }
+                });
+
+
+
+                
+
+                function updateMemberCountDisplay() {
+                    var memberCount_val = $('#member-count').val();
+                    if (memberCount_val === "") {
+                        memberCount_val = 0;
+                    }
+                    $('#member-count-display').text(memberCount_val);
+
+                    const totalAmount = memberCount_val * pricePerUser;
+                    console.log("Total Amount Calculated:", totalAmount.toFixed(2));
+                    const total_prices = parseFloat(urlParams.get('total_price'));
+                    console.log("total_prices", total_prices);
+
+                    const alltotal_amount = totalAmount + total_prices;
+                    console.log("alltotal_amount", alltotal_amount.toFixed(2));
+
+                    if (memberCount_val > 0) {
+                        $('#amount-count-display').text(alltotal_amount.toFixed(2));
+                    } else {
+                        $('#amount-count-display').text('<%= total_price%>');
+                    }
+                 }
+
+                $('#member-count').on('input', function() {
+                    updateMemberCountDisplay();
+                });
+                $('.formbold-form-step-1').each(function() {
+                    $('.formbold-back-btn').css('display', 'none');
+                });
+
+    $('#togglePassword').click(function() {
+        var passwordField = $('#register_password');
+        var type = passwordField.attr('type');
+        
+        if (type === 'password') {
+            passwordField.attr('type', 'text');
+            $(this).removeClass('fa-eye-slash').addClass('fa-eye');
+        } else {
+            passwordField.attr('type', 'password');
+            $(this).removeClass('fa-eye').addClass('fa-eye-slash');
         }
+    });
 
-        // document.getElementById('user_country').addEventListener('change', async function() {
-		// 		const countryCode = this.value;
-		// 		const stateDropdown = document.getElementById('user_state');
-		// 		stateDropdown.innerHTML = '<option value="">Select a state</option>';
-	
-		// 		if (countryCode) {
-		// 			try {
-		// 				const response = await axios.get(`/getStates?country=${countryCode}`);
-		// 				const states = response.data;
-	
-		// 				states.forEach(state => {
-		// 					const option = document.createElement('option');
-		// 					option.value = state.name;
-		// 					option.textContent = state.name;
-		// 					stateDropdown.appendChild(option);
-		// 				});
-		// 			} catch (error) {
-		// 				console.error('Error fetching states:', error);
-		// 				alert('Failed to load states. Please try again.');
-		// 			}
-		// 		}
-		// 	});
-	
-
-            document.getElementById('user_country').addEventListener('change', async function() {
-				const countryCode = this.value;
-				const stateDropdown = document.getElementById('user_state');
-				stateDropdown.innerHTML = '<option value="">Select a state</option>';
-	
-				if (countryCode) {
-					try {
-						const response = await axios.get(`/getStatesbycountryid?country=${countryCode}`);
-						const states = response.data;
-	
-						states.forEach(state => {
-							const option = document.createElement('option');
-							option.value = state.id;
-							option.textContent = state.name;
-							stateDropdown.appendChild(option);
-						});
-					} catch (error) {
-						console.error('Error fetching states:', error);
-						alert('Failed to load states. Please try again.');
-					}
-				}
-			});
-	
-            
-            
-
-            
-    </script> -->
-
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600&display=swap');
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+    $('#toggleConfirmPassword').click(function() {
+        var confirmPasswordField = $('#register_confirm_password');
+        var type = confirmPasswordField.attr('type');
+        
+        if (type === 'password') {
+            confirmPasswordField.attr('type', 'text');
+            $(this).removeClass('fa-eye-slash').addClass('fa-eye');
+        } else {
+            confirmPasswordField.attr('type', 'password');
+            $(this).removeClass('fa-eye').addClass('fa-eye-slash');
         }
+    });
 
-        body {
-            font-family: "Inter", sans-serif;
-        }
 
-        .formbold-main-wrapper {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 48px;
-        }
 
-        .formbold-form-wrapper {
-            margin: 0 auto;
-            max-width: 550px;
-            width: 100%;
-            background: white;
-        }
 
-        .formbold-steps {
-            padding-bottom: 18px;
-            margin-bottom: 35px;
-            border-bottom: 1px solid #DDE3EC;
-        }
+            });
 
-        .formbold-steps ul {
-            padding: 0;
-            margin: 0;
-            list-style: none;
-            display: flex;
-            gap: 40px;
-        }
 
-        .formbold-steps li {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            font-weight: 500;
-            font-size: 16px;
-            line-height: 24px;
-            color: #536387;
-        }
+        </script>
 
-        .formbold-steps li span {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #DDE3EC;
-            border-radius: 50%;
-            width: 36px;
-            height: 36px;
-            font-weight: 500;
-            font-size: 16px;
-            line-height: 24px;
-            color: #536387;
-        }
 
-        .formbold-steps li.active {
-            color: #07074D;
-            ;
-        }
 
-        .formbold-steps li.active span {
-            background: #6A64F1;
-            color: #FFFFFF;
-        }
 
-        .formbold-input-flex {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 22px;
-        }
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600&display=swap');
 
-        .formbold-input-flex>div {
-            width: 50%;
-        }
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
 
-        .formbold-form-input {
-            width: 100%;
-            padding: 13px 22px;
-            border-radius: 5px;
-            border: 1px solid #DDE3EC;
-            background: #FFFFFF;
-            font-weight: 500;
-            font-size: 16px;
-            color: #536387;
-            outline: none;
-            resize: none;
-        }
+            body {
+                font-family: "Inter", sans-serif;
+            }
 
-        .formbold-form-input:focus {
-            border-color: #6a64f1;
-            box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
-        }
+            .formbold-main-wrapper {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 48px;
+            }
 
-        .formbold-form-label {
-            color: #07074D;
-            font-weight: 500;
-            font-size: 14px;
-            line-height: 24px;
-            display: block;
-            margin-bottom: 10px;
-        }
+            .formbold-form-wrapper {
+                margin: 0 auto;
+                max-width: 550px;
+                width: 100%;
+                background: white;
+            }
 
-        .formbold-form-confirm {
-            border-bottom: 1px solid #DDE3EC;
-            padding-bottom: 35px;
-        }
+            .formbold-steps {
+                padding-bottom: 18px;
+                margin-bottom: 35px;
+                border-bottom: 1px solid #DDE3EC;
+            }
 
-        .formbold-form-confirm p {
-            font-size: 16px;
-            line-height: 24px;
-            color: #536387;
-            margin-bottom: 22px;
-            width: 75%;
-        }
+            .formbold-steps ul {
+                padding: 0;
+                margin: 0;
+                list-style: none;
+                display: flex;
+                gap: 40px;
+            }
 
-        .formbold-form-confirm>div {
-            display: flex;
-            gap: 15px;
-        }
+            .formbold-steps li {
+                display: flex;
+                align-items: center;
+                gap: 14px;
+                font-weight: 500;
+                font-size: 16px;
+                line-height: 24px;
+                color: #536387;
+            }
 
-        .formbold-confirm-btn {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: #FFFFFF;
-            border: 0.5px solid #DDE3EC;
-            border-radius: 5px;
-            font-size: 16px;
-            line-height: 24px;
-            color: #536387;
-            cursor: pointer;
-            padding: 10px 20px;
-            transition: all .3s ease-in-out;
-        }
+            .formbold-steps li span {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: #DDE3EC;
+                border-radius: 50%;
+                width: 36px;
+                height: 36px;
+                font-weight: 500;
+                font-size: 16px;
+                line-height: 24px;
+                color: #536387;
+            }
 
-        .formbold-confirm-btn {
-            box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.12);
-        }
+            .formbold-steps li.active {
+                color: #07074D;
+                ;
+            }
 
-        .formbold-confirm-btn.active {
-            background: #6A64F1;
-            color: #FFFFFF;
-        }
+            .formbold-steps li.active span {
+                background: #6A64F1;
+                color: #FFFFFF;
+            }
 
-        .formbold-form-step-1,
-        .formbold-form-step-2,
-        .formbold-form-step-3 {
-            display: none;
-        }
+            .formbold-input-flex {
+                display: flex;
+                gap: 20px;
+                margin-bottom: 22px;
+            }
 
-        .formbold-form-step-1.active,
-        .formbold-form-step-2.active,
-        .formbold-form-step-3.active {
-            display: block;
-        }
+            .formbold-input-flex>div {
+                width: 50%;
+            }
 
-        .formbold-form-btn-wrapper {
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            gap: 25px;
-            margin-top: 25px;
-        }
+            .formbold-form-input {
+                width: 100%;
+                padding: 13px 22px;
+                border-radius: 5px;
+                border: 1px solid #DDE3EC;
+                background: #FFFFFF;
+                font-weight: 500;
+                font-size: 16px;
+                color: #536387;
+                outline: none;
+                resize: none;
+            }
 
-        .formbold-back-btn {
-            cursor: pointer;
-            background: #FFFFFF;
-            border: none;
-            color: #07074D;
-            font-weight: 500;
-            font-size: 16px;
-            line-height: 24px;
-            /* display: none; */
-        }
+            .formbold-form-input:focus {
+                border-color: #6a64f1;
+                box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
+            }
 
-        .formbold-back-btn.active {
-            display: block;
-        }
+            .formbold-form-label {
+                color: #07074D;
+                font-weight: 500;
+                font-size: 14px;
+                line-height: 24px;
+                display: block;
+                margin-bottom: 10px;
+            }
 
-        .formbold-btn {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 16px;
-            border-radius: 5px;
-            padding: 10px 25px;
-            border: none;
-            font-weight: 500;
-            background-color: #6A64F1;
-            color: white;
-            cursor: pointer;
-        }
+            .formbold-form-confirm {
+                border-bottom: 1px solid #DDE3EC;
+                padding-bottom: 35px;
+            }
 
-        .formbold-btn:hover {
-            box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
-        }
-    </style>
+            .formbold-form-confirm p {
+                font-size: 16px;
+                line-height: 24px;
+                color: #536387;
+                margin-bottom: 22px;
+                width: 75%;
+            }
 
-</body>
+            .formbold-form-confirm>div {
+                display: flex;
+                gap: 15px;
+            }
 
-</html>
+            .formbold-confirm-btn {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                background: #FFFFFF;
+                border: 0.5px solid #DDE3EC;
+                border-radius: 5px;
+                font-size: 16px;
+                line-height: 24px;
+                color: #536387;
+                cursor: pointer;
+                padding: 10px 20px;
+                transition: all .3s ease-in-out;
+            }
+
+            .formbold-confirm-btn {
+                box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.12);
+            }
+
+            .formbold-confirm-btn.active {
+                background: #6A64F1;
+                color: #FFFFFF;
+            }
+
+            .formbold-form-step-1,
+            .formbold-form-step-2,
+            .formbold-form-step-3 {
+                display: none;
+            }
+
+            .formbold-form-step-1.active,
+            .formbold-form-step-2.active,
+            .formbold-form-step-3.active {
+                display: block;
+            }
+
+            .formbold-form-btn-wrapper {
+                display: flex;
+                align-items: center;
+                justify-content: flex-end;
+                gap: 25px;
+                margin-top: 25px;
+            }
+
+            .formbold-back-btn {
+                cursor: pointer;
+                background: #FFFFFF;
+                border: none;
+                color: #07074D;
+                font-weight: 500;
+                font-size: 16px;
+                line-height: 24px;
+                /* display: none; */
+            }
+
+            .formbold-back-btn.active {
+                display: block;
+            }
+
+            .formbold-btn {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                font-size: 16px;
+                border-radius: 5px;
+                padding: 10px 25px;
+                border: none;
+                font-weight: 500;
+                background-color: #6A64F1;
+                color: white;
+                cursor: pointer;
+            }
+
+            .formbold-btn:hover {
+                box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
+            }
+            .formbold-steps li.active span {
+                background: #FCCB06;
+                color: #FFFFFF;
+            }
+            .formbold-form-input {
+                width: 100%;
+                padding: 13px 22px;
+                border-radius: 5px;
+                border: 1px solid #ffc107;
+            }
+            .input-with-icon {
+                position: relative;
+            }
+            .formbold-form-wrapper {
+                max-width: 630px;
+                padding: 40px 0;
+            }
+            .formbold-back-btn {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                font-size: 16px;
+                border-radius: 5px;
+                padding: 10px 25px;
+            }
+            .formbold-btn ,.formbold-back-btn,.formbold-confirm-btn.active{
+                font-weight: 600;
+                color: white;
+                cursor: pointer;
+                background: black;
+                border: 3px solid #ffc107;
+            }
+            .formbold-btn:hover,.formbold-back-btn:hover,.formbold-confirm-btn.active:hover{
+                background: #ffc107;
+                color: black;
+                border: 3px solid black;
+            }
+            .formbold-btn:hover svg path{
+                fill: black !important;
+            }
+            .formbold-form-step-2.form-step.active div {
+                margin-bottom: 20px;
+            }
+            body{
+                padding-right: 0 !important;
+            }
+            .formbold-form-confirm p {
+                margin-bottom: 15px;
+                color: black;
+                font-weight: 700;
+                border-radius: 0 15px;
+            }
+            .formbold-form-confirm {
+                background: #ffc107;
+                padding: 30px;
+                border-radius: 10px;
+                border: 2px solid black;
+            }
+           
+        </style>
+
+        </body>
+
+        </html>

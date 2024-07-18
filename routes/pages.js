@@ -1291,13 +1291,17 @@ router.get('/stripe-year-payment', checkCookieValue, async (req, res) => {
         const getstatevalue = await queryAsync(getstatesquery,[country_no]);
         //console.log("getstatevalue",getstatevalue);
 
-        const [latestReviews,getCountries] = await Promise.all([
+        const [latestReviews,getCountries,globalPageMeta] = await Promise.all([
             comFunction2.getlatestReviews(20),
             comFunction.getCountries(),
+            comFunction2.getPageMetaValues('global'),
         ]);
         console.log("getCountries",getCountries);
 
         res.render('front-end/stripe_payment_yearly', {
+            menu_active_id: 'Subscription',
+            page_title: 'Subscription creation',
+            globalPageMeta,
             planId,
             planPrice,
             yearly,
@@ -1348,7 +1352,31 @@ router.get('/create-user-company-subscription', checkCookieValue, async(req, res
         //console.log("planidvalue", planidvalue[0].id);
         if(planidvalue.length>0){
             var planID = planidvalue[0].id;
+            console.log("planID",planID);
+            var monthly_plan_price = planidvalue[0].monthly_price;
+            console.log("monthly_plan_price",monthly_plan_price);
+            var yearly_price = planidvalue[0].yearly_price;
+            console.log("yearly_price",yearly_price);         
+            var per_user_prices = planidvalue[0].per_user_price;
+            console.log("per_user_prices",per_user_prices);
         }
+        const getcurencyquery = `SELECT * FROM currency_conversion`;
+        const getcurrencyval = await queryAsync(getcurencyquery);
+        console.log("getcurrencyval", getcurrencyval);
+
+        var indian_currency = getcurrencyval[0].inr_currency;
+        console.log("indian_currency", indian_currency);
+        var jp_currency = getcurrencyval[0].jpy_currency;
+        console.log("jp_currency", jp_currency);
+
+        if(country_code=='IN'){
+            var per_user_price = per_user_prices * indian_currency;
+        }else if(country_code=='JP'){
+            var per_user_price = per_user_prices * jp_currency;
+        } else{
+            var per_user_price = per_user_prices
+        }
+
         
         const exchangeRates = await comFunction2.getCurrency();
         //console.log("exchangeRates",exchangeRates);
@@ -1380,7 +1408,10 @@ router.get('/create-user-company-subscription', checkCookieValue, async(req, res
             getCountries,
             getCountriesList,
             razorpay_key: razorpay_key,
-            subscriptionType: subscriptionType
+            subscriptionType: subscriptionType,
+            monthly_plan_price: monthly_plan_price,
+            yearly_price: yearly_price,
+            per_user_price
         });
     } catch (err) {
         console.error(err);
@@ -1481,6 +1512,58 @@ router.get('/checkcompanyEmailAvailability', async (req, res) => {
     } catch (error) {
         console.error('Error checking email availability:', error);
         res.status(500).json({ message: 'Failed to check email availability' });
+    }
+});
+router.get('/checkcompanyPhoneAvailability', async (req, res) => {
+    const { comp_phone } = req.query;
+
+    try {
+        const emailExists = await new Promise((resolve, reject) => {
+            db.query('SELECT * FROM company WHERE comp_phone = ?', [comp_phone], (err, results) => {
+                if (err) {
+                    console.error('Database query error:', err);
+                    reject({ status: 'error', message: 'Database query error' });
+                } else {
+                    if (results.length > 0) {
+                        const register_from = results[0].register_from;
+                        resolve({ available: false, message: 'Phone number already exists for another company.' });
+                    } else {
+                        resolve({ available: true, message: 'Phone number available.' });
+                    }
+                }
+            });
+        });
+
+        res.json(emailExists);
+    } catch (error) {
+        console.error('Error checking email availability:', error);
+        res.status(500).json({ message: 'Failed to check email availability' });
+    }
+});
+router.get('/checkuserPhoneAvailability', async (req, res) => {
+    const { phone } = req.query;
+
+    try {
+        const emailExists = await new Promise((resolve, reject) => {
+            db.query('SELECT * FROM users WHERE phone = ?', [phone], (err, results) => {
+                if (err) {
+                    console.error('Database query error:', err);
+                    reject({ status: 'error', message: 'Database query error' });
+                } else {
+                    if (results.length > 0) {
+                        const register_from = results[0].register_from;
+                        resolve({ available: false, message: 'Phone number already exists for another user.' });
+                    } else {
+                        resolve({ available: true, message: 'Phone number available.' });
+                    }
+                }
+            });
+        });
+
+        res.json(emailExists);
+    } catch (error) {
+        console.error('Error checking Phone availability:', error);
+        res.status(500).json({ message: 'Failed to check Phone availability' });
     }
 });
 

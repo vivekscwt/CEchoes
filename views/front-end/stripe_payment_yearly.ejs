@@ -20,6 +20,10 @@
                     <div class="row">
                         <div class="col">
                             <h3 class="title">Billing Address</h3>
+							<div class="inputBox">
+								<label for="memberCount">Add-on Users:</label>
+								<input type="number" min = 1 name="memberCount" id="memberCount" placeholder="Enter number of add-on users">
+							</div>
                             <div class="inputBox">
                                 <label for="name">Full Name:</label>
                                 <input type="text" id="name" name="name" placeholder="Enter your full name" required>
@@ -180,9 +184,12 @@
 				console.error('Element with ID paymentForm not found');
 				return;
 			}
+
 	
 			paymentForm.addEventListener('submit', async function (event) {
 				event.preventDefault();
+				var addonUsersCount = document.getElementById('memberCount').value;
+				console.log('Add-on Users Count:', addonUsersCount);
 	
 				try {
 					const formData = {
@@ -195,7 +202,7 @@
 						zip: document.getElementById('zip').value,
 						planId: '<%= planID %>',
 						billingCycle: 'yearly',
-						memberCount: '<%= memberCount %>'
+						memberCount: addonUsersCount
 					};
 	
 					const response = await axios.post('/auth/create-subscription', formData);
