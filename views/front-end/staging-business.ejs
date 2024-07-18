@@ -352,7 +352,7 @@
                            <% if (currentUserData && currentUserData.claimed_comp_id !=null) { %>
                               <div class="member-control">
                                  <label for="<%= plan %>-member-count">Members:</label>
-                                 <input type="number" min="0" name="memberCount" id="<%= plan %>-member-count" value="">
+                                 <input type="hidden" min="0" name="memberCount" id="<%= plan %>-member-count" value="">
                                  <input type="hidden" id="<%= plan %>-per-user-price"
                                     value="<%= getplans[plan + '_val'].per_user_price_local %>">
                                  <input type="hidden" name="userId" value="<%= currentUserData.user_id %>">
@@ -419,7 +419,7 @@
                                                       <% } else if (!currentUserData) { %>
                                                          <div class="member-control">
                                                             <label for="<%= plan %>-member-count">Members:</label>
-                                                            <input type="number" min="0" name="memberCount"
+                                                            <input type="hidden" min="0" name="memberCount"
                                                                id="<%= plan %>-member-count" value="">
                                                             <input type="hidden" id="<%= plan %>-per-user-price"
                                                                value="<%= getplans[plan + '_val'].per_user_price_local %>">

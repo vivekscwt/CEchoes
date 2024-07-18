@@ -78,8 +78,13 @@
                                
             </div>
             <div class="formbold-form-step-2 form-step">
-                <input type="text" name="parent_id" id="parent_id" placeholder="parent company" value="0"
-                    class="formbold-form-input" />
+                <input type="hidden" name="parent_id" id="parent_id" placeholder="parent company" value="0"
+                    class="formbold-form-input" />                 
+                    <div>
+                        <label for="memberCounts" class="formbold-form-label">Add On Users</label>
+                        <input type="number" name="memberCount" id="member-count" placeholder="Enter the number of add-on users"
+                            class="formbold-form-input" required />
+                    </div>
                     <div>
                         <label for="main_address_country" class="formbold-form-label">Select a Country</label>
                         <select name="main_address_country" id="main_address_country" class="formbold-form-input" required>
@@ -121,7 +126,7 @@
                 </div> -->
                 <div>
                     <label for="main_address_pin_code" class="formbold-form-label">Pincode</label>
-                    <input type="text" name="main_address_pin_code" id="main_address_pin_code"
+                    <input type="number" name="main_address_pin_code" id="main_address_pin_code"
                         placeholder="Enter the pincode" class="formbold-form-input" required />
                 </div>
             </div>
@@ -173,6 +178,8 @@
         var subscriptionType = '<%= subscriptionType%>';
         console.log("subscriptionType",subscriptionType);
         let currentStep = 1;
+
+
 
 
         function showStep(step) {
@@ -230,6 +237,8 @@
         return true;
     }
 
+    var memberCount = document.getElementById('member-count').value;
+    console.log('Member Countsd:', memberCount);
     // document.getElementById('email').addEventListener('blur', async function () {
     //     const email = this.value.trim();
     //     if (email) {
@@ -544,7 +553,9 @@ function validateAndNext() {
 
 <script>
     $(document).ready(function() {
-        // Function to enable/disable Next button based on form validity
+        var memberCount = document.getElementById('member-count').value;
+        console.log('Member Countsd:', memberCount);
+
         function validateForm() {
             const firstName = $('#first_name').val().trim();
             const lastName = $('#last_name').val().trim();
@@ -573,15 +584,13 @@ function validateAndNext() {
             $('#register_password').toggleClass('invalid', !isPasswordValid);
             $('#register_confirm_password').toggleClass('invalid', !doPasswordsMatch);
     
-            // Enable Next button if all fields are valid
             const isFormValid = isFirstNameValid && isLastNameValid && isEmailValid &&
                                 isCountryValid && isStateValid && isPasswordValid && doPasswordsMatch;
             $('#nextStepBtn').prop('disabled', !isFormValid);
         }
     
-        // Event listeners for input change in form fields
         $('#first_name, #last_name, #dob, #email, #user_country, #user_state, #register_password, #register_confirm_password').on('input change', function() {
-            validateForm(); // Check form validity after input changes
+            validateForm(); 
         });
     
         // Basic email validation function
