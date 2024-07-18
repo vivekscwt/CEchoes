@@ -10,9 +10,6 @@
                 </ul>
             </div>
             <div class="formbold-form-step-1 form-step active">
-                <div>
-                    <label for="member_count" class="formbold-form-label">Add On users<%= memberCount%></label>
-                </div>
                 <div class="formbold-input-flex">
                     <div>
                         <label for="first_name" class="formbold-form-label">First name</label>
@@ -82,7 +79,7 @@
                     class="formbold-form-input" />                 
                     <div>
                         <label for="memberCounts" class="formbold-form-label">Add On Users</label>
-                        <input type="number" name="memberCount" id="member-count" placeholder="Enter the number of add-on users"
+                        <input type="number" min="0" name="memberCount" id="member-count" placeholder="Enter the number of add-on users"
                             class="formbold-form-input" required />
                     </div>
                     <div>
@@ -132,10 +129,10 @@
             </div>
             <div class="formbold-form-step-3 form-step">
                 <div class="formbold-form-confirm">
-                    <p>Are you sure!You want to submit the form?</p>
+                    <p>Are you sure you want to submit the form?</p>
+                    <p>Member Count: <span id="member-count-display"></span></p>
                     <div>
-                        <button type="button" class="formbold-confirm-btn active"
-                            onclick="handleConfirmation(true)">Yes</button>
+                        <button type="button" class="formbold-confirm-btn active" onclick="handleConfirmation(true)">Yes</button>
                         <!-- <button type="button" class="formbold-confirm-btn" onclick="handleConfirmation(false)">No</button> -->
                     </div>
                 </div>
@@ -237,8 +234,7 @@
         return true;
     }
 
-    var memberCount = document.getElementById('member-count').value;
-    console.log('Member Countsd:', memberCount);
+
     // document.getElementById('email').addEventListener('blur', async function () {
     //     const email = this.value.trim();
     //     if (email) {
@@ -274,7 +270,7 @@
                         planId: planID,
                         //billingCycle: 'daily',
                         billingCycle:subscriptionType,
-                        memberCount: memberCount,
+                        memberCount: memberCountt,
                         register_password: document.getElementById('register_password').value,
                         register_confirm_password: document.getElementById('register_confirm_password').value,
                         user_country: document.getElementById('user_country').value,
@@ -377,6 +373,7 @@
                 });
             }
         }
+
 
         document.getElementById('user_country').addEventListener('change', async function () {
             const countryCode = this.value;
@@ -715,6 +712,11 @@ function validateAndNext() {
         } else {
             $('#companyemailAvailabilityError').hide();
         }
+    });
+
+    $('#member-count').on('input', function() {
+        var memberCount = $(this).val();
+        $('#member-count-display').text(memberCount);
     });
 });
 
