@@ -822,17 +822,17 @@ var KTAccountSettingsProfileDetails = function () {
                     //     }
                     // },
                     main_address_pin_code: {
-                                        validators: {
-                                            // notEmpty: {
-                                            //     message: 'Pin is required'
-                                            // },
-                                            regexp: {
-                                                // regexp: /^\d{6}$/, // Regular expression pattern for a 6-digit number
-                                                regexp: /^[a-zA-Z0-9]{6}$/,
-                                                message: 'Pin is not valid'
-                                            }
-                                        }
-                                    },
+                        //validators: {
+                        // notEmpty: {
+                        //     message: 'Pin is required'
+                        // },
+                        regexp: {
+                        // regexp: /^\d{6}$/, // Regular expression pattern for a 6-digit number
+                        regexp: /^[a-zA-Z0-9]+$/,
+                        message: 'Pin is not valid'
+                        }
+                        //}
+                    },
                     address_map_url: {
                         validators: {
                             regexp: {

@@ -552,16 +552,16 @@
                                     //     }
                                     // },
                                     main_address_pin_code: {
-                                        validators: {
+                                        //validators: {
                                             // notEmpty: {
                                             //     message: 'Pin is required'
                                             // },
                                             regexp: {
                                                 // regexp: /^\d{6}$/, // Regular expression pattern for a 6-digit number
-                                                regexp: /^[a-zA-Z0-9]{6}$/,
+                                                regexp: /^[a-zA-Z0-9]+$/,
                                                 message: 'Pin is not valid'
                                             }
-                                        }
+                                        //}
                                     },
                                     main_address_country: {
                                         validators: {
