@@ -513,5 +513,6 @@ router.post('/create-subscription-checkout-session',authController.createSubscri
 
 router.post('/api/v1/create-subscription-checkout-session',authController.createSession)
 router.post('/getlocation',authController.getLocation);
+router.get('/get-exist-company',authController.getExistCompany);
 
 module.exports = router;

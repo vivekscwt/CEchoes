@@ -388,7 +388,7 @@ router.get('/home/:getcountryhome', checkCookieValue, async (req, res) => {
     ]);
     const rangeTexts = {};
 
-    //console.log("PopularCategories", PopularCategories);
+    console.log("PopularCategories", PopularCategories);
     // console.log("getPositiveReviewsCompany",PositiveReviewsCompany);
     // console.log("getNegativeReviewsCompany",NegativeReviewsCompany);
     // console.log("getCountries", getCountries);
@@ -436,7 +436,7 @@ router.get('/home/:getcountryhome', checkCookieValue, async (req, res) => {
                 //         ORDER BY featured_companies.ordering ASC `;
                 db.query(featured_sql, (featured_err, featured_result) => {
                     var featured_comps = featured_result;
-                    res.render('front-end/landing', {
+                    res.render('front-end/us_landing', {
                         menu_active_id: 'landing',
                         page_title: home.title,
                         currentUserData: currentUserData,
@@ -492,7 +492,7 @@ router.get('/home/:getcountryhome', checkCookieValue, async (req, res) => {
                         ORDER BY featured_companies.ordering ASC `;
                 db.query(featured_sql, (featured_err, featured_result) => {
                     var featured_comps = featured_result;
-                    res.render('front-end/landing', {
+                    res.render('front-end/us_landing', {
                         menu_active_id: 'landing',
                         page_title: home.title,
                         currentUserData: currentUserData,
@@ -574,7 +574,7 @@ router.get('/contact-us', checkCookieValue, async (req, res) => {
 
 });
 
-router.get('/:getcountryname/contact-us', checkCookieValue, async (req, res) => {
+router.get('/contact-us/:getcountryname', checkCookieValue, async (req, res) => {
     //resp.sendFile(`${publicPath}/index.html`)
     let currentUserData = JSON.parse(req.userData);
     const apiKey = process.env.GEO_LOCATION_API_KEY;
@@ -671,7 +671,7 @@ router.get('/about-us', checkCookieValue, async (req, res) => {
     //res.render('front-end/about', { menu_active_id: 'about', page_title: 'About Us', currentUserData });
 });
 
-router.get('/:getcountryname/about-us', checkCookieValue, async (req, res) => {
+router.get('/about-us/:getcountryname', checkCookieValue, async (req, res) => {
     let currentUserData = JSON.parse(req.userData);
     const apiKey = process.env.GEO_LOCATION_API_KEY;
     console.log("apiKey",apiKey);
@@ -922,7 +922,7 @@ router.get('/faq', checkCookieValue, async (req, res) => {
     //res.render('front-end/faq', { menu_active_id: 'faq', page_title: 'FAQ', currentUserData });
 });
 
-router.get('/:getcountryname/faq', checkCookieValue, async (req, res) => {
+router.get('/faq/:getcountryname', checkCookieValue, async (req, res) => {
     try {
         let currentUserData = JSON.parse(req.userData);
         // const faqPageData = await comFunction2.getFaqPage();
@@ -1117,7 +1117,7 @@ router.get('/business', checkCookieValue, async (req, res) => {
     }
 });
 
-router.get('/:getcountryname/business', checkCookieValue, async (req, res) => {
+router.get('/business/:getcountryname', checkCookieValue, async (req, res) => {
     try {
         let currentUserData = JSON.parse(req.userData);
         console.log("currentUserData", currentUserData);
@@ -1389,26 +1389,90 @@ router.get('/create-user-company-subscription', checkCookieValue, async(req, res
 })
 
 
+
 router.get('/checkEmailAvailability', async (req, res) => {
     const { email } = req.query;
-    console.log("email",email);
 
     try {
         const emailExists = await new Promise((resolve, reject) => {
             db.query('SELECT email, register_from FROM users WHERE email = ?', [email], (err, results) => {
                 if (err) {
                     console.error('Database query error:', err);
-                    reject(err);
+                    reject({ status: 'error', message: 'Database query error' });
                 } else {
-
-                    console.log("dfgdfg");
                     if (results.length > 0) {
                         const register_from = results[0].register_from;
-                        resolve({ status: 'error', message: 'Email already exists.' });
-                    } 
-                    // else {
-                    //     reject({ status: 'success', message: 'Email available.' });
-                    // }
+                        resolve({ available: false, message: 'Email already exists.' });
+                    } else {
+                        resolve({ available: true, message: 'Email available.' });
+                    }
+                }
+            });
+        });
+
+        res.json(emailExists);
+    } catch (error) {
+        console.error('Error checking email availability:', error);
+        res.status(500).json({ message: 'Failed to check email availability' });
+    }
+});
+
+router.get('/get-exist-company', async (req, res) => {
+    try {
+        const { company_name, main_address_country, parent_id } = req.query;
+        console.log("getexistcomp",req.query);
+        if (parent_id == 0) {
+            const companyquery = `SELECT * FROM company WHERE company_name = ? AND main_address_country = ?`;
+            const companyvalue = await query(companyquery, [company_name, main_address_country]);
+
+            console.log("companyvalue", companyvalue);
+
+            if (companyvalue.length > 0) {
+                return res.json({
+                    status: 'err',
+                    data: '',
+                    message: 'Organization name already exists.'
+                });
+            } else {
+                return res.json({
+                    status: 'success',
+                    data: '',
+                    message: 'Organization name is available.'
+                });
+            }
+        } else {
+            return res.json({
+                status: 'success',
+                data: '',
+                message: 'Parent ID is not 0, skipping company name check.'
+            });
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        return res.json({
+            status: 'err',
+            message: error.message
+        });
+    }
+});
+
+
+router.get('/checkcompanyEmailAvailability', async (req, res) => {
+    const { email } = req.query;
+
+    try {
+        const emailExists = await new Promise((resolve, reject) => {
+            db.query('SELECT * FROM company WHERE comp_email = ?', [email], (err, results) => {
+                if (err) {
+                    console.error('Database query error:', err);
+                    reject({ status: 'error', message: 'Database query error' });
+                } else {
+                    if (results.length > 0) {
+                        const register_from = results[0].register_from;
+                        resolve({ available: false, message: 'Email already exists for another company.' });
+                    } else {
+                        resolve({ available: true, message: 'Email available.' });
+                    }
                 }
             });
         });
@@ -1521,7 +1585,7 @@ router.get('/privacy-policy', checkCookieValue, async (req, res) => {
         res.status(500).send('An error occurred');
     }
 });
-router.get('/:getcountryname/privacy-policy', checkCookieValue, async (req, res) => {
+router.get('/privacy-policy/:getcountryname', checkCookieValue, async (req, res) => {
     let currentUserData = JSON.parse(req.userData);
     const apiKey = process.env.GEO_LOCATION_API_KEY;
     console.log("apiKey",apiKey);
@@ -1629,7 +1693,7 @@ router.get('/disclaimer', checkCookieValue, async (req, res) => {
     }
     //res.render('front-end/disclaimer', { menu_active_id: 'disclaimer', page_title: 'Disclaimer', currentUserData });
 });
-router.get('/:getcountryname/disclaimer', checkCookieValue, async (req, res) => {
+router.get('/disclaimer/:getcountryname', checkCookieValue, async (req, res) => {
     let currentUserData = JSON.parse(req.userData);
     const apiKey = process.env.GEO_LOCATION_API_KEY;
     console.log("apiKey",apiKey);
@@ -1733,7 +1797,7 @@ router.get('/terms-of-service', checkCookieValue, async (req, res) => {
     //res.render('front-end/terms-of-service', { menu_active_id: 'terms-of-service', page_title: 'Terms Of Service', currentUserData });
 });
 
-router.get('/:getcountryname/terms-of-service', checkCookieValue, async (req, res) => {
+router.get('/terms-of-service/:getcountryname', checkCookieValue, async (req, res) => {
     let currentUserData = JSON.parse(req.userData);
     const apiKey = process.env.GEO_LOCATION_API_KEY;
     const getcountryname = req.params.getcountryname;
@@ -2376,6 +2440,85 @@ router.get('/categories', checkCookieValue, async (req, res) => {
 //category Company Listing page
 // router.get('/category/:category_slug', checkCookieValue, async (req, res) => {
 router.get('/category/:category_slug/:country', checkCookieValue, async (req, res) => {
+    let currentUserData = JSON.parse(req.userData);
+    const category_slug = req.params.category_slug;
+    const country = req.params.country;
+    const baseURL = process.env.MAIN_URL;
+    const apiKey = process.env.GEO_LOCATION_API_KEY;
+    console.log("apiKey",apiKey);
+    console.log("countrysss",country);
+
+
+    let country_name = req.cookies.countryName || 'India';
+    let country_code = req.cookies.countryCode || 'IN';
+
+    console.log("country_names", country_name);
+    console.log("country_codes", country_code);
+
+    const [globalPageMeta, getSubCategories, companyDetails, AllRatingTags, CategoryDetails] = await Promise.all([
+        comFunction2.getPageMetaValues('global'),
+        comFunction2.getsubCategories(category_slug),
+        comFunction2.getCompanyDetails(category_slug, country),
+        comFunction.getAllRatingTags(),
+        comFunction.getCategoryDetails(category_slug),
+        //comFunction.getParentCategories(category_slug),
+    ]);
+
+    const categoryParentId = CategoryDetails[0].parent_id;
+    const ParentCategories = await comFunction.getParentCategories(categoryParentId);
+
+    console.log("getSubCategories",getSubCategories);
+
+    try {
+
+        const subcategories = getSubCategories.map((row) => ({
+            categoryName: row.category_name,
+            categorySlug: row.category_slug,
+            subCategoryNames: row.subcategories ? row.subcategories.split(',') : [],
+            subCategorySlug: row.subcategoriesSlug ? row.subcategoriesSlug.split(',') : [],
+            country:row.shortname
+        }));
+        console.log("newsubcategories",subcategories);
+
+        // res.json({
+        //     menu_active_id: 'company-listing',
+        //     page_title: subcategories[0].categoryName,
+        //     currentUserData,
+        //     globalPageMeta:globalPageMeta,
+        //     subCategories:subcategories[0],
+        //     companyDetails:companyDetails,
+        //     AllRatingTags:AllRatingTags,
+        //     baseURL:baseURL,
+        //     filter_value:'',
+        //     CategoryDetails,
+        //     ParentCategories
+        // });
+        res.render('front-end/company-listing', {
+            menu_active_id: 'company-listing',
+            page_title: subcategories[0].categoryName,
+            currentUserData,
+            globalPageMeta: globalPageMeta,
+            subCategories: subcategories[0],
+            companyDetails: companyDetails,
+            AllRatingTags: AllRatingTags,
+            baseURL: baseURL,
+            filter_value: '',
+            CategoryDetails,
+            ParentCategories,
+            category_country: country
+        });
+    } catch (err) {
+        console.error(err);
+        res.render('front-end/404', {
+            menu_active_id: '404',
+            page_title: '404',
+            currentUserData,
+            globalPageMeta: globalPageMeta
+        });
+    }
+});
+
+router.get('/home/category/:category_slug/:country', checkCookieValue, async (req, res) => {
     let currentUserData = JSON.parse(req.userData);
     const category_slug = req.params.category_slug;
     const country = req.params.country;
