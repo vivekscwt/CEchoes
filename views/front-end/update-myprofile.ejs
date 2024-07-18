@@ -370,22 +370,15 @@
             // Update the input field with the sanitized value
             $(this).val(inputValue);
         });
+    $('#numericInputPin').on('input', function() {
+        let inputValue = $(this).val();
+        inputValue = inputValue.replace(/[^a-zA-Z0-9]/g, '');
+        // if (inputValue.length > 10) {
+        //     inputValue = inputValue.slice(0, 10);
+        // }
+        $(this).val(inputValue);
+    });
 
-        $('#numericInputPin').on('input', function() {
-            // Get the current input value
-            let inputValue = $(this).val();
-
-            // Remove any non-numeric characters using a regular expression
-            inputValue = inputValue.replace(/[^0-9]/g, '');
-
-            // Ensure that the input has exactly 10 digits
-            if (inputValue.length > 6) {
-                inputValue = inputValue.slice(0, 6);
-            }
-
-            // Update the input field with the sanitized value
-            $(this).val(inputValue);
-        });
 
 
     }); 

@@ -733,7 +733,7 @@ exports.frontendUserLogin = (req, res) => {
         } else {
             if (results.length > 0) {
                 const user = results[0];
-                console.log("usersaas",user);
+                console.log("usersaas", user);
                 // Compare the provided password with the stored hashed password
                 bcrypt.compare(password, user.password, (err, result) => {
                     if (err) {
@@ -761,7 +761,7 @@ exports.frontendUserLogin = (req, res) => {
                                 let userData = {};
                                 if (results.length > 0) {
                                     const user_meta = results[0];
-                                    console.log(user_meta,'aaaaaaaa');
+                                    console.log(user_meta, 'aaaaaaaa');
                                     // Set a cookie
                                     const dateString = user_meta.date_of_birth;
                                     const date_of_birth_date = new Date(dateString);
@@ -888,7 +888,7 @@ exports.frontendUserLogin = (req, res) => {
                             })
                         } else {
                             let err_msg = '';
-                            if (user.user_status == 0 || user.user_status == 3 ) {
+                            if (user.user_status == 0 || user.user_status == 3) {
                                 err_msg = 'your account is inactive, please contact with administrator.';
                             } else {
                                 err_msg = 'Do you want to login as administrator, then please go to proper route';
@@ -2091,9 +2091,9 @@ exports.restoreUser = (req, res) => {
 
 
 // }
-exports.getExistCompany =async (req, res)=>{
-    try{
-        const{company_name,main_address_country,parent_id}= req.query;
+exports.getExistCompany = async (req, res) => {
+    try {
+        const { company_name, main_address_country, parent_id } = req.query;
         if (parent_id == 0) {
             const companyquery = `SELECT * FROM company WHERE company_name = ? AND main_address_country =? `;
             const companyvalue = await query(companyquery, [company_name, main_address_country]);
@@ -2110,15 +2110,15 @@ exports.getExistCompany =async (req, res)=>{
                 )
             }
         }
-    }catch(error){
-            console.error('Error:', error);
-            return res.send({
-                status: 'err',
-                //data: companyId,
-                message: error.message
-            }); 
-        }
+    } catch (error) {
+        console.error('Error:', error);
+        return res.send({
+            status: 'err',
+            //data: companyId,
+            message: error.message
+        });
     }
+}
 
 
 
@@ -3732,7 +3732,7 @@ exports.trashCompanies = async (req, res) => {
 //             console.log("pppppp");
 //             const updateLogSql = `DELETE FROM company_claim_request WHERE company_id = ?`;
 //             const updateLogData = [req.body.companyid];
-            
+
 //             db.query(updateLogSql, updateLogData, (err, result) => {
 //                 if (err) {
 //                     console.log("Error updating company_log:", err);
@@ -4286,7 +4286,7 @@ exports.updateFAQ = async (req, res) => {
     }
 };
 
-  
+
 
 //Update FAQ Images
 exports.updateFAQImages = async (req, res) => {
@@ -4468,7 +4468,7 @@ exports.updateHome = async (req, res) => {
         for_customer, cus_right_content, cus_right_button_link, cus_right_button_text, youtube_link,
         youtube_1, youtube_2, youtube_3, youtube_4, youtube_5, youtube_6, youtube_7, youtube_8, youtube_9, youtube_10, fb_widget, twitter_widget,
         org_responsibility_content, org_responsibility_buttton_link, org_responsibility_buttton_text,
-        about_us_content, about_us_button_link, about_us_button_text, bannner_content_2, bannner_hashtag, impression_number, impression_number_visibility, reviews_count, reviews_count_visibility, total_users_count, total_users_count_visibility, reviewers_guidelines_title, reviewers_guidelines_popup, review_form_demo_location, cus_right_facts_popup, org_responsibility_facts_popup, app_banner_title_1, app_banner_title_2, app_features_for_customer, app_review_content, app_features_hashtag, app_cus_right_content, app_cus_right_point, app_org_responsibility_content, app_org_responsibility_points, app_about_us_content_1, app_about_us_content_2, app_about_us_button_text, bannner_message, country_name} = req.body;
+        about_us_content, about_us_button_link, about_us_button_text, bannner_content_2, bannner_hashtag, impression_number, impression_number_visibility, reviews_count, reviews_count_visibility, total_users_count, total_users_count_visibility, reviewers_guidelines_title, reviewers_guidelines_popup, review_form_demo_location, cus_right_facts_popup, org_responsibility_facts_popup, app_banner_title_1, app_banner_title_2, app_features_for_customer, app_review_content, app_features_hashtag, app_cus_right_content, app_cus_right_point, app_org_responsibility_content, app_org_responsibility_points, app_about_us_content_1, app_about_us_content_2, app_about_us_button_text, bannner_message, country_name } = req.body;
 
     const { banner_img_1, banner_img_2, banner_img_3, banner_img_4, banner_img_5, banner_img_6, cus_right_img_1, cus_right_img_2, cus_right_img_3, cus_right_img_4, cus_right_img_5,
         cus_right_img_6, cus_right_img_7, cus_right_img_8, org_responsibility_img_1, org_responsibility_img_2, org_responsibility_img_3,
@@ -5225,7 +5225,7 @@ exports.updateAbout = async (req, res) => {
     });
 
     const title_sql = `UPDATE page_info SET title = ?, meta_title = ?, meta_desc = ?, meta_keyword = ?, country = ? WHERE id  = ?`;
-    const title_data = [title, meta_title, meta_desc, meta_keyword,country_name, about_id];
+    const title_data = [title, meta_title, meta_desc, meta_keyword, country_name, about_id];
     //console.log(title_data);
     db.query(title_sql, title_data, (title_err, title_result) => {
         return res.send(
@@ -5503,8 +5503,8 @@ exports.updateBusiness = async (req, res) => {
 exports.updatePrivacy = (req, res) => {
     //console.log('Privacy', req.body);
 
-    const { common_id, title, meta_title, meta_desc, keyword, content,country_name } = req.body;
-    console.log("updateprivacy",req.body);
+    const { common_id, title, meta_title, meta_desc, keyword, content, country_name } = req.body;
+    console.log("updateprivacy", req.body);
 
     const check_sql = `SELECT * FROM page_meta WHERE page_id = ? AND page_meta_key = ?`;
     const check_data = [common_id, "content"];
@@ -5524,7 +5524,7 @@ exports.updatePrivacy = (req, res) => {
                 db.query(update_sql, update_data, (update_err, update_result) => {
                     if (update_err) throw update_err;
                     const title_sql = `UPDATE page_info SET title = ?, meta_title = ?, meta_desc = ?, meta_keyword = ?, country = ? WHERE id  = ?`;
-                    const title_data = [title, meta_title, meta_desc, keyword,country_name, common_id];
+                    const title_data = [title, meta_title, meta_desc, keyword, country_name, common_id];
                     //console.log(title_data);
                     db.query(title_sql, title_data, (title_err, title_result) => {
                         return res.send(
@@ -5542,9 +5542,9 @@ exports.updatePrivacy = (req, res) => {
                 db.query(insert_sql, insert_data, (insert_err, insert_result) => {
                     if (insert_err) throw insert_err;
                     const title_sql = `UPDATE page_info SET title = ?, meta_title = ?, meta_desc = ?, meta_keyword = ?, country = ? WHERE id  = ?`;
-                    const title_data = [title, meta_title, meta_desc, keyword,country_name, common_id];
+                    const title_data = [title, meta_title, meta_desc, keyword, country_name, common_id];
 
-                    console.log("title_data",title_data);
+                    console.log("title_data", title_data);
                     db.query(title_sql, title_data, (title_err, title_result) => {
                         return res.send(
                             {
@@ -5627,7 +5627,7 @@ exports.updateDisclaimer = (req, res) => {
 exports.updateTermsOfService = (req, res) => {
     console.log('updateTermsOfService', req.body);
 
-    const { common_id, title, meta_title, meta_desc, keyword, content,country_name } = req.body;
+    const { common_id, title, meta_title, meta_desc, keyword, content, country_name } = req.body;
 
     const check_sql = `SELECT * FROM page_meta WHERE page_id = ? AND page_meta_key = ?`;
     const check_data = [common_id, "content"];
@@ -5749,7 +5749,7 @@ exports.updateComplaint = async (req, res) => {
     //console.log('updateComplaint', req.body);
     //console.log('updateComplaint', req.files);
     const form_data = req.body;
-    const { common_id, title, meta_title, meta_desc, meta_keyword, country_name} = req.body;
+    const { common_id, title, meta_title, meta_desc, meta_keyword, country_name } = req.body;
     const { banner_img_1, banner_img_2, banner_img_3, banner_img_4, banner_img_5, banner_img_6, banner_img_7, banner_img_8 } = req.files;
     const file_meta_value = [banner_img_1, banner_img_2, banner_img_3, banner_img_4, banner_img_5, banner_img_6, banner_img_7, banner_img_8];
     const file_meta_key = ['banner_img_1', 'banner_img_2', 'banner_img_3', 'banner_img_4', 'banner_img_5', 'banner_img_6', 'banner_img_7', 'banner_img_8'];
@@ -7780,35 +7780,35 @@ exports.getDiscussions = async (req, res) => {
 // }
 
 exports.addComment = async (req, res) => {
-    try{
-    console.log('addComment', req.body);
-    const { discussion_id, user_id, comment } = req.body;
-    const currentDate = new Date();
-    const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ');
+    try {
+        console.log('addComment', req.body);
+        const { discussion_id, user_id, comment } = req.body;
+        const currentDate = new Date();
+        const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ');
 
-    const encodedUserData = req.cookies.user;
-    const currentUserData = JSON.parse(encodedUserData);
+        const encodedUserData = req.cookies.user;
+        const currentUserData = JSON.parse(encodedUserData);
 
-    const Insertdata = {
-        discussion_id: discussion_id,
-        user_id: user_id,
-        comment: comment,
-        ip_address: requestIp.getClientIp(req),
-        created_at: formattedDate,
-        comment_status: "0"
-    };
+        const Insertdata = {
+            discussion_id: discussion_id,
+            user_id: user_id,
+            comment: comment,
+            ip_address: requestIp.getClientIp(req),
+            created_at: formattedDate,
+            comment_status: "0"
+        };
 
-    const insertQuery = 'INSERT INTO discussions_user_response SET ?';
-    db.query(insertQuery, Insertdata, async (insertErr, insertResult) => {
-        if (insertErr) {
-            return res.status(500).send({
-                status: 'not ok',
-                message: 'Something went wrong 3' + insertErr
-            });
-        } else {
-            const url = encodedUserData ? `${process.env.MAIN_URL}edit-discussion/${discussion_id}` : `${process.env.MAIN_URL}admin-login`;
+        const insertQuery = 'INSERT INTO discussions_user_response SET ?';
+        db.query(insertQuery, Insertdata, async (insertErr, insertResult) => {
+            if (insertErr) {
+                return res.status(500).send({
+                    status: 'not ok',
+                    message: 'Something went wrong 3' + insertErr
+                });
+            } else {
+                const url = encodedUserData ? `${process.env.MAIN_URL}edit-discussion/${discussion_id}` : `${process.env.MAIN_URL}admin-login`;
 
-            const html = `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+                const html = `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
                     <style>
                     body, table, td, p, a, h1, h2, h3, h4, h5, h6, div {
                         font-family: Calibri, 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif !important;
@@ -7909,34 +7909,34 @@ exports.addComment = async (req, res) => {
                     </table>
                     </div>`;
 
-            const mailOptions = {
-                from: process.env.MAIL_USER,
-                //to: "dev2.scwt@gmail.com",
-                to: process.env.MAIL_USER,
-                subject: 'Discussion comment approval',
-                html: html
-            };
+                const mailOptions = {
+                    from: process.env.MAIL_USER,
+                    //to: "dev2.scwt@gmail.com",
+                    to: process.env.MAIL_USER,
+                    subject: 'Discussion comment approval',
+                    html: html
+                };
 
-            try {
-                await mdlconfig.transporter.sendMail(mailOptions);
-                console.log('Mail Send');
-                return res.send({
-                    status: 'ok',
-                    message: 'Your Comment Added Successfully'
-                });
-            } catch (err) {
-                console.error(err);
-                return res.status(500).send({
-                    status: 'not ok',
-                    message: 'Failed to send email'
-                });
+                try {
+                    await mdlconfig.transporter.sendMail(mailOptions);
+                    console.log('Mail Send');
+                    return res.send({
+                        status: 'ok',
+                        message: 'Your Comment Added Successfully'
+                    });
+                } catch (err) {
+                    console.error(err);
+                    return res.status(500).send({
+                        status: 'not ok',
+                        message: 'Failed to send email'
+                    });
+                }
             }
-        }
-    });
-}catch (error) {
-    console.error('Error:', error);
-    return res.status(500).json({ message: 'An error occurred.', error: error.message });
-}
+        });
+    } catch (error) {
+        console.error('Error:', error);
+        return res.status(500).json({ message: 'An error occurred.', error: error.message });
+    }
 }
 
 
@@ -12408,57 +12408,57 @@ exports.addingUsers = async (req, res) => {
 
 exports.confirmUser = async (req, res) => {
     try {
-      const id = req.body.id;
-      const activationId = 1;
-      const isUserQuery = `SELECT * FROM users WHERE user_id = ?`;
-      const result = await query(isUserQuery, [id]);
-  
-      const userDetails = {
-        fullName : result[0].first_name + ' ' + result[0].last_name ,
-        email : result[0].email,
-        phone : result[0].phone 
-      }
-      const adminMail = process.env.MAIL_USER
-  
-      if (result && result.length > 0) {
-        const updateQuery = `UPDATE users SET user_status = ? WHERE user_id = ?`;
-        const updateResult = await query(updateQuery, [activationId, id]);
-  
-        // Check if the update was successful
-        if (updateResult && updateResult.affectedRows > 0) {
-  
-          const userActivationHtml = comFunction2.userActivation(userDetails.fullName, userDetails.email) ;
-  
-          const userActivationHtmlForAdmin = comFunction2.userActivationmailtoAdmin(userDetails.fullName, userDetails.email, userDetails.phone) ;
-  
-        //   const emailSentToUser = await sendEmail(userDetails.email, 'Welcome to CEchoes! 🎉', userActivationHtml); // User
-        //   const emailSentToAdmin = await sendEmail(adminMail, 'Registration at CEchoes', userActivationHtmlForAdmin); // Admin
-  
-          if (userActivationHtml && userActivationHtmlForAdmin ) {
-            return res.status(200).json({
-              status: "ok",
-              message: 'Account activation has been successful, and activation emails have been forwarded to the user and the admin.',
-            });
-          } else {
-            return res.status(500).json({
-              status: "error",
-              message: "Failed to send activation email",
-            });
-          }
-  
-        } else {
-          
-          return res.status(400).json({ message: 'Activation failed' }); 
+        const id = req.body.id;
+        const activationId = 1;
+        const isUserQuery = `SELECT * FROM users WHERE user_id = ?`;
+        const result = await query(isUserQuery, [id]);
+
+        const userDetails = {
+            fullName: result[0].first_name + ' ' + result[0].last_name,
+            email: result[0].email,
+            phone: result[0].phone
         }
-      } else {
-        // User not found
-        return res.status(404).json({ message: 'User not found' });
-      }
+        const adminMail = process.env.MAIL_USER
+
+        if (result && result.length > 0) {
+            const updateQuery = `UPDATE users SET user_status = ? WHERE user_id = ?`;
+            const updateResult = await query(updateQuery, [activationId, id]);
+
+            // Check if the update was successful
+            if (updateResult && updateResult.affectedRows > 0) {
+
+                const userActivationHtml = comFunction2.userActivation(userDetails.fullName, userDetails.email);
+
+                const userActivationHtmlForAdmin = comFunction2.userActivationmailtoAdmin(userDetails.fullName, userDetails.email, userDetails.phone);
+
+                //   const emailSentToUser = await sendEmail(userDetails.email, 'Welcome to CEchoes! 🎉', userActivationHtml); // User
+                //   const emailSentToAdmin = await sendEmail(adminMail, 'Registration at CEchoes', userActivationHtmlForAdmin); // Admin
+
+                if (userActivationHtml && userActivationHtmlForAdmin) {
+                    return res.status(200).json({
+                        status: "ok",
+                        message: 'Account activation has been successful, and activation emails have been forwarded to the user and the admin.',
+                    });
+                } else {
+                    return res.status(500).json({
+                        status: "error",
+                        message: "Failed to send activation email",
+                    });
+                }
+
+            } else {
+
+                return res.status(400).json({ message: 'Activation failed' });
+            }
+        } else {
+            // User not found
+            return res.status(404).json({ message: 'User not found' });
+        }
     } catch (error) {
-      console.log(error);
-      return res.status(500).json({ message: 'Internal Server Error' });
+        console.log(error);
+        return res.status(500).json({ message: 'Internal Server Error' });
     }
-  };
+};
 
 //actual
 
@@ -12548,7 +12548,7 @@ exports.confirmUser = async (req, res) => {
 
 
 const getPlanFromDatabase = async (planId) => {
-    console.log("planferrg",planId);
+    console.log("planferrg", planId);
     const sql = 'SELECT name, description, monthly_price, yearly_price, currency,per_user_price FROM plan_management WHERE id = ?';
     const result = await queryAsync(sql, [planId]);
     console.log(`Database query result for planId ${planId}:`, result);
@@ -12962,30 +12962,30 @@ const createStripeProductAndPrice = async (plan, billingCycle, memberCount) => {
 
 exports.updateOrderHistory = async (req, res) => {
     try {
-        const { name, email,phone, address, city, state, zip, planId, billingCycle, memberCount, subscriptionId } = req.body;
+        const { name, email, phone, address, city, state, zip, planId, billingCycle, memberCount, subscriptionId } = req.body;
         console.log("updateOrderHistory:", req.body);
 
 
         const getidquery = `SELECT * FROM users WHERE email = "${email}"`;
         const getidvalue = await queryAsync(getidquery);
         var userId = getidvalue[0].user_id;
-        console.log("userId",userId);
+        console.log("userId", userId);
 
-        let customerId = await findOrCreateCustomer(email, name,phone, address, city, state, zip);
+        let customerId = await findOrCreateCustomer(email, name, phone, address, city, state, zip);
         console.log("customerId", customerId);
 
-        let country_name = req.cookies.countryName 
+        let country_name = req.cookies.countryName
         //|| 'India';
-        let country_code = req.cookies.countryCode 
+        let country_code = req.cookies.countryCode
         //|| 'IN';
-        console.log("country_codesdf",country_code);
-        console.log("country_namesdf",country_name);
+        console.log("country_codesdf", country_code);
+        console.log("country_namesdf", country_name);
 
         const getcompanyquery = `SELECT company.* FROM company LEFT JOIN company_claim_request ON company.ID = company_claim_request.company_id WHERE company_claim_request.claimed_by=?`;
-        const getcompanyvalue = await queryAsync(getcompanyquery,[userId]);
-        console.log("getcompanyvaluea",getcompanyvalue);
-        var companyID = getcompanyvalue[0] .ID;
-        console.log("companyID",companyID);
+        const getcompanyvalue = await queryAsync(getcompanyquery, [userId]);
+        console.log("getcompanyvaluea", getcompanyvalue);
+        var companyID = getcompanyvalue[0].ID;
+        console.log("companyID", companyID);
 
         const updatecompany_query = `UPDATE company SET membership_type_id = ? WHERE ID = "${companyID}"`;
         const updatecompany_value = await queryAsync(updatecompany_query, [planId]);
@@ -13007,68 +13007,68 @@ exports.updateOrderHistory = async (req, res) => {
 
         console.log("Subscription current start timestamp:", subscriptionDetails.current_start);
         console.log("Subscription charge at timestamp:", subscriptionDetails.charge_at);
-        
+
         const subscriptionStartDate = new Date(subscriptionDetails.current_start * 1000);
         const subscriptionEndDate = new Date(subscriptionDetails.charge_at * 1000);
-        
+
         console.log("Subscription start date:", subscriptionStartDate);
         console.log("Subscription end date:", subscriptionEndDate);
-        
-        
+
+
         const order_history_data = {
             // user_id: userID,
             payment_status: 'success',
             subscription_details: JSON.stringify(subscriptionDetails),
             subscription_start_date: new Date(subscriptionDetails.current_start * 1000),
             subscription_end_date: new Date(subscriptionDetails.charge_at * 1000),
-          };
-          
-          const update_order_history_query = `
+        };
+
+        const update_order_history_query = `
             UPDATE order_history
             SET payment_status = ?, subscription_details = ?, subscription_start_date = ?, subscription_end_date = ?
             WHERE stripe_subscription_id = ?
           `;
-          
-          const update_values = [
+
+        const update_values = [
             //order_history_data.user_id,
             order_history_data.payment_status,
             order_history_data.subscription_details,
             order_history_data.subscription_start_date,
             order_history_data.subscription_end_date,
             subscriptionId
-          ];
-          try {
+        ];
+        try {
             const update_result = await queryAsync(update_order_history_query, update_values);
             console.log(`Order history updated for subscription ID ${subscriptionId}`);
-          } catch (error) {
+        } catch (error) {
             console.error('Failed to update order history:', error);
-          }
+        }
     } catch (error) {
         console.error('Error creating subscription flow:', error);
         res.status(500).send({ error: error.message });
-    } 
+    }
 };
 
 exports.createSubscription = async (req, res) => {
     try {
-        const { name, email,phone, address, city, state, zip, planId, billingCycle, memberCount,} = req.body;
+        const { name, email, phone, address, city, state, zip, planId, billingCycle, memberCount, } = req.body;
         console.log("Subscription request body:", req.body);
 
 
         const getidquery = `SELECT * FROM users WHERE email = "${email}"`;
         const getidvalue = await queryAsync(getidquery);
         var userId = getidvalue[0].user_id;
-        console.log("userId",userId);
+        console.log("userId", userId);
 
-        let customerId = await findOrCreateCustomer(email, name,phone, address, city, state, zip);
+        let customerId = await findOrCreateCustomer(email, name, phone, address, city, state, zip);
         console.log("customerId", customerId);
 
-        let country_name = req.cookies.countryName 
+        let country_name = req.cookies.countryName
         //|| 'India';
-        let country_code = req.cookies.countryCode 
+        let country_code = req.cookies.countryCode
         //|| 'IN';
-        console.log("country_codesdf",country_code);
-        console.log("country_namesdf",country_name);
+        console.log("country_codesdf", country_code);
+        console.log("country_namesdf", country_name);
 
         // const customerId = customer.id.startsWith('cust_') ? customer.id : `cust_${customer.id}`;
         // console.log('Formatted Customer ID:', customerId);
@@ -13081,14 +13081,14 @@ exports.createSubscription = async (req, res) => {
             return res.status(404).send({ error: 'Plan not found' });
         }
 
-        const priceId = await createRazorpayPlan(plan, billingCycle, memberCount, country_code);
+        const priceId = await createRazorpayPlanprevioususer(plan, billingCycle, memberCount, country_code);
         if (!priceId) {
             return res.status(500).send({ error: 'Failed to create price for the plan' });
         }
         console.log("Created Razorpay plan:", priceId);
 
-        var amountss=  priceId.item.amount;
-        console.log("amountss",amountss);
+        var amountss = priceId.item.amount;
+        console.log("amountss", amountss);
 
         const subscriptionParams = {
             plan_id: priceId.id,
@@ -13105,7 +13105,7 @@ exports.createSubscription = async (req, res) => {
             // }
         };
 
-        console.log("subscriptionParams",subscriptionParams);
+        console.log("subscriptionParams", subscriptionParams);
         const subscription = await razorpay.subscriptions.create(subscriptionParams);
         console.log("Created subscription:", subscription);
 
@@ -13164,12 +13164,12 @@ exports.createSubscription = async (req, res) => {
             message: 'Subscription created successfully',
             subscription: subscription,
             amount
-            :amountss
+                : amountss
         });
     } catch (error) {
         console.error('Error creating subscription flow:', error);
         res.status(500).send({ error: error.message });
-    } 
+    }
 };
 
 const getInvoicesForSubscription = async (subscriptionId) => {
@@ -13207,7 +13207,7 @@ exports.createexternalSubscription = async (req, res) => {
 
         // Fetch plan details from database
         const plan = await getPlanFromDatabase(planId);
-        console.log("planss",plan);
+        console.log("planss", plan);
         if (!plan) {
             return res.status(404).send({ error: 'Plan not found' });
         }
@@ -13266,7 +13266,7 @@ exports.createexternalSubscription = async (req, res) => {
 
 
 exports.externalRegistration = async (req, res) => {
-    const { first_name, last_name, email, register_password, phone, address, city, state, zip, planId, billingCycle, memberCount, subscriptionId,user_state, user_country, register_confirm_password  } = req.body;
+    const { first_name, last_name, email, register_password, phone, address, city, state, zip, planId, billingCycle, memberCount, subscriptionId, user_state, user_country, register_confirm_password } = req.body;
     console.log("externalRegistration", req.body);
 
     try {
@@ -13309,22 +13309,22 @@ exports.externalRegistration = async (req, res) => {
         const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ');
 
         // Insert user into users table
-        const userInsertQuery = 'INSERT INTO users (first_name, last_name, email, password, register_from, user_registered, user_status, user_type_id, alise_name) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
-        db.query(userInsertQuery, [first_name, last_name, email, hashedPassword, 'web', formattedDate, 3, 2, first_name + last_name], async (err, userResults) => {
+        const userInsertQuery = 'INSERT INTO users (first_name, last_name, email,phone, password, register_from, user_registered, user_status, user_type_id, alise_name) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+        db.query(userInsertQuery, [first_name, last_name, email, phone, hashedPassword, 'web', formattedDate, 3, 2, first_name + last_name], async (err, userResults) => {
             if (err) {
                 console.error('Error inserting user into "users" table:', err);
                 return res.status(500).json({ status: 'err', data: '', message: 'An error occurred while processing your request' });
             }
 
             var userID = userResults.insertId;
-            console.log("userID",userID);
+            console.log("userID", userID);
 
             // Send welcome email
             var mailOptions = {
                 from: process.env.MAIL_USER,
                 to: email,
                 subject: 'Welcome e-mail',
-                html:`<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+                html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
                 <style>
                 body, table, td, p, a, h1, h2, h3, h4, h5, h6, div {
                     font-family: Calibri, 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif !important;
@@ -13435,7 +13435,7 @@ exports.externalRegistration = async (req, res) => {
                 from: process.env.MAIL_USER,
                 to: process.env.MAIL_USER,
                 subject: 'New Registration at CEchoes',
-                html:`<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+                html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
                 <style>
                 body, table, td, p, a, h1, h2, h3, h4, h5, h6, div {
                     font-family: Calibri, 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif !important;
@@ -13582,7 +13582,7 @@ exports.externalRegistration = async (req, res) => {
 
                             const updatecompanyclaim_query = `INSERT INTO company_claim_request SET company_id = ?, claimed_by = ?, status = ?, claimed_date = ?`;
                             const updatecompanyclaim_values = [companyId, userID, '1', formattedDate];
-                            const updatecompanyclaim_result = await queryAsync(updatecompanyclaim_query, updatecompanyclaim_values);                         
+                            const updatecompanyclaim_result = await queryAsync(updatecompanyclaim_query, updatecompanyclaim_values);
                             console.log("Company claim request inserted successfully:", updatecompanyclaim_result);
 
                             const subscriptionDetails = await razorpay.subscriptions.fetch(subscriptionId);
@@ -13592,7 +13592,7 @@ exports.externalRegistration = async (req, res) => {
                                 'subscription_id': subscriptionId
                             });
                             console.log('Invoices for subscriptions:', invoices);
-                    
+
                             const invoiceId = invoices.items.length > 0 ? invoices.items[0].id : null;
                             console.log('Invoice IDs:', invoiceId);
 
@@ -13601,52 +13601,52 @@ exports.externalRegistration = async (req, res) => {
 
                             console.log("Subscription current start timestamp:", subscriptionDetails.current_start);
                             console.log("Subscription charge at timestamp:", subscriptionDetails.charge_at);
-                            
+
                             const subscriptionStartDate = new Date(subscriptionDetails.current_start * 1000);
                             const subscriptionEndDate = new Date(subscriptionDetails.charge_at * 1000);
-                            
+
                             console.log("Subscription start date:", subscriptionStartDate);
                             console.log("Subscription end date:", subscriptionEndDate);
-                            
-                            
+
+
                             const order_history_data = {
                                 user_id: userID,
                                 payment_status: 'success',
                                 subscription_details: JSON.stringify(subscriptionDetails),
                                 subscription_start_date: new Date(subscriptionDetails.current_start * 1000),
                                 subscription_end_date: new Date(subscriptionDetails.charge_at * 1000),
-                              };
-                              
-                              const update_order_history_query = `
+                            };
+
+                            const update_order_history_query = `
                                 UPDATE order_history
                                 SET user_id = ?, payment_status = ?, subscription_details = ?, subscription_start_date = ?, subscription_end_date = ?
                                 WHERE stripe_subscription_id = ?
                               `;
-                              
-                              const update_values = [
+
+                            const update_values = [
                                 order_history_data.user_id,
                                 order_history_data.payment_status,
                                 order_history_data.subscription_details,
                                 order_history_data.subscription_start_date,
                                 order_history_data.subscription_end_date,
                                 subscriptionId
-                              ];
-                              
-                              // Execute the query
-                              try {
+                            ];
+
+                            // Execute the query
+                            try {
                                 const update_result = await queryAsync(update_order_history_query, update_values);
                                 console.log(`Order history updated for subscription ID ${subscriptionId}`);
-                              } catch (error) {
+                            } catch (error) {
                                 console.error('Failed to update order history:', error);
-                              }
-                              
+                            }
+
 
                             // Insert user meta
                             const userMetaInsertQuery = 'INSERT INTO user_customer_meta (user_id, review_count, country, state) VALUES (?, ?, ?, ?)';
-                            await queryAsync(userMetaInsertQuery, [userResults.insertId, 0,user_country, user_state]);
+                            await queryAsync(userMetaInsertQuery, [userResults.insertId, 0, user_country, user_state]);
 
                             // Register user in blog API
-                             const userRegistrationData = {
+                            const userRegistrationData = {
                                 username: email,
                                 email: email,
                                 password: register_password,
@@ -13803,7 +13803,7 @@ exports.externalRegistration = async (req, res) => {
 //                                 <td id="header_wrapper" style="padding: 36px 48px; display: block;">
 //                                    <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Welcome</h1>
 //                                 </td>
-          
+
 //                                </tr>
 //                              </tbody>
 //                            </table>
@@ -13823,7 +13823,7 @@ exports.externalRegistration = async (req, res) => {
 //                                     <tr>
 //                                      <td style="padding: 48px;" valign="top">
 //                                        <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
-                                        
+
 //                                         <table border="0" cellpadding="4" cellspacing="0" width="90%">
 //                                           <tr>
 //                                             <td colspan="2">
@@ -13914,7 +13914,7 @@ exports.externalRegistration = async (req, res) => {
 //                                 <td id="header_wrapper" style="padding: 36px 48px; display: block;">
 //                                    <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Welcome</h1>
 //                                 </td>
-          
+
 //                                </tr>
 //                              </tbody>
 //                            </table>
@@ -13934,7 +13934,7 @@ exports.externalRegistration = async (req, res) => {
 //                                     <tr>
 //                                      <td style="padding: 48px;" valign="top">
 //                                        <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
-                                        
+
 //                                         <table border="0" cellpadding="4" cellspacing="0" width="90%">
 //                                           <tr>
 //                                             <td colspan="2">
@@ -14043,7 +14043,7 @@ exports.externalRegistration = async (req, res) => {
 //                                 'subscription_id': subscriptionId
 //                             });
 //                             console.log('Invoices for subscriptions:', invoices);
-                    
+
 //                             const invoiceId = invoices.items.length > 0 ? invoices.items[0].id : null;
 //                             console.log('Invoice IDs:', invoiceId);
 
@@ -14052,14 +14052,14 @@ exports.externalRegistration = async (req, res) => {
 
 //                             console.log("Subscription current start timestamp:", subscriptionDetails.current_start);
 //                             console.log("Subscription charge at timestamp:", subscriptionDetails.charge_at);
-                            
+
 //                             const subscriptionStartDate = new Date(subscriptionDetails.current_start * 1000);
 //                             const subscriptionEndDate = new Date(subscriptionDetails.charge_at * 1000);
-                            
+
 //                             console.log("Subscription start date:", subscriptionStartDate);
 //                             console.log("Subscription end date:", subscriptionEndDate);
-                            
-                            
+
+
 //                             const order_history_data = {
 //                                 user_id: userID,
 //                                 payment_status: 'success',
@@ -14067,13 +14067,13 @@ exports.externalRegistration = async (req, res) => {
 //                                 subscription_start_date: new Date(subscriptionDetails.current_start * 1000),
 //                                 subscription_end_date: new Date(subscriptionDetails.charge_at * 1000),
 //                               };
-                              
+
 //                               const update_order_history_query = `
 //                                 UPDATE order_history
 //                                 SET user_id = ?, payment_status = ?, subscription_details = ?, subscription_start_date = ?, subscription_end_date = ?
 //                                 WHERE stripe_subscription_id = ?
 //                               `;
-                              
+
 //                               const update_values = [
 //                                 order_history_data.user_id,
 //                                 order_history_data.payment_status,
@@ -14082,7 +14082,7 @@ exports.externalRegistration = async (req, res) => {
 //                                 order_history_data.subscription_end_date,
 //                                 subscriptionId
 //                               ];
-                              
+
 //                               // Execute the query
 //                               try {
 //                                 const update_result = await queryAsync(update_order_history_query, update_values);
@@ -14090,7 +14090,7 @@ exports.externalRegistration = async (req, res) => {
 //                               } catch (error) {
 //                                 console.error('Failed to update order history:', error);
 //                               }
-                              
+
 
 //                             // Insert user meta
 //                             const userMetaInsertQuery = 'INSERT INTO user_customer_meta (user_id, review_count, country, state) VALUES (?, ?, ?, ?)';
@@ -14289,15 +14289,15 @@ const fetchPaymentsByInvoiceId = async (invoiceId) => {
         // Extract payments from the response
         const payments = response.items;
 
-        console.log("payments",payments);
+        console.log("payments", payments);
 
         // Filter payments by invoiceId
         const matchingPayments = payments.filter(payment => payment.invoice_id === invoiceId);
 
         console.log('Payments for invoice:', matchingPayments);
-        if(matchingPayments.length>0){
-            return matchingPayments; 
-        } else{
+        if (matchingPayments.length > 0) {
+            return matchingPayments;
+        } else {
             return [];
         }
     } catch (error) {
@@ -14306,18 +14306,18 @@ const fetchPaymentsByInvoiceId = async (invoiceId) => {
     }
 };
 
- //fetchPaymentsByInvoiceId('inv_OXHIwBbIbje4gl');
+//fetchPaymentsByInvoiceId('inv_OXHIwBbIbje4gl');
 
 async function findOrCreateCustomer(email, name, phone, address, city, state, zip) {
     try {
         console.log("email:", email);
         const customers = await razorpay.customers.all();
         console.log("customerslist:", customers);
-        console.log("address",address);
-        console.log("name",name);
-        console.log("city",city);
-        console.log("state",state);
-        console.log("zip",zip);
+        console.log("address", address);
+        console.log("name", name);
+        console.log("city", city);
+        console.log("state", state);
+        console.log("zip", zip);
 
         if (customers.items.length > 0) {
             const foundCustomer = customers.items.find(customer => customer.email === email);
@@ -14388,11 +14388,11 @@ async function CreateCustomer(email, name, phone, address, city, state, zip) {
         console.log("email:", email);
         const customers = await razorpay.customers.all();
         console.log("customerslist:", customers);
-        console.log("address",address);
-        console.log("name",name);
-        console.log("city",city);
-        console.log("state",state);
-        console.log("zip",zip);
+        console.log("address", address);
+        console.log("name", name);
+        console.log("city", city);
+        console.log("state", state);
+        console.log("zip", zip);
 
         if (customers.items.length > 0) {
             const foundCustomer = customers.items.find(customer => customer.email == email);
@@ -14548,19 +14548,53 @@ const createRazorpayPlan = async (plan, billingCycle, memberCount, country_code)
             addonPrice = userAddonPrice * memberCount;
         }
 
-        const totalPrice = parseFloat(basePrice) + parseFloat(addonPrice);
-        if (isNaN(totalPrice) || totalPrice <= 0) {
-            throw new Error('Invalid total price');
+        const getcurencyquery = `SELECT * FROM currency_conversion`;
+        const getcurrencyval = await queryAsync(getcurencyquery);
+        console.log("getcurrencyval", getcurrencyval);
+
+        var indian_currency = getcurrencyval[0].inr_currency;
+        console.log("indian_currency", indian_currency);
+        var jp_currency = getcurrencyval[0].jpy_currency;
+        console.log("jp_currency", jp_currency);
+
+        if (getcurrencyval.length > 0) {
+            if (country_code == "IN") {
+                var toalbasePrice = basePrice * indian_currency;
+                var totaladdonPrice = addonPrice * indian_currency
+                var totalPrice = parseFloat(toalbasePrice) + parseFloat(totaladdonPrice);
+                if (isNaN(totalPrice) || totalPrice <= 0) {
+                    throw new Error('Invalid total price');
+                }
+                console.log("totalPrice", totalPrice);
+            } else if (country_code == "JP") {
+                var toalbasePrice = basePrice * jp_currency;
+                var totaladdonPrice = addonPrice * jp_currency;
+                const totalPrice = parseFloat(basePrice) + parseFloat(addonPrice);
+                if (isNaN(totalPrice) || totalPrice <= 0) {
+                    throw new Error('Invalid total price');
+                }
+                console.log("totalPrice", totalPrice);
+            }else{
+                var totalPrice = parseFloat(basePrice) + parseFloat(addonPrice);
+                if (isNaN(totalPrice) || totalPrice <= 0) {
+                    throw new Error('Invalid total price');
+                }
+                console.log("totalPrice", totalPrice);
+            }
         }
-        console.log("totalPrice", totalPrice);
+
 
         let totalPriceInPaise;
-        if (country_code === "IN") {
+        if (country_code == "IN") {
             totalPriceInPaise = totalPrice * 100;
         } else if (country_code === "JP") {
-            totalPriceInPaise = totalPrice * 100 * 1.23; // Convert to paise then apply conversion rate
+            const conversionRate = 1.23;
+            console.log("jpppp");
+            //totalPriceInPaise = totalPrice * 100 * conversionRate;
+            totalPriceInPaise = totalPrice * 100 ;
+            console.log("totalPriceInPaisedf",totalPriceInPaise);
         } else {
-            totalPriceInPaise = totalPrice * 100; // Default conversion to paise
+            totalPriceInPaise = totalPrice * 100;
         }
         console.log("totalPriceInPaise", totalPriceInPaise);
 
@@ -14577,10 +14611,10 @@ const createRazorpayPlan = async (plan, billingCycle, memberCount, country_code)
         } else {
             throw new Error('Invalid billing cycle');
         }
-        console.log("period",period);
-        console.log("interval",interval);
-        console.log("plan.name",plan.name);
-        console.log("plan.description",plan.description);
+        console.log("period", period);
+        console.log("interval", interval);
+        console.log("plan.name", plan.name);
+        console.log("plan.description", plan.description);
 
         const razorpayPlan = await razorpay.plans.create({
             period: period,
@@ -14589,6 +14623,7 @@ const createRazorpayPlan = async (plan, billingCycle, memberCount, country_code)
                 name: plan.name,
                 description: plan.description,
                 amount: totalPriceInPaise,
+                //amount: totalPrice,
                 currency: 'INR'
             }
         });
@@ -14600,6 +14635,120 @@ const createRazorpayPlan = async (plan, billingCycle, memberCount, country_code)
     }
 };
 
+const createRazorpayPlanprevioususer = async (plan, billingCycle, memberCount, country_code) => {
+    try {
+        memberCount = parseInt(memberCount);
+        console.log("memberCount", memberCount);
+        if (isNaN(memberCount) || memberCount < 0) {
+            throw new Error('Invalid memberCount');
+        }
+
+        console.log("country_code", country_code);
+        console.log("plan", plan);
+        console.log("billingCycle", billingCycle);
+
+        const basePrice = billingCycle === 'yearly' ? plan.yearly_price : plan.monthly_price;
+        if (isNaN(basePrice) || basePrice <= 0) {
+            throw new Error('Invalid base price');
+        }
+
+        let addonPrice = 0;
+        if (memberCount > 0) {
+            const userAddonPrice = plan.per_user_price;
+            addonPrice = userAddonPrice * memberCount;
+        }
+
+        const getcurencyquery = `SELECT * FROM currency_conversion`;
+        const getcurrencyval = await queryAsync(getcurencyquery);
+        //console.log("getcurrencyval", getcurrencyval);
+
+        // var indian_currency = getcurrencyval[0].inr_currency;
+        // console.log("indian_currency", indian_currency);
+        // var jp_currency = getcurrencyval[0].jpy_currency;
+        // console.log("jp_currency", jp_currency);
+
+        // if (getcurrencyval.length > 0) {
+        //     if (country_code == "IN") {
+        //         var toalbasePrice = basePrice * indian_currency;
+        //         var totaladdonPrice = addonPrice * indian_currency
+        //         var totalPrice = parseFloat(toalbasePrice) + parseFloat(totaladdonPrice);
+        //         if (isNaN(totalPrice) || totalPrice <= 0) {
+        //             throw new Error('Invalid total price');
+        //         }
+        //         console.log("totalPrice", totalPrice);
+        //     } else if (country_code == "JP") {
+        //         var toalbasePrice = basePrice * jp_currency;
+        //         var totaladdonPrice = addonPrice * jp_currency;
+        //         const totalPrice = parseFloat(toalbasePrice) + parseFloat(totaladdonPrice);
+        //         if (isNaN(totalPrice) || totalPrice <= 0) {
+        //             throw new Error('Invalid total price');
+        //         }
+        //         console.log("totalPrice", totalPrice);
+        //     }else{
+
+
+                var totalPrice = parseFloat(basePrice) + parseFloat(addonPrice);
+                if (isNaN(totalPrice) || totalPrice <= 0) {
+                    throw new Error('Invalid total price');
+                }
+                console.log("totalPrice", totalPrice);
+            //}
+        //}
+
+
+        let totalPriceInPaise;
+        // if (country_code == "IN") {
+        //     totalPriceInPaise = totalPrice * 100;
+        // } 
+        // else if (country_code == "JP") {
+        //     const conversionRate = 1.23;
+        //     console.log("jpppp");
+        //     //totalPriceInPaise = totalPrice * 100 * conversionRate;
+        //     totalPriceInPaise = totalPrice * 100 ;
+        //     console.log("totalPriceInPaisedf",totalPriceInPaise);
+        // }
+        //  else {
+        //     totalPriceInPaise = totalPrice * 100;
+        // }
+        totalPriceInPaise = totalPrice * 100;
+        console.log("totalPriceInPaise", totalPriceInPaise);
+
+        let period, interval;
+        if (billingCycle === 'yearly') {
+            period = 'monthly';
+            interval = 13; // 13 months
+        } else if (billingCycle === 'monthly') {
+            period = 'monthly';
+            interval = 1; // 1 month
+        } else if (billingCycle === 'daily') {
+            period = 'daily';
+            interval = 7; // 7 days
+        } else {
+            throw new Error('Invalid billing cycle');
+        }
+        console.log("period", period);
+        console.log("interval", interval);
+        console.log("plan.name", plan.name);
+        console.log("plan.description", plan.description);
+
+        const razorpayPlan = await razorpay.plans.create({
+            period: period,
+            interval: interval,
+            item: {
+                name: plan.name,
+                description: plan.description,
+                amount: totalPriceInPaise,
+                //amount: totalPrice,
+                currency: 'INR'
+            }
+        });
+        console.log("razorpayPlan", razorpayPlan);
+        return razorpayPlan;
+    } catch (error) {
+        console.error('Error creating Razorpay plan:', error);
+        throw error;
+    }
+};
 
 // const fetchActiveSubscriptionsFromStripe = async () => {
 //     const subscriptions = [];
@@ -14743,7 +14892,7 @@ async function fetchActiveSubscriptions() {
         };
         const response = await axios.get('https://api.razorpay.com/v1/subscriptions?status=active', { auth });
         console.log('Active Subscriptions:', response.data.items);
-        return response.data.items;  
+        return response.data.items;
     } catch (error) {
         console.error('Error fetching active subscriptions:', error.response ? error.response.data : error.message);
         throw error;
@@ -14754,7 +14903,7 @@ async function fetchSubscriptionsFromDB() {
     try {
         const query = 'SELECT stripe_subscription_id, subscription_start_date, subscription_end_date FROM order_history';
         const subscriptionsData = await queryAsync(query);
-        console.log("subscriptionsData",subscriptionsData);
+        console.log("subscriptionsData", subscriptionsData);
         return subscriptionsData;
     } catch (error) {
         console.error('Error fetching subscriptions from database:', error);
