@@ -437,22 +437,22 @@
             document.getElementById('main_address_pin_code').addEventListener('input', function (e) {
                 const value = e.target.value;
                 if (value.length > 6) {
-                    e.target.value = value.slice(0, 6);
+                    e.target.value = value.slice(0, 10);
                 }
             });
 
-            document.getElementById('main_address_pin_code').addEventListener('blur', function (e) {
-                const value = e.target.value;
-                if (value.length !== 6) {
-                    // alert('Pincode Code must be exactly 6 digits.');
-                    Swal.fire({
-                        icon: 'error',
-                        // title: 'Failed to load states',
-                        text: 'Pincode Code must be exactly 6 digits.'
-                    });
-                    //e.target.focus();
-                }
-            });
+            // document.getElementById('main_address_pin_code').addEventListener('blur', function (e) {
+            //     const value = e.target.value;
+            //     if (value.length !== 6) {
+            //         // alert('Pincode Code must be exactly 6 digits.');
+            //         Swal.fire({
+            //             icon: 'error',
+            //             // title: 'Failed to load states',
+            //             text: 'Pincode Code must be exactly 6 digits.'
+            //         });
+            //         //e.target.focus();
+            //     }
+            // });
 
             document.getElementById('register_password').addEventListener('input', function (e) {
                 const password = e.target.value;
