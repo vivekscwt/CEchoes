@@ -442,7 +442,7 @@ exports.frontendUserRegister = async (req, res) => {
                                                             data: userData,
                                                             wp_user: wp_user_data,
                                                             currentUrlPath: req.body.currentUrlPath,
-                                                            message: 'Registration successful you are automatically login to your dashboard'
+                                                            message: 'Registration Successful. Please wait. You will be logged in to your Dashboard automatically.'
                                                         }
                                                     )
                                                 }
