@@ -329,6 +329,12 @@
                                 }).then(() => {
                                     // Post payment success, create user and company
                                     createUserAndCompany(formData);
+                                    Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success',
+                                    text: 'User and company created successfully.Please wait for admin approval',
+                                    confirmButtonText: 'OK'
+                                })
                                 });
                             },
                             prefill: {
