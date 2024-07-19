@@ -141,7 +141,7 @@
                     </div> -->
                     <div>
                         <label for="main_address_pin_code" class="formbold-form-label">Pincode</label>
-                        <input type="number" name="main_address_pin_code" id="main_address_pin_code"
+                        <input type="text" name="main_address_pin_code" id="main_address_pin_code"
                             placeholder="Enter the pincode" class="formbold-form-input" required />
                     </div>
                 </div>
@@ -305,6 +305,7 @@
                             register_confirm_password: document.getElementById('register_confirm_password').value,
                             user_country: document.getElementById('user_country').value,
                             user_state: document.getElementById('user_state').value,
+                            //main_address_pin_code: 
                         };
 
                         const response = await axios.post('/auth/createexternalSubscription', formData);
@@ -436,10 +437,14 @@
 
             document.getElementById('main_address_pin_code').addEventListener('input', function (e) {
                 const value = e.target.value;
-                if (value.length > 6) {
-                    e.target.value = value.slice(0, 10);
-                }
+
+                // Example: Format input (if needed), e.g., grouping every 4 characters
+                const formattedValue = value.toUpperCase().replace(/[^A-Z0-9]/g, ''); // Remove non-alphanumeric characters and convert to uppercase
+
+                // Update the input field with the formatted value
+                e.target.value = formattedValue;
             });
+
 
             // document.getElementById('main_address_pin_code').addEventListener('blur', function (e) {
             //     const value = e.target.value;
