@@ -55,6 +55,16 @@ body.home header.main_header {
 .header-right-content a.single-link {
     color: #ffffff;
 }
+.country-dropdown {
+    position: relative !important;
+    background: #fccb06;
+    width: 95px !important;
+    border-radius: 4px;
+    padding: 10px 22px;
+    display: block !important;
+    overflow: hidden;
+    box-shadow: rgba(0, 0, 0, 0.4) 0 0 10px;
+}
 
 .header-right-content a.single-link:hover {
     color: #FCCB06;

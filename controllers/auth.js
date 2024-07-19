@@ -442,7 +442,7 @@ exports.frontendUserRegister = async (req, res) => {
                                                             data: userData,
                                                             wp_user: wp_user_data,
                                                             currentUrlPath: req.body.currentUrlPath,
-                                                            message: 'Registration successful you are automatically login to your dashboard'
+                                                            message: 'Registration Successful. Please wait. You will be logged in to your Dashboard automatically.'
                                                         }
                                                     )
                                                 }
@@ -13150,7 +13150,8 @@ exports.createSubscription = async (req, res) => {
             user_id: userId,
             stripe_subscription_id: subscription.id,
             plan_id: planId,
-            payment_status: 'pending',
+            //payment_status: 'pending',
+            payment_status: 'success',
             subscription_details: JSON.stringify(subscription),
             subscription_duration: billingCycle,
             subscription_start_date: new Date(subscription.current_start * 1000),
