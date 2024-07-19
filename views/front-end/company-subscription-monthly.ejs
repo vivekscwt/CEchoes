@@ -1,182 +1,182 @@
 <%- include('common/header') -%>
     <link href="/front-end/css/company-profile-dashboard.css" rel="stylesheet" type="text/css">
-    <div class="formbold-form-wrapper">
-        <form id="multiStepForm">
-            <div class="formbold-steps">
-                <ul>
-                    <li class="formbold-step-menu1 active"><span>1</span>Sign Up</li>
-                    <li class="formbold-step-menu2"><span>2</span>Company Details</li>
-                    <li class="formbold-step-menu3"><span>3</span>Confirm</li>
-                </ul>
-            </div>
-            <div class="formbold-form-step-1 form-step active">
-                <div class="formbold-input-flex">
-                    <div>
-                        <label for="first_name" class="formbold-form-label">First name</label>
-                        <input type="text" name="first_name" placeholder="Andrio" id="first_name"
-                            class="formbold-form-input" required />
-                    </div>
-                    <div>
-                        <label for="last_name" class="formbold-form-label">Last name</label>
-                        <input type="text" name="last_name" placeholder="Dolee" id="last_name"
-                            class="formbold-form-input" required />
-                    </div>
+    <div class="container">
+        <div class="formbold-form-wrapper">
+            <form id="multiStepForm">
+                <div class="formbold-steps">
+                    <ul>
+                        <li class="formbold-step-menu1 active"><span>1</span>Sign Up</li>
+                        <li class="formbold-step-menu2"><span>2</span>Company Details</li>
+                        <li class="formbold-step-menu3"><span>3</span>Confirm</li>
+                    </ul>
                 </div>
-                <div class="formbold-input-flex">
-                    <div>
-                        <label for="dob" class="formbold-form-label">Date of Birth</label>
-                        <input type="date" name="dob" id="dob" class="formbold-form-input" />
+                <div class="formbold-form-step-1 form-step active">
+                    <div class="formbold-input-flex">
+                        <div>
+                            <label for="first_name" class="formbold-form-label">First name</label>
+                            <input type="text" name="first_name" placeholder="Andrio" id="first_name"
+                                class="formbold-form-input" required />
+                        </div>
+                        <div>
+                            <label for="last_name" class="formbold-form-label">Last name</label>
+                            <input type="text" name="last_name" placeholder="Dolee" id="last_name"
+                                class="formbold-form-input" required />
+                        </div>
                     </div>
-                    <div>
-                        <label for="email" class="formbold-form-label">Email Address</label>
-                        <input type="email" name="email" placeholder="example@mail.com" id="email"
-                            class="formbold-form-input" required />
-                        <span id="emailError" style="color: red; display: none;">Invalid email address.</span>
-                        <span id="emailAvailabilityError" style="display: none; color: red;">This email is already
-                            registered. Please use a different email address.</span>
+                    <div class="formbold-input-flex">
+                        <div>
+                            <label for="dob" class="formbold-form-label">Date of Birth</label>
+                            <input type="date" name="dob" id="dob" class="formbold-form-input" />
+                        </div>
+                        <div>
+                            <label for="email" class="formbold-form-label">Email Address</label>
+                            <input type="email" name="email" placeholder="example@mail.com" id="email"
+                                class="formbold-form-input" required />
+                            <span id="emailError" style="color: red; display: none;">Invalid email address.</span>
+                            <span id="emailAvailabilityError" style="display: none; color: red;">This email is already
+                                registered. Please use a different email address.</span>
+                        </div>
                     </div>
+                    <div class="formbold-input">
+                        <div>
+                            <label for="phone" class="formbold-form-label">Phone</label>
+                            <input type="number" name="phone" placeholder="9654354544" id="phone"
+                                class="formbold-form-input" required />
+                            <span id="phoneavailabilityerror" style="display: none; color: red;">This Phone is already
+                                registered. Please use a different Phone number.</span>
+                        </div>
+                    </div>
+                    <div class="formbold-input-flex">
+                        <div>
+                            <label for="user_country" class="formbold-form-label">Select a Country</label>
+                            <select name="user_country" id="user_country" class="formbold-form-input" required>
+                                <option value="">Select a country</option>
+                                <% getCountries.forEach(country=> { %>
+                                    <option value="<%= country.id %>">
+                                        <%= country.name %>
+                                    </option>
+                                    <% }); %>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="state" class="formbold-form-label">Select a State</label>
+                            <select name="user_state" id="user_state" class="formbold-form-input" required>
+                                <option value="">Select a state</option>
+                            </select>
+                        </div>
+                    </div>
+    
+                    <div class="formbold-input-flex">
+                        <div>
+                            <label for="register_password" class="formbold-form-label">Password</label>
+                            <div class="input-with-icon">
+                                <input type="password" name="register_password" placeholder="Please enter a password"
+                                    id="register_password" class="formbold-form-input" required />
+                                <div class="input-icon"><i class="fa-solid fa-eye-slash eye-change" id="togglePassword"></i></div>
+                            </div>
+                            <span id="passwordLengthError" style="color: red; display: none;">Password must be between 8 and
+                                30 characters.</span>
+                        </div>
+                        <div>
+                            <label for="register_confirm_password" class="formbold-form-label">Confirm Password</label>
+                            <div class="input-with-icon">
+                                <input type="password" name="register_confirm_password"
+                                    placeholder="Please confirm your password" id="register_confirm_password"
+                                    class="formbold-form-input" required />
+                                <div class="input-icon"><i class="fa-solid fa-eye-slash eye-change" id="toggleConfirmPassword"></i></div>
+                            </div>
+                            <span id="passwordMismatchError" style="color: red; display: none;">Passwords do not
+                                match.</span>
+                        </div>
+                    </div>
+    
                 </div>
-                <div class="formbold-input">
+                <div class="formbold-form-step-2 form-step">
+                    <input type="hidden" name="parent_id" id="parent_id" placeholder="parent company" value="0"
+                        class="formbold-form-input" />
                     <div>
-                        <label for="phone" class="formbold-form-label">Phone</label>
-                        <input type="number" name="phone" placeholder="9654354544" id="phone"
-                            class="formbold-form-input" required />
-                        <span id="phoneavailabilityerror" style="display: none; color: red;">This Phone is already
-                            registered. Please use a different Phone number.</span>
+                        <label for="memberCounts" class="formbold-form-label">Add On Users</label>
+                        <input type="number" min="1" name="memberCount" id="member-count"
+                            placeholder="Enter the number of add-on users" class="formbold-form-input" required />
                     </div>
-                </div>
-                <div class="formbold-input-flex">
                     <div>
-                        <label for="user_country" class="formbold-form-label">Select a Country</label>
-                        <select name="user_country" id="user_country" class="formbold-form-input" required>
+                        <label for="main_address_country" class="formbold-form-label">Select a Country</label>
+                        <select name="main_address_country" id="main_address_country" class="formbold-form-input" required>
                             <option value="">Select a country</option>
-                            <% getCountries.forEach(country=> { %>
-                                <option value="<%= country.id %>">
+                            <% getCountriesList.forEach(country=> { %>
+                                <option value="<%= country.shortname %>">
                                     <%= country.name %>
                                 </option>
                                 <% }); %>
                         </select>
                     </div>
                     <div>
-                        <label for="state" class="formbold-form-label">Select a State</label>
-                        <select name="user_state" id="user_state" class="formbold-form-input" required>
-                            <option value="">Select a state</option>
-                        </select>
+                        <label for="company_name" class="formbold-form-label">Company Name</label>
+                        <input type="text" name="company_name" id="company_name" placeholder="Enter your company name"
+                            class="formbold-form-input" required />
+                        <span id="companyCheckResult" class="result-message" style="color: red;"></span>
+                    </div>
+                    <div>
+                        <label for="main_address" class="formbold-form-label">Company Address</label>
+                        <input type="text" name="main_address" id="main_address" placeholder="Enter your company address"
+                            class="formbold-form-input" required />
+                    </div>
+                    <div>
+                        <label for="companyEmail" class="formbold-form-label">Company Email</label>
+                        <input type="email" name="comp_email" id="comp_email" placeholder="Enter your company email"
+                            class="formbold-form-input" required />
+                        <span id="companyemailAvailabilityError" style="color: red; display: none;"></span>
+                    </div>
+    
+                    <div>
+                        <label for="comp_phone" class="formbold-form-label">Company Phone</label>
+                        <input type="number" name="comp_phone" id="comp_phone" placeholder="Enter your company phone"
+                            class="formbold-form-input" required />
+                        <span id="companyphoneAvailabilityError" style="color: red; display: none;"></span>
+                    </div>
+                    <!-- <div>
+                        <label for="main_address_country" class="formbold-form-label">Country</label>
+                        <input type="text" name="main_address_country" id="main_address_country" placeholder="Enter country"
+                            class="formbold-form-input" required />
+                    </div> -->
+                    <div>
+                        <label for="main_address_pin_code" class="formbold-form-label">Pincode</label>
+                        <input type="number" name="main_address_pin_code" id="main_address_pin_code"
+                            placeholder="Enter the pincode" class="formbold-form-input" required />
                     </div>
                 </div>
-
-                <div class="formbold-input-flex">
-                    <div>
-                        <label for="register_password" class="formbold-form-label">Password</label>
-                        <div class="input-with-icon">
-                            <input type="password" name="register_password" placeholder="Please enter a password"
-                                id="register_password" class="formbold-form-input" required />
-                            <div class="input-icon"><i class="fa-solid fa-eye-slash eye-change" id="togglePassword"></i></div>
+                <div class="formbold-form-step-3 form-step">
+                    <div class="formbold-form-confirm" id="confirmed">
+                        <p>Number of added users: <span id="member-count-display">0</span></p>
+                        <p>Total Amount: <span id="amount-count-display"><%= total_price%></span></p>
+                        <p>Are you sure you want to submit the form?</p>
+                        <div>
+                            <button type="button" class="formbold-confirm-btn active"
+                                onclick="handleConfirmation(true)">Proceed</button>
+                            <!-- <button type="button" class="formbold-confirm-btn" onclick="handleConfirmation(false)">No</button> -->
                         </div>
-                        <span id="passwordLengthError" style="color: red; display: none;">Password must be between 8 and
-                            30 characters.</span>
-                    </div>
-                    <div>
-                        <label for="register_confirm_password" class="formbold-form-label">Confirm Password</label>
-                        <div class="input-with-icon">
-                            <input type="password" name="register_confirm_password"
-                                placeholder="Please confirm your password" id="register_confirm_password"
-                                class="formbold-form-input" required />
-                            <div class="input-icon"><i class="fa-solid fa-eye-slash eye-change" id="toggleConfirmPassword"></i></div>
-                        </div>
-                        <span id="passwordMismatchError" style="color: red; display: none;">Passwords do not
-                            match.</span>
                     </div>
                 </div>
-
-            </div>
-            <div class="formbold-form-step-2 form-step">
-                <input type="hidden" name="parent_id" id="parent_id" placeholder="parent company" value="0"
-                    class="formbold-form-input" />
-                <div>
-                    <label for="memberCounts" class="formbold-form-label">Add On Users</label>
-                    <input type="number" min="1" name="memberCount" id="member-count"
-                        placeholder="Enter the number of add-on users" class="formbold-form-input" required />
+                <div class="formbold-form-btn-wrapper">
+                    <button type="button" class="formbold-back-btn" onclick="prevStep()">Back</button>
+                    <button type="button" id="nextStepBtn" class="formbold-btn" onclick="nextStep()">Next
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <g clip-path="url(#clip0_1675_1807)">
+                                <path
+                                    d="M10.7814 7.33312L7.20541 3.75712L8.14808 2.81445L13.3334 7.99979L8.14808 13.1851L7.20541 12.2425L10.7814 8.66645H2.66675V7.33312H10.7814Z"
+                                    fill="white" />
+                            </g>
+                            <defs>
+                                <clipPath id="clip0_1675_1807">
+                                    <rect width="16" height="16" fill="white" />
+                                </clipPath>
+                            </defs>
+                        </svg>
+                    </button>
                 </div>
-                <div>
-                    <label for="main_address_country" class="formbold-form-label">Select a Country</label>
-                    <select name="main_address_country" id="main_address_country" class="formbold-form-input" required>
-                        <option value="">Select a country</option>
-                        <% getCountriesList.forEach(country=> { %>
-                            <option value="<%= country.shortname %>">
-                                <%= country.name %>
-                            </option>
-                            <% }); %>
-                    </select>
-                </div>
-                <div>
-                    <label for="company_name" class="formbold-form-label">Company Name</label>
-                    <input type="text" name="company_name" id="company_name" placeholder="Enter your company name"
-                        class="formbold-form-input" required />
-                    <span id="companyCheckResult" class="result-message" style="color: red;"></span>
-                </div>
-                <div>
-                    <label for="main_address" class="formbold-form-label">Company Address</label>
-                    <input type="text" name="main_address" id="main_address" placeholder="Enter your company address"
-                        class="formbold-form-input" required />
-                </div>
-                <div>
-                    <label for="companyEmail" class="formbold-form-label">Company Email</label>
-                    <input type="email" name="comp_email" id="comp_email" placeholder="Enter your company email"
-                        class="formbold-form-input" required />
-                    <span id="companyemailAvailabilityError" style="color: red; display: none;"></span>
-                </div>
-
-                <div>
-                    <label for="comp_phone" class="formbold-form-label">Company Phone</label>
-                    <input type="number" name="comp_phone" id="comp_phone" placeholder="Enter your company phone"
-                        class="formbold-form-input" required />
-                    <span id="companyphoneAvailabilityError" style="color: red; display: none;"></span>
-                </div>
-                <!-- <div>
-                    <label for="main_address_country" class="formbold-form-label">Country</label>
-                    <input type="text" name="main_address_country" id="main_address_country" placeholder="Enter country"
-                        class="formbold-form-input" required />
-                </div> -->
-                <div>
-                    <label for="main_address_pin_code" class="formbold-form-label">Pincode</label>
-                    <input type="number" name="main_address_pin_code" id="main_address_pin_code"
-                        placeholder="Enter the pincode" class="formbold-form-input" required />
-                </div>
-            </div>
-            <div class="formbold-form-step-3 form-step">
-                <div class="formbold-form-confirm" id="confirmed">
-                    <p>Number of added users: <span id="member-count-display">0</span></p>
-                    <p>Total Amount: <span id="amount-count-display"><%= total_price%></span></p>
-                    <p>Are you sure you want to submit the form?</p>
-                    <div>
-                        <button type="button" class="formbold-confirm-btn active"
-                            onclick="handleConfirmation(true)">Proceed</button>
-                        <!-- <button type="button" class="formbold-confirm-btn" onclick="handleConfirmation(false)">No</button> -->
-                    </div>
-                </div>
-            </div>
-            <div class="formbold-form-btn-wrapper">
-                <button type="button" class="formbold-back-btn" onclick="prevStep()">Back</button>
-                <button type="button" id="nextStepBtn" class="formbold-btn" onclick="nextStep()">Next
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <g clip-path="url(#clip0_1675_1807)">
-                            <path
-                                d="M10.7814 7.33312L7.20541 3.75712L8.14808 2.81445L13.3334 7.99979L8.14808 13.1851L7.20541 12.2425L10.7814 8.66645H2.66675V7.33312H10.7814Z"
-                                fill="white" />
-                        </g>
-                        <defs>
-                            <clipPath id="clip0_1675_1807">
-                                <rect width="16" height="16" fill="white" />
-                            </clipPath>
-                        </defs>
-                    </svg>
-                </button>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
-
-
 
     <%- include('common/footer') -%>
 
@@ -996,7 +996,9 @@
                 display: flex;
                 gap: 40px;
             }
-
+            .formbold-input {
+                margin-bottom: 25px;
+            }
             .formbold-steps li {
                 display: flex;
                 align-items: center;
@@ -1220,9 +1222,39 @@
                 border-radius: 10px;
                 border: 2px solid black;
             }
-           
+           @media (max-width:575px){
+            .formbold-input-flex>div {
+                width: 100%;
+            }
+            .formbold-input-flex>div {
+                margin-bottom: 20px;
+            }
+            .formbold-input-flex {
+                display: block;
+                margin-bottom: 20px;
+            }
+            .formbold-steps ul{
+                gap: 15px;
+                justify-content: space-between;
+            }
+            .formbold-steps li {
+                gap: 10px;
+                font-size: 15px;
+            }
+           }
+           @media (max-width:420px){
+            .formbold-steps ul {
+                gap: 14px;
+                justify-content: center;
+                flex-wrap: wrap;
+                flex-direction: column;
+            }
+           }
         </style>
 
         </body>
 
         </html>
+
+
+

@@ -376,7 +376,7 @@
                                        </div>
                                           <% if (isSubscribed(plan, 'monthly')) { %>
                                              <label>
-                                                <input type="radio" id="subscribe-<%= plan %>-monthly" name="subscriptionType" value="monthly" disabled checked>
+                                                <input type="radio" id="subscribe-<%= plan %>-monthly" name="subscriptionType" value="monthly" disabled checked class="subscribed-radio">
                                                 Subscribed
                                              </label>
                                        <% } else if (userHasSubscription) { %>
@@ -410,7 +410,7 @@
                                           </div>
                                           <% if (isSubscribed(plan, 'yearly')) { %>
                                              <label>
-                                                 <input type="radio" id="subscribe-<%= plan %>-yearly" name="subscriptionType" value="yearly" disabled checked>
+                                                 <input type="radio" id="subscribe-<%= plan %>-yearly" name="subscriptionType" value="yearly" disabled checked class="subscribed-radio">
                                                  Subscribed
                                              </label>
                                          <% } else if (userHasSubscription) { %>
@@ -456,7 +456,7 @@
 
                                                          <% if (isSubscribed(plan, 'monthly')) { %>
                                                             <label>
-                                                                <input type="radio" id="subscribe-<%= plan %>-monthly" name="subscriptionType" value="monthly" disabled checked>
+                                                                <input type="radio" id="subscribe-<%= plan %>-monthly" name="subscriptionType" value="monthly" disabled checked class="subscribed-radio">
                                                                 Subscribed
                                                             </label>
                                                         <% } else if (userHasSubscription) { %>
@@ -494,7 +494,7 @@
 
                                                                      <% if (isSubscribed(plan, 'yearly')) { %>
                                                                         <label>
-                                                                            <input type="radio" id="subscribe-<%= plan %>-yearly" name="subscriptionType" value="yearly" disabled checked>
+                                                                            <input type="radio" id="subscribe-<%= plan %>-yearly" name="subscriptionType" value="yearly" disabled checked class="subscribed-radio">
                                                                             Subscribed
                                                                         </label>
                                                                     <% } else if (userHasSubscription) { %>
@@ -582,6 +582,33 @@
          }
          .choose-your-plan-box-step>* {
             margin-bottom: 25px;
+         }
+         input[type="radio"] {
+            appearance: none;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 50%;
+            cursor: pointer;
+            height: 16px;
+            width: 16px;
+            position: relative;
+         }
+
+         input[type="radio"]:checked::before {
+            content: '';
+            display: block;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #FCCB06; 
+         }
+
+         input.subscribed-radio[type="radio"]:checked::before {
+            background-color: #FCCB06;
          }
       </style>
 
