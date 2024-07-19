@@ -12975,9 +12975,9 @@ exports.updateOrderHistory = async (req, res) => {
         console.log("customerId", customerId);
 
         let country_name = req.cookies.countryName
-        //|| 'India';
+        || 'India';
         let country_code = req.cookies.countryCode
-        //|| 'IN';
+        || 'IN';
         console.log("country_codesdf", country_code);
         console.log("country_namesdf", country_name);
 
@@ -12994,13 +12994,13 @@ exports.updateOrderHistory = async (req, res) => {
         const subscriptionDetails = await razorpay.subscriptions.fetch(subscriptionId);
         console.log('Subscription details:', subscriptionDetails);
 
-        const invoices = await razorpay.invoices.all({
-            'subscription_id': subscriptionId
-        });
-        console.log('Invoices for subscriptions:', invoices);
+        // const invoices = await razorpay.invoices.all({
+        //     'subscription_id': subscriptionId
+        // });
+        // console.log('Invoices for subscriptions:', invoices);
 
-        const invoiceId = invoices.items.length > 0 ? invoices.items[0].id : null;
-        console.log('Invoice IDs:', invoiceId);
+        // const invoiceId = invoices.items.length > 0 ? invoices.items[0].id : null;
+        // console.log('Invoice IDs:', invoiceId);
 
         // const getpayments= fetchPaymentsByInvoiceId(invoiceId);
         // console.log("getpayments",getpayments);
@@ -13196,7 +13196,17 @@ exports.createexternalSubscription = async (req, res) => {
         const { name, email, phone, address, city, state, zip, planId, billingCycle, memberCount } = req.body;
         console.log("Subscription request body:", req.body);
 
-        let customerId = await CreateCustomer(email, name, phone, address, city, state, zip);
+        const getcountryquery = `SELECT * FROM countries WHERE id = "${req.body.user_country}"`;
+        const getcountryvalue = await queryAsync(getcountryquery);
+        const getstatequery = `SELECT * FROM states WHERE country_id = "${req.body.user_country}"`;
+        const getstatevalue = await queryAsync(getstatequery);
+        var countryNAme = getcountryvalue[0].name;
+        console.log("countryNAme",countryNAme);
+        var stateNAme = getstatevalue[0].name;
+        console.log("countryNAme",countryNAme);
+
+
+        let customerId = await CreateCustomer(email, name, phone, countryNAme, city, stateNAme, zip);
         console.log("customerId", customerId);
 
         // Fetch country details from cookies
@@ -14308,7 +14318,143 @@ const fetchPaymentsByInvoiceId = async (invoiceId) => {
 
 //fetchPaymentsByInvoiceId('inv_OXHIwBbIbje4gl');
 
-async function findOrCreateCustomer(email, name, phone, address, city, state, zip) {
+// async function findOrCreateCustomer(email, name, phone, address, city, state, zip) {
+//     try {
+//         console.log("email:", email);
+//         const customers = await razorpay.customers.all();
+//         console.log("customerslist:", customers);
+//         console.log("address", address);
+//         console.log("name", name);
+//         console.log("city", city);
+//         console.log("state", state);
+//         console.log("zip", zip);
+
+//         if (customers.items.length > 0) {
+//             const foundCustomer = customers.items.find(customer => customer.email === email);
+//             if (foundCustomer) {
+//                 console.log('Found customer:', foundCustomer);
+
+//                 //const foundCustomerId = "cust_" + foundCustomer.id;
+//                 const foundCustomerId = foundCustomer.id;
+//                 console.log("Concatenated Customer ID:", foundCustomerId);
+
+//                 let updatedCustomer = await razorpay.customers.edit(foundCustomerId, {
+//                     name: name,
+//                     email: email,
+//                     contact: phone,
+//                     // shipping_address: {
+//                     //     line1: address,
+//                     //     city: city,
+//                     //     state: state,
+//                     //     //zip: zip,
+//                     //     country: 'IN'
+//                     // }
+//                 });
+
+//                 console.log('Updated customer:', updatedCustomer);
+
+//                 return foundCustomerId;
+//             } else {
+//                 console.log(`Customer with email ${email} not found.`);
+//                 const customer = await razorpay.customers.create({
+//                     name: name,
+//                     email: email,
+//                     //contact: phone,
+//                     // shipping_address: {
+//                     //     line1: address,
+//                     //     city: city,
+//                     //     state: state,
+//                     //     //zip: zip,
+//                     //     country: 'IN'
+//                     // }
+//                 });
+//                 console.log('Created new customer:', customer.id);
+//                 return customer.id;
+//             }
+//         } else {
+//             const customer = await razorpay.customers.create({
+//                 name: name,
+//                 email: email,
+//                 contact: phone,
+//                 // shipping_address: {
+//                 //     line1: address,
+//                 //     city: city,
+//                 //     state: state,
+//                 //     //zip: zip,
+//                 //     country: 'IN'
+//                 // }
+//             });
+//             console.log('Created new customer:', customer.id);
+//             return customer.id;
+//         }
+//     } catch (error) {
+//         console.error('Error finding or creating customer:', error);
+//         throw error;
+//     }
+// }
+
+
+
+const findOrCreateCustomer = async (email, name, phone, address, city, state, zip) => {
+    try {
+        console.log("email:", email);
+
+        // Step 1: Search for existing customers by email
+        const response = await axios.get('https://api.razorpay.com/v1/customers', {
+            auth: {
+              username: process.env.RAZORPAY_KEY_ID,
+              password: process.env.RAZORPAY_KEY_SECRET
+            }
+        });
+      
+        // Get the list of customers
+        const customers = response.data.items;
+        console.log("customers list:", customers);
+        console.log("address:", address);
+        console.log("name:", name);
+        console.log("city:", city);
+        console.log("state:", state);
+        console.log("zip:", zip);
+
+        const foundCustomer = customers.find(customer => customer.email === email);
+
+        if (foundCustomer) {
+            console.log('Found customer:', foundCustomer);
+            return foundCustomer.id;
+        } else {
+            // Step 2: Create a new customer if not found
+            console.log(`Customer with email ${email} not found. Creating new customer.`);
+            const customer = await axios.post('https://api.razorpay.com/v1/customers', {
+                name: name,
+                email: email,
+                contact: phone,
+                shipping_address: {
+                    line1: address,
+                    city: city,
+                    state: state,
+                    zip: zip,
+                    // country: 'IN'
+                }
+            }, {
+                auth: {
+                  username: process.env.RAZORPAY_KEY_ID,
+                  password: process.env.RAZORPAY_KEY_SECRET
+                }
+            });
+            console.log('Created new customer:', customer.data.id);
+            return customer.data.id;
+        }
+    } catch (error) {
+        // Handle errors
+        console.error('Error finding or creating customer:', error);
+        throw error;
+    }
+};
+
+
+
+
+const CreateCustomer = async (email, name, phone, address, city, state, zip) => {
     try {
         console.log("email:", email);
         const customers = await razorpay.customers.all();
@@ -14322,103 +14468,9 @@ async function findOrCreateCustomer(email, name, phone, address, city, state, zi
         if (customers.items.length > 0) {
             const foundCustomer = customers.items.find(customer => customer.email === email);
             if (foundCustomer) {
-                console.log('Found customer:', foundCustomer);
-
-                //const foundCustomerId = "cust_" + foundCustomer.id;
-                const foundCustomerId = foundCustomer.id;
-                console.log("Concatenated Customer ID:", foundCustomerId);
-
-                let updatedCustomer = await razorpay.customers.edit(foundCustomerId, {
-                    name: name,
-                    email: email,
-                    //contact: phone,
-                    // shipping_address: {
-                    //     line1: address,
-                    //     city: city,
-                    //     state: state,
-                    //     //zip: zip,
-                    //     country: 'IN'
-                    // }
-                });
-
-                console.log('Updated customer:', updatedCustomer);
-
-                return foundCustomerId;
-            } else {
-                console.log(`Customer with email ${email} not found.`);
-                const customer = await razorpay.customers.create({
-                    name: name,
-                    email: email,
-                    //contact: phone,
-                    // shipping_address: {
-                    //     line1: address,
-                    //     city: city,
-                    //     state: state,
-                    //     //zip: zip,
-                    //     country: 'IN'
-                    // }
-                });
-                console.log('Created new customer:', customer.id);
-                return customer.id;
-            }
-        } else {
-            const customer = await razorpay.customers.create({
-                name: name,
-                email: email,
-                contact: phone,
-                // shipping_address: {
-                //     line1: address,
-                //     city: city,
-                //     state: state,
-                //     //zip: zip,
-                //     country: 'IN'
-                // }
-            });
-            console.log('Created new customer:', customer.id);
-            return customer.id;
-        }
-    } catch (error) {
-        console.error('Error finding or creating customer:', error);
-        throw error;
-    }
-}
-
-async function CreateCustomer(email, name, phone, address, city, state, zip) {
-    try {
-        console.log("email:", email);
-        const customers = await razorpay.customers.all();
-        console.log("customerslist:", customers);
-        console.log("address", address);
-        console.log("name", name);
-        console.log("city", city);
-        console.log("state", state);
-        console.log("zip", zip);
-
-        if (customers.items.length > 0) {
-            const foundCustomer = customers.items.find(customer => customer.email == email);
-            if (foundCustomer) {
                 console.log('Found customerss:', foundCustomer);
-
-                // //const foundCustomerId = "cust_" + foundCustomer.id;
-                // const foundCustomerId = foundCustomer.id;
-                // console.log("Concatenated Customer ID:", foundCustomerId);
-
-                // let updatedCustomer = await razorpay.customers.edit(foundCustomerId, {
-                //     name: name,
-                //     email: email,
-                //     //contact: phone,
-                //     // shipping_address: {
-                //     //     line1: address,
-                //     //     city: city,
-                //     //     state: state,
-                //     //     //zip: zip,
-                //     //     country: 'IN'
-                //     // }
-                // });
-
-                // console.log('Updated customer:', updatedCustomer);
-
-                // return foundCustomerId;
+                // Return the ID of the found customer
+                return foundCustomer.id;
             } else {
                 console.log(`Customer with email ${email} not found.`);
                 const customer = await razorpay.customers.create({
@@ -14442,6 +14494,7 @@ async function CreateCustomer(email, name, phone, address, city, state, zip) {
         throw error;
     }
 }
+
 
 // const createRazorpayPlan = async (plan, billingCycle, memberCount, country_code) => {
 //     try {
@@ -14660,31 +14713,31 @@ const createRazorpayPlanprevioususer = async (plan, billingCycle, memberCount, c
 
         const getcurencyquery = `SELECT * FROM currency_conversion`;
         const getcurrencyval = await queryAsync(getcurencyquery);
-        //console.log("getcurrencyval", getcurrencyval);
+        console.log("getcurrencyval", getcurrencyval);
 
-        // var indian_currency = getcurrencyval[0].inr_currency;
-        // console.log("indian_currency", indian_currency);
-        // var jp_currency = getcurrencyval[0].jpy_currency;
-        // console.log("jp_currency", jp_currency);
+        var indian_currency = getcurrencyval[0].inr_currency;
+        console.log("indian_currency", indian_currency);
+        var jp_currency = getcurrencyval[0].jpy_currency;
+        console.log("jp_currency", jp_currency);
 
-        // if (getcurrencyval.length > 0) {
-        //     if (country_code == "IN") {
-        //         var toalbasePrice = basePrice * indian_currency;
-        //         var totaladdonPrice = addonPrice * indian_currency
-        //         var totalPrice = parseFloat(toalbasePrice) + parseFloat(totaladdonPrice);
-        //         if (isNaN(totalPrice) || totalPrice <= 0) {
-        //             throw new Error('Invalid total price');
-        //         }
-        //         console.log("totalPrice", totalPrice);
-        //     } else if (country_code == "JP") {
-        //         var toalbasePrice = basePrice * jp_currency;
-        //         var totaladdonPrice = addonPrice * jp_currency;
-        //         const totalPrice = parseFloat(toalbasePrice) + parseFloat(totaladdonPrice);
-        //         if (isNaN(totalPrice) || totalPrice <= 0) {
-        //             throw new Error('Invalid total price');
-        //         }
-        //         console.log("totalPrice", totalPrice);
-        //     }else{
+        if (getcurrencyval.length > 0) {
+            if (country_code == "IN") {
+                var toalbasePrice = basePrice * indian_currency;
+                var totaladdonPrice = addonPrice * indian_currency
+                var totalPrice = parseFloat(toalbasePrice) + parseFloat(totaladdonPrice);
+                if (isNaN(totalPrice) || totalPrice <= 0) {
+                    throw new Error('Invalid total price');
+                }
+                console.log("totalPrice", totalPrice);
+            } else if (country_code == "JP") {
+                var toalbasePrice = basePrice * jp_currency;
+                var totaladdonPrice = addonPrice * jp_currency;
+                const totalPrice = parseFloat(toalbasePrice) + parseFloat(totaladdonPrice);
+                if (isNaN(totalPrice) || totalPrice <= 0) {
+                    throw new Error('Invalid total price');
+                }
+                console.log("totalPrice", totalPrice);
+            }else{
 
 
                 var totalPrice = parseFloat(basePrice) + parseFloat(addonPrice);
@@ -14692,8 +14745,8 @@ const createRazorpayPlanprevioususer = async (plan, billingCycle, memberCount, c
                     throw new Error('Invalid total price');
                 }
                 console.log("totalPrice", totalPrice);
-            //}
-        //}
+            }
+        }
 
 
         let totalPriceInPaise;
