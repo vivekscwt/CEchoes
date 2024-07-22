@@ -13255,7 +13255,7 @@ exports.createexternalSubscription = async (req, res) => {
         const order_history_data = {
             stripe_subscription_id: subscription.id,
             plan_id: planId,
-            payment_status: 'pending',
+            payment_status: 'success',
             subscription_details: JSON.stringify(subscription),
             subscription_duration: billingCycle,
             subscription_start_date: new Date(subscription.current_start * 1000),
