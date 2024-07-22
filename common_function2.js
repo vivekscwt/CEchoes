@@ -5745,7 +5745,123 @@ async function getAllPaymentHistory() {
 }
 
 
+async function getuserAllPaymentHistory(user_id) {
+  return new Promise((resolve, reject) => {
+    db.query(
+      `SELECT p.*, c.company_name, c.logo, c.comp_email, plan_management.name AS plan_name, plan_management.monthly_price, plan_management.yearly_price, users.email as company_user_email
+       FROM order_history p
+       LEFT JOIN company_claim_request ccr ON ccr.claimed_by = p.user_id 
+       LEFT JOIN company c ON c.ID = ccr.company_id AND c.status != '3'
+       LEFT JOIN plan_management ON p.plan_id = plan_management.id
+       LEFT JOIN users ON ccr.claimed_by = users.user_id
+       WHERE p.user_id="${user_id}"AND p.payment_status='success'`,
+      async (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          const payments = [];
 
+          result.forEach(row => {
+            let transactionId = null;
+            let subscriptionAmount = null;
+            let subscriptionInterval = null;
+            let formattedPaymentDate = null;
+            let nextPaymentDate = null;
+
+            try {
+              const paymentDetails = JSON.parse(row.payment_details);
+              transactionId = paymentDetails.charge;
+
+              const paymentDate = new Date(paymentDetails.created * 1000);
+              formattedPaymentDate = paymentDate.toLocaleDateString('en-US');
+
+              console.log('Payment Date:', formattedPaymentDate);
+            } catch (error) {
+              console.error('Error parsing payment details:', error);
+            }
+
+            try {
+              const subscriptionDetails = JSON.parse(row.subscription_details);
+              const currentPeriodEnd = subscriptionDetails.current_period_end;
+
+
+              if (currentPeriodEnd) {
+                const nextPaymentTimestamp = new Date(currentPeriodEnd * 1000);
+                const interval = subscriptionDetails.items.data[0].plan.interval;
+                const intervalCount = subscriptionDetails.items.data[0].plan.interval_count;
+
+                if (interval === 'day') {
+                  nextPaymentTimestamp.setDate(nextPaymentTimestamp.getDate() + intervalCount);
+                } else if (interval === 'week') {
+                  nextPaymentTimestamp.setDate(nextPaymentTimestamp.getDate() + intervalCount * 7);
+                } else if (interval === 'month') {
+                  nextPaymentTimestamp.setMonth(nextPaymentTimestamp.getMonth() + intervalCount);
+                } else if (interval === 'year') {
+                  nextPaymentTimestamp.setFullYear(nextPaymentTimestamp.getFullYear() + intervalCount);
+                }
+
+                nextPaymentDate = nextPaymentTimestamp.toLocaleDateString('en-US');
+              } else {
+                console.warn('No current_period_end found in subscription_details');
+              }
+
+              const subscriptionItem = subscriptionDetails.items.data[0];
+              subscriptionAmount = subscriptionItem.plan.amount / 100;
+
+              const interval = subscriptionItem.plan.interval;
+              const intervalCount = subscriptionItem.plan.interval_count;
+
+              if (interval === 'day') {
+                subscriptionInterval = 'Daily';
+              } else if (interval === 'week') {
+                subscriptionInterval = 'Weekly';
+              } else if (interval === 'month') {
+                if (intervalCount === 1) {
+                  subscriptionInterval = 'Monthly';
+                } else {
+                  subscriptionInterval = `Every ${intervalCount} Months`;
+                }
+              } else if (interval === 'year') {
+                if (intervalCount === 1) {
+                  subscriptionInterval = 'Yearly';
+                } else {
+                  subscriptionInterval = `Every ${intervalCount} Years`;
+                }
+              } else {
+                subscriptionInterval = 'Unknown';
+              }
+            } catch (error) {
+              console.error('Error parsing subscription details:', error);
+            }
+
+            const modifiedRow = {
+              ...row,
+              transaction_id: transactionId,
+              subscription_amount: subscriptionAmount,
+              subscription_interval: subscriptionInterval,
+              formattedPaymentDate: formattedPaymentDate,
+              next_payment_date: nextPaymentDate
+            };
+            payments.push(modifiedRow);
+          });
+
+         // console.log('All Payments:', payments); 
+          const groupedPayments = {
+            Basic: payments.filter(payment => payment.plan_name === 'basic'),
+            Standard: payments.filter(payment => payment.plan_name === 'standard'),
+            Advanced: payments.filter(payment => payment.plan_name === 'advanced'),
+            Premium: payments.filter(payment => payment.plan_name === 'premium'),
+            Enterprise: payments.filter(payment => payment.plan_name === 'enterprise'),
+          };
+
+          console.log('Grouped Payments:', groupedPayments); 
+
+          resolve(groupedPayments);
+        }
+      }
+    );
+  });
+}
 
 
 
@@ -7244,6 +7360,7 @@ module.exports = {
   getmembershipPlans,
   getAllPayments,
   getAllPaymentHistory,//
+  getuserAllPaymentHistory,//
   getpaymentDetailsById,
   getAllPolls,
   getAllComplaints,
