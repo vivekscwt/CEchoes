@@ -351,7 +351,7 @@
 
                            <% if (currentUserData && currentUserData.claimed_comp_id !=null) { %>
                               <div class="member-control">
-                                 <label for="<%= plan %>-member-count">Members:</label>
+                                 <label for="<%= plan %>-member-count"></label>
                                  <input type="hidden" min="0" name="memberCount" id="<%= plan %>-member-count" value="">
                                  <input type="hidden" id="<%= plan %>-per-user-price"
                                     value="<%= getplans[plan + '_val'].per_user_price_local %>">
@@ -359,21 +359,22 @@
                                  <input type="hidden" name="email" value="<%= currentUserData.email %>">
                               </div>
 
-                              <div class="total-price-display">
-                                 <% if (country_name==="India" ) { %>
-                                    Monthly Subscription Amount: ₹<span id="<%= plan %>-total-monthly-price">
-                                       <%= getplans[plan + '_val' ].monthly_price_local %>
-                                    </span>
-                                    <% } else if (country_name==="Japan" ) { %>
-                                       Monthly Subscription Amount: ¥<span id="<%= plan %>-total-monthly-price">
-                                          <%= getplans[plan + '_val' ].monthly_price_local %>
-                                       </span>
-                                       <% } else { %>
-                                          Monthly Subscription Amount: $<span id="<%= plan %>-total-monthly-price">
-                                             <%= getplans[plan + '_val' ].monthly_price_local %>
-                                          </span>
+
+                                       <div class="total-price-display" id="total-monthly-price-<%= plan %>">
+                                          <% if (country_name==="India") { %>
+                                              Monthly Subscription Amount: ₹<span id="<%= plan %>-total-monthly-price">
+                                                  <%= getplans[plan + '_val'].monthly_price_local %>
+                                              </span>
+                                          <% } else if (country_name==="Japan") { %>
+                                              Monthly Subscription Amount: ¥<span id="<%= plan %>-total-monthly-price">
+                                                  <%= getplans[plan + '_val'].monthly_price_local %>
+                                              </span>
+                                          <% } else { %>
+                                              Monthly Subscription Amount: $<span id="<%= plan %>-total-monthly-price">
+                                                  <%= getplans[plan + '_val'].monthly_price_local %>
+                                              </span>
                                           <% } %>
-                                       </div>
+                                      </div>
                                           <% if (isSubscribed(plan, 'monthly')) { %>
                                              <label>
                                                 <input type="radio" id="subscribe-<%= plan %>-monthly" name="subscriptionType" value="monthly" disabled checked class="subscribed-radio">
@@ -386,28 +387,30 @@
                                              </label>
                                        <% } else { %>
                                              <label>
-                                                <input type="radio" id="subscribe-<%= plan %>-monthly" name="subscriptionType" value="monthly" onclick="redirectToStripePayment('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].monthly_price %>', 'monthly')">
+                                                <input type="radio" id="subscribe-<%= plan %>-monthly" name="subscriptionType" value="monthly">
                                                 Subscribe Monthly
-                                             </label>
+                                            </label>
+                                            <div class="proceed_btn proceed-invisible-btn" id="proceed-btn-<%= plan %>-monthly">
+                                                <a href="#" onclick="redirectToStripePayment('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].monthly_price %>', 'monthly')">Proceed</a>
+                                            </div>
+                                             
                                        <% } %>
                                        
-                                          <div class="total-price-display">
-                                             <% if (country_name==="India" ) { %>
-                                                Yearly Subscription Amount: ₹<span id="<%= plan %>-total-yearly-price">
-                                                   <%= getplans[plan + '_val' ].yearly_price_local %>
-                                                </span>
-                                                <% } else if (country_name==="Japan" ) { %>
-                                                   Yearly Subscription Amount: ¥<span
-                                                      id="<%= plan %>-total-yearly-price">
-                                                      <%= getplans[plan + '_val' ].yearly_price_local %>
-                                                   </span>
-                                                   <% } else { %>
-                                                      Yearly Subscription Amount: $<span
-                                                         id="<%= plan %>-total-yearly-price">
-                                                         <%= getplans[plan + '_val' ].yearly_price_local %>
-                                                      </span>
-                                                      <% } %>
-                                          </div>
+                                       <div class="total-price-display" id="total-yearly-price-<%= plan %>">
+                                          <% if (country_name==="India") { %>
+                                              Yearly Subscription Amount: ₹<span id="<%= plan %>-total-yearly-price">
+                                                  <%= getplans[plan + '_val'].yearly_price_local %>
+                                              </span>
+                                          <% } else if (country_name==="Japan") { %>
+                                              Yearly Subscription Amount: ¥<span id="<%= plan %>-total-yearly-price">
+                                                  <%= getplans[plan + '_val'].yearly_price_local %>
+                                              </span>
+                                          <% } else { %>
+                                              Yearly Subscription Amount: $<span id="<%= plan %>-total-yearly-price">
+                                                  <%= getplans[plan + '_val'].yearly_price_local %>
+                                              </span>
+                                          <% } %>
+                                      </div>
                                           <% if (isSubscribed(plan, 'yearly')) { %>
                                              <label>
                                                  <input type="radio" id="subscribe-<%= plan %>-yearly" name="subscriptionType" value="yearly" disabled checked class="subscribed-radio">
@@ -420,13 +423,16 @@
                                              </label>
                                          <% } else { %>
                                              <label>
-                                                 <input type="radio" id="subscribe-<%= plan %>-yearly" name="subscriptionType" value="yearly" onclick="redirectToYearlyStripePayment('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].yearly_price %>', 'yearly')">
-                                                 Subscribe Yearly
-                                             </label>
+                                                <input type="radio" id="subscribe-<%= plan %>-yearly" name="subscriptionType" value="yearly">
+                                                Subscribe Yearly
+                                            </label>
+                                            <div class="proceed_btn proceed-invisible-btn" id="proceed-btn-<%= plan %>-yearly">
+                                                <a href="#" onclick="redirectToYearlyStripePayment('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].yearly_price %>', 'yearly')">Proceed</a>
+                                            </div>
                                          <% } %>                                               
                                                       <% } else if (!currentUserData) { %>
                                                          <div class="member-control">
-                                                            <label for="<%= plan %>-member-count">Members:</label>
+                                                            <label for="<%= plan %>-member-count"></label>
                                                             <input type="hidden" min="0" name="memberCount"
                                                                id="<%= plan %>-member-count" value="">
                                                             <input type="hidden" id="<%= plan %>-per-user-price"
@@ -434,25 +440,21 @@
                                                             <input type="hidden" name="email" value="">
                                                          </div>
 
-                                                         <div class="total-price-display">
-                                                            <% if (country_name==="India" ) { %>
-                                                               Monthly Subscription Amount: ₹<span
-                                                                  id="<%= plan %>-total-monthly-price">
-                                                                  <%= getplans[plan + '_val' ].monthly_price_local %>
-                                                               </span>
-                                                               <% } else if (country_name==="Japan" ) { %>
-                                                                  Monthly Subscription Amount: ¥<span
-                                                                     id="<%= plan %>-total-monthly-price">
-                                                                     <%= getplans[plan + '_val' ].monthly_price_local %>
-                                                                  </span>
-                                                                  <% } else { %>
-                                                                     Monthly Subscription Amount: $<span
-                                                                        id="<%= plan %>-total-monthly-price">
-                                                                        <%= getplans[plan + '_val' ].monthly_price_local
-                                                                           %>
-                                                                     </span>
-                                                                     <% } %>
-                                                         </div>
+                                                         <div class="total-price-display" id="total-monthly-price-<%= plan %>">
+                                                            <% if (country_name==="India") { %>
+                                                                Monthly Subscription Amount: ₹<span id="<%= plan %>-total-monthly-price">
+                                                                    <%= getplans[plan + '_val'].monthly_price_local %>
+                                                                </span>
+                                                            <% } else if (country_name==="Japan") { %>
+                                                                Monthly Subscription Amount: ¥<span id="<%= plan %>-total-monthly-price">
+                                                                    <%= getplans[plan + '_val'].monthly_price_local %>
+                                                                </span>
+                                                            <% } else { %>
+                                                                Monthly Subscription Amount: $<span id="<%= plan %>-total-monthly-price">
+                                                                    <%= getplans[plan + '_val'].monthly_price_local %>
+                                                                </span>
+                                                            <% } %>
+                                                        </div>
 
                                                          <% if (isSubscribed(plan, 'monthly')) { %>
                                                             <label>
@@ -465,32 +467,30 @@
                                                                 Subscribe Monthly
                                                             </label>
                                                         <% } else { %>
+
                                                             <label>
-                                                                <input type="radio" id="subscribe-<%= plan %>-monthly" name="subscriptionType" value="monthly" onclick="redirectToSubscriptionPage('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].monthly_price %>', 'monthly')">
-                                                                Subscribe Monthly
+                                                               <input type="radio" id="subscribe-<%= plan %>-monthly" name="subscriptionType" value="monthly">
+                                                               Subscribe Monthly
                                                             </label>
+                                                            <div class="proceed_btn proceed-invisible-btn" id="proceed-btn-<%= plan %>-monthly">
+                                                               <a href="#" onclick="redirectToSubscriptionPage('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].monthly_price %>', 'monthly')">Proceed</a>
+                                                            </div>
                                                         <% } %>                                                              
-                                                                     <div class="total-price-display">
-                                                                        <% if (country_name==="India" ) { %>
-                                                                           Yearly Subscription Amount: ₹<span
-                                                                              id="<%= plan %>-total-yearly-price">
-                                                                              <%= getplans[plan + '_val'
-                                                                                 ].yearly_price_local %>
-                                                                           </span>
-                                                                           <% } else if (country_name==="Japan" ) { %>
-                                                                              Yearly Subscription Amount: ¥<span
-                                                                                 id="<%= plan %>-total-yearly-price">
-                                                                                 <%= getplans[plan + '_val'
-                                                                                    ].yearly_price_local %>
-                                                                              </span>
-                                                                              <% } else { %>
-                                                                                 Yearly Subscription Amount: $<span
-                                                                                    id="<%= plan %>-total-yearly-price">
-                                                                                    <%= getplans[plan + '_val'
-                                                                                       ].yearly_price_local %>
-                                                                                 </span>
-                                                                                 <% } %>
-                                                                     </div>
+                                                        <div class="total-price-display" id="total-yearly-price-<%= plan %>">
+                                                         <% if (country_name==="India") { %>
+                                                             Yearly Subscription Amount: ₹<span id="<%= plan %>-total-yearly-price">
+                                                                 <%= getplans[plan + '_val'].yearly_price_local %>
+                                                             </span>
+                                                         <% } else if (country_name==="Japan") { %>
+                                                             Yearly Subscription Amount: ¥<span id="<%= plan %>-total-yearly-price">
+                                                                 <%= getplans[plan + '_val'].yearly_price_local %>
+                                                             </span>
+                                                         <% } else { %>
+                                                             Yearly Subscription Amount: $<span id="<%= plan %>-total-yearly-price">
+                                                                 <%= getplans[plan + '_val'].yearly_price_local %>
+                                                             </span>
+                                                         <% } %>
+                                                     </div>
 
                                                                      <% if (isSubscribed(plan, 'yearly')) { %>
                                                                         <label>
@@ -504,9 +504,12 @@
                                                                         </label>
                                                                     <% } else { %>
                                                                         <label>
-                                                                            <input type="radio" id="subscribe-<%= plan %>-yearly" name="subscriptionType" value="yearly" onclick="redirectToYearlySubscriptionPage('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].yearly_price %>', 'yearly')">
-                                                                            Subscribe Yearly
-                                                                        </label>
+                                                                           <input type="radio" id="subscribe-<%= plan %>-yearly" name="subscriptionType" value="yearly">
+                                                                           Subscribe Yearly
+                                                                       </label>
+                                                                       <div class="proceed_btn proceed-invisible-btn" id="proceed-btn-<%= plan %>-yearly">
+                                                                           <a href="#" onclick="redirectToYearlySubscriptionPage('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].yearly_price %>', 'yearly')">Proceed</a>
+                                                                       </div>
                                                                     <% } %>
                                                                            
                                                                      <% } else { %>
@@ -610,6 +613,37 @@
          input.subscribed-radio[type="radio"]:checked::before {
             background-color: #FCCB06;
          }
+         /* AYAN-CSS */
+         .choose-your-plan-box .choose-your-plan-box-step ul li{
+            margin-top: 20px;
+         }
+         .choose-your-plan-box .choose-your-plan-box-step ul{
+            padding-bottom: 30px;
+            border-bottom: 1px solid #fff;
+         }
+
+         .choose-your-plan-box .choose-your-plan-box-step  .total-price-display{
+            margin-bottom:15px;
+         }
+         .proceed_btn a{
+            padding: 8px 20px;
+            background-color: #f00;
+            border-radius: 5px;
+            color: #fff;
+            text-transform: capitalize;
+            font-size: 14px;
+            font-weight: 500;
+         }
+         .proceed_btn{
+            margin-bottom: 20px;
+         }
+         .proceed-visible-btn{
+            display: block;
+         }
+         .proceed-invisible-btn{
+            display: none;
+         }
+
       </style>
 
       <%- include('common/footer') -%>
@@ -848,4 +882,44 @@
                   console.error('Error initializing country info:', error);
                }
             });
+         </script>
+
+         <script>
+$(document).ready(function() {
+    function toggleProceedButton(plan, type) {
+        // Determine IDs for the proceed button and total price display based on plan and type
+        const proceedBtnId = `proceed-btn-${plan}-${type}`;
+        const totalPriceDisplayId = `total-${type}-price-${plan}`;
+
+        // Select the proceed button and total price display for the given plan and type
+        const $proceedBtn = $(`#${proceedBtnId}`);
+        const $totalPriceDisplay = $(`#${totalPriceDisplayId}`);
+
+        // Show the proceed button and total price display for the selected plan and type
+        $proceedBtn.removeClass('proceed-invisible-btn').addClass('proceed-visible-btn');
+        $totalPriceDisplay.show(); // Show total price display
+
+        // Hide the proceed button and total price display for other plans and types
+        $('.proceed_btn').not(`#${proceedBtnId}`).each(function() {
+            $(this).removeClass('proceed-visible-btn').addClass('proceed-invisible-btn');
+        });
+
+        $('.total-price-display').not(`#${totalPriceDisplayId}`).each(function() {
+            $(this).hide(); // Hide total price display for other plans
+        });
+    }
+
+    // Attach click event handlers to radio buttons
+    $('input[name="subscriptionType"]').on('click', function() {
+        const idParts = $(this).attr('id').split('-'); // Split ID to get plan and type
+        const plan = idParts[1];
+        const type = idParts[2]; // 'monthly' or 'yearly'
+        toggleProceedButton(plan, type);
+    });
+
+    // Initial setup to hide proceed buttons and prices on page load
+    $('.proceed_btn').addClass('proceed-invisible-btn');
+    $('.total-price-display').hide();
+});
+
          </script>
