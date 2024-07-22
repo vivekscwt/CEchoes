@@ -9036,7 +9036,7 @@ router.get('/user_payment_history', checkCookieValue, async (req, res) => {
 
         // Fetch all the required data asynchronously
         const [getAllPayments, getUser, getUserMeta, globalPageMeta, AllCompaniesReviews] = await Promise.all([
-            comFunction2.getAllPaymentHistory(),
+            comFunction2.getuserAllPaymentHistory(userId),
             comFunction.getUser(userId),
             comFunction.getUserMeta(userId),
             comFunction2.getPageMetaValues('global'),
