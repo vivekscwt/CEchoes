@@ -211,7 +211,7 @@
                                 <th class="min-w-125px">Model Description</th>
                                 <th class="min-w-125px">Purchase Place</th>
                                 <th class="min-w-125px">Purchase Date</th>
-                                <th class="min-w-125px">Expire Date</th>
+                                <th class="min-w-125px">Created Date</th>
                             </tr>
                         </thead>
                         <!--end::Table head-->
@@ -221,12 +221,49 @@
                             <tr>
                                 <!--begin::Action=-->
                                 <td class="text-end">
-                                    <% if(currentUserData.user_type_id != 3 ) { %>
+                                    <% if(currentUserData.user_type_id !=3 ) { %>
+                                        <a href="#" class="btn btn-light btn-active-light-primary btn-sm"
+                                            data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end"
+                                            data-kt-menu-flip="top-end">Actions
+                                            <!--begin::Svg Icon | path: icons/duotune/arrows/arr072.svg-->
+                                            <span class="svg-icon svg-icon-5 m-0">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                    viewBox="0 0 24 24" fill="none">
+                                                    <path
+                                                        d="M11.4343 12.7344L7.25 8.55005C6.83579 8.13583 6.16421 8.13584 5.75 8.55005C5.33579 8.96426 5.33579 9.63583 5.75 10.05L11.2929 15.5929C11.6834 15.9835 12.3166 15.9835 12.7071 15.5929L18.25 10.05C18.6642 9.63584 18.6642 8.96426 18.25 8.55005C17.8358 8.13584 17.1642 8.13584 16.75 8.55005L12.5657 12.7344C12.2533 13.0468 11.7467 13.0468 11.4343 12.7344Z"
+                                                        fill="black" />
+                                                </svg>
+                                            </span>
+                                            <!--end::Svg Icon--></a>
+                                        <!--begin::Menu-->
+                                        <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4"
+                                            data-kt-menu="true">
+                                            <!--begin::Menu item-->
+                                            <a href="#" 
+                                                class="btn btn-light btn-active-light-primary btn-m"
+                                                data-kt-menu-placement="bottom-end" 
+                                                data-kt-menu-trigger="click"
+                                                data-kt-menu-flip="top-end" 
+                                                data-complaint-id="<%= complaint.id %>" 
+                                                onclick="handleClick(event)"> 
+                                                Edit 
+                                            </a>
+                                         
+                                         
+                                            <div class="menu-item px-3">
+                                                <a href="#" class="btn btn-light btn-active-light-primary btn-m" data-companyid="<%= complaint.id %>" data-kt-users-table-filter="delete_row">delete                                       
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <!--end::Menu-->
+                                        <% } else { %>
+                                            <a href=""
+                                                class="btn btn-light btn-active-light-primary btn-m"
+                                                data-kt-menu-placement="bottom-end" data-kt-menu-trigger="click"
+                                                data-kt-menu-flip="top-end"> Edit
 
-                                        <a href="#" class="btn btn-light btn-active-light-primary btn-m" data-companyid="<%= complaint.id %>" data-kt-users-table-filter="delete_row">Delete
-                                            
-                                        </a>
-                                    <% } %>
+                                            </a>
+                                            <% } %>
                                 </td>
                                 <!--end::Action=-->
                                 <td>
@@ -318,6 +355,7 @@ var __webpack_exports__ = {};
 /*!**************************************************************************************************!*\
   !*** ../../../themes/metronic/html/demo1/src/js/custom/apps/user-management/users/list/table.js ***!
   \**************************************************************************************************/
+
 
 
 var KTUsersList = function () {
@@ -820,6 +858,7 @@ var KTModalExportUsers = function () {
             });
         });
 
+
         // Close button handler
         const closeButton = element.querySelector('[data-kt-users-modal-action="close"]');
         closeButton.addEventListener('click', function (e) {
@@ -871,6 +910,19 @@ KTUtil.onDOMContentLoaded(function () {
 ;
 //# sourceMappingURL=export-users.js.map
 </script>
+<script>
+    function handleClick(event) {
+        event.preventDefault();
+        const clickedElement = event.currentTarget;
+
+        const complaintId = clickedElement.getAttribute('data-complaint-id');
+        const url = `/edit-complaints/${complaintId}`;
+    
+        console.log('Redirecting to:', url); 
+        window.location.href = url;
+    }
+    </script>
+    
 <style>
     .symbol-circle{
         box-shadow: 0px 4px 14px 0px rgba(0, 0, 0, 0.25);

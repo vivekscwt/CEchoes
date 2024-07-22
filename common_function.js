@@ -247,6 +247,38 @@ function getCompany(companyId) {
   });
 }
 
+function getComplaint(complaintId) {
+  return new Promise((resolve, reject) => {
+    const sql = `SELECT complaint.*,company.company_name
+              FROM complaint 
+              LEFT JOIN company ON complaint.company_id = company.ID
+              WHERE complaint.id = ?`
+    db.query(sql, [complaintId], (err, result) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(result[0]);
+      }
+    });
+  });
+}
+
+function getCategorybyCompany(companyId) {
+  return new Promise((resolve, reject) => {
+    const sql = `SELECT complaint.*,company.company_name
+              FROM complaint 
+              LEFT JOIN company ON complaint.company_id = company.ID
+              WHERE complaint.id = ?`
+    db.query(sql, [complaintId], (err, result) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(result[0]);
+      }
+    });
+  });
+}
+
 // async function getCompanyCategory() {
 //   try {
 //     const connection = await mysql.createConnection({
@@ -2526,6 +2558,8 @@ module.exports = {
   getStatesByCountryID,//
   getAllCompany,
   getCompany,
+  getComplaint,//
+  getCategorybyCompany,//
   getCompanyCategory,
   getParentCompany,
   getCountriesList,

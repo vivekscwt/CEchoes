@@ -6,7 +6,12 @@
 <section class="main-content bottom-main-content">
     <div class="discussion-page-content">
        <div class="container">
+          <div class="discussion-user-img" title="">
+            <h4><%= AllCommentByDiscusId[0].first_name.charAt(0).toUpperCase()%></h4>
+          </div>
           <h2 class="inner-main-head"><%= AllCommentByDiscusId[0].topic.charAt(0).toUpperCase() + AllCommentByDiscusId[0].topic.slice(1)%></h2>
+          <% const discussion_date = new Date(AllCommentByDiscusId[0].created_at); %>
+          <p>Created <%= discussion_date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) %></p>
           <%
           let tags = []
           if(AllCommentByDiscusId[0].tags != ''){

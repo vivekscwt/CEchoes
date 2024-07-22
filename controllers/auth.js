@@ -13241,7 +13241,7 @@ exports.createexternalSubscription = async (req, res) => {
         console.log("Created subscription:", subscription);
 
         // Store subscription ID in a variable accessible outside this function
-        req.subscriptionId = subscription.id;
+        //req.subscriptionId = subscription.id;
 
         console.log("Subscription current start timestamp:", subscription.current_start);
         console.log("Subscription charge at timestamp:", subscription.charge_at);
