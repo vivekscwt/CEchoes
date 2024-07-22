@@ -802,6 +802,7 @@ exports.frontendUserLogin = (req, res) => {
                                         email: user.email,
                                         phone: user.phone,
                                         user_type_id: user.user_type_id,
+                                        user_status: user.user_status,
                                         claimed_comp_id: '',
                                         claimed_comp_slug: ''
                                     };

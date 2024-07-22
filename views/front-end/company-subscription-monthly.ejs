@@ -296,7 +296,8 @@
                             comp_phone: document.getElementById('comp_phone').value,
                             city: 'Default City',
                             state: 'Default State',
-                            zip: document.getElementById('main_address_pin_code').value,
+                            //zip: document.getElementById('main_address_pin_code').value,
+                            main_address_pin_code: document.getElementById('main_address_pin_code').value,
                             planId: planID,
                             //billingCycle: 'daily',
                             billingCycle: subscriptionType,
@@ -321,21 +322,23 @@
                             description: `Subscription Payment: ₹${(amount / 100).toFixed(2)}`, // Display amount in rupees
                             amount: amount, // Amount in paise
                             handler: function (response) {
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Payment Successful!',
-                                    text: 'Your payment was successful.',
-                                    confirmButtonText: 'OK'
-                                }).then(() => {
-                                    // Post payment success, create user and company
-                                    createUserAndCompany(formData);
-                                    Swal.fire({
-                                    icon: 'success',
-                                    title: 'Success',
-                                    text: 'User and company created successfully.Please wait for admin approval',
-                                    confirmButtonText: 'OK'
-                                })
-                                });
+                                // Swal.fire({
+                                //     icon: 'success',
+                                //     title: 'Payment Successful!',
+                                //     text: 'Your payment was successful.',
+                                //     confirmButtonText: 'OK'
+                                // }).then(() => {
+                                //     // Post payment success, create user and company
+                                //     createUserAndCompany(formData);
+                                // //     Swal.fire({
+                                // //     icon: 'success',
+                                // //     title: 'Success',
+                                // //     text: 'User and company created successfully.Please wait for admin approval',
+                                // //     confirmButtonText: 'OK'
+                                // // })
+                                // });
+                                formData.razorpay_payment_id = response.razorpay_payment_id;
+                                createUserAndCompany(formData);
                             },
                             prefill: {
                                 name: formData.name,
@@ -387,11 +390,12 @@
                         Swal.fire({
                             icon: 'success',
                             title: 'Success',
-                            text: response.data.message || 'User and company created successfully.',
+                            //text: response.data.message || 'User and company created successfully.',
+                            text: 'User and company completed successfully. Please wait for admin approval.',
                             confirmButtonText: 'OK'
                         }).then(() => {
-                            //window.location.href = '/business';
-                            //window.location.href = '/staging-business';
+                            //window.location.href = '';
+                            window.location.href = '/staging-business';
                         });
                     } else {
                         Swal.fire({

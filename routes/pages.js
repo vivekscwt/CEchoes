@@ -131,6 +131,7 @@ router.get('', checkCookieValue, async (req, res) => {
     }
     const apiKey = process.env.GEO_LOCATION_API_KEY
     console.log("apiKey",apiKey);
+    console.log("currentUserData",currentUserData);
 
     const country_name = req.cookies.countryName
      || 'India';
@@ -141,6 +142,17 @@ router.get('', checkCookieValue, async (req, res) => {
 
     if (country_code != 'UK' && country_code != 'JP') {
         country_code = 'US';
+    }
+
+    const getbusinessquery = `SELECT * FROM users WHERE user_id= "${userId}"`;
+    const getbusinessvalue = await queryAsync(getbusinessquery);
+    if(getbusinessvalue.length>0){
+        console.log("getbusinessvalue",getbusinessvalue);
+        var user_status = getbusinessvalue[0].user_status;
+        console.log("user_status",user_status);
+        if (getbusinessvalue[0].user_status == "3") {
+            res.redirect('/logout');
+        }
     }
 
     const [allRatingTags, globalPageMeta, latestReviews, AllReviewTags, AllReviewVoting, PopularCategories, ReviewCount, UserCount, PositiveReviewsCompany, NegativeReviewsCompany, HomeMeta, VisitorCheck, getAllLatestDiscussion, getAllPopularDiscussion, getAllDiscussions, getCountries] = await Promise.all([
@@ -969,6 +981,8 @@ router.get('/staging-business', checkCookieValue, async (req, res) => {
             console.log("encryptedEmail",encryptedEmail);
         }
 
+
+
         const getbusinessquery = `SELECT * FROM users WHERE user_id= "${user_id}"`;
         const getbusinessvalue = await queryAsync(getbusinessquery);
         console.log("getbusinessvalue",getbusinessvalue);
@@ -976,6 +990,9 @@ router.get('/staging-business', checkCookieValue, async (req, res) => {
             console.log("getbusinessvalue",getbusinessvalue);
             var user_status = getbusinessvalue[0].user_status;
             console.log("user_status",user_status);
+            if (getbusinessvalue[0].user_status == "3") {
+                res.redirect('/logout');
+            }
         }
         
         const api_key = process.env.GEO_LOCATION_API_KEY;
@@ -3192,6 +3209,7 @@ router.get('/discussion-details/:discussion_id', checkCookieValue, async (req, r
 
         console.log("getcommentvoting", getcommentvoting);
         console.log("getUserLikedComments", getUserLikedComments);
+        console.log("getAllCommentByDiscusId",getAllCommentByDiscusId);
 
         try {
             // res.json( {
