@@ -264,19 +264,23 @@ function getComplaint(complaintId) {
 }
 
 function getCategorybyCompany(companyId) {
-  return new Promise((resolve, reject) => {
-    const sql = `SELECT complaint.*,company.company_name
-              FROM complaint 
-              LEFT JOIN company ON complaint.company_id = company.ID
-              WHERE complaint.id = ?`
-    db.query(sql, [complaintId], (err, result) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(result[0]);
-      }
-    });
-  });
+  db.query('SELECT * FROM complaint_category WHERE company_id = ? AND parent_id = 0 ', [companyId], async (err, results) => {
+    if (err) {
+        return res.send(
+            {
+                status: 'err',
+                data: '',
+                message: 'An error occurred while processing your request' + err
+            }
+        )
+    } else {
+        if (results.length > 0) {
+            return results;
+        } else {
+            return [];
+        }
+    }
+})
 }
 
 // async function getCompanyCategory() {
@@ -1788,6 +1792,59 @@ async function editCustomerReview(req) {
   }
 }
 
+async function editCustomerComplaint(req) {
+  let ratingTagsArray = [];
+  if (req.tags) {
+    try {
+      ratingTagsArray = JSON.parse(req.tags);
+      if (!Array.isArray(ratingTagsArray)) {
+        throw new Error("Invalid tags format");
+      }
+    } catch (error) {
+      console.error("Error parsing tags:", error);
+      return 'Invalid tags format';
+    }
+  }
+
+  const update_review_values = [
+    req.update_company_id ? req.update_company_id : req.company_id,
+    req.ticket_id || null,
+    req.category_id || null,
+    req.sub_cat_id,
+    req.model_desc,
+    req.purchase_date,
+    req.purchase_place,
+    req.message || null,
+    JSON.stringify(ratingTagsArray), // Convert array to JSON string
+    req.complaint_id,
+  ];
+
+  const update_review_query =
+    'UPDATE complaint SET ' +
+    'company_id = ?, ' +
+    'ticket_id = ?, ' +
+    'category_id = ?, ' +
+    'sub_cat_id = ?, ' +
+    'model_desc = ?, ' +
+    'purchase_date = ?, ' +
+    'purchase_place = ?, ' +
+    'message = ?, ' +
+    'tags = ? ' + 
+    'WHERE id = ?';
+
+  console.log("Update query:", update_review_query);
+  try {
+    const update_review_result = await query(update_review_query, update_review_values);
+    console.log("Update result:", update_review_result);
+
+    return true;
+  } catch (error) {
+    console.error("Error during update:", error);
+    return 'Error during user update_review_query:' + error;
+  }
+}
+
+
 async function newsearchCompany(keyword) {
   const get_company_query = `
     SELECT ID, company_name, logo, about_company, slug, main_address, main_address_pin_code FROM company
@@ -2581,6 +2638,7 @@ module.exports = {
   getCustomerReviewData,
   getCustomerReviewTagRelationData,
   editCustomerReview,
+  editCustomerComplaint,//
   searchCompany,
   newsearchCompany,//
   fetchChildCompanies,//

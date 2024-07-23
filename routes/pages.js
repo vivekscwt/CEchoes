@@ -6681,24 +6681,63 @@ router.get('/edit-complaints/:id', checkLoggedIn, async (req, res) => {
         WHERE complaint.id = ?`;
         const getcompanyvalue = await query(getcompanyquery, [complaintId]);
         if (getcompanyvalue.length > 0) {
+            console.log("getcompanyvalue",getcompanyvalue);
+            var companyID = getcompanyvalue[0].company_id;
+            console.log("companyID",companyID);
         }
         const [complaint,getAllCompany] = await Promise.all([
             comFunction.getComplaint(complaintId),
             comFunction.getAllCompany(),
         ]);
-         console.log("complaint", complaint);
+        console.log("complaint", complaint);
+
+        var getcomplaintcategory = `SELECT * FROM complaint_category WHERE company_id = ? AND parent_id = 0`;
+        var getcomplaintcategoryval = await queryAsync(getcomplaintcategory,[companyID]);
+        console.log("getcomplaintcategoryval",getcomplaintcategoryval);
+
         res.render('edit-complaint', {
             menu_active_id: 'complaint',
             page_title: 'Edit complaint',
             currentUserData,
             complaint: complaint,  
-            allcompany: getAllCompany        
+            allcompany: getAllCompany,
+            getcomplaintcategoryval:getcomplaintcategoryval      
         });
     } catch (err) {
         console.error(err);
         res.status(500).send('An error occurred');
     }
 });
+router.get('/complain-sub-category', (req, res) => {
+    const category_id = req.query.category_id;
+    console.log("complain-sub-category_cat",category_id);
+
+    db.query('SELECT * FROM complaint_category WHERE  parent_id = ? ', [category_id], (err, results) => {
+        if (err) {
+            return res.send({
+                status: 'err',
+                data: '',
+                message: 'An error occurred while processing your request: ' + err
+            });
+        } else {
+            if (results.length > 0) {
+                console.log("Subcategories",results);
+                return res.send({
+                    status: 'ok',
+                    data: results,
+                    message: 'Subcategories received'
+                });
+            } else {
+                return res.send({
+                    status: 'err',
+                    data: '',
+                    message: 'No subcategories available for this category ID'
+                });
+            }
+        }
+    });
+});
+
 
 router.get('/plans', checkLoggedIn, async (req, res) => {
     try {

@@ -208,6 +208,8 @@ router.post('/add-rating-tags', upload.single('rating_image'), authController.cr
 router.put('/edit-rating-tags', upload.single('rating_image'), authController.editRatingTags);
 //---Review--------//
 router.put('/edit-review', authController.editCustomerReview);
+//edit complaint
+router.put('/edit-complaint', authController.editComplaint);
 //---Review reply--------//
 router.put('/edit-review-reply', authController.editCustomerReviewReply);
 

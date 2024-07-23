@@ -707,7 +707,7 @@
                         deleteSelected.addEventListener('click', function () {
                             // SweetAlert2 pop up --- official docs reference: https://sweetalert2.github.io/
                             Swal.fire({
-                                text: "Are you sure you want to delete selected customers?",
+                                text: "Are you sure you want to delete selected categories?",
                                 icon: "warning",
                                 showCancelButton: true,
                                 buttonsStyling: false,
@@ -720,7 +720,7 @@
                             }).then(function (result) {
                                 if (result.value) {
                                     Swal.fire({
-                                        text: "You have deleted all selected customers!.",
+                                        text: "You have deleted all selected categories!.",
                                         icon: "success",
                                         buttonsStyling: false,
                                         confirmButtonText: "Ok, got it!",
@@ -755,6 +755,7 @@
                                 }
                             });
                         });
+                    
                     }
 
                     // Toggle toolbars

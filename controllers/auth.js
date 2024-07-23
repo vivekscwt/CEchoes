@@ -3934,6 +3934,35 @@ exports.editCustomerReview = async (req, res) => {
     }
 }
 
+exports.editComplaint = async (req, res) => {
+    try{
+        console.log("editComplaint",req.body);
+        const [editResponse] = await Promise.all([
+            comFunction.editCustomerComplaint(req.body),
+        ]);
+    
+        if (editResponse == true) {
+            return res.send({
+                status: 'ok',
+                data: '',
+                message: 'Complaint updated successfully.'
+            });
+        } else {
+            return res.send({
+                status: 'err',
+                data: '',
+                message: editResponse
+            });
+        }
+    } catch(error){
+        console.error('Unexpected error:', error);
+        return res.status(500).send({
+            status: 'error',
+            message: 'An unexpected error occurred while updating complaint data',
+        });
+    }
+}
+
 exports.editCustomerReviewReply = async (req, res) => {
     console.log('editCustomerReviewReply', req.body);
     //return false;
