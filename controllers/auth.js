@@ -14582,7 +14582,7 @@ const CreateCustomer = async (email, name, phone, address, city, state, zip) => 
 
 const createRazorpayPlan = async (plan, billingCycle, memberCount, country_code) => {
     try {
-        memberCount = parseInt(memberCount);
+        memberCount = parseInt(memberCount) || 0;;
         console.log("memberCount", memberCount);
         if (isNaN(memberCount) || memberCount < 0) {
             throw new Error('Invalid memberCount');
@@ -14692,7 +14692,7 @@ const createRazorpayPlan = async (plan, billingCycle, memberCount, country_code)
 
 const createRazorpayPlanprevioususer = async (plan, billingCycle, memberCount, country_code) => {
     try {
-        memberCount = parseInt(memberCount);
+        memberCount = parseInt(memberCount) || 0;
         console.log("memberCount", memberCount);
         if (isNaN(memberCount) || memberCount < 0) {
             throw new Error('Invalid memberCount');
