@@ -6278,6 +6278,74 @@ router.get('/delete-category', checkLoggedIn, (req, res, next) => {
 
 });
 
+router.post('/delete-categories', checkLoggedIn, (req, res) => {
+    try {
+        const ids = req.body.ids;
+        console.log("delete-categoriesids", ids);
+        if (!ids || !Array.isArray(ids) || ids.length === 0) {
+            return res.status(400).send({
+                status: 'error',
+                message: 'No categories selected for deletion'
+            });
+        }
+
+        // Construct query to select category images
+        const fileQuery = `SELECT category_img FROM category WHERE ID IN (${ids.join(',')})`;
+        db.query(fileQuery, (imgErr, imgRes) => {
+            if (imgErr) {
+                return res.status(500).send({
+                    status: 'error',
+                    message: 'Failed to fetch category images'
+                });
+            }
+
+            // Delete images if they exist
+            imgRes.forEach(row => {
+                if (row.category_img && row.category_img !== 'NULL') {
+                    const filePath = `uploads/${row.category_img}`;
+                    fs.unlink(filePath, err => {
+                        if (err) console.error(`Failed to delete file ${filePath}:`, err);
+                    });
+                }
+            });
+
+            // Construct query to delete categories
+            const deleteCategoryQuery = `DELETE FROM category WHERE ID IN (${ids.join(',')})`;
+            db.query(deleteCategoryQuery, (err, result) => {
+                if (err) {
+                    return res.status(500).send({
+                        status: 'error',
+                        message: 'Failed to delete categories'
+                    });
+                }
+
+                // Construct query to delete category-country relations
+                const deleteCountryQuery = `DELETE FROM category_country_relation WHERE cat_id IN (${ids.join(',')})`;
+                db.query(deleteCountryQuery, (countryErr, countryRes) => {
+                    if (countryErr) {
+                        return res.status(500).send({
+                            status: 'error',
+                            message: 'Failed to delete category-country relations'
+                        });
+                    }
+
+                    return res.send({
+                        status: 'ok',
+                        message: 'Categories deleted successfully'
+                    });
+                });
+            });
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('An error occurred');
+    }
+});
+
+
+
+
+
 router.get('/fetch-parent-categories', async (req, res) => {
     const { countryId } = req.query;
     console.log("countryId",countryId);

@@ -302,135 +302,86 @@
                     <div class="card-body pt-0">
                         <!--begin::Table-->
                         <table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_table_users">
-                            <!--begin::Table head-->
                             <thead>
-                                <!--begin::Table row-->
                                 <tr class="text-start text-muted fw-bolder fs-7 text-uppercase gs-0">
                                     <th class="text-center min-w-100px">Actions</th>
                                     <th class="w-10px pe-2">
                                         <div class="form-check form-check-sm form-check-custom form-check-solid me-3">
-                                            <input class="form-check-input" type="checkbox" data-kt-check="true"
-                                                data-kt-check-target="#kt_table_users .form-check-input" value="1" />
+                                            <input class="form-check-input" type="checkbox" data-id="0" data-kt-check="true" data-kt-check-target="#kt_table_users .form-check-input" value="1" />
                                         </div>
                                     </th>
                                     <th class="min-w-125px">Category</th>
                                     <th class="min-w-125px">Parent Category</th>
                                     <th class="min-w-125px">Country(s)</th>
                                 </tr>
-                                <!--end::Table row-->
                             </thead>
-                            <!--end::Table head-->
-                            <!--begin::Table body-->
                             <tbody class="text-gray-600 fw-bold">
-                                <% categoriess.forEach( category=> { %>
-                                    <!--begin::Table row-->
-                                    <tr>
-                                        <!--begin::Action=-->
-                                        <td class="text-end">
-                                            <% if(currentUserData.user_type_id !=3 ) { %>
-                                                <a href="#" class="btn btn-light btn-active-light-primary btn-sm"
-                                                    data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end"
-                                                    data-kt-menu-flip="top-end">Actions
-                                                    <!--begin::Svg Icon | path: icons/duotune/arrows/arr072.svg-->
-                                                    <span class="svg-icon svg-icon-5 m-0">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                            viewBox="0 0 24 24" fill="none">
-                                                            <path
-                                                                d="M11.4343 12.7344L7.25 8.55005C6.83579 8.13583 6.16421 8.13584 5.75 8.55005C5.33579 8.96426 5.33579 9.63583 5.75 10.05L11.2929 15.5929C11.6834 15.9835 12.3166 15.9835 12.7071 15.5929L18.25 10.05C18.6642 9.63584 18.6642 8.96426 18.25 8.55005C17.8358 8.13584 17.1642 8.13584 16.75 8.55005L12.5657 12.7344C12.2533 13.0468 11.7467 13.0468 11.4343 12.7344Z"
-                                                                fill="black" />
-                                                        </svg>
-                                                    </span>
-                                                    <!--end::Svg Icon-->
-                                                </a>
-                                                <!--begin::Menu-->
-                                                <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4"
-                                                    data-kt-menu="true">
-                                                    <!--begin::Menu item-->
-                                                    <div class="menu-item px-3">
-                                                        <a href="/edit-category?id=<%= category.categoryId %>"
-                                                            class="menu-link px-3">Edit</a>
-                                                    </div>
-                                                    <div class="menu-item px-3">
-                                                        <a href="#" data-cat-id="<%= category.categoryId %>"
-                                                            class="menu-link px-3 category-id"
-                                                            data-kt-users-table-filter="delete_row">Delete</a>
-                                                    </div>
-                                                </div>
-                                                <!--end::Menu-->
-                                                <% } else { %>
-                                                    <a href="/edit-category?id=<%= category.categoryId %>"
-                                                        class="btn btn-light btn-active-light-primary btn-m"
-                                                        data-kt-menu-placement="bottom-end" data-kt-menu-trigger="click"
-                                                        data-kt-menu-flip="top-end"> Edit
-
-                                                    </a>
+                                <% categoriess.forEach(category => { %>
+                                <tr>
+                                    <td class="text-end">
+                                        <% if (currentUserData.user_type_id != 3) { %>
+                                        <a href="#" class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" data-kt-menu-flip="top-end">Actions
+                                            <span class="svg-icon svg-icon-5 m-0">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                                    <path d="M11.4343 12.7344L7.25 8.55005C6.83579 8.13583 6.16421 8.13584 5.75 8.55005C5.33579 8.96426 5.33579 9.63583 5.75 10.05L11.2929 15.5929C11.6834 15.9835 12.3166 15.9835 12.7071 15.5929L18.25 10.05C18.6642 9.63584 18.6642 8.96426 18.25 8.55005C17.8358 8.13584 17.1642 8.13584 16.75 8.55005L12.5657 12.7344C12.2533 13.0468 11.7467 13.0468 11.4343 12.7344Z" fill="black" />
+                                                </svg>
+                                            </span>
+                                        </a>
+                                        <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold fs-7 w-125px py-4" data-kt-menu="true">
+                                            <div class="menu-item px-3">
+                                                <a href="/edit-category?id=<%= category.categoryId %>" class="menu-link px-3">Edit</a>
+                                            </div>
+                                            <div class="menu-item px-3">
+                                                <a href="#" data-cat-id="<%= category.categoryId %>" class="menu-link px-3 category-id" data-kt-users-table-filter="delete_row">Delete</a>
+                                            </div>
+                                        </div>
+                                        <% } else { %>
+                                        <a href="/edit-category?id=<%= category.categoryId %>" class="btn btn-light btn-active-light-primary btn-m" data-kt-menu-placement="bottom-end" data-kt-menu-trigger="click" data-kt-menu-flip="top-end"> Edit</a>
+                                        <% } %>
+                                    </td>
+                                    <td>
+                                        <div class="form-check form-check-sm form-check-custom form-check-solid">
+                                            <input class="form-check-input" type="checkbox" data-id="<%= category.categoryId %>" />
+                                        </div>
+                                    </td>
+                                    <td class="d-flex align-items-center">
+                                        <div class="symbol symbol-circle symbol-50px overflow-hidden me-3">
+                                            <a href="#">
+                                                <div class="symbol-label">
+                                                    <% if (category.categoryImage) { %>
+                                                    <img src="<%= category.categoryImage %>" alt="<%= category.category_name %>" class="w-100" />
+                                                    <% } else { %>
+                                                    <img src="/assets/media/no-image/no-photo.png" alt="<%= category.categoryName %>" class="w-100" />
                                                     <% } %>
-
-                                        </td>
-                                        <!--end::Action=-->
-                                        <!--begin::Checkbox-->
-                                        <td>
-                                            <div class="form-check form-check-sm form-check-custom form-check-solid">
-                                                <input class="form-check-input" type="checkbox" value="1" />
-                                            </div>
-                                        </td>
-                                        <!--end::Checkbox-->
-                                        <!--begin::User=-->
-                                        <td class="d-flex align-items-center">
-                                            <!--begin:: Avatar -->
-                                            <div class="symbol symbol-circle symbol-50px overflow-hidden me-3">
-                                                <a href="#">
-                                                    <div class="symbol-label">
-                                                        <% if(category.categoryImage){ %>
-                                                            <img src="<%= category.categoryImage %>"
-                                                                alt="<%= category.category_name %>" class="w-100" />
-                                                            <% } else { %>
-                                                                <img src="/assets/media/no-image/no-photo.png"
-                                                                    alt="<%= category.categoryName %>" class="w-100" />
-                                                                <% } %>
-                                                    </div>
-                                                </a>
-                                            </div>
-                                            <!--end::Avatar-->
-                                            <!--begin::User details-->
-                                            <div class="d-flex flex-column">
-                                                <a href="#" class="text-gray-800 text-hover-primary mb-1">
-                                                    <%= category.categoryName %>
-                                                </a>
-                                            </div>
-                                            <!--begin::User details-->
-                                        </td>
-                                        <!--end::User=-->
-                                        <!--begin::Role=-->
-                                        <td>
-                                            <% if (category.parentName) { %>
-                                                <%= category.parentName %>
-                                                    <% }else{ %>
-                                                        <%= "-" %>
-                                                            <% } %>
-                                        </td>
-                                        <!--end::Role=-->
-                                        <!--begin::Last login=-->
-                                        <td>
-
-                                            <% category.countryNames.forEach((order,index)=> {%>
-                                                <div class="badge badge-light-success fw-bolder">
-                                                    <%= order %>
                                                 </div>
-
-                                                <% });%>
-
-
-                                        </td>
-                                        <!--end::Last login=-->
-
-
-                                    </tr>
-                                    <!--end::Table row-->
-                                    <% }) %>
+                                            </a>
+                                        </div>
+                                        <div class="d-flex flex-column">
+                                            <a href="#" class="text-gray-800 text-hover-primary mb-1">
+                                                <%= category.categoryName %>
+                                            </a>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <% if (category.parentName) { %>
+                                        <%= category.parentName %>
+                                        <% } else { %>
+                                        <%= "-" %>
+                                        <% } %>
+                                    </td>
+                                    <td>
+                                        <% category.countryNames.forEach((order, index) => { %>
+                                        <div class="badge badge-light-success fw-bolder">
+                                            <%= order %>
+                                        </div>
+                                        <% }); %>
+                                    </td>
+                                </tr>
+                                <% }) %>
                             </tbody>
-                            <!--end::Table body-->
                         </table>
+                        
+                        
                         <!--end::Table-->
                     </div>
                     <!--end::Card body-->
@@ -686,6 +637,7 @@
                         // Toggle selected action toolbar
                         // Select all checkboxes
                         const checkboxes = table.querySelectorAll('[type="checkbox"]');
+                        console.log("checkboxes",checkboxes);
 
                         // Select elements
                         toolbarBase = document.querySelector('[data-kt-user-table-toolbar="base"]');
@@ -704,8 +656,63 @@
                         });
 
                         // Deleted selected rows
+                        // deleteSelected.addEventListener('click', function () {
+                        //     // SweetAlert2 pop up --- official docs reference: https://sweetalert2.github.io/
+                        //     console.log("Delete button clicked");
+                        //     Swal.fire({
+                        //         text: "Are you sure you want to delete selected categories?",
+                        //         icon: "warning",
+                        //         showCancelButton: true,
+                        //         buttonsStyling: false,
+                        //         confirmButtonText: "Yes, delete!",
+                        //         cancelButtonText: "No, cancel",
+                        //         customClass: {
+                        //             confirmButton: "btn fw-bold btn-danger",
+                        //             cancelButton: "btn fw-bold btn-active-light-primary"
+                        //         }
+                        //     }).then(function (result) {
+                        //         if (result.value) {
+                        //             Swal.fire({
+                        //                 text: "You have deleted all selected categories!.",
+                        //                 icon: "success",
+                        //                 buttonsStyling: false,
+                        //                 confirmButtonText: "Ok, got it!",
+                        //                 customClass: {
+                        //                     confirmButton: "btn fw-bold btn-primary",
+                        //                 }
+                        //             }).then(function () {
+                        //                 // Remove all selected customers
+                        //                 checkboxes.forEach(c => {
+                        //                     if (c.checked) {
+                        //                         console.log("Removing row for checkbox:", c);
+                        //                         datatable.row($(c.closest('tbody tr'))).remove().draw();
+                        //                     }
+                        //                 });
+
+                        //                 // Remove header checked box
+                        //                 const headerCheckbox = table.querySelectorAll('[type="checkbox"]')[0];
+                        //                 headerCheckbox.checked = false;
+                        //             }).then(function () {
+                        //                 toggleToolbars(); // Detect checked checkboxes
+                        //                 initToggleToolbar(); // Re-init toolbar to recalculate checkboxes
+                        //             });
+                        //         } else if (result.dismiss === 'cancel') {
+                        //             Swal.fire({
+                        //                 text: "Selected customers was not deleted.",
+                        //                 icon: "error",
+                        //                 buttonsStyling: false,
+                        //                 confirmButtonText: "Ok, got it!",
+                        //                 customClass: {
+                        //                     confirmButton: "btn fw-bold btn-primary",
+                        //                 }
+                        //             });
+                        //         }
+                        //     });
+                        // });
+                    
                         deleteSelected.addEventListener('click', function () {
                             // SweetAlert2 pop up --- official docs reference: https://sweetalert2.github.io/
+                            console.log("Delete button clicked");
                             Swal.fire({
                                 text: "Are you sure you want to delete selected categories?",
                                 icon: "warning",
@@ -719,32 +726,77 @@
                                 }
                             }).then(function (result) {
                                 if (result.value) {
-                                    Swal.fire({
-                                        text: "You have deleted all selected categories!.",
-                                        icon: "success",
-                                        buttonsStyling: false,
-                                        confirmButtonText: "Ok, got it!",
-                                        customClass: {
-                                            confirmButton: "btn fw-bold btn-primary",
+                                    // Collect selected category IDs
+                                    const selectedIds = [];
+                                    checkboxes.forEach(c => {
+                                        if (c.checked) {
+                                            selectedIds.push($(c).data('id'));
                                         }
-                                    }).then(function () {
-                                        // Remove all selected customers
-                                        checkboxes.forEach(c => {
-                                            if (c.checked) {
-                                                datatable.row($(c.closest('tbody tr'))).remove().draw();
-                                            }
-                                        });
+                                    });
 
-                                        // Remove header checked box
-                                        const headerCheckbox = table.querySelectorAll('[type="checkbox"]')[0];
-                                        headerCheckbox.checked = false;
-                                    }).then(function () {
-                                        toggleToolbars(); // Detect checked checkboxes
-                                        initToggleToolbar(); // Re-init toolbar to recalculate checkboxes
+                                    console.log("Selected IDs:", selectedIds);
+
+                                    $.ajax({
+                                        url: '/delete-categories',
+                                        method: 'POST',
+                                        data: JSON.stringify({ ids: selectedIds }),
+                                        contentType: 'application/json',
+                                        success: function (data) {
+                                            if (data.status === 'ok') {
+                                                Swal.fire({
+                                                    text: "You have deleted all selected categories!.",
+                                                    icon: "success",
+                                                    buttonsStyling: false,
+                                                    confirmButtonText: "Ok, got it!",
+                                                    customClass: {
+                                                        confirmButton: "btn fw-bold btn-primary",
+                                                    }
+                                                }).then(function () {
+                                                    // Remove all selected rows from DataTable
+                                                    checkboxes.forEach(c => {
+                                                        if (c.checked) {
+                                                            datatable.row($(c.closest('tbody tr'))).remove().draw();
+                                                        }
+                                                    });
+
+                                                    // Remove header checked box
+                                                    const headerCheckbox = table.querySelectorAll('[type="checkbox"]')[0];
+                                                    headerCheckbox.checked = false;
+                                                    if (result.isConfirmed) {
+                                                            window.location.href = "/manage-categories";
+                                                        }
+                                                }).then(function () {
+                                                    toggleToolbars(); // Detect checked checkboxes
+                                                    initToggleToolbar(); // Re-init toolbar to recalculate checkboxes
+                                                });
+                                            } else {
+                                                Swal.fire({
+                                                    text: "An error occurred while deleting categories.",
+                                                    icon: "error",
+                                                    buttonsStyling: false,
+                                                    confirmButtonText: "Ok, got it!",
+                                                    customClass: {
+                                                        confirmButton: "btn fw-bold btn-primary",
+                                                    }
+                                                });
+                                            }
+                                        },
+                                        error: function (xhr, status, error) {
+                                            Swal.fire({
+                                                text: "An error occurred while deleting categories.",
+                                                icon: "error",
+                                                buttonsStyling: false,
+                                                confirmButtonText: "Ok, got it!",
+                                                customClass: {
+                                                    confirmButton: "btn fw-bold btn-primary",
+                                                }
+                                            });
+                                            console.error("AJAX Error:", xhr, status, error);
+                                        }
                                     });
                                 } else if (result.dismiss === 'cancel') {
                                     Swal.fire({
-                                        text: "Selected customers was not deleted.",
+                                        text: "Selected categories were not deleted.",
                                         icon: "error",
                                         buttonsStyling: false,
                                         confirmButtonText: "Ok, got it!",
@@ -762,6 +814,7 @@
                     const toggleToolbars = () => {
                         // Select refreshed checkbox DOM elements 
                         const allCheckboxes = table.querySelectorAll('tbody [type="checkbox"]');
+                        console.log("allCheckboxes",allCheckboxes);
 
                         // Detect checkboxes state & count
                         let checkedState = false;
