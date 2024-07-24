@@ -1028,6 +1028,210 @@ async function createCompany(comInfo, userId) {
   }
 };
 
+//actual
+// async function createcompany(comInfo, userId) {
+//   console.log("comInfo, userId", comInfo, userId);
+//   console.log("createcompany");
+//   let return_data = {};
+//   try {
+//     // Check if the company Name already exists in the "company" table
+//     //const company_name_checking_query = "SELECT ID FROM company WHERE company_name = ?";
+//     const company_name_checking_query = "SELECT ID FROM company WHERE company_name = ?";
+//     const company_name_checking_results = await query(company_name_checking_query, [comInfo.company_name]);
+//     console.log("iiiiiiiiiiiii");
+
+//     if (company_name_checking_results.length > 0) {
+//       //company exist
+//       console.log("company exits");
+//       console.log("company_name_checking_results[0].ID",company_name_checking_results[0].ID);
+//       try {
+//         //const company_address_exist_query = 'SELECT * FROM company_location WHERE company_id = ? AND address = ?';
+//         const company_address_exist_query = 'SELECT * FROM company_location WHERE company_id = ?';
+//         const company_address_exist_values = [company_name_checking_results[0].ID, comInfo.address];
+//         const company_address_exist_results = await query(company_address_exist_query, company_address_exist_values);
+//         if (company_address_exist_results.length > 0) {
+//           console.log("company_address_exist_results.length > 0");
+//           //address exist return location ID
+//           return_data.companyID = company_name_checking_results[0].ID;
+//           return_data.companyLocationID = company_address_exist_results[0].ID;
+//           return return_data;
+//         } else {
+//           //new
+//           const country_name_query = `SELECT name,id FROM countries WHERE shortname = "${comInfo.main_address_country}"`;
+//           const country_name_value = await query(country_name_query);
+//           if (country_name_value.length > 0) {
+//             var country_name = country_name_value[0].name;
+//             console.log("country_name", country_name);
+//             var country_id = country_name_value[0].id;
+//             console.log("country_id", country_id);
+//           }
+
+//           const state_name_query = `SELECT * FROM states WHERE id = "${comInfo.main_address_state}"`;
+//           const state_name_value = await query(state_name_query);
+//           if (state_name_value.length > 0) {
+//             var state_name = state_name_value[0].name;
+//             console.log("state_name", state_name);
+//           }
+
+//           var city_value = comInfo['review-address'];
+//           console.log("city_value", city_value);
+
+//           var concatenatedAddress = city_value + ', ' + state_name + ', ' + country_name;
+//           console.log(concatenatedAddress);
+
+
+
+//           //create new address for company
+//           try {
+//             const create_company_address_query = 'INSERT INTO company_location (company_id, address, country, state, city, zip, status) VALUES (?, ?, ?, ?, ?, ?, ?)';
+//             const create_company_address_values = [company_name_checking_results[0].ID, comInfo.address, country_name, '', '', '', '2'];
+//             //const create_company_address_values = [comInfo.company_name, concatenatedAddress, '', '', '', '', '2'];
+
+//             const create_company_address_results = await query(create_company_address_query, create_company_address_values);
+//             if (create_company_address_results.insertId) {
+//               return_data.companyID = company_name_checking_results[0].ID;
+//               return_data.companyLocationID = create_company_address_results.insertId;
+//               return return_data;
+//             }
+//           } catch (error) {
+//             console.error('Error during create_company_address_query:', error);
+//             return error;
+//           }
+
+//         }
+//       } catch (error) {
+//         console.error('Error during company_address_exist_query:', error);
+//         return error;
+//       }
+//       //return company_name_checking_results[0].ID;
+//     } else {
+//       // Create New Company
+//       // Get the current date
+//       console.log("ppppppp");
+//       const currentDate = new Date();
+
+//       // Format the date in 'YYYY-MM-DD HH:mm:ss' format (adjust the format as needed)
+//       const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ');
+//       try {
+//         const companySlug = await new Promise((resolve, reject) => {
+//           comFunction2.generateUniqueSlug(comInfo.company_name, (error, generatedSlug) => {
+//             if (error) {
+//               console.log('Error:', error.message);
+//               reject(error);
+//             } else {
+//               //console.log('Generated Company Slug:', generatedSlug);
+//               resolve(generatedSlug);
+//             }
+//           });
+//         });
+
+//         //console.log('Outside of Callback - Company Slug:', companySlug);
+//         //return false;
+//         const companyInsertData = {
+//           user_created_by: userId,
+//           company_name: comInfo.company_name || null,
+//           status: '2',
+//           created_date: formattedDate,
+//           updated_date: formattedDate,
+//           main_address: comInfo.address || null,
+//           verified: '0',
+//           slug: companySlug,
+//           main_address_country: comInfo.main_address_country,
+//           main_address_state: comInfo.main_address_state,
+//           parent_id: '0',
+//           paid_status: "free",
+//         };
+//         const create_company_query = 'INSERT INTO company SET ?'
+//         const create_company_results = await query(create_company_query, companyInsertData);
+
+//         if (create_company_results.insertId) {
+//           //create new address for company
+
+//           //new
+//           const country_name_query = `SELECT name,id FROM countries WHERE shortname = "${comInfo.main_address_country}"`;
+//           const country_name_value = await query(country_name_query);
+//           if (country_name_value.length > 0) {
+//             var country_name = country_name_value[0].name;
+//             console.log("country_name", country_name);
+//             var country_id = country_name_value[0].id;
+//             console.log("country_id", country_id);
+//           }
+
+//           const state_name_query = `SELECT * FROM states WHERE id = "${comInfo.main_address_state}"`;
+//           const state_name_value = await query(state_name_query);
+//           if (state_name_value.length > 0) {
+//             var state_name = state_name_value[0].name;
+//             console.log("state_name", state_name);
+//           }
+
+//           var city_value = comInfo['review-address'];
+//           console.log("city_value", city_value);
+
+//           // var concatenatedAddresses = city_value + ', ' + state_name + ', ' + country_name;
+//           // console.log("concatenatedAddresses",concatenatedAddresses);
+
+//           var concatenatedAddress = '';
+
+//           if (city_value) {
+//             concatenatedAddress += city_value;
+//           }
+
+//           if (state_name) {
+//             if (concatenatedAddress) {
+//               concatenatedAddress += ', ';
+//             }
+//             concatenatedAddress += state_name;
+//           }
+
+//           if (country_name) {
+//             if (concatenatedAddress) {
+//               concatenatedAddress += ', ';
+//             }
+//             concatenatedAddress += country_name;
+//           }
+
+//           console.log("concatenatedAddress", concatenatedAddress);
+
+
+//           try {
+//             const create_company_address_values = {
+//               company_id: create_company_results.insertId,
+//               //address: comInfo.address || null,
+//               address: concatenatedAddress || null,
+//               status: '2',
+//             };
+//             const create_company_address_query = 'INSERT INTO company_location SET ?'
+//             const create_company_address_results = await query(create_company_address_query, create_company_address_values);
+
+//             if (create_company_address_results.insertId) {
+//               return_data.companyID = create_company_results.insertId;
+//               return_data.companyLocationID = create_company_address_results.insertId;
+//               console.log('return_data', return_data)
+//               return return_data;
+//             } else {
+//               return_data.companyID = create_company_results.insertId;
+//               return_data.companyLocationID = '';
+//               console.log('return_data.companyLocationID:', return_data)
+//               return return_data;
+//             }
+//           } catch (error) {
+//             console.error('Error during create_company_address_query:', error);
+//             return error;
+//           }
+//         } else {
+//           return [];
+//         }
+
+//       } catch (error) {
+//         console.error('Error during user create_company_query:', error);
+//         return error;
+//       }
+//     }
+//   }
+//   catch (error) {
+//     console.error('Error during user company_name_checking_query:', error);
+//   }
+// };
 
 async function createcompany(comInfo, userId) {
   console.log("comInfo, userId", comInfo, userId);
@@ -1083,7 +1287,7 @@ async function createcompany(comInfo, userId) {
 
           //create new address for company
           try {
-            const create_company_address_query = 'INSERT INTO company_location (company_id, address, country, state, city, zip, status) VALUES (?, ?, ?, ?, ?, ?, ?)';
+            const create_company_address_query = 'INSERT INTO company_location (temp_company_id, address, country, state, city, zip, status) VALUES (?, ?, ?, ?, ?, ?, ?)';
             const create_company_address_values = [company_name_checking_results[0].ID, comInfo.address, country_name, '', '', '', '2'];
             //const create_company_address_values = [comInfo.company_name, concatenatedAddress, '', '', '', '', '2'];
 
@@ -1136,8 +1340,14 @@ async function createcompany(comInfo, userId) {
           main_address: comInfo.address || null,
           verified: '0',
           slug: companySlug,
+          main_address_country: comInfo.main_address_country,
+          main_address_state: comInfo.main_address_state,
+          parent_id: '0',
+          paid_status: "free",
+          temp_comp_status: '0'
         };
-        const create_company_query = 'INSERT INTO company SET ?'
+        // const create_company_query = 'INSERT INTO company SET ?'
+         const create_company_query = 'INSERT INTO temp_company SET ?'
         const create_company_results = await query(create_company_query, companyInsertData);
 
         if (create_company_results.insertId) {
@@ -1529,6 +1739,171 @@ async function createReview(reviewIfo, userId, comInfo) {
 //   }
 // }
 
+//actualsds
+// async function createreview(reviewIfo, userId, comInfo) {
+//   console.log('Review Info', reviewIfo);
+//   console.log('Company Info', comInfo);
+//   // reviewIfo['tags[]'].forEach((tag) => {
+//   //   console.log(tag);
+//   // });
+
+//   console.log("typeof reviewIfo['tags[]']",typeof reviewIfo['tags[]']);
+
+//   const getcompanyidquery = `SELECT * FROM company WHERE company_name,main_address_country,main_address_state,main_address_city`
+
+
+//   if (typeof reviewIfo['tags[]'] === 'string') {
+//     // Convert it to an array containing a single element
+//     reviewIfo['tags[]'] = [reviewIfo['tags[]']];
+//   }
+//   const currentDate = new Date();
+//   // Format the date in 'YYYY-MM-DD HH:mm:ss' format (adjust the format as needed)
+//   const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ');
+
+
+//   const country_name_query = `SELECT name,id FROM countries WHERE shortname = "${reviewIfo.main_address_country}"`;
+//   const country_name_value = await query(country_name_query);
+//   if (country_name_value.length > 0) {
+//     var country_name = country_name_value[0].name;
+//     console.log("country_name", country_name);
+//     var country_id = country_name_value[0].id;
+//     console.log("country_id", country_id);
+//   }
+
+//   const state_name_query = `SELECT * FROM states WHERE id = "${reviewIfo.main_address_state}"`;
+//   const state_name_value = await query(state_name_query);
+//   if (state_name_value.length > 0) {
+//     var state_name = state_name_value[0].name;
+//     console.log("state_name", state_name);
+//   }
+
+//   var city_value = reviewIfo['review-address'];
+//   console.log("city_value", city_value);
+
+//   // var concatenatedAddress = city_value + ', ' + state_name + ', ' + country_name;
+//   // console.log(concatenatedAddress);
+
+//   var concatenatedAddress = '';
+
+//   if (city_value) {
+//     concatenatedAddress += city_value;
+//   }
+
+//   if (state_name) {
+//     if (concatenatedAddress) {
+//       concatenatedAddress += ', ';
+//     }
+//     concatenatedAddress += state_name;
+//   }
+
+//   if (country_name) {
+//     if (concatenatedAddress) {
+//       concatenatedAddress += ', ';
+//     }
+//     concatenatedAddress += country_name;
+//   }
+
+//   console.log("concatenatedAddress", concatenatedAddress);
+
+
+  
+
+//   // const getcompanyquery = `SELECT ID FROM company WHERE company_name = ?`;
+//   // const getcompanyvalue = await query(getcompanyquery,[reviewIfo.company_name]);
+//   // console.log("getcompanyvalue",getcompanyvalue);
+//   // if(getcompanyvalue.length>0){
+//   //     var CompanyID = getcompanyvalue[0].ID;
+//   //     console.log("CompanyID",CompanyID);
+//   // }
+//   let CompanyID;
+
+//   let queryParameters = [reviewIfo.company_name];
+//   let sqlQuery = `SELECT ID AS company_id FROM company WHERE company_name = ?`;
+  
+//   if (reviewIfo.main_address_country) {
+//       queryParameters.push(reviewIfo.main_address_country);
+//       sqlQuery += ` AND main_address_country = ?`;
+//   }
+  
+//   // if (reviewIfo.main_address_state) {
+//   //     queryParameters.push(reviewIfo.main_address_state);
+//   //     sqlQuery += ` AND main_address_state = ?`;
+//   // }
+  
+//       const [rows] = await query(sqlQuery, queryParameters);
+//     console.log("rowssdefsd",rows);
+//     if (rows && rows.company_id !== undefined) {
+//       CompanyID = rows.company_id;
+//       console.log("Company ID:", CompanyID);
+//   } else {
+//       console.log("Company not found");
+//       return null;
+//   }
+
+
+//   const getcompanylocquery = `SELECT ID FROM company_location WHERE company_id = ?`;
+//   const getcompanylocvalue = await query(getcompanylocquery,[CompanyID]);
+//   console.log("getcompanylocvalue",getcompanylocvalue);
+//   if(getcompanylocvalue.length>0){
+//       var CompanylocID = getcompanylocvalue[0].ID;
+//       console.log("CompanylocID",CompanylocID);
+//   }else{
+//     const addcompanylocquery = 'INSERT INTO company_location (company_id, address, country, state, city, zip, status) VALUES (?, ?, ?, ?, ?, ?, ?)';
+//     const addcompanylocvalues = [CompanyID, concatenatedAddress, country_name, state_name, city_value, '', '2'];
+//     const addcompanylocvalue = await query(addcompanylocquery, addcompanylocvalues);
+//     var CompanylocID = addcompanylocvalue.insertId;
+//     console.log("Inserted row IDa:",CompanylocID );
+//     //var CompanylocID = '0';
+// }
+//   // const country_name_query = `SELECT name FROM countries WHERE shortname = "${reviewIfo.main_address_country}"`;
+//   // const country_name_value = await query(country_name_query);
+//   // if(country_name_value.length>0){
+//   //   var country_name = country_name_value[0].name;
+//   //   console.log("country_name",country_name);
+//   // }
+//   const create_review_query = 'INSERT INTO reviews (company_id, customer_id, company_location, company_location_id, review_title, rating, review_content, user_privacy, review_status, created_at, updated_at, labels, user_contact, category_id, product_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+//   const create_review_values = [CompanyID, userId, concatenatedAddress, CompanylocID, reviewIfo.review_title, reviewIfo.rating, reviewIfo.review_content, reviewIfo.user_privacy, '2', formattedDate, formattedDate, reviewIfo.review_lable, reviewIfo.user_contact, reviewIfo.category_id, reviewIfo.product_id];
+
+//   try {
+//     const create_review_results = await query(create_review_query, create_review_values);
+//     if (create_review_results.insertId) {
+//       if (Array.isArray(reviewIfo['tags[]']) && reviewIfo['tags[]'].length > 0) {
+//         //insert review_tag_relation
+//         const review_tag_relation_query = 'INSERT INTO review_tag_relation (review_id, tag_name) VALUES (?, ?)';
+//         try {
+//           for (const tag of reviewIfo['tags[]']) {
+//             const review_tag_relation_values = [create_review_results.insertId, tag];
+//             const review_tag_relation_results = await query(review_tag_relation_query, review_tag_relation_values);
+//           }
+
+//           //-- user review count------//
+//           const update_review_count_query = 'UPDATE user_customer_meta SET review_count = review_count + 1 WHERE user_id = ?';
+//           try {
+//             const [update_review_count_result] = await db.promise().query(update_review_count_query, [userId]);
+//             return create_review_results.insertId;
+//           } catch (error) {
+//             console.error('Error during user update_review_count_query:', error);
+//           }
+
+//         } catch (error) {
+//           console.error('Error during user review_tag_relation_results:', error);
+//         }
+//       } else {
+//         //-- user review count------//
+//         const update_review_count_query = 'UPDATE user_customer_meta SET review_count = review_count + 1 WHERE user_id = ?';
+//         try {
+//           const [update_review_count_result] = await db.promise().query(update_review_count_query, [userId]);
+//           return create_review_results.insertId;
+//         } catch (error) {
+//           console.error('Error during user update_review_count_query:', error);
+//         }
+//       }
+//     }
+//   } catch (error) {
+//     console.error('Error during user create_review_results:', error);
+//   }
+// }
+
 async function createreview(reviewIfo, userId, comInfo) {
   console.log('Review Info', reviewIfo);
   console.log('Company Info', comInfo);
@@ -1594,18 +1969,9 @@ async function createreview(reviewIfo, userId, comInfo) {
 
   console.log("concatenatedAddress", concatenatedAddress);
 
-
-  
-
-  // const getcompanyquery = `SELECT ID FROM company WHERE company_name = ?`;
-  // const getcompanyvalue = await query(getcompanyquery,[reviewIfo.company_name]);
-  // console.log("getcompanyvalue",getcompanyvalue);
-  // if(getcompanyvalue.length>0){
-  //     var CompanyID = getcompanyvalue[0].ID;
-  //     console.log("CompanyID",CompanyID);
-  // }
   let CompanyID;
 
+  // Define the query for the company table
   let queryParameters = [reviewIfo.company_name];
   let sqlQuery = `SELECT ID AS company_id FROM company WHERE company_name = ?`;
   
@@ -1614,57 +1980,54 @@ async function createreview(reviewIfo, userId, comInfo) {
       sqlQuery += ` AND main_address_country = ?`;
   }
   
-  // if (reviewIfo.main_address_state) {
-  //     queryParameters.push(reviewIfo.main_address_state);
-  //     sqlQuery += ` AND main_address_state = ?`;
-  // }
+  const rows = await query(sqlQuery, queryParameters);
+  console.log("Company query result:", rows);
+
+  if (rows && rows.length > 0) {
+      CompanyID = rows[0].company_id;
+      console.log("Company ID from company table:", CompanyID);
+      const getcompanylocquery = `SELECT ID FROM company_location WHERE company_id = ?`;
+      const getcompanylocvalue = await query(getcompanylocquery,[CompanyID]);
+      console.log("getcompanylocvalue",getcompanylocvalue);
+      if(getcompanylocvalue.length>0){
+          var CompanylocID = getcompanylocvalue[0].ID;
+          console.log("CompanylocID",CompanylocID);
+      }else{
+        const addcompanylocquery = 'INSERT INTO company_location (company_id, address, country, state, city, zip, status) VALUES (?, ?, ?, ?, ?, ?, ?)';
+        const addcompanylocvalues = [CompanyID, concatenatedAddress, country_name, state_name, city_value, '', '2'];
+        const addcompanylocvalue = await query(addcompanylocquery, addcompanylocvalues);
+        var CompanylocID = addcompanylocvalue.insertId;
+        console.log("Inserted row IDa:",CompanylocID );
+        //var CompanylocID = '0';
+    }
+    const create_review_query = 'INSERT INTO reviews (company_id, customer_id, company_location, company_location_id, review_title, rating, review_content, user_privacy, review_status, created_at, updated_at, labels, user_contact, category_id, product_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+    const create_review_values = [CompanyID, userId, concatenatedAddress, CompanylocID, reviewIfo.review_title, reviewIfo.rating, reviewIfo.review_content, reviewIfo.user_privacy, '2', formattedDate, formattedDate, reviewIfo.review_lable, reviewIfo.user_contact, reviewIfo.category_id, reviewIfo.product_id];
   
-      const [rows, fields] = await query(sqlQuery, queryParameters);
-    console.log("rowssdefsd",rows);
-    if (rows && rows.company_id !== undefined) {
-      CompanyID = rows.company_id;
-      console.log("Company ID:", CompanyID);
-  } else {
-      console.log("Company not found");
-      return null;
-  }
-
-
-  const getcompanylocquery = `SELECT ID FROM company_location WHERE company_id = ?`;
-  const getcompanylocvalue = await query(getcompanylocquery,[CompanyID]);
-  console.log("getcompanylocvalue",getcompanylocvalue);
-  if(getcompanylocvalue.length>0){
-      var CompanylocID = getcompanylocvalue[0].ID;
-      console.log("CompanylocID",CompanylocID);
-  }else{
-    const addcompanylocquery = 'INSERT INTO company_location (company_id, address, country, state, city, zip, status) VALUES (?, ?, ?, ?, ?, ?, ?)';
-    const addcompanylocvalues = [CompanyID, concatenatedAddress, country_name, state_name, city_value, '', '2'];
-    const addcompanylocvalue = await query(addcompanylocquery, addcompanylocvalues);
-    var CompanylocID = addcompanylocvalue.insertId;
-    console.log("Inserted row IDa:",CompanylocID );
-    //var CompanylocID = '0';
-}
-  // const country_name_query = `SELECT name FROM countries WHERE shortname = "${reviewIfo.main_address_country}"`;
-  // const country_name_value = await query(country_name_query);
-  // if(country_name_value.length>0){
-  //   var country_name = country_name_value[0].name;
-  //   console.log("country_name",country_name);
-  // }
-  const create_review_query = 'INSERT INTO reviews (company_id, customer_id, company_location, company_location_id, review_title, rating, review_content, user_privacy, review_status, created_at, updated_at, labels, user_contact, category_id, product_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-  const create_review_values = [CompanyID, userId, concatenatedAddress, CompanylocID, reviewIfo.review_title, reviewIfo.rating, reviewIfo.review_content, reviewIfo.user_privacy, '2', formattedDate, formattedDate, reviewIfo.review_lable, reviewIfo.user_contact, reviewIfo.category_id, reviewIfo.product_id];
-
-  try {
-    const create_review_results = await query(create_review_query, create_review_values);
-    if (create_review_results.insertId) {
-      if (Array.isArray(reviewIfo['tags[]']) && reviewIfo['tags[]'].length > 0) {
-        //insert review_tag_relation
-        const review_tag_relation_query = 'INSERT INTO review_tag_relation (review_id, tag_name) VALUES (?, ?)';
-        try {
-          for (const tag of reviewIfo['tags[]']) {
-            const review_tag_relation_values = [create_review_results.insertId, tag];
-            const review_tag_relation_results = await query(review_tag_relation_query, review_tag_relation_values);
+    try {
+      const create_review_results = await query(create_review_query, create_review_values);
+      if (create_review_results.insertId) {
+        if (Array.isArray(reviewIfo['tags[]']) && reviewIfo['tags[]'].length > 0) {
+          //insert review_tag_relation
+          const review_tag_relation_query = 'INSERT INTO review_tag_relation (review_id, tag_name) VALUES (?, ?)';
+          try {
+            for (const tag of reviewIfo['tags[]']) {
+              const review_tag_relation_values = [create_review_results.insertId, tag];
+              const review_tag_relation_results = await query(review_tag_relation_query, review_tag_relation_values);
+            }
+  
+            //-- user review count------//
+            const update_review_count_query = 'UPDATE user_customer_meta SET review_count = review_count + 1 WHERE user_id = ?';
+            try {
+              const [update_review_count_result] = await db.promise().query(update_review_count_query, [userId]);
+              return create_review_results.insertId;
+            } catch (error) {
+              console.error('Error during user update_review_count_query:', error);
+            }
+  
+          } catch (error) {
+            console.error('Error during user review_tag_relation_results:', error);
           }
-
+        } else {
           //-- user review count------//
           const update_review_count_query = 'UPDATE user_customer_meta SET review_count = review_count + 1 WHERE user_id = ?';
           try {
@@ -1673,24 +2036,151 @@ async function createreview(reviewIfo, userId, comInfo) {
           } catch (error) {
             console.error('Error during user update_review_count_query:', error);
           }
-
-        } catch (error) {
-          console.error('Error during user review_tag_relation_results:', error);
-        }
-      } else {
-        //-- user review count------//
-        const update_review_count_query = 'UPDATE user_customer_meta SET review_count = review_count + 1 WHERE user_id = ?';
-        try {
-          const [update_review_count_result] = await db.promise().query(update_review_count_query, [userId]);
-          return create_review_results.insertId;
-        } catch (error) {
-          console.error('Error during user update_review_count_query:', error);
         }
       }
+    } catch (error) {
+      console.error('Error during user create_review_results:', error);
     }
-  } catch (error) {
-    console.error('Error during user create_review_results:', error);
+  } else {
+      console.log("Company not found in company table, querying temp_company table");
+  
+      let tempQueryParameters = [reviewIfo.company_name];
+      let tempSqlQuery = `SELECT ID AS company_id FROM temp_company WHERE company_name = ?`;
+      
+      if (reviewIfo.main_address_country) {
+          tempQueryParameters.push(reviewIfo.main_address_country);
+          tempSqlQuery += ` AND main_address_country = ?`;
+      }
+      
+      try {
+          const tempRows = await query(tempSqlQuery, tempQueryParameters);
+          console.log("Temp company query result:", tempRows);
+          console.log("tempRows.length",tempRows.length);
+      
+          if (tempRows && tempRows.length>0) {
+              CompanyID = tempRows[0].company_id;
+              console.log("Company ID from temp_company table:", CompanyID);
+      
+              const getcompanylocquery = `SELECT ID FROM company_location WHERE temp_company_id = ?`;
+              const getcompanylocvalue = await query(getcompanylocquery, [CompanyID]);
+              console.log("getcompanylocvalue", getcompanylocvalue);
+      
+              if (getcompanylocvalue && getcompanylocvalue.length > 0) {
+                  var CompanylocID = getcompanylocvalue[0].ID;
+                  console.log("CompanylocID:", CompanylocID);
+              } else {
+                  const addcompanylocquery = 'INSERT INTO company_location (temp_company_id, address, country, state, city, zip, status) VALUES (?, ?, ?, ?, ?, ?, ?)';
+                  const addcompanylocvalues = [CompanyID, concatenatedAddress, country_name, state_name, city_value, '', '2'];
+                  const addcompanylocvalue = await query(addcompanylocquery, addcompanylocvalues);
+                  var CompanylocID = addcompanylocvalue.insertId;
+                  console.log("Inserted row ID Temp:", CompanylocID);
+              }
+              const create_review_query = 'INSERT INTO temp_reviews (company_id, customer_id, company_location, company_location_id, review_title, rating, review_content, user_privacy, review_status, created_at, updated_at, labels, user_contact, category_id, product_id, temp_review_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+              const create_review_values = [CompanyID, userId, concatenatedAddress, CompanylocID, reviewIfo.review_title, reviewIfo.rating, reviewIfo.review_content, reviewIfo.user_privacy, '2', formattedDate, formattedDate, reviewIfo.review_lable, reviewIfo.user_contact, reviewIfo.category_id, reviewIfo.product_id,'0'];
+            
+              try {
+                const create_review_results = await query(create_review_query, create_review_values);
+                if (create_review_results.insertId) {
+                  if (Array.isArray(reviewIfo['tags[]']) && reviewIfo['tags[]'].length > 0) {
+                    //insert review_tag_relation
+                    const review_tag_relation_query = 'INSERT INTO temp_review_tag_relation (review_id, tag_name) VALUES (?, ?)';
+                    try {
+                      for (const tag of reviewIfo['tags[]']) {
+                        const review_tag_relation_values = [create_review_results.insertId, tag];
+                        const review_tag_relation_results = await query(review_tag_relation_query, review_tag_relation_values);
+                      }
+            
+                      //-- user review count------//
+                      const update_review_count_query = 'UPDATE user_customer_meta SET review_count = review_count + 1 WHERE user_id = ?';
+                      try {
+                        const [update_review_count_result] = await db.promise().query(update_review_count_query, [userId]);
+                        return create_review_results.insertId;
+                      } catch (error) {
+                        console.error('Error during user update_review_count_query:', error);
+                      }
+            
+                    } catch (error) {
+                      console.error('Error during user temp_review_tag_relation_results:', error);
+                    }
+                  } else {
+                    //-- user review count------//
+                    const update_review_count_query = 'UPDATE user_customer_meta SET review_count = review_count + 1 WHERE user_id = ?';
+                    try {
+                      const [update_review_count_result] = await db.promise().query(update_review_count_query, [userId]);
+                      return create_review_results.insertId;
+                    } catch (error) {
+                      console.error('Error during user update_review_count_query:', error);
+                    }
+                  }
+                }
+              } catch (error) {
+                console.error('Error during user create_review_results:', error);
+              }
+          } else {
+              console.log("Company not found in temp_company table");
+              CompanyID = null;
+          }
+      } catch (error) {
+          console.error("Error querying temp_company table:", error);
+      }
   }
+  
+//   const getcompanylocquery = `SELECT ID FROM company_location WHERE company_id = ?`;
+//   const getcompanylocvalue = await query(getcompanylocquery,[CompanyID]);
+//   console.log("getcompanylocvalue",getcompanylocvalue);
+//   if(getcompanylocvalue.length>0){
+//       var CompanylocID = getcompanylocvalue[0].ID;
+//       console.log("CompanylocID",CompanylocID);
+//   }else{
+//     const addcompanylocquery = 'INSERT INTO company_location (company_id, address, country, state, city, zip, status) VALUES (?, ?, ?, ?, ?, ?, ?)';
+//     const addcompanylocvalues = [CompanyID, concatenatedAddress, country_name, state_name, city_value, '', '2'];
+//     const addcompanylocvalue = await query(addcompanylocquery, addcompanylocvalues);
+//     var CompanylocID = addcompanylocvalue.insertId;
+//     console.log("Inserted row IDa:",CompanylocID );
+//     //var CompanylocID = '0';
+// }
+
+  // const create_review_query = 'INSERT INTO reviews (company_id, customer_id, company_location, company_location_id, review_title, rating, review_content, user_privacy, review_status, created_at, updated_at, labels, user_contact, category_id, product_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+  // const create_review_values = [CompanyID, userId, concatenatedAddress, CompanylocID, reviewIfo.review_title, reviewIfo.rating, reviewIfo.review_content, reviewIfo.user_privacy, '2', formattedDate, formattedDate, reviewIfo.review_lable, reviewIfo.user_contact, reviewIfo.category_id, reviewIfo.product_id];
+
+  // try {
+  //   const create_review_results = await query(create_review_query, create_review_values);
+  //   if (create_review_results.insertId) {
+  //     if (Array.isArray(reviewIfo['tags[]']) && reviewIfo['tags[]'].length > 0) {
+  //       //insert review_tag_relation
+  //       const review_tag_relation_query = 'INSERT INTO review_tag_relation (review_id, tag_name) VALUES (?, ?)';
+  //       try {
+  //         for (const tag of reviewIfo['tags[]']) {
+  //           const review_tag_relation_values = [create_review_results.insertId, tag];
+  //           const review_tag_relation_results = await query(review_tag_relation_query, review_tag_relation_values);
+  //         }
+
+  //         //-- user review count------//
+  //         const update_review_count_query = 'UPDATE user_customer_meta SET review_count = review_count + 1 WHERE user_id = ?';
+  //         try {
+  //           const [update_review_count_result] = await db.promise().query(update_review_count_query, [userId]);
+  //           return create_review_results.insertId;
+  //         } catch (error) {
+  //           console.error('Error during user update_review_count_query:', error);
+  //         }
+
+  //       } catch (error) {
+  //         console.error('Error during user review_tag_relation_results:', error);
+  //       }
+  //     } else {
+  //       //-- user review count------//
+  //       const update_review_count_query = 'UPDATE user_customer_meta SET review_count = review_count + 1 WHERE user_id = ?';
+  //       try {
+  //         const [update_review_count_result] = await db.promise().query(update_review_count_query, [userId]);
+  //         return create_review_results.insertId;
+  //       } catch (error) {
+  //         console.error('Error during user update_review_count_query:', error);
+  //       }
+  //     }
+  //   }
+  // } catch (error) {
+  //   console.error('Error during user create_review_results:', error);
+  // }
 }
 
 

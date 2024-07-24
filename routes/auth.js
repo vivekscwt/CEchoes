@@ -89,6 +89,7 @@ router.post('/delete-company', authController.deleteCompany);
 router.post('/deleteCompanies', authController.deleteCompanies);
 
 router.post('/get-company-details', authController.getcompanyDetails);
+router.post('/getcompany-details', authController.companyDetails)
 
 router.post("/currency-convert",authController.currencyConvert);
 

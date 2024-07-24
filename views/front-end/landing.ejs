@@ -1867,13 +1867,26 @@
         });
 
         $('#search-input-review').on('input', function () {
+          $('#state').html('<option value="" selected disabled>Select State</option>');
+          $('#city').val('').prop('readonly', false);
+          $('#select_category').html('<option value="0" selected disabled>Select Category</option><option value="0">General</option>');
+          $('#select_sub_category').html('<option value="0" selected disabled>Select Product</option><option value="0">General</option>');
+
+          const selectedCountries = $('#country_review').val();
+          console.log("selectedCountries", selectedCountries);
+          if (selectedCountries) {
+            console.log("sdfdfgdfg");
+            fetchStates(selectedCountries);
+          }
+
           $('.autofield-dropdown-review').on('click', 'a', function (e) {
             e.preventDefault();
             const selectedCompanyName = $(this).data('resulttitle');
             console.log('Selected company name from dropdown:', selectedCompanyName);
+
             if (selectedCompanyName) {
               $.ajax({
-                url: 'auth/get-company-details',
+                url: 'auth/getcompany-details',
                 method: 'POST',
                 data: JSON.stringify({ company_name: selectedCompanyName }),
                 contentType: 'application/json',
@@ -1884,13 +1897,26 @@
                     console.log("bbbbb");
                     const companyDetails = data.companyDetails;
                     console.log("companyDetails", companyDetails);
-
                     if (companyDetails) {
                       const stateSelect = $('#state');
-                      stateSelect.html('<option value="' + companyDetails.state + '">' + companyDetails.state + '</option>');
-
                       const cityInput = $('#city');
-                      cityInput.val(companyDetails.city);
+                      if (companyDetails.state) {
+                        stateSelect.html('<option value="' + companyDetails.stateId + '">' + companyDetails.state + '</option>');
+                      } else {
+                        stateSelect.html('<option value="" selected disabled>State is not available</option>');
+                      }
+
+                      if (companyDetails.city) {
+                        cityInput.val(companyDetails.city);
+                      } else {
+                        cityInput.val('');
+                      }
+                      cityInput.prop('readonly', true);
+
+                      const compid = $('#selected_company_id');
+                      if (companyDetails.ID) {
+                        compid.val(companyDetails.ID);
+                      }
                     }
                   } else {
                     console.error('No company details found');
@@ -1903,6 +1929,38 @@
             }
           });
         });
+
+        function fetchStates(country) {
+          $.ajax({
+            url: '/getStates',
+            type: 'GET',
+            data: { country: country },
+            contentType: 'application/json',
+            success: function (response) {
+              console.log('Response:', response);
+              var states = response.states || response;
+              var $stateDropdown = $('#state');
+              $stateDropdown.empty();
+              $stateDropdown.append('<option value="" selected disabled>Select State</option>');
+
+              if (Array.isArray(states)) {
+                states.forEach(function (state) {
+                  if (state.id && state.name) {
+                    $stateDropdown.append('<option value="' + state.id + '">' + state.name + '</option>');
+                  } else {
+                    console.error('Invalid state data:', state);
+                  }
+                });
+              } else {
+                console.error('States is not an array:', states);
+              }
+            },
+            error: function (error) {
+              console.error('Error fetching states:', error);
+            }
+          });
+        }
+
 
         $('#country').on('change', function () {
           $('#state').val('Select state').trigger('change');
@@ -2498,60 +2556,76 @@
           }
         });
 
-        // Function to perform search for review
         function performSearchForReview(keyword, country_name) {
           $('.autofield-dropdown-review').css('height', "200px");
           const data = {
             keyword: keyword,
             country: country_name
           };
-          console.log("performdata", data);
 
           $.ajax({
-            url: '/api/search-company',
+            url: 'api/search-company',
             method: 'POST',
-            data: JSON.stringify(data),
-            contentType: 'application/json', // Ensure correct content type
+            data: data,
+            ContentType: 'application/json',
             success: function (data) {
-              console.log("Company search response:", data);
-              if (data.status === 'ok') {
+              if (data.status == 'ok') {
+                let html = '<ul class="p-0 m-0">';
+
                 if (data.data.length > 0) {
-                  let respData = data.data;
-                  let html = '<ul class="p-0 m-0">';
-                  respData.forEach(company => {
+                  // Populate existing company results
+                  data.data.forEach(company => {
                     html += '<li><a href="#" data-resulttitle="' + company.company_name + '" data-companyID="' + company.ID + '" data-companyAddress="' + company.main_address + '" data-companyPin="' + company.main_address_pin_code + '">' + company.company_name + '</a></li>';
                   });
-                  html += '</ul>';
-                  $('.autofield-dropdown-review').html(html).show();
-                  if (data.data.length < 4) {
-                    var divlength = data.data.length * 48;
-                    $('.autofield-dropdown-review').css('height', divlength + "px");
+
+                  if (data.data.length === 0) {
+                    html += '<li><a href="#" id="create-new-company">Create New Company: ' + keyword + '</a></li>';
                   }
-
-                  // Click handler for company links
-                  $('.autofield-dropdown-review a').click(function (e) {
-                    e.preventDefault();
-                    var companyName = $(this).data('resulttitle');
-                    console.log("Selected company name:", companyName);
-                    $('#search-input-review').val(companyName); // Set the selected company name in the input field
-                    // Optionally, you can trigger additional actions here
-
-                    $('.autofield-dropdown-review').hide();
-                  });
-
                 } else {
-                  $('.autofield-dropdown-review').hide().html('');
+                  html += '<li><a href="#" id="create-new-company">Create New Company: ' + keyword + '</a></li>';
                 }
+
+                html += '</ul>';
+                $('.autofield-dropdown-review').html(html);
+                $('.autofield-dropdown-review').show();
+
+                if (data.data.length < 4) {
+                  var divlength = data.data.length * 48;
+                  $('.autofield-dropdown-review').css('height', divlength + "px");
+                }
+
+                $('.autofield-dropdown-review a').click(function (e) {
+                  e.preventDefault();
+                  const selectedCompany = $(this).data('resulttitle');
+
+                  if ($(this).attr('id') === 'create-new-company') {
+                    // Trigger the process to create a new company
+                    console.log("Creating new company with name:", keyword);
+                    //createNewCompany(keyword);
+                  } else {
+                    console.log("Clicked element data:", $(this).data());
+                    console.log("Selected company name:", selectedCompany);
+                    $('.autofield-dropdown-review').hide();
+                  }
+                });
               } else {
-                $('.autofield-dropdown-review').hide().html('');
+                $('.autofield-dropdown-review').hide();
+                $('.autofield-dropdown-review').html('');
               }
             },
             error: function (error) {
-              console.error('Error searching companies:', error);
-              console.log('Response text:', error.responseText);
-              $('.autofield-dropdown-review').hide().html('');
+              $('.autofield-dropdown-review').hide();
+              $('.autofield-dropdown-review').html('');
             }
           });
+        }
+
+        function createNewCompany(companyName) {
+          // Implement your logic to create a new company here
+          // For example, you could open a modal or redirect to a new page
+          //alert('Create a new company with the name: ' + companyName);
+          // Example: Redirect to a company creation page
+          // window.location.href = '/create-company?name=' + encodeURIComponent(companyName);
         }
 
 
@@ -2672,7 +2746,7 @@
                 $stateDropdown.append('<option value="" selected disabled>Select State</option>');
 
                 states.forEach(function (state) {
-                  $stateDropdown.append('<option value="' + state.shortname + '">' + state.name + '</option>');
+                  $stateDropdown.append('<option value="' + state.name + '">' + state.name + '</option>');
                 });
               } else {
                 console.error('States is not an array:', states);
@@ -2680,7 +2754,7 @@
             },
             error: function (xhr, status, error) {
               console.error('Error fetching states:', status, error);
-              alert('Error fetching states. Please try again.');
+              //alert('Error fetching states. Please try again.');
             }
           });
         } else {
@@ -2704,12 +2778,17 @@
               success: function (response) {
                 console.log('Response:', response);
                 var states = response.states || response;
+                var $stateDropdown = $('#state');
+                $stateDropdown.empty();
+                $stateDropdown.append('<option value="" selected disabled>Select State</option>');
+
                 if (Array.isArray(states)) {
-                  var $stateDropdown = $('#state');
-                  $stateDropdown.empty();
-                  $stateDropdown.append('<option value="" selected disabled>Select State</option>');
                   states.forEach(function (state) {
-                    $stateDropdown.append('<option value="' + state.shortname + '">' + state.name + '</option>');
+                    if (state.id && state.name) {
+                      $stateDropdown.append('<option value="' + state.name + '">' + state.name + '</option>');
+                    } else {
+                      console.error('Invalid state data:', state);
+                    }
                   });
                 } else {
                   console.error('States is not an array:', states);
@@ -2717,9 +2796,9 @@
               },
               error: function (xhr, status, error) {
                 console.error('Error fetching states:', status, error);
-                alert('Error fetching states. Please try again.');
               }
             });
+
           } else {
             $('#state').empty();
             $('#state').append('<option value="" selected disabled>Select State</option>');
@@ -2731,7 +2810,11 @@
         if (selectedCountry) {
           loadStates(selectedCountry);
         }
+        $('#state').on('change', function () {
+          console.log('Selected state:', $(this).val());
+        });
       });
+
 
     </script>
 

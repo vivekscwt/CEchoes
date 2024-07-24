@@ -851,7 +851,7 @@ router.get('/getStates', async (req, res) => {
     console.log("getcountryval",getcountryval[0].id);
 
     const states = await comFunction.getStatesByCountryID(coun);
-    //console.log("States:", states);
+    console.log("States:", states);
 
     return res.json(states);
     }catch(error){

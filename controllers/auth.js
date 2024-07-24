@@ -3571,6 +3571,55 @@ exports.getcompanyDetails = async (req, res) => {
     }
 }
 
+exports.companyDetails = async (req, res) => {
+    try {
+        const company_name = req.body.company_name;
+        console.log("company_name", company_name);
+
+        const getcompanyquery = `SELECT * FROM company WHERE company_name=?`;
+        const companyvalue = await query(getcompanyquery, [company_name]);
+
+        if (companyvalue.length > 0) {
+            var company_state = companyvalue[0].main_address_state;
+            var company_city = companyvalue[0].main_address_city;
+            var company_id = companyvalue[0].ID;
+
+
+
+            const state_query = `SELECT * FROM states WHERE ID = ?`;
+            const states = await query(state_query, [company_state]);
+
+            if (states.length > 0) {
+                var state_name = states[0].name;
+               
+            }
+
+            console.log("company_state", company_state);
+            console.log("company_city", company_city);
+            console.log("company_id", company_id);
+
+
+            res.status(200).json({
+                status: 'ok',
+                companyDetails: {
+                    state: state_name,
+                    city: company_city,
+                    company_id: company_id,
+                    stateId : company_state
+                }
+            });
+        } else {
+            // Send error response if company not found
+            res.status(404).json({
+                status: 'error',
+                message: 'Company not found'
+            });
+        }
+    } catch (error) {
+        console.error('Error getcompanyDetails:', error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+}
 
 exports.currencyConvert = async (req, res) => {
     try {
@@ -8700,7 +8749,26 @@ exports.complaintRegister = async (req, res) => {
     var city_value = req.body['review-address'];
     console.log("city_value", city_value);
 
-    var concatenatedAddress = city_value + ', ' + state_name + ', ' + country_name;
+    let concatenatedAddress = '';
+
+    if (city_value) {
+        concatenatedAddress += city_value;
+    }
+    
+    if (state_name) {
+        if (concatenatedAddress.length > 0) {
+            concatenatedAddress += ', ';
+        }
+        concatenatedAddress += state_name;
+    }
+    
+    if (country_name) {
+        if (concatenatedAddress.length > 0) {
+            concatenatedAddress += ', ';
+        }
+        concatenatedAddress += country_name;
+    }
+    
     console.log(concatenatedAddress);
 
 

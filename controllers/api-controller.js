@@ -93,6 +93,7 @@ exports.complainCategory = (req, res) => {
             )
         } else {
             if (results.length > 0) {
+                console.log("complainCategoryresults",results);
                 return res.send(
                     {
                         status: 'ok',

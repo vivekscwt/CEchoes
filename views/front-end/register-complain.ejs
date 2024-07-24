@@ -165,8 +165,9 @@
  }
  #register_country option {
      color: black;
+     background-color: #fff;
+     border: 1px solid #ccc;
  }
- 
  
  </style>
 
@@ -224,48 +225,47 @@ $(document).ready(function () {
    });
 
    $('#select_category').change(function() {
-      $('#select_sub_category').empty().append($('<option value="0">Select Sub Category</option>'));
-      //$("#select_state").prop('required',false);
-      $('#dynamic_sub_category_field_wrapper').hide();
-      var category_id = $(this).val();
-      //alert(category_id);
-      //return false;
-      //$('#country_name').val(this.options[this.selectedIndex].text);
-      $.ajax({
-         url: '/api/complain_sub_category',
-         method: 'POST',
-         data: {category_id:category_id},
-         ContentType: 'application/json',
-         success: function (data) {
-            if (data.status == 'ok') {
-               $('#dynamic_sub_category_field_wrapper').show();
-               //$("#select_state").prop('required',true);
-               $.each(data.data, function (i, item) {
-                     $('#select_sub_category').append($('<option>', { 
+    $('#select_sub_category').empty().append($('<option value="" disabled selected>Select Sub Category</option>')); // Default option
+    $('#dynamic_sub_category_field_wrapper').hide();
+    var category_id = $(this).val();
+
+    $.ajax({
+        url: '/api/complain_sub_category',
+        method: 'POST',
+        data: { category_id: category_id },
+        ContentType: 'application/json',
+        success: function(data) {
+            $('#select_sub_category').append($('<option value="general">General</option>')); // General option
+
+            if (data.status == 'ok' && data.data.length > 0) {
+                $('#dynamic_sub_category_field_wrapper').show();
+                
+                $.each(data.data, function(i, item) {
+                    $('#select_sub_category').append($('<option>', { 
                         value: item.id,
-                        text : item.category_name 
-                     }));
-               });                
+                        text: item.category_name 
+                    }));
+                });
             } else {
-               $('#dynamic_sub_category_field_wrapper').hide();
-               $("#select_sub_category").prop('required',false);
+                $('#dynamic_sub_category_field_wrapper').hide();
+                $("#select_sub_category").prop('required', false);
             }
-         },
-         error: function (error) {
+        },
+        error: function(error) {
             // Handle any errors
             Swal.fire({
-               text: error,
-               icon: "error",
-               buttonsStyling: false,
-               confirmButtonText: "Ok, got it!",
-               customClass: {
-                     confirmButton: "btn btn-primary"
-               }
+                text: error.responseText || "An error occurred",
+                icon: "error",
+                buttonsStyling: false,
+                confirmButtonText: "Ok, got it!",
+                customClass: {
+                    confirmButton: "btn btn-primary"
+                }
             });
             submitButton.disabled = false;
-         }
-      });    
-   });
+        }
+    });
+});
 
 
    var allTags = [];
@@ -494,45 +494,52 @@ $('#city').on('input', function() {
 
 
 $('#companyDropdown').on('change', function() {
-        var companyId = $(this).val(); // Get the selected value of the company dropdown
-        console.log("Selected Company ID:", companyId);
-        
-        $.ajax({
-         url: '/api/complain_category',
-         method: 'POST',
-         data: {company_id:companyId},
-         ContentType: 'application/json',
-         success: function (data) {
-            if (data.status == 'ok') {
-               $('#dynamic_state_field_wrapper').show();
-               //$("#select_state").prop('required',true);
-               //$('#select_category').empty().append($('<option value="">Select Category</option>'));
-               $.each(data.data, function (i, item) {
-                     $('#select_category').append($('<option>', { 
+    var companyId = $(this).val(); 
+    console.log("Selected Company ID:", companyId);
+    
+      $("#select_category").empty().append($('<option value="" disabled selected>Select a category</option>'));
+      $("#select_sub_category").empty().append($('<option value="" disabled selected>Select Sub Category</option>'));
+      $('#dynamic_state_field_wrapper').hide();
+      $('#dynamic_sub_category_field_wrapper').hide();
+    $.ajax({
+        url: '/api/complain_category',
+        method: 'POST',
+        data: { company_id: companyId },
+        ContentType: 'application/json',
+        success: function(data) {
+            $("#select_category").empty(); // Clear previous options
+            $("#select_category").append($('<option value="" disabled selected>Select a category</option>')); // Default disabled option
+
+            if (data.status == 'ok' && data.data.length > 0) {
+                $('#dynamic_state_field_wrapper').show();
+                
+                $.each(data.data, function(i, item) {
+                    $('#select_category').append($('<option>', { 
                         value: item.id,
-                        text : item.category_name 
-                     }));
-               });                
+                        text: item.category_name 
+                    }));
+                });
             } else {
-               $('#dynamic_state_field_wrapper').hide();
-               $("#select_category").prop('required',false);
+                $('#dynamic_state_field_wrapper').hide();
+                $("#select_category").append($('<option value="0">General</option>')); // General option
+                $("#select_category").prop('required', false);
             }
-         },
-         error: function (error) {
+        },
+        error: function(error) {
             // Handle any errors
             Swal.fire({
-               text: error,
-               icon: "error",
-               buttonsStyling: false,
-               confirmButtonText: "Ok, got it!",
-               customClass: {
-                     confirmButton: "btn btn-primary"
-               }
+                text: error.responseText || "An error occurred",
+                icon: "error",
+                buttonsStyling: false,
+                confirmButtonText: "Ok, got it!",
+                customClass: {
+                    confirmButton: "btn btn-primary"
+                }
             });
             submitButton.disabled = false;
-         }
-      });   
+        }
     });
+});
 
   });
 
@@ -543,7 +550,7 @@ $('#companyDropdown').on('change', function() {
     width: '100%' 
   });
   $('#state').select2({
-    placeholder: " Select State*",
+    placeholder: " Select State",
     allowClear: true, 
    //  width: '100%'
   });
