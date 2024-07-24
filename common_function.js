@@ -246,6 +246,23 @@ function getCompany(companyId) {
     });
   });
 }
+function getnewCompany(companyId) {
+  return new Promise((resolve, reject) => {
+    const sql = `SELECT temp_company.*, mp.name as membership_plan_name, pcd.cover_img
+              FROM temp_company 
+              LEFT JOIN plan_management mp ON temp_company.membership_type_id = mp.id
+              LEFT JOIN premium_company_data pcd ON temp_company.ID = pcd.company_id
+              WHERE temp_company.ID = ?`
+    db.query(sql, [companyId], (err, result) => {
+      console.log("resultsnewcomp",result);
+      if (err) {
+        reject(err);
+      } else {
+        resolve(result[0]);
+      }
+    });
+  });
+}
 
 function getComplaint(complaintId) {
   return new Promise((resolve, reject) => {
@@ -562,6 +579,27 @@ async function getAllReviews() {
     SELECT r.*, c.company_name, c.logo, c.status as company_status, c.verified as verified_status, cl.address, cl.country, cl.state, cl.city, cl.zip, u.first_name, u.last_name, ucm.profile_pic, rr.status as reply_status
       FROM reviews r
       JOIN company c ON r.company_id = c.ID
+      JOIN company_location cl ON r.company_location_id = cl.ID
+      JOIN users u ON r.customer_id = u.user_id
+      LEFT JOIN user_customer_meta ucm ON u.user_id = ucm.user_id
+      LEFT JOIN review_reply rr ON rr.review_id = r.id AND rr.reply_by = r.customer_id
+      WHERE r.flag_status = '0' OR r.flag_status IS NULL
+      ORDER BY r.created_at DESC;
+  `;
+  try {
+    const all_review_results = await query(all_review_query);
+    return all_review_results;
+  }
+  catch (error) {
+    console.error('Error during all_review_query:', error);
+  }
+}
+
+async function getTempReviews() {
+  const all_review_query = `
+    SELECT r.*, c.company_name, c.logo, c.status as company_status, c.verified as verified_status, cl.address, cl.country, cl.state, cl.city, cl.zip, u.first_name, u.last_name, ucm.profile_pic, rr.status as reply_status
+      FROM temp_reviews r
+      JOIN temp_company c ON r.company_id = c.ID
       JOIN company_location cl ON r.company_location_id = cl.ID
       JOIN users u ON r.customer_id = u.user_id
       LEFT JOIN user_customer_meta ucm ON u.user_id = ucm.user_id
@@ -3105,6 +3143,7 @@ module.exports = {
   getStatesByCountryID,//
   getAllCompany,
   getCompany,
+  getnewCompany,//
   getComplaint,//
   getCategorybyCompany,//
   getCompanyCategory,
@@ -3125,6 +3164,7 @@ module.exports = {
   createReview,
   getlatestReviews,
   getAllReviews,
+  getTempReviews,//
   getCustomerReviewData,
   getCustomerReviewTagRelationData,
   editCustomerReview,

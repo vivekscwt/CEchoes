@@ -1,0 +1,898 @@
+<%- include('common/header') -%>
+<!--begin::Content-->
+<div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+    <!--begin::Toolbar-->
+    <div class="toolbar" id="kt_toolbar">
+        <!--begin::Container-->
+        <div id="kt_toolbar_container" class="container-fluid d-flex flex-stack">
+        <!--begin::Page title-->
+        <div data-kt-swapper="true" data-kt-swapper-mode="prepend" data-kt-swapper-parent="{default: '#kt_content_container', 'lg' : '#kt_toolbar_container'}" class="page-title d-flex align-items-center flex-wrap me-3 mb-5 mb-lg-0">
+            <!--begin::Title-->
+            <h1
+                class="d-flex align-items-center text-dark fw-bolder fs-3 my-1">
+                Organization Details
+                <!--end::Description-->
+            </h1>
+            <!--end::Title-->
+        </div>
+        <!--end::Page title-->
+        </div>
+        <!--end::Container-->
+    </div>
+    <!--end::Toolbar-->
+    <!--begin::Post-->
+    <div class="post d-flex flex-column-fluid" id="kt_post">
+    <!--begin::Container-->
+    <div id="kt_content_container" class="container-xxl">
+        <!--begin::Basic info-->
+        <div class="card mb-5 mb-xl-10">
+            <!--begin::Card header-->
+            <div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse" data-bs-target="#kt_account_profile_details" aria-expanded="true" aria-controls="kt_account_profile_details">
+                <!--begin::Card title-->
+                <div class="card-title m-0">
+                    
+                    <h3 class="fw-bolder m-0">Edit Organization Details</h3>
+                </div>
+                <!--end::Card title-->
+            </div>
+            <!--begin::Card header-->
+            <!--begin::Content-->
+            <div id="kt_account_profile_details" class="collapse show">
+                <!--begin::Form-->
+                <form id="kt_account_profile_details_form" class="form" action="/auth/edit-company-data" method="POST" enctype="multipart/form-data">
+                    <!--begin::Card body-->
+                    <div class="card-body border-top p-9">
+                        <!--begin::Input group-->
+                        <div class="row mb-6">
+                            <!--begin::Label-->
+                            <label class="col-lg-4 col-form-label fw-bold fs-6">Logo</label>
+                            <!--end::Label-->
+                            <!--begin::Col-->
+                            <div class="col-lg-8">
+                                <!--begin::Image input-->
+                                <div class="image-input image-input-outline" data-kt-image-input="true" style="background-image: url(/front-end/images/company-placeholder-image.png)">
+                                    <!--begin::Preview existing avatar-->
+                                    <% if(company && company.logo){ %>
+                                    <div class="image-input-wrapper w-125px h-125px" style="background-image: url('/<%= company.logo %>')" ></div>
+                                    <% }else{ %>
+                                    <div class="image-input-wrapper w-125px h-125px" style="background-image: url('/front-end/images/company-placeholder-image.png')" ></div>
+                                    <% } %>
+                                    <!--end::Preview existing avatar-->
+                                    <!--begin::Label-->
+                                    <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" title="Change avatar">
+                                        <i class="bi bi-pencil-fill fs-7"></i>
+                                        <!--begin::Inputs-->
+                                        <input type="file" name="logo" accept=".png, .jpg, .jpeg" />
+                                        <input type="hidden" name="avatar_remove" />
+                                        <input type="hidden" name="previous_logo" value="<%= company.logo %>">
+                                        <!--end::Inputs-->
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Cancel-->
+                                    <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="cancel" data-bs-toggle="tooltip" title="Cancel avatar">
+                                        <i class="bi bi-x fs-2"></i>
+                                    </span>
+                                    <!--end::Cancel-->
+                                    <!--begin::Remove-->
+                                    <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="remove" data-bs-toggle="tooltip" title="Remove avatar">
+                                        <i class="bi bi-x fs-2"></i>
+                                    </span>
+                                    <!--end::Remove-->
+                                </div>
+                                <!--end::Image input-->
+                                <!--begin::Hint-->
+                                <div class="form-text">Allowed file types: png, jpg, jpeg.</div>
+                                <!--end::Hint-->
+                            </div>
+                            <!--end::Col-->
+                        </div>
+                        <!--end::Input group-->
+                        <!--begin::Input group-->
+                        <div class="row mb-6">
+                            <!--begin::Label-->
+                            <label class="col-lg-4 col-form-label required fw-bold fs-6">Organization Name</label>
+                            <!--end::Label-->
+                            <!--begin::Col-->
+                            <div class="col-lg-8">
+                                <!--begin::Row-->
+                                <div class="row">
+                                    <!--begin::Col-->
+                                    <div class="col-lg-12 fv-row">
+                                        <input type="text" name="company_name" id="company_name" class="form-control form-control-lg form-control-solid mb-3 mb-lg-0" placeholder="Organization Name" value="<%= company.company_name %>" />
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <!--end::Row-->
+                            </div>
+                            <!--end::Col-->
+                        </div>
+                        
+                        <div class="row mb-6">
+                            <!--begin::Label-->
+                            <label class="col-lg-4 col-form-label required fw-bold fs-6">Organization Slug</label>
+                            <!--end::Label-->
+                            <!--begin::Col-->
+                            <div class="col-lg-8">
+                                <!--begin::Row-->
+                                <div class="row">
+                                    <!--begin::Col-->
+                                    <div class="col-lg-12 fv-row">
+                                        <input type="text" name="company_slug" id="company_slug" class="form-control form-control-lg form-control-solid mb-3 mb-lg-0" placeholder="Organization slug" value="<%= company.slug %>" />
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <!--end::Row-->
+                            </div>
+                            <!--end::Col-->
+                        </div>
+                        <div class="row mb-6">
+                            <!--begin::Label-->
+                            <label class="col-lg-4 col-form-label fw-bold fs-6">Tagline</label>
+                            <!--end::Label-->
+                            <!--begin::Col-->
+                            <div class="col-lg-8">
+                                <!--begin::Row-->
+                                <div class="row">
+                                    <!--begin::Col-->
+                                    <div class="col-lg-12 fv-row">
+                                        <input type="text" name="heading" class="form-control form-control-lg form-control-solid mb-3 mb-lg-0" placeholder="Tagline" value="<%= company.heading %>" />
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <!--end::Row-->
+                            </div>
+                            <!--end::Col-->
+                        </div>
+                        <div class="row mb-6">
+                            <!--begin::Label-->
+                            <label class="col-lg-4 col-form-label fw-bold fs-6">About Organization</label>
+                            <!--end::Label-->
+                            <!--begin::Col-->
+                            <div class="col-lg-8">
+                                <!--begin::Row-->
+                                <div class="row">
+                                    <!--begin::Col-->
+                                    <div class="col-lg-12 fv-row">
+                                        <textarea rows="8" name="about_company" class="form-control form-control-lg form-control-solid mb-3 mb-lg-0" placeholder="About Organization"><%= company.about_company %></textarea>
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <!--end::Row-->
+                            </div>
+                            <!--end::Col-->
+                        </div>
+                        <!--end::Input group-->
+                        <!--begin::Input group-->
+                        <div class="row mb-6">
+                            <!--begin::Label-->
+                            <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                <span class="">Email</span>
+                            </label>
+                            <!--end::Label-->
+                            <!--begin::Col-->
+                            <div class="col-lg-8 fv-row">
+                                <input type="email" name="comp_email" class="form-control form-control-lg form-control-solid" placeholder="Email" value="<%= company.comp_email %>"/>
+                            </div>
+                            <!--end::Col-->
+                        </div>
+                        <!--end::Input group-->
+                        <!--begin::Input group-->
+                        <div class="row mb-6">
+                            <!--begin::Label-->
+                            <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                <span class="">Contact Phone</span>
+                            </label>
+                            <!--end::Label-->
+                            <!--begin::Col-->
+                            <div class="col-lg-8 fv-row">
+                                <input type="tel" name="comp_phone" class="form-control form-control-lg form-control-solid" placeholder="Phone number" value="<%= company.comp_phone %>" />
+                            </div>
+                            <!--end::Col-->
+                        </div>
+                        <div class="row mb-6">
+                            <!--begin::Label-->
+                            <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                <span class="">Toll Free Number</span>
+                            </label>
+                            <!--end::Label-->
+                            <!--begin::Col-->
+                            <div class="col-lg-8 fv-row">
+                                <input type="tel" name="tollfree_number" class="form-control form-control-lg form-control-solid" placeholder="Toll Free Number" value="<%= company.tollfree_number %>" />
+                            </div>
+                            <!--end::Col-->
+                        </div>
+                        <div class="row mb-6">
+                            <!--begin::Label-->
+                            <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                <span class="">Main Address</span>
+                            </label>
+                            <!--end::Label-->
+                            <!--begin::Col-->
+                            <div class="col-lg-8 fv-row">
+                                <input type="text" name="main_address" class="form-control form-control-lg form-control-solid" placeholder="Main Address" value="<%= company.main_address %>" />
+                            </div>
+                            <!--end::Col-->
+                        </div>
+                        <div class="row mb-6">
+                            <!--begin::Label-->
+                            <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                <span class="">Country</span>
+                            </label>
+                            <!--end::Label-->
+                            <!--begin::Col-->
+                            <div class="col-lg-8 fv-row">
+                                <select name="main_address_country" id="main_address_country" class="form-select form-select-lg form-select-solid">
+                                    <% var selectedCountryId = company.main_address_country; %>
+                                    <% if (selectedCountryId === '') { %>
+                                        <option value="" selected disabled>Select a country</option>
+                                    <% } %>
+                                    <% getCountries.forEach(function(country) { %>
+                                        <option value="<%= country.shortname %>" <%= country.shortname === selectedCountryId ? 'selected' : '' %> >
+                                            <%= country.name %>
+                                        </option>
+                                    <% }); %>
+                                </select>
+                                                                                          
+                            </div>
+                            <!--end::Col-->
+                        </div>
+                        
+                        <div class="row mb-6">
+                            <!--begin::Label-->
+                            <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                <span class="">State</span>
+                            </label>
+                            <!--end::Label-->
+                            <!--begin::Col-->
+                            <div class="col-lg-8 fv-row">
+                                    <select id="state" name="main_address_state" aria-label="Select state" data-control="select2" data-placeholder="Select state..." class="form-select">
+                                    <% getStatesByCountryID.forEach(function(state) { %>
+                                        <option value="<%= state.id %>" <%= state.id == company.main_address_state ? 'selected' : '' %>><%= state.name %></option>
+                                    <% }); %>
+                                </select>
+                            </div>
+                            
+                            <!--end::Col-->
+                        </div>
+                        <div class="row mb-6">
+                            <!--begin::Label-->
+                            <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                <span class="">City</span>
+                            </label>
+                            <!--end::Label-->
+                            <!--begin::Col-->
+                            <div class="col-lg-8 fv-row">
+                                <input type="text" name="main_address_city" class="form-control form-control-lg form-control-solid" placeholder="City" value="<%= company.main_address_city %>" />
+                            </div>
+                            <!--end::Col-->
+                        </div>
+                        <div class="row mb-6">
+                            <!--begin::Label-->
+                            <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                <span class="">Address Pin Code</span>
+                            </label>
+                            <!--end::Label-->
+                            <!--begin::Col-->
+                            <div class="col-lg-8 fv-row">
+                                <input type="text" name="main_address_pin_code" class="form-control form-control-lg form-control-solid" placeholder="Address Pin Code" value="<%= company.main_address_pin_code %>" />
+                            </div>
+                            <!--end::Col-->
+                        </div>
+                        <div class="row mb-6">
+                            <!--begin::Label-->
+                            <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                <span class="">Address URL</span>
+                            </label>
+                            <!--end::Label-->
+                            <!--begin::Col-->
+                            <div class="col-lg-8 fv-row">
+                                <input type="text" name="address_map_url" class="form-control form-control-lg form-control-solid" placeholder="Address URL" value="<%= company.address_map_url %>" />
+                            </div>
+                            <!--end::Col-->
+                        </div>
+                        <!--end::Input group-->
+                        <!--begin::Input group-->
+                        <div class="row mb-6">
+                            <!--begin::Label-->
+                            <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                <span class="">Registration ID</span>
+                            </label>
+                            <!--end::Label-->
+                            <!--begin::Col-->
+                            <div class="col-lg-8 fv-row">
+                                <input type="text" name="comp_registration_id" class="form-control form-control-lg form-control-solid" placeholder="Registration ID" value="<%= company.comp_registration_id %>" />
+                            </div>
+                            <!--end::Col-->
+                        </div>
+                        <!--end::Input group-->
+                        <div class="row mb-6">
+                            <!--begin::Label-->
+                            <label class="col-lg-4 col-form-label required fw-bold fs-6">Organization Status</label>
+                            <!--end::Label-->
+                            <!--begin::Col-->
+                            <div class="col-lg-8 fv-row">
+                                <!--begin::Options-->
+                                <div class="d-flex align-items-center mt-3">
+                                    <!--begin::Option-->
+                                    <label class="form-check form-check-inline form-check-solid me-5">
+                                        <input class="form-check-input mt-1" name="status" type="radio" value="2" <% if(company.status == '2'){ %>checked <% } %>/>
+                                        <span class="fw-bold fs-6 badge badge-light-warning fw-bolder px-4 py-3">Pending</span>
+                                    </label>
+                                    <!--end::Option-->
+                                    <!--begin::Option-->
+                                    <label class="form-check form-check-inline form-check-solid me-5">
+                                        <input class="form-check-input mt-1" name="status" type="radio" value="1" <% if(company.status == '1'){ %>checked <% } %>/>
+                                        <span class="fw-bold fs-6 badge badge-light-success fw-bolder px-4 py-3">Approved</span>
+                                    </label>
+                                    <!--end::Option-->
+                                    <!--begin::Option-->
+                                    <label class="form-check form-check-inline form-check-solid">
+                                        <input class="form-check-input mt-1" name="status" type="radio" value="0" <% if(company.status == '0'){ %>checked <% } %> />
+                                        <span class="fw-bold fs-6 badge badge-light-danger fw-bolder px-4 py-3">Rejected</span>
+                                    </label>
+                                    <label class="form-check form-check-inline form-check-solid">
+                                        <input class="form-check-input mt-1" name="status" type="radio" value="3" <% if(company.status == '3'){ %>checked <% } %> />
+                                        <span class="fw-bold fs-6 badge badge-light-dark fw-bolder px-4 py-3">Trashed</span>
+                                    </label>
+                                    <!--end::Option-->
+                                </div>
+                                <!--end::Options-->
+                            </div>
+                            <!--end::Col-->
+                        </div>
+                        <div class="row mb-6">
+                            <!--begin::Label-->
+                            <label class="col-lg-4 col-form-label required fw-bold fs-6">Activation Status</label>
+                            <!--end::Label-->
+                            <!--begin::Col-->
+                            <div class="col-lg-8 fv-row">
+                                <!--begin::Options-->
+                                <div class="d-flex align-items-center mt-3">
+                                    <!--begin::Option-->
+                                    <label class="form-check form-check-inline form-check-solid me-5">
+                                        <input class="form-check-input mt-1" name="temp_comp_status" type="radio" value="0" <% if(company.temp_comp_status == '0'){ %>checked <% } %>/>
+                                        <span class="fw-bold fs-6 badge badge-light-danger fw-bolder px-4 py-3">No</span>
+                                    </label>
+                                    <!--end::Option-->
+                                    <!--begin::Option-->
+                                    <label class="form-check form-check-inline form-check-solid me-5">
+                                        <input class="form-check-input mt-1" name="trending" type="radio" value="1" <% if(company.trending == '1'){ %>checked <% } %>/>
+                                        <span class="fw-bold fs-6 badge badge-light-success fw-bolder px-4 py-3">Yes</span>
+                                    </label>
+                                    <!--end::Option-->
+                                </div>
+                                <!--end::Options-->
+                            </div>
+                            <!--end::Col-->
+                        </div>
+                        <div class="row mb-6">
+                            <!--begin::Label-->
+                            <label class="col-lg-4 col-form-label required fw-bold fs-6">Trending</label>
+                            <!--end::Label-->
+                            <!--begin::Col-->
+                            <div class="col-lg-8 fv-row">
+                                <!--begin::Options-->
+                                <div class="d-flex align-items-center mt-3">
+                                    <!--begin::Option-->
+                                    <label class="form-check form-check-inline form-check-solid me-5">
+                                        <input class="form-check-input mt-1" name="trending" type="radio" value="0" <% if(company.trending == '0'){ %>checked <% } %>/>
+                                        <span class="fw-bold fs-6 badge badge-light-danger fw-bolder px-4 py-3">No</span>
+                                    </label>
+                                    <!--end::Option-->
+                                    <!--begin::Option-->
+                                    <label class="form-check form-check-inline form-check-solid me-5">
+                                        <input class="form-check-input mt-1" name="trending" type="radio" value="1" <% if(company.trending == '1'){ %>checked <% } %>/>
+                                        <span class="fw-bold fs-6 badge badge-light-success fw-bolder px-4 py-3">Yes</span>
+                                    </label>
+                                    <!--end::Option-->
+                                </div>
+                                <!--end::Options-->
+                            </div>
+                            <!--end::Col-->
+                        </div>
+                        <div class="row mb-6">
+                            <!--begin::Label-->
+                            <label class="col-lg-4 col-form-label required fw-bold fs-6">Verified</label>
+                            <!--end::Label-->
+                            <!--begin::Col-->
+                            <div class="col-lg-8 fv-row">
+                                <!--begin::Options-->
+                                <div class="d-flex align-items-center mt-3">
+                                    <!--begin::Option-->
+                                    <label class="form-check form-check-inline form-check-solid me-5">
+                                        <input class="form-check-input mt-1" name="verified" type="radio" value="0" <% if(company.verified != '1'){ %>checked <% } %>/>
+                                        <span class="fw-bold fs-6 badge badge-light-danger fw-bolder px-4 py-3">No</span>
+                                    </label>
+                                    <!--end::Option-->
+                                    <!--begin::Option-->
+                                    <label class="form-check form-check-inline form-check-solid me-5">
+                                        <input class="form-check-input mt-1" name="verified" type="radio" value="1" <% if(company.verified == '1'){ %>checked <% } %>/>
+                                        <span class="fw-bold fs-6 badge badge-light-success fw-bolder px-4 py-3">Yes</span>
+                                    </label>
+                                    <!--end::Option-->
+                                    <!--end::Option-->
+                                </div>
+                                <!--end::Options-->
+                            </div>
+                            <!--end::Col-->
+                        </div>
+                        
+
+                        <div class="row mb-6" id="complaint-level-div">
+                            <!--begin::Label-->
+                            <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                <span class="">Complaint Level No</span>
+                            </label>
+                            <!--end::Label-->
+                            <!--begin::Col-->
+                            <div class="col-lg-8 fv-row" >
+                                <input type="tel" name="complaint_level" class="form-control form-control-lg form-control-solid" placeholder=" No Of Complaint Level" value="<%= company.complaint_level %>" />
+                            </div>
+                            <!--end::Col-->
+                        </div>
+                        
+                        <div class="row mb-6">
+                            <!--begin::Label-->
+                            <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                <span class="">Cover Image</span>
+                            </label>
+                            <!--end::Label-->
+                            <!--begin::Col-->
+                            <div class="col-lg-7 fv-row">
+                                <input type="file" name="cover_img" id=""
+                                    class="form-control form-control-lg form-control-solid" placeholder=""
+                                    value="" />
+                            </div>
+                            <div class="col-lg-1 fv-row">
+                                <img src="/<%= company.cover_img %>" alt="img" width="50"
+                                    height="50" loading="">
+                            </div>
+                            <!--end::Col-->
+                        </div>
+                        <input type="hidden" name="previous_cover_img" value="<%= company.cover_img %>">
+                        <!--end::Input group-->
+                    </div>
+                    <!--end::Card body-->
+                    <!--begin::Actions-->
+                    <div class="card-footer d-flex justify-content-end py-6 px-9">
+                        <input type="hidden" name="company_id" value="<%= company.ID %>">
+                        <button type="reset" class="btn btn-light btn-active-light-primary me-2">Discard</button>
+                        <button type="submit" class="btn btn-primary" id="kt_account_profile_details_submit">Save Changes</button>
+                    </div>
+                    <!--end::Actions-->
+                </form>
+                <!--end::Form-->
+            </div>
+            <!--end::Content-->
+        </div>
+    </div>
+    
+    </div>
+    <!--end::Container-->
+    <!--end::Post-->
+    
+</div>
+<!--end::Content-->
+<style>
+    #categoryTree {
+        max-height: 400px;
+        overflow-y: auto;
+        background-color: #F5F8FA;
+        border-color: #F5F8FA;
+    }
+</style>
+<%- include('common/footer') -%>
+<script> 
+    var complaintStatus = $('input[name="complaint_status"]:checked').val();
+    var memebership = $('input[name="membership_type_id"]:checked').val();
+    console.log("memebership",memebership);
+
+    if (complaintStatus == 0) {
+        $('#complaint-level-div').hide();
+    }
+    
+
+    $('input[name="complaint_status"]').change(function() {
+        var newComplaintStatus = $('input[name="complaint_status"]:checked').val();
+        if (newComplaintStatus == 0 && memebership<=3) {
+            $('#complaint-level-div').hide();
+        } else {
+            $('#complaint-level-div').show();
+        }
+    });
+    // $('input[name="membership_type_id"]').change(function() {
+    //     var memebership = $('input[name="complaint_status"]:checked').val();
+    //     if (memebership<=3) {
+    //         $('#complaint-level-div').hide();
+    //     } else {
+    //         $('#complaint-level-div').show();
+    //     }
+    // });
+
+
+document.querySelector("select[name='parent_id']").addEventListener("change", function() {
+    const selectedValue = this.value;
+    console.log("Selected Value:", selectedValue);
+});
+
+$("#parent_id").change(function() {
+    const selectedValue = $(this).val();
+    $(".output").text(selectedValue); // Update another element with the selected value
+
+    console.log("Updated Output with Selected Value:", selectedValue);
+});
+
+
+//$("input[name='verified']").prop("disabled", true);
+$('#select_country').change(function() {
+    $('#select_state').empty();
+    $("#select_state").prop('required',false);
+    $('#dynamic_state_field_wrapper').hide();
+    var country_id = $(this).val();
+    $('#country_name').val(this.options[this.selectedIndex].text);
+    $.ajax({
+        url: '/api/states',
+        method: 'POST',
+        data: {country_id:country_id},
+        ContentType: 'application/json',
+        success: function (data) {
+            if (data.status == 'ok') {
+                $('#dynamic_state_field_wrapper').show();
+                $("#select_state").prop('required',true);
+                $.each(data.data, function (i, item) {
+                    $('#select_state').append($('<option>', { 
+                        value: item.id,
+                        text : item.name 
+                    }));
+                });                
+            } else {
+                $('#dynamic_state_field_wrapper').hide();
+                $("#select_state").prop('required',false);
+            }
+        },
+        error: function (error) {
+            // Handle any errors
+            Swal.fire({
+                text: error,
+                icon: "error",
+                buttonsStyling: false,
+                confirmButtonText: "Ok, got it!",
+                customClass: {
+                    confirmButton: "btn btn-primary"
+                }
+            });
+            submitButton.disabled = false;
+        }
+    });    
+});
+$('#select_state').change(function() {  
+    $('#state_name').val(this.options[this.selectedIndex].text);
+});    
+/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+var __webpack_exports__ = {};
+/*!*********************************************************************************************!*\
+  !*** ../../../themes/metronic/html/demo1/src/js/custom/account/settings/profile-details.js ***!
+  \*********************************************************************************************/
+
+
+// Class definition
+var KTAccountSettingsProfileDetails = function () {
+    // Private variables
+    var form;
+    var submitButton;
+    var validation;
+
+    var handleForm = function () {
+
+        validation = FormValidation.formValidation(
+            form,
+            {
+                fields: {
+                    company_name: {
+                        validators: {
+                            notEmpty: {
+                                message: 'Organization name is required'
+                            }
+                        }
+                    },
+                    company_slug: {
+                        validators: {
+                            notEmpty: {
+                                message: 'Organization slug is required'
+                            }
+                        }
+                    },
+                    comp_email: {
+                        validators: {
+                            emailAddress: {
+                                message: 'The value is not a valid email address'
+                            }
+                        }
+                    },
+                    // comp_phone: {
+                    //     validators: {
+                    //         regexp: {
+                    //             regexp: /^\d{10}$/, // Regular expression pattern for a 10-digit phone number
+                    //             message: 'The phone number is not valid'
+                    //         }
+                    //     }
+                    // },
+                    main_address_pin_code: {
+                        //validators: {
+                        // notEmpty: {
+                        //     message: 'Pin is required'
+                        // },
+                        regexp: {
+                        // regexp: /^\d{6}$/, // Regular expression pattern for a 6-digit number
+                        regexp: /^[a-zA-Z0-9]+$/,
+                        message: 'Pin is not valid'
+                        }
+                        //}
+                    },
+                    address_map_url: {
+                        validators: {
+                            regexp: {
+                                regexp: /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/, // Regular expression pattern for URL validation
+                                message: 'The URL is not valid'
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    trigger: new FormValidation.plugins.Trigger(),
+                    submitButton: new FormValidation.plugins.SubmitButton(),
+                    //defaultSubmit: new FormValidation.plugins.DefaultSubmit(), // Uncomment this line to enable normal button submit after form validation
+                    bootstrap: new FormValidation.plugins.Bootstrap5({
+                        rowSelector: '.fv-row',
+                        eleInvalidClass: '',
+                        eleValidClass: ''
+                    })
+                }
+            }
+        );
+
+        // Handle form submit
+        submitButton.addEventListener('click', function (e) {
+            e.preventDefault();
+            validation.validate().then(function (status) {
+                if (status == 'Valid') {
+
+            var membershipType = $('input[name="membership_type_id"]:checked').val();
+            var complaintStatus = $('input[name="complaint_status"]:checked').val();
+            var complaintLevel = $('input[name="complaint_level"]').val();
+
+            console.log("membershipType,complaintStatus,complaintLevel",membershipType,complaintStatus,complaintLevel);
+
+            if (membershipType >= 4 && complaintLevel == '' && complaintStatus == 1) {
+                swal.fire({
+                    text: "Please fill in the Complaint Level No.",
+                    icon: "error",
+                    buttonsStyling: false,
+                    confirmButtonText: "Ok, got it!",
+                    customClass: {
+                        confirmButton: "btn fw-bold btn-light-primary"
+                    }
+                });
+            } else{
+                    //$('#kt_account_profile_details_form').submit();
+                    var formElement = document.getElementById('kt_account_profile_details_form');
+                    console.log("formElement",formElement);
+                    var formData = new FormData(formElement);
+                    fetch('/auth/edit-company-data', {
+                        method: 'PUT',
+                        body: formData
+                      })
+                      .then(response => response.json())
+                      .then(data => {
+                        if (data.status == 'ok') {
+                            Swal.fire({
+                                text: data.message,
+                                icon: "success",
+                                buttonsStyling: false,
+                                confirmButtonText: "Ok, got it!",
+                                customClass: {
+                                    confirmButton: "btn btn-primary"
+                                }
+                            }).then(function (result) {
+                                if (result.isConfirmed) {
+                                    window.location.href="/edit-company/"+data.data;
+                                }
+                            });
+                        } else {
+                            Swal.fire({
+                                text: data.message,
+                                icon: "error",
+                                buttonsStyling: false,
+                                confirmButtonText: "Ok, got it!",
+                                customClass: {
+                                    confirmButton: "btn btn-primary"
+                                }
+                            });
+                        }
+                      })
+                      .catch(error => {
+                        // Handle any errors that occurred during the AJAX request
+                        console.error(error);
+                      });
+                    }                    
+                } else {
+                    swal.fire({
+                        text: "Sorry, looks like there are some errors detected, please try again.",
+                        icon: "error",
+                        buttonsStyling: false,
+                        confirmButtonText: "Ok, got it!",
+                        customClass: {
+                            confirmButton: "btn fw-bold btn-light-primary"
+                        }
+                    });
+                }
+            });
+        });
+    }
+
+    // Public methods
+    return {
+        init: function () {
+            form = document.getElementById('kt_account_profile_details_form');
+            submitButton = form.querySelector('#kt_account_profile_details_submit');
+
+            handleForm();
+        }
+    }
+}();
+
+// On document ready
+KTUtil.onDOMContentLoaded(function() {
+    KTAccountSettingsProfileDetails.init();
+});
+
+/******/ })()
+;
+//# sourceMappingURL=profile-details.js.map    
+
+//-------Climed User on select Verified status auto change --------//
+$('#claimed_by').on('change', function (e) {
+    var claimed_user_id = this.value;
+    if(claimed_user_id){
+        var verified_value = '1';
+        var payment_status_value = 'free';
+        $("input[name=verified][value=" + verified_value + "]").prop('checked', true);
+        //$("input[name=payment_status][value=" + payment_status_value + "]").prop('checked', true);
+        $("input[name=membership_type_id][value=1]").prop('checked', true);
+        $("#payment_status").val(payment_status_value);
+    }
+});
+$('input[type=radio][name=membership_type_id]').change(function() {
+    if (this.value == 1 || this.value == '0') {
+        $("#payment_status").val('free');
+    }else{
+        $("#payment_status").val('paid'); 
+    }
+});
+
+
+$(document).ready(function() {
+    // Function to generate a slug from a given string
+    function generateSlug(text) {
+        return text.toLowerCase().replace(/ /g, '-').replace(/[^a-z0-9-]/g, '');
+    }
+
+    // Event handler for the "keyup" event on the "Company Name" input field
+    $("#company_name").on("keyup", function() {
+        var companyName = $(this).val();
+        var companySlug = generateSlug(companyName);
+        $("#company_slug").val(companySlug);
+    });
+    $("select[name='main_address_country']").select2({
+                placeholder: "Select a country",
+                allowClear: true,
+                width: '100%'
+            });
+
+            $('input[name="complaint_status"]').change(function() {
+        if ($(this).val() === '1') {
+            console.log("aaaaa");
+            // If complaint status is active, enable the complaint level input
+            $('input[name="complaint_level"]').prop('disabled', false);
+        } else {
+            console.log("bbbb");
+            // If complaint status is inactive, disable the complaint level input
+            $('input[name="complaint_level"]').prop('disabled', true);
+        }
+    });
+    
+});
+let country;
+$(document).ready(function() {
+    // When country selection changes
+    $('#main_address_country').on('change', function() {
+        country = $(this).val();
+        console.log("Selected Country:", country);
+        
+        $.ajax({
+            url: '/getCountryIdByShortName',
+            method: 'GET',
+            data: { countryShortName: country },
+            success: function(response) {
+                var countryId = response.countryId; 
+                fetchStatesByCountry(countryId); 
+            },
+            error: function(err) {
+                console.error('Error fetching country ID:', err);
+            }
+        });
+    });
+
+
+
+    function fetchStatesByCountry(countryId) {
+        $.ajax({
+            url: '/getstatebyCountries', 
+            method: 'GET',
+            data: { country_ID: countryId }, 
+            success: function(response) {
+                populateStatesDropdown(response);
+            },
+            error: function(err) {
+                console.error('Error fetching states:', err);
+            }
+        });
+    }
+    
+    function populateStatesDropdown(states) {
+        var $stateDropdown = $('#state');
+        $stateDropdown.empty().append($('<option>', {
+            value: '',
+            text: 'Select a state'
+        }));
+        states.forEach(function(state) {
+            $stateDropdown.append($('<option>', {
+                value: state.id, 
+                text: state.name 
+            }));
+        });
+    }
+
+    });
+
+
+$(document).ready(function () {
+                $("select[name='parent_id']").select2({
+                    placeholder: "Select Parent",
+                    allowClear: true
+                });
+                $("select[name='main_address_state']").select2({
+                    placeholder: "Select state",
+                    allowClear: true
+                });
+            });
+</script>
+
+<script>
+    let compidss= '<%= company.ID%>';
+    console.log("compidss",compidss);
+                $(document).ready(function() {
+
+
+  $('#main_address_country').change(async function() {
+    const selectedCountry = $(this).val();
+
+    console.log("selectedCountry",selectedCountry);
+
+    try {
+      const response = await fetch(`/edit-categories/${selectedCountry}/${compidss}`); 
+      const html = await response.text();
+
+      $('#categoryTree').html(html); 
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+      // Handle error display
+    }
+  });
+
+  // Trigger change event on page load to fetch categories for default country (India)
+  $('#main_address_country').trigger('change');
+});
+
+</script>

@@ -251,6 +251,21 @@ function getAllReviewTags() {
   });
 }
 
+function getAlltempReviewTags() {
+  return new Promise((resolve, reject) => {
+    const reviewed_companies_query = `
+            SELECT review_id,tag_name
+            FROM  temp_review_tag_relation 
+            WHERE 1 `;
+    db.query(reviewed_companies_query, (err, result) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(result);
+      }
+    });
+  });
+}
 
 
 //Function to fetch latest Reviews from the  reviews,company,company_location,users,user_customer_meta table
@@ -6374,6 +6389,26 @@ function getAllParentCompany() {
       });
   });
 }
+
+function getAllnewParentCompany() {
+  return new Promise((resolve, reject) => {
+    db.query(
+      `SELECT c.*, GROUP_CONCAT(cat.category_name) AS categories
+      FROM temp_company c
+      LEFT JOIN company_cactgory_relation cr ON c.ID = cr.company_id
+      LEFT JOIN category cat ON cr.category_id = cat.ID
+      WHERE c.status != '3' AND c.parent_id = '0'
+      GROUP BY c.ID`,
+      async (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result);
+        }
+      });
+  });
+}
+
 function getChildCompany(companyId) {
   return new Promise((resolve, reject) => {
     db.query(
@@ -7277,6 +7312,7 @@ module.exports = {
   getAllCompaniesReviews,
   getCompaniesReviewsbyuserId,//
   getAllReviewTags,
+  getAlltempReviewTags,//
   getlatestReviews,
   getAllTrendingReviews,
   getAllReviews,
@@ -7382,6 +7418,7 @@ module.exports = {
   getcompaniesbyCountry,
   getCountryName,
   getAllParentCompany,
+  getAllnewParentCompany,//
   getChildCompany,
   getPublicIpAddress,//
   getcountrybyIp,

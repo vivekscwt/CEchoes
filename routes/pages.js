@@ -6609,6 +6609,51 @@ router.get('/companies', checkLoggedIn, async (req, res) => {
 
 });
 
+router.get('/new-companies', checkLoggedIn, async (req, res) => {
+    try {
+        const encodedUserData = req.cookies.user;
+        const currentUserData = JSON.parse(encodedUserData);
+
+        const [allcompany] = await Promise.all([
+            comFunction2.getAllnewParentCompany(),
+        ]);
+        console.log("allcompany",allcompany);
+        let countries = [];
+        await Promise.all(allcompany.map(async company => {
+            try {
+                if (company.main_address_country) {
+                    countries.push(company.main_address_country);
+        
+                    var company_country_query = `SELECT name FROM countries WHERE shortname = ?`;
+                    var company_country_value = await query(company_country_query, [company.main_address_country]);
+        
+                    if (company_country_value.length > 0) {
+                        company.country_name = company_country_value[0].name;
+                    } else {
+                        company.country_name = null; 
+                    }
+                } else {
+                    company.country_name = null;
+                }
+            } catch (error) {
+                console.error(`Error fetching country name for company ID ${company.id}:`, error);
+                company.country_name = null; 
+            }
+        }));
+        res.render('temp-company', {
+            menu_active_id: 'Newly Created Organizations',
+            page_title: 'Organizations',
+            currentUserData,
+            allcompany: allcompany,
+            countries: countries
+        });
+    } catch (error) {
+        console.error("Error:", error);
+        res.status(500).send("Internal Server Error");
+    }
+
+});
+
 router.get('/trashed-companies', checkLoggedIn, async (req, res) => {
     try {
         const encodedUserData = req.cookies.user;
@@ -6722,6 +6767,109 @@ router.get('/edit-company/:id', checkLoggedIn, async (req, res) => {
             currentUserData,
             company: company,
             company_all_categories: company_all_categories,
+            Allusers: users,
+            getParentCompany: getParentCompany,
+            getCountries: getCountries,
+            statevalue: statevalue,
+            getStatesByCountryID: getStatesByCountryID,
+            getChildCompany: getChildCompany,
+            countries: countries
+            //countries: countries,
+            //states: states            
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('An error occurred');
+    }
+});
+
+router.get('/edit-new-company/:id', checkLoggedIn, async (req, res) => {
+    try {
+        const encodedUserData = req.cookies.user;
+        const currentUserData = JSON.parse(encodedUserData);
+        const companyId = req.params.id;
+
+        const getcompanyquery = `SELECT *
+        FROM temp_company 
+        WHERE temp_company.ID = ?`;
+        const getcompanyvalue = await query(getcompanyquery, [companyId]);
+        if (getcompanyvalue.length > 0) {
+            var comp_state_id = getcompanyvalue[0].main_address_state;
+            //console.log("comp_state_id",comp_state_id);
+            var comp_country_shortname = getcompanyvalue[0].main_address_country;
+            //console.log("comp_country_shortname",comp_country_shortname);
+        }
+        const getcountryidquery = `SELECT * FROM countries WHERE shortname=?`;
+        const getcountryidvalue = await query(getcountryidquery, [comp_country_shortname]);
+        if (getcountryidvalue.length > 0) {
+            var comp_country_id = getcountryidvalue[0].id;
+            //console.log("comp_country_id",comp_country_id);
+        }
+
+        const getstatequery = `SELECT * FROM states WHERE country_id=?`;
+        const getstatevalue = await query(getstatequery, [comp_country_id]);
+
+        if (getstatevalue.length > 0) {
+            var statevalue = getstatevalue[0].name;
+            //console.log("statevalue",statevalue);
+        }
+
+
+
+        // Fetch all the required data asynchronously
+        const [company, company_all_categories, users, getParentCompany, getCountries, getStatesByCountryID, getChildCompany] = await Promise.all([
+            comFunction.getnewCompany(companyId),
+            comFunction.getCompanyCategoryBuID(companyId),
+            comFunction.getUsersByRole(2),
+            comFunction.getParentCompany(),
+            comFunction.getCountries(),
+            comFunction.getStatesByCountryID(comp_country_id),
+            comFunction2.getChildCompany(companyId)
+            //comFunction.getCompanyMeta(userId),
+            //comFunction.getCountries(),
+            //comFunction.getStatesByUserID(userId)
+        ]);
+         console.log("companysss", company);
+        // console.log("getStatesByCountryID",getStatesByCountryID);
+        //console.log("getChildCompany", getChildCompany);
+
+        let countries = [];
+        await Promise.all(getChildCompany.map(async company => {
+            if (company.main_address_country && !countries.includes(company.main_address_country)) {
+                countries.push(company.main_address_country);
+
+                var company_country_query = `SELECT name FROM countries WHERE shortname= ?`;
+                var company_country_value = await query(company_country_query, [company.main_address_country]);
+
+                if (company_country_value.length > 0) {
+                    company.country_name = company_country_value[0].name;
+                } else {
+                    company.country_name = null;
+                }
+            }
+        }));
+
+
+
+
+
+        // Render the 'edit-user' EJS view and pass the data
+        // res.json({
+        //     menu_active_id: 'company',
+        //     page_title: 'Edit Company',
+        //     currentUserData,
+        //     company: company,
+        //     company_all_categories: company_all_categories,
+        //     users: users
+        //     //countries: countries,
+        //     //states: states            
+        // });
+        res.render('edit-new-company', {
+            menu_active_id: 'company',
+            page_title: 'Edit Company',
+            currentUserData,
+            company: company,
+            //company_all_categories: company_all_categories,
             Allusers: users,
             getParentCompany: getParentCompany,
             getCountries: getCountries,
@@ -7293,6 +7441,38 @@ router.get('/all-review', checkLoggedIn, async (req, res) => {
         res.status(500).send('An error occurred');
     }
 });
+
+router.get('/temporay-review', checkLoggedIn, async (req, res) => {
+    try {
+        const encodedUserData = req.cookies.user;
+        const currentUserData = JSON.parse(encodedUserData);
+
+        // Fetch all the required data asynchronously
+        const [allReviews, AllReviewTags] = await Promise.all([
+            comFunction.getTempReviews(),
+            comFunction2.getAlltempReviewTags(),
+        ]);
+        //console.log(currentUserData);
+
+        // res.json({
+        //     menu_active_id: 'review',
+        //     page_title: 'All Review',
+        //     currentUserData,
+        //     allReviews: allReviews
+        // });
+        res.render('temp-reviews', {
+            menu_active_id: 'review',
+            page_title: 'Temp Review',
+            currentUserData,
+            allReviews: allReviews,
+            AllReviewTags: AllReviewTags
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('An error occurred');
+    }
+});
+
 router.get('/flag-review', checkLoggedIn, async (req, res) => {
     try {
         const encodedUserData = req.cookies.user;
