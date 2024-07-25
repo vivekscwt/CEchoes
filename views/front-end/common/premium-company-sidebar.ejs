@@ -157,7 +157,7 @@
      <% if(company && company.membership_type_id>=3 ){ %>
      <li <% if( menu_active_id == 'complaint') { %> class="active" <% } %>><a href="/company-complaint-listing/<%= company.slug  %>"><i class="fa-solid fa-comment-exclamation"></i> Complaint</a>
         <ul>
-           <li><a href="/complaint-level-management/<%= company.slug  %>">Level Management</a></li>
+           <!-- <li><a href="/complaint-level-management/<%= company.slug  %>">Level Management</a></li> -->
            <li><a href="/company-complaint-listing/<%= company.slug  %>">Complaint Listing</a></li>
            <li><a href="/new_complain/<%= company.slug  %>">New Complaint</a></li>
         </ul>

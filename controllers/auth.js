@@ -1472,150 +1472,22 @@ exports.createCategory = async (req, res) => {
 }
 
 //Update Category
-exports.updateCategory = (req, res) => {
-    console.log('category', req.body, req.file);
-    const { cat_id, cat_name, category_slug, cat_parent_id, country } = req.body;
-    const check_arr = [cat_name, cat_id]
-    const cat_sql = "SELECT category.category_name FROM category LEFT JOIN category_country_relation ON category.ID = category_country_relation.cat_id WHERE category.category_name = ? AND category_country_relation.country_id = ?";
-    db.query(cat_sql, check_arr, (cat_err, cat_result) => {
-        if (cat_err) throw cat_err;
-        if (cat_result.length > 0) {
-            return res.send(
-                {
-                    status: 'Not ok',
-                    message: 'Category name already exists '
-                }
-            )
-        } else {
-            if (req.file) {
-                const file_query = `SELECT category_img FROM category WHERE ID = ${cat_id}`;
-                db.query(file_query, async function (img_err, img_res) {
-                    console.log(img_res);
-                    if (img_res[0].category_img != 'NULL') {
-                        const filename = img_res[0].category_img;
-                        const filePath = `uploads/${filename}`;
-                        console.log(filePath);
+exports.updatecategory = async (req, res) => {
+    try {
+        const { complaint_id, category_id, updated_user_id } = req.body;
+        console.log("req.body", req.body);
+        const updateQuery = `UPDATE complaint SET category_id = ?, updated_user_id = ? WHERE id = ?`;
+        const updateValue = await query(updateQuery, [category_id, updated_user_id, complaint_id])
+        //console.log("updateValue",updateValue[0]);
+        return res.status(200).json({ success_message: 'category updated succesfully.' });
 
-                        fs.unlink(filePath, await function () {
-                            console.log('file deleted');
-                        })
-                    }
-                })
-                if (cat_parent_id == '') {
-                    const val = [cat_name, category_slug, req.file.filename, cat_id];
-                    const sql = `UPDATE category SET category_name = ?, category_slug  = ?, category_img = ? WHERE ID = ?`;
-                    db.query(sql, val, async (err, result) => {
-                        if (err) {
-                            console.log(err)
-                        } else {
-                            const delete_query = `DELETE FROM category_country_relation WHERE cat_id = ${cat_id}`;
-                            db.query(`DELETE FROM category_country_relation WHERE cat_id = ${cat_id}`, await function (del_err, del_res) {
-
-                            });
-                            for (var i = 0; i < country.length; i++) {
-                                db.query(`INSERT INTO category_country_relation (cat_id , country_id) VALUES (${cat_id}, ${country[i]} )`, await function (err, country_val) {
-                                    if (err) throw err;
-
-                                });
-                            }
-                            return res.send(
-                                {
-                                    status: 'ok',
-                                    data: result,
-                                    message: 'Category updated'
-                                }
-                            )
-                        }
-                    })
-                } else {
-                    const val = [cat_name, category_slug, cat_parent_id, req.file.filename, cat_id];
-
-                    const sql = `UPDATE category SET category_name = ?,category_slug  = ?, parent_id = ?, category_img = ? WHERE ID = ?`;
-                    db.query(sql, val, async (err, result) => {
-                        if (err) {
-                            console.log(err)
-                        } else {
-                            const delete_query = `DELETE FROM category_country_relation WHERE cat_id = ${cat_id}`;
-                            db.query(`DELETE FROM category_country_relation WHERE cat_id = ${cat_id}`, await function (del_err, del_res) {
-
-                            });
-
-                            for (var i = 0; i < country.length; i++) {
-                                db.query(`INSERT INTO category_country_relation (cat_id , country_id) VALUES (${cat_id}, ${country[i]} )`, await function (err, country_val) {
-                                    if (err) throw err;
-
-                                });
-                            }
-                            return res.send(
-                                {
-                                    status: 'ok',
-                                    data: result,
-                                    message: 'Category updated'
-                                }
-                            )
-                        }
-                    })
-                }
-
-            } else {
-                if (cat_parent_id == '') {
-                    const val = [cat_name, category_slug, cat_id];
-
-                    const sql = `UPDATE category SET category_name = ?, category_slug =?  WHERE ID = ?`;
-                    db.query(sql, val, async (err, result) => {
-                        if (err) {
-                            console.log(err)
-                        } else {
-                            const delete_query = `DELETE FROM category_country_relation WHERE cat_id = ${cat_id}`;
-                            db.query(`DELETE FROM category_country_relation WHERE cat_id = ${cat_id}`, await function (del_err, del_res) {
-
-                            });
-                            for (var i = 0; i < country.length; i++) {
-                                db.query(`INSERT INTO category_country_relation (cat_id , country_id) VALUES (${cat_id}, ${country[i]} )`, await function (err, country_val) {
-                                    if (err) throw err;
-
-                                });
-                            }
-                            return res.send(
-                                {
-                                    status: 'ok',
-                                    data: result,
-                                    message: 'Category updated'
-                                }
-                            )
-                        }
-                    })
-                } else {
-                    const val = [cat_name, category_slug, cat_parent_id, cat_id];
-
-                    const sql = `UPDATE category SET category_name = ?,category_slug = ?, parent_id = ?  WHERE ID = ?`;
-                    db.query(sql, val, async (err, result) => {
-                        if (err) {
-                            console.log(err)
-                        } else {
-                            const delete_query = `DELETE FROM category_country_relation WHERE cat_id = ${cat_id}`;
-                            db.query(`DELETE FROM category_country_relation WHERE cat_id = ${cat_id}`, await function (del_err, del_res) {
-
-                            });
-                            for (var i = 0; i < country.length; i++) {
-                                db.query(`INSERT INTO category_country_relation (cat_id , country_id) VALUES (${cat_id}, ${country[i]} )`, await function (err, country_val) {
-                                    if (err) throw err;
-
-                                });
-                            }
-                            return res.send(
-                                {
-                                    status: 'ok',
-                                    data: result,
-                                    message: 'Category updated'
-                                }
-                            )
-                        }
-                    })
-                }
-            }
-        }
-    })
+    } catch (error) {
+        console.error("error", error);
+        res.send({
+            status: 'error',
+            message: 'An error occurred while processing your request.'
+        });
+    }
 }
 
 exports.getcatsbyCountry = async (req, res) => {
@@ -8544,145 +8416,370 @@ exports.updateCompanyCategory = async (req, res) => {
 // }
 
 exports.createCompanyLevel = async (req, res) => {
-    //console.log('createCompanyLevel', req.body);
-    const { company_id, label_count, complaint_status } = req.body;
-    let emailsArr = [];
-    let emails;
-    const currentDate = new Date();
-    const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ');
-    let completedCount = 0;
+    try {
+        console.log("aaaa",);
+        //console.log('createCompanyLevel', req.body);
+        //const { company_id, email, first_name, last_name, complaint_status, password, category } = req.body;
+        const { company_id, level, email, first_name, last_name, complaint_status, password, category } = req.body;
 
-    if (complaint_status == '1') {
-        for (let index = 1; index <= label_count; index++) {
-            let emailsKey = 'emails_' + index;
-            emails = req.body[emailsKey];
+        console.log("req.body", req.body);
+        let emailsArr = [];
+        let emails;
+        const currentDate = new Date();
+        const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ');
+        let completedCount = 0;
 
-            let eta_days_Key = 'eta_days_' + index;
-            let eta_days = req.body[eta_days_Key];
 
-            if (typeof emails == 'string') {
-                emailsArr.push(emails);
+        if (complaint_status == '1') {
+            console.log("bbbbbb");
+            let hasPassword = await bcrypt.hash(password, 8);
+            const existing_user_query = `SELECT * FROM users WHERE email = "${email}"`
+            const user_result = await query(existing_user_query);
+            //console.log("user_result", user_result);
+
+            if (user_result.length > 0) {
+                console.log('User already registered in the company.');
+                return res.status(400).json({ error_message: 'User already registered in the company.' });
             } else {
-                emailsArr = [...emails];
+                // const userquery = `INSERT INTO users SET ?`;
+                // const userData = {
+                //     first_name: first_name,
+                //     last_name: last_name,
+                //     email: email,
+                //     password: hasPassword,
+                //     register_from: "web",
+                //     user_status: "1",
+                //     user_type_id: "2",
+                //     user_registered: formattedDate
+                // }
+                // const user_result = await query(userquery, [userData]);
+                // console.log("user_result", user_result[0]);
+
+
+                const currentDate = new Date();
+
+                const year = currentDate.getFullYear();
+                const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+                const day = String(currentDate.getDate()).padStart(2, '0');
+                const hours = String(currentDate.getHours()).padStart(2, '0');
+                const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+                const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+
+                const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+                const userInsertQuery = 'INSERT INTO users (first_name, last_name, email, password, register_from, user_registered, user_status, user_type_id, alise_name) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+                db.query(userInsertQuery, [first_name, last_name, email, hasPassword, 'web', formattedDate, 1, 2, first_name + last_name], async (err, userResults) => {
+                    if (err) {
+                        console.error('Error inserting user into "users" table:', err);
+                        return res.send(
+                            {
+                                status: 'err',
+                                data: '',
+                                message: 'An error occurred while processing your request' + err
+                            }
+                        )
+                    }
+
+                    var mailOptions = {
+                        from: process.env.MAIL_USER,
+                        //to: 'pranab@scwebtech.com',
+                        to: email,
+                        subject: 'Welcome Email',
+                        html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+                        <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
+                         <tbody>
+                          <tr>
+                           <td align="center" valign="top">
+                             <div id="template_header_image"><p style="margin-top: 0;"></p></div>
+                             <table id="template_container" style="box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important; background-color: #fdfdfd; border: 1px solid #dcdcdc; border-radius: 3px !important;" border="0" cellpadding="0" cellspacing="0" width="600">
+                              <tbody>
+                                <tr>
+                                 <td align="center" valign="top">
+                                   <!-- Header -->
+                                   <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
+                                     <tbody>
+                                       <tr>
+                                       <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/email-template-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+                                        <td id="header_wrapper" style="padding: 36px 48px; display: block;">
+                                           <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Welcome Email</h1>
+                                        </td>
+                  
+                                       </tr>
+                                     </tbody>
+                                   </table>
+                             <!-- End Header -->
+                             </td>
+                                </tr>
+                                <tr>
+                                 <td align="center" valign="top">
+                                   <!-- Body -->
+                                   <table id="template_body" border="0" cellpadding="0" cellspacing="0" width="600">
+                                     <tbody>
+                                       <tr>
+                                        <td id="body_content" style="background-color: #fdfdfd;" valign="top">
+                                          <!-- Content -->
+                                          <table border="0" cellpadding="20" cellspacing="0" width="100%">
+                                           <tbody>
+                                            <tr>
+                                             <td style="padding: 48px;" valign="top">
+                                               <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
+                                                
+                                                <table border="0" cellpadding="4" cellspacing="0" width="90%">
+                                                  <tr>
+                                                    <td colspan="2">
+                                                        <strong>Hello ${first_name},</strong>
+                                                        <p style="font-size:15px; line-height:20px">Warm greetings from the Bolo Grahak team!
+                                                        You have joined a community dedicated to empowering all Grahaks (Customers) and ensuring their voices are heard <b>LOUD</b> and <b>C L E A R</b>.</p>
+                                                        <p style="font-size:15px; line-height:20px"> Keep sharing your Customer experiences (positive or negative), read about others' experience and get to know Customer centric information.</p>
+                                                        <p style="font-size:15px; line-height:20px">Share this platform with all your friends and family.
+                                                        Together, we can make Organisations listen and improve because <b>#CustomersHavePower</b>.</p><p style="font-size:15px; line-height:20px">Let's usher in this Customer Revolution coz <b>#CustomerRightsMatter</b>.</p><p style="font-size:15px; line-height:20px">Welcome Onboard!</p><br><p style="font-size:15px; line-height:20px">Kind Regards,</p><p style="font-size:15px; line-height:20px">Bolo Grahak Team</p><br>
+                                                    </td>
+                                                  </tr>
+                                                </table>
+                                                <p style="font-size:15px; line-height:20px">Download the app from Google Playstore or visit  <a style="color:#FCCB06" href="${process.env.MAIN_URL}">BoloGrahak.com </a>.</p>
+                                               </div>
+                                             </td>
+                                            </tr>
+                                           </tbody>
+                                          </table>
+                                        <!-- End Content -->
+                                        </td>
+                                       </tr>
+                                     </tbody>
+                                   </table>
+                                 <!-- End Body -->
+                                 </td>
+                                </tr>
+                                <tr>
+                                 <td align="center" valign="top">
+                                   <!-- Footer -->
+                                   <table id="template_footer" border="0" cellpadding="10" cellspacing="0" width="600">
+                                    <tbody>
+                                     <tr>
+                                      <td style="padding: 0; -webkit-border-radius: 6px;" valign="top">
+                                       <table border="0" cellpadding="10" cellspacing="0" width="100%">
+                                         <tbody>
+                                           <tr>
+                                            <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
+                                                 <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">BoloGrahak</a></p>
+                                            </td>
+                                           </tr>
+                                         </tbody>
+                                       </table>
+                                      </td>
+                                     </tr>
+                                    </tbody>
+                                   </table>
+                                 <!-- End Footer -->
+                                 </td>
+                                </tr>
+                              </tbody>
+                             </table>
+                           </td>
+                          </tr>
+                         </tbody>
+                        </table>
+                       </div>`
+
+                    }
+                    await mdlconfig.transporter.sendMail(mailOptions, function (err, info) {
+                        if (err) {
+                            console.log(err);
+                            // return res.send({
+                            //     status: 'not ok',
+                            //     message: 'Something went wrong'
+                            // });
+                        } else {
+                            console.log('Mail Send: ', info.response);
+                            // return res.send({
+                            //     status: 'ok',
+                            //     message: ''
+                            // });
+
+                        }
+                    })
+                    // Insert the user into the "user_customer_meta" table
+                    const userMetaInsertQuery = 'INSERT INTO user_customer_meta (user_id, review_count) VALUES (?, ?)';
+                    db.query(userMetaInsertQuery, [userResults.insertId, 0], (err, metaResults) => {
+                        if (err) {
+                            // return res.send(
+                            //     {
+                            //         status: 'err',
+                            //         data: '',
+                            //         message: 'An error occurred while processing your request' + err
+                            //     }
+                            // )
+                        }
+
+                        const userRegistrationData = {
+                            username: email,
+                            email: email,
+                            password: password,
+                            first_name: first_name,
+                            last_name: last_name,
+                        };
+                        axios.post(process.env.BLOG_API_ENDPOINT + '/register', userRegistrationData)
+                            .then((response) => {
+                                //console.log('User registration successful. User ID:', response.data.user_id);
+
+                                //-------User Auto Login --------------//
+                                const userAgent = req.headers['user-agent'];
+                                const agent = useragent.parse(userAgent);
+
+                                // Set a cookie
+                                const userData = {
+                                    user_id: userResults.insertId,
+                                    first_name: first_name,
+                                    last_name: last_name,
+                                    email: email,
+                                    user_type_id: 2
+                                };
+                                const encodedUserData = JSON.stringify(userData);
+                                res.cookie('user', encodedUserData);
+
+                                (async () => {
+                                    //---- Login to Wordpress Blog-----//
+                                    //let wp_user_data;
+                                    try {
+                                        const userLoginData = {
+                                            email: email,
+                                            password: password,
+                                        };
+                                        const response = await axios.post(process.env.BLOG_API_ENDPOINT + '/login', userLoginData);
+                                        const wp_user_data = response.data.data;
+
+
+
+                                        //-- check last Login Info-----//
+                                        const device_query = "SELECT * FROM user_device_info WHERE user_id = ?";
+                                        db.query(device_query, [userResults.insertId], async (err, device_query_results) => {
+                                            const currentDate = new Date();
+                                            const year = currentDate.getFullYear();
+                                            const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+                                            const day = String(currentDate.getDate()).padStart(2, '0');
+                                            const hours = String(currentDate.getHours()).padStart(2, '0');
+                                            const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+                                            const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+                                            const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+                                            if (device_query_results.length > 0) {
+                                                // User exist update info
+                                                const device_update_query = 'UPDATE user_device_info SET device_id = ?, IP_address = ?, last_logged_in = ? WHERE user_id = ?';
+                                                const values = [agent.toAgent() + ' ' + agent.os.toString(), requestIp.getClientIp(req), formattedDate, userResults.insertId];
+                                                db.query(device_update_query, values, (err, device_update_query_results) => {
+
+                                                })
+                                            } else {
+                                                // User doesnot exist Insert New Row.
+
+                                                const device_insert_query = 'INSERT INTO user_device_info (user_id, device_id, device_token, imei_no, model_name, make_name, IP_address, last_logged_in, created_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+                                                const values = [userResults.insertId, agent.toAgent() + ' ' + agent.os.toString(), '', '', '', '', requestIp.getClientIp(req), formattedDate, formattedDate];
+
+                                                // db.query(device_insert_query, values, (err, device_insert_query_results) => {
+                                                //     const OTPdelQuery = `DELETE FROM signup_otp_veryfy WHERE email = '${email}' `;
+                                                //     db.query(OTPdelQuery, (OTPdelErr, TOPdelRes) => {
+                                                //         if (OTPdelErr) {
+                                                //             console.log(OTPdelErr);
+                                                //             return res.send({
+                                                //                 status: 'not ok',
+                                                //                 message: 'Something went wrong'
+                                                //             });
+                                                //         } else {
+                                                //             console.log('otp deleted')
+                                                //             return res.send(
+                                                //                 {
+                                                //                     status: 'ok',
+                                                //                     data: userData,
+                                                //                     wp_user: wp_user_data,
+                                                //                     currentUrlPath: req.body.currentUrlPath,
+                                                //                     message: 'Registration successful you are automatically login to your dashboard'
+                                                //                 }
+                                                //             )
+                                                //         }
+
+                                                //     })
+
+                                                // })
+
+                                            }
+                                        })
+                                    } catch (error) {
+                                        console.error('User login failed. Error:', error);
+                                        if (error.response && error.response.data) {
+                                            console.log('Error response data:', error.response.data);
+                                        }
+                                    }
+                                })();
+                            })
+                            .catch((error) => {
+                                console.error('User registration failed:',);
+                                // return res.send(
+                                //     {
+                                //         status: 'err',
+                                //         data: '',
+                                //         //message: error.response.data
+                                //     }
+                                // )
+                            });
+                    })
+                })
+
+                //
+                const complaint_query = `SELECT * FROM complaint_level_management WHERE emails = "${email}" AND company_id= "${company_id}"`;
+                const complaintData = await query(complaint_query);
+                console.log(complaintData, "complaintData");
+
+                if (complaintData.length > 0) {
+                    return res.status(400).json({ error_message: 'User already added for complaint level management.' });
+                }
+
+                const complaint_level_query = `SELECT * FROM company_level_manage_users WHERE emails = "${email}" AND company_id= "${company_id}"`;
+                const complaintlevelData = await query(complaint_level_query);
+                console.log(complaintlevelData, "complaintlevelData");
+
+                if (complaintlevelData.length > 0) {
+                    console.log("already in")
+                    return res.status(400).json({ error_message: 'User already added for complaint level management users.' });
+                }
+
+                if (req.body.category == 'manager' || req.body.category == 'help_desk') {
+                    console.log("Manager");
+                    const insertQuery = `INSERT INTO company_level_manage_users SET ?`;
+                    const insertData = {
+                        company_id: company_id,
+                        emails: email,
+                        level: level,
+                        //eta_days: eta_days,
+                        level_user_type: category,
+                        created_at: formattedDate
+                    }
+                    const insertResult = await query(insertQuery, [insertData]);
+                }
+
+                if (req.body.category != 'manager' && req.body.category != 'help_desk') {
+                    //console.log("userssss");
+                    const insertQuery = `INSERT INTO complaint_level_management SET ?`;
+                    const insertData = {
+                        company_id: company_id,
+                        emails: email,
+                        level: level,
+                        //eta_days: eta_days,
+                        category_id: category,
+                        created_at: formattedDate
+                    }
+                    var insertResult = await query(insertQuery, [insertData]);
+                }
+                console.log("insertResult", insertResult);
+
+                return res.status(200).json({ success_message: 'Complaint level management users added successfully.' });
             }
-            let strEmails = JSON.stringify(emailsArr.filter(item => item !== ""));
-
-            const checkQuery = `SELECT id FROM complaint_level_management WHERE company_id  = ? AND level = ? `;
-            const checkData = [company_id, index];
-
-            await new Promise((resolve) => {
-                db.query(checkQuery, checkData, async (checkErr, checkResult) => {
-                    if (checkErr) {
-                        res.send({
-                            status: 'not ok',
-                            message: 'Something went wrong ' + checkErr
-                        });
-                        return resolve();
-                    }
-
-                    if (checkResult.length > 0) {
-                        const updateQuery = `UPDATE complaint_level_management SET ? WHERE company_id  = '${company_id}' AND level = '${index}' `;
-                        const updateData = {
-                            level: index || null,
-                            emails: strEmails || [],
-                            eta_days: eta_days || null,
-                            created_at: formattedDate || null,
-                        };
-
-                        await new Promise((resolveUpdate) => {
-                            db.query(updateQuery, updateData, (updateErr, updateRes) => {
-                                if (updateErr) {
-                                    res.send({
-                                        status: 'not ok',
-                                        message: 'Something went wrong ' + updateErr
-                                    });
-                                } else {
-                                    const updateQuery = `UPDATE company SET complaint_status='1' WHERE ID = '${company_id}' `;
-                                    db.query(updateQuery, (updateErr, updateRes) => {
-                                        if (updateErr) {
-                                            res.send({
-                                                status: 'not ok',
-                                                message: 'Something went wrong ' + updateErr
-                                            });
-                                        } else {
-                                            completedCount++;
-                                            resolveUpdate();
-                                        }
-                                    });
-                                }
-                            });
-                        });
-
-                    } else {
-                        const insertQuery = `INSERT INTO complaint_level_management SET ?`;
-                        const insertData = {
-                            company_id: company_id,
-                            level: index || null,
-                            emails: strEmails || [],
-                            eta_days: eta_days || null,
-                            created_at: formattedDate || null,
-                        };
-
-                        await new Promise((resolveInsert) => {
-                            db.query(insertQuery, insertData, (insertErr, insertRes) => {
-                                if (insertErr) {
-                                    res.send({
-                                        status: 'not ok',
-                                        message: 'Something went wrong ' + insertErr
-                                    });
-                                } else {
-                                    const updateQuery = `UPDATE company SET complaint_status='1' WHERE ID = '${company_id}' `;
-                                    db.query(updateQuery, (updateErr, updateRes) => {
-                                        if (updateErr) {
-                                            res.send({
-                                                status: 'not ok',
-                                                message: 'Something went wrong ' + updateErr
-                                            });
-                                        } else {
-                                            completedCount++;
-                                            resolveInsert();
-                                        }
-                                    });
-                                }
-                            });
-                        });
-                    }
-                    resolve();
-                });
-            });
         }
 
-        // Send the response after all iterations are complete
-        res.send({
-            status: 'ok',
-            message: 'All iterations completed successfully!'
-        });
-    } else {
-        const delQuery = `DELETE FROM complaint_level_management WHERE company_id = '${company_id}' `;
-        db.query(delQuery, (delErr, delRes) => {
-            if (delErr) {
-                res.send({
-                    status: 'not ok',
-                    message: 'Something went wrong ' + delErr
-                });
-            } else {
-                const updateQuery = `UPDATE company SET complaint_status='0' WHERE ID = '${company_id}' `;
-                db.query(updateQuery, (updateErr, updateRes) => {
-                    if (updateErr) {
-                        res.send({
-                            status: 'not ok',
-                            message: 'Something went wrong ' + updateErr
-                        });
-                    } else {
-                        res.send({
-                            status: 'ok',
-                            message: 'Complaint status updated successfully !'
-                        });
-                    }
-                });
-            }
-        });
+    } catch (error) {
+        console.error("error", error);
+        return res.status(500).json({ error_message: '<center><h1 style="color: darkred;">Please try again later</h1></center>' });
     }
+
 }
 
 
@@ -9040,18 +9137,33 @@ exports.updateEnterprise = async (req, res) => {
 
 
 //Insert Company Query and  to user
+//Insert Company Query and  to user
 exports.companyQuery = async (req, res) => {
     //console.log('companyQuery',req.body ); 
     //return false;
     const { company_id, user_id, complaint_id, message, complaint_status, complaint_level, company_slug } = req.body;
 
-    if (complaint_status == '1') {
-        const [updateComplaintStatus, complaintCompanyResolvedEmail] = await Promise.all([
-            comFunction2.updateComplaintStatus(complaint_id, '1'),
-            comFunction2.complaintCompanyResolvedEmail(complaint_id)
+    // if (complaint_status == '1') {
+    //     const [updateComplaintStatus, complaintCompanyResolvedEmail] = await Promise.all([
+    //         comFunction2.updateComplaintStatus(complaint_id, '1'),
+    //         comFunction2.complaintCompanyResolvedEmail(complaint_id)
+    //     ]);
+    // } else {
+    //     await comFunction2.complaintCompanyResponseEmail(complaint_id)
+    // }
+    if (complaint_status == '0') {
+        // Reopen complaint and send an email
+        const [updateComplaintStatus, sendEmail] = await Promise.all([
+            comFunction2.updateComplaintStatus(complaint_id, '0'),
+            comFunction2.complaintUserReopenEmail(complaint_id),
         ]);
-    } else {
-        await comFunction2.complaintCompanyResponseEmail(complaint_id)
+
+        console.log('Complaint reopened and email sent.');
+    } else if (complaint_status == '1') {
+        await comFunction2.complaintUserResponseEmail(complaint_id);
+        await comFunction2.updateresolveComplaintStatus(complaint_id, '1');
+
+        console.log('Complaint resolved and email sent.');
     }
 
     const currentDate = new Date();
@@ -9934,11 +10046,6 @@ exports.escalateNextLevel = async (req, res) => {
         cc: emails,
         subject: 'Escalate to next level email',
         html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
-        <style>
-        body, table, td, p, a, h1, h2, h3, h4, h5, h6, div {
-            font-family: Calibri, 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif !important;
-        }
-        </style>
         <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
           <tbody>
           <tr>
@@ -9952,7 +10059,7 @@ exports.escalateNextLevel = async (req, res) => {
                     <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
                       <tbody>
                         <tr>
-                        <td><img alt="Logo" src="${process.env.MAIN_URL}front-end/images/cechoes-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+                        <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/email-template-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
                         <td id="header_wrapper" style="padding: 36px 48px; display: block;">
                             <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Escalate to next level email</h1>
                         </td>
@@ -10013,7 +10120,7 @@ exports.escalateNextLevel = async (req, res) => {
                           <tbody>
                             <tr>
                             <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
-                                  <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology</a></p>
+                                  <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">BoloGrahak</a></p>
                             </td>
                             </tr>
                           </tbody>
@@ -10067,6 +10174,7 @@ exports.escalateNextLevel = async (req, res) => {
         });
     }
 };
+
 
 //add payment details
 exports.addPayment = (req, res) => {
@@ -14577,85 +14685,6 @@ const fetchPaymentsByInvoiceId = async (invoiceId) => {
     }
 };
 
-//fetchPaymentsByInvoiceId('inv_OXHIwBbIbje4gl');
-
-// async function findOrCreateCustomer(email, name, phone, address, city, state, zip) {
-//     try {
-//         console.log("email:", email);
-//         const customers = await razorpay.customers.all();
-//         console.log("customerslist:", customers);
-//         console.log("address", address);
-//         console.log("name", name);
-//         console.log("city", city);
-//         console.log("state", state);
-//         console.log("zip", zip);
-
-//         if (customers.items.length > 0) {
-//             const foundCustomer = customers.items.find(customer => customer.email === email);
-//             if (foundCustomer) {
-//                 console.log('Found customer:', foundCustomer);
-
-//                 //const foundCustomerId = "cust_" + foundCustomer.id;
-//                 const foundCustomerId = foundCustomer.id;
-//                 console.log("Concatenated Customer ID:", foundCustomerId);
-
-//                 let updatedCustomer = await razorpay.customers.edit(foundCustomerId, {
-//                     name: name,
-//                     email: email,
-//                     contact: phone,
-//                     // shipping_address: {
-//                     //     line1: address,
-//                     //     city: city,
-//                     //     state: state,
-//                     //     //zip: zip,
-//                     //     country: 'IN'
-//                     // }
-//                 });
-
-//                 console.log('Updated customer:', updatedCustomer);
-
-//                 return foundCustomerId;
-//             } else {
-//                 console.log(`Customer with email ${email} not found.`);
-//                 const customer = await razorpay.customers.create({
-//                     name: name,
-//                     email: email,
-//                     //contact: phone,
-//                     // shipping_address: {
-//                     //     line1: address,
-//                     //     city: city,
-//                     //     state: state,
-//                     //     //zip: zip,
-//                     //     country: 'IN'
-//                     // }
-//                 });
-//                 console.log('Created new customer:', customer.id);
-//                 return customer.id;
-//             }
-//         } else {
-//             const customer = await razorpay.customers.create({
-//                 name: name,
-//                 email: email,
-//                 contact: phone,
-//                 // shipping_address: {
-//                 //     line1: address,
-//                 //     city: city,
-//                 //     state: state,
-//                 //     //zip: zip,
-//                 //     country: 'IN'
-//                 // }
-//             });
-//             console.log('Created new customer:', customer.id);
-//             return customer.id;
-//         }
-//     } catch (error) {
-//         console.error('Error finding or creating customer:', error);
-//         throw error;
-//     }
-// }
-
-
-
 const findOrCreateCustomer = async (email, name, phone, address, city, state, zip) => {
     try {
         console.log("email:", email);
@@ -15376,6 +15405,1853 @@ exports.getLocation = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
+
+
+//newly added for complaint
+exports.getcategoriess = async (req, res) => {
+    const sql = `
+    SELECT complaint_category.id AS category_id,complaint_category.category_name,complaint_category.parent_id FROM 
+    complaint_category
+    WHERE complaint_category.company_id = '${companyId}' AND complaint_category.parent_id='0';  
+    `;
+    try {
+        const results = await query(sql);
+        console.log("results", results);
+        if (results.length > 0) {
+            console.log("results", results);
+            //return results;
+            return res.status(200).json({ success_message: 'company has categories' });
+        } else {
+            return res.status(500).json({ success_message: 'First create the categories.' });
+            return [];
+        }
+    }
+    catch (error) {
+        console.error('Error during fetch company categories details: ', error);
+
+    }
+}
+
+exports.updateComplaintStatus = async (req, res) => {
+    try {
+        const { company_id, complaint_status } = req.body;
+
+        const sqlQuery = `UPDATE company SET complaint_status = ? WHERE ID = ?`;
+
+        await query(sqlQuery, [complaint_status, company_id]);
+
+        return res.json({ success_message: 'Complaint status updated successfully.' });
+    } catch (error) {
+        console.error('Error updating complaint status:', error);
+        return res.json({ error_message: 'Failed to update complaint status.' });
+        // res.status(500).json({ status: 'error', message: 'Failed to update complaint status' });
+    }
+}
+exports.companyLevel = async (req, res) => {
+    try {
+        const levels = req.body.level;
+        const emails = req.body.email;
+
+        for (let i = 0; i < levels.length; i++) {
+            const level = levels[i];
+            const email = emails[i];
+
+            // Update the database for each email at the respective level
+            const currentDate = new Date();
+            const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ');
+
+            // Example query to update the database
+            const updateQuery = `UPDATE company_level_manage_users SET eta_days = ? WHERE emails = ? AND level = ?`;
+            const updateData = [req.body[`eta_days_${level}`], email, level];
+
+            db.query(updateQuery, updateData, (error, results, fields) => {
+                if (error) {
+                    console.error('Error updating data:', error);
+                    // Handle the error appropriately
+                } else {
+                    console.log('Data updated successfully:', results);
+                    // Optionally, do something with the results
+                }
+            });
+        }
+
+        // Send success response
+        res.json({ success_message: 'Company levels updated successfully!' });
+    } catch (error) {
+        console.error("An error occurred:", error);
+        res.status(500).json({ error_message: 'An error occurred while updating company levels.' });
+    }
+}
+exports.createLevelusers = async (req, res) => {
+    try {
+        //console.log('createCompanyLevel', req.body);
+        //const { company_id, email, first_name, last_name, complaint_status, password, category } = req.body;
+        const { company_id, email, first_name, last_name, complaint_status, password, category } = req.body;
+
+
+        console.log("createLevelusers", req.body);
+        let emailsArr = [];
+        let emails;
+        const currentDate = new Date();
+        const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ');
+        let completedCount = 0;
+
+        const companyNamequery = `SELECT company_name FROM company WHERE ID ="${company_id}"`;
+        const companynamevalue = await query(companyNamequery);
+        var comp = companynamevalue[0].company_name;
+        console.log("comp", comp);
+        if (companynamevalue.length > 0) {
+            var companyName = companynamevalue[0];
+            console.log(("companyName", companyName));
+        }
+
+
+
+        if (complaint_status == '1') {
+            // console.log("jjjjj");
+            let hasPassword = await bcrypt.hash(password, 8);
+            if (req.body.category == "manager" || req.body.category == "help_desk") {
+                //console.log("llllll")
+                const complaintLevelQuery = `SELECT * FROM company_level_manage_users WHERE company_id ="${company_id}" AND level_user_type="${req.body.category}"`;
+                const complaintLevelData = await query(complaintLevelQuery);
+
+                if (complaintLevelData.length > 0) {
+                    return res.status(500).json({ error_message: `Already a ${req.body.category} added for complaint level management.` });
+                }
+            }
+            const existing_user_query = `SELECT * FROM users WHERE email = "${email}"`
+            const user_result = await query(existing_user_query);
+            //console.log("user_result", user_result[0].user_id);
+
+            if (user_result.length > 0) {
+                var First_name = user_result[0].first_name;
+                var Last_name = user_result[0].last_name;
+                var fullName = First_name + ' ' + Last_name;
+                //console.log("fullNamefff",fullName);
+                var level_users_id = user_result[0].user_id
+                //return res.status(500).json({ error_message: 'User already registered in the company.' });
+                // const usergetquery = `SELECT first_name,last_name FROM users WHERE email="${email}"`;
+                // const usergetdata = await query(usergetquery);
+                // var fullName= usergetdata[0];
+                // console.log(("fullName",fullName));
+                // if (usergetdata.length > 0) {
+                //     var fullName= usergetdata[0];
+                //     console.log(("fullName",fullName));
+                //     //const { First_name, Last_name } = usergetdata[0];
+                //     // var fullName = First_name + ' ' + Last_name;
+                //     // console.log("First Names:", First_name);
+                //     // console.log("Last Names:", Last_name);
+                //     //return res.status(500).json({ error_message: 'User already registered in the company.' });
+                // } else {
+                //     console.log("No user found with the provided email.");
+                // }
+                const complaint_level_query = `SELECT * FROM company_level_manage_users WHERE emails = "${email}" AND company_id= "${company_id}"`;
+                const complaintlevelData = await query(complaint_level_query);
+
+                if (complaintlevelData.length > 0) {
+                    return res.status(500).json({ error_message: 'User already added for complainyt level manangement users.' });
+                }
+                if (req.body.category == 'manager' || req.body.category == 'help_desk') {
+                    console.log("Manager");
+                    const insertQuery = `INSERT INTO company_level_manage_users SET ?`;
+                    const insertData = {
+                        company_id: company_id,
+                        emails: email,
+                        user_id: level_users_id,
+                        level_user_type: category,
+                        created_at: formattedDate
+                    }
+                    const insertResult = await query(insertQuery, [insertData]);
+
+                    let updateColumn = '';
+                    if (req.body.category == 'manager') {
+                        updateColumn = 'manger_email';
+                    } else if (req.body.category == 'help_desk') {
+                        updateColumn = 'help_desk_email';
+                    }
+
+                    if (updateColumn) {
+                        const updateCompanyQuery = `UPDATE company SET ?? = ? WHERE ID = ?`;
+                        await query(updateCompanyQuery, [updateColumn, email, company_id]);
+                    }
+                    var mailOptions = {
+                        from: process.env.MAIL_USER,
+                        //to: 'dev2.scwt@gmail.com',
+                        to: email,
+                        subject: 'Added as a Level Management User',
+                        html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+                        <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
+                         <tbody>
+                          <tr>
+                           <td align="center" valign="top">
+                             <div id="template_header_image"><p style="margin-top: 0;"></p></div>
+                             <table id="template_container" style="box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important; background-color: #fdfdfd; border: 1px solid #dcdcdc; border-radius: 3px !important;" border="0" cellpadding="0" cellspacing="0" width="600">
+                              <tbody>
+                                <tr>
+                                 <td align="center" valign="top">
+                                   <!-- Header -->
+                                   <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
+                                     <tbody>
+                                       <tr>
+                                       <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/email-template-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+                                        <td id="header_wrapper" style="padding: 36px 48px; display: block;">
+                                           <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Complaint Assigned Mail</h1>
+                                        </td>
+                  
+                                       </tr>
+                                     </tbody>
+                                   </table>
+                             <!-- End Header -->
+                             </td>
+                                </tr>
+                                <tr>
+                                 <td align="center" valign="top">
+                                   <!-- Body -->
+                                   <table id="template_body" border="0" cellpadding="0" cellspacing="0" width="600">
+                                     <tbody>
+                                       <tr>
+                                        <td id="body_content" style="background-color: #fdfdfd;" valign="top">
+                                          <!-- Content -->
+                                          <table border="0" cellpadding="20" cellspacing="0" width="100%">
+                                           <tbody>
+                                            <tr>
+                                             <td style="padding: 48px;" valign="top">
+                                               <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
+                                                
+                                                <table border="0" cellpadding="4" cellspacing="0" width="90%">
+                                                  <tr>
+                                                    <td colspan="2">
+                                                    <strong>Hello ${fullName},</strong>
+                                                    <p style="font-size:15px; line-height:20px">You have added as a ${category} for ${comp} company for manage the complaint management.<i><b> </b></i> Please visit <a href="${process.env.MAIN_URL}" style="color: #007BFF; text-decoration: none;">our site</a> for more information.</p>
+                                                    </td>
+                                                  </tr>
+                                                </table>
+                                                
+                                               </div>
+                                             </td>
+                                            </tr>
+                                           </tbody>
+                                          </table>
+                                        <!-- End Content -->
+                                        </td>
+                                       </tr>
+                                     </tbody>
+                                   </table>
+                                 <!-- End Body -->
+                                 </td>
+                                </tr>
+                                <tr>
+                                 <td align="center" valign="top">
+                                   <!-- Footer -->
+                                   <table id="template_footer" border="0" cellpadding="10" cellspacing="0" width="600">
+                                    <tbody>
+                                     <tr>
+                                      <td style="padding: 0; -webkit-border-radius: 6px;" valign="top">
+                                       <table border="0" cellpadding="10" cellspacing="0" width="100%">
+                                         <tbody>
+                                           <tr>
+                                            <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
+                                                 <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">BoloGrahak</a></p>
+                                            </td>
+                                           </tr>
+                                         </tbody>
+                                       </table>
+                                      </td>
+                                     </tr>
+                                    </tbody>
+                                   </table>
+                                 <!-- End Footer -->
+                                 </td>
+                                </tr>
+                              </tbody>
+                             </table>
+                           </td>
+                          </tr>
+                         </tbody>
+                        </table>
+                       </div>`
+                    }
+                    console.log("emailss", email);
+                    await mdlconfig.transporter.sendMail(mailOptions, function (err, info) {
+                        if (err) {
+                            console.log(err);
+                            return res.send({
+                                status: 'not ok',
+                                message: 'Something went wrong'
+                            });
+                        } else {
+                            console.log('Mail Send: ', info.response);
+                            return res.send({
+                                status: 'ok',
+                                message: 'Flag Approve'
+                            });
+                        }
+                    })
+
+                }
+                return res.status(200).json({ success_message: 'Complaint level users added successfully.' });
+            }
+            else {
+                const complaintlevelquery = `SELECT * FROM company_level_manage_users WHERE emails = "${email}" AND company_id ="${company_id}"`;
+                const complaintleveldata = await query(complaintlevelquery);
+
+                if (complaintleveldata.length > 0) {
+                    return res.status(500).json({ error_message: 'Already user added for complainyt level manangement users.' });
+                }
+                // const userquery = `INSERT INTO users SET ?`;
+                // const userData = {
+                //     first_name: first_name,
+                //     last_name: last_name,
+                //     email: email,
+                //     password: hasPassword,
+                //     register_from: "web",
+                //     user_status: "1",
+                //     user_type_id: "2",
+                //     user_registered: formattedDate
+                // }
+                // const user_result = await query(userquery, [userData]);
+                // console.log("user_result", user_result[0]);
+
+                // var insertedId = user_result.insertId;
+                // console.log("Inserted ID:", insertedId);
+                const currentDate = new Date();
+
+                const year = currentDate.getFullYear();
+                const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+                const day = String(currentDate.getDate()).padStart(2, '0');
+                const hours = String(currentDate.getHours()).padStart(2, '0');
+                const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+                const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+
+                const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+                const userInsertQuery = 'INSERT INTO users (first_name, last_name, email, password, register_from, user_registered, user_status, user_type_id, alise_name) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+                db.query(userInsertQuery, [first_name, last_name, email, hasPassword, 'web', formattedDate, 1, 2, first_name + last_name], async (err, userResults) => {
+                    if (err) {
+                        console.error('Error inserting user into "users" table:', err);
+                        return res.send(
+                            {
+                                status: 'err',
+                                data: '',
+                                message: 'An error occurred while processing your request' + err
+                            }
+                        )
+                    }
+
+                    var insertedId = userResults.insertId;
+
+                    var mailOptions = {
+                        from: process.env.MAIL_USER,
+                        //to: 'pranab@scwebtech.com',
+                        to: email,
+                        subject: 'Welcome Email',
+                        html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+                        <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
+                         <tbody>
+                          <tr>
+                           <td align="center" valign="top">
+                             <div id="template_header_image"><p style="margin-top: 0;"></p></div>
+                             <table id="template_container" style="box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important; background-color: #fdfdfd; border: 1px solid #dcdcdc; border-radius: 3px !important;" border="0" cellpadding="0" cellspacing="0" width="600">
+                              <tbody>
+                                <tr>
+                                 <td align="center" valign="top">
+                                   <!-- Header -->
+                                   <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
+                                     <tbody>
+                                       <tr>
+                                       <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/email-template-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+                                        <td id="header_wrapper" style="padding: 36px 48px; display: block;">
+                                           <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Welcome Email</h1>
+                                        </td>
+                  
+                                       </tr>
+                                     </tbody>
+                                   </table>
+                             <!-- End Header -->
+                             </td>
+                                </tr>
+                                <tr>
+                                 <td align="center" valign="top">
+                                   <!-- Body -->
+                                   <table id="template_body" border="0" cellpadding="0" cellspacing="0" width="600">
+                                     <tbody>
+                                       <tr>
+                                        <td id="body_content" style="background-color: #fdfdfd;" valign="top">
+                                          <!-- Content -->
+                                          <table border="0" cellpadding="20" cellspacing="0" width="100%">
+                                           <tbody>
+                                            <tr>
+                                             <td style="padding: 48px;" valign="top">
+                                               <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
+                                                
+                                                <table border="0" cellpadding="4" cellspacing="0" width="90%">
+                                                  <tr>
+                                                    <td colspan="2">
+                                                        <strong>Hello ${first_name},</strong>
+                                                        <p style="font-size:15px; line-height:20px">Warm greetings from the Bolo Grahak team!
+                                                        You have joined a community dedicated to empowering all Grahaks (Customers) and ensuring their voices are heard <b>LOUD</b> and <b>C L E A R</b>.</p>
+                                                        <p style="font-size:15px; line-height:20px"> Keep sharing your Customer experiences (positive or negative), read about others' experience and get to know Customer centric information.</p>
+                                                        <p style="font-size:15px; line-height:20px">Share this platform with all your friends and family.
+                                                        Together, we can make Organisations listen and improve because <b>#CustomersHavePower</b>.</p><p style="font-size:15px; line-height:20px">Let's usher in this Customer Revolution coz <b>#CustomerRightsMatter</b>.</p><p style="font-size:15px; line-height:20px">Welcome Onboard!</p><br><p style="font-size:15px; line-height:20px">Kind Regards,</p><p style="font-size:15px; line-height:20px">Bolo Grahak Team</p><br>
+                                                    </td>
+                                                  </tr>
+                                                </table>
+                                                <p style="font-size:15px; line-height:20px">Download the app from Google Playstore or visit  <a style="color:#FCCB06" href="${process.env.MAIN_URL}">BoloGrahak.com </a>.</p>
+                                               </div>
+                                             </td>
+                                            </tr>
+                                           </tbody>
+                                          </table>
+                                        <!-- End Content -->
+                                        </td>
+                                       </tr>
+                                     </tbody>
+                                   </table>
+                                 <!-- End Body -->
+                                 </td>
+                                </tr>
+                                <tr>
+                                 <td align="center" valign="top">
+                                   <!-- Footer -->
+                                   <table id="template_footer" border="0" cellpadding="10" cellspacing="0" width="600">
+                                    <tbody>
+                                     <tr>
+                                      <td style="padding: 0; -webkit-border-radius: 6px;" valign="top">
+                                       <table border="0" cellpadding="10" cellspacing="0" width="100%">
+                                         <tbody>
+                                           <tr>
+                                            <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
+                                                 <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">BoloGrahak</a></p>
+                                            </td>
+                                           </tr>
+                                         </tbody>
+                                       </table>
+                                      </td>
+                                     </tr>
+                                    </tbody>
+                                   </table>
+                                 <!-- End Footer -->
+                                 </td>
+                                </tr>
+                              </tbody>
+                             </table>
+                           </td>
+                          </tr>
+                         </tbody>
+                        </table>
+                       </div>`
+
+                    }
+                    await mdlconfig.transporter.sendMail(mailOptions, function (err, info) {
+                        if (err) {
+                            console.log(err);
+                            // return res.send({
+                            //     status: 'not ok',
+                            //     message: 'Something went wrong'
+                            // });
+                        } else {
+                            console.log('Mail Send: ', info.response);
+                            // return res.send({
+                            //     status: 'ok',
+                            //     message: ''
+                            // });
+
+                        }
+                    })
+                    // Insert the user into the "user_customer_meta" table
+                    const userMetaInsertQuery = 'INSERT INTO user_customer_meta (user_id, review_count) VALUES (?, ?)';
+                    db.query(userMetaInsertQuery, [userResults.insertId, 0], (err, metaResults) => {
+                        if (err) {
+                            // return res.send(
+                            //     {
+                            //         status: 'err',
+                            //         data: '',
+                            //         message: 'An error occurred while processing your request' + err
+                            //     }
+                            // )
+                        }
+
+                        const userRegistrationData = {
+                            username: email,
+                            email: email,
+                            password: password,
+                            first_name: first_name,
+                            last_name: last_name,
+                        };
+                        axios.post(process.env.BLOG_API_ENDPOINT + '/register', userRegistrationData)
+                            .then((response) => {
+                                //console.log('User registration successful. User ID:', response.data.user_id);
+
+                                //-------User Auto Login --------------//
+                                const userAgent = req.headers['user-agent'];
+                                const agent = useragent.parse(userAgent);
+
+                                // Set a cookie
+                                const userData = {
+                                    user_id: userResults.insertId,
+                                    first_name: first_name,
+                                    last_name: last_name,
+                                    email: email,
+                                    user_type_id: 2
+                                };
+                                const encodedUserData = JSON.stringify(userData);
+                                res.cookie('user', encodedUserData);
+
+                                (async () => {
+                                    //---- Login to Wordpress Blog-----//
+                                    //let wp_user_data;
+                                    try {
+                                        const userLoginData = {
+                                            email: email,
+                                            password: password,
+                                        };
+                                        const response = await axios.post(process.env.BLOG_API_ENDPOINT + '/login', userLoginData);
+                                        const wp_user_data = response.data.data;
+
+
+
+                                        //-- check last Login Info-----//
+                                        const device_query = "SELECT * FROM user_device_info WHERE user_id = ?";
+                                        db.query(device_query, [userResults.insertId], async (err, device_query_results) => {
+                                            const currentDate = new Date();
+                                            const year = currentDate.getFullYear();
+                                            const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+                                            const day = String(currentDate.getDate()).padStart(2, '0');
+                                            const hours = String(currentDate.getHours()).padStart(2, '0');
+                                            const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+                                            const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+                                            const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+                                            if (device_query_results.length > 0) {
+                                                // User exist update info
+                                                const device_update_query = 'UPDATE user_device_info SET device_id = ?, IP_address = ?, last_logged_in = ? WHERE user_id = ?';
+                                                const values = [agent.toAgent() + ' ' + agent.os.toString(), requestIp.getClientIp(req), formattedDate, userResults.insertId];
+                                                db.query(device_update_query, values, (err, device_update_query_results) => {
+
+                                                })
+                                            } else {
+                                                // User doesnot exist Insert New Row.
+
+                                                const device_insert_query = 'INSERT INTO user_device_info (user_id, device_id, device_token, imei_no, model_name, make_name, IP_address, last_logged_in, created_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+                                                const values = [userResults.insertId, agent.toAgent() + ' ' + agent.os.toString(), '', '', '', '', requestIp.getClientIp(req), formattedDate, formattedDate];
+
+                                                // db.query(device_insert_query, values, (err, device_insert_query_results) => {
+                                                //     const OTPdelQuery = `DELETE FROM signup_otp_veryfy WHERE email = '${email}' `;
+                                                //     db.query(OTPdelQuery, (OTPdelErr, TOPdelRes) => {
+                                                //         if (OTPdelErr) {
+                                                //             console.log(OTPdelErr);
+                                                //             return res.send({
+                                                //                 status: 'not ok',
+                                                //                 message: 'Something went wrong'
+                                                //             });
+                                                //         } else {
+                                                //             console.log('otp deleted')
+                                                //             return res.send(
+                                                //                 {
+                                                //                     status: 'ok',
+                                                //                     data: userData,
+                                                //                     wp_user: wp_user_data,
+                                                //                     currentUrlPath: req.body.currentUrlPath,
+                                                //                     message: 'Registration successful you are automatically login to your dashboard'
+                                                //                 }
+                                                //             )
+                                                //         }
+
+                                                //     })
+
+                                                // })
+
+                                            }
+                                        })
+                                    } catch (error) {
+                                        console.error('User login failed. Error:', error);
+                                        if (error.response && error.response.data) {
+                                            console.log('Error response data:', error.response.data);
+                                        }
+                                    }
+                                })();
+                            })
+                            .catch((error) => {
+                                console.error('User registration failed:',);
+                                // return res.send(
+                                //     {
+                                //         status: 'err',
+                                //         data: '',
+                                //         //message: error.response.data
+                                //     }
+                                // )
+                            });
+                    })
+
+
+
+                    const complaint_level_query = `SELECT * FROM company_level_manage_users WHERE emails = "${email}"`;
+                    const complaintlevelData = await query(complaint_level_query);
+
+                    if (complaintlevelData.length > 0) {
+                        return res.status(500).json({ error_message: 'User already added for complainyt level manangement users.' });
+                    }
+                    if (req.body.category == 'manager' || req.body.category == 'help_desk') {
+                        console.log("Manager");
+                        const insertQuery = `INSERT INTO company_level_manage_users SET ?`;
+                        const insertData = {
+                            company_id: company_id,
+                            emails: email,
+                            user_id: insertedId,
+                            level_user_type: category,
+                            created_at: formattedDate
+                        }
+                        const insertResult = await query(insertQuery, [insertData]);
+
+                        let updateColumn = '';
+                        if (req.body.category == 'manager') {
+                            updateColumn = 'manger_email';
+                        } else if (req.body.category == 'help_desk') {
+                            updateColumn = 'help_desk_email';
+                        }
+
+                        if (updateColumn) {
+                            const updateCompanyQuery = `UPDATE company SET ?? = ? WHERE ID = ?`;
+                            await query(updateCompanyQuery, [updateColumn, email, company_id]);
+                        }
+
+                        var mailOptions = {
+                            from: process.env.MAIL_USER,
+                            //to: 'dev2.scwt@gmail.com',
+                            to: email,
+                            subject: 'Added as a Level Management User',
+                            html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+                        <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
+                         <tbody>
+                          <tr>
+                           <td align="center" valign="top">
+                             <div id="template_header_image"><p style="margin-top: 0;"></p></div>
+                             <table id="template_container" style="box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important; background-color: #fdfdfd; border: 1px solid #dcdcdc; border-radius: 3px !important;" border="0" cellpadding="0" cellspacing="0" width="600">
+                              <tbody>
+                                <tr>
+                                 <td align="center" valign="top">
+                                   <!-- Header -->
+                                   <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
+                                     <tbody>
+                                       <tr>
+                                       <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/email-template-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+                                        <td id="header_wrapper" style="padding: 36px 48px; display: block;">
+                                           <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Complaint Assigned Mail</h1>
+                                        </td>
+                  
+                                       </tr>
+                                     </tbody>
+                                   </table>
+                             <!-- End Header -->
+                             </td>
+                                </tr>
+                                <tr>
+                                 <td align="center" valign="top">
+                                   <!-- Body -->
+                                   <table id="template_body" border="0" cellpadding="0" cellspacing="0" width="600">
+                                     <tbody>
+                                       <tr>
+                                        <td id="body_content" style="background-color: #fdfdfd;" valign="top">
+                                          <!-- Content -->
+                                          <table border="0" cellpadding="20" cellspacing="0" width="100%">
+                                           <tbody>
+                                            <tr>
+                                             <td style="padding: 48px;" valign="top">
+                                               <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
+                                                
+                                                <table border="0" cellpadding="4" cellspacing="0" width="90%">
+                                                  <tr>
+                                                    <td colspan="2">
+                                                    <strong>Hello ${first_name}  ${last_name},</strong>
+                                                    <p style="font-size:15px; line-height:20px">You have added as a ${category} for ${comp} company for manage the complaint management.<i><b> </b></i> Please visit <a href="${process.env.MAIN_URL}" style="color: #007BFF; text-decoration: none;">our site</a> for more information.</p>
+                                                    </td>
+                                                  </tr>
+                                                </table>
+                                                
+                                               </div>
+                                             </td>
+                                            </tr>
+                                           </tbody>
+                                          </table>
+                                        <!-- End Content -->
+                                        </td>
+                                       </tr>
+                                     </tbody>
+                                   </table>
+                                 <!-- End Body -->
+                                 </td>
+                                </tr>
+                                <tr>
+                                 <td align="center" valign="top">
+                                   <!-- Footer -->
+                                   <table id="template_footer" border="0" cellpadding="10" cellspacing="0" width="600">
+                                    <tbody>
+                                     <tr>
+                                      <td style="padding: 0; -webkit-border-radius: 6px;" valign="top">
+                                       <table border="0" cellpadding="10" cellspacing="0" width="100%">
+                                         <tbody>
+                                           <tr>
+                                            <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
+                                                 <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">BoloGrahak</a></p>
+                                            </td>
+                                           </tr>
+                                         </tbody>
+                                       </table>
+                                      </td>
+                                     </tr>
+                                    </tbody>
+                                   </table>
+                                 <!-- End Footer -->
+                                 </td>
+                                </tr>
+                              </tbody>
+                             </table>
+                           </td>
+                          </tr>
+                         </tbody>
+                        </table>
+                       </div>`
+                        }
+                        await mdlconfig.transporter.sendMail(mailOptions, function (err, info) {
+                            if (err) {
+                                console.log(err);
+                                return res.send({
+                                    status: 'not ok',
+                                    message: 'Something went wrong'
+                                });
+                            } else {
+                                console.log('Mail Send: ', info.response);
+                                return res.send({
+                                    status: 'ok',
+                                    message: 'Flag Approve'
+                                });
+                            }
+                        })
+
+
+                    }
+                })
+                return res.status(200).json({ success_message: 'Complaint level users added successfully.' });
+            }
+        }
+    } catch (error) {
+        console.error("error", error);
+        return res.status(500).json({ error_message: '<center><h1 style="color: darkred;">Please try again later</h1></center>' });
+        // return res.status(500).json({
+        //     status: 'error',
+        //     message: 'An error occurred while processing your request.'
+        // });
+
+    }
+}
+// Backend endpoint to verify user existence
+exports.verifyUser = async (req, res) => {
+    try {
+        const { email } = req.body;
+        console.log("req.body.emailverify", req.body);
+        let firstName = '';
+        let lastName = '';
+        const existingUserQuery = `SELECT first_name,last_name FROM users WHERE email = ?`;
+        const existingUser = await query(existingUserQuery, [email]);
+        console.log("existingUser", existingUser);
+        if (existingUser.length > 0) {
+            firstName = existingUser[0].first_name;
+            lastName = existingUser[0].last_name;
+            res.json({ userExists: true, firstName: firstName, lastName: lastName });
+        } else {
+            res.json({ userExists: false });
+        }
+    } catch (error) {
+        console.error('Error verifying user:', error);
+        res.status(500).json({ error: 'An error occurred while verifying the user.' });
+    }
+};
+exports.createnewLevelusers = async (req, res) => {
+    try {
+        //console.log('createCompanyLevel', req.body);
+        //const { company_id, email, first_name, last_name, complaint_status, password, category } = req.body;
+        const { company_id, email, first_name, last_name, complaint_status, password, category } = req.body;
+
+
+        console.log("createnewLevelusers", req.body);
+        let emailsArr = [];
+        let emails;
+        const currentDate = new Date();
+        const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ');
+        let completedCount = 0;
+
+        const companyNamequery = `SELECT company_name FROM company WHERE ID ="${company_id}"`;
+        const companynamevalue = await query(companyNamequery);
+        var comp = companynamevalue[0].company_name;
+        console.log("comp", comp);
+        if (companynamevalue.length > 0) {
+            var companyName = companynamevalue[0];
+            console.log(("companyName", companyName));
+        }
+
+        if (complaint_status == '1') {
+
+            let hasPassword = await bcrypt.hash(password, 8);
+
+            const userexistquery = `SELECT * FROM company_level_manage_users WHERE company_id ="${company_id}" AND level_user_type="${req.body.category}"`;
+            const userexistvalue = await query(userexistquery);
+            if (userexistquery.length > 0) {
+                console.log("deleteeee");
+                const deletequery = `DELETE FROM company_level_manage_users WHERE company_id="${company_id}" AND level_user_type= "${category}"`;
+                const deletevalue = await query(deletequery);
+            }
+
+            const existing_user_query = `SELECT * FROM users WHERE email = "${email}"`
+            const user_result = await query(existing_user_query);
+            //console.log("user_result", user_result[0].user_id);
+
+            if (user_result.length > 0) {
+                var First_name = user_result[0].first_name;
+                var Last_name = user_result[0].last_name;
+                var fullName = First_name + ' ' + Last_name;
+                //console.log("fullNamefff",fullName);
+                var level_users_id = user_result[0].user_id
+
+                const complaint_level_query = `SELECT * FROM company_level_manage_users WHERE emails = "${email}" AND company_id= "${company_id}"`;
+                const complaintlevelData = await query(complaint_level_query);
+
+                if (complaintlevelData.length > 0) {
+                    return res.status(500).json({ error_message: 'User already added for complainyt level manangement users.' });
+                }
+                if (req.body.category == 'manager' || req.body.category == 'help_desk') {
+                    console.log("Manager");
+                    const insertQuery = `INSERT INTO company_level_manage_users SET ?`;
+                    const insertData = {
+                        company_id: company_id,
+                        emails: email,
+                        user_id: level_users_id,
+                        level_user_type: category,
+                        created_at: formattedDate
+                    }
+                    const insertResult = await query(insertQuery, [insertData]);
+
+                    let updateColumn = '';
+                    if (req.body.category == 'manager') {
+                        updateColumn = 'manger_email';
+                    } else if (req.body.category == 'help_desk') {
+                        updateColumn = 'help_desk_email';
+                    }
+
+                    if (updateColumn) {
+                        const updateCompanyQuery = `UPDATE company SET ?? = ? WHERE ID = ?`;
+                        await query(updateCompanyQuery, [updateColumn, email, company_id]);
+                    }
+                    var mailOptions = {
+                        from: process.env.MAIL_USER,
+                        //to: 'dev2.scwt@gmail.com',
+                        to: email,
+                        subject: 'Added as a Level Management User',
+                        html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+                        <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
+                         <tbody>
+                          <tr>
+                           <td align="center" valign="top">
+                             <div id="template_header_image"><p style="margin-top: 0;"></p></div>
+                             <table id="template_container" style="box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important; background-color: #fdfdfd; border: 1px solid #dcdcdc; border-radius: 3px !important;" border="0" cellpadding="0" cellspacing="0" width="600">
+                              <tbody>
+                                <tr>
+                                 <td align="center" valign="top">
+                                   <!-- Header -->
+                                   <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
+                                     <tbody>
+                                       <tr>
+                                       <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/email-template-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+                                        <td id="header_wrapper" style="padding: 36px 48px; display: block;">
+                                           <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Complaint Assigned Mail</h1>
+                                        </td>
+                  
+                                       </tr>
+                                     </tbody>
+                                   </table>
+                             <!-- End Header -->
+                             </td>
+                                </tr>
+                                <tr>
+                                 <td align="center" valign="top">
+                                   <!-- Body -->
+                                   <table id="template_body" border="0" cellpadding="0" cellspacing="0" width="600">
+                                     <tbody>
+                                       <tr>
+                                        <td id="body_content" style="background-color: #fdfdfd;" valign="top">
+                                          <!-- Content -->
+                                          <table border="0" cellpadding="20" cellspacing="0" width="100%">
+                                           <tbody>
+                                            <tr>
+                                             <td style="padding: 48px;" valign="top">
+                                               <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
+                                                
+                                                <table border="0" cellpadding="4" cellspacing="0" width="90%">
+                                                  <tr>
+                                                    <td colspan="2">
+                                                    <strong>Hello ${fullName},</strong>
+                                                    <p style="font-size:15px; line-height:20px">You have added as a ${category} for ${comp} company for manage the complaint management.<i><b> </b></i> Please visit <a href="${process.env.MAIN_URL}" style="color: #007BFF; text-decoration: none;">our site</a> for more information.</p>
+                                                    </td>
+                                                  </tr>
+                                                </table>
+                                                
+                                               </div>
+                                             </td>
+                                            </tr>
+                                           </tbody>
+                                          </table>
+                                        <!-- End Content -->
+                                        </td>
+                                       </tr>
+                                     </tbody>
+                                   </table>
+                                 <!-- End Body -->
+                                 </td>
+                                </tr>
+                                <tr>
+                                 <td align="center" valign="top">
+                                   <!-- Footer -->
+                                   <table id="template_footer" border="0" cellpadding="10" cellspacing="0" width="600">
+                                    <tbody>
+                                     <tr>
+                                      <td style="padding: 0; -webkit-border-radius: 6px;" valign="top">
+                                       <table border="0" cellpadding="10" cellspacing="0" width="100%">
+                                         <tbody>
+                                           <tr>
+                                            <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
+                                                 <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">BoloGrahak</a></p>
+                                            </td>
+                                           </tr>
+                                         </tbody>
+                                       </table>
+                                      </td>
+                                     </tr>
+                                    </tbody>
+                                   </table>
+                                 <!-- End Footer -->
+                                 </td>
+                                </tr>
+                              </tbody>
+                             </table>
+                           </td>
+                          </tr>
+                         </tbody>
+                        </table>
+                       </div>`
+                    }
+                    console.log("emailss", email);
+                    await mdlconfig.transporter.sendMail(mailOptions, function (err, info) {
+                        if (err) {
+                            console.log(err);
+                            return res.send({
+                                status: 'not ok',
+                                message: 'Something went wrong'
+                            });
+                        } else {
+                            console.log('Mail Send: ', info.response);
+                            return res.send({
+                                status: 'ok',
+                                message: 'Flag Approve'
+                            });
+                        }
+                    })
+
+                }
+                return res.status(200).json({ success_message: `Previuous ${category} user deleted and new ${category} user added successfully.` });
+            }
+            else {
+                const complaintlevelquery = `SELECT * FROM company_level_manage_users WHERE emails = "${email}" AND company_id ="${company_id}"`;
+                const complaintleveldata = await query(complaintlevelquery);
+
+                if (complaintleveldata.length > 0) {
+                    return res.status(500).json({ error_message: 'Already user added for complainyt level manangement users.' });
+                }
+                const currentDate = new Date();
+
+                const year = currentDate.getFullYear();
+                const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+                const day = String(currentDate.getDate()).padStart(2, '0');
+                const hours = String(currentDate.getHours()).padStart(2, '0');
+                const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+                const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+
+                const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+                const userInsertQuery = 'INSERT INTO users (first_name, last_name, email, password, register_from, user_registered, user_status, user_type_id, alise_name) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+                db.query(userInsertQuery, [first_name, last_name, email, hasPassword, 'web', formattedDate, 1, 2, first_name + last_name], async (err, userResults) => {
+                    if (err) {
+                        console.error('Error inserting user into "users" table:', err);
+                        return res.send(
+                            {
+                                status: 'err',
+                                data: '',
+                                message: 'An error occurred while processing your request' + err
+                            }
+                        )
+                    }
+
+                    var insertedId = userResults.insertId;
+
+                    var mailOptions = {
+                        from: process.env.MAIL_USER,
+                        //to: 'pranab@scwebtech.com',
+                        to: email,
+                        subject: 'Welcome Email',
+                        html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+                        <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
+                         <tbody>
+                          <tr>
+                           <td align="center" valign="top">
+                             <div id="template_header_image"><p style="margin-top: 0;"></p></div>
+                             <table id="template_container" style="box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important; background-color: #fdfdfd; border: 1px solid #dcdcdc; border-radius: 3px !important;" border="0" cellpadding="0" cellspacing="0" width="600">
+                              <tbody>
+                                <tr>
+                                 <td align="center" valign="top">
+                                   <!-- Header -->
+                                   <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
+                                     <tbody>
+                                       <tr>
+                                       <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/email-template-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+                                        <td id="header_wrapper" style="padding: 36px 48px; display: block;">
+                                           <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Welcome Email</h1>
+                                        </td>
+                  
+                                       </tr>
+                                     </tbody>
+                                   </table>
+                             <!-- End Header -->
+                             </td>
+                                </tr>
+                                <tr>
+                                 <td align="center" valign="top">
+                                   <!-- Body -->
+                                   <table id="template_body" border="0" cellpadding="0" cellspacing="0" width="600">
+                                     <tbody>
+                                       <tr>
+                                        <td id="body_content" style="background-color: #fdfdfd;" valign="top">
+                                          <!-- Content -->
+                                          <table border="0" cellpadding="20" cellspacing="0" width="100%">
+                                           <tbody>
+                                            <tr>
+                                             <td style="padding: 48px;" valign="top">
+                                               <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
+                                                
+                                                <table border="0" cellpadding="4" cellspacing="0" width="90%">
+                                                  <tr>
+                                                    <td colspan="2">
+                                                        <strong>Hello ${first_name},</strong>
+                                                        <p style="font-size:15px; line-height:20px">Warm greetings from the Bolo Grahak team!
+                                                        You have joined a community dedicated to empowering all Grahaks (Customers) and ensuring their voices are heard <b>LOUD</b> and <b>C L E A R</b>.</p>
+                                                        <p style="font-size:15px; line-height:20px"> Keep sharing your Customer experiences (positive or negative), read about others' experience and get to know Customer centric information.</p>
+                                                        <p style="font-size:15px; line-height:20px">Share this platform with all your friends and family.
+                                                        Together, we can make Organisations listen and improve because <b>#CustomersHavePower</b>.</p><p style="font-size:15px; line-height:20px">Let's usher in this Customer Revolution coz <b>#CustomerRightsMatter</b>.</p><p style="font-size:15px; line-height:20px">Welcome Onboard!</p><br><p style="font-size:15px; line-height:20px">Kind Regards,</p><p style="font-size:15px; line-height:20px">Bolo Grahak Team</p><br>
+                                                    </td>
+                                                  </tr>
+                                                </table>
+                                                <p style="font-size:15px; line-height:20px">Download the app from Google Playstore or visit  <a style="color:#FCCB06" href="${process.env.MAIN_URL}">BoloGrahak.com </a>.</p>
+                                               </div>
+                                             </td>
+                                            </tr>
+                                           </tbody>
+                                          </table>
+                                        <!-- End Content -->
+                                        </td>
+                                       </tr>
+                                     </tbody>
+                                   </table>
+                                 <!-- End Body -->
+                                 </td>
+                                </tr>
+                                <tr>
+                                 <td align="center" valign="top">
+                                   <!-- Footer -->
+                                   <table id="template_footer" border="0" cellpadding="10" cellspacing="0" width="600">
+                                    <tbody>
+                                     <tr>
+                                      <td style="padding: 0; -webkit-border-radius: 6px;" valign="top">
+                                       <table border="0" cellpadding="10" cellspacing="0" width="100%">
+                                         <tbody>
+                                           <tr>
+                                            <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
+                                                 <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">BoloGrahak</a></p>
+                                            </td>
+                                           </tr>
+                                         </tbody>
+                                       </table>
+                                      </td>
+                                     </tr>
+                                    </tbody>
+                                   </table>
+                                 <!-- End Footer -->
+                                 </td>
+                                </tr>
+                              </tbody>
+                             </table>
+                           </td>
+                          </tr>
+                         </tbody>
+                        </table>
+                       </div>`
+
+                    }
+                    await mdlconfig.transporter.sendMail(mailOptions, function (err, info) {
+                        if (err) {
+                            console.log(err);
+                            // return res.send({
+                            //     status: 'not ok',
+                            //     message: 'Something went wrong'
+                            // });
+                        } else {
+                            console.log('Mail Send: ', info.response);
+                            // return res.send({
+                            //     status: 'ok',
+                            //     message: ''
+                            // });
+
+                        }
+                    })
+                    // Insert the user into the "user_customer_meta" table
+                    const userMetaInsertQuery = 'INSERT INTO user_customer_meta (user_id, review_count) VALUES (?, ?)';
+                    db.query(userMetaInsertQuery, [userResults.insertId, 0], (err, metaResults) => {
+                        if (err) {
+                        }
+
+                        const userRegistrationData = {
+                            username: email,
+                            email: email,
+                            password: password,
+                            first_name: first_name,
+                            last_name: last_name,
+                        };
+                        axios.post(process.env.BLOG_API_ENDPOINT + '/register', userRegistrationData)
+                            .then((response) => {
+                                //console.log('User registration successful. User ID:', response.data.user_id);
+
+                                //-------User Auto Login --------------//
+                                const userAgent = req.headers['user-agent'];
+                                const agent = useragent.parse(userAgent);
+
+                                // Set a cookie
+                                const userData = {
+                                    user_id: userResults.insertId,
+                                    first_name: first_name,
+                                    last_name: last_name,
+                                    email: email,
+                                    user_type_id: 2
+                                };
+                                const encodedUserData = JSON.stringify(userData);
+                                res.cookie('user', encodedUserData);
+
+                                (async () => {
+                                    //---- Login to Wordpress Blog-----//
+                                    //let wp_user_data;
+                                    try {
+                                        const userLoginData = {
+                                            email: email,
+                                            password: password,
+                                        };
+                                        const response = await axios.post(process.env.BLOG_API_ENDPOINT + '/login', userLoginData);
+                                        const wp_user_data = response.data.data;
+
+
+
+                                        //-- check last Login Info-----//
+                                        const device_query = "SELECT * FROM user_device_info WHERE user_id = ?";
+                                        db.query(device_query, [userResults.insertId], async (err, device_query_results) => {
+                                            const currentDate = new Date();
+                                            const year = currentDate.getFullYear();
+                                            const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+                                            const day = String(currentDate.getDate()).padStart(2, '0');
+                                            const hours = String(currentDate.getHours()).padStart(2, '0');
+                                            const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+                                            const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+                                            const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+                                            if (device_query_results.length > 0) {
+                                                // User exist update info
+                                                const device_update_query = 'UPDATE user_device_info SET device_id = ?, IP_address = ?, last_logged_in = ? WHERE user_id = ?';
+                                                const values = [agent.toAgent() + ' ' + agent.os.toString(), requestIp.getClientIp(req), formattedDate, userResults.insertId];
+                                                db.query(device_update_query, values, (err, device_update_query_results) => {
+
+                                                })
+                                            } else {
+                                                // User doesnot exist Insert New Row.
+
+                                                const device_insert_query = 'INSERT INTO user_device_info (user_id, device_id, device_token, imei_no, model_name, make_name, IP_address, last_logged_in, created_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+                                                const values = [userResults.insertId, agent.toAgent() + ' ' + agent.os.toString(), '', '', '', '', requestIp.getClientIp(req), formattedDate, formattedDate];
+
+                                            }
+                                        })
+                                    } catch (error) {
+                                        console.error('User login failed. Error:', error);
+                                        if (error.response && error.response.data) {
+                                            console.log('Error response data:', error.response.data);
+                                        }
+                                    }
+                                })();
+                            })
+                            .catch((error) => {
+                                console.error('User registration failed:',);
+                            });
+                    })
+
+                    const complaint_level_query = `SELECT * FROM company_level_manage_users WHERE emails = "${email}"`;
+                    const complaintlevelData = await query(complaint_level_query);
+
+                    if (complaintlevelData.length > 0) {
+                        return res.status(500).json({ error_message: 'User already added for complainyt level manangement users.' });
+                    }
+                    if (req.body.category == 'manager' || req.body.category == 'help_desk') {
+                        console.log("Manager");
+                        const insertQuery = `INSERT INTO company_level_manage_users SET ?`;
+                        const insertData = {
+                            company_id: company_id,
+                            emails: email,
+                            user_id: insertedId,
+                            level_user_type: category,
+                            created_at: formattedDate
+                        }
+                        const insertResult = await query(insertQuery, [insertData]);
+
+                        let updateColumn = '';
+                        if (req.body.category == 'manager') {
+                            updateColumn = 'manger_email';
+                        } else if (req.body.category == 'help_desk') {
+                            updateColumn = 'help_desk_email';
+                        }
+
+                        if (updateColumn) {
+                            const updateCompanyQuery = `UPDATE company SET ?? = ? WHERE ID = ?`;
+                            await query(updateCompanyQuery, [updateColumn, email, company_id]);
+                        }
+
+                        var mailOptions = {
+                            from: process.env.MAIL_USER,
+                            //to: 'dev2.scwt@gmail.com',
+                            to: email,
+                            subject: 'Added as a Level Management User',
+                            html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+                            <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
+                             <tbody>
+                              <tr>
+                               <td align="center" valign="top">
+                                 <div id="template_header_image"><p style="margin-top: 0;"></p></div>
+                                 <table id="template_container" style="box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important; background-color: #fdfdfd; border: 1px solid #dcdcdc; border-radius: 3px !important;" border="0" cellpadding="0" cellspacing="0" width="600">
+                                  <tbody>
+                                    <tr>
+                                     <td align="center" valign="top">
+                                       <!-- Header -->
+                                       <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
+                                         <tbody>
+                                           <tr>
+                                           <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/email-template-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+                                            <td id="header_wrapper" style="padding: 36px 48px; display: block;">
+                                               <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Complaint Assigned Mail</h1>
+                                            </td>
+                      
+                                           </tr>
+                                         </tbody>
+                                       </table>
+                                 <!-- End Header -->
+                                 </td>
+                                    </tr>
+                                    <tr>
+                                     <td align="center" valign="top">
+                                       <!-- Body -->
+                                       <table id="template_body" border="0" cellpadding="0" cellspacing="0" width="600">
+                                         <tbody>
+                                           <tr>
+                                            <td id="body_content" style="background-color: #fdfdfd;" valign="top">
+                                              <!-- Content -->
+                                              <table border="0" cellpadding="20" cellspacing="0" width="100%">
+                                               <tbody>
+                                                <tr>
+                                                 <td style="padding: 48px;" valign="top">
+                                                   <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
+                                                    
+                                                    <table border="0" cellpadding="4" cellspacing="0" width="90%">
+                                                      <tr>
+                                                        <td colspan="2">
+                                                        <strong>Hello ${first_name}  ${last_name},</strong>
+                                                        <p style="font-size:15px; line-height:20px">You have added as a ${category} for ${comp} company for manage the complaint management.<i><b> </b></i> Please visit <a href="${process.env.MAIN_URL}" style="color: #007BFF; text-decoration: none;">our site</a> for more information.</p>
+                                                        </td>
+                                                      </tr>
+                                                    </table>
+                                                    
+                                                   </div>
+                                                 </td>
+                                                </tr>
+                                               </tbody>
+                                              </table>
+                                            <!-- End Content -->
+                                            </td>
+                                           </tr>
+                                         </tbody>
+                                       </table>
+                                     <!-- End Body -->
+                                     </td>
+                                    </tr>
+                                    <tr>
+                                     <td align="center" valign="top">
+                                       <!-- Footer -->
+                                       <table id="template_footer" border="0" cellpadding="10" cellspacing="0" width="600">
+                                        <tbody>
+                                         <tr>
+                                          <td style="padding: 0; -webkit-border-radius: 6px;" valign="top">
+                                           <table border="0" cellpadding="10" cellspacing="0" width="100%">
+                                             <tbody>
+                                               <tr>
+                                                <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
+                                                     <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">BoloGrahak</a></p>
+                                                </td>
+                                               </tr>
+                                             </tbody>
+                                           </table>
+                                          </td>
+                                         </tr>
+                                        </tbody>
+                                       </table>
+                                     <!-- End Footer -->
+                                     </td>
+                                    </tr>
+                                  </tbody>
+                                 </table>
+                               </td>
+                              </tr>
+                             </tbody>
+                            </table>
+                           </div>`
+                        }
+                        await mdlconfig.transporter.sendMail(mailOptions, function (err, info) {
+                            if (err) {
+                                console.log(err);
+                                return res.send({
+                                    status: 'not ok',
+                                    message: 'Something went wrong'
+                                });
+                            } else {
+                                console.log('Mail Send: ', info.response);
+                                return res.send({
+                                    status: 'ok',
+                                    message: 'Flag Approve'
+                                });
+                            }
+                        })
+                    }
+                })
+                return res.status(200).json({ success_message: 'Complaint level users added successfully.' });
+            }
+        }
+    } catch (error) {
+        console.error("error", error);
+        return res.status(500).json({ error_message: '<center><h1 style="color: darkred;">Please try again later</h1></center>' });
+    }
+}
+exports.editnewUsers = async (req, res) => {
+    try {
+        const { email, first_name, last_name, category, company_id } = req.body;
+
+        console.log("Received data:", req.body); // Log the full request body
+
+        // Check for required fields
+        if (!email || !first_name || !last_name) {
+            return res.status(400).json({ error_message: "Required fields are missing." });
+        }
+
+        // Find the user by email
+        const userQuery = "SELECT * FROM users WHERE email = ?";
+        const user = await query(userQuery, [email]);
+
+        if (user.length === 0) {
+            return res.status(404).json({ error_message: "User not found." });
+        }
+
+        // Update user details
+        const updateQuery = "UPDATE users SET first_name = ?, last_name = ? WHERE email = ?";
+        const updateValues = await query(updateQuery, [first_name, last_name, email]);
+
+        // Update complaint level management
+        const updateCategoryQuery = "UPDATE complaint_level_management SET category_id = ? WHERE emails = ? AND company_id = ?";
+        const updateCategoryValues = await query(updateCategoryQuery, [category, email, company_id]);
+
+        console.log("User updated successfully:", updateValues);
+        console.log("Complaint level updated:", updateCategoryValues);
+
+        return res.status(200).json({ success_message: "User updated successfully." });
+
+    } catch (error) {
+        console.error("Error while updating user:", error);
+        res.status(500).json({ error_message: "An error occurred while processing your request." });
+    }
+};
+//updateEtaDays
+exports.updateEtaDays = async (req, res) => {
+    try {
+        const { emails, etaDays, companyIds, levels } = req.body;
+        console.log("req.body", req.body);
+        if (req.body.etaDays == null) {
+            res.status(500).json({ error_message: 'ETA days required' });
+        }
+        const updateQuery = `
+            UPDATE complaint_level_management
+            SET eta_days = ?
+            WHERE emails = ? AND company_id = ? AND level = ?        
+        `;
+
+        for (let i = 0; i < emails.length; i++) {
+            const email = emails[i];
+            const etaDay = etaDays[i];
+            const companyId = companyIds[i];
+            const levelId = levels[i];
+
+            try {
+                const results = await query(updateQuery, [etaDay, email, companyId, levelId]);
+
+                if (results.affectedRows > 0) {
+                    console.log(`ETA days updated successfully for email ${email}`);
+                } else {
+                    console.error(`No rows affected for email ${email}`);
+                }
+            } catch (error) {
+                res.status(500).json({ error_message: 'Please try again later' });
+                console.error(`Error updating ETA days for email ${email}:`, error);
+            }
+        }
+
+        res.status(200).json({ success_message: 'ETA days updated successfully' });
+
+    } catch (error) {
+        console.error("An error occurred:", error);
+        res.status(500).json({ error_message: 'Please try again later' });
+    }
+
+
+}
+exports.assignUsers = async (req, res) => {
+    try {
+        const { emails, company_id, category_id, complaint_id, level, added_by } = req.body;
+        //console.log("req.body.assignusersss", req.body);
+
+        // const getcomplaintstatus = `SELECT status FROM complaint WHERE id="${complaint_id}"`;
+        // const getcomplaintvalue = await query(getcomplaintstatus);
+        // var getcomplaint = getcomplaintvalue[0].status
+        // console.log("getcomplaint",getcomplaint);
+
+
+        const currentDate = new Date();
+        const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ');
+
+        const userquery = `SELECT * FROM complaint_assigned_users WHERE complaint_id= ? AND level = ?`;
+        const uservalue = await query(userquery, [complaint_id, level]);
+        //console.log("uservalue", uservalue);
+        if (uservalue.length > 0) {
+            return res.status(400).json({ error_message: 'Another user already assigend for this complaint.' });
+        }
+
+        const userexistquery = `SELECT * FROM complaint_assigned_users WHERE user_email = ? AND company_id= ? AND complaint_id= ?`;
+        const userValue = await query(userexistquery, [emails, company_id, complaint_id]);
+        //console.log("userValue",userValue);
+        if (userValue.length > 0) {
+            return res.status(400).json({ error_message: 'User already assigend for this complaint.' });
+        }
+        const selectquery = `SELECT user_id FROM users WHERE email = "${emails}"`;
+        const selectvalue = await query(selectquery);
+        const val = selectvalue[0].user_id;
+        // console.log("val",val);
+        // console.log("selectvalue",selectvalue[0])
+
+        const update_query = `INSERT INTO complaint_assigned_users (complaint_id, user_email, company_id,level,created_at,added_by,assigned_user_id) VALUES (?, ?, ?, ?, ?, ?,?)`;
+        const update_value = await query(update_query, [complaint_id, emails, company_id, level, formattedDate, added_by, val]);
+        //console.log("update_value", update_value);
+
+        const complaint_update_query = `UPDATE complaint SET assigned_status = ? WHERE id =?`;
+        const complaint_update_value = await query(complaint_update_query, ['1', complaint_id]);
+
+
+
+        const added_user_query = `SELECT first_name, last_name FROM users WHERE user_id = ?`;
+        const added_user_value = await query(added_user_query, [added_by]);
+        if (added_user_value.length > 0) {
+            const firstName = added_user_value[0].first_name;
+            const lastName = added_user_value[0].last_name;
+            var addedbyfullName = `${firstName} ${lastName}`;
+            //console.log("addedbyfullName:", addedbyfullName);
+        }
+
+
+        const user_query = `SELECT first_name, last_name FROM users WHERE email = ?`;
+        const user_value = await query(user_query, [emails]);
+
+        //console.log("user_value", user_value);
+
+        const company_query = `SELECT slug FROM company WHERE ID = ?`;
+        const company_value = await query(company_query, [company_id]);
+        //console.log("company_value", company_value[0].slug);
+        var slug = company_value[0].slug;
+
+        if (user_value.length > 0) {
+            const firstName = user_value[0].first_name;
+            const lastName = user_value[0].last_name;
+            var fullName = `${firstName} ${lastName}`;
+            //console.log("Full Name:", fullName);
+        }
+
+        var additionalPath = `company-complaint-listing/${slug}`;
+        //console.log("additionalPath",additionalPath)
+        var mailOptions = {
+            from: process.env.MAIL_USER,
+            //to: 'dev2.scwt@gmail.com',
+            to: emails,
+            subject: 'Complaint Assigned Mail',
+            html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+            <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
+             <tbody>
+              <tr>
+               <td align="center" valign="top">
+                 <div id="template_header_image"><p style="margin-top: 0;"></p></div>
+                 <table id="template_container" style="box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important; background-color: #fdfdfd; border: 1px solid #dcdcdc; border-radius: 3px !important;" border="0" cellpadding="0" cellspacing="0" width="600">
+                  <tbody>
+                    <tr>
+                     <td align="center" valign="top">
+                       <!-- Header -->
+                       <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
+                         <tbody>
+                           <tr>
+                           <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/email-template-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+                            <td id="header_wrapper" style="padding: 36px 48px; display: block;">
+                               <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Complaint Assigned Mail</h1>
+                            </td>
+      
+                           </tr>
+                         </tbody>
+                       </table>
+                 <!-- End Header -->
+                 </td>
+                    </tr>
+                    <tr>
+                     <td align="center" valign="top">
+                       <!-- Body -->
+                       <table id="template_body" border="0" cellpadding="0" cellspacing="0" width="600">
+                         <tbody>
+                           <tr>
+                            <td id="body_content" style="background-color: #fdfdfd;" valign="top">
+                              <!-- Content -->
+                              <table border="0" cellpadding="20" cellspacing="0" width="100%">
+                               <tbody>
+                                <tr>
+                                 <td style="padding: 48px;" valign="top">
+                                   <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
+                                    
+                                    <table border="0" cellpadding="4" cellspacing="0" width="90%">
+                                      <tr>
+                                        <td colspan="2">
+                                        <strong>Hello ${fullName},</strong>
+                                        <p style="font-size:15px; line-height:20px">You have assigned for this complaint<i><b> </b></i> Please visit<a  href="${process.env.MAIN_URL}${additionalPath}">the complaint</a> .</p>
+                                        </td>
+                                      </tr>
+                                    </table>
+                                    
+                                   </div>
+                                 </td>
+                                </tr>
+                               </tbody>
+                              </table>
+                            <!-- End Content -->
+                            </td>
+                           </tr>
+                         </tbody>
+                       </table>
+                     <!-- End Body -->
+                     </td>
+                    </tr>
+                    <tr>
+                     <td align="center" valign="top">
+                       <!-- Footer -->
+                       <table id="template_footer" border="0" cellpadding="10" cellspacing="0" width="600">
+                        <tbody>
+                         <tr>
+                          <td style="padding: 0; -webkit-border-radius: 6px;" valign="top">
+                           <table border="0" cellpadding="10" cellspacing="0" width="100%">
+                             <tbody>
+                               <tr>
+                                <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
+                                     <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">BoloGrahak</a></p>
+                                </td>
+                               </tr>
+                             </tbody>
+                           </table>
+                          </td>
+                         </tr>
+                        </tbody>
+                       </table>
+                     <!-- End Footer -->
+                     </td>
+                    </tr>
+                  </tbody>
+                 </table>
+               </td>
+              </tr>
+             </tbody>
+            </table>
+           </div>`
+        }
+        await mdlconfig.transporter.sendMail(mailOptions, function (err, info) {
+            if (err) {
+                console.log(err);
+                return res.send({
+                    status: 'not ok',
+                    message: 'Something went wrong'
+                });
+            } else {
+                console.log('Mail Send: ', info.response);
+                return res.send({
+                    status: 'ok',
+                    message: 'Flag Approve'
+                });
+            }
+        })
+
+        var history_details = `The complaint ${complaint_id} has assigned to ${fullName} by ${addedbyfullName} on ${formattedDate} for level ${level}.`
+
+        const history_data = {
+            complaint_id: complaint_id,
+            history_details: history_details,
+            created_at: formattedDate
+        }
+
+        const historyQuery = `INSERT INTO complaint_history SET ?  `;
+        const complaint_value = await query(historyQuery, [history_data]);
+        return res.status(200).json({ success_message: 'User assigned succesfully.' });
+
+    } catch (error) {
+        console.error("error", error);
+        res.send({
+            status: 'error',
+            message: 'An error occurred while processing your request.'
+        });
+    }
+}
+exports.escalateassignUsers = async (req, res) => {
+    try {
+        const { emails, company_id, category_id, complaint_id, level, added_by } = req.body;
+        console.log("req.body.assignusers", req.body);
+        const currentDate = new Date();
+        const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ');
+
+        const userquery = `SELECT * FROM complaint_assigned_users WHERE complaint_id= ? AND level = ?`;
+        const uservalue = await query(userquery, [complaint_id, level]);
+        console.log("escalateassignUsersuservalue", uservalue);
+        if (uservalue.length > 0) {
+            return res.status(400).json({ error_message: 'Another user already assigend for this complaint.' });
+        }
+
+        // if (userValue.length > 0) {
+        //     return res.status(400).json({ error_message: 'User already assigend for this complaint.' });
+        // }
+
+        const userexistquery = `SELECT * FROM complaint_assigned_users WHERE user_email = ? AND company_id= ? AND complaint_id= ?`;
+        const userValue = await query(userexistquery, [emails, company_id, complaint_id]);
+        //console.log("userValue", userValue);
+        if (userValue.length > 0) {
+            return res.status(400).json({ error_message: 'User already assigend for this complaint.' });
+        }
+        const selectquery = `SELECT user_id FROM users WHERE email = "${emails}"`;
+        const selectvalue = await query(selectquery);
+        const val = selectvalue[0].user_id;
+        // console.log("val",val);
+        // console.log("selectvalue",selectvalue[0])
+
+        const update_query = `INSERT INTO complaint_assigned_users (complaint_id, user_email, company_id,level, created_at,assigned_user_id,added_by) VALUES (?, ?, ?, ?, ?, ?,?)`;
+        const update_value = await query(update_query, [complaint_id, emails, company_id, level, formattedDate, val, added_by]);
+        console.log("update_value", update_value);
+        const levels_id = level;
+        console.log("levels_id", levels_id);
+        const complaint_update_query = `UPDATE complaint SET assigned_status = ?, level_id= ?,level_update_at=? WHERE id =?`;
+        const complaint_update_value = await query(complaint_update_query, ['1', levels_id, formattedDate, complaint_id]);
+
+        const user_query = `SELECT first_name, last_name FROM users WHERE email = ?`;
+        const user_value = await query(user_query, [emails]);
+
+        //console.log("user_value", user_value);
+
+        const company_query = `SELECT slug FROM company WHERE ID = ?`;
+        const company_value = await query(company_query, [company_id]);
+        console.log("company_value", company_value[0]);
+        console.log("company_value", company_value[0].slug);
+        var slug = company_value[0].slug;
+
+        if (user_value.length > 0) {
+            const firstName = user_value[0].first_name;
+            const lastName = user_value[0].last_name;
+            var fullName = `${firstName} ${lastName}`;
+            //console.log("Full Name:", fullName);
+        }
+
+
+
+        // const added_user_query = `SELECT first_name, last_name FROM users WHERE user_id = ?`;
+        // const added_user_value = await query(added_user_query, [added_by]);
+        // if (added_user_value.length > 0) {
+        //     const firstName = added_user_value[0].first_name;
+        //     const lastName = added_user_value[0].last_name;
+        //     var addedbyfullName = `${firstName} ${lastName}`;
+        //     console.log("addedbyfullName:", addedbyfullName);
+        // }
+
+        var additionalPath = `company-complaint-listing/${slug}`;
+        //console.log("additionalPath",additionalPath)
+        var mailOptions = {
+            from: process.env.MAIL_USER,
+            //to: 'dev2.scwt@gmail.com',
+            to: emails,
+            subject: 'Complaint Assigned Mail',
+            html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+            <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
+             <tbody>
+              <tr>
+               <td align="center" valign="top">
+                 <div id="template_header_image"><p style="margin-top: 0;"></p></div>
+                 <table id="template_container" style="box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important; background-color: #fdfdfd; border: 1px solid #dcdcdc; border-radius: 3px !important;" border="0" cellpadding="0" cellspacing="0" width="600">
+                  <tbody>
+                    <tr>
+                     <td align="center" valign="top">
+                       <!-- Header -->
+                       <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
+                         <tbody>
+                           <tr>
+                           <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/email-template-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+                            <td id="header_wrapper" style="padding: 36px 48px; display: block;">
+                               <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Complaint Assigned Mail</h1>
+                            </td>
+      
+                           </tr>
+                         </tbody>
+                       </table>
+                 <!-- End Header -->
+                 </td>
+                    </tr>
+                    <tr>
+                     <td align="center" valign="top">
+                       <!-- Body -->
+                       <table id="template_body" border="0" cellpadding="0" cellspacing="0" width="600">
+                         <tbody>
+                           <tr>
+                            <td id="body_content" style="background-color: #fdfdfd;" valign="top">
+                              <!-- Content -->
+                              <table border="0" cellpadding="20" cellspacing="0" width="100%">
+                               <tbody>
+                                <tr>
+                                 <td style="padding: 48px;" valign="top">
+                                   <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
+                                    
+                                    <table border="0" cellpadding="4" cellspacing="0" width="90%">
+                                      <tr>
+                                        <td colspan="2">
+                                        <strong>Hello ${fullName},</strong>
+                                        <p style="font-size:15px; line-height:20px">You have assigned for this complaint<i><b> </b></i> Please visit<a  href="${process.env.MAIN_URL}${additionalPath}">the complaint</a> .</p>
+                                        </td>
+                                      </tr>
+                                    </table>
+                                    
+                                   </div>
+                                 </td>
+                                </tr>
+                               </tbody>
+                              </table>
+                            <!-- End Content -->
+                            </td>
+                           </tr>
+                         </tbody>
+                       </table>
+                     <!-- End Body -->
+                     </td>
+                    </tr>
+                    <tr>
+                     <td align="center" valign="top">
+                       <!-- Footer -->
+                       <table id="template_footer" border="0" cellpadding="10" cellspacing="0" width="600">
+                        <tbody>
+                         <tr>
+                          <td style="padding: 0; -webkit-border-radius: 6px;" valign="top">
+                           <table border="0" cellpadding="10" cellspacing="0" width="100%">
+                             <tbody>
+                               <tr>
+                                <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
+                                     <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">BoloGrahak</a></p>
+                                </td>
+                               </tr>
+                             </tbody>
+                           </table>
+                          </td>
+                         </tr>
+                        </tbody>
+                       </table>
+                     <!-- End Footer -->
+                     </td>
+                    </tr>
+                  </tbody>
+                 </table>
+               </td>
+              </tr>
+             </tbody>
+            </table>
+           </div>`
+        }
+        await mdlconfig.transporter.sendMail(mailOptions, function (err, info) {
+            if (err) {
+                console.log(err);
+                return res.send({
+                    status: 'not ok',
+                    message: 'Something went wrong'
+                });
+            } else {
+                console.log('Mail Send: ', info.response);
+                return res.send({
+                    status: 'ok',
+                    message: 'Flag Approve'
+                });
+            }
+        })
+
+
+
+        var history_details = `The complaint ${complaint_id} has assigned to ${fullName} on ${formattedDate} for level ${level}. `
+        const history_data = {
+            complaint_id: complaint_id,
+            history_details: history_details,
+            created_at: formattedDate
+        }
+
+        const historyQuery = `INSERT INTO complaint_history SET ?  `;
+        const complaint_value = await query(historyQuery, [history_data]);
+        return res.status(200).json({ success_message: 'User assigned succesfully.' });
+
+    } catch (error) {
+        console.error("error", error);
+        res.send({
+            status: 'error',
+            message: 'An error occurred while processing your request.'
+        });
+    }
+}
+//update category
+exports.updateCategorys = async (req, res) => {
+    try {
+        const { complaint_id, category_id, updated_user_id } = req.body;
+        console.log("req.body", req.body);
+        const updateQuery = `UPDATE complaint SET category_id = ?, updated_user_id = ? WHERE id = ?`;
+        const updateValue = await query(updateQuery, [category_id, updated_user_id, complaint_id])
+        //console.log("updateValue",updateValue[0]);
+        return res.status(200).json({ success_message: 'category updated succesfully.' });
+
+    } catch (error) {
+        console.error("error", error);
+        res.send({
+            status: 'error',
+            message: 'An error occurred while processing your request.'
+        });
+    }
+}
 
 // const syncPlansWithStripe = async () => {
 //     const plans = await getPlanFromDatabase();

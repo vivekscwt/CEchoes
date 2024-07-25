@@ -66,7 +66,7 @@ router.post('/user-company-register', authController.userCompanyRegistration);
 router.post('/create-category', upload.single('cat_image'), authController.createCategory);
 
 //Update category--------//
-router.post('/update-category', upload.single('cat_image'), authController.updateCategory);
+router.post('/update-category', upload.single('cat_image'), authController.updatecategory);
 
 //getcatsbyCountry
 router.get('/getcatsbyCountry',authController.getcatsbyCountry)
@@ -524,4 +524,26 @@ router.post('/api/v1/create-subscription-checkout-session',authController.create
 router.post('/getlocation',authController.getLocation);
 router.get('/get-exist-company',authController.getExistCompany);
 
+//newly added for compliants
+router.get('/getcategoriess/:company_id',authController.getcategoriess);
+//updateComplaintStatus
+router.post('/update-complaint-status', authController.updateComplaintStatus);
+//companyLevel
+router.post('/company-level',authController.companyLevel);
+//create level users type
+router.post('/create-level-users', authController.createLevelusers);
+//verifyUser
+router.post('/verify-user', authController.verifyUser);
+//createnewLevelusers
+router.post('/create-new-level-users', authController.createnewLevelusers);
+//edit users added by level management users
+router.post('/editnewusers',authController.editnewUsers);
+//update eta days
+router.post('/update-eta-days',authController.updateEtaDays);
+//assign users for the company's complaint
+router.post('/assign-users',authController.assignUsers);
+//escalateassignUsers
+router.post('/escalate-assign-users',authController.escalateassignUsers);
+//updateCategory
+router.post('/updatecategory',authController.updateCategorys);
 module.exports = router;

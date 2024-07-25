@@ -944,6 +944,165 @@ async function getPremiumCompanyData(companyId) {
   //}
 }
 
+async function getComplaintAllLevelDetails(companyId) {
+  const sql = `
+  SELECT 
+  complaint_level_management.id AS complaint_level_management_id,
+  complaint_level_management.company_id  AS complaint_level_management_company_id,
+  complaint_level_management.level AS complaint_level_management_level,
+  complaint_level_management.emails AS complaint_level_management_emails,
+  complaint_level_management.eta_days AS complaint_level_management_eta_days,
+  complaint_level_management.category_id AS complaint_level_management_category_id,
+  complaint_level_management.created_at AS complaint_level_management_created_at,
+  company_level_manage_users.id AS company_level_manage_users_id,
+  company_level_manage_users.company_id AS company_level_manage_users_company_id,
+  company_level_manage_users.level AS company_level_manage_users_level,
+  company_level_manage_users.emails AS company_level_manage_users_emails,
+  company_level_manage_users.eta_days AS company_level_manage_users_eta_days,
+  company_level_manage_users.level_user_type AS company_level_manage_users_level_user_type,
+  company_level_manage_users.created_at AS company_level_manage_users_created_at
+  FROM complaint_level_management 
+  LEFT JOIN company_level_manage_users ON complaint_level_management.company_id = company_level_manage_users.company_id AND complaint_level_management.level = company_level_manage_users.level 
+  WHERE complaint_level_management.company_id = '${companyId}';  
+  `;
+  try {
+    const results = await query(sql);
+    console.log("results", results);
+    if (results.length > 0) {
+      console.log("results", results);
+      return results;
+    } else {
+      return [];
+    }
+  }
+  catch (error) {
+    console.error('Error during fetch All complaint level details: ', error);
+
+  }
+}
+
+//get company categories
+async function geCompanyCategories(companyId) {
+  const sql = `
+  SELECT complaint_category.id AS category_id,complaint_category.category_name,complaint_category.parent_id FROM 
+  complaint_category
+  WHERE complaint_category.company_id = '${companyId}' AND complaint_category.parent_id='0';  
+  `;
+  try {
+    const results = await query(sql);
+    console.log("results", results);
+    if (results.length > 0) {
+      console.log("results", results);
+      return results;
+    } else {
+      return [];
+    }
+  }
+  catch (error) {
+    console.error('Error during fetch company categories details: ', error);
+
+  }
+}
+
+async function getcategoriesUsers(company_id) {
+  const get_company_categories_users = `
+      SELECT 
+      complaint_level_management.*,
+      users.first_name,
+      users.last_name,
+      complaint_category.category_name,
+      complaint_category.parent_id
+      FROM complaint_level_management
+      LEFT JOIN users ON complaint_level_management.emails = users.email
+      LEFT JOIN complaint_category ON complaint_level_management.category_id = complaint_category.id
+      WHERE complaint_level_management.company_id = ${company_id};
+  `;
+  try {
+      const company_categories_users_result = await query(get_company_categories_users);
+      
+      if (company_categories_users_result.length == 0) {
+          return []; 
+      }else{
+        return company_categories_users_result;
+      }
+
+  } catch (error) {
+      return 'Error during getcategoriesUsers:' + error;
+  }
+}
+async function getEtaDays(companyId) {
+  const sql = `
+  SELECT DISTINCT eta_days, level
+  FROM complaint_level_management
+  WHERE company_id = '${companyId}'
+  ORDER BY eta_days IS NULL, eta_days
+`;
+  try {
+    const results = await query(sql);
+    if (results.length > 0) {
+      const nonNullEtaDays = results.filter(entry => entry.eta_days !== null);
+      console.log("nonNullEtaDays",nonNullEtaDays);
+      return nonNullEtaDays;
+    } else {
+      return [];
+    }
+  }
+  catch (error) {
+    console.error('Error during fetch All complaint level details: ', error);
+
+  }
+}
+async function geCompanyCategorieslength(companyId) {
+  const sql = `
+  SELECT COUNT(*) AS category_count
+  FROM complaint_category
+  WHERE company_id = ?
+    AND parent_id = '0';  
+`;
+
+try {
+  const results = await query(sql, [companyId]);
+  if (results.length > 0) {
+    var counts = results[0].category_count;
+    // console.log("Category count:", results[0].category_count);
+    // console.log("Category count:", results);
+    return counts;
+  } else {
+    console.log("No categories found");
+    return [];
+  }
+} catch (error) {
+  console.error('Error during fetching company categories details:', error);
+  throw error; 
+}
+
+}
+
+async function getmanagementUsers(company_id) {
+  const get_company_getmanagementUsers = `
+      SELECT 
+      company_level_manage_users.*,
+      users.first_name,
+      users.last_name
+      FROM company_level_manage_users
+      LEFT JOIN users ON company_level_manage_users.emails = users.email
+      WHERE company_level_manage_users.company_id = ${company_id};
+  `;
+  try {
+      const company_categories_users_result = await query(get_company_getmanagementUsers);
+      
+      if (company_categories_users_result.length == 0) {
+          return []; 
+      }else{
+        return company_categories_users_result;
+      }
+
+  } catch (error) {
+      return 'Error during getmanagementUsers:' + error;
+  }
+}
+
+
 async function getCompanySurveyCount(companyId) {
   const sql = `SELECT COUNT(id) as surveycount FROM survey where company_id = '${companyId}' AND CURDATE() <= expire_at`;
   const CompanySurveyCountData = await query(sql);
@@ -3086,6 +3245,56 @@ async function getAllComplaintsByCompanyId(companyId) {
   WHERE complaint.company_id = '${companyId}'
   GROUP BY complaint.id
   ORDER BY complaint.id DESC;
+  `;
+
+  try {
+    const results = await query(sql);
+    if (results.length > 0) {
+      return results;
+    } else {
+      return [];
+    }
+  }
+  catch (error) {
+    console.error('Error during fetch all complaint details: ', error);
+
+  }
+}
+
+async function getuserslistofcompanycategory(companyId) {
+  const sql = `
+  SELECT DISTINCT
+  complaint_level_management.emails,
+  complaint_level_management.level,
+  complaint_level_management.category_id
+  FROM 
+    complaint_level_management
+  WHERE complaint_level_management.company_id = "${companyId}"
+  `;
+
+  try {
+    const results = await query(sql);
+    if (results.length > 0) {
+      return results;
+    } else {
+      return [];
+    }
+  }
+  catch (error) {
+    console.error('Error during fetch all complaint details: ', error);
+
+  }
+}
+
+async function getuserslistofescalatecategory(companyId,category_id) {
+  const sql = `
+  SELECT DISTINCT
+  complaint_level_management.emails,
+  complaint_level_management.level,
+  complaint_level_management.category_id
+  FROM 
+    complaint_level_management
+  WHERE complaint_level_management.company_id = "${companyId}" AND category_id = "${category_id}"
   `;
 
   try {
@@ -7565,6 +7774,12 @@ module.exports = {
   reviewApprovedEmail,
   reviewRejectdEmail,
   getPremiumCompanyData,
+  getComplaintAllLevelDetails,//
+  geCompanyCategories,
+  getcategoriesUsers,//
+  getEtaDays,//
+  geCompanyCategorieslength,//
+  getmanagementUsers,//
   getUserName,
   ReviewReplyTo,
   TotalReplied,
@@ -7609,6 +7824,8 @@ module.exports = {
   getCompanyCategories,
   getComplaintLevelDetails,
   getAllComplaintsByCompanyId,
+  getuserslistofcompanycategory,//
+  getuserslistofescalatecategory,//
   getAllComplaintsByUserId,
   getAllComplaintsByComplaintId,
   updateComplaintStatus,

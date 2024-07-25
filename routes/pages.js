@@ -5043,6 +5043,92 @@ router.get('/create-category/:slug', checkClientClaimedCompany, async (req, res)
     }
 });
 
+router.get('/get-eta-days/:companyId', async (req, res) => {
+    const companyId = req.params.companyId;
+
+    const sql = `
+        SELECT DISTINCT eta_days, level
+        FROM complaint_level_management
+        WHERE company_id = ?
+    `;
+
+    try {
+        const results = await query(sql, [companyId]); // Pass companyId as a parameter to prevent SQL injection
+
+        if (results.length > 0) {
+            res.json(results); // Return the results as a JSON array
+        } else {
+            res.status(404).json({ error_message: 'No data found for the given company ID' }); // No data found
+        }
+    } catch (error) {
+        console.error('Error during fetching ETA days:', error);
+        res.status(500).json({ error_message: 'An error occurred while fetching ETA days. Please try again later.' });
+    }
+});
+
+router.get('/getusers/:categoryId',async(req, res)=>{
+    var categoryId = req.params.categoryId;
+    //const getuserslistofcategory = `SELECT users.first_name,users.last_name, `
+    const sql = `
+            SELECT DISTINCT
+            complaint_level_management.emails,
+            complaint_level_management.level,
+            complaint_level_management.company_id
+            FROM 
+              complaint_level_management
+            WHERE complaint_level_management.category_id = "${categoryId}"
+            `;
+
+            try {
+                const results = await query(sql);
+                console.log("getusersresults", results);
+                if (results.length > 0) {
+                    return res.json({
+                        status: 'ok',
+                        users: results,  // Use "users" key to align with client expectations
+                        message: 'Users fetched successfully.'
+                    });
+                } else {
+                    return res.status(404).json({
+                        status: 'no',
+                        message: 'No users found.'
+                    });
+                }
+            } catch (error) {
+                console.error('Error during fetch all complaint details: ', error);
+                return res.status(500).json({
+                    status: 'error',
+                    message: 'Server error during fetching users.'
+                });
+            }
+            
+})
+
+router.get('/getuserss/:companyId/:level/:category_id', (req, res) => {
+    const { companyId, level, category_id } = req.params;
+  
+    console.log("Received parameters:", companyId, level, category_id); // Log parameters
+  
+    const sql = `
+      SELECT emails
+      FROM complaint_level_management
+      WHERE company_id = ? AND level = ? AND category_id = ?
+    `;
+  
+    db.query(sql, [companyId, level, category_id], (err, results) => {
+      if (err) {
+        console.error("Database query error:", err);
+        return res.status(500).json({ error: 'Database error' });
+      }
+      console.log("resultsss",results);
+  
+      if (results.length > 0) {
+        res.json({ status: 'ok', users: results, message: 'Users fetched successfully.' });
+      } else {
+        res.status(404).json({ status: 'error', message: 'No data found for the given parameters.' });
+      }
+    });
+  });
 
 //send survey invitation page
 router.get('/new_complain/:slug', checkClientClaimedCompany, async (req, res) => {
@@ -5175,7 +5261,7 @@ router.get('/new_complain/:slug', checkClientClaimedCompany, async (req, res) =>
         }
         /////////////////////////////////////////////////
       
-    });
+});
 
 //company complaint-level-management Page 
 router.get('/complaint-level-management/:slug', checkClientClaimedCompany, async (req, res) => {
@@ -5264,64 +5350,93 @@ router.get('/company-complaint-listing/:slug', checkClientClaimedCompany, async 
     const encodedUserData = req.cookies.user;
     const currentUserData = JSON.parse(encodedUserData);
     const slug = req.params.slug;
-    const comp_res = await comFunction2.getCompanyIdBySlug(slug);
+    const comp_res =await comFunction2.getCompanyIdBySlug(slug);
     const companyId = comp_res.ID;
+    console.log("companyId",companyId);
     //const companyId = req.params.compID;
-    const [globalPageMeta, company, companyReviewNumbers, allRatingTags, PremiumCompanyData, getAllComplaintsByCompanyId] = await Promise.all([
+    const [globalPageMeta, company, companyReviewNumbers, allRatingTags, PremiumCompanyData, getAllComplaintsByCompanyId, getuserslistofcompanycategory,getuserslistofescalatecategory,getcategories,geCompanyCategories,geCompanyCategorieslength] = await Promise.all([
         comFunction2.getPageMetaValues('global'),
         comFunction.getCompany(companyId),
         comFunction.getCompanyReviewNumbers(companyId),
         comFunction.getAllRatingTags(),
         comFunction2.getPremiumCompanyData(companyId),
         comFunction2.getAllComplaintsByCompanyId(companyId),
+        comFunction2.getuserslistofcompanycategory(companyId),
+        comFunction2.getuserslistofescalatecategory(companyId),
+        comFunction2.getcategories(companyId),
+        comFunction2.geCompanyCategories(companyId),
+        comFunction2.geCompanyCategorieslength(companyId)
+        //comFunction2.sendemailtolevelUsers(),
     ]);
-    const formattedCoplaintData = getAllComplaintsByCompanyId.map(item => {
-        let responsesArray = [];
-        let comp_query = [];
-        let cus_response = [];
-        if (item.notification_statuses != null) {
-            responsesArray = item.notification_statuses.split(',');
-        }
-        if (item.company_query != null) {
-            comp_query = item.company_query.split(',');
-        }
-        if (item.user_response != null) {
-            cus_response = item.user_response.split(',');
-        }
-        return {
-            ...item,
-            notification_statuses: responsesArray,
-            company_query: comp_query,
-            customer_response: cus_response
-        };
-    });
-
+    console.log("getAllComplaintsByCompanyId",getAllComplaintsByCompanyId);
+    var company_level = company.complaint_level;
+    console.log("company_level",company_level);
+    const get_complaint_level = `SELECT complaint_level FROM company WHERE ID= "${companyId}"`;
+    const complaintlevelResult = await query(get_complaint_level);
+    
+    if (complaintlevelResult && complaintlevelResult.length > 0) {
+        var complaintLevel = complaintlevelResult[0].complaint_level;
+        console.log("complaintLevel", complaintLevel); 
+    }
+        const formattedCoplaintData = getAllComplaintsByCompanyId.map(item => {
+            let responsesArray = [];
+            let comp_query = [];
+            let cus_response = [];
+            if (item.notification_statuses != null) {
+                    responsesArray = item.notification_statuses.split(',');
+            }
+            if (item.company_query != null) {
+                comp_query = item.company_query.split(',');
+            }
+            if (item.user_response != null) {
+                cus_response = item.user_response.split(',');
+            }
+            return {
+                ...item,
+                notification_statuses: responsesArray,
+                company_query : comp_query,
+                customer_response:cus_response
+            };
+        });
+        
+        //console.log("formattedCoplaintData",formattedCoplaintData);
+        //console.log("getuserslistofcompanycategory",getuserslistofcompanycategory);
+        console.log("geCompanyCategorieslength",geCompanyCategorieslength);
     const companyPaidStatus = company.paid_status.trim();;
-    if (companyPaidStatus == 'free') {
+    if(companyPaidStatus=='free'){
         res.render('front-end/basic-complaint-listing',
-            {
-                menu_active_id: 'complaint',
-                page_title: 'Complaint Listing',
-                currentUserData,
-                globalPageMeta: globalPageMeta,
-                company: company,
-                companyReviewNumbers,
-                allRatingTags,
-                AllComplaintsByCompanyId: formattedCoplaintData
-            });
-    } else {
+        {
+            menu_active_id: 'complaint',
+            page_title: 'Complaint Listing',
+            currentUserData,
+            globalPageMeta:globalPageMeta,
+            company:company,
+            companyReviewNumbers,
+            allRatingTags,
+            AllComplaintsByCompanyId:formattedCoplaintData,
+            getuserslistofcompanycategory: getuserslistofcompanycategory,
+            companyId: companyId,
+            company_level: company_level,
+            getcategories: getcategories,
+            geCompanyCategories: geCompanyCategories,
+            getuserslistofescalatecategory: getuserslistofescalatecategory,
+            complaintLevel: complaintLevel,
+            geCompanyCategorieslength: geCompanyCategorieslength
+            //sendemailtolevelUsers: sendemailtolevelUsers
+        });
+    }else{
         let facebook_url = '';
         let twitter_url = '';
         let instagram_url = '';
         let linkedin_url = '';
         let youtube_url = '';
-
-        if (typeof PremiumCompanyData !== 'undefined') {
-            facebook_url = PremiumCompanyData.facebook_url;
-            twitter_url = PremiumCompanyData.twitter_url;
-            instagram_url = PremiumCompanyData.instagram_url;
-            linkedin_url = PremiumCompanyData.linkedin_url;
-            youtube_url = PremiumCompanyData.youtube_url;
+    
+        if(typeof PremiumCompanyData !== 'undefined' ){
+             facebook_url = PremiumCompanyData.facebook_url;
+             twitter_url = PremiumCompanyData.twitter_url;
+             instagram_url = PremiumCompanyData.instagram_url;
+             linkedin_url = PremiumCompanyData.linkedin_url;
+             youtube_url = PremiumCompanyData.youtube_url;
         }
         // res.json(
         // {
@@ -5340,21 +5455,30 @@ router.get('/company-complaint-listing/:slug', checkClientClaimedCompany, async 
         //     AllComplaintsByCompanyId:formattedCoplaintData
         // });
         res.render('front-end/premium-complaint-listing',
-            {
-                menu_active_id: 'complaint',
-                page_title: 'Complaint Listing',
-                currentUserData,
-                globalPageMeta: globalPageMeta,
-                company: company,
-                companyReviewNumbers,
-                allRatingTags,
-                facebook_url: facebook_url,
-                twitter_url: twitter_url,
-                instagram_url: instagram_url,
-                linkedin_url: linkedin_url,
-                youtube_url: youtube_url,
-                AllComplaintsByCompanyId: formattedCoplaintData
-            });
+        {
+            menu_active_id: 'complaint',
+            page_title: 'Complaint Listing',
+            currentUserData,
+            globalPageMeta:globalPageMeta,
+            company:company,
+            companyReviewNumbers,
+            allRatingTags,
+            facebook_url:facebook_url,
+            twitter_url:twitter_url,
+            instagram_url:instagram_url,
+            linkedin_url:linkedin_url,
+            youtube_url:youtube_url,
+            AllComplaintsByCompanyId:formattedCoplaintData,
+            getuserslistofcompanycategory: getuserslistofcompanycategory,
+            companyId: companyId,
+            company_level: company_level,
+            getcategories: getcategories,
+            geCompanyCategories: geCompanyCategories,
+            getuserslistofescalatecategory: getuserslistofescalatecategory,
+            complaintLevel: complaintLevel,
+            geCompanyCategorieslength: geCompanyCategorieslength
+            //sendemailtolevelUsers: sendemailtolevelUsers
+        });
     }
 });
 
@@ -5517,80 +5641,80 @@ router.get('/send-survey-invitation/:slug', checkClientClaimedCompany, async (re
 });
 
 //send survey invitation page
-router.get('/new_complain/:slug', checkClientClaimedCompany, async (req, res) => {
+// router.get('/new_complain/:slug', checkClientClaimedCompany, async (req, res) => {
 
-    const encodedUserData = req.cookies.user;
-    const currentUserData = JSON.parse(encodedUserData);
-    const slug = req.params.slug;
-    const comp_res = await comFunction2.getCompanyIdBySlug(slug);
-    const companyId = comp_res.ID;
-    const [globalPageMeta, company, PremiumCompanyData, companyReviewNumbers, allRatingTags, getCompanyOngoingSurveyDetails] = await Promise.all([
-        comFunction2.getPageMetaValues('global'),
-        comFunction.getCompany(companyId),
-        comFunction2.getPremiumCompanyData(companyId),
-        comFunction.getCompanyReviewNumbers(companyId),
-        comFunction.getAllRatingTags(),
-        comFunction.getCompanyOngoingSurveyDetails(companyId),
-    ]);
+//     const encodedUserData = req.cookies.user;
+//     const currentUserData = JSON.parse(encodedUserData);
+//     const slug = req.params.slug;
+//     const comp_res = await comFunction2.getCompanyIdBySlug(slug);
+//     const companyId = comp_res.ID;
+//     const [globalPageMeta, company, PremiumCompanyData, companyReviewNumbers, allRatingTags, getCompanyOngoingSurveyDetails] = await Promise.all([
+//         comFunction2.getPageMetaValues('global'),
+//         comFunction.getCompany(companyId),
+//         comFunction2.getPremiumCompanyData(companyId),
+//         comFunction.getCompanyReviewNumbers(companyId),
+//         comFunction.getAllRatingTags(),
+//         comFunction.getCompanyOngoingSurveyDetails(companyId),
+//     ]);
 
-    try {
-        let cover_img = '';
-        let facebook_url = '';
-        let twitter_url = '';
-        let instagram_url = '';
-        let linkedin_url = '';
-        let youtube_url = '';
+//     try {
+//         let cover_img = '';
+//         let facebook_url = '';
+//         let twitter_url = '';
+//         let instagram_url = '';
+//         let linkedin_url = '';
+//         let youtube_url = '';
 
-        if (typeof PremiumCompanyData !== 'undefined') {
-            cover_img = PremiumCompanyData.cover_img;
-            facebook_url = PremiumCompanyData.facebook_url;
-            twitter_url = PremiumCompanyData.twitter_url;
-            instagram_url = PremiumCompanyData.instagram_url;
-            linkedin_url = PremiumCompanyData.linkedin_url;
-            youtube_url = PremiumCompanyData.youtube_url;
-        }
-        // res.json( {
-        //     menu_active_id: 'survey',
-        //     page_title: 'Send Survey Invitation',
-        //     currentUserData,
-        //     globalPageMeta:globalPageMeta,
-        //     company,
-        //     companyReviewNumbers,
-        //     facebook_url:facebook_url,
-        //     twitter_url:twitter_url,
-        //     instagram_url:instagram_url,
-        //     linkedin_url:linkedin_url,
-        //     youtube_url:youtube_url,
-        //     allRatingTags,
-        //     CompanyOngoingSurveyDetails:getCompanyOngoingSurveyDetails
-        // });
-        res.render('front-end/new_complaint', {
-            menu_active_id: 'survey',
-            page_title: 'Send Survey Invitation',
-            currentUserData,
-            globalPageMeta: globalPageMeta,
-            company,
-            companyReviewNumbers,
-            facebook_url: facebook_url,
-            twitter_url: twitter_url,
-            instagram_url: instagram_url,
-            linkedin_url: linkedin_url,
-            youtube_url: youtube_url,
-            allRatingTags,
-            CompanyOngoingSurveyDetails: getCompanyOngoingSurveyDetails
-        });
-    } catch (err) {
-        console.error(err);
-        res.render('front-end/404', {
-            menu_active_id: '404',
-            page_title: '404',
-            currentUserData,
-            globalPageMeta: globalPageMeta
-        });
-    }
-    /////////////////////////////////////////////////
+//         if (typeof PremiumCompanyData !== 'undefined') {
+//             cover_img = PremiumCompanyData.cover_img;
+//             facebook_url = PremiumCompanyData.facebook_url;
+//             twitter_url = PremiumCompanyData.twitter_url;
+//             instagram_url = PremiumCompanyData.instagram_url;
+//             linkedin_url = PremiumCompanyData.linkedin_url;
+//             youtube_url = PremiumCompanyData.youtube_url;
+//         }
+//         // res.json( {
+//         //     menu_active_id: 'survey',
+//         //     page_title: 'Send Survey Invitation',
+//         //     currentUserData,
+//         //     globalPageMeta:globalPageMeta,
+//         //     company,
+//         //     companyReviewNumbers,
+//         //     facebook_url:facebook_url,
+//         //     twitter_url:twitter_url,
+//         //     instagram_url:instagram_url,
+//         //     linkedin_url:linkedin_url,
+//         //     youtube_url:youtube_url,
+//         //     allRatingTags,
+//         //     CompanyOngoingSurveyDetails:getCompanyOngoingSurveyDetails
+//         // });
+//         res.render('front-end/new_complaint', {
+//             menu_active_id: 'survey',
+//             page_title: 'Send Survey Invitation',
+//             currentUserData,
+//             globalPageMeta: globalPageMeta,
+//             company,
+//             companyReviewNumbers,
+//             facebook_url: facebook_url,
+//             twitter_url: twitter_url,
+//             instagram_url: instagram_url,
+//             linkedin_url: linkedin_url,
+//             youtube_url: youtube_url,
+//             allRatingTags,
+//             CompanyOngoingSurveyDetails: getCompanyOngoingSurveyDetails
+//         });
+//     } catch (err) {
+//         console.error(err);
+//         res.render('front-end/404', {
+//             menu_active_id: '404',
+//             page_title: '404',
+//             currentUserData,
+//             globalPageMeta: globalPageMeta
+//         });
+//     }
+//     /////////////////////////////////////////////////
 
-});
+// });
 
 //complaint level listing page
 router.get('/complain_level_list/:slug', checkClientClaimedCompany, async (req, res) => {
