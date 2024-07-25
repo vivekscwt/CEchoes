@@ -277,11 +277,116 @@
             //     }
             // });
 
+            // async function handleConfirmation(confirmed) {
+            //     if (confirmed) {
+            //         try {
+            //             const memberCountt = document.getElementById('member-count').value;
+            //             console.log('Member Count:', memberCountt);
+            //             const formData = {
+            //                 name: document.getElementById('first_name').value + ' ' + document.getElementById('last_name').value,
+            //                 first_name: document.getElementById('first_name').value,
+            //                 last_name: document.getElementById('last_name').value,
+            //                 email: document.getElementById('email').value,
+            //                 phone: document.getElementById('phone').value,
+            //                 address: document.getElementById('main_address').value,
+            //                 main_address_country: document.getElementById('main_address_country').value,
+            //                 company_name: document.getElementById('company_name').value,
+            //                 parent_id: document.getElementById('parent_id').value,
+            //                 comp_email: document.getElementById('comp_email').value,
+            //                 comp_phone: document.getElementById('comp_phone').value,
+            //                 city: 'Default City',
+            //                 state: 'Default State',
+            //                 //zip: document.getElementById('main_address_pin_code').value,
+            //                 main_address_pin_code: document.getElementById('main_address_pin_code').value,
+            //                 planId: planID,
+            //                 //billingCycle: 'daily',
+            //                 billingCycle: subscriptionType,
+            //                 memberCount: memberCountt,
+            //                 register_password: document.getElementById('register_password').value,
+            //                 register_confirm_password: document.getElementById('register_confirm_password').value,
+            //                 user_country: document.getElementById('user_country').value,
+            //                 user_state: document.getElementById('user_state').value,
+            //                 //main_address_pin_code: 
+            //             };
+
+            //             const response = await axios.post('/auth/createexternalSubscription', formData);
+            //             const { subscription, amount } = response.data;
+
+            //             formData.subscriptionId = subscription.id;
+
+            //             const options = {
+            //                 //key: 'rzp_test_ivrp5LlA1gQXAT',
+            //                 key: razorpay_key,
+            //                 subscription_id: subscription.id,
+            //                 name: 'Subscription Payment',
+            //                 description: `Subscription Payment: ₹${(amount / 100).toFixed(2)}`, // Display amount in rupees
+            //                 amount: amount, // Amount in paise
+            //                 handler: function (response) {
+            //                     // Swal.fire({
+            //                     //     icon: 'success',
+            //                     //     title: 'Payment Successful!',
+            //                     //     text: 'Your payment was successful.',
+            //                     //     confirmButtonText: 'OK'
+            //                     // }).then(() => {
+            //                     //     // Post payment success, create user and company
+            //                     //     createUserAndCompany(formData);
+            //                     // //     Swal.fire({
+            //                     // //     icon: 'success',
+            //                     // //     title: 'Success',
+            //                     // //     text: 'User and company created successfully.Please wait for admin approval',
+            //                     // //     confirmButtonText: 'OK'
+            //                     // // })
+            //                     // });
+            //                     formData.razorpay_payment_id = response.razorpay_payment_id;
+            //                     createUserAndCompany(formData);
+            //                 },
+            //                 prefill: {
+            //                     name: formData.name,
+            //                     email: formData.email
+            //                 },
+            //                 theme: {
+            //                     color: '#F37254'
+            //                 }
+            //             };
+
+            //             const rzp = new Razorpay(options);
+            //             rzp.open();
+
+            //             rzp.on('payment.failed', function (response) {
+            //                 Swal.fire({
+            //                     icon: 'error',
+            //                     title: 'Payment Error',
+            //                     text: response.error.description || 'Unknown error occurred.',
+            //                     confirmButtonText: 'OK'
+            //                 });
+            //             });
+            //         } catch (error) {
+            //             console.error('Error initiating payment:', error);
+            //             let errorMessage = 'Failed to initiate payment. Please try again later.';
+
+            //             if (error.response) {
+            //                 // If error.response exists, use its data
+            //                 errorMessage = error.response.data.message || errorMessage;
+            //             } else if (error.message) {
+            //                 // If error.message exists, use it
+            //                 errorMessage = error.message;
+            //             }
+
+            //             Swal.fire({
+            //                 icon: 'error',
+            //                 title: 'Payment Initiation Failed',
+            //                 text: errorMessage,
+            //                 confirmButtonText: 'OK'
+            //             });
+            //         }
+            //     }
+            // }
+
+
             async function handleConfirmation(confirmed) {
                 if (confirmed) {
                     try {
                         const memberCountt = document.getElementById('member-count').value;
-                        console.log('Member Count:', memberCountt);
                         const formData = {
                             name: document.getElementById('first_name').value + ' ' + document.getElementById('last_name').value,
                             first_name: document.getElementById('first_name').value,
@@ -296,53 +401,41 @@
                             comp_phone: document.getElementById('comp_phone').value,
                             city: 'Default City',
                             state: 'Default State',
-                            //zip: document.getElementById('main_address_pin_code').value,
                             main_address_pin_code: document.getElementById('main_address_pin_code').value,
                             planId: planID,
-                            //billingCycle: 'daily',
                             billingCycle: subscriptionType,
                             memberCount: memberCountt,
                             register_password: document.getElementById('register_password').value,
                             register_confirm_password: document.getElementById('register_confirm_password').value,
                             user_country: document.getElementById('user_country').value,
                             user_state: document.getElementById('user_state').value,
-                            //main_address_pin_code: 
                         };
 
                         const response = await axios.post('/auth/createexternalSubscription', formData);
                         const { subscription, amount } = response.data;
 
+                        // Ensure amount is a valid number
+                        if (isNaN(amount) || amount === undefined || amount === null) {
+                            throw new Error('Invalid amount received from the server');
+                        }
+
                         formData.subscriptionId = subscription.id;
 
                         const options = {
-                            //key: 'rzp_test_ivrp5LlA1gQXAT',
-                            key: razorpay_key,
+                            key: razorpay_key, 
                             subscription_id: subscription.id,
                             name: 'Subscription Payment',
-                            description: `Subscription Payment: ₹${(amount / 100).toFixed(2)}`, // Display amount in rupees
-                            amount: amount, // Amount in paise
+                            // description: `Subscription payment ${amount}`,
+                            description: `Subscription payment amount`,
+                            amount: amount, 
                             handler: function (response) {
-                                // Swal.fire({
-                                //     icon: 'success',
-                                //     title: 'Payment Successful!',
-                                //     text: 'Your payment was successful.',
-                                //     confirmButtonText: 'OK'
-                                // }).then(() => {
-                                //     // Post payment success, create user and company
-                                //     createUserAndCompany(formData);
-                                // //     Swal.fire({
-                                // //     icon: 'success',
-                                // //     title: 'Success',
-                                // //     text: 'User and company created successfully.Please wait for admin approval',
-                                // //     confirmButtonText: 'OK'
-                                // // })
-                                // });
                                 formData.razorpay_payment_id = response.razorpay_payment_id;
                                 createUserAndCompany(formData);
                             },
                             prefill: {
                                 name: formData.name,
-                                email: formData.email
+                                email: formData.email,
+                                //phone: formData.phone 
                             },
                             theme: {
                                 color: '#F37254'
@@ -353,10 +446,28 @@
                         rzp.open();
 
                         rzp.on('payment.failed', function (response) {
+                            console.error('Payment Failed:', response.error);
+                            let errorMessage = 'Unknown error occurred.';
+
+                            switch (response.error.reason) {
+                                case 'card_mandate_card_not_supported':
+                                    errorMessage = 'This card does not support recurring payments. Please use a different card.';
+                                    break;
+                                case 'card_mandate_creation':
+                                    errorMessage = 'Error during card mandate creation. Please try again with a different card or contact support.';
+                                    break;
+                                case 'network_error':
+                                    errorMessage = 'Network error. Please check your internet connection and try again.';
+                                    break;
+                                // Add more specific error cases as needed
+                                default:
+                                    errorMessage = response.error.description || errorMessage;
+                            }
+
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Payment Error',
-                                text: response.error.description || 'Unknown error occurred.',
+                                text: errorMessage,
                                 confirmButtonText: 'OK'
                             });
                         });
@@ -365,10 +476,9 @@
                         let errorMessage = 'Failed to initiate payment. Please try again later.';
 
                         if (error.response) {
-                            // If error.response exists, use its data
+                            console.error('Error Response Data:', error.response.data);
                             errorMessage = error.response.data.message || errorMessage;
                         } else if (error.message) {
-                            // If error.message exists, use it
                             errorMessage = error.message;
                         }
 
@@ -381,6 +491,7 @@
                     }
                 }
             }
+
 
             async function createUserAndCompany(formData) {
                 try {
