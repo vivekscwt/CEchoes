@@ -13231,6 +13231,9 @@ exports.createexternalSubscription = async (req, res) => {
         }
         console.log("Created Razorpay plan:", priceId);
 
+        const amount = priceId.item.amount;
+        console.log("amount",amount);
+
         // Create subscription with Razorpay
         const subscriptionParams = {
             plan_id: priceId.id,
@@ -13269,6 +13272,7 @@ exports.createexternalSubscription = async (req, res) => {
         res.status(200).send({
             message: 'Subscription created successfully',
             subscription: subscription,
+            amount: amount
         });
     } catch (error) {
         console.error('Error creating subscription flow:', error);
