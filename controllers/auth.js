@@ -2969,6 +2969,8 @@ exports.editCompany = async (req, res) => {
 }
 
 
+
+
 //--- Create Company Bulk Upload ----//
 exports.companyBulkUpload = async (req, res) => {
     //console.log(req.body);
@@ -3591,7 +3593,7 @@ exports.companyDetails = async (req, res) => {
 
             if (states.length > 0) {
                 var state_name = states[0].name;
-               
+
             }
 
             console.log("company_state", company_state);
@@ -3605,7 +3607,7 @@ exports.companyDetails = async (req, res) => {
                     state: state_name,
                     city: company_city,
                     company_id: company_id,
-                    stateId : company_state
+                    stateId: company_state
                 }
             });
         } else {
@@ -3984,12 +3986,12 @@ exports.editCustomerReview = async (req, res) => {
 }
 
 exports.editComplaint = async (req, res) => {
-    try{
-        console.log("editComplaint",req.body);
+    try {
+        console.log("editComplaint", req.body);
         const [editResponse] = await Promise.all([
             comFunction.editCustomerComplaint(req.body),
         ]);
-    
+
         if (editResponse == true) {
             return res.send({
                 status: 'ok',
@@ -4003,7 +4005,7 @@ exports.editComplaint = async (req, res) => {
                 message: editResponse
             });
         }
-    } catch(error){
+    } catch (error) {
         console.error('Unexpected error:', error);
         return res.status(500).send({
             status: 'error',
@@ -8754,21 +8756,21 @@ exports.complaintRegister = async (req, res) => {
     if (city_value) {
         concatenatedAddress += city_value;
     }
-    
+
     if (state_name) {
         if (concatenatedAddress.length > 0) {
             concatenatedAddress += ', ';
         }
         concatenatedAddress += state_name;
     }
-    
+
     if (country_name) {
         if (concatenatedAddress.length > 0) {
             concatenatedAddress += ', ';
         }
         concatenatedAddress += country_name;
     }
-    
+
     console.log(concatenatedAddress);
 
 
@@ -12558,8 +12560,168 @@ exports.confirmUser = async (req, res) => {
     }
 };
 
-//actual
+exports.confirmCompany = async (req, res) => {
+    try {
+        const id = req.body.id;
+        const activationId = 0;
+        const isUserQuery = `SELECT * FROM company WHERE ID = ?`;
+        const result = await query(isUserQuery, [id]);
 
+        var temp_button = result[0].temp_comp_status;
+        console.log("temp_button", temp_button);
+        if (temp_button == 1) {
+
+
+            const currentDate = new Date();
+            const year = currentDate.getFullYear();
+            const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+            const day = String(currentDate.getDate()).padStart(2, '0');
+            const hours = String(currentDate.getHours()).padStart(2, '0');
+            const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+            const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+            const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+            //console.log("tempresulcom", result);
+            var company_names = result[0].company_name;
+
+            const userDetails = {
+                fullName: result[0].company_name,
+            }
+            const adminMail = process.env.MAIL_USER;
+
+
+                    // const companyDetails = {
+                    //     user_created_by: result[0].user_created_by,
+                    //     company_name: result[0].company_name,
+                    //     status: result[0].status,
+                    //     created_date: result[0].created_date,
+                    //     updated_date: result[0].updated_date,
+                    //     main_address_country: result[0].main_address_country,
+                    //     main_address_state: result[0].main_address_state,
+                    //     main_address_city: result[0].main_address_city,
+                    //     verified: result[0].verified,
+                    //     paid_status: result[0].paid_status,
+                    //     slug: companySlug,
+                    //     parent_id: result[0].parent_id,
+                    // }
+
+                    if (result && result.length > 0) {
+                        const updateQuery = `UPDATE company SET temp_comp_status = ?,status=? WHERE ID = ?`;
+                        const updateResult = await query(updateQuery, [activationId,'1', id]);
+
+                        // Check if the update was successful
+                        if (updateResult && updateResult.affectedRows > 0) {
+
+                            // const insercompanyquery = `INSERT INTO company SET ?`;
+                            // const insertcompanyval = await query(insercompanyquery, companyDetails);
+                            // console.log("insertcompanyval", insertcompanyval);
+
+                            const userActivationHtmlForAdmin = comFunction2.companyActivationmailtoAdmin(userDetails.fullName,);
+
+                            if (userActivationHtmlForAdmin) {
+                                return res.status(200).json({
+                                    status: "ok",
+                                    message: 'Company activation has been successful, and activation emails have been forwarded to the admin.',
+                                });
+                            } else {
+                                return res.status(500).json({
+                                    status: "error",
+                                    message: "Failed to send activation email",
+                                });
+                            }
+
+                        } else {
+
+                            return res.status(400).json({ message: 'Activation failed' });
+                        }
+                    } else {
+                        // User not found
+                        return res.status(404).json({ message: 'Company not found' });
+                    }
+                }
+            //})
+        }
+     catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: 'Internal Server Error' });
+    }
+};
+
+exports.confirmReview = async (req, res) => {
+    try {
+        const id = req.body.id;
+        const activationId = 0;
+        const isUserQuery = `SELECT * FROM reviews WHERE id = ?`;
+        const result = await query(isUserQuery, [id]);
+
+        var temp_button = result[0].temp_review_status;
+        console.log("temp_button", temp_button);
+        if (temp_button == 1) {
+
+
+            const currentDate = new Date();
+            const year = currentDate.getFullYear();
+            const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+            const day = String(currentDate.getDate()).padStart(2, '0');
+            const hours = String(currentDate.getHours()).padStart(2, '0');
+            const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+            const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+            const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+            //console.log("tempresulcom", result);
+            var company_names = result[0].company_name;
+
+            const companyDetails = {
+                fullName: result[0].company_name,
+            }
+            const adminMail = process.env.MAIL_USER;
+
+
+
+
+                    if (result && result.length > 0) {
+                        const updateQuery = `UPDATE reviews SET temp_review_status = ? WHERE id = ?`;
+                        const updateResult = await query(updateQuery, [activationId, id]);
+
+                        // Check if the update was successful
+                        if (updateResult && updateResult.affectedRows > 0) {
+
+                            const userActivationHtmlForAdmin = comFunction2.reviewActivationmailtoAdmin(companyDetails.fullName,);
+
+                            if (userActivationHtmlForAdmin) {
+                                return res.status(200).json({
+                                    status: "ok",
+                                    message: 'Review activation has been successful, and activation emails have been forwarded to the admin.',
+                                });
+                            } else {
+                                return res.status(500).json({
+                                    status: "error",
+                                    message: "Failed to send activation email",
+                                });
+                            }
+
+                        } else {
+
+                            return res.status(400).json({ message: 'Activation failed' });
+                        }
+                    } else {
+                        // User not found
+                        return res.status(404).json({ message: 'Company not found' }); 
+                }
+            }
+        }
+     catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: 'Internal Server Error' });
+    }
+}
+
+
+
+
+
+
+//actual
 // const getPlanFromDatabase = async (planId) => {
 //     console.log("planId", planId);
 //     const sql = 'SELECT name, description, monthly_price, yearly_price, currency FROM plan_management WHERE id = ?';
@@ -13073,9 +13235,9 @@ exports.updateOrderHistory = async (req, res) => {
         console.log("customerId", customerId);
 
         let country_name = req.cookies.countryName
-        || 'India';
+            || 'India';
         let country_code = req.cookies.countryCode
-        || 'IN';
+            || 'IN';
         console.log("country_codesdf", country_code);
         console.log("country_namesdf", country_name);
 
@@ -13300,9 +13462,9 @@ exports.createexternalSubscription = async (req, res) => {
         const getstatequery = `SELECT * FROM states WHERE country_id = "${req.body.user_country}"`;
         const getstatevalue = await queryAsync(getstatequery);
         var countryNAme = getcountryvalue[0].name;
-        console.log("countryNAme",countryNAme);
+        console.log("countryNAme", countryNAme);
         var stateNAme = getstatevalue[0].name;
-        console.log("countryNAme",countryNAme);
+        console.log("countryNAme", countryNAme);
 
 
         let customerId = await CreateCustomer(email, name, phone, countryNAme, city, stateNAme, zip);
@@ -14501,11 +14663,11 @@ const findOrCreateCustomer = async (email, name, phone, address, city, state, zi
         // Step 1: Search for existing customers by email
         const response = await axios.get('https://api.razorpay.com/v1/customers', {
             auth: {
-              username: process.env.RAZORPAY_KEY_ID,
-              password: process.env.RAZORPAY_KEY_SECRET
+                username: process.env.RAZORPAY_KEY_ID,
+                password: process.env.RAZORPAY_KEY_SECRET
             }
         });
-      
+
         // Get the list of customers
         const customers = response.data.items;
         console.log("customers list:", customers);
@@ -14536,8 +14698,8 @@ const findOrCreateCustomer = async (email, name, phone, address, city, state, zi
                 }
             }, {
                 auth: {
-                  username: process.env.RAZORPAY_KEY_ID,
-                  password: process.env.RAZORPAY_KEY_SECRET
+                    username: process.env.RAZORPAY_KEY_ID,
+                    password: process.env.RAZORPAY_KEY_SECRET
                 }
             });
             console.log('Created new customer:', customer.data.id);
@@ -14726,7 +14888,7 @@ const createRazorpayPlan = async (plan, billingCycle, memberCount, country_code)
                     throw new Error('Invalid total price');
                 }
                 console.log("totalPrice", totalPrice);
-            }else{
+            } else {
                 var totalPrice = parseFloat(basePrice) + parseFloat(addonPrice);
                 if (isNaN(totalPrice) || totalPrice <= 0) {
                     throw new Error('Invalid total price');
@@ -14743,8 +14905,8 @@ const createRazorpayPlan = async (plan, billingCycle, memberCount, country_code)
             const conversionRate = 1.23;
             console.log("jpppp");
             //totalPriceInPaise = totalPrice * 100 * conversionRate;
-            totalPriceInPaise = totalPrice * 100 ;
-            console.log("totalPriceInPaisedf",totalPriceInPaise);
+            totalPriceInPaise = totalPrice * 100;
+            console.log("totalPriceInPaisedf", totalPriceInPaise);
         } else {
             totalPriceInPaise = totalPrice * 100;
         }
@@ -14836,7 +14998,7 @@ const createRazorpayPlanprevioususer = async (plan, billingCycle, memberCount, c
                     throw new Error('Invalid total price');
                 }
                 console.log("totalPrice", totalPrice);
-            }else{
+            } else {
 
 
                 var totalPrice = parseFloat(basePrice) + parseFloat(addonPrice);

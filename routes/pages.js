@@ -26,10 +26,26 @@ const queryAsync = util.promisify(db.query).bind(db);
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const dns = require('dns');
 const { login } = require('../controllers/auth');
+const multer = require('multer');
 
 function decodeHTMLEntities(text) {
     return he.decode(text);
 }
+
+// Set up multer storage for file upload
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/');
+    },
+    filename: function (req, file, cb) {
+        const originalname = file.originalname;
+        const sanitizedFilename = originalname.replace(/[^a-zA-Z0-9\-\_\.]/g, ''); // Remove symbols and spaces
+        const filename = Date.now() + '-' + sanitizedFilename;
+        cb(null, filename);
+    }
+});
+// Create multer instance
+const upload = multer({ storage: storage });
 
 
 router.get('/countries', (req, res) => {
@@ -435,8 +451,8 @@ router.get('/home/:getcountryhome', checkCookieValue, async (req, res) => {
                 await meta_values.forEach((item) => {
                     meta_values_array[item.page_meta_key] = item.page_meta_value;
                 })
-                console.log("meta_values_array",meta_values_array);
-                //console.log(allRatingTags);
+                //console.log("meta_values_array",meta_values_array);
+                console.log("allRatingTags",allRatingTags);
                 const featured_sql = `SELECT featured_companies.id,featured_companies.company_id,featured_companies.short_desc,featured_companies.link,company.logo,company.slug, company.company_name FROM featured_companies 
                         JOIN company ON featured_companies.company_id = company.ID 
                         WHERE featured_companies.status = 'active' 
@@ -5027,6 +5043,140 @@ router.get('/create-category/:slug', checkClientClaimedCompany, async (req, res)
     }
 });
 
+
+//send survey invitation page
+router.get('/new_complain/:slug', checkClientClaimedCompany, async (req, res) => {
+    //new_complain
+        const encodedUserData = req.cookies.user;
+        const currentUserData = JSON.parse(encodedUserData);
+        //console.log("currentUserData,",currentUserData);
+        const slug = req.params.slug;
+        //console.log("req.params",req.params);
+    
+        //const company_id = req.params.company_Id;
+        const comp_res =await comFunction2.getCompanyIdBySlug(slug);
+        const companyId = comp_res.ID;
+        //console.log("companyId",companyId);
+    
+        const get_complaint_status = `SELECT complaint_status FROM company WHERE ID= "${companyId}"`;
+        const complaintStatusResult = await query(get_complaint_status);
+        if (complaintStatusResult && complaintStatusResult.length > 0) {
+            var complaintStatus = complaintStatusResult[0].complaint_status;
+            //console.log("complaintStatus", complaintStatus); 
+        }
+    
+        const get_complaint_level = `SELECT complaint_level FROM company WHERE ID= "${companyId}"`;
+        const complaintlevelResult = await query(get_complaint_level);
+        
+        if (complaintlevelResult && complaintlevelResult.length > 0) {
+            var complaintLevel = complaintlevelResult[0].complaint_level;
+            //console.log("complaintLevel", complaintLevel); 
+        }
+    
+        //const companyId = req.params.companyId;
+        const [globalPageMeta, company, companyReviewNumbers, PremiumCompanyData, allRatingTags, getComplaintLevelDetails, geCompanyCategories, getcategoriesUsers, getEtaDays,geCompanyCategorieslength,getmanagementUsers ] = await Promise.all([
+            comFunction2.getPageMetaValues('global'),
+            comFunction.getCompany(companyId),
+            comFunction.getCompanyReviewNumbers(companyId),
+            comFunction2.getPremiumCompanyData(companyId),
+            comFunction.getAllRatingTags(),
+            comFunction2.getComplaintAllLevelDetails(companyId),
+            comFunction2.geCompanyCategories(companyId),
+            comFunction2.getcategoriesUsers(companyId),
+            comFunction2.getEtaDays(companyId),
+            comFunction2.geCompanyCategorieslength(companyId),
+            comFunction2.getmanagementUsers(companyId)
+        ]);
+    
+        // console.log("getCompany",company);
+        // console.log("geCompanyCategories",geCompanyCategories);
+        // console.log("getcategoriesUsers",getcategoriesUsers);
+        console.log("getEtaDays",getEtaDays);
+        console.log("getmanagementUsers",getmanagementUsers);
+    
+        const companyPaidStatus = company.paid_status.trim();
+        //console.log("companyPaidStatus",companyPaidStatus);
+        if(companyPaidStatus=='free'){
+            res.render('front-end/basic-complain-management',
+            {
+                menu_active_id: 'settings',
+                page_title: 'Complaint Management',
+                currentUserData,
+                globalPageMeta:globalPageMeta,
+                company:company,
+                companyReviewNumbers,
+                allRatingTags,
+                ComplaintLevelDetails:getComplaintLevelDetails,
+                companyId: companyId,
+                complaintStatus: complaintStatus,
+                geCompanyCategories: geCompanyCategories,
+                complaintLevel: complaintLevel,
+                getEtaDays: getEtaDays,
+                geCompanyCategorieslength: geCompanyCategorieslength,
+                getmanagementUsers: getmanagementUsers
+            });
+        }else{
+            let facebook_url = '';
+            let twitter_url = '';
+            let instagram_url = '';
+            let linkedin_url = '';
+            let youtube_url = '';
+        
+            if(typeof PremiumCompanyData !== 'undefined' ){
+                 facebook_url = PremiumCompanyData.facebook_url;
+                 twitter_url = PremiumCompanyData.twitter_url;
+                 instagram_url = PremiumCompanyData.instagram_url;
+                 linkedin_url = PremiumCompanyData.linkedin_url;
+                 youtube_url = PremiumCompanyData.youtube_url;
+            }
+    
+            // res.json(
+            // {
+            //     menu_active_id: 'complaint',
+            //     page_title: 'Complaint Management',
+            //     currentUserData,
+            //     globalPageMeta:globalPageMeta,
+            //     company:company,
+            //     companyReviewNumbers,
+            //     allRatingTags,
+            //     facebook_url:facebook_url,
+            //     twitter_url:twitter_url,
+            //     instagram_url:instagram_url,
+            //     linkedin_url:linkedin_url,
+            //     youtube_url:youtube_url,
+            //     ComplaintLevelDetails:getComplaintLevelDetails,
+            // });
+    
+            res.render('front-end/new_complaint',
+            {
+                menu_active_id: 'complaint',
+                page_title: 'Complaint Management',
+                currentUserData,
+                globalPageMeta:globalPageMeta,
+                company:company,
+                companyReviewNumbers,
+                allRatingTags,
+                facebook_url:facebook_url,
+                twitter_url:twitter_url,
+                instagram_url:instagram_url,
+                linkedin_url:linkedin_url,
+                youtube_url:youtube_url,
+                ComplaintLevelDetails:getComplaintLevelDetails,
+                companyId: companyId,
+                complaintStatus: complaintStatus,
+                geCompanyCategories: geCompanyCategories,
+                complaintLevel: complaintLevel,
+                getcategoriesUsers:getcategoriesUsers,
+                getEtaDays: getEtaDays,
+                geCompanyCategorieslength: geCompanyCategorieslength,
+                getmanagementUsers: getmanagementUsers
+            });
+            
+        }
+        /////////////////////////////////////////////////
+      
+    });
+
 //company complaint-level-management Page 
 router.get('/complaint-level-management/:slug', checkClientClaimedCompany, async (req, res) => {
     const encodedUserData = req.cookies.user;
@@ -6824,67 +6974,148 @@ router.get('/edit-new-company/:id', checkLoggedIn, async (req, res) => {
             comFunction.getParentCompany(),
             comFunction.getCountries(),
             comFunction.getStatesByCountryID(comp_country_id),
-            comFunction2.getChildCompany(companyId)
-            //comFunction.getCompanyMeta(userId),
-            //comFunction.getCountries(),
-            //comFunction.getStatesByUserID(userId)
         ]);
          console.log("companysss", company);
-        // console.log("getStatesByCountryID",getStatesByCountryID);
-        //console.log("getChildCompany", getChildCompany);
+
 
         let countries = [];
-        await Promise.all(getChildCompany.map(async company => {
-            if (company.main_address_country && !countries.includes(company.main_address_country)) {
-                countries.push(company.main_address_country);
 
-                var company_country_query = `SELECT name FROM countries WHERE shortname= ?`;
-                var company_country_value = await query(company_country_query, [company.main_address_country]);
-
-                if (company_country_value.length > 0) {
-                    company.country_name = company_country_value[0].name;
-                } else {
-                    company.country_name = null;
-                }
-            }
-        }));
-
-
-
-
-
-        // Render the 'edit-user' EJS view and pass the data
-        // res.json({
-        //     menu_active_id: 'company',
-        //     page_title: 'Edit Company',
-        //     currentUserData,
-        //     company: company,
-        //     company_all_categories: company_all_categories,
-        //     users: users
-        //     //countries: countries,
-        //     //states: states            
-        // });
         res.render('edit-new-company', {
             menu_active_id: 'company',
             page_title: 'Edit Company',
             currentUserData,
             company: company,
-            //company_all_categories: company_all_categories,
             Allusers: users,
             getParentCompany: getParentCompany,
             getCountries: getCountries,
             statevalue: statevalue,
             getStatesByCountryID: getStatesByCountryID,
-            getChildCompany: getChildCompany,
-            countries: countries
-            //countries: countries,
-            //states: states            
+            countries: countries        
         });
     } catch (err) {
         console.error(err);
         res.status(500).send('An error occurred');
     }
 });
+
+router.post('/edit-new-company-data/:id',upload.single('logo'),async (req, res) => {
+    //console.log(req.body);
+    console.log('editCompany',req.body);
+    //return false;
+    try{  
+    const companyID = req.body.company_id;
+    const currentDate = new Date();
+
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+    const day = String(currentDate.getDate()).padStart(2, '0');
+    const hours = String(currentDate.getHours()).padStart(2, '0');
+    const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+    const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+
+    const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+    db.query(`SELECT slug FROM temp_company WHERE slug = '${req.body.company_slug}' AND ID != '${companyID}' `, async (slugErr, slugResult) => {
+        if (slugErr) {
+            return res.send({
+                status: 'err',
+                data: '',
+                message: 'An error occurred while updating the company details: ' + slugErr
+            });
+        }
+        if (slugResult.length > 0) {
+            return res.send({
+                status: 'err',
+                data: '',
+                message: 'Company slug already exist'
+            });
+        } else {
+            // Update company details in the company table
+            const updateQuery = 'UPDATE temp_company SET company_name = ?, heading = ?, logo = ?, about_company = ?, comp_phone = ?, comp_email = ?, comp_registration_id = ?, status = ?, trending = ?, updated_date = ?, tollfree_number = ?, main_address = ?, main_address_pin_code = ?, address_map_url = ?, main_address_country = ?, main_address_state = ?, main_address_city = ?, verified = ?, paid_status = ?, slug = ?, membership_type_id = ?, complaint_status = ?, complaint_level = ?, parent_id = ?, review_display_type = ? WHERE ID = ?';
+            const updateValues = [
+                req.body.company_name,
+                req.body.heading,
+                '',
+                req.body.about_company,
+                req.body.comp_phone,
+                req.body.comp_email,
+                req.body.comp_registration_id,
+                req.body.status,
+                req.body.trending,
+                formattedDate,
+                req.body.tollfree_number,
+                req.body.main_address,
+                req.body.main_address_pin_code,
+                req.body.address_map_url,
+                req.body.main_address_country,
+                req.body.main_address_state,
+                req.body.main_address_city,
+                req.body.verified,
+                req.body.payment_status.trim(),
+                req.body.company_slug,
+                req.body.membership_type_id,
+                req.body.complaint_status,
+                req.body.complaint_level,
+                req.body.parent_id,
+                req.body.review_display_type,
+                companyID
+            ];
+
+            if (req.files.logo) {
+                // Unlink (delete) the previous file
+                const unlinkcompanylogo = "uploads/" + req.body.previous_logo;
+                fs.unlink(unlinkcompanylogo, (err) => {
+                    if (err) {
+                        //console.error('Error deleting file:', err);
+                    } else {
+                        //console.log('Previous file deleted');
+                    }
+                });
+
+                updateValues[2] = req.files.logo[0].filename;
+            } else {
+                updateValues[2] = req.body.previous_logo;
+            }
+            if (req.files.cover_img) {
+                // Unlink (delete) the previous file
+                const unlinkcompanycover_img = "uploads/" + req.body.previous_cover_img;
+                fs.unlink(unlinkcompanycover_img, (err) => {
+                    if (err) {
+                        //console.error('Error deleting file:', err);
+                    } else {
+                        //console.log('Previous file deleted');
+                    }
+                });
+            }
+            db.query(updateQuery, updateValues, (err, results) => {
+                if (err) {
+                    // Handle the error
+                    return res.send({
+                        status: 'err',
+                        data: '',
+                        message: 'An error occurred while updating the company details: ' + err
+                    });
+                }
+                else {
+                    return res.send({
+                        status: 'ok',
+                        data: companyID,
+                        message: 'Company details updated successfully'
+                    });
+                }
+            })
+        }
+    })
+}catch(error){
+    console.error('Error:', error);
+    return res.send({
+        status: 'err',
+        //data: companyId,
+        message: error.message
+    });
+}
+})
+
 
 router.get('/edit-complaints/:id', checkLoggedIn, async (req, res) => {
     try {
@@ -7452,7 +7683,7 @@ router.get('/temporay-review', checkLoggedIn, async (req, res) => {
             comFunction.getTempReviews(),
             comFunction2.getAlltempReviewTags(),
         ]);
-        //console.log(currentUserData);
+        console.log("allReviews",allReviews);
 
         // res.json({
         //     menu_active_id: 'review',

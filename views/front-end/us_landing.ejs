@@ -420,7 +420,7 @@
               <div class="popular-category-part">
                 <a href="category/<%= category.category_slug %>/<%= category.country_shortnames %>">
                   <% if(category.category_img) { %>
-                    <img src="/images/categories/<%= category.category_img %>" alt="<%= category.category_name %>" loading="lazy" width="100" height="100">
+                    <img src="/<%= category.category_img %>" alt="<%= category.category_name %>" loading="lazy" width="100" height="100">
                   <% } else { %>
                     <img src="/front-end/images/company-placeholder-image.png" alt="<%= category.category_name %>" loading="lazy" width="100" height="100">
                   <% } %>

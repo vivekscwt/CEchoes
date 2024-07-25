@@ -255,7 +255,7 @@ function getAlltempReviewTags() {
   return new Promise((resolve, reject) => {
     const reviewed_companies_query = `
             SELECT review_id,tag_name
-            FROM  temp_review_tag_relation 
+            FROM  review_tag_relation 
             WHERE 1 `;
     db.query(reviewed_companies_query, (err, result) => {
       if (err) {
@@ -6378,7 +6378,7 @@ function getAllParentCompany() {
       FROM company c
       LEFT JOIN company_cactgory_relation cr ON c.ID = cr.company_id
       LEFT JOIN category cat ON cr.category_id = cat.ID
-      WHERE c.status != '3' AND c.parent_id = '0'
+      WHERE c.status != '3' AND c.parent_id = '0' AND c.temp_comp_status='0'
       GROUP BY c.ID`,
       async (err, result) => {
         if (err) {
@@ -6394,10 +6394,10 @@ function getAllnewParentCompany() {
   return new Promise((resolve, reject) => {
     db.query(
       `SELECT c.*, GROUP_CONCAT(cat.category_name) AS categories
-      FROM temp_company c
+      FROM company c
       LEFT JOIN company_cactgory_relation cr ON c.ID = cr.company_id
       LEFT JOIN category cat ON cr.category_id = cat.ID
-      WHERE c.status != '3' AND c.parent_id = '0'
+      WHERE c.status != '3' AND c.parent_id = '0' AND c.temp_comp_status='1'
       GROUP BY c.ID`,
       async (err, result) => {
         if (err) {
@@ -7171,11 +7171,13 @@ await mdlconfig.transporter.sendMail(mailOptions, function (err, info) {
 }
 
 
+
+
 async function userActivationmailtoAdmin(name, email, phone) {
   var mailOptions = {
     from: process.env.MAIL_USER,
-    to: 'relok28728@furnato.com',
-    //to: email,
+    //to: 'relok28728@furnato.com',
+    to: process.env.MAIL_USER,
     subject: 'User Activation Email',
     html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
     <style>
@@ -7294,8 +7296,249 @@ await mdlconfig.transporter.sendMail(mailOptions, function (err, info) {
 })
 }
 
+async function companyActivationmailtoAdmin(name) {
+  var mailOptions = {
+    from: process.env.MAIL_USER,
+    //to: 'relok28728@furnato.com',
+    to: process.env.MAIL_USER,
+    subject: 'Company Activation Email',
+    html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+    <style>
+    body, table, td, p, a, h1, h2, h3, h4, h5, h6, div {
+        font-family: Calibri, 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif !important;
+    }
+    </style>
+    <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
+     <tbody>
+      <tr>
+       <td align="center" valign="top">
+         <div id="template_header_image"><p style="margin-top: 0;"></p></div>
+         <table id="template_container" style="box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important; background-color: #fdfdfd; border: 1px solid #dcdcdc; border-radius: 3px !important;" border="0" cellpadding="0" cellspacing="0" width="600">
+          <tbody>
+            <tr>
+             <td align="center" valign="top">
+               <!-- Header -->
+               <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
+                 <tbody>
+                   <tr>
+                   <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/email-template-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+                    <td id="header_wrapper" style="padding: 36px 48px; display: block;">
+                       <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">New User Activation</h1>
+                    </td>
 
+                   </tr>
+                 </tbody>
+               </table>
+         <!-- End Header -->
+         </td>
+            </tr>
+            <tr>
+             <td align="center" valign="top">
+               <!-- Body -->
+               <table id="template_body" border="0" cellpadding="0" cellspacing="0" width="600">
+                 <tbody>
+                   <tr>
+                    <td id="body_content" style="background-color: #fdfdfd;" valign="top">
+                      <!-- Content -->
+                      <table border="0" cellpadding="20" cellspacing="0" width="100%">
+                       <tbody>
+                        <tr>
+                         <td style="padding: 48px;" valign="top">
+                           <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
+                            
+                            <table border="0" cellpadding="4" cellspacing="0" width="90%">
+                              <tr>
+                                <td colspan="2">
+                                    <strong>Hello Dear</strong>
+                                    <p style="font-size:15px; line-height:20px">A new user has been successfully activated on CEchoes. Below are the details: </b>.</p>
+                                    <p style="font-size:15px; line-height:20px"><strong>Company Name:</strong> ${name}</p>
+                                    <p style="font-size:15px; line-height:20px"><br><p style="font-size:15px; line-height:20px">Kind Regards,</p><p style="font-size:15px; line-height:20px">CEchoes Technology Team</p><br>
+                                </td>
+                              </tr>
+                            </table>
+                           </div>
+                         </td>
+                        </tr>
+                       </tbody>
+                      </table>
+                    <!-- End Content -->
+                    </td>
+                   </tr>
+                 </tbody>
+               </table>
+             <!-- End Body -->
+             </td>
+            </tr>
+            <tr>
+             <td align="center" valign="top">
+               <!-- Footer -->
+               <table id="template_footer" border="0" cellpadding="10" cellspacing="0" width="600">
+                <tbody>
+                 <tr>
+                  <td style="padding: 0; -webkit-border-radius: 6px;" valign="top">
+                   <table border="0" cellpadding="10" cellspacing="0" width="100%">
+                     <tbody>
+                       <tr>
+                        <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
+                             <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology</a></p>
+                        </td>
+                       </tr>
+                     </tbody>
+                   </table>
+                  </td>
+                 </tr>
+                </tbody>
+               </table>
+             <!-- End Footer -->
+             </td>
+            </tr>
+          </tbody>
+         </table>
+       </td>
+      </tr>
+     </tbody>
+    </table>
+   </div>`
+}
+await mdlconfig.transporter.sendMail(mailOptions, function (err, info) {
+    if (err) {
+        console.log(err);
+        return res.send({
+            status: 'not ok',
+            message: 'Something went wrong'
+        });
+    } else {
+        console.log('Mail Send to admin: ', info.response);
+        return res.send({
+            status: 'ok',
+            message: ''
+        });
 
+    }
+})
+}
+
+async function reviewActivationmailtoAdmin(name) {
+  var mailOptions = {
+    from: process.env.MAIL_USER,
+    //to: 'relok28728@furnato.com',
+    to: process.env.MAIL_USER,
+    subject: 'Review Activation Email',
+    html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+    <style>
+    body, table, td, p, a, h1, h2, h3, h4, h5, h6, div {
+        font-family: Calibri, 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif !important;
+    }
+    </style>
+    <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
+     <tbody>
+      <tr>
+       <td align="center" valign="top">
+         <div id="template_header_image"><p style="margin-top: 0;"></p></div>
+         <table id="template_container" style="box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important; background-color: #fdfdfd; border: 1px solid #dcdcdc; border-radius: 3px !important;" border="0" cellpadding="0" cellspacing="0" width="600">
+          <tbody>
+            <tr>
+             <td align="center" valign="top">
+               <!-- Header -->
+               <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
+                 <tbody>
+                   <tr>
+                   <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/email-template-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+                    <td id="header_wrapper" style="padding: 36px 48px; display: block;">
+                       <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">New User Activation</h1>
+                    </td>
+
+                   </tr>
+                 </tbody>
+               </table>
+         <!-- End Header -->
+         </td>
+            </tr>
+            <tr>
+             <td align="center" valign="top">
+               <!-- Body -->
+               <table id="template_body" border="0" cellpadding="0" cellspacing="0" width="600">
+                 <tbody>
+                   <tr>
+                    <td id="body_content" style="background-color: #fdfdfd;" valign="top">
+                      <!-- Content -->
+                      <table border="0" cellpadding="20" cellspacing="0" width="100%">
+                       <tbody>
+                        <tr>
+                         <td style="padding: 48px;" valign="top">
+                           <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
+                            
+                            <table border="0" cellpadding="4" cellspacing="0" width="90%">
+                              <tr>
+                                <td colspan="2">
+                                    <strong>Hello Dear</strong>
+                                    <p style="font-size:15px; line-height:20px">A new review has been successfully activated on CEchoes. Below are the details: </b>.</p>
+                                    <p style="font-size:15px; line-height:20px"><strong>Company Name:</strong> ${name}</p>
+                                    <p style="font-size:15px; line-height:20px"><br><p style="font-size:15px; line-height:20px">Kind Regards,</p><p style="font-size:15px; line-height:20px">CEchoes Technology Team</p><br>
+                                </td>
+                              </tr>
+                            </table>
+                           </div>
+                         </td>
+                        </tr>
+                       </tbody>
+                      </table>
+                    <!-- End Content -->
+                    </td>
+                   </tr>
+                 </tbody>
+               </table>
+             <!-- End Body -->
+             </td>
+            </tr>
+            <tr>
+             <td align="center" valign="top">
+               <!-- Footer -->
+               <table id="template_footer" border="0" cellpadding="10" cellspacing="0" width="600">
+                <tbody>
+                 <tr>
+                  <td style="padding: 0; -webkit-border-radius: 6px;" valign="top">
+                   <table border="0" cellpadding="10" cellspacing="0" width="100%">
+                     <tbody>
+                       <tr>
+                        <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
+                             <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology</a></p>
+                        </td>
+                       </tr>
+                     </tbody>
+                   </table>
+                  </td>
+                 </tr>
+                </tbody>
+               </table>
+             <!-- End Footer -->
+             </td>
+            </tr>
+          </tbody>
+         </table>
+       </td>
+      </tr>
+     </tbody>
+    </table>
+   </div>`
+}
+await mdlconfig.transporter.sendMail(mailOptions, function (err, info) {
+    if (err) {
+        console.log(err);
+        return res.send({
+            status: 'not ok',
+            message: 'Something went wrong'
+        });
+    } else {
+        console.log('Mail Send to admin: ', info.response);
+        return res.send({
+            status: 'ok',
+            message: ''
+        });
+
+    }
+})
+}
 
 module.exports = {
   getFaqPage,
@@ -7431,5 +7674,7 @@ module.exports = {
   encryptEmail,
   decryptEmail,
   userActivation,
-  userActivationmailtoAdmin
+  userActivationmailtoAdmin,
+  companyActivationmailtoAdmin,
+  reviewActivationmailtoAdmin
 };

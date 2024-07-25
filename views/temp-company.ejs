@@ -361,6 +361,7 @@
                                     <th class="min-w-125px">Phone</th>
                                     <th class="min-w-125px">Activation Status</th>
                                     <th class="min-w-125px">Created Date</th>
+                                    <th class="min-w-125px"></th>
                                 </tr>
                             </thead>
                             <!--end::Table head-->
@@ -389,7 +390,7 @@
                                                     data-kt-menu="true">
                                                     <!--begin::Menu item-->
                                                     <div class="menu-item px-3">
-                                                        <a href="/edit-new-company/<%= company.ID %>"
+                                                        <a href="/edit-company/<%= company.ID %>"
                                                             class="menu-link px-3">Edit</a>
                                                     </div>
                                                     <div class="menu-item px-3">
@@ -493,6 +494,24 @@
                                                             minute: 'numeric' , hour12: true }) %>
                                                 </td>
                                                 <!--begin::Joined-->
+                                                <td>
+                                                    <button 
+                                                    class="btn btn-primary" 
+                                                    id="<%= `activeRequestButtone${company.ID}` %>" 
+                                                    <% if (company.temp_comp_status === 0) { %> 
+                                                        disabled
+                                                        onclick="return false;"
+                                                    <% }else { %> 
+                                                        onclick="activeRequest('<%= company.ID %>')"
+                                                    <% } %>
+                                                >
+                                                    <span class="indicator-label">Activate</span>
+                                                    <span class="indicator-progress">
+                                                        Activating... <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                                                    </span>
+                                                    <% if (company.temp_comp_status == 1) %>
+                                                </button>
+                                                </td>
 
                                     </tr>
                                     <!--end::Table row-->
@@ -511,6 +530,14 @@
         <!--end::Post-->
     </div>
     <!--end::Content-->
+<style>
+    button.disabled-button {
+    pointer-events: none; 
+    opacity: 0.65;
+    cursor: not-allowed; 
+}
+</style>
+
     <%- include('common/footer') -%>
         <script src="/assets/plugins/custom/datatables/datatables.bundle.js"></script>
         <script>
@@ -977,6 +1004,72 @@
                 });
                 /******/
 })()
+
+function activeRequest(id) {
+    Swal.fire({
+        title: 'Are you sure ?',
+        text: 'You are about to approve the request.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, approve it!',
+        cancelButtonText: 'No, cancel!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const activeButton = document.getElementById(`activeRequestButtone${id}`)
+            activeButton.disabled = true;
+            activeButton.setAttribute("data-kt-indicator", "on");
+            const body = {
+                id : id
+            }
+            $.ajax({
+                url: "auth/confirmCompany",
+                type: "PUT",
+                data: JSON.stringify(body),
+                processData: false,
+                contentType: "application/json",
+                success: function (data) {
+                    activeButton.removeAttribute("data-kt-indicator"); 
+                    activeButton.disabled = false;
+                    if (data.status === "ok") {
+                        Swal.fire({
+                            text: data.message,
+                            icon: "success",
+                            buttonsStyling: false,
+                            confirmButtonText: "Ok, got it!",
+                            customClass: {
+                                confirmButton: "btn btn-primary",
+                            },
+                        }).then(function (result) {
+                            if (result.isConfirmed) {
+                                window.location.reload();
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            text: data.message,
+                            icon: "error",
+                            buttonsStyling: false,
+                            confirmButtonText: "Ok, got it!",
+                            customClass: {
+                                confirmButton: "btn btn-primary",
+                            },
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    activeButton.removeAttribute("data-kt-indicator"); 
+                    activeButton.disabled = false;
+                    console.log(error);
+                },
+            });
+        }
+    })
+    
+}
+
+
                 ;
             //# sourceMappingURL=table.js.map    
         </script>
@@ -1184,6 +1277,27 @@
                 ;
             //# sourceMappingURL=export-users.js.map
         </script>
+        <script>
+            $(document).ready(function() {
+                $('button[id^="activeRequestButtone"]').each(function() {
+                    var buttonId = $(this).attr('id');
+                    var companyId = buttonId.replace('activeRequestButtone', '');
+
+                    console.log("companyIdfff",companyId);
+
+
+                    if (tempStatus == 1) {
+
+                        $(this).addClass('disabled-button'); 
+                        $(this).prop('disabled', true);
+                    }
+                });
+            });
+
+
+            </script>
+
+
         <style>
             .symbol-circle {
                 box-shadow: 0px 4px 14px 0px rgba(0, 0, 0, 0.25);

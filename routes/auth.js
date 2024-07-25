@@ -84,6 +84,8 @@ router.put('/edit-company-data',upload.fields([
     { name: 'logo', maxCount: 1 },
     { name: 'cover_img', maxCount: 1 },
 ]), authController.editCompany);
+
+
 router.post('/company-bulk-upload', csvupload.single('company_file'), authController.companyBulkUpload);
 router.post('/delete-company', authController.deleteCompany);
 router.post('/deleteCompanies', authController.deleteCompanies);
@@ -501,7 +503,11 @@ router.post('create-product',authController.createproduct);
 router.post('/adding-users',authController.addingUsers);
 
 router.put('/active-users',authController.confirmUser);
+// /confirmCompany
+router.put('/confirmCompany',authController.confirmCompany);
 
+// /confirmCompany
+router.put('/confirmReview',authController.confirmReview);
 
 router.post('/create-subscription',authController.createSubscription);
 
