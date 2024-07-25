@@ -14430,25 +14430,33 @@ const findOrCreateCustomer = async (email, name, phone, address, city, state, zi
         } else {
             // Step 2: Create a new customer if not found
             console.log(`Customer with email ${email} not found. Creating new customer.`);
-            const customer = await axios.post('https://api.razorpay.com/v1/customers', {
+            // const customer = await axios.post('https://api.razorpay.com/v1/customers', {
+            //     name: name,
+            //     email: email,
+            //     contact: phone,
+            //     shipping_address: {
+            //         line1: address,
+            //         city: city,
+            //         state: state,
+            //         zip: zip,
+            //         // country: 'IN'
+            //     }
+            // }, {
+            //     auth: {
+            //       username: process.env.RAZORPAY_KEY_ID,
+            //       password: process.env.RAZORPAY_KEY_SECRET
+            //     }
+            // });
+            // console.log('Created new customer:', customer.data.id);
+            // return customer.data.id;
+
+            const customer = await razorpay.customers.create({
                 name: name,
                 email: email,
                 contact: phone,
-                shipping_address: {
-                    line1: address,
-                    city: city,
-                    state: state,
-                    zip: zip,
-                    // country: 'IN'
-                }
-            }, {
-                auth: {
-                  username: process.env.RAZORPAY_KEY_ID,
-                  password: process.env.RAZORPAY_KEY_SECRET
-                }
             });
-            console.log('Created new customer:', customer.data.id);
-            return customer.data.id;
+            console.log('Created new customer:', customer.id);
+            return customer.id;
         }
     } catch (error) {
         // Handle errors
