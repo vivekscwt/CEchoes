@@ -17234,6 +17234,7 @@ exports.escalateassignUsers = async (req, res) => {
         });
     }
 }
+
 //update category
 exports.updateCategorys = async (req, res) => {
     try {

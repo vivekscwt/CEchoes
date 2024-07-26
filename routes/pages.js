@@ -5368,7 +5368,8 @@ router.get('/company-complaint-listing/:slug', checkClientClaimedCompany, async 
         comFunction2.geCompanyCategorieslength(companyId)
         //comFunction2.sendemailtolevelUsers(),
     ]);
-    console.log("getAllComplaintsByCompanyId",getAllComplaintsByCompanyId);
+    //console.log("getAllComplaintsByCompanyId",getAllComplaintsByCompanyId);
+    console.log("getuserslistofcompanycategory",getuserslistofcompanycategory);
     var company_level = company.complaint_level;
     console.log("company_level",company_level);
     const get_complaint_level = `SELECT complaint_level FROM company WHERE ID= "${companyId}"`;
@@ -7000,9 +7001,9 @@ router.get('/edit-company/:id', checkLoggedIn, async (req, res) => {
             //comFunction.getCountries(),
             //comFunction.getStatesByUserID(userId)
         ]);
-        // console.log("company", company);
-        // console.log("getStatesByCountryID",getStatesByCountryID);
-        console.log("getChildCompany", getChildCompany);
+        console.log("company", company);
+        console.log("getStatesByCountryID",getStatesByCountryID);
+        //console.log("getChildCompany", getChildCompany);
 
         let countries = [];
         await Promise.all(getChildCompany.map(async company => {
