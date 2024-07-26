@@ -2578,12 +2578,12 @@
                     html += '<li><a href="#" data-resulttitle="' + company.company_name + '" data-companyID="' + company.ID + '" data-companyAddress="' + company.main_address + '" data-companyPin="' + company.main_address_pin_code + '">' + company.company_name + '</a></li>';
                   });
 
-                  if (data.data.length === 0) {
-                    html += '<li><a href="#" id="create-new-company">Create New Company: ' + keyword + '</a></li>';
-                  }
-                } else {
-                  html += '<li><a href="#" id="create-new-company">Create New Company: ' + keyword + '</a></li>';
-                }
+                //   if (data.data.length === 0) {
+                //     html += '<li><a href="#" id="create-new-company">Create New Company: ' + keyword + '</a></li>';
+                //   }
+                // } else {
+                //   html += '<li><a href="#" id="create-new-company">Create New Company: ' + keyword + '</a></li>';
+                // }
 
                 html += '</ul>';
                 $('.autofield-dropdown-review').html(html);
