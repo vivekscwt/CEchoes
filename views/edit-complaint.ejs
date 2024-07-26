@@ -219,11 +219,16 @@
                                                 <input type="text" name="created_at" id="created_at"
                                                     class="form-control form-control-lg form-control-solid"
                                                     placeholder="Ticket Id"
-                                                    value="<% if(complaint && complaint.created_at){ %><%= complaint.created_at %><% } %>"
-                                                    <% if(currentUserData){ %>readonly <% } %> />
+                                                    value="<% if(complaint && complaint.created_at) { 
+                                                                const datee = new Date(complaint.created_at);
+                                                                const formattedDatee = datee.toISOString().split('T')[0];
+                                                                %><%= formattedDatee %><% 
+                                                            } %>"
+                                                    <% if(currentUserData) { %>readonly <% } %> />
                                             </div>
                                             <!--end::Col-->
                                         </div>
+
                                         <div class="row mb-6">
                                             <!--begin::Label-->
                                             <label class="col-lg-4 col-form-label fw-bold fs-6">
@@ -271,12 +276,12 @@
                                                 <span class="">Sub Category</span>
                                             </label>
                                             <div class="col-lg-8 fv-row" id="dynamic_sub_category_field_wrapper">
-                                                <select name="sub_cat_id" id="sub_cat_id"
-                                                    class="form-control form-control-lg form-control-solid">
-                                                    <option value="0"disabled >Select Sub Category</option>
+                                                <select name="sub_cat_id" id="sub_cat_id" class="form-control form-control-lg form-control-solid">
+                                                    <option value="0" disabled>Select Sub Category</option>
                                                 </select>
                                             </div>
                                         </div>
+
                             </div>
                             <div class="card-footer d-flex justify-content-end py-6 px-9">
                                 <button type="reset"
@@ -739,6 +744,7 @@
                         value: 0,
                         text: 'Select Sub Category'
                     }));
+                    
 
                     if (category_id) {
                         $.ajax({
@@ -758,6 +764,12 @@
                                     if (selectedSubCatId) {
                                         $('#sub_cat_id').val(selectedSubCatId);
                                     }
+                                }
+                                else {
+                                    $('#sub_cat_id').append($('<option>', {
+                                        value: 0,
+                                        text: 'Select Sub Category'
+                                    }));
                                 }
                             },
                             error: function (error) {

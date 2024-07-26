@@ -10068,10 +10068,11 @@ router.get('/getcomplaintcompanies', async (req, res) => {
 
         let sqlQuery = `SELECT c.*, GROUP_CONCAT(cat.category_name) AS categories
         FROM company c
-        LEFT JOIN company_cactgory_relation cr ON c.ID = cr.company_id
-        LEFT JOIN category cat ON cr.category_id = cat.ID
+        left JOIN company_cactgory_relation cr ON c.ID = cr.company_id
+        left JOIN category cat ON cr.category_id = cat.ID
         WHERE c.status = '1' AND c.complaint_status = '1' AND c.main_address_country=?
         `;
+
 
         // let sqlQuery = `SELECT c.*, GROUP_CONCAT(cat.category_name) AS categories
         // FROM company c

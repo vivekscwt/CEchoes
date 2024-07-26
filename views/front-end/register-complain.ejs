@@ -99,7 +99,7 @@
                            <div class="custom-form">
                               <div class="custom-form m-0 dynamic_state_field_wrapper" >
                                  <select id="select_category" name="category_id" id="select_category"  class="form-select" required>
-                                     <option value="0">Select Category</option>
+                                     <option value="0" disabled>Select Category</option>
                                      <option value="0">General</option>
                                  </select>
                              </div> 
@@ -109,7 +109,7 @@
                            <div class="custom-form">
                               <div class="custom-form m-0 dynamic_sub_category_field_wrapper" >
                                  <select id="select_sub_category" name="sub_category_id"  class="form-select" required>
-                                     <option value="0">Select Sub-Category</option>
+                                     <option value="0" disabled>Select Sub-Category</option>
                                      <option value="0">General</option>
                                  </select>
                              </div>
@@ -235,7 +235,7 @@ $(document).ready(function () {
         data: { category_id: category_id },
         ContentType: 'application/json',
         success: function(data) {
-            $('#select_sub_category').append($('<option value="0">General</option>')); // General option
+             $('#select_sub_category').append($('<option value="0">General</option>')); // General option
 
             if (data.status == 'ok' && data.data.length > 0) {
                 $('#dynamic_sub_category_field_wrapper').show();
