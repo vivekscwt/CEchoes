@@ -46,7 +46,7 @@
                             <div class="card-body border-top p-9">
                                 <input type="hidden" name="common_id" 
                                             value="<%= common2.id %>" />
-                                <input type="text" name="country_name" id="country_name" value="<%= common2.country %>" />
+                                <input type="hidden" name="country_name" id="country_name" value="<%= common2.country %>" />
                                 <!--begin::Input group-->
                                 <div class="row mb-6">
                                     <!--begin::Label-->
@@ -232,7 +232,7 @@
                                                     }
                                                 }).then(function (result) {
                                                     if (result.isConfirmed) {
-                                                        window.location.href = "/edit-privacy-policy";
+                                                        window.location.href = "/jp-edit-privacy-policy";
                                                     }
                                                 });
                                             } else {
