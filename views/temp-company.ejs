@@ -472,10 +472,10 @@
                                         <!--end::Role=-->
                                         <!--begin::Two step=-->
                                         <td>
-                                            <% if(company.temp_comp_status==0){ %>
+                                            <% if(company.status==0){ %>
                                                 <span
                                                     class="badge badge-light-warning fw-bolder px-4 py-3">Pending</span>
-                                                <% }else if(company.temp_comp_status==1){ %>
+                                                <% }else if(company.status==1){ %>
                                                     <span
                                                         class="badge badge-light-success fw-bolder px-4 py-3">Approved</span>
                                                     <% }else{%>
