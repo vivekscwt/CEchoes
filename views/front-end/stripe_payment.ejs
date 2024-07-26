@@ -51,8 +51,7 @@
 							</div>
 							<div class="inputBox">
 								<label for="zip">Zip Code:</label>
-								<input type="number" name="zip" id="zip" placeholder="123456" minlength="6"
-									maxlength="6" required>
+								<input type="text" name="zip" id="zip" placeholder="123456"  required>
 							</div>
 						</div>
 					</div>
@@ -354,7 +353,8 @@
 							confirmButtonText: 'OK'
 						}).then(() => {
 							OrderAPI(formData);
-							window.location.href = '/business';
+							//window.location.href = '/business';
+							window.location.href = '/staging-business';
 						});
 						//window.location.href = '/staging-business';
 					},
@@ -446,20 +446,30 @@
 		}
 	});
 
-	document.getElementById('zip').addEventListener('input', function (e) {
-		const value = e.target.value;
-		if (value.length > 6) {
-			e.target.value = value.slice(0, 6);
-		}
-	});
+	// document.getElementById('zip').addEventListener('input', function (e) {
+	// 	const value = e.target.value;
+	// 	if (value.length > 6) {
+	// 		e.target.value = value.slice(0, 6);
+	// 	}
+	// });
 
-	document.getElementById('zip').addEventListener('blur', function (e) {
-		const value = e.target.value;
-		if (value.length !== 6) {
-			alert('Zip Code must be exactly 6 digits.');
-			e.target.focus();
-		}
-	});
+	// document.getElementById('zip').addEventListener('blur', function (e) {
+	// 	const value = e.target.value;
+	// 	if (value.length !== 6) {
+	// 		alert('Zip Code must be exactly 6 digits.');
+	// 		e.target.focus();
+	// 	}
+	// });
+
+	document.getElementById('zip').addEventListener('input', function (e) {
+                const value = e.target.value;
+
+                // Example: Format input (if needed), e.g., grouping every 4 characters
+                const formattedValue = value.toUpperCase().replace(/[^A-Z0-9]/g, ''); // Remove non-alphanumeric characters and convert to uppercase
+
+                // Update the input field with the formatted value
+                e.target.value = formattedValue;
+    });
 	$(document).ready(function () {
 		const urlParams = new URLSearchParams(window.location.search);
 		const subscriptionTypeparams = urlParams.get('billingCycle'); // Ensure this matches your URL query parameter

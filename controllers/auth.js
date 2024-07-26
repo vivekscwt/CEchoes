@@ -13598,6 +13598,9 @@ exports.createexternalSubscription = async (req, res) => {
         }
         console.log("Created Razorpay plan:", priceId);
 
+        const amount = priceId.item.amount;
+        console.log("amount",amount);
+
         // Create subscription with Razorpay
         const subscriptionParams = {
             plan_id: priceId.id,
@@ -13622,7 +13625,7 @@ exports.createexternalSubscription = async (req, res) => {
         const order_history_data = {
             stripe_subscription_id: subscription.id,
             plan_id: planId,
-            payment_status: 'pending',
+            payment_status: 'success',
             subscription_details: JSON.stringify(subscription),
             subscription_duration: billingCycle,
             subscription_start_date: new Date(subscription.current_start * 1000),
@@ -13636,6 +13639,7 @@ exports.createexternalSubscription = async (req, res) => {
         res.status(200).send({
             message: 'Subscription created successfully',
             subscription: subscription,
+            amount: amount
         });
     } catch (error) {
         console.error('Error creating subscription flow:', error);
@@ -14714,7 +14718,27 @@ const findOrCreateCustomer = async (email, name, phone, address, city, state, zi
         } else {
             // Step 2: Create a new customer if not found
             console.log(`Customer with email ${email} not found. Creating new customer.`);
-            const customer = await axios.post('https://api.razorpay.com/v1/customers', {
+            // const customer = await axios.post('https://api.razorpay.com/v1/customers', {
+            //     name: name,
+            //     email: email,
+            //     contact: phone,
+            //     shipping_address: {
+            //         line1: address,
+            //         city: city,
+            //         state: state,
+            //         zip: zip,
+            //         // country: 'IN'
+            //     }
+            // }, {
+            //     auth: {
+            //       username: process.env.RAZORPAY_KEY_ID,
+            //       password: process.env.RAZORPAY_KEY_SECRET
+            //     }
+            // });
+            // console.log('Created new customer:', customer.data.id);
+            // return customer.data.id;
+
+            const customer = await razorpay.customers.create({
                 name: name,
                 email: email,
                 contact: phone,
@@ -14727,8 +14751,8 @@ const findOrCreateCustomer = async (email, name, phone, address, city, state, zi
                 }
             }, {
                 auth: {
-                    username: process.env.RAZORPAY_KEY_ID,
-                    password: process.env.RAZORPAY_KEY_SECRET
+                  username: process.env.RAZORPAY_KEY_ID,
+                  password: process.env.RAZORPAY_KEY_SECRET
                 }
             });
             console.log('Created new customer:', customer.data.id);
@@ -14870,7 +14894,7 @@ const CreateCustomer = async (email, name, phone, address, city, state, zip) => 
 
 const createRazorpayPlan = async (plan, billingCycle, memberCount, country_code) => {
     try {
-        memberCount = parseInt(memberCount);
+        memberCount = parseInt(memberCount) || 0;;
         console.log("memberCount", memberCount);
         if (isNaN(memberCount) || memberCount < 0) {
             throw new Error('Invalid memberCount');
@@ -14980,7 +15004,7 @@ const createRazorpayPlan = async (plan, billingCycle, memberCount, country_code)
 
 const createRazorpayPlanprevioususer = async (plan, billingCycle, memberCount, country_code) => {
     try {
-        memberCount = parseInt(memberCount);
+        memberCount = parseInt(memberCount) || 0;
         console.log("memberCount", memberCount);
         if (isNaN(memberCount) || memberCount < 0) {
             throw new Error('Invalid memberCount');
