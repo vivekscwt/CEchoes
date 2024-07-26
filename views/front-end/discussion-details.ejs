@@ -6,6 +6,7 @@
 <section class="main-content bottom-main-content">
     <div class="discussion-page-content">
        <div class="container">
+        <div class="quries-part">
           <div class="discussion-user-img" title="">
             <h4><%= AllCommentByDiscusId[0].first_name.charAt(0).toUpperCase()%></h4>
           </div>
@@ -21,6 +22,8 @@
           <% tags.forEach((tag) =>{ %> 
           <a href="#" class="btn-default btn-warning dis-details-top-btn my-1"><%= tag %></a>
           <% }) %>
+        </div>
+          
           <div class="discussion-details-left">
             <div class="contribute-discussion">
                <a href="#" class="discussionscrollbtn"><i class="fa-solid fa-messages"></i> Contribute to this discussion?</a>
@@ -169,6 +172,16 @@
 }
 .like-dislike-buttons i:hover {
         color: #F8A401;
+    }
+    .quries-part {
+      position: relative;
+      padding-left: 60px;
+    }
+
+    .quries-part .discussion-user-img {
+      position: absolute;
+      left: 0;
+      top: 0;
     }
 </style>
 
