@@ -916,6 +916,7 @@ KTUtil.onDOMContentLoaded(function () {
         const clickedElement = event.currentTarget;
 
         const complaintId = clickedElement.getAttribute('data-complaint-id');
+        console.log("complaintId",complaintId);
         const url = `/edit-complaints/${complaintId}`;
     
         console.log('Redirecting to:', url); 

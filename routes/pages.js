@@ -7247,6 +7247,7 @@ router.get('/edit-complaints/:id', checkLoggedIn, async (req, res) => {
         const encodedUserData = req.cookies.user;
         const currentUserData = JSON.parse(encodedUserData);
         const complaintId = req.params.id;
+        console.log("complaintId",complaintId);
 
         const getcompanyquery = `SELECT *
         FROM complaint 
@@ -7280,35 +7281,76 @@ router.get('/edit-complaints/:id', checkLoggedIn, async (req, res) => {
         res.status(500).send('An error occurred');
     }
 });
+// router.get('/complain-sub-category', (req, res) => {
+//     const category_id = req.query.category_id;
+//     console.log("complain-sub-category_cat",category_id);
+
+//     db.query('SELECT * FROM complaint_category WHERE  parent_id = ? ', [category_id], (err, results) => {
+//         if (err) {
+//             return res.send({
+//                 status: 'err',
+//                 data: '',
+//                 message: 'An error occurred while processing your request: ' + err
+//             });
+//         } else {
+//             if (results.length > 0) {
+//                 console.log("Subcategories",results);
+//                 return res.send({
+//                     status: 'ok',
+//                     data: results,
+//                     message: 'Subcategories received'
+//                 });
+//             } else {
+//                 return res.send({
+//                     status: 'err',
+//                     data: '',
+//                     message: 'No subcategories available for this category ID'
+//                 });
+//             }
+//         }
+//     });
+// });
+
 router.get('/complain-sub-category', (req, res) => {
     const category_id = req.query.category_id;
-    console.log("complain-sub-category_cat",category_id);
+    console.log("complain-sub-category_cat", category_id);
 
-    db.query('SELECT * FROM complaint_category WHERE  parent_id = ? ', [category_id], (err, results) => {
-        if (err) {
-            return res.send({
-                status: 'err',
-                data: '',
-                message: 'An error occurred while processing your request: ' + err
-            });
-        } else {
-            if (results.length > 0) {
-                console.log("Subcategories",results);
-                return res.send({
-                    status: 'ok',
-                    data: results,
-                    message: 'Subcategories received'
-                });
-            } else {
+    const defaultSubCategory = { id: 0, category_name: 'General' };
+
+    if (category_id == 0) {
+        return res.send({
+            status: 'ok',
+            data: [defaultSubCategory],
+            message: 'General sub-category returned'
+        });
+    } else {
+        db.query('SELECT * FROM complaint_category WHERE parent_id = ?', [category_id], (err, results) => {
+            if (err) {
                 return res.send({
                     status: 'err',
                     data: '',
-                    message: 'No subcategories available for this category ID'
+                    message: 'An error occurred while processing your request: ' + err
                 });
+            } else {
+                if (results.length > 0) {
+                    console.log("Subcategories", results);
+                    return res.send({
+                        status: 'ok',
+                        data: results,
+                        message: 'Subcategories received'
+                    });
+                } else {
+                    return res.send({
+                        status: 'ok',
+                        data: [defaultSubCategory],
+                        message: 'No subcategories available for this category ID, returning General'
+                    });
+                }
             }
-        }
-    });
+        });
+    }
 });
+
 
 
 router.get('/plans', checkLoggedIn, async (req, res) => {

@@ -259,8 +259,11 @@
                                             <div class="col-lg-8 fv-row">
                                                 <select name="category_id" id="category_id"
                                                     class="form-control form-control-lg form-control-solid">
-                                                    <option value="0" disabled <% if (complaint && complaint.category_id == 0) { %> selected <% } %>>
+                                                    <option value="0" disabled  selected>
                                                         Select a category
+                                                    </option>
+                                                    <option value="0" <% if (complaint && complaint.category_id == 0) { %> selected <% } %>>
+                                                        General
                                                     </option>
                                                     <% getcomplaintcategoryval.forEach(function(category) { %>
                                                         <option value="<%= category.id %>" <% if (complaint &&
@@ -277,7 +280,10 @@
                                             </label>
                                             <div class="col-lg-8 fv-row" id="dynamic_sub_category_field_wrapper">
                                                 <select name="sub_cat_id" id="sub_cat_id" class="form-control form-control-lg form-control-solid">
-                                                    <option value="0" disabled>Select Sub Category</option>
+                                                    <option value="" disabled>Select Sub Category</option>
+                                                    <option value="0"<% if (complaint && complaint.sub_category_id == 0) { %> selected <% } %>>
+                                                        General
+                                                    </option>
                                                 </select>
                                             </div>
                                         </div>
@@ -473,6 +479,7 @@
                             validation.validate().then(function (status) {
                                 if (status == 'Valid') {
                                     const formData = $('#kt_review_tag_update_form').serializeArray();
+                                    console.log("formDatadd",formData);
                                     const jsonData = {};
                                     let tagsArray = [];
 
@@ -488,6 +495,11 @@
                                             }
                                         } else {
                                             jsonData[field.name] = field.value;
+                                        }
+                                        if (field.name === 'category_id') {
+                                            console.log("Category ID:", field.value);
+                                        } else if (field.name === 'sub_cat_id') {
+                                            console.log("Sub Category ID:", field.value);
                                         }
                                     });
 
@@ -513,7 +525,7 @@
                                                     }
                                                 }).then(function (result) {
                                                     if (result.isConfirmed) {
-                                                        window.location.href = "/complaint-listing";
+                                                       // window.location.href = "/complaint-listing";
                                                     }
                                                 });
                                             } else {
@@ -732,66 +744,66 @@
         </script>
 
         <script>
-            var company_id = '<%= complaint.company_id %>';
-            console.log("company_id", company_id);
+    $(document).ready(function () {
+        // Handle category change
+        $('#category_id').change(function () {
+            var category_id = $(this).val();
+            console.log("Selected category_id:", category_id);
 
-            $(document).ready(function () {
-                $('#category_id').change(function () {
-                    var category_id = $(this).val();
-                    console.log("Selected category_id:", category_id);
+            // Clear the sub-category dropdown
+            $('#sub_cat_id').empty().append($('<option>', {
+                value: null,
+                text: 'Select Sub Category',
+                disabled: true,
+                selected: true
+            }));
 
-                    $('#sub_cat_id').empty().append($('<option>', {
-                        value: 0,
-                        text: 'Select Sub Category'
-                    }));
-                    
+            if (category_id) {
+                $.ajax({
+                    url: '/complain-sub-category',
+                    method: 'GET',
+                    data: { category_id: category_id },
+                    success: function (data) {
+                        if (data.status === 'ok' && data.data.length > 0) {
+                            $.each(data.data, function (i, item) {
+                                $('#sub_cat_id').append($('<option>', {
+                                    value: item.id,
+                                    text: item.category_name
+                                }));
+                            });
 
-                    if (category_id) {
-                        $.ajax({
-                            url: '/complain-sub-category',
-                            method: 'GET',
-                            data: { category_id: category_id },
-                            success: function (data) {
-                                if (data.status === 'ok' && data.data.length > 0) {
-                                    $.each(data.data, function (i, item) {
-                                        $('#sub_cat_id').append($('<option>', {
-                                            value: item.id,
-                                            text: item.category_name
-                                        }));
-                                    });
-
-                                    var selectedSubCatId = '<%= complaint.sub_cat_id %>';
-                                    if (selectedSubCatId) {
-                                        $('#sub_cat_id').val(selectedSubCatId);
-                                    }
-                                }
-                                else {
-                                    $('#sub_cat_id').append($('<option>', {
-                                        value: 0,
-                                        text: 'Select Sub Category'
-                                    }));
-                                }
-                            },
-                            error: function (error) {
-                                Swal.fire({
-                                    text: 'Error fetching subcategories',
-                                    icon: 'error',
-                                    buttonsStyling: false,
-                                    confirmButtonText: 'Ok, got it!',
-                                    customClass: {
-                                        confirmButton: 'btn btn-primary'
-                                    }
-                                });
+                            // Set the selected sub-category if it exists
+                            var selectedSubCatId = '<%= complaint.sub_cat_id %>';
+                            if (selectedSubCatId) {
+                                $('#sub_cat_id').val(selectedSubCatId);
+                            }
+                        } else {
+                            $('#sub_cat_id').append($('<option>', {
+                                value: 0,
+                                text: 'General'
+                            }));
+                        }
+                    },
+                    error: function (error) {
+                        Swal.fire({
+                            text: 'Error fetching subcategories',
+                            icon: 'error',
+                            buttonsStyling: false,
+                            confirmButtonText: 'Ok, got it!',
+                            customClass: {
+                                confirmButton: 'btn btn-primary'
                             }
                         });
                     }
                 });
+            }
+        });
 
-                // Trigger category change event on page load if category is already selected
-                if ($('#category_id').val()) {
-                    console.log("Triggering category change");
-                    $('#category_id').trigger('change');
-                }
-            });
-
-        </script>
+        // Trigger category change event on page load if category is already selected
+        var initialCategoryId = $('#category_id').val();
+        if (initialCategoryId) {
+            console.log("Triggering category change for initial category:", initialCategoryId);
+            $('#category_id').trigger('change');
+        }
+    });
+</script>
