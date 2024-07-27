@@ -1868,13 +1868,25 @@
         });
 
         $('#search-input-review').on('input', function () {
+          $('#state').html('<option value="" selected disabled>Select State</option>');
+          $('#city').val('').prop('readonly', false);
+          $('#select_category').html('<option value="0" selected disabled>Select Category</option><option value="0">General</option>');
+          $('#select_sub_category').html('<option value="0" selected disabled>Select Product</option><option value="0">General</option>');
+
+          const selectedCountries = $('#country_review').val();
+          console.log("selectedCountries", selectedCountries);
+          if (selectedCountries) {
+            console.log("sdfdfgdfg");
+            fetchStates(selectedCountries);
+          }
+
           $('.autofield-dropdown-review').on('click', 'a', function (e) {
             e.preventDefault();
             const selectedCompanyName = $(this).data('resulttitle');
             console.log('Selected company name from dropdown:', selectedCompanyName);
             if (selectedCompanyName) {
               $.ajax({
-                url: 'auth/get-company-details',
+                url: '/auth/get-company-details',
                 method: 'POST',
                 data: JSON.stringify({ company_name: selectedCompanyName }),
                 contentType: 'application/json',
@@ -1904,6 +1916,36 @@
             }
           });
         });
+        function fetchStates(country) {
+          $.ajax({
+            url: '/getStates',
+            type: 'GET',
+            data: { country: country },
+            contentType: 'application/json',
+            success: function (response) {
+              console.log('Response:', response);
+              var states = response.states || response;
+              var $stateDropdown = $('#state');
+              $stateDropdown.empty();
+              $stateDropdown.append('<option value="" selected disabled>Select State</option>');
+
+              if (Array.isArray(states)) {
+                states.forEach(function (state) {
+                  if (state.id && state.name) {
+                    $stateDropdown.append('<option value="' + state.id + '">' + state.name + '</option>');
+                  } else {
+                    console.error('Invalid state data:', state);
+                  }
+                });
+              } else {
+                console.error('States is not an array:', states);
+              }
+            },
+            error: function (error) {
+              console.error('Error fetching states:', error);
+            }
+          });
+        }
 
         $('#country').on('change', function () {
           $('#state').val('Select state').trigger('change');
