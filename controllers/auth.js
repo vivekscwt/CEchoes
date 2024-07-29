@@ -15145,200 +15145,200 @@ const CreateCustomer = async (email, name, phone, address, city, state, zip) => 
 
 
 
-const createRazorpayPlan = async (plan, billingCycle, memberCount, country_code) => {
-    try {
-      memberCount = parseInt(memberCount) || 0;
-      if (isNaN(memberCount) || memberCount < 0) {
-        throw new Error('Invalid memberCount');
-      }
-  
-      const basePrice = billingCycle === 'yearly' ? plan.yearly_price : plan.monthly_price;
-      if (isNaN(basePrice) || basePrice <= 0) {
-        throw new Error('Invalid base price');
-      }
-  
-      let addonPrice = 0;
-      if (memberCount > 0) {
-        const userAddonPrice = plan.per_user_price;
-        addonPrice = userAddonPrice * memberCount;
-      }
-  
-      const getCurrencyQuery = `SELECT * FROM currency_conversion`;
-      const getCurrencyVal = await queryAsync(getCurrencyQuery);
-  
-      let totalPrice;
-      if (getCurrencyVal.length > 0) {
-        const indianCurrency = getCurrencyVal[0].inr_currency;
-        const jpCurrency = getCurrencyVal[0].jpy_currency;
-  
-        if (country_code == "IN") {
-          const totalBasePrice = basePrice * indianCurrency;
-          const totalAddonPrice = addonPrice * indianCurrency;
-          totalPrice = parseFloat(totalBasePrice) + parseFloat(totalAddonPrice);
-        } else if (country_code == "JP") {
-          const totalBasePrice = basePrice * jpCurrency;
-          const totalAddonPrice = addonPrice * jpCurrency;
-          totalPrice = parseFloat(totalBasePrice) + parseFloat(totalAddonPrice);
-        } else {
-          totalPrice = parseFloat(basePrice) + parseFloat(addonPrice);
-        }
-      }
-  
-      if (isNaN(totalPrice) || totalPrice <= 0) {
-        throw new Error('Invalid total price');
-      }
-  
-      let totalPriceInPaise;
-      if (country_code == "IN") {
-        totalPriceInPaise = totalPrice * 100;
-      } else if (country_code === "JP") {
-        totalPriceInPaise = totalPrice * 100;
-      } else {
-        totalPriceInPaise = totalPrice * 100;
-      }
-  
-      let period, interval;
-      if (billingCycle === 'yearly') {
-        period = 'yearly';
-        interval = 1; // 1 year
-      } else if (billingCycle === 'monthly') {
-        period = 'monthly';
-        interval = 1; // 1 month
-      } else if (billingCycle === 'daily') {
-        period = 'daily';
-        interval = 7; // 7 days
-      } else {
-        throw new Error('Invalid billing cycle');
-      }
-  
-      const razorpayPlan = await razorpay.plans.create({
-        period: period,
-        interval: interval,
-        item: {
-          name: plan.name,
-          description: plan.description,
-          amount: totalPriceInPaise,
-          currency: 'INR'
-        }
-      });
-  
-      return razorpayPlan;
-    } catch (error) {
-      console.error('Error creating Razorpay plan:', error);
-      throw error;
-    }
-  };
-  
-
 // const createRazorpayPlan = async (plan, billingCycle, memberCount, country_code) => {
 //     try {
-//         memberCount = parseInt(memberCount) || 0;;
-//         console.log("memberCount", memberCount);
-//         if (isNaN(memberCount) || memberCount < 0) {
-//             throw new Error('Invalid memberCount');
-//         }
-
-//         console.log("country_code", country_code);
-//         console.log("plan", plan);
-//         console.log("billingCycle", billingCycle);
-
-//         const basePrice = billingCycle === 'yearly' ? plan.yearly_price : plan.monthly_price;
-//         if (isNaN(basePrice) || basePrice <= 0) {
-//             throw new Error('Invalid base price');
-//         }
-
-//         let addonPrice = 0;
-//         if (memberCount > 0) {
-//             const userAddonPrice = plan.per_user_price;
-//             addonPrice = userAddonPrice * memberCount;
-//         }
-
-//         const getcurencyquery = `SELECT * FROM currency_conversion`;
-//         const getcurrencyval = await queryAsync(getcurencyquery);
-//         console.log("getcurrencyval", getcurrencyval);
-
-//         var indian_currency = getcurrencyval[0].inr_currency;
-//         console.log("indian_currency", indian_currency);
-//         var jp_currency = getcurrencyval[0].jpy_currency;
-//         console.log("jp_currency", jp_currency);
-
-//         if (getcurrencyval.length > 0) {
-//             if (country_code == "IN") {
-//                 var toalbasePrice = basePrice * indian_currency;
-//                 var totaladdonPrice = addonPrice * indian_currency
-//                 var totalPrice = parseFloat(toalbasePrice) + parseFloat(totaladdonPrice);
-//                 if (isNaN(totalPrice) || totalPrice <= 0) {
-//                     throw new Error('Invalid total price');
-//                 }
-//                 console.log("totalPrice", totalPrice);
-//             } else if (country_code == "JP") {
-//                 var toalbasePrice = basePrice * jp_currency;
-//                 var totaladdonPrice = addonPrice * jp_currency;
-//                 const totalPrice = parseFloat(basePrice) + parseFloat(addonPrice);
-//                 if (isNaN(totalPrice) || totalPrice <= 0) {
-//                     throw new Error('Invalid total price');
-//                 }
-//                 console.log("totalPrice", totalPrice);
-//             } else {
-//                 var totalPrice = parseFloat(basePrice) + parseFloat(addonPrice);
-//                 if (isNaN(totalPrice) || totalPrice <= 0) {
-//                     throw new Error('Invalid total price');
-//                 }
-//                 console.log("totalPrice", totalPrice);
-//             }
-//         }
-
-
-//         let totalPriceInPaise;
+//       memberCount = parseInt(memberCount) || 0;
+//       if (isNaN(memberCount) || memberCount < 0) {
+//         throw new Error('Invalid memberCount');
+//       }
+  
+//       const basePrice = billingCycle === 'yearly' ? plan.yearly_price : plan.monthly_price;
+//       if (isNaN(basePrice) || basePrice <= 0) {
+//         throw new Error('Invalid base price');
+//       }
+  
+//       let addonPrice = 0;
+//       if (memberCount > 0) {
+//         const userAddonPrice = plan.per_user_price;
+//         addonPrice = userAddonPrice * memberCount;
+//       }
+  
+//       const getCurrencyQuery = `SELECT * FROM currency_conversion`;
+//       const getCurrencyVal = await queryAsync(getCurrencyQuery);
+  
+//       let totalPrice;
+//       if (getCurrencyVal.length > 0) {
+//         const indianCurrency = getCurrencyVal[0].inr_currency;
+//         const jpCurrency = getCurrencyVal[0].jpy_currency;
+  
 //         if (country_code == "IN") {
-//             totalPriceInPaise = totalPrice * 100;
-//         } else if (country_code === "JP") {
-//             const conversionRate = 1.23;
-//             console.log("jpppp");
-//             //totalPriceInPaise = totalPrice * 100 * conversionRate;
-//             totalPriceInPaise = totalPrice * 100;
-//             console.log("totalPriceInPaisedf", totalPriceInPaise);
+//           const totalBasePrice = basePrice * indianCurrency;
+//           const totalAddonPrice = addonPrice * indianCurrency;
+//           totalPrice = parseFloat(totalBasePrice) + parseFloat(totalAddonPrice);
+//         } else if (country_code == "JP") {
+//           const totalBasePrice = basePrice * jpCurrency;
+//           const totalAddonPrice = addonPrice * jpCurrency;
+//           totalPrice = parseFloat(totalBasePrice) + parseFloat(totalAddonPrice);
 //         } else {
-//             totalPriceInPaise = totalPrice * 100;
+//           totalPrice = parseFloat(basePrice) + parseFloat(addonPrice);
 //         }
-//         console.log("totalPriceInPaise", totalPriceInPaise);
-
-//         let period, interval;
-//         if (billingCycle === 'yearly') {
-//             period = 'monthly';
-//             interval = 13; // 13 months
-//         } else if (billingCycle === 'monthly') {
-//             period = 'monthly';
-//             interval = 1; // 1 month
-//         } else if (billingCycle === 'daily') {
-//             period = 'daily';
-//             interval = 7; // 7 days
-//         } else {
-//             throw new Error('Invalid billing cycle');
+//       }
+  
+//       if (isNaN(totalPrice) || totalPrice <= 0) {
+//         throw new Error('Invalid total price');
+//       }
+  
+//       let totalPriceInPaise;
+//       if (country_code == "IN") {
+//         totalPriceInPaise = totalPrice * 100;
+//       } else if (country_code === "JP") {
+//         totalPriceInPaise = totalPrice * 100;
+//       } else {
+//         totalPriceInPaise = totalPrice * 100;
+//       }
+  
+//       let period, interval;
+//       if (billingCycle === 'yearly') {
+//         period = 'yearly';
+//         interval = 1; // 1 year
+//       } else if (billingCycle === 'monthly') {
+//         period = 'monthly';
+//         interval = 1; // 1 month
+//       } else if (billingCycle === 'daily') {
+//         period = 'daily';
+//         interval = 7; // 7 days
+//       } else {
+//         throw new Error('Invalid billing cycle');
+//       }
+  
+//       const razorpayPlan = await razorpay.plans.create({
+//         period: period,
+//         interval: interval,
+//         item: {
+//           name: plan.name,
+//           description: plan.description,
+//           amount: totalPriceInPaise,
+//           currency: 'INR'
 //         }
-//         console.log("period", period);
-//         console.log("interval", interval);
-//         console.log("plan.name", plan.name);
-//         console.log("plan.description", plan.description);
-
-//         const razorpayPlan = await razorpay.plans.create({
-//             period: period,
-//             interval: interval,
-//             item: {
-//                 name: plan.name,
-//                 description: plan.description,
-//                 amount: totalPriceInPaise,
-//                 //amount: totalPrice,
-//                 currency: 'INR'
-//             }
-//         });
-//         console.log("razorpayPlan", razorpayPlan);
-//         return razorpayPlan;
+//       });
+  
+//       return razorpayPlan;
 //     } catch (error) {
-//         console.error('Error creating Razorpay plan:', error);
-//         throw error;
+//       console.error('Error creating Razorpay plan:', error);
+//       throw error;
 //     }
-// };
+//   };
+  
+
+const createRazorpayPlan = async (plan, billingCycle, memberCount, country_code) => {
+    try {
+        memberCount = parseInt(memberCount) || 0;;
+        console.log("memberCount", memberCount);
+        if (isNaN(memberCount) || memberCount < 0) {
+            throw new Error('Invalid memberCount');
+        }
+
+        console.log("country_code", country_code);
+        console.log("plan", plan);
+        console.log("billingCycle", billingCycle);
+
+        const basePrice = billingCycle === 'yearly' ? plan.yearly_price : plan.monthly_price;
+        if (isNaN(basePrice) || basePrice <= 0) {
+            throw new Error('Invalid base price');
+        }
+
+        let addonPrice = 0;
+        if (memberCount > 0) {
+            const userAddonPrice = plan.per_user_price;
+            addonPrice = userAddonPrice * memberCount;
+        }
+
+        const getcurencyquery = `SELECT * FROM currency_conversion`;
+        const getcurrencyval = await queryAsync(getcurencyquery);
+        console.log("getcurrencyval", getcurrencyval);
+
+        var indian_currency = getcurrencyval[0].inr_currency;
+        console.log("indian_currency", indian_currency);
+        var jp_currency = getcurrencyval[0].jpy_currency;
+        console.log("jp_currency", jp_currency);
+
+        if (getcurrencyval.length > 0) {
+            if (country_code == "IN") {
+                var toalbasePrice = basePrice * indian_currency;
+                var totaladdonPrice = addonPrice * indian_currency
+                var totalPrice = parseFloat(toalbasePrice) + parseFloat(totaladdonPrice);
+                if (isNaN(totalPrice) || totalPrice <= 0) {
+                    throw new Error('Invalid total price');
+                }
+                console.log("totalPrice", totalPrice);
+            } else if (country_code == "JP") {
+                var toalbasePrice = basePrice * jp_currency;
+                var totaladdonPrice = addonPrice * jp_currency;
+                const totalPrice = parseFloat(basePrice) + parseFloat(addonPrice);
+                if (isNaN(totalPrice) || totalPrice <= 0) {
+                    throw new Error('Invalid total price');
+                }
+                console.log("totalPrice", totalPrice);
+            } else {
+                var totalPrice = parseFloat(basePrice) + parseFloat(addonPrice);
+                if (isNaN(totalPrice) || totalPrice <= 0) {
+                    throw new Error('Invalid total price');
+                }
+                console.log("totalPrice", totalPrice);
+            }
+        }
+
+
+        let totalPriceInPaise;
+        if (country_code == "IN") {
+            totalPriceInPaise = totalPrice * 100;
+        } else if (country_code === "JP") {
+            const conversionRate = 1.23;
+            console.log("jpppp");
+            //totalPriceInPaise = totalPrice * 100 * conversionRate;
+            totalPriceInPaise = totalPrice * 100;
+            console.log("totalPriceInPaisedf", totalPriceInPaise);
+        } else {
+            totalPriceInPaise = totalPrice * 100;
+        }
+        console.log("totalPriceInPaise", totalPriceInPaise);
+
+        let period, interval;
+        if (billingCycle === 'yearly') {
+            period = 'monthly';
+            interval = 13; // 13 months
+        } else if (billingCycle === 'monthly') {
+            period = 'monthly';
+            interval = 1; // 1 month
+        } else if (billingCycle === 'daily') {
+            period = 'daily';
+            interval = 7; // 7 days
+        } else {
+            throw new Error('Invalid billing cycle');
+        }
+        console.log("period", period);
+        console.log("interval", interval);
+        console.log("plan.name", plan.name);
+        console.log("plan.description", plan.description);
+
+        const razorpayPlan = await razorpay.plans.create({
+            period: period,
+            interval: interval,
+            item: {
+                name: plan.name,
+                description: plan.description,
+                amount: totalPriceInPaise,
+                //amount: totalPrice,
+                currency: 'INR'
+            }
+        });
+        console.log("razorpayPlan", razorpayPlan);
+        return razorpayPlan;
+    } catch (error) {
+        console.error('Error creating Razorpay plan:', error);
+        throw error;
+    }
+};
 
 const createRazorpayPlanprevioususer = async (plan, billingCycle, memberCount, country_code) => {
     try {
