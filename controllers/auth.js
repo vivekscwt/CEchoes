@@ -6310,16 +6310,16 @@ exports.updatePremiumCompany = async (req, res) => {
                         }
                         //gallery_img.push(galleryImages);
 
-                        //console.log('merge_img:',gallery_img);
+                        console.log('merge_img:',gallery_img);
 
 
                         const promotionSQL = JSON.parse(check_result[0].promotions);
-                        //console.log('promotionSQL',promotionSQL);
+                        console.log('promotionSQL',promotionSQL);
                         //return false;
                         if (promotionSQL.length > 0) {
                             promotionSQL.forEach(function (promotionImg, index, arr) {
                                 if (promotionImg.promotion_image != null) {
-                                    //console.log('promotion_image',promotionImg.promotion_image);
+                                    console.log('promotion_image',promotionImg.promotion_image);
                                     if (promotion_image && promotion_image[index] == '') {
 
                                         PromotionalData[index].promotion_image = promotionSQL[index].promotion_image;

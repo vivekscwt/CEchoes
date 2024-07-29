@@ -139,6 +139,230 @@ router.get('/user-company-register', async (req, res) => {
     }
 });
 
+// router.get('', checkCookieValue, async (req, res) => {
+//     let currentUserData = JSON.parse(req.userData);
+//     let userId = '';
+//     if (currentUserData) {
+//         userId = currentUserData.user_id;
+//     }
+//     const apiKey = process.env.GEO_LOCATION_API_KEY
+//     console.log("apiKey",apiKey);
+//     console.log("currentUserData",currentUserData);
+
+//     const country_name = req.cookies.countryName
+//      || 'India';
+//     let country_code = req.cookies.countryCode 
+//     || 'IN';
+//     console.log("country_namesland", country_name);
+//     console.log("country_codesland", country_code);
+
+//     if (country_code != 'UK' && country_code != 'JP') {
+//         country_code = 'US';
+//     }
+
+//     const getbusinessquery = `SELECT * FROM users WHERE user_id= "${userId}"`;
+//     const getbusinessvalue = await queryAsync(getbusinessquery);
+//     if(getbusinessvalue.length>0){
+//         console.log("getbusinessvalue",getbusinessvalue);
+//         var user_status = getbusinessvalue[0].user_status;
+//         console.log("user_status",user_status);
+//         if (getbusinessvalue[0].user_status == "3") {
+//             res.redirect('/logout');
+//         }
+//     }
+
+//     const [allRatingTags, globalPageMeta, latestReviews, AllReviewTags, AllReviewVoting, PopularCategories, ReviewCount, UserCount, PositiveReviewsCompany, NegativeReviewsCompany, HomeMeta, VisitorCheck, getAllLatestDiscussion, getAllPopularDiscussion, getAllDiscussions, getCountries] = await Promise.all([
+//         comFunction.getAllRatingTags(),
+//         comFunction2.getPageMetaValues('global'),
+//         //comFunction2.getlatestReviews(18, country_name),
+//         comFunction2.getlatestReviews(18),
+//         comFunction2.getAllReviewTags(),
+//         comFunction2.getAllReviewVoting(),
+//         //comFunction.getPopularCategories(country_code),
+//         comFunction.getPopularCategories(),
+//         comFunction.getReviewCount(),
+//         comFunction.getUserCount(),
+//         comFunction.getPositiveReviewsCompany(),
+//         comFunction.getNegativeReviewsCompany(),
+//         // comFunction.getPositiveReviewsCompany(country_code),
+//         // comFunction.getNegativeReviewsCompany(country_code),
+
+//         //comFunction2.getPageMetaValues('home'),
+//         comFunction2.getPageMetaValue('home',country_code),
+//         comFunction.getVisitorCheck(requestIp.getClientIp(req)),
+//         //comFunction2.getAllLatestDiscussion(20, country_name),
+//         comFunction2.getAllLatestDiscussion(20),
+//         //comFunction2.getAllPopularDiscussion(country_name),
+//         comFunction2.getAllPopularDiscussion(),
+//         //comFunction2.getAllDiscussions(),
+//         comFunction2.getAllDiscussion(),
+//         //comFunction2.getAllDiscussion(country_name),
+//         comFunction.getCountries(),
+//     ]);
+//     const rangeTexts = {};
+
+//     //console.log("PopularCategories", PopularCategories);
+//     // console.log("getPositiveReviewsCompany",PositiveReviewsCompany);
+//     // console.log("getNegativeReviewsCompany",NegativeReviewsCompany);
+//     // console.log("getCountries", getCountries);
+//     console.log("HomeMeta",HomeMeta);
+
+//     try {
+//         // Make API request to fetch blog posts
+//         const apiUrl = process.env.BLOG_API_ENDPOINT + '/home-blog';
+//         const response = await axios.get(apiUrl);
+//         const blogPosts = response.data;
+//         const restructuredResponse = {
+//             "status": blogPosts.status,
+//             "data": blogPosts.data.map(item => ({
+//                 ...item,
+//                 "title": decodeHTMLEntities(item.title)
+//             })),
+//             "success_message": blogPosts.success_message,
+//             "error_message": blogPosts.error_message
+//         };
+//         //console.log('restructuredResponse', restructuredResponse);
+
+//         const sql = `SELECT * FROM page_info where secret_Key = 'home' AND country= "${country_code}"`;
+//         db.query(sql, (err, results, fields) => {
+//             if (err) throw err;
+//             const home = results[0];
+//             console.log("home",home);
+//             const meta_sql = `SELECT * FROM page_meta where page_id = ${home.id}`;
+//             db.query(meta_sql, async (meta_err, _meta_result) => {
+//                 if (meta_err) throw meta_err;
+
+//                 const meta_values = _meta_result;
+//                 let meta_values_array = {};
+//                 await meta_values.forEach((item) => {
+//                     meta_values_array[item.page_meta_key] = item.page_meta_value;
+//                 })
+//                 console.log("meta_values_array",meta_values_array);
+//                 //console.log(allRatingTags);
+//                 const featured_sql = `SELECT featured_companies.id,featured_companies.company_id,featured_companies.short_desc,featured_companies.link,company.logo,company.slug, company.company_name FROM featured_companies 
+//                         JOIN company ON featured_companies.company_id = company.ID 
+//                         WHERE featured_companies.status = 'active' 
+//                         ORDER BY featured_companies.ordering ASC `;
+
+//                 // const featured_sql = `SELECT featured_companies.id,featured_companies.company_id,featured_companies.short_desc,featured_companies.link,company.logo,company.slug, company.company_name FROM featured_companies 
+//                 //         JOIN company ON featured_companies.company_id = company.ID 
+//                 //         WHERE featured_companies.status = 'active' AND company.main_address_country = "${country_code}"
+//                 //         ORDER BY featured_companies.ordering ASC `;
+//                 db.query(featured_sql, (featured_err, featured_result) => {
+//                     var featured_comps = featured_result;
+//                     // res.json( {
+//                     //     menu_active_id: 'landing',
+//                     //     page_title: home.title,
+//                     //     currentUserData: currentUserData,
+//                     //     homePosts: restructuredResponse.status === 'ok' ? restructuredResponse.data : [],
+//                     //     home,
+//                     //     meta_values_array,
+//                     //     featured_comps,
+//                     //     allRatingTags: allRatingTags,
+//                     //     AddressapiKey: process.env.ADDRESS_GOOGLE_API_Key,
+//                     //     globalPageMeta:globalPageMeta,
+//                     //     latestReviews: latestReviews,
+//                     //     AllReviewTags: AllReviewTags,
+//                     //     AllReviewVoting:AllReviewVoting,
+//                     //     PopularCategories,
+//                     //     ReviewCount,
+//                     //     UserCount,
+//                     //     PositiveReviewsCompany,
+//                     //     NegativeReviewsCompany,
+//                     //     HomeMeta,
+//                     //     VisitorCheck
+//                     // });
+//                     res.render('front-end/landing', {
+//                         menu_active_id: 'landing',
+//                         page_title: home.title,
+//                         currentUserData: currentUserData,
+//                         homePosts: restructuredResponse.status === 'ok' ? restructuredResponse.data : [],
+//                         home,
+//                         meta_values_array,
+//                         featured_comps,
+//                         allRatingTags: allRatingTags,
+//                         AddressapiKey: process.env.ADDRESS_GOOGLE_API_Key,
+//                         globalPageMeta: globalPageMeta,
+//                         latestReviews: latestReviews,
+//                         AllReviewTags: AllReviewTags,
+//                         AllReviewVoting: AllReviewVoting,
+//                         PopularCategories,
+//                         ReviewCount,
+//                         UserCount,
+//                         PositiveReviewsCompany,
+//                         NegativeReviewsCompany,
+//                         HomeMeta,
+//                         VisitorCheck,
+//                         AllLatestDiscussion: getAllLatestDiscussion,
+//                         AllPopularDiscussion: getAllPopularDiscussion,
+//                         AllDiscussions: getAllDiscussions,
+//                         getCountries: getCountries,
+//                         country_name: country_name,
+//                         countryname: country_code,
+//                         apiKey
+//                     });
+//                 })
+
+//             })
+
+//         })
+//     } catch (error) {
+//         console.error('Error fetching blog posts:', error);
+//         const sql = `SELECT * FROM page_info where secret_Key = 'home' `;
+//         db.query(sql, (err, results, fields) => {
+//             if (err) throw err;
+//             const home = results[0];
+//             const meta_sql = `SELECT * FROM page_meta where page_id = ${home.id}`;
+//             db.query(meta_sql, async (meta_err, _meta_result) => {
+//                 if (meta_err) throw meta_err;
+
+//                 const meta_values = _meta_result;
+//                 let meta_values_array = {};
+//                 await meta_values.forEach((item) => {
+//                     meta_values_array[item.page_meta_key] = item.page_meta_value;
+//                 })
+
+//                 const featured_sql = `SELECT featured_companies.id,featured_companies.company_id,featured_companies.short_desc,featured_companies.link,company.logo,company.company_name FROM featured_companies 
+//                         JOIN company ON featured_companies.company_id = company.ID 
+//                         WHERE featured_companies.status = 'active' 
+//                         ORDER BY featured_companies.ordering ASC `;
+//                 db.query(featured_sql, (featured_err, featured_result) => {
+//                     var featured_comps = featured_result;
+//                     res.render('front-end/landing', {
+//                         menu_active_id: 'landing',
+//                         page_title: home.title,
+//                         currentUserData: currentUserData,
+//                         homePosts: [],
+//                         home,
+//                         meta_values_array,
+//                         featured_comps,
+//                         allRatingTags: allRatingTags,
+//                         AddressapiKey: process.env.ADDRESS_GOOGLE_API_Key,
+//                         globalPageMeta: globalPageMeta,
+//                         latestReviews: latestReviews,
+//                         AllReviewTags: AllReviewTags,
+//                         AllReviewVoting: AllReviewVoting,
+//                         PositiveReviewsCompany,
+//                         NegativeReviewsCompany,
+//                         PopularCategories,
+//                         ReviewCount,
+//                         UserCount,
+//                         PositiveReviewsCompany,
+//                         NegativeReviewsCompany,
+//                         HomeMeta,
+//                         VisitorCheck,
+//                         AllLatestDiscussion: getAllLatestDiscussion,
+//                         AllPopularDiscussion: getAllPopularDiscussion,
+//                         AllDiscussions: getAllDiscussions,
+//                         getCountries: getCountries,
+//                         apiKey
+//                     });
+//                 })
+//             })
+//         })
+//     }
+// });
+
 router.get('', checkCookieValue, async (req, res) => {
     let currentUserData = JSON.parse(req.userData);
     let userId = '';
@@ -151,6 +375,7 @@ router.get('', checkCookieValue, async (req, res) => {
 
     const country_name = req.cookies.countryName
      || 'India';
+
     let country_code = req.cookies.countryCode 
     || 'IN';
     console.log("country_namesland", country_name);
@@ -159,6 +384,12 @@ router.get('', checkCookieValue, async (req, res) => {
     if (country_code != 'UK' && country_code != 'JP') {
         country_code = 'US';
     }
+
+    const new_country_code_query = `SELECT shortname FROM countries WHERE name="${country_name}"`;
+    const new_country_code_val = await queryAsync(new_country_code_query);
+    console.log("new_country_code_val",new_country_code_val);
+    var new_country_code = new_country_code_val[0].shortname;
+    console.log("new_country_code",new_country_code);
 
     const getbusinessquery = `SELECT * FROM users WHERE user_id= "${userId}"`;
     const getbusinessvalue = await queryAsync(getbusinessquery);
@@ -174,29 +405,29 @@ router.get('', checkCookieValue, async (req, res) => {
     const [allRatingTags, globalPageMeta, latestReviews, AllReviewTags, AllReviewVoting, PopularCategories, ReviewCount, UserCount, PositiveReviewsCompany, NegativeReviewsCompany, HomeMeta, VisitorCheck, getAllLatestDiscussion, getAllPopularDiscussion, getAllDiscussions, getCountries] = await Promise.all([
         comFunction.getAllRatingTags(),
         comFunction2.getPageMetaValues('global'),
-        //comFunction2.getlatestReviews(18, country_name),
-        comFunction2.getlatestReviews(18),
+        comFunction2.getlatestReviews(18, country_name),
+        //comFunction2.getlatestReviews(18),
         comFunction2.getAllReviewTags(),
         comFunction2.getAllReviewVoting(),
-        //comFunction.getPopularCategories(country_code),
-        comFunction.getPopularCategories(),
+        comFunction.getPopularCategories(new_country_code),
+        //comFunction.getPopularCategories(),
         comFunction.getReviewCount(),
         comFunction.getUserCount(),
-        comFunction.getPositiveReviewsCompany(),
-        comFunction.getNegativeReviewsCompany(),
-        // comFunction.getPositiveReviewsCompany(country_code),
-        // comFunction.getNegativeReviewsCompany(country_code),
+        // comFunction.getPositiveReviewsCompany(),
+        // comFunction.getNegativeReviewsCompany(),
+        comFunction.getPositiveReviewsCompany(new_country_code),
+        comFunction.getNegativeReviewsCompany(new_country_code),
 
         //comFunction2.getPageMetaValues('home'),
         comFunction2.getPageMetaValue('home',country_code),
         comFunction.getVisitorCheck(requestIp.getClientIp(req)),
-        //comFunction2.getAllLatestDiscussion(20, country_name),
-        comFunction2.getAllLatestDiscussion(20),
-        //comFunction2.getAllPopularDiscussion(country_name),
-        comFunction2.getAllPopularDiscussion(),
+        comFunction2.getAllLatestDiscussion(20, country_name),
+        //comFunction2.getAllLatestDiscussion(20),
+        comFunction2.getAllPopularDiscussion(country_name),
+        //comFunction2.getAllPopularDiscussion(),
         //comFunction2.getAllDiscussions(),
-        comFunction2.getAllDiscussion(),
-        //comFunction2.getAllDiscussion(country_name),
+        //comFunction2.getAllDiscussion(),
+        comFunction2.getAllDiscussion(country_name),
         comFunction.getCountries(),
     ]);
     const rangeTexts = {};
@@ -239,15 +470,15 @@ router.get('', checkCookieValue, async (req, res) => {
                 })
                 console.log("meta_values_array",meta_values_array);
                 //console.log(allRatingTags);
-                const featured_sql = `SELECT featured_companies.id,featured_companies.company_id,featured_companies.short_desc,featured_companies.link,company.logo,company.slug, company.company_name FROM featured_companies 
-                        JOIN company ON featured_companies.company_id = company.ID 
-                        WHERE featured_companies.status = 'active' 
-                        ORDER BY featured_companies.ordering ASC `;
-
                 // const featured_sql = `SELECT featured_companies.id,featured_companies.company_id,featured_companies.short_desc,featured_companies.link,company.logo,company.slug, company.company_name FROM featured_companies 
                 //         JOIN company ON featured_companies.company_id = company.ID 
-                //         WHERE featured_companies.status = 'active' AND company.main_address_country = "${country_code}"
+                //         WHERE featured_companies.status = 'active' 
                 //         ORDER BY featured_companies.ordering ASC `;
+
+                const featured_sql = `SELECT featured_companies.id,featured_companies.company_id,featured_companies.short_desc,featured_companies.link,company.logo,company.slug, company.company_name FROM featured_companies 
+                        JOIN company ON featured_companies.company_id = company.ID 
+                        WHERE featured_companies.status = 'active' AND company.main_address_country = "${new_country_code}"
+                        ORDER BY featured_companies.ordering ASC `;
                 db.query(featured_sql, (featured_err, featured_result) => {
                     var featured_comps = featured_result;
                     // res.json( {
@@ -362,6 +593,7 @@ router.get('', checkCookieValue, async (req, res) => {
         })
     }
 });
+
 router.get('/home/:getcountryhome', checkCookieValue, async (req, res) => {
     let currentUserData = JSON.parse(req.userData);
     let userId = '';
