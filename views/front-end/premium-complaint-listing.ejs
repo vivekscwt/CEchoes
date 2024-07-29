@@ -6,306 +6,119 @@
       <section class="main-content premium_company_profile bottom-main-content">
          <div class="container">
             <div class="main_box">
-               <% if (currentUserData.level_user_type=='manager' || currentUserData.level_user_type=='help_desk' ) { %>
-                  <%- include('common/level-manager-sidebar') -%>
-                     <% } else { %>
-                        <%- include('common/premium-company-sidebar') -%>
-                           <% } %>
+               <%- include('common/premium-company-sidebar') -%>
             </div>
-
             <% if(company && company.membership_type_id>=3 ){ %>
-               <div class="each_box update_basic_information all_review_listing_for_company">
-                  <div class="table-responsive">
-                     <table class="table table-hover custom-table">
-                        <thead>
-                           <tr>
-                              <th scope="col">Date</th>
-                              <th scope="col">Token</th>
-                              <th scope="col">Category</th>
-                              <th scope="col">Sub-Category</th>
-                              <th scope="col">Product Name</th>
-                              <th scope="col">Status</th>
-                              <th scope="col">Assigned Status</th>
-                              <th scope="col">Messages</th>
-                              <th scope="col" style="width: 110px; text-align: center;">Action</th>
-                           </tr>
-                        </thead>
-                        <tbody>
-                           <% AllComplaintsByCompanyId.forEach( compnaint=> { %>
-                              <tr role="row" class="odd">
-                                 <td>
-                                    <% const dateString=compnaint.created_at; %>
-                                       <% const date=new Date(dateString); %>
-                                          <%= date.toLocaleDateString('en-US', { day: 'numeric' , month: 'short' ,
-                                             year: 'numeric' }) %>
-                                 </td>
-                                 <td><strong>
-                                       <a href="/company-compnaint-details/<%= company.slug %>/<%= compnaint.id %>">
-                                          <%= compnaint.ticket_id %>
-                                          <% if (compnaint.status == '0') { %>
-                                             <i class="fa-solid fa-lock-open"style="color: #000;"></i> 
-                                           <% } %>
-                                       </a>
-                                    </strong></td>
-                                 <td>
-                                    <% if(compnaint.category_id=='0' ){ %>
-                                       General
+            <div class="each_box update_basic_information all_review_listing_for_company">
+               <div class="table-responsive">
+                  <table class="table table-hover custom-table">
+                     <thead>
+                        <tr>
+                           <th scope="col">Date</th>
+                           <th scope="col">Token</th>
+                           <th scope="col">Category</th>
+                           <th scope="col">Sub-Category</th>
+                           <th scope="col">Product Name</th>
+                           <th scope="col">Status</th>
+                           <th scope="col">Messages</th>
+                           <th scope="col" style="width: 110px; text-align: center;">Action</th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        <% AllComplaintsByCompanyId.forEach( compnaint=> { %>
+                           <tr role="row" class="odd">
+                              <td>
+                                 <% const dateString=compnaint.created_at; %>
+                                    <% const date=new Date(dateString); %>
+                                       <%= date.toLocaleDateString('en-US', { day: 'numeric' , month: 'short' ,
+                                          year: 'numeric' }) %>
+                              </td>
+                              <td><strong>
+                                    <a href="/company-compnaint-details/<%= company.slug %>/<%= compnaint.id %>" ><%= compnaint.ticket_id %></a>
+                                 </strong></td>
+                              <td>
+                                 <% if(compnaint.category_id == '0'){ %>
+                                    General
+                                 <% } else { %>
+                                    <%= compnaint.category_name %>
+                                 <% } %>
+                              </td>
+                              <td>
+                                 <% if(compnaint.category_id == '0'){ %>
+                                    General
+                                 <% } else { %>
+                                    <%= compnaint.sub_category_name %>
+                                 <% } %>
+                              </td>
+                              <td>
+                                 <%= compnaint.model_desc %>
+                              </td>
+                              <td>
+                                 <% if(compnaint.status=='0' ) { %>
+                                    <span class="text-danger"><strong>Reopen</strong></span>
+                                    <% } else if(compnaint.status=='1' ) { %>
+                                       <span class="text-success"><strong>Resolved</strong></span>
                                        <% } else { %>
-                                          <%= compnaint.category_name %>
-                                             <% } %>
-                                 </td>
-                                 <td>
-                                    <% if(compnaint.category_id=='0' ){ %>
-                                       General
-                                       <% } else { %>
-                                          <%= compnaint.sub_category_name %>
-                                             <% } %>
-                                 </td>
-                                 <td>
-                                    <%= compnaint.model_desc %>
-                                 </td>
-                                 <td>
-                                    <% if(compnaint.status=='0' ) { %>
-                                       <span class="text-danger"><strong>Reopen</strong></span>
-                                       <% } else if(compnaint.status=='1' ) { %>
-                                          <span class="text-success"><strong>Resolved</strong></span>
-                                          <% } else { %>
-                                             <span class="text-yellow"><strong>Ongoing</strong></span>
-                                             <% } %>
-                                 </td>
-                                 <td>
-                                    <% if(compnaint.assigned_status=='0' ) { %>
-                                       <span class="text-danger"><strong>Unassigned</strong></span>
-                                       <% } else if(compnaint.assigned_status=='1' ) { %>
-                                          <span class="text-success"><strong>Assigned</strong></span>
+                                          <span class="text-yellow"><strong>Ongoing</strong></span>
                                           <% } %>
-                                 </td>
-                                 <td style="text-align: center;" class="complaint-status">
-                                    <% if(compnaint.notification_statuses.length> 0){ %>
-                                       <% let count=0; %>
-                                          <% compnaint.notification_statuses.forEach((notification, index)=> { %>
-                                             <% if( compnaint.company_query[index]=="" ){ %>
-                                                <% count ++ ; %>
-                                                   <% } %>
-                                                      <% }) %>
-                                                         <% if(count> 0) { %>
-                                                            <span class="bell_icon"><i class="fa-solid fa-message"></i>
-                                                               <span class="bell_icon1">
-                                                                  <%= count %>
-                                                               </span> </span>
-                                                            <% } %>
-
-                                                               <% } %>
-                                 </td>
-                                 <td style="text-align: center;">
-                                    <% if(compnaint.status !='1' ) { %>
-                                       <span class="action-select">
-                                          <span class="action-change">Action</span> <a href="" class="action-arw"><i
-                                                class="fa-solid fa-angle-down"></i></a>
-                                          <div class="action-dropdown">
-                                             <ul class="p-0 m-0">
-                                                <% if(
-                                                   currentUserData.level_user_type=='manager' ||
-                                                   currentUserData.claimed_comp_slug!=null){ %>
-                                                   <li><a href="#" data-bs-toggle="modal"
-                                                         data-complaint-id="<%= compnaint.id %>"
-                                                         data-level-id="<%= compnaint.level_id %>"
-                                                         data-customer-id="<%= compnaint.user_id %>"
-                                                         data-bs-target="#customerquerymodal"
-                                                         class="respond-link">Respond
-                                                         to customer with query</a></li>
-
-                                                   <li>
-                                                      <% } %>
-                                                         <% if(
-                                                            currentUserData.level_user_type=='manager' ||
-                                                            currentUserData.claimed_comp_slug!=null){ %>
-                                                            <a href="#" data-bs-toggle="modal"
-                                                               data-complaint-id="<%= compnaint.id %>"
-                                                               data-level-id="<%= compnaint.level_id %>"
-                                                               data-customer-id="<%= compnaint.user_id %>"
-                                                               data-bs-target="#respondcustomermodal"
-                                                               class="respond-link">Respond to customer & Close</a>
-                                                   </li>
-                                                   <% } %>
-                                                      <li>
-                                                         <a href="#" data-bs-toggle="modal"
-                                                            data-complaint-id="<%= compnaint.id %>"
-                                                            data-level-id="<%= compnaint.level_id %>"
-                                                            data-customer-id="<%= compnaint.user_id %>"
-                                                            data-bs-target="#assign_category"
-                                                            class="respond-link">Update
-                                                            Category</a>
-                                                      </li>
-
-                                                      <% if((compnaint.level_id < company_level) &&
-                                                         (company.membership_type_id==4) &&
-                                                         (currentUserData.level_user_type=='manager' ||
-                                                         currentUserData.claimed_comp_slug !=null)) { %>
-                                                         <li>
-                                                            <a href="#" data-bs-toggle="modal"
-                                                               data-complaint-id="<%= compnaint.id %>"
-                                                               data-level-id="<%= compnaint.level_id %>"
-                                                               data-customer-id="<%= compnaint.user_id %>"
-                                                               data-category-id="<%= compnaint.category_id %>"
-                                                               data-company-id="<%= compnaint.company_id %>"
-                                                               data-bs-target="#assign_complain"
-                                                               class="respond-link escalate-link">Escalate
-                                                               to next
-                                                               level</a>
-                                                         </li>
-                                                         <% } %>
-                                                         <% if(compnaint.assigned_status=='0' ) { %>
-                                                            <li>
-                                                               <a href="#" data-bs-toggle="modal"
-                                                                  data-complaint-id="<%= compnaint.id %>"
-                                                                  data-level-id="<%= compnaint.level_id %>"
-                                                                  data-customer-id="<%= compnaint.user_id %>"
-                                                                  data-category-id="<%= compnaint.category_id %>"
-                                                                  data-bs-target="#listing_complain"
-                                                                  class="respond-link assign-user-link">Assign User</a>
-                                                            </li>
-                                                            
-                                                               <% } %>
-                                             </ul>
-                                          </div>
-                                       </span>
+                              </td>
+                              <td style="text-align: center;" class="complaint-status" >
+                                 <% if(compnaint.notification_statuses.length > 0){ %>
+                                    <% let count = 0; %>
+                                    <% compnaint.notification_statuses.forEach((notification, index) => { %>
+                                       <% if( compnaint.company_query[index] == "" ){ %>
+                                          <% count ++ ; %>
                                        <% } %>
-                                 </td>
-                              </tr>
-                              <% }) %>
-                        </tbody>
-                     </table>
+                                    <% })  %>
+                                    <% if(count > 0) { %>
+                                      <span class="bell_icon"><i class="fa-solid fa-message"></i> <span class="bell_icon1"><%= count %></span> </span>
+                                    <% } %>
+                                    
+                                 <% }  %>
+                              </td>
+                              <td style="text-align: center;">
+                                 <% if(compnaint.status != '1') { %>   
+                                 <span class="action-select">
+                                    <span class="action-change">Action</span> <a href="" class="action-arw"><i
+                                          class="fa-solid fa-angle-down"></i></a>   
+                                    <div class="action-dropdown">
+                                       <ul class="p-0 m-0">
+                                          <li><a href="#" data-bs-toggle="modal"
+                                                data-complaint-id="<%= compnaint.id %>" data-level-id="<%= compnaint.level_id %>" data-customer-id="<%= compnaint.user_id %>"
+                                                data-bs-target="#customerquerymodal" class="respond-link">Respond
+                                                to customer with query</a></li>
+
+                                          <li>
+                                             <a href="#" data-bs-toggle="modal"
+                                                data-complaint-id="<%= compnaint.id %>" data-level-id="<%= compnaint.level_id %>"  data-customer-id="<%= compnaint.user_id %>"
+                                                data-bs-target="#respondcustomermodal"
+                                                class="respond-link">Respond to customer & Close</a>
+                                          </li>
+                                          <% if(compnaint.level_id == 1 && company && company.membership_type_id==4 ){ %> 
+                                             <li>
+                                                <a href="#" class="escalate_next_level" data-complaint-id="<%= compnaint.id %>" data-level-id="<%= compnaint.level_id %>" data-customer-id="<%= compnaint.user_id %>" >Escalate to next level</a>
+                                             </li>
+                                          <% } %>
+                                       </ul>
+                                    </div>
+                                 </span>
+                                 <% } %>
+                              </td>
+                           </tr>
+                        <% }) %>
+                     </tbody>
+                  </table>
+               </div>
+            </div>
+            <% }else{ %>
+               <div class="container">
+                  <div class="each_box update_basic_information all_review_listing_for_company">
+                     <h5>You have no permission to access survey features</h5>
                   </div>
                </div>
-               <% }else{ %>
-                  <div class="container">
-                     <div class="each_box update_basic_information all_review_listing_for_company">
-                        <h5>You have no permission to access survey features</h5>
-                     </div>
-                  </div>
-                  <% } %>
+            <% } %>
          </div>
       </section>
-
-      <!-- Modal -->
-      <div class="modal popup" id="listing_complain">
-         <div class="modal-dialog">
-            <div class="popup__content modal-content" id="user">
-               <div class="close">
-                  <span></span>
-                  <span></span>
-               </div>
-               <div class="modal-header border-0">
-                  <button type="button" class="btn-close" data-bs-dismiss="modal"><i
-                        class="fa-solid fa-circle-xmark"></i></button>
-               </div>
-               <div class="modal-content">
-                  <div class="assign_catagories">
-                     <h4 class="add_user_heading">Select User</h4>
-                     <form id="leveluserForm" action="#">
-                        <input type="hidden" id="complaintIdField" name="complaint_id">
-                        <input type="hidden" value="<%-companyId%>" name="company_id">
-                        <input type="hidden" id="levelIdField" name="level">
-                        <input type="hidden" id="customerIdField" name="added_by">
-                        <select name="emails" id="category">
-                           <option value="" disabled selected>Select User</option>
-                           <% getuserslistofcompanycategory.forEach(function(user) { %>
-                              <option value="<%= user.emails %>">
-                                 <%= user.emails %> (Level- <%= user.level %>)
-                              </option>
-                              <% }); %>
-                        </select>
-                        <div class="add_user_submit_btn">
-                           <input type="submit" value="Save">
-                        </div>
-                     </form>
-                  </div>
-               </div>
-            </div>
-         </div>
-      </div>
-      <!-- modal-end -->
-
-
-      <!-- Modal -->
-
-      <div class="modal popup" id="assign_category">
-         <div class="modal-dialog">
-            <div class="popup__content modal-content" id="user">
-               <div class="close">
-                  <span></span>
-                  <span></span>
-               </div>
-               <div class="modal-header border-0">
-                  <button type="button" class="btn-close" data-bs-dismiss="modal"><i
-                        class="fa-solid fa-circle-xmark"></i></button>
-               </div>
-               <div class="modal-content">
-                  <div class="assign_catagories">
-                     <div class="add_user_input">
-                        <label for="">Select Category</label>
-                        <form id="updatecategoryForm" action="#">
-                           <input type="hidden" id="complaintIdField" name="complaint_id">
-                           <input type="hidden" value="<%-companyId%>" name="company_id">
-                           <input type="hidden" id="levelIdField" name="level">
-                           <input type="hidden" id="customerIdField" name="customer_id">
-                           <input type="hidden" name="updated_user_id" value="<%- currentUserData.user_id -%>">
-
-                           <select name="category_id" id="category">
-                              <option value="" disabled selected>Select Category</option>
-                              <% geCompanyCategories.forEach(function(category) { %>
-                                 <option value="<%= category.category_id %>">
-                                    <%= category.category_name %>
-                                 </option>
-                                 <% }); %>
-                           </select>
-                     </div>
-                     <div class="add_user_submit_btn">
-                        <input type="submit" value="Save">
-                     </div>
-                  </div>
-                  </form>
-               </div>
-            </div>
-         </div>
-
-      </div>
-      <!-- modal-end -->
-
-      <!-- Modal -->
-      <div class="modal popup" id="assign_complain">
-         <div class="modal-dialog">
-            <div class="popup__content modal-content" id="user">
-               <div class="close">
-                  <span></span>
-                  <span></span>
-               </div>
-               <div class="modal-header border-0">
-                  <button type="button" class="btn-close" data-bs-dismiss="modal"><i
-                        class="fa-solid fa-circle-xmark"></i></button>
-               </div>
-               <div class="modal-content">
-                  <div class="assign_catagories">
-                     <h4 class="add_user_heading">Select User</h4>
-                     <form id="assignuserForm" action="#">
-                        <input type="hidden" id="complaintIdField" name="complaint_id">
-                        <input type="hidden" value="<%-companyId%>" name="company_id">
-                        <input type="hidden" id="levelIdField" name="level">
-                        <input type="hidden" id="customerIdField" name="added_by">
-                        <input type="hidden" id="categoryIdField" name="category_id">
-                        <select name="emails" id="category_2">
-                        </select>
-                        <div class="add_user_submit_btn">
-                           <input type="submit" value="Save">
-                        </div>
-                     </form>
-                  </div>
-               </div>
-            </div>
-         </div>
-      </div>
-      <!-- modal-end -->
 
       <!-- The Modal -->
       <div class="modal fade" id="customerquerymodal">
@@ -330,8 +143,8 @@
                      <input type="hidden" name="company_slug" value="<%= company.slug %>" />
                      <input type="hidden" id="complaint-id-input" name="complaint_id" value="">
                      <input type="hidden" id="complaint-query-level" name="complaint_level" value="">
-                     <input type="hidden" name="complaint_status" value="2">
-                     <input type="submit" class="btn-default btn-warning submit_btn" value="Submit">
+                     <input type="hidden"  name="complaint_status" value="2">
+                     <input type="submit" class="btn-default btn-warning submit_btn"  value="Submit">
                   </form>
                   <div class="register-now frm-loading" style=" display: none; ">
                      <span class="indicator-progress">Please wait...
@@ -367,7 +180,7 @@
                      <input type="hidden" name="company_id" value="<%= company.ID %>" />
                      <input type="hidden" name="company_slug" value="<%= company.slug %>" />
                      <input type="hidden" id="complaint-id-resolve" name="complaint_id" value="">
-                     <input type="hidden" name="complaint_status" value="1">
+                     <input type="hidden"  name="complaint_status" value="1">
                      <input type="hidden" id="complaint-resolve-level" name="complaint_level" value="">
                      <input type="submit" class="btn-default btn-warning submit_btn" id="" value="Resolved">
                   </form>
@@ -385,28 +198,27 @@
       </div>
 
       <!--Escalate Modal -->
-      <div class="modal modal_body_edit fade" id="successModal" tabindex="-1" role="dialog"
-         aria-labelledby="successModalLabel" aria-hidden="true">
+      <div class="modal modal_body_edit fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-               <div class="modal-header" style="border-bottom: none;">
-                  <h5 class="modal-title" id="successModalLabel">Success</h5>
-                  <button type="button" class="btn-close btn_close_all" data-bs-dismiss="modal"><i
-                        class="fa-solid fa-circle-xmark"></i></button>
+           <div class="modal-content">
+             <div class="modal-header" style="border-bottom: none;">
+               <h5 class="modal-title" id="successModalLabel">Success</h5>
+               <button type="button" class="btn-close btn_close_all" data-bs-dismiss="modal"><i
+                  class="fa-solid fa-circle-xmark"></i></button>
 
+             </div>
+             <div class="modal-body">
+               <!-- Display your success message here -->
+               <p id="successMessage"></p>
+             </div>
+             <div class="modal-footer" style="border-top: none;">
+               <button type="button" class="btn btn-secondary btn_close_all" data-bs-dismiss="modal">Close</button>
                </div>
-               <div class="modal-body">
-                  <!-- Display your success message here -->
-                  <p id="successMessage"></p>
-               </div>
-               <div class="modal-footer" style="border-top: none;">
-                  <button type="button" class="btn btn-secondary btn_close_all" data-bs-dismiss="modal">Close</button>
-               </div>
-            </div>
+           </div>
          </div>
-      </div>
+       </div>
 
-
+       
       <!-- ============== Section1 end =============== -->
       <style>
          .complaint-status {
@@ -415,16 +227,14 @@
             min-width: 96px;
             font-size: 12px;
          }
-
-         .bell_icon {
+         .bell_icon{
             position: relative;
          }
-
          .bell_icon i {
             font-size: 14px;
             position: relative;
          }
-
+         
          .bell_icon .bell_icon1 {
             position: absolute;
             right: -6px;
@@ -439,80 +249,21 @@
          }
 
          .modal_body_edit #successMessage {
-            border: 1px solid #fccb06;
-            padding: 15px 10px;
-            border-radius: 5px;
-            text-align: center;
-         }
+    border: 1px solid #fccb06;
+    padding: 15px 10px;
+    border-radius: 5px;
+    text-align: center;
+}
 
-         .modal_body_edit .modal-header {
-            margin-bottom: 0px;
-         }
+.modal_body_edit .modal-header{
+   margin-bottom: 0px;
+}
 
-         .modal_body_edit .modal-body {
-            border: none !important;
-            margin: 0px !important;
-         }
-
-         .assign_catagories {
-            padding: 30px 20px;
-         }
-
-         .assign_catagories label {
-            margin-bottom: 14px;
-         }
-
-         .assign_catagories select {
-            padding: 12px 18px;
-            width: 100%;
-            margin-right: 10px;
-            border-radius: 10px;
-            border: 1px solid #FCCB06;
-            margin-bottom: 20PX;
-         }
-
-         .assign_catagories h4 {
-            display: flex;
-            justify-content: center;
-            font-family: Nunito;
-            font-size: 24px;
-            font-weight: 700;
-            line-height: 36px;
-            text-align: left;
-            margin-bottom: 25px;
-
-         }
-
-         .assign_catagories .add_user_input label {
-            display: flex;
-            justify-content: center;
-            font-family: Nunito;
-            font-size: 24px;
-            font-weight: 700;
-            line-height: 36px;
-            text-align: left;
-            margin-bottom: 25px;
-
-         }
-
-         .assign_catagories .add_user_submit_btn input {
-            padding: 10px 18px;
-            background-color: #000;
-            width: 100%;
-            border-radius: 10px;
-            color: #fff;
-            font-family: Nunito;
-            font-size: 18px;
-            font-weight: 600;
-            line-height: 36px;
-            text-align: center;
-
-         }
-
-         #assign_category .popup__content {
-            width: 420px;
-         }
-      </style>
+.modal_body_edit .modal-body{
+    border: none !important;
+    margin: 0px !important;
+}
+         </style>
 
       <%- include('common/footer') -%>
 
@@ -524,8 +275,6 @@
          <script
             src="https://cdn.datatables.net/plug-ins/f2c75b7247b/integration/bootstrap/3/dataTables.bootstrap.js"></script>
          <script src="https://cdn.datatables.net/responsive/1.0.4/js/dataTables.responsive.js"></script>
-         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
          <script>
             jQuery(function ($) {
                $(document).ready(() => {
@@ -534,148 +283,20 @@
                   });
                });
             });
-            let complaintLevel = "<%=complaintLevel%>";
-            console.log("complaintLevel", complaintLevel);
+
             $(document).ready(function () {
                $('.respond-link').on('click', function (e) {
                   e.preventDefault();
                   const complaintId = $(this).data('complaint-id');
-                  var categoryId = $(this).data('category-id');
-                  console.log("categoryId", categoryId);
                   const customerId = $(this).data('customer-id');
                   const levelId = $(this).data('level-id');
-                  console.log("levelId", levelId);
-                  console.log("complaintLevel", complaintLevel);
-
-                  if (levelId > complaintLevel) {
-                     $('#assign_complain').hide();
-                     //$('#assign_category').hide();
-                     console.log("Escalation is restricted due to level exceeding limit.");
-
-                     // Hide the list item that allows escalation to the next level
-                     $('.respond-link[data-bs-target="#assign_complain"]').closest('li').hide();
-                  }
-
-                  //    if (levelId > complaintLevel) {
-                  //    // Hide the elements that should not be visible when levelId > complaintLevel
-                  //    $('#assign_complain').hide();
-                  //    $('#assign_category').hide();
-                  //    console.log("Escalation is restricted due to level exceeding limit.");
-                  // } else {
-                  //    // If levelId is within the limit, show elements
-                  //    $('#assign_complain').show();
-                  //    $('#assign_category').show();
-                  // }
-
                   $('#complaint-id-input').val(complaintId);
                   $('#complaint-id-resolve').val(complaintId);
                   $('#customer_id_resolve').val(customerId);
                   $('#customer-id-query').val(customerId);
                   $('#complaint-query-level').val(levelId);
                   $('#complaint-resolve-level').val(levelId);
-                  $('#listing_complain').find('#complaintIdField').val(complaintId);
-                  $('#listing_complain').find('#levelIdField').val(levelId);
-                  $('#listing_complain').find('#customerIdField').val(customerId);
-                  $('#listing_complain').find('#categoryIdField').val(categoryId);
-
-
-                  $('#assign_complain').find('#complaintIdField').val(complaintId);
-                  $('#assign_complain').find('#levelIdField').val(levelId + 1);
-                  $('#assign_complain').find('#customerIdField').val(customerId);
-                  var categoryIds = $('#assign_complain').find('#categoryIdField').val(categoryId);
-                  console.log("categoryIds:", categoryIds);
-
-                  $('#assign_category').find('#complaintIdField').val(complaintId);
-                  $('#assign_category').find('#levelIdField').val(levelId + 1);
-                  $('#assign_category').find('#customerIdField').val(customerId);
-
                });
-
-
-
-
-               $('.assign-user-link').on('click', function () {
-                  var categoryId = $(this).data('category-id');
-                  var complaintId = $(this).data('complaint-id');
-                  var levelId = $(this).data('level-id');
-                  var customerId = $(this).data('customer-id');
-
-                  console.log("categoryId, complaintId, levelId, customerId, categoryId", categoryId, complaintId, levelId, customerId, categoryId);
-
-                  $('#complaintIdField').val(complaintId);
-                  $('#levelIdField').val(levelId);
-                  $('#customerIdField').val(customerId);
-                  $('#categoryId').val(categoryId);
-
-                  $.ajax({
-                     url: `/getusers/${categoryId}`,  // Adjusted to match your server route
-                     type: 'GET',
-                     success: function (response) {
-                        console.log("response", response);
-                        console.log("aaaaaa")
-                        if (response.status == 'ok' && response.users) {
-                           var $select = $('#category').empty(); // Clear previous options
-                           response.users.forEach(function (user) {
-                              $select.append($('<option></option>').val(user.emails).text(user.emails + ' (Level- ' + user.level + ')'));
-                           });
-                        } else {
-                           console.log('No users found or error:', response.message);
-                           $('#category').empty().append('<option>No users found</option>');
-                        }
-                     },
-                     error: function (error) {
-                        console.error('Failed to fetch users', error);
-                        $('#category').empty().append('<option>No users found</option>');
-                     }
-                  });
-               });
-
-               $('.escalate-link').on('click', function () {
-                  console.log("Escalate link clicked");
-                  var companyId = $(this).data('company-id');
-                  var complaintId = $(this).data('complaint-id');
-                  var levelId = $(this).data('level-id');
-                  var customerId = $(this).data('customer-id');
-                  var categoryId = $(this).data('category-id');
-                  var incrementedLevelId = levelId + 1; // Increment levelId
-    
-                  // Check the original and incremented values to confirm the result
-                  console.log("Original levelId:", levelId);
-                  console.log("Incremented levelId:", incrementedLevelId);
-
-                  console.log("categoryId, complaintId, levelId, customerId, categoryId,companyId", categoryId, complaintId, levelId, customerId, categoryId, companyId);
-
-                  // Set hidden field values
-                  $('#assign_complain').find('#complaintIdField').val(complaintId);
-                  $('#assign_complain').find('#levelIdField').val(levelId + 1);
-                  $('#assign_complain').find('#customerIdField').val(customerId);
-                  $('#assign_complain').find('#categoryIdField').val(categoryId);
-
-                  $.ajax({
-                     url: `/getuserss/${companyId}/${incrementedLevelId}/${categoryId}`,
-                     type: 'GET',
-                     success: function (response) {
-                        const $select = $('#category_2'); 
-                        $select.empty(); 
-
-                        if (response.status === 'ok' && response.users.length > 0) {
-                           response.users.forEach(function (user) {
-                              $select.append($('<option></option>')
-                                 .val(user.emails)
-                                 .text(`${user.emails}`));
-                           });
-                        } else {
-                           $select.append('<option>No users found</option>');
-                        }
-                     },
-                     error: function (jqXHR, textStatus, errorThrown) {
-                        console.error('Error fetching users:', textStatus, errorThrown);
-                        $select.empty().append('<option>No users found</option>');
-                     }
-                  });
-
-               });
-
 
                $('form.message_form').submit(function (e) {
                   e.preventDefault();
@@ -724,7 +345,7 @@
 
                });
 
-               $('.btn_close_all').on('click', function (e) {
+               $('.btn_close_all').on('click', function(e){
                   location.reload(true);
                })
 
@@ -735,12 +356,12 @@
                   //console.log(complaintId, customerId, levelId)
                   //alert('aaaaaaaa');
                   $.ajax({
-                     url: '/auth/escalate-next-level',
-                     method: 'POST',
-                     data: JSON.stringify({ complaintId: complaintId, customerId: customerId, levelId: levelId }),
-                     contentType: 'application/json',
-                     processData: false,
-                     success: function (data) {
+                     url:'/auth/escalate-next-level',
+                     method:'POST',
+                     data:JSON.stringify({complaintId:complaintId, customerId:customerId, levelId:levelId }),
+                     contentType:'application/json',
+                     processData:false,
+                     success: function (data){
                         // $('.response-message').text(data.message);
                         // $('.response-message').show();
 
@@ -748,158 +369,16 @@
                         $('#successMessage').text(data.message);
                         // Open the modal
                         $('#successModal').modal('show');
-                        setTimeout(function () {
+                        setTimeout(function() {
                            location.reload(true);
                         }, 3000);
                      },
-                     error: function (error) {
+                     error: function(error){
                         console.log(error);
                      }
                   })
                   //return false;
                });
-
-               $('#leveluserForm').on('submit', function (event) {
-                  event.preventDefault();
-
-
-                  var formData = $(this).serialize();
-                  console.log("formDatass", formData);
-                  $.ajax({
-                     url: '/auth/assign-users',
-                     method: 'POST',
-                     data: formData,
-                     success: function (response) {
-                        console.log('Forms submitted successfully!');
-                        alertMessage('success', response.success_message);
-                        setTimeout(function () {
-                           window.location.reload();
-                        }, 2000);
-                     },
-                     error: function (xhr, status, error) {
-                        console.error('Error submitting form:', error);
-
-                        var errorMessage;
-                        if (xhr.responseJSON && xhr.responseJSON.error_message) {
-                           errorMessage = xhr.responseJSON.error_message;
-                        } else {
-                           errorMessage = 'An error occurred while submitting emails. Please try again later.';
-                        }
-                        alertMessage('error', errorMessage);
-                     }
-                  });
-               });
-
-               $('#assignuserForm').on('submit', function (event) {
-                  event.preventDefault();
-
-                  var formData = $(this).serialize();
-                  console.log("formDatass", formData);
-                  $.ajax({
-                     url: '/auth/escalate-assign-users',
-                     method: 'POST',
-                     data: formData,
-                     success: function (response) {
-                        console.log("response", response);
-                        console.log('Forms submitted successfully!');
-                        alertMessage('success', response.success_message);
-                        setTimeout(function () {
-                           window.location.reload();
-                        }, 2000);
-                     },
-                     error: function (xhr, status, error) {
-                        console.error('Error submitting form:', error);
-
-                        var errorMessage;
-                        if (xhr.responseJSON && xhr.responseJSON.error_message) {
-                           errorMessage = xhr.responseJSON.error_message;
-                        } else {
-                           errorMessage = 'An error occurred while submitting emails. Please try again later.';
-                        }
-                        alertMessage('error', errorMessage);
-                     }
-                  });
-                  $.ajax({
-                     url: `/getuserss/${companyId}/${levelId}/${categoryId}`,
-                     type: 'GET',
-                     success: function (response) {
-                        const $select = $('#category').empty(); // Empty the current options
-
-                        if (response.status === 'ok' && response.users.length > 0) {
-                           // Add each user as an option in the dropdown
-                           response.users.forEach(function (user) {
-                              $select.append($('<option></option>')
-                                 .val(user.email)
-                                 .text(`${user.email} (Level- ${user.level})`));
-                           });
-                        } else {
-                           $select.append('<option>No users found</option>');
-                        }
-                     },
-                     error: function (jqXHR, textStatus, errorThrown) {
-                        console.error('Error fetching users:', textStatus, errorThrown);
-                        $('#category').empty().append('<option>Error fetching users</option>');
-                     }
-                  });
-               });
-
-               $('#updatecategoryForm').on('submit', function (event) {
-                  event.preventDefault();
-
-                  var formData = $(this).serialize();
-                  console.log("formDatass", formData);
-                  $.ajax({
-                     url: '/auth/updatecategory',
-                     method: 'POST',
-                     data: formData,
-                     success: function (response) {
-                        console.log('Forms submitted successfully!');
-                        alertMessage('success', response.success_message);
-                        setTimeout(function () {
-                           window.location.reload();
-                        }, 2000);
-                     },
-                     error: function (xhr, status, error) {
-                        console.error('Error submitting form:', error);
-
-                        var errorMessage;
-                        if (xhr.responseJSON && xhr.responseJSON.error_message) {
-                           errorMessage = xhr.responseJSON.error_message;
-                        } else {
-                           errorMessage = 'An error occurred while submitting emails. Please try again later.';
-                        }
-                        alertMessage('error', errorMessage);
-                     }
-                  });
-               });
-
-
-
-
-
-               $(document).on('click', '#listing_complaint', function () {
-                  $("#listing_complain").fadeIn(500);
-               });
-               $(document).on('click', '#assign_complaint', function () {
-                  $("#assign_complain").fadeIn(500);
-               });
-               $(document).on('click', '#category_complaint', function () {
-                  $("#assign_category").fadeIn(500);
-               });
-
-
-               $(".close").click(function () {
-                  $(".popup").fadeOut(500);
-               });
-               function alertMessage(type, msg) {
-                  Swal.fire({
-                     position: 'center',
-                     icon: type,
-                     title: msg,
-                     showConfirmButton: false,
-                     timer: 2000
-                  })
-               }
 
             });
 
