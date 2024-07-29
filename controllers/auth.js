@@ -6136,267 +6136,518 @@ exports.updateBasicCompany = (req, res) => {
 }
 
 //--Front end- Update Basic Company profile --//
+// exports.updatePremiumCompany = async (req, res) => {
+//     try{
+//     console.log('PremiumCompany:', req.body);
+//     //console.log('PremiumCompany File:',req.files);
+
+//     const companyID = req.body.company_id;
+//     const companySlug = req.body.company_slug;
+//     const currentDate = new Date();
+
+//     const year = currentDate.getFullYear();
+//     const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+//     const day = String(currentDate.getDate()).padStart(2, '0');
+//     const hours = String(currentDate.getHours()).padStart(2, '0');
+//     const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+//     const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+
+//     const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+
+//     const { previous_cover_image, youtube_iframe, promotion_title, promotion_desc, promotion_discount, promotion_image, product_title, product_desc, product_image, facebook_url, twitter_url, instagram_url, linkedin_url, youtube_url, support_email, escalation_one, escalation_two, escalation_three } = req.body;
+
+//     const { cover_image, gallery_images } = req.files;
+//     let galleryImages = [];
+//     if (gallery_images) {
+//         galleryImages = gallery_images.map((title, index) => ({
+//             gallery_images: req.files.gallery_images[index].filename
+//         }));
+//     }
+
+//     //return false;
+//     if (typeof product_image == 'undefined' || typeof promotion_image == 'undefined') {
+//         let product_image = [];
+//         let promotion_image = [];
+//     }
+//     let ProductData = [];
+//     if (Array.isArray(product_title) && product_title.length > 0) {
+//         let count = 0;
+//         ProductData = product_title.map((title, index) => {
+//             let productImage = null;
+//             if (product_image[index] !== '') {
+//                 productImage = req.files.product_image[count].filename;
+//                 count++;
+//             } else {
+//                 productImage = null;
+//             }
+
+//             return {
+//                 product_title: title,
+//                 product_desc: product_desc[index],
+//                 product_image: productImage
+//             };
+//         });
+//     } else {
+//         let prodkImg = null;
+//         if (typeof product_image != 'undefined') {
+//             if (product_image[0] !== '') {
+//                 prodkImg = req.files.product_image[0].filename;
+//             }
+//         }
+
+//         ProductData = [{
+//             "product_title": product_title,
+//             "product_desc": product_desc,
+//             "product_image": prodkImg
+//         }]
+//     }
+
+
+
+//     let PromotionalData = [];
+//     if (Array.isArray(promotion_title) && promotion_title.length > 0) {
+//         let i = 0;
+//         PromotionalData = promotion_title.map((title, index) => {
+//             let promotionImage = null;
+//             if (promotion_image[index] !== '') {
+//                 promotionImage = req.files.promotion_image[i].filename;
+//                 i++;
+//             }
+
+//             return {
+//                 promotion_title: title,
+//                 promotion_desc: promotion_desc[index],
+//                 promotion_discount: promotion_discount[index],
+//                 promotion_image: promotionImage
+//             };
+//         });
+//     } else {
+//         let promoImg = null;
+//         if (typeof promotion_image != 'undefined') {
+//             if (promotion_image[0] !== '') {
+//                 promoImg = req.files.promotion_image[0].filename;
+//             }
+//         }
+
+//         PromotionalData = [{
+//             "promotion_title": promotion_title,
+//             "promotion_desc": promotion_desc,
+//             "promotion_discount": promotion_discount,
+//             "promotion_image": promoImg
+//         }]
+//     }
+//     console.log('PromotionalData:',PromotionalData)
+
+//     let coverImg = null;
+//     if (cover_image) {
+//         coverImg = cover_image[0].filename;
+//     } else {
+//         coverImg = previous_cover_image;
+//     }
+
+
+//     // Update company details in the company table
+//     const updateQuery = 'UPDATE company SET  heading = ?, logo = ?, about_company = ?, comp_phone = ?, comp_email = ?, updated_date = ?, tollfree_number = ?, main_address = ?, operating_hours = ?  WHERE ID = ?';
+//     const updateValues = [
+//         req.body.heading,
+//         '',
+//         req.body.about_company,
+//         req.body.comp_phone,
+//         req.body.comp_email,
+//         formattedDate,
+//         req.body.tollfree_number,
+//         req.body.main_address,
+//         req.body.operating_hours,
+//         companyID
+//     ];
+
+//     if (req.files.logo) {
+//         // Unlink (delete) the previous file
+//         const unlinkcompanylogo = "uploads/" + req.body.previous_logo;
+//         fs.unlink(unlinkcompanylogo, (err) => {
+//             if (err) {
+//                 //console.error('Error deleting file:', err);
+//             } else {
+//                 //console.log('Previous file deleted');
+//             }
+//         });
+
+//         updateValues[1] = req.files.logo[0].filename;
+//     } else {
+//         updateValues[1] = req.body.previous_logo;
+//     }
+//     db.query(updateQuery, updateValues, (err, results) => {
+//         if (err) {
+//             // Handle the error
+//             return res.send({
+//                 status: 'err',
+//                 data: '',
+//                 message: '3 An error occurred while updating the company details: ' + err
+//             });
+//         } else {
+//             const check_sql = `SELECT * FROM premium_company_data WHERE company_id = ? `;
+//             const check_data = [companyID];
+//             db.query(check_sql, check_data, (check_err, check_result) => {
+//                 if (check_err) {
+//                     return res.send(
+//                         {
+//                             status: 'err',
+//                             data: '',
+//                             message: 'An error occurred while processing your request'
+//                         }
+//                     )
+//                 } else {
+//                     if (check_result.length > 0) {
+
+//                         console.log(check_result[0]);
+//                         //return false;
+//                         const gallery_img = JSON.parse(check_result[0].gallery_img);
+
+//                         if (galleryImages.length > 0) {
+//                             galleryImages.forEach(function (img, index, arr) {
+//                                 gallery_img.push(img);
+//                             })
+//                         }
+//                         //gallery_img.push(galleryImages);
+
+//                         console.log('merge_img:',gallery_img);
+
+
+//                         const promotionSQL = JSON.parse(check_result[0].promotions);
+//                         console.log('promotionSQL',promotionSQL);
+//                         //return false;
+//                         if (promotionSQL.length > 0) {
+//                             promotionSQL.forEach(function (promotionImg, index, arr) {
+//                                 if (promotionImg.promotion_image != null) {
+//                                     console.log('promotion_image',promotionImg.promotion_image);
+//                                     if (promotion_image && promotion_image[index] == '') {
+
+//                                         PromotionalData[index].promotion_image = promotionSQL[index].promotion_image;
+//                                     }
+//                                 }
+//                             })
+//                         }
+//                         const productSQL = JSON.parse(check_result[0].products);
+//                         if (productSQL.length > 0) {
+//                             productSQL.forEach(function (productImg, index, arr) {
+//                                 if (productImg.product_image != null) {
+//                                     if (product_image && product_image[index] == '') {
+//                                         ProductData[index].product_image = productSQL[index].product_image;
+//                                     }
+//                                 }
+//                             })
+//                         }
+//                         console.log('allPromotionalData',PromotionalData);
+//                         console.log('allProductData',ProductData);
+//                         const galleryimg = JSON.stringify(gallery_img);
+//                         const Products = JSON.stringify(ProductData);
+//                         const Promotion = JSON.stringify(PromotionalData);
+
+
+//                         //return false;
+//                         const update_query = `UPDATE premium_company_data SET cover_img = ?, gallery_img = ?, youtube_iframe = ?,promotions = ?, products = ?, facebook_url = ?, twitter_url = ?, instagram_url = ?, linkedin_url = ?, youtube_url = ?, support_email = ?, escalation_one = ?, escalation_two = ?, escalation_three = ? WHERE company_id = ? `;
+//                         const update_data = [coverImg, galleryimg, youtube_iframe, Promotion, Products, facebook_url, twitter_url, instagram_url, linkedin_url, youtube_url, support_email, escalation_one, escalation_two, escalation_three, companyID];
+//                         db.query(update_query, update_data, (update_err, update_result) => {
+//                             if (update_err) {
+//                                 // Handle the error
+//                                 return res.send({
+//                                     status: 'err',
+//                                     data: '',
+//                                     message: '2 An error occurred while updating the company details: ' + update_err
+//                                 });
+//                             } else {
+//                                 return res.send(
+//                                     {
+//                                         status: 'ok',
+//                                         data: companySlug,
+//                                         message: 'Successfully Updated'
+//                                     }
+//                                 )
+//                             }
+//                         })
+
+//                     } else {
+//                         const galleryimg = JSON.stringify(galleryImages);
+//                         const Products = JSON.stringify(ProductData);
+//                         const Promotion = JSON.stringify(PromotionalData);
+
+//                         const premium_query = `INSERT INTO premium_company_data ( company_id, cover_img, gallery_img, youtube_iframe, promotions, products, facebook_url, twitter_url, instagram_url, linkedin_url, youtube_url, support_email, escalation_one, escalation_two, escalation_three) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+//                         const premium_data = [companyID, coverImg, galleryimg, youtube_iframe, Promotion, Products, facebook_url, twitter_url, instagram_url, linkedin_url, youtube_url, support_email, escalation_one, escalation_two, escalation_three];
+//                         db.query(premium_query, premium_data, (premium_err, premium_result) => {
+//                             if (premium_err) {
+//                                 // Handle the error
+//                                 return res.send({
+//                                     status: 'err',
+//                                     data: '',
+//                                     message: '1 An error occurred while updating the company details: ' + premium_err
+//                                 });
+//                             } else {
+//                                 return res.send(
+//                                     {
+//                                         status: 'ok',
+//                                         data: companySlug,
+//                                         message: 'Successfully Updated'
+//                                     }
+//                                 )
+//                             }
+//                         })
+//                     }
+//                 }
+//             });
+//         }
+//     })
+// }catch(error){
+//     console.error(err);
+//     res.status(500).send('An error occurred');
+// }
+// }
+
+
 exports.updatePremiumCompany = async (req, res) => {
-    console.log('PremiumCompany:', req.body);
-    //console.log('PremiumCompany File:',req.files);
+    try {
+        console.log('PremiumCompany:', req.body);
+        //console.log('PremiumCompany File:', req.files);
 
-    const companyID = req.body.company_id;
-    const companySlug = req.body.company_slug;
-    const currentDate = new Date();
+        const companyID = req.body.company_id;
+        const companySlug = req.body.company_slug;
+        const currentDate = new Date();
 
-    const year = currentDate.getFullYear();
-    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-    const day = String(currentDate.getDate()).padStart(2, '0');
-    const hours = String(currentDate.getHours()).padStart(2, '0');
-    const minutes = String(currentDate.getMinutes()).padStart(2, '0');
-    const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+        const year = currentDate.getFullYear();
+        const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+        const day = String(currentDate.getDate()).padStart(2, '0');
+        const hours = String(currentDate.getHours()).padStart(2, '0');
+        const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+        const seconds = String(currentDate.getSeconds()).padStart(2, '0');
 
-    const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 
+        const { previous_cover_image, youtube_iframe, promotion_title, promotion_desc, promotion_discount, promotion_image, product_title, product_desc, product_image, facebook_url, twitter_url, instagram_url, linkedin_url, youtube_url, support_email, escalation_one, escalation_two, escalation_three } = req.body;
 
-    const { previous_cover_image, youtube_iframe, promotion_title, promotion_desc, promotion_discount, promotion_image, product_title, product_desc, product_image, facebook_url, twitter_url, instagram_url, linkedin_url, youtube_url, support_email, escalation_one, escalation_two, escalation_three } = req.body;
-
-    const { cover_image, gallery_images } = req.files;
-    let galleryImages = [];
-    if (gallery_images) {
-        galleryImages = gallery_images.map((title, index) => ({
-            gallery_images: req.files.gallery_images[index].filename
-        }));
-    }
-
-    //return false;
-    if (typeof product_image == 'undefined' || typeof promotion_image == 'undefined') {
-        let product_image = [];
-        let promotion_image = [];
-    }
-    let ProductData = [];
-    if (Array.isArray(product_title) && product_title.length > 0) {
-        let count = 0;
-        ProductData = product_title.map((title, index) => {
-            let productImage = null;
-            if (product_image[index] !== '') {
-                productImage = req.files.product_image[count].filename;
-                count++;
-            } else {
-                productImage = null;
-            }
-
-            return {
-                product_title: title,
-                product_desc: product_desc[index],
-                product_image: productImage
-            };
-        });
-    } else {
-        let prodkImg = null;
-        if (typeof product_image != 'undefined') {
-            if (product_image[0] !== '') {
-                prodkImg = req.files.product_image[0].filename;
-            }
+        const { cover_image, gallery_images } = req.files;
+        let galleryImages = [];
+        if (gallery_images) {
+            galleryImages = gallery_images.map((file, index) => ({
+                gallery_images: req.files.gallery_images[index].filename
+            }));
         }
 
-        ProductData = [{
-            "product_title": product_title,
-            "product_desc": product_desc,
-            "product_image": prodkImg
-        }]
-    }
-
-
-
-    let PromotionalData = [];
-    if (Array.isArray(promotion_title) && promotion_title.length > 0) {
-        let i = 0;
-        PromotionalData = promotion_title.map((title, index) => {
-            let promotionImage = null;
-            if (promotion_image[index] !== '') {
-                promotionImage = req.files.promotion_image[i].filename;
-                i++;
-            }
-
-            return {
-                promotion_title: title,
-                promotion_desc: promotion_desc[index],
-                promotion_discount: promotion_discount[index],
-                promotion_image: promotionImage
-            };
-        });
-    } else {
-        let promoImg = null;
-        if (typeof promotion_image != 'undefined') {
-            if (promotion_image[0] !== '') {
-                promoImg = req.files.promotion_image[0].filename;
-            }
+        if (typeof product_image == 'undefined' || typeof promotion_image == 'undefined') {
+            product_image = [];
+            promotion_image = [];
         }
 
-        PromotionalData = [{
-            "promotion_title": promotion_title,
-            "promotion_desc": promotion_desc,
-            "promotion_discount": promotion_discount,
-            "promotion_image": promoImg
-        }]
-    }
-    //console.log('PromotionalData:',PromotionalData)
+        let ProductData = [];
+        if (Array.isArray(product_title) && product_title.length > 0) {
+            let count = 0;
+            ProductData = product_title.map((title, index) => {
+                let productImage = null;
+                if (product_image[index] !== '') {
+                    productImage = req.files.product_image[count].filename;
+                    count++;
+                } else {
+                    productImage = null;
+                }
 
-    let coverImg = null;
-    if (cover_image) {
-        coverImg = cover_image[0].filename;
-    } else {
-        coverImg = previous_cover_image;
-    }
-
-
-    // Update company details in the company table
-    const updateQuery = 'UPDATE company SET  heading = ?, logo = ?, about_company = ?, comp_phone = ?, comp_email = ?, updated_date = ?, tollfree_number = ?, main_address = ?, operating_hours = ?  WHERE ID = ?';
-    const updateValues = [
-        req.body.heading,
-        '',
-        req.body.about_company,
-        req.body.comp_phone,
-        req.body.comp_email,
-        formattedDate,
-        req.body.tollfree_number,
-        req.body.main_address,
-        req.body.operating_hours,
-        companyID
-    ];
-
-    if (req.files.logo) {
-        // Unlink (delete) the previous file
-        const unlinkcompanylogo = "uploads/" + req.body.previous_logo;
-        fs.unlink(unlinkcompanylogo, (err) => {
-            if (err) {
-                //console.error('Error deleting file:', err);
-            } else {
-                //console.log('Previous file deleted');
-            }
-        });
-
-        updateValues[1] = req.files.logo[0].filename;
-    } else {
-        updateValues[1] = req.body.previous_logo;
-    }
-    db.query(updateQuery, updateValues, (err, results) => {
-        if (err) {
-            // Handle the error
-            return res.send({
-                status: 'err',
-                data: '',
-                message: '3 An error occurred while updating the company details: ' + err
+                return {
+                    product_title: title,
+                    product_desc: product_desc[index],
+                    product_image: productImage
+                };
             });
         } else {
-            const check_sql = `SELECT * FROM premium_company_data WHERE company_id = ? `;
-            const check_data = [companyID];
-            db.query(check_sql, check_data, (check_err, check_result) => {
-                if (check_err) {
-                    return res.send(
-                        {
+            let prodkImg = null;
+            if (typeof product_image != 'undefined' && product_image[0] !== '') {
+                prodkImg = req.files.product_image[0].filename;
+            }
+
+            ProductData = [{
+                "product_title": product_title,
+                "product_desc": product_desc,
+                "product_image": prodkImg
+            }];
+        }
+
+        let PromotionalData = [];
+        if (Array.isArray(promotion_title) && promotion_title.length > 0) {
+            let i = 0;
+            PromotionalData = promotion_title.map((title, index) => {
+                let promotionImage = null;
+                if (promotion_image[index] !== '') {
+                    promotionImage = req.files.promotion_image[i].filename;
+                    i++;
+                }
+
+                return {
+                    promotion_title: title,
+                    promotion_desc: promotion_desc[index],
+                    promotion_discount: promotion_discount[index],
+                    promotion_image: promotionImage
+                };
+            });
+        } else {
+            let promoImg = null;
+            if (typeof promotion_image != 'undefined' && promotion_image[0] !== '') {
+                promoImg = req.files.promotion_image[0].filename;
+            }
+
+            PromotionalData = [{
+                "promotion_title": promotion_title,
+                "promotion_desc": promotion_desc,
+                "promotion_discount": promotion_discount,
+                "promotion_image": promoImg
+            }];
+        }
+        console.log('PromotionalData:', PromotionalData);
+
+        let coverImg = null;
+        if (cover_image) {
+            coverImg = cover_image[0].filename;
+        } else {
+            coverImg = previous_cover_image;
+        }
+
+        // Update company details in the company table
+        const updateQuery = 'UPDATE company SET heading = ?, logo = ?, about_company = ?, comp_phone = ?, comp_email = ?, updated_date = ?, tollfree_number = ?, main_address = ?, operating_hours = ? WHERE ID = ?';
+        const updateValues = [
+            req.body.heading,
+            '',
+            req.body.about_company,
+            req.body.comp_phone,
+            req.body.comp_email,
+            formattedDate,
+            req.body.tollfree_number,
+            req.body.main_address,
+            req.body.operating_hours,
+            companyID
+        ];
+
+        if (req.files.logo) {
+            // Unlink (delete) the previous file
+            const unlinkcompanylogo = "uploads/" + req.body.previous_logo;
+            fs.unlink(unlinkcompanylogo, (err) => {
+                if (err) {
+                    //console.error('Error deleting file:', err);
+                } else {
+                    //console.log('Previous file deleted');
+                }
+            });
+
+            updateValues[1] = req.files.logo[0].filename;
+        } else {
+            updateValues[1] = req.body.previous_logo;
+        }
+
+        db.query(updateQuery, updateValues, (err, results) => {
+            if (err) {
+                // Handle the error
+                return res.send({
+                    status: 'err',
+                    data: '',
+                    message: 'An error occurred while updating the company details: ' + err
+                });
+            } else {
+                const check_sql = `SELECT * FROM premium_company_data WHERE company_id = ?`;
+                const check_data = [companyID];
+                db.query(check_sql, check_data, (check_err, check_result) => {
+                    if (check_err) {
+                        return res.send({
                             status: 'err',
                             data: '',
                             message: 'An error occurred while processing your request'
-                        }
-                    )
-                } else {
-                    if (check_result.length > 0) {
-
-                        //console.log(check_result[0]);
-                        //return false;
-                        const gallery_img = JSON.parse(check_result[0].gallery_img);
-
-                        if (galleryImages.length > 0) {
-                            galleryImages.forEach(function (img, index, arr) {
-                                gallery_img.push(img);
-                            })
-                        }
-                        //gallery_img.push(galleryImages);
-
-                        //console.log('merge_img:',gallery_img);
-
-
-                        const promotionSQL = JSON.parse(check_result[0].promotions);
-                        //console.log('promotionSQL',promotionSQL);
-                        //return false;
-                        if (promotionSQL.length > 0) {
-                            promotionSQL.forEach(function (promotionImg, index, arr) {
-                                if (promotionImg.promotion_image != null) {
-                                    //console.log('promotion_image',promotionImg.promotion_image);
-                                    if (promotion_image && promotion_image[index] == '') {
-
-                                        PromotionalData[index].promotion_image = promotionSQL[index].promotion_image;
-                                    }
-                                }
-                            })
-                        }
-                        const productSQL = JSON.parse(check_result[0].products);
-                        if (productSQL.length > 0) {
-                            productSQL.forEach(function (productImg, index, arr) {
-                                if (productImg.product_image != null) {
-                                    if (product_image && product_image[index] == '') {
-                                        ProductData[index].product_image = productSQL[index].product_image;
-                                    }
-                                }
-                            })
-                        }
-                        // console.log('allPromotionalData',PromotionalData);
-                        // console.log('allProductData',ProductData);
-                        const galleryimg = JSON.stringify(gallery_img);
-                        const Products = JSON.stringify(ProductData);
-                        const Promotion = JSON.stringify(PromotionalData);
-
-
-                        //return false;
-                        const update_query = `UPDATE premium_company_data SET cover_img = ?, gallery_img = ?, youtube_iframe = ?,promotions = ?, products = ?, facebook_url = ?, twitter_url = ?, instagram_url = ?, linkedin_url = ?, youtube_url = ?, support_email = ?, escalation_one = ?, escalation_two = ?, escalation_three = ? WHERE company_id = ? `;
-                        const update_data = [coverImg, galleryimg, youtube_iframe, Promotion, Products, facebook_url, twitter_url, instagram_url, linkedin_url, youtube_url, support_email, escalation_one, escalation_two, escalation_three, companyID];
-                        db.query(update_query, update_data, (update_err, update_result) => {
-                            if (update_err) {
-                                // Handle the error
-                                return res.send({
-                                    status: 'err',
-                                    data: '',
-                                    message: '2 An error occurred while updating the company details: ' + update_err
-                                });
-                            } else {
-                                return res.send(
-                                    {
-                                        status: 'ok',
-                                        data: companySlug,
-                                        message: 'Successfully Updated'
-                                    }
-                                )
-                            }
-                        })
-
+                        });
                     } else {
-                        const galleryimg = JSON.stringify(galleryImages);
-                        const Products = JSON.stringify(ProductData);
-                        const Promotion = JSON.stringify(PromotionalData);
+                        if (check_result.length > 0) {
+                            console.log(check_result[0]);
 
-                        const premium_query = `INSERT INTO premium_company_data ( company_id, cover_img, gallery_img, youtube_iframe, promotions, products, facebook_url, twitter_url, instagram_url, linkedin_url, youtube_url, support_email, escalation_one, escalation_two, escalation_three) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-                        const premium_data = [companyID, coverImg, galleryimg, youtube_iframe, Promotion, Products, facebook_url, twitter_url, instagram_url, linkedin_url, youtube_url, support_email, escalation_one, escalation_two, escalation_three];
-                        db.query(premium_query, premium_data, (premium_err, premium_result) => {
-                            if (premium_err) {
-                                // Handle the error
-                                return res.send({
-                                    status: 'err',
-                                    data: '',
-                                    message: '1 An error occurred while updating the company details: ' + premium_err
+                            const gallery_img = JSON.parse(check_result[0].gallery_img) || [];
+                            if (galleryImages.length > 0) {
+                                galleryImages.forEach(img => gallery_img.push(img));
+                            }
+                            console.log('merge_img:', gallery_img);
+
+                            const promotionSQL = JSON.parse(check_result[0].promotions) || [];
+                            console.log('promotionSQL', promotionSQL);
+                            if (promotionSQL.length > 0) {
+                                promotionSQL.forEach((promotionImg, index) => {
+                                    if (promotionImg.promotion_image != null && promotion_image && promotion_image[index] === '') {
+                                        PromotionalData[index].promotion_image = promotionImg.promotion_image;
+                                    }
                                 });
-                            } else {
-                                return res.send(
-                                    {
+                            }
+
+                            const productSQL = JSON.parse(check_result[0].products) || [];
+                            if (productSQL.length > 0) {
+                                productSQL.forEach((productImg, index) => {
+                                    if (productImg.product_image != null && product_image && product_image[index] === '') {
+                                        ProductData[index].product_image = productImg.product_image;
+                                    }
+                                });
+                            }
+
+                            console.log('allPromotionalData', PromotionalData);
+                            console.log('allProductData', ProductData);
+
+                            const galleryimg = JSON.stringify(gallery_img);
+                            const Products = JSON.stringify(ProductData);
+                            const Promotion = JSON.stringify(PromotionalData);
+
+                            const update_query = `UPDATE premium_company_data SET cover_img = ?, gallery_img = ?, youtube_iframe = ?, promotions = ?, products = ?, facebook_url = ?, twitter_url = ?, instagram_url = ?, linkedin_url = ?, youtube_url = ?, support_email = ?, escalation_one = ?, escalation_two = ?, escalation_three = ? WHERE company_id = ?`;
+                            const update_data = [coverImg, galleryimg, youtube_iframe, Promotion, Products, facebook_url, twitter_url, instagram_url, linkedin_url, youtube_url, support_email, escalation_one, escalation_two, escalation_three, companyID];
+                            db.query(update_query, update_data, (update_err, update_result) => {
+                                if (update_err) {
+                                    // Handle the error
+                                    return res.send({
+                                        status: 'err',
+                                        data: '',
+                                        message: 'An error occurred while updating the company details: ' + update_err
+                                    });
+                                } else {
+                                    return res.send({
                                         status: 'ok',
                                         data: companySlug,
                                         message: 'Successfully Updated'
-                                    }
-                                )
-                            }
-                        })
+                                    });
+                                }
+                            });
+
+                        } else {
+                            const galleryimg = JSON.stringify(galleryImages);
+                            const Products = JSON.stringify(ProductData);
+                            const Promotion = JSON.stringify(PromotionalData);
+
+                            const premium_query = `INSERT INTO premium_company_data (company_id, cover_img, gallery_img, youtube_iframe, promotions, products, facebook_url, twitter_url, instagram_url, linkedin_url, youtube_url, support_email, escalation_one, escalation_two, escalation_three) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+                            const premium_data = [companyID, coverImg, galleryimg, youtube_iframe, Promotion, Products, facebook_url, twitter_url, instagram_url, linkedin_url, youtube_url, support_email, escalation_one, escalation_two, escalation_three];
+                            db.query(premium_query, premium_data, (premium_err, premium_result) => {
+                                if (premium_err) {
+                                    return res.send({
+                                        status: 'err',
+                                        data: '',
+                                        message: 'An error occurred while inserting the premium company data: ' + premium_err
+                                    });
+                                } else {
+                                    return res.send({
+                                        status: 'ok',
+                                        data: companySlug,
+                                        message: 'Successfully Inserted'
+                                    });
+                                }
+                            });
+                        }
                     }
-                }
-            });
-        }
-    })
-}
+                });
+            }
+        });
+    } catch (err) {
+        console.error('An unexpected error occurred:', err);
+        return res.send({
+            status: 'err',
+            data: '',
+            message: 'An unexpected error occurred while processing your request.'
+        });
+    }
+};
+
 
 // Delete premium gallery image
 exports.deletePremiumImage = (req, res) => {
