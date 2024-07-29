@@ -77,6 +77,7 @@ router.put('/edit-user-data', upload.single('profile_pic'), authController.editU
 router.post('/delete-user', authController.deleteUser);
 router.post('/trash-user', authController.trashUser);
 router.post('/restore-user', authController.restoreUser);
+router.post('/delete-management-user',authController.deletemanagementuser)
 
 //---Company--------//
 router.post('/create-company', upload.single('logo'), authController.createCompany);

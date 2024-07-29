@@ -81,6 +81,12 @@
                                         company.complaint_status=='1') { %>
                                         <% if (currentUserData.claimed_comp_id !=null && company &&
                                             company.complaint_status=='1' ) { %>
+                                                <% if (geCompanyCategorieslength <= 0) { %>
+                                                                    <div class="alert alert-warning" role="alert">
+                                                                        Please add categories first.
+                                                                    </div>
+                                                                <% } else { %>
+                                                                    <% } %>
                                             <div
                                                 class="management-users-list management_user_listing_box level_box mb-27">
                                                 <h3>Management Users</h3>
@@ -101,20 +107,16 @@
                                                                 <div class="col-md-1">
                                                                     <div class="management_user_listing_box_btn">
                                                                         <button type="button"
-                                                                            class="btn-default btn-warning each_form_submit delete_users"
-                                                                            data-bs-toggle="modal"
-                                                                            data-bs-target="#deleteUserModal"
-                                                                            data-email="<%= user.email %>"
+                                                                            class="btn-default btn-warning each_form_submit delete_management_users"
+                                                                            id="deleteusers-<%= user.id %>"
+                                                                            data-email="<%= user.emails %>"
                                                                             data-first-name="<%= user.first_name %>"
                                                                             data-last-name="<%= user.last_name %>"
                                                                             data-level="<%= user.level_user_type %>">
-                                                                            <i class="fa fa-trash" aria-hidden="true"
-                                                                                style="color: #000;"></i>
+                                                                            <i class="fa fa-trash" aria-hidden="true" style="color: #000;"></i>
                                                                         </button>
                                                                     </div>
                                                                 </div>
-
-
                                                             </div>
                                                         </li>
                                                         <% }); %>
@@ -125,6 +127,12 @@
                                                     <% if (!hasManager || !hasHelpDesk) {%>
                                                         <% if (currentUserData.claimed_comp_id !=null && company &&
                                                             company.complaint_status=='1' ) { %>
+                                                                <% if (geCompanyCategorieslength <= 0) { %>
+                                                                    <div class="alert alert-warning" role="alert">
+                                                                        Please add categories first.
+                                                                    </div>
+                                                                <% } else { %>
+                                                                    <% } %>
                                                             <div
                                                                 class="d-flex justify-content-center align-items-center">
                                                                 <button type="button"
@@ -533,6 +541,12 @@
                                             company.complaint_status=='1') { %>
                                             <% if (currentUserData.claimed_comp_id !=null && company &&
                                                 company.complaint_status=='1' ) { %>
+                                                    <% if (geCompanyCategorieslength <= 0) { %>
+                                                                    <div class="alert alert-warning" role="alert">
+                                                                        Please add categories first.
+                                                                    </div>
+                                                                <% } else { %>
+                                                                    <% } %>
                                                 <div
                                                     class="management-users-list management_user_listing_box level_box mb-27">
                                                     <h3>Management Users</h3>
@@ -580,6 +594,12 @@
                                                         <% if (!hasManager || !hasHelpDesk) {%>
                                                             <% if (currentUserData.claimed_comp_id !=null && company &&
                                                                 company.complaint_status=='1' ) { %>
+                                                                    <% if (geCompanyCategorieslength <= 0) { %>
+                                                                    <div class="alert alert-warning" role="alert">
+                                                                        Please add categories first.
+                                                                    </div>
+                                                                <% } else { %>
+                                                                    <% } %>
                                                                 <div
                                                                     class="d-flex justify-content-center align-items-center">
                                                                     <button type="button"
@@ -1054,6 +1074,37 @@
                     "manager": "Manager"
                 };
 
+                let getCompanymanagmentuserss = JSON.parse('<%- JSON.stringify(getCompanymanagmentusers) %>');
+                console.log("getCompanymanagmentuserss", getCompanymanagmentuserss);
+
+                function checkUserTypes(users) {
+                    let hasManager = false;
+                    //let hasHelpDesk = false;
+                    users.forEach(user => {
+                        if (user.level_user_type === 'manager') {
+                            hasManager = true;
+                        }
+                    });
+                    return { hasManager};
+                }
+                function helpdeskUserTypes(users) {
+                    let hasHelpDesk = false;
+                    //let hasHelpDesk = false;
+                    users.forEach(user => {
+                        if (user.level_user_type === 'help_desk') {
+                            hasHelpDesk = true;
+                        }
+                    });
+                    return { hasHelpDesk};
+                }
+                let userTypeChecks = checkUserTypes(getCompanymanagmentuserss);
+                console.log("userTypeChecks", userTypeChecks);
+                let helpdeskuserchecks = helpdeskUserTypes(getCompanymanagmentuserss);
+                let managerval = userTypeChecks.hasManager;
+                console.log("managerval:", managerval);
+                let helpdeskval = helpdeskuserchecks.hasHelpDesk;
+                console.log("helpdeskval:", helpdeskval);
+
 
                 $(document).ready(function () {
                     jQuery(function ($) {
@@ -1078,6 +1129,8 @@
                         }
 
 
+
+
                         $('.form-check-input').change(function () {
                             var status = $(this).val();
                             console.log("status", status);
@@ -1100,14 +1153,41 @@
                             if (status == '1') {
                                 Swal.fire({
                                     icon: 'warning',
-                                    title: 'Add Management Users',
+                                    title: 'Complaint Status',
                                     text: 'Complaint status activated and You should add management users.',
+                                    //text: 'Complaint status activated.',
                                     confirmButtonText: 'Okay'
                                 });
                                 setTimeout(function () {
                                     window.location.reload();
                                 }, 2000);
                             }
+                            if (status == '1' && managerval == true) {
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: 'Complaint Status',
+                                    text: 'Complaint status activated and You should add a Help Desk user.',
+                                    //text: 'Complaint status activated.',
+                                    confirmButtonText: 'Okay'
+                                });
+                                setTimeout(function () {
+                                    window.location.reload();
+                                }, 2000);
+                            }
+                            if (status == '1' && helpdeskval == true) {
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: 'Complaint Status',
+                                    text: 'Complaint status activated and You should add a manager user.',
+                                    //text: 'Complaint status activated.',
+                                    confirmButtonText: 'Okay'
+                                });
+                                setTimeout(function () {
+                                    window.location.reload();
+                                }, 2000);
+                            }
+
+                            
 
 
                             $.ajax({
@@ -2128,9 +2208,9 @@
                                     console.log(("responseedit", response));
                                     if (response.success_message) {
                                         alertMessage('success', response.success_message);
-                                        // setTimeout(function () {
-                                        //     window.location.reload();
-                                        // }, 2000);
+                                        setTimeout(function () {
+                                            window.location.reload();
+                                        }, 2000);
                                     } else {
                                         console.log('Form submitted successfully!');
                                     }
@@ -2436,6 +2516,61 @@
                         }
 
                     })
-                })
 
+        $('.delete_management_users').on('click', function() {
+            console.log("Clicked button:", this);
+            var email = $(this).attr('data-email');
+            var firstName = $(this).attr('data-first-name');
+            var lastName = $(this).attr('data-last-name');
+            var level = $(this).attr('data-level');
+
+            console.log("Email:", email);
+            console.log("First Name:", firstName);
+            console.log("Last Name:", lastName);
+            console.log("Level:", level);
+            if (!email) {
+                console.error('Email is empty');
+            }
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: `Do you really want to delete ${firstName} ${lastName}?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, keep it'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/auth/delete-management-user', 
+                        type: 'POST',
+                        data: {
+                            email: email,
+                            // first_name: firstName,
+                            // last_name: lastName,
+                            // level: level
+                        },
+                        success: function(response) {
+                            Swal.fire(
+                                'Deleted!',
+                                'User has been deleted.',
+                                'success'
+                            ).then(() => {
+                                location.reload();
+                            });
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire(
+                                'Failed!',
+                                'Failed to delete user.',
+                                'error'
+                            );
+                        }
+                    });
+                }
+            });
+        });
+
+
+                })
             </script>

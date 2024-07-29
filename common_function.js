@@ -230,6 +230,23 @@ function getAllTrashedCompany() {
 //   });
 // }
 
+function getCompanymanagmentusers(companyId) {
+  console.log("getCompanymanagmentuserscompanyId",companyId);
+  return new Promise((resolve, reject) => {
+    const sql = `SELECT company_level_manage_users.emails, company_level_manage_users.level_user_type
+              FROM company_level_manage_users 
+              WHERE company_level_manage_users.company_id = ?`
+    db.query(sql, [companyId], (err, result) => {
+      console.log("getCompanymanagmentusersresult",result);
+      if (err) {
+        reject(err);
+      } else {
+        resolve(result);
+      }
+    });
+  });
+}
+
 function getCompany(companyId) {
   return new Promise((resolve, reject) => {
     const sql = `SELECT company.*, ccr.claimed_by, mp.name as membership_plan_name, pcd.cover_img
@@ -1328,8 +1345,8 @@ async function createcompany(comInfo, userId) {
          </div>`;
           var mailOptions = {
               from: process.env.MAIL_USER,
-              to: 'dev2.scwt@gmail.com',
-              //to: process.env.MAIL_USER,
+              //to: 'dev2.scwt@gmail.com',
+              to: process.env.MAIL_USER,
               subject: 'New review added',
               html: template
           }
@@ -3273,6 +3290,7 @@ module.exports = {
   getStatesByUserID,
   getStatesByCountryID,//
   getAllCompany,
+  getCompanymanagmentusers,//
   getCompany,
   getnewCompany,//
   getComplaint,//

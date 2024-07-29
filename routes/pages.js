@@ -4125,15 +4125,30 @@ async function checkClientClaimedCompany(req, res, next) {
     //const userId = UserJsonData.user_id;
     //try {
 
+    // if (req.cookies.user) {
+    //     const encodedUserData = req.cookies.user;
+    //     const UserJsonData = JSON.parse(encodedUserData);
+    //     if (UserJsonData && UserJsonData.claimed_comp_slug == req.params.slug) {
+    //         next();
+    //     } else {
+    //         res.redirect('/logout');
+    //     }
+
+    // } else {
+    //     res.redirect('/');
+    // }
     if (req.cookies.user) {
         const encodedUserData = req.cookies.user;
+        console.log("encodedUserDatass",encodedUserData);
         const UserJsonData = JSON.parse(encodedUserData);
-        if (UserJsonData && UserJsonData.claimed_comp_slug == req.params.slug) {
+        console.log("UserJsonData",UserJsonData);
+
+        if (UserJsonData && UserJsonData.claimed_comp_slug == req.params.slug || UserJsonData.emails == UserJsonData.email) {
             next();
-        } else {
+        }else{
             res.redirect('/logout');
         }
-
+        
     } else {
         res.redirect('/');
     }
@@ -5160,9 +5175,10 @@ router.get('/new_complain/:slug', checkClientClaimedCompany, async (req, res) =>
         }
     
         //const companyId = req.params.companyId;
-        const [globalPageMeta, company, companyReviewNumbers, PremiumCompanyData, allRatingTags, getComplaintLevelDetails, geCompanyCategories, getcategoriesUsers, getEtaDays,geCompanyCategorieslength,getmanagementUsers ] = await Promise.all([
+        const [globalPageMeta, company, getCompanymanagmentusers, companyReviewNumbers, PremiumCompanyData, allRatingTags, getComplaintLevelDetails, geCompanyCategories, getcategoriesUsers, getEtaDays,geCompanyCategorieslength,getmanagementUsers ] = await Promise.all([
             comFunction2.getPageMetaValues('global'),
             comFunction.getCompany(companyId),
+            comFunction.getCompanymanagmentusers(companyId),
             comFunction.getCompanyReviewNumbers(companyId),
             comFunction2.getPremiumCompanyData(companyId),
             comFunction.getAllRatingTags(),
@@ -5174,7 +5190,7 @@ router.get('/new_complain/:slug', checkClientClaimedCompany, async (req, res) =>
             comFunction2.getmanagementUsers(companyId)
         ]);
     
-        // console.log("getCompany",company);
+        console.log("getCompanymanagmentusers",getCompanymanagmentusers);
         // console.log("geCompanyCategories",geCompanyCategories);
         // console.log("getcategoriesUsers",getcategoriesUsers);
         console.log("getEtaDays",getEtaDays);
@@ -5199,7 +5215,8 @@ router.get('/new_complain/:slug', checkClientClaimedCompany, async (req, res) =>
                 complaintLevel: complaintLevel,
                 getEtaDays: getEtaDays,
                 geCompanyCategorieslength: geCompanyCategorieslength,
-                getmanagementUsers: getmanagementUsers
+                getmanagementUsers: getmanagementUsers,
+                getCompanymanagmentusers: getCompanymanagmentusers
             });
         }else{
             let facebook_url = '';
@@ -5255,12 +5272,242 @@ router.get('/new_complain/:slug', checkClientClaimedCompany, async (req, res) =>
                 getcategoriesUsers:getcategoriesUsers,
                 getEtaDays: getEtaDays,
                 geCompanyCategorieslength: geCompanyCategorieslength,
-                getmanagementUsers: getmanagementUsers
+                getmanagementUsers: getmanagementUsers,
+                getCompanymanagmentusers: getCompanymanagmentusers
             });
             
         }
         /////////////////////////////////////////////////
       
+});
+
+router.get('/manage-complaint-listing/:slug',checkFrontEndLoggedIn,async(req, res) => {
+    //company-complaint-listing
+    const encodedUserData = req.cookies.user;
+    const currentUserData = JSON.parse(encodedUserData);
+    //console.log("currentUserData",currentUserData);
+    var email = currentUserData.email;
+    //console.log("currentUserData.email",email);
+    const slug = req.params.slug;
+    const comp_res =await comFunction2.getCompanyIdBySlug(slug);
+    const companyId = comp_res.ID;
+    log("companyId",companyId)
+    //const companyId = req.params.compID;
+    const [globalPageMeta, company, companyReviewNumbers, allRatingTags, PremiumCompanyData, getAllComplaintsByCompanyId, getAllComplaintsByUserId,getuserslistofcompanycategory,getcategories] = await Promise.all([
+        comFunction2.getPageMetaValues('global'),
+        comFunction.getCompany(companyId),
+        comFunction.getCompanyReviewNumbers(companyId),
+        comFunction.getAllRatingTags(),
+        comFunction2.getPremiumCompanyData(companyId),
+        comFunction2.getAllComplaintsByCompanyuserId(companyId,email),
+        //getAllComplaintsByCompanyuserId
+        comFunction2.getAllComplaintsByUserId(companyId),
+        
+        comFunction2.getuserslistofcompanycategory(companyId),
+        comFunction2.getcategories(companyId),
+        //comFunction2.sendemailtolevelUsers(),
+    ]);
+    var company_level = company.complaint_level;
+    // console.log("company_level",company_level);
+    // console.log("getAllComplaintsByCompanyId",getAllComplaintsByCompanyId);
+        const formattedCoplaintData = getAllComplaintsByCompanyId.map(item => {
+            let responsesArray = [];
+            let comp_query = [];
+            let cus_response = [];
+            if (item.notification_statuses != null) {
+                    responsesArray = item.notification_statuses.split(',');
+            }
+            if (item.company_query != null) {
+                comp_query = item.company_query.split(',');
+            }
+            if (item.user_response != null) {
+                cus_response = item.user_response.split(',');
+            }
+            return {
+                ...item,
+                notification_statuses: responsesArray,
+                company_query : comp_query,
+                customer_response:cus_response
+            };
+        });
+        
+        //console.log("formattedCoplaintData",formattedCoplaintData);
+        //console.log("getuserslistofcompanycategory",getuserslistofcompanycategory);
+    const companyPaidStatus = company.paid_status.trim();;
+    if(companyPaidStatus=='free'){
+        res.render('front-end/basic-complaint-listing',
+        {
+            menu_active_id: 'complaint',
+            page_title: 'Complaint Listing',
+            currentUserData,
+            globalPageMeta:globalPageMeta,
+            company:company,
+            companyReviewNumbers,
+            allRatingTags,
+            AllComplaintsByCompanyId:formattedCoplaintData,
+            getuserslistofcompanycategory: getuserslistofcompanycategory,
+            companyId: companyId,
+            company_level: company_level,
+            getcategories: getcategories,
+            getAllComplaintsByUserId: getAllComplaintsByUserId
+            //sendemailtolevelUsers: sendemailtolevelUsers
+        });
+    }else{
+        let facebook_url = '';
+        let twitter_url = '';
+        let instagram_url = '';
+        let linkedin_url = '';
+        let youtube_url = '';
+    
+        if(typeof PremiumCompanyData !== 'undefined' ){
+             facebook_url = PremiumCompanyData.facebook_url;
+             twitter_url = PremiumCompanyData.twitter_url;
+             instagram_url = PremiumCompanyData.instagram_url;
+             linkedin_url = PremiumCompanyData.linkedin_url;
+             youtube_url = PremiumCompanyData.youtube_url;
+        }
+        // res.json(
+        // {
+        //     menu_active_id: 'complaint',
+        //     page_title: 'Complaint Listing',
+        //     currentUserData,
+        //     globalPageMeta:globalPageMeta,
+        //     company:company,
+        //     companyReviewNumbers,
+        //     allRatingTags,
+        //     facebook_url:facebook_url,
+        //     twitter_url:twitter_url,
+        //     instagram_url:instagram_url,
+        //     linkedin_url:linkedin_url,
+        //     youtube_url:youtube_url,
+        //     AllComplaintsByCompanyId:formattedCoplaintData
+        // });
+        res.render('front-end/manage-complaint-listing',
+        {
+            menu_active_id: 'complaint',
+            page_title: 'Complaint Listing',
+            currentUserData,
+            globalPageMeta:globalPageMeta,
+            company:company,
+            companyReviewNumbers,
+            allRatingTags,
+            facebook_url:facebook_url,
+            twitter_url:twitter_url,
+            instagram_url:instagram_url,
+            linkedin_url:linkedin_url,
+            youtube_url:youtube_url,
+            AllComplaintsByCompanyId:formattedCoplaintData,
+            getuserslistofcompanycategory: getuserslistofcompanycategory,
+            companyId: companyId,
+            company_level: company_level,
+            getcategories: getcategories,
+            getAllComplaintsByUserId: getAllComplaintsByUserId
+            //sendemailtolevelUsers: sendemailtolevelUsers
+        });
+    }
+})
+router.get('/manage-compnaint-details/:slug/:complaintId', checkFrontEndLoggedIn, async (req, res) => {
+    const encodedUserData = req.cookies.user;
+    const currentUserData = JSON.parse(encodedUserData);
+    const slug = req.params.slug;
+    const comp_res = await comFunction2.getCompanyIdBySlug(slug);
+    const companyId = comp_res.ID;
+    const complaintId = req.params.complaintId;
+    // const companyId = req.params.compID;
+
+    const user_email = currentUserData.email;
+    console.log("user_email",user_email);
+    const leveluserquery = `SELECT * FROM complaint_level_management WHERE emails="${user_email}"`;
+    const leveluservalue = await query(leveluserquery);
+    //console.log("leveluservalue",leveluservalue[0]);
+    var leveluservalues = leveluservalue[0];
+    if(leveluservalue.length> 0){
+        console.log(("leveluservalue",leveluservalue));
+    }
+    try {
+        const [globalPageMeta, company, companyReviewNumbers, allRatingTags, PremiumCompanyData, getAllComplaintsByComplaintId, updateCompanyrNotificationStatus, complaintHistory] = await Promise.all([
+            comFunction2.getPageMetaValues('global'),
+            comFunction.getCompany(companyId),
+            comFunction.getCompanyReviewNumbers(companyId),
+            comFunction.getAllRatingTags(),
+            comFunction2.getPremiumCompanyData(companyId),
+            comFunction2.getAllComplaintsByComplaintId(complaintId),
+            comFunction2.updateCompanyrNotificationStatus(complaintId),
+            comFunction2.getcomplaintHistory(complaintId),
+            //comFunction2.sendemailtolevelUsers()
+        ]);
+
+        const overallDaysquery = `SELECT created_at FROM complaint WHERE id=?`;
+        const overallDaysvalue = await query(overallDaysquery,[complaintId]);
+        const overalldays = overallDaysvalue[0].created_at;
+        //console.log("overalldays",overalldays);
+        const givenDate = new Date(overalldays);
+        const currentDate = new Date();
+        const differenceInMs = currentDate - givenDate;
+        const differenceInDays = differenceInMs / (1000 * 60 * 60 * 24);
+        const approximateDifferenceInDays = Math.round(differenceInDays);
+        //console.log("Difference in days:", approximateDifferenceInDays);
+        
+
+        //console.log("complaintHistory", complaintHistory);
+        
+        const companyPaidStatus = company.paid_status.trim();
+        if (companyPaidStatus == 'free') {
+            res.render('front-end/basic-company-complain-details', {
+                menu_active_id: 'complaint',
+                page_title: 'Complaint Listing',
+                currentUserData,
+                globalPageMeta,
+                company,
+                companyReviewNumbers,
+                allRatingTags,
+                ComplaintsByComplaintId: getAllComplaintsByComplaintId[0],
+                getcomplaintHistory: complaintHistory,
+                approximateDifferenceInDays: approximateDifferenceInDays,
+                leveluservalues: leveluservalues
+                //sendemailtolevelUsers: sendemailtolevelUsers
+            });
+
+        } else {
+            let facebook_url = '';
+            let twitter_url = '';
+            let instagram_url = '';
+            let linkedin_url = '';
+            let youtube_url = '';
+
+            if (typeof PremiumCompanyData !== 'undefined') {
+                facebook_url = PremiumCompanyData.facebook_url;
+                twitter_url = PremiumCompanyData.twitter_url;
+                instagram_url = PremiumCompanyData.instagram_url;
+                linkedin_url = PremiumCompanyData.linkedin_url;
+                youtube_url = PremiumCompanyData.youtube_url;
+            }
+
+            res.render('front-end/manage-compnaint-details', {
+                menu_active_id: 'complaint',
+                page_title: 'Complaint Details',
+                currentUserData,
+                globalPageMeta,
+                company,
+                companyReviewNumbers,
+                allRatingTags,
+                facebook_url,
+                twitter_url,
+                instagram_url,
+                linkedin_url,
+                youtube_url,
+                ComplaintsByComplaintId: getAllComplaintsByComplaintId[0],
+                getcomplaintHistory: complaintHistory,
+                approximateDifferenceInDays: approximateDifferenceInDays,
+                leveluservalues: leveluservalues
+                //sendemailtolevelUsers: sendemailtolevelUsers
+            });
+        }
+    } catch (error) {
+        console.error('Error while fetching data:', error);
+        // Handle error response
+        res.status(500).send('Internal Server Error');
+    }
 });
 
 //company complaint-level-management Page 
@@ -5347,8 +5594,11 @@ router.get('/complaint-level-management/:slug', checkClientClaimedCompany, async
 
 //company dashboard Review listing Page 
 router.get('/company-complaint-listing/:slug', checkClientClaimedCompany, async (req, res) => {
+    console.log("ddddddd");
     const encodedUserData = req.cookies.user;
     const currentUserData = JSON.parse(encodedUserData);
+    console.log("currentUserData",currentUserData);
+
     const slug = req.params.slug;
     const comp_res =await comFunction2.getCompanyIdBySlug(slug);
     const companyId = comp_res.ID;
@@ -5368,6 +5618,8 @@ router.get('/company-complaint-listing/:slug', checkClientClaimedCompany, async 
         comFunction2.geCompanyCategorieslength(companyId)
         //comFunction2.sendemailtolevelUsers(),
     ]);
+
+    console.log("getCompany",company);
     //console.log("getAllComplaintsByCompanyId",getAllComplaintsByCompanyId);
     console.log("getuserslistofcompanycategory",getuserslistofcompanycategory);
     var company_level = company.complaint_level;
@@ -10220,6 +10472,18 @@ router.get('/myprofile', checkFrontEndLoggedIn, async (req, res) => {
         const userId = currentUserData.user_id;
         //console.log('editUserID: ', currentUserData);
 
+        const email_query = `SELECT email FROM users WHERE user_id =?`;
+        const emailData = await query(email_query,[userId]);
+        console.log("emailData",emailData[0].email);
+
+        const getManagerQuery = `SELECT company_level_manage_users.*,company.slug FROM company_level_manage_users LEFT JOIN company ON company_level_manage_users.company_id = company.ID WHERE company_level_manage_users.emails=?`;
+        const getManagerData = await query(getManagerQuery, [emailData[0].email]);
+        //console.log("getManagerData", getManagerData[0]);
+
+        const getQuery = `SELECT complaint_assigned_users.*,company.slug FROM complaint_assigned_users LEFT JOIN company ON complaint_assigned_users.company_id = company.ID WHERE complaint_assigned_users.user_email=?`;
+        const getData = await query(getQuery, [emailData[0].email]);
+        // console.log("getData", getData[0]);
+
         // Fetch all the required data asynchronously
         const [user, userMeta, globalPageMeta, AllCompaniesReviews] = await Promise.all([
             comFunction.getUser(userId),
@@ -10236,7 +10500,9 @@ router.get('/myprofile', checkFrontEndLoggedIn, async (req, res) => {
             user: user,
             userMeta: userMeta,
             globalPageMeta: globalPageMeta,
-            AllCompaniesReviews: AllCompaniesReviews
+            AllCompaniesReviews: AllCompaniesReviews,
+            getData: getData,
+            getManagerData
         });
     } catch (err) {
         console.error(err);
@@ -10251,6 +10517,18 @@ router.get('/profile-dashboard', checkFrontEndLoggedIn, async (req, res) => {
         const currentUserData = JSON.parse(encodedUserData);
         const userId = currentUserData.user_id;
         console.log('editUserID: ', userId);
+
+        const email_query = `SELECT email FROM users WHERE user_id =?`;
+        const emailData = await query(email_query,[userId]);
+        console.log("emailData",emailData[0].email);
+
+        const getManagerQuery = `SELECT company_level_manage_users.*,company.slug FROM company_level_manage_users LEFT JOIN company ON company_level_manage_users.company_id = company.ID WHERE company_level_manage_users.emails=?`;
+        const getManagerData = await query(getManagerQuery, [emailData[0].email]);
+        //console.log("getManagerData", getManagerData[0]);
+
+        const getQuery = `SELECT complaint_assigned_users.*,company.slug FROM complaint_assigned_users LEFT JOIN company ON complaint_assigned_users.company_id = company.ID WHERE complaint_assigned_users.user_email=?`;
+        const getData = await query(getQuery, [emailData[0].email]);
+        // console.log("getData", getData[0]);
 
         // Fetch all the required data asynchronously
         const [user, userMeta, ReviewedCompanies, AllCompaniesReviews, AllReviewTags, allRatingTags, globalPageMeta, AllReviewVoting] = await Promise.all([
@@ -10287,7 +10565,9 @@ router.get('/profile-dashboard', checkFrontEndLoggedIn, async (req, res) => {
             allRatingTags: allRatingTags,
             AllReviewTags: AllReviewTags,
             globalPageMeta: globalPageMeta,
-            AllReviewVoting: AllReviewVoting
+            AllReviewVoting: AllReviewVoting,
+            getData: getData,
+            getManagerData
         });
     } catch (err) {
         console.error(err);
@@ -10655,6 +10935,17 @@ router.get('/my-complaints', checkFrontEndLoggedIn, async (req, res) => {
         comFunction2.getAllCompaniesReviews(userId),
         comFunction2.getAllComplaintsByUserId(userId),
     ]);
+    const email_query = `SELECT email FROM users WHERE user_id =?`;
+    const emailData = await query(email_query,[userId]);
+    console.log("emailData",emailData[0].email);
+
+    const getManagerQuery = `SELECT company_level_manage_users.*,company.slug FROM company_level_manage_users LEFT JOIN company ON company_level_manage_users.company_id = company.ID WHERE company_level_manage_users.emails=?`;
+    const getManagerData = await query(getManagerQuery, [emailData[0].email]);
+    //console.log("getManagerData", getManagerData[0]);
+
+    const getQuery = `SELECT complaint_assigned_users.*,company.slug FROM complaint_assigned_users LEFT JOIN company ON complaint_assigned_users.company_id = company.ID WHERE complaint_assigned_users.user_email=?`;
+    const getData = await query(getQuery, [emailData[0].email]);
+    // console.log("getData", getData[0]);
 
     const formattedCoplaintData = getAllComplaintsByUserId.map(item => {
         let responsesArray = [];
@@ -10698,7 +10989,9 @@ router.get('/my-complaints', checkFrontEndLoggedIn, async (req, res) => {
             userMeta: userMeta,
             globalPageMeta: globalPageMeta,
             AllCompaniesReviews: AllCompaniesReviews,
-            AllComplaintsByUserId: formattedCoplaintData
+            AllComplaintsByUserId: formattedCoplaintData,
+            getData: getData,
+            getManagerData
         });
     } catch (err) {
         console.error(err);
@@ -10721,6 +11014,16 @@ router.get('/user-compnaint-details/:complainId', checkFrontEndLoggedIn, async (
         comFunction2.updateUserNotificationStatus(complaintId),
     ]);
     try {
+        const email_query = `SELECT email FROM users WHERE user_id =?`;
+        const emailData = await query(email_query,[userId]);
+        console.log("emailData",emailData[0].email);
+
+        const getManagerQuery = `SELECT company_level_manage_users.*,company.slug FROM company_level_manage_users LEFT JOIN company ON company_level_manage_users.company_id = company.ID WHERE company_level_manage_users.emails=?`;
+        const getManagerData = await query(getManagerQuery, [emailData[0].email]);
+        //console.log("getManagerData", getManagerData[0]);
+
+        const getQuery = `SELECT complaint_assigned_users.*,company.slug FROM complaint_assigned_users LEFT JOIN company ON complaint_assigned_users.company_id = company.ID WHERE complaint_assigned_users.user_email=?`;
+        const getData = await query(getQuery, [emailData[0].email]);
 
         // res.json( {
         //     menu_active_id: 'complain-profile',
@@ -10740,7 +11043,9 @@ router.get('/user-compnaint-details/:complainId', checkFrontEndLoggedIn, async (
             userMeta: userMeta,
             globalPageMeta: globalPageMeta,
             AllCompaniesReviews: AllCompaniesReviews,
-            ComplaintsByComplaintId: getAllComplaintsByComplaintId[0]
+            ComplaintsByComplaintId: getAllComplaintsByComplaintId[0],
+            getData: getData,
+            getManagerData
         });
     } catch (err) {
         console.error(err);

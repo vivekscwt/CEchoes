@@ -693,16 +693,30 @@
     if (complaintStatus == 0) {
         $('#complaint-level-div').hide();
     }
+    if (memebership < 4) {
+        $('#complaint-level-div').hide();
+    }
     
 
-    $('input[name="complaint_status"]').change(function() {
-        var newComplaintStatus = $('input[name="complaint_status"]:checked').val();
-        if (newComplaintStatus == 0 && memebership<=3) {
-            $('#complaint-level-div').hide();
-        } else {
-            $('#complaint-level-div').show();
-        }
-    });
+    function updateComplaintLevelDiv() {
+    var newComplaintStatus = $('input[name="complaint_status"]:checked').val();
+    var memberships = $('input[name="membership_type_id"]:checked').val();
+
+    console.log("memberships", memberships);
+    console.log("newComplaintStatus", newComplaintStatus);
+
+    if (newComplaintStatus == 1 && memberships < 4) {
+        $('#complaint-level-div').hide();
+    } else if (newComplaintStatus == 0) {
+        $('#complaint-level-div').hide();
+    } else {
+        $('#complaint-level-div').show();
+    }
+}
+
+$('input[name="complaint_status"]').change(updateComplaintLevelDiv);
+$('input[name="membership_type_id"]').change(updateComplaintLevelDiv);
+
     // $('input[name="membership_type_id"]').change(function() {
     //     var memebership = $('input[name="complaint_status"]:checked').val();
     //     if (memebership<=3) {
