@@ -839,7 +839,7 @@
             },
             error: function(xhr, status, error) {
                 console.error('Error fetching states:', status, error); // Debugging line
-                alert('Error fetching states. Please try again.');
+                //alert('Error fetching states. Please try again.');
                 $('#state').empty().append('<option value="" selected disabled>Select State</option>'); // Reset to default
             }
         });

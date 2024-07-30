@@ -14932,7 +14932,7 @@ const createRazorpayPlan = async (plan, billingCycle, memberCount, country_code)
                 if (isNaN(totalPrice) || totalPrice <= 0) {
                     throw new Error('Invalid total price');
                 }
-                console.log("totalPrice", totalPrice);
+                console.log("totalPricein", totalPrice);
             } else if (country_code == "JP") {
                 var toalbasePrice = basePrice * jp_currency;
                 var totaladdonPrice = addonPrice * jp_currency;
@@ -14940,13 +14940,13 @@ const createRazorpayPlan = async (plan, billingCycle, memberCount, country_code)
                 if (isNaN(totalPrice) || totalPrice <= 0) {
                     throw new Error('Invalid total price');
                 }
-                console.log("totalPrice", totalPrice);
+                console.log("totalPricejp", totalPrice);
             } else {
                 var totalPrice = parseFloat(basePrice) + parseFloat(addonPrice);
                 if (isNaN(totalPrice) || totalPrice <= 0) {
                     throw new Error('Invalid total price');
                 }
-                console.log("totalPrice", totalPrice);
+                console.log("totalPriceelse", totalPrice);
             }
         }
 
