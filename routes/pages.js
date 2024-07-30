@@ -385,51 +385,104 @@ router.get('', checkCookieValue, async (req, res) => {
         country_code = 'US';
     }
 
-    const new_country_code_query = `SELECT shortname FROM countries WHERE name="${country_name}"`;
-    const new_country_code_val = await queryAsync(new_country_code_query);
-    console.log("new_country_code_val", new_country_code_val);
-    var new_country_code = new_country_code_val[0].shortname;
-    console.log("new_country_code", new_country_code);
-
-    const getbusinessquery = `SELECT * FROM users WHERE user_id= "${userId}"`;
-    const getbusinessvalue = await queryAsync(getbusinessquery);
-    if (getbusinessvalue.length > 0) {
-        console.log("getbusinessvalue", getbusinessvalue);
-        var user_status = getbusinessvalue[0].user_status;
-        console.log("user_status", user_status);
-        if (getbusinessvalue[0].user_status == "3") {
-            res.redirect('/logout');
+    if(req.cookies.countryCode != 'All'){
+        const new_country_code_query = `SELECT shortname FROM countries WHERE name="${country_name}"`;
+        const new_country_code_val = await queryAsync(new_country_code_query);
+        console.log("new_country_code_val", new_country_code_val);
+        var new_country_code = new_country_code_val[0].shortname;
+        console.log("new_country_code", new_country_code);
+    
+        const getbusinessquery = `SELECT * FROM users WHERE user_id= "${userId}"`;
+        const getbusinessvalue = await queryAsync(getbusinessquery);
+        if (getbusinessvalue.length > 0) {
+            console.log("getbusinessvalue", getbusinessvalue);
+            var user_status = getbusinessvalue[0].user_status;
+            console.log("user_status", user_status);
+            if (getbusinessvalue[0].user_status == "3") {
+                res.redirect('/logout');
+            }
         }
+    
+        var [allRatingTags, globalPageMeta, latestReviews, AllReviewTags, AllReviewVoting, PopularCategories, ReviewCount, UserCount, PositiveReviewsCompany, NegativeReviewsCompany, HomeMeta, VisitorCheck, getAllLatestDiscussion, getAllPopularDiscussion, getAllDiscussions, getCountries] = await Promise.all([
+            comFunction.getAllRatingTags(),
+            comFunction2.getPageMetaValues('global'),
+            comFunction2.getlatestReviews(18, new_country_code),
+            //comFunction2.getlatestReviews(18),
+            comFunction2.getAllReviewTags(),
+            comFunction2.getAllReviewVoting(),
+            comFunction.getPopularCategories(new_country_code),
+            //comFunction.getPopularCategories(),
+            comFunction.getReviewCount(),
+            comFunction.getUserCount(),
+            // comFunction.getPositiveReviewsCompany(),
+            // comFunction.getNegativeReviewsCompany(),
+            comFunction.getPositiveReviewsCompany(new_country_code),
+            comFunction.getNegativeReviewsCompany(new_country_code),
+    
+            //comFunction2.getPageMetaValues('home'),
+            comFunction2.getPageMetaValue('home', country_code),
+            comFunction.getVisitorCheck(requestIp.getClientIp(req)),
+            comFunction2.getAllLatestDiscussion(20, country_name),
+            //comFunction2.getAllLatestDiscussion(20),
+            comFunction2.getAllPopularDiscussion(country_name),
+            //comFunction2.getAllPopularDiscussion(),
+            //comFunction2.getAllDiscussions(),
+            //comFunction2.getAllDiscussion(),
+            comFunction2.getAllDiscussion(country_name),
+            comFunction.getCountries(),
+        ]);
+        var featured_sql = `SELECT featured_companies.id,featured_companies.company_id,featured_companies.short_desc,featured_companies.link,company.logo,company.slug, company.company_name FROM featured_companies 
+        JOIN company ON featured_companies.company_id = company.ID 
+        WHERE featured_companies.status = 'active' AND company.main_address_country = "${new_country_code}"
+        ORDER BY featured_companies.ordering ASC `;
+    }
+    else{
+        const getbusinessquery = `SELECT * FROM users WHERE user_id= "${userId}"`;
+        const getbusinessvalue = await queryAsync(getbusinessquery);
+        if (getbusinessvalue.length > 0) {
+            console.log("getbusinessvalue", getbusinessvalue);
+            var user_status = getbusinessvalue[0].user_status;
+            console.log("user_status", user_status);
+            if (getbusinessvalue[0].user_status == "3") {
+                res.redirect('/logout');
+            }
+        }
+    
+        var [allRatingTags, globalPageMeta, latestReviews, AllReviewTags, AllReviewVoting, PopularCategories, ReviewCount, UserCount, PositiveReviewsCompany, NegativeReviewsCompany, HomeMeta, VisitorCheck, getAllLatestDiscussion, getAllPopularDiscussion, getAllDiscussions, getCountries] = await Promise.all([
+            comFunction.getAllRatingTags(),
+            comFunction2.getPageMetaValues('global'),
+            comFunction2.getlatestReviews(18, ),
+            //comFunction2.getlatestReviews(18),
+            comFunction2.getAllReviewTags(),
+            comFunction2.getAllReviewVoting(),
+            comFunction.getPopularCategories(),
+            //comFunction.getPopularCategories(),
+            comFunction.getReviewCount(),
+            comFunction.getUserCount(),
+            // comFunction.getPositiveReviewsCompany(),
+            // comFunction.getNegativeReviewsCompany(),
+            comFunction.getPositiveReviewsCompany(),
+            comFunction.getNegativeReviewsCompany(),
+    
+            //comFunction2.getPageMetaValues('home'),
+            comFunction2.getPageMetaValue('home', country_code),
+            comFunction.getVisitorCheck(requestIp.getClientIp(req)),
+            comFunction2.getAllLatestDiscussion(20),
+            //comFunction2.getAllLatestDiscussion(20),
+            comFunction2.getAllPopularDiscussion(),
+            //comFunction2.getAllPopularDiscussion(),
+            //comFunction2.getAllDiscussions(),
+            //comFunction2.getAllDiscussion(),
+            comFunction2.getAllDiscussion(),
+            comFunction.getCountries(),
+        ]);
+        var featured_sql = `SELECT featured_companies.id,featured_companies.company_id,featured_companies.short_desc,featured_companies.link,company.logo,company.slug, company.company_name FROM featured_companies 
+        JOIN company ON featured_companies.company_id = company.ID 
+        WHERE featured_companies.status = 'active'
+        ORDER BY featured_companies.ordering ASC `;
     }
 
-    const [allRatingTags, globalPageMeta, latestReviews, AllReviewTags, AllReviewVoting, PopularCategories, ReviewCount, UserCount, PositiveReviewsCompany, NegativeReviewsCompany, HomeMeta, VisitorCheck, getAllLatestDiscussion, getAllPopularDiscussion, getAllDiscussions, getCountries] = await Promise.all([
-        comFunction.getAllRatingTags(),
-        comFunction2.getPageMetaValues('global'),
-        comFunction2.getlatestReviews(18, new_country_code),
-        //comFunction2.getlatestReviews(18),
-        comFunction2.getAllReviewTags(),
-        comFunction2.getAllReviewVoting(),
-        comFunction.getPopularCategories(new_country_code),
-        //comFunction.getPopularCategories(),
-        comFunction.getReviewCount(),
-        comFunction.getUserCount(),
-        // comFunction.getPositiveReviewsCompany(),
-        // comFunction.getNegativeReviewsCompany(),
-        comFunction.getPositiveReviewsCompany(new_country_code),
-        comFunction.getNegativeReviewsCompany(new_country_code),
 
-        //comFunction2.getPageMetaValues('home'),
-        comFunction2.getPageMetaValue('home', country_code),
-        comFunction.getVisitorCheck(requestIp.getClientIp(req)),
-        comFunction2.getAllLatestDiscussion(20, country_name),
-        //comFunction2.getAllLatestDiscussion(20),
-        comFunction2.getAllPopularDiscussion(country_name),
-        //comFunction2.getAllPopularDiscussion(),
-        //comFunction2.getAllDiscussions(),
-        //comFunction2.getAllDiscussion(),
-        comFunction2.getAllDiscussion(country_name),
-        comFunction.getCountries(),
-    ]);
     const rangeTexts = {};
 
     //console.log("PopularCategories", PopularCategories);
@@ -475,10 +528,7 @@ router.get('', checkCookieValue, async (req, res) => {
                 //         WHERE featured_companies.status = 'active' 
                 //         ORDER BY featured_companies.ordering ASC `;
 
-                const featured_sql = `SELECT featured_companies.id,featured_companies.company_id,featured_companies.short_desc,featured_companies.link,company.logo,company.slug, company.company_name FROM featured_companies 
-                        JOIN company ON featured_companies.company_id = company.ID 
-                        WHERE featured_companies.status = 'active' AND company.main_address_country = "${new_country_code}"
-                        ORDER BY featured_companies.ordering ASC `;
+
                 db.query(featured_sql, (featured_err, featured_result) => {
                     var featured_comps = featured_result;
                     // res.json( {
@@ -605,10 +655,10 @@ router.get('/home/:getcountryhome', checkCookieValue, async (req, res) => {
     console.log("currentUserData", currentUserData);
 
     const country_name = req.cookies.countryName
-        || 'India';
+        //|| 'India';
 
     let country_code = req.cookies.countryCode
-        || 'IN';
+       // || 'IN';
     console.log("country_namesland", country_name);
     console.log("country_codesland", country_code);
 
@@ -616,51 +666,105 @@ router.get('/home/:getcountryhome', checkCookieValue, async (req, res) => {
         country_code = 'US';
     }
 
-    const new_country_code_query = `SELECT name FROM countries WHERE shortname="${country_code}"`;
-    const new_country_code_val = await queryAsync(new_country_code_query);
-    console.log("new_country_code_val", new_country_code_val);
-    var new_country_name = new_country_code_val[0].name;
-    console.log("new_country_name", new_country_name);
-
-    const getbusinessquery = `SELECT * FROM users WHERE user_id= "${userId}"`;
-    const getbusinessvalue = await queryAsync(getbusinessquery);
-    if (getbusinessvalue.length > 0) {
-        console.log("getbusinessvalue", getbusinessvalue);
-        var user_status = getbusinessvalue[0].user_status;
-        console.log("user_status", user_status);
-        if (getbusinessvalue[0].user_status == "3") {
-            res.redirect('/logout');
+    if(req.cookies.countryCode != 'All'){
+        console.log("notall");
+        const new_country_code_query = `SELECT name FROM countries WHERE shortname="${country_code}"`;
+        const new_country_code_val = await queryAsync(new_country_code_query);
+        console.log("new_country_code_val", new_country_code_val);
+        var new_country_name = new_country_code_val[0].name;
+        console.log("new_country_name", new_country_name);
+    
+        const getbusinessquery = `SELECT * FROM users WHERE user_id= "${userId}"`;
+        const getbusinessvalue = await queryAsync(getbusinessquery);
+        if (getbusinessvalue.length > 0) {
+            console.log("getbusinessvalue", getbusinessvalue);
+            var user_status = getbusinessvalue[0].user_status;
+            console.log("user_status", user_status);
+            if (getbusinessvalue[0].user_status == "3") {
+                res.redirect('/logout');
+            }
         }
+    
+        var [allRatingTags, globalPageMeta, latestReviews, AllReviewTags, AllReviewVoting, PopularCategories, ReviewCount, UserCount, PositiveReviewsCompany, NegativeReviewsCompany, HomeMeta, VisitorCheck, getAllLatestDiscussion, getAllPopularDiscussion, getAllDiscussions, getCountries] = await Promise.all([
+            comFunction.getAllRatingTags(),
+            comFunction2.getPageMetaValues('global'),
+            comFunction2.getlatestReviews(18, country_code),
+            //comFunction2.getlatestReviews(18),
+            comFunction2.getAllReviewTags(),
+            comFunction2.getAllReviewVoting(),
+            comFunction.getPopularCategories(country_code),
+            //comFunction.getPopularCategories(),
+            comFunction.getReviewCount(),
+            comFunction.getUserCount(),
+            // comFunction.getPositiveReviewsCompany(),
+            // comFunction.getNegativeReviewsCompany(),
+            comFunction.getPositiveReviewsCompany(country_code),
+            comFunction.getNegativeReviewsCompany(country_code),
+    
+            //comFunction2.getPageMetaValues('home'),
+            comFunction2.getPageMetaValue('home', country_code),
+            comFunction.getVisitorCheck(requestIp.getClientIp(req)),
+            comFunction2.getAllLatestDiscussion(20, new_country_name),
+            //comFunction2.getAllLatestDiscussion(20),
+            comFunction2.getAllPopularDiscussion(new_country_name),
+            //comFunction2.getAllPopularDiscussion(),
+            //comFunction2.getAllDiscussions(),
+            //comFunction2.getAllDiscussion(),
+            comFunction2.getAllDiscussion(new_country_name),
+            comFunction.getCountries(),
+        ]);
+        var featured_sql = `SELECT featured_companies.id,featured_companies.company_id,featured_companies.short_desc,featured_companies.link,company.logo,company.slug, company.company_name FROM featured_companies 
+        JOIN company ON featured_companies.company_id = company.ID 
+        WHERE featured_companies.status = 'active' AND company.main_address_country = "${country_code}"
+        ORDER BY featured_companies.ordering ASC `;
+    }
+    else{
+        console.log("allll");
+        const getbusinessquery = `SELECT * FROM users WHERE user_id= "${userId}"`;
+        const getbusinessvalue = await queryAsync(getbusinessquery);
+        if (getbusinessvalue.length > 0) {
+            console.log("getbusinessvalue", getbusinessvalue);
+            var user_status = getbusinessvalue[0].user_status;
+            console.log("user_status", user_status);
+            if (getbusinessvalue[0].user_status == "3") {
+                res.redirect('/logout');
+            }
+        }
+    
+        var [allRatingTags, globalPageMeta, latestReviews, AllReviewTags, AllReviewVoting, PopularCategories, ReviewCount, UserCount, PositiveReviewsCompany, NegativeReviewsCompany, HomeMeta, VisitorCheck, getAllLatestDiscussion, getAllPopularDiscussion, getAllDiscussions, getCountries] = await Promise.all([
+            comFunction.getAllRatingTags(),
+            comFunction2.getPageMetaValues('global'),
+            comFunction2.getlatestReviews(18),
+            //comFunction2.getlatestReviews(18),
+            comFunction2.getAllReviewTags(),
+            comFunction2.getAllReviewVoting(),
+            comFunction.getPopularCategories(),
+            //comFunction.getPopularCategories(),
+            comFunction.getReviewCount(),
+            comFunction.getUserCount(),
+            // comFunction.getPositiveReviewsCompany(),
+            // comFunction.getNegativeReviewsCompany(),
+            comFunction.getPositiveReviewsCompany(),
+            comFunction.getNegativeReviewsCompany(),
+    
+            //comFunction2.getPageMetaValues('home'),
+            comFunction2.getPageMetaValue('home', country_code),
+            comFunction.getVisitorCheck(requestIp.getClientIp(req)),
+            comFunction2.getAllLatestDiscussion(20, ),
+            //comFunction2.getAllLatestDiscussion(20),
+            comFunction2.getAllPopularDiscussion(),
+            //comFunction2.getAllPopularDiscussion(),
+            //comFunction2.getAllDiscussions(),
+            //comFunction2.getAllDiscussion(),
+            comFunction2.getAllDiscussion(),
+            comFunction.getCountries(),
+        ]);
+        var featured_sql = `SELECT featured_companies.id,featured_companies.company_id,featured_companies.short_desc,featured_companies.link,company.logo,company.slug, company.company_name FROM featured_companies 
+        JOIN company ON featured_companies.company_id = company.ID 
+        WHERE featured_companies.status = 'active'
+        ORDER BY featured_companies.ordering ASC `;
     }
 
-    const [allRatingTags, globalPageMeta, latestReviews, AllReviewTags, AllReviewVoting, PopularCategories, ReviewCount, UserCount, PositiveReviewsCompany, NegativeReviewsCompany, HomeMeta, VisitorCheck, getAllLatestDiscussion, getAllPopularDiscussion, getAllDiscussions, getCountries] = await Promise.all([
-        comFunction.getAllRatingTags(),
-        comFunction2.getPageMetaValues('global'),
-        comFunction2.getlatestReviews(18, country_code),
-        //comFunction2.getlatestReviews(18),
-        comFunction2.getAllReviewTags(),
-        comFunction2.getAllReviewVoting(),
-        comFunction.getPopularCategories(country_code),
-        //comFunction.getPopularCategories(),
-        comFunction.getReviewCount(),
-        comFunction.getUserCount(),
-        // comFunction.getPositiveReviewsCompany(),
-        // comFunction.getNegativeReviewsCompany(),
-        comFunction.getPositiveReviewsCompany(country_code),
-        comFunction.getNegativeReviewsCompany(country_code),
-
-        //comFunction2.getPageMetaValues('home'),
-        comFunction2.getPageMetaValue('home', country_code),
-        comFunction.getVisitorCheck(requestIp.getClientIp(req)),
-        comFunction2.getAllLatestDiscussion(20, new_country_name),
-        //comFunction2.getAllLatestDiscussion(20),
-        comFunction2.getAllPopularDiscussion(new_country_name),
-        //comFunction2.getAllPopularDiscussion(),
-        //comFunction2.getAllDiscussions(),
-        //comFunction2.getAllDiscussion(),
-        comFunction2.getAllDiscussion(new_country_name),
-        comFunction.getCountries(),
-    ]);
     const rangeTexts = {};
 
     //console.log("PopularCategories", PopularCategories);
@@ -705,10 +809,6 @@ router.get('/home/:getcountryhome', checkCookieValue, async (req, res) => {
                 //         WHERE featured_companies.status = 'active' 
                 //         ORDER BY featured_companies.ordering ASC `;
 
-                const featured_sql = `SELECT featured_companies.id,featured_companies.company_id,featured_companies.short_desc,featured_companies.link,company.logo,company.slug, company.company_name FROM featured_companies 
-                    JOIN company ON featured_companies.company_id = company.ID 
-                    WHERE featured_companies.status = 'active' AND company.main_address_country = "${country_code}"
-                    ORDER BY featured_companies.ordering ASC `;
                 db.query(featured_sql, (featured_err, featured_result) => {
                     var featured_comps = featured_result;
                     res.render('front-end/us_landing', {
@@ -1142,39 +1242,37 @@ router.get('/about-us', checkCookieValue, async (req, res) => {
 router.get('/about-us/:getcountryname', checkCookieValue, async (req, res) => {
     let currentUserData = JSON.parse(req.userData);
     const apiKey = process.env.GEO_LOCATION_API_KEY;
-    console.log("apiKey", apiKey);
+   // console.log("apiKey", apiKey);
 
     let getcountryname = req.params.getcountryname;
     console.log("getcountryname", getcountryname);
 
-
-    const country_name = req.cookies.countryName
-        || 'India';
-    let country_code = req.cookies.countryCode
-        || 'IN';
-    console.log("country_namesland", country_name);
-    console.log("country_codesland", country_code);
-
-
-    if (getcountryname != 'UK' && getcountryname != 'JP') {
-        getcountryname = 'US';
-    }
-
     try {
+        let country_name = req.cookies.countryName
+        //|| 'India';
         let country_code = req.cookies.countryCode
-            || 'IN';
+            //|| 'IN';
         console.log("country_namesland", country_name);
         console.log("country_codesland", country_code);
 
-        if (country_code != 'UK' && country_code != 'JP') {
-            country_code = 'US';
+        if (getcountryname != 'UK' && getcountryname != 'JP' && getcountryname != 'All') {
+            getcountryname = 'US';
+        }
+        if(getcountryname == 'All'){  
+            console.log("fggfgfh");        
+            var [PageInfo, PageMetaValues, globalPageMeta] = await Promise.all([
+                comFunction2.getPageInfo('about'),
+                comFunction2.getPageMetaValue('about', 'US'),
+                comFunction2.getPageMetaValues('global'),
+            ]);
+        } else{
+            var [PageInfo, PageMetaValues, globalPageMeta] = await Promise.all([
+                comFunction2.getPageInfo('about'),
+                comFunction2.getPageMetaValue('about', getcountryname),
+                comFunction2.getPageMetaValues('global'),
+            ]);
         }
 
-        const [PageInfo, PageMetaValues, globalPageMeta] = await Promise.all([
-            comFunction2.getPageInfo('about'),
-            comFunction2.getPageMetaValue('about', getcountryname),
-            comFunction2.getPageMetaValues('global'),
-        ]);
         //console.log(globalPageMeta)
         res.render('front-end/abouts', {
             menu_active_id: 'about',
@@ -1186,13 +1284,6 @@ router.get('/about-us/:getcountryname', checkCookieValue, async (req, res) => {
         });
     } catch (error) {
         console.error('Error fetching blog posts:', error);
-        res.render('front-end/about', {
-            menu_active_id: 'about',
-            page_title: common.title,
-            currentUserData: currentUserData,
-            common,
-            meta_values_array
-        });
     }
     //res.render('front-end/about', { menu_active_id: 'about', page_title: 'About Us', currentUserData });
 });
@@ -1202,11 +1293,7 @@ router.get('/review', checkCookieValue, async (req, res) => {
         let currentUserData = JSON.parse(req.userData);
         console.log(currentUserData);
         const apiKey = process.env.GEO_LOCATION_API_KEY;
-        console.log("apiKey", apiKey);
-
-        // const ipAddress = requestIp.getClientIp(req); 
-        // const ipAddress = '45.64.221.211';
-        // console.log('Client IP Address:', ipAddress);
+        //console.log("apiKey", apiKey);
 
         const country_name = req.cookies.countryName || 'India';
         const country_code = req.cookies.countryCode || 'IN';
@@ -1215,28 +1302,49 @@ router.get('/review', checkCookieValue, async (req, res) => {
         console.log("country_namesreview", country_name);
         console.log("country_codesreview", country_code);
 
+        let new_country_code;
+
+        if(req.cookies.countryCode != 'All'){
+            const new_country_code_query = `SELECT shortname FROM countries WHERE name="${country_name}"`;
+            const new_country_code_val = await queryAsync(new_country_code_query);
+            console.log("new_country_code_val", new_country_code_val);
+            new_country_code = new_country_code_val[0].shortname;
+            console.log("new_country_code", new_country_code);
+            var [latestReviews, AllReviews, AllTrendingReviews, AllReviewTags, allRatingTags, globalPageMeta, homePageMeta, AllReviewVoting, getCountries] = await Promise.all([
+                comFunction2.getlatestReviews(20,new_country_code),
+                comFunction2.getAllReviews(new_country_code),
+                comFunction2.getAllTrendingReviews(new_country_code),
+                //comFunction2.getlatestReviews(20),
+                //comFunction2.getAllReviews(),
+                //comFunction2.getAllTrendingReviews(),
+                comFunction2.getAllReviewTags(),
+                comFunction.getAllRatingTags(),
+                comFunction2.getPageMetaValues('global'),
+                comFunction2.getPageMetaValues('home'),
+                comFunction2.getAllReviewVoting(),
+                comFunction.getCountries(),
+    
+            ]);
+        } else {
+            var [latestReviews, AllReviews, AllTrendingReviews, AllReviewTags, allRatingTags, globalPageMeta, homePageMeta, AllReviewVoting, getCountries] = await Promise.all([
+                comFunction2.getlatestReviews(20),
+                comFunction2.getAllReviews(),
+                comFunction2.getAllTrendingReviews(),
+                //comFunction2.getlatestReviews(20),
+                //comFunction2.getAllReviews(),
+                //comFunction2.getAllTrendingReviews(),
+                comFunction2.getAllReviewTags(),
+                comFunction.getAllRatingTags(),
+                comFunction2.getPageMetaValues('global'),
+                comFunction2.getPageMetaValues('home'),
+                comFunction2.getAllReviewVoting(),
+                comFunction.getCountries(),
+    
+            ]);
+        }
         const api_key = process.env.GEO_LOCATION_API_KEY
-
-
-        const [latestReviews, AllReviews, AllTrendingReviews, AllReviewTags, allRatingTags, globalPageMeta, homePageMeta, AllReviewVoting, getCountries] = await Promise.all([
-            comFunction2.getlatestReviews(20, country_name),
-            comFunction2.getAllReviews(country_name),
-            comFunction2.getAllTrendingReviews(country_name),
-            //comFunction2.getlatestReviews(20),
-            //comFunction2.getAllReviews(),
-            //comFunction2.getAllTrendingReviews(),
-            comFunction2.getAllReviewTags(),
-            comFunction.getAllRatingTags(),
-            comFunction2.getPageMetaValues('global'),
-            comFunction2.getPageMetaValues('home'),
-            comFunction2.getAllReviewVoting(),
-            comFunction.getCountries(),
-
-        ]);
-
-
         //console.log("getCountries",getCountries);
-        console.log("AllTrendingReviews", AllTrendingReviews);
+       // console.log("AllTrendingReviews", AllTrendingReviews);
         // res.json({
         //     menu_active_id: 'review',
         //     page_title: 'Customer Reviews',
@@ -1274,7 +1382,111 @@ router.get('/review', checkCookieValue, async (req, res) => {
 });
 
 
+router.get('/review/:getcountryname', checkCookieValue, async (req, res) => {
+    try {
+        var getcountryname = req.params.getcountryname;
+        let currentUserData = JSON.parse(req.userData);
+        console.log(currentUserData);
+        const apiKey = process.env.GEO_LOCATION_API_KEY;
+        console.log("apiKey", apiKey);
 
+        // const ipAddress = requestIp.getClientIp(req); 
+        // const ipAddress = '45.64.221.211';
+        // console.log('Client IP Address:', ipAddress);
+
+        const country_name = req.cookies.countryName || 'India';
+        const country_code = req.cookies.countryCode || 'IN';
+
+
+        console.log("country_namesreview", country_name);
+        console.log("country_codesreview", country_code);
+
+
+        if (req.cookies.countryCode !== 'All') {
+            const new_country_code_query = `SELECT shortname FROM countries WHERE name="${country_name}"`;
+            const new_country_code_val = await queryAsync(new_country_code_query);
+            console.log("new_country_code_val", new_country_code_val);
+            var new_country_code = new_country_code_val[0].shortname;
+            console.log("new_country_code", new_country_code);
+            var [latestReviews, AllReviews, AllTrendingReviews, AllReviewTags, allRatingTags, globalPageMeta, homePageMeta, AllReviewVoting, getCountries] = await Promise.all([
+                comFunction2.getlatestReviews(20,country_code),
+                comFunction2.getAllReviews(country_code),
+                comFunction2.getAllTrendingReviews(country_code),
+                //comFunction2.getlatestReviews(20),
+                //comFunction2.getAllReviews(),
+                //comFunction2.getAllTrendingReviews(),
+                comFunction2.getAllReviewTags(),
+                comFunction.getAllRatingTags(),
+                comFunction2.getPageMetaValues('global'),
+                comFunction2.getPageMetaValues('home'),
+                comFunction2.getAllReviewVoting(),
+                comFunction.getCountries(),
+    
+            ]);
+        }
+        else{
+            var [latestReviews, AllReviews, AllTrendingReviews, AllReviewTags, allRatingTags, globalPageMeta, homePageMeta, AllReviewVoting, getCountries] = await Promise.all([
+                comFunction2.getlatestReviews(20),
+                comFunction2.getAllReviews(),
+                comFunction2.getAllTrendingReviews(),
+                //comFunction2.getlatestReviews(20),
+                //comFunction2.getAllReviews(),
+                //comFunction2.getAllTrendingReviews(),
+                comFunction2.getAllReviewTags(),
+                comFunction.getAllRatingTags(),
+                comFunction2.getPageMetaValues('global'),
+                comFunction2.getPageMetaValues('home'),
+                comFunction2.getAllReviewVoting(),
+                comFunction.getCountries(),
+    
+            ]);
+        }
+
+
+
+        const api_key = process.env.GEO_LOCATION_API_KEY
+
+
+
+
+
+        //console.log("getCountries",getCountries);
+       // console.log("AllTrendingReviews", AllTrendingReviews);
+        // res.json({
+        //     menu_active_id: 'review',
+        //     page_title: 'Customer Reviews',
+        //     currentUserData,
+        //     latestReviews: latestReviews,
+        //     AllReviews: AllReviews,
+        //     allRatingTags: allRatingTags,
+        //     AllReviewTags: AllReviewTags,
+        //     AllTrendingReviews: AllTrendingReviews,
+        //     globalPageMeta:globalPageMeta,
+        //     homePageMeta:homePageMeta
+        // });
+        res.render('front-end/review', {
+            menu_active_id: 'review',
+            page_title: 'Customer Reviews',
+            currentUserData,
+            latestReviews: latestReviews,
+            AllReviews: AllReviews,
+            allRatingTags: allRatingTags,
+            AllReviewTags: AllReviewTags,
+            AllTrendingReviews: AllTrendingReviews,
+            globalPageMeta: globalPageMeta,
+            homePageMeta: homePageMeta,
+            AllReviewVoting: AllReviewVoting,
+            getCountries: getCountries,
+            // ip_address: ipAddress,
+            country_name: country_name,
+            countryname: country_code,
+            apiKey: apiKey
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('An error occurred');
+    }
+});
 
 
 router.get('/get-country', async (req, res) => {
@@ -1657,6 +1869,12 @@ router.get('/business', checkCookieValue, async (req, res) => {
         if (country_code != 'UK' && country_code != 'JP') {
             country_code = 'US';
         }
+        if(country_name == 'All'){
+            country_name= 'India'
+        }
+
+        console.log("country_code",country_code);
+
 
         const [globalPageMeta, getplans, getSubscribedUsers] = await Promise.all([
             comFunction2.getPageMetaValues('global'),
@@ -1727,8 +1945,11 @@ router.get('/business/:getcountryname', checkCookieValue, async (req, res) => {
         console.log("country_names", country_name);
         console.log("country_codes", country_code);
 
-        if (country_code != 'UK' && country_code != 'JP') {
+        if (country_code != 'UK' && country_code != 'JP' && country_code!= 'All') {
             country_code = 'US';
+        }
+        if(country_name == 'All'){
+            country_name= 'US'
         }
 
         const [globalPageMeta, getplans, getSubscribedUsers] = await Promise.all([
@@ -3642,7 +3863,7 @@ router.get('/discussion', checkCookieValue, async (req, res) => {
     let currentUserData = JSON.parse(req.userData);
 
     const apiKey = process.env.GEO_LOCATION_API_KEY;
-    console.log("apiKey", apiKey);
+    //console.log("apiKey", apiKey);
 
     let country_name = req.cookies.countryName || 'India';
     let country_code = req.cookies.countryCode || 'IN';
@@ -3650,20 +3871,44 @@ router.get('/discussion', checkCookieValue, async (req, res) => {
     console.log("country_names", country_name);
     console.log("country_codes", country_code);
 
-    const [globalPageMeta, getAllLatestDiscussion, getAllPopularDiscussion, getAllDiscussions, getAllViewedDiscussion, getPopularTags, getCountries] = await Promise.all([
-        comFunction2.getPageMetaValues('global'),
-        // comFunction2.getAllLatestDiscussion(20, country_name),
-        // comFunction2.getAllPopularDiscussion(country_name),
-        // comFunction2.getAllDiscussion(country_name),
-        // comFunction2.getAllViewedDiscussion(country_name),
-        comFunction2.getAllLatestDiscussion(20),
-        comFunction2.getAllPopularDiscussion(),
-        comFunction2.getAllDiscussion(),
-        comFunction2.getAllViewedDiscussion(),
-        comFunction2.getPopularTags(20),
-        comFunction.getCountries(),
-    ]);
-    //console.log(getAllLatestDiscussion);
+    if (req.cookies.countryCode !== 'All') {       
+    const new_country_code_query = `SELECT shortname FROM countries WHERE name="${country_name}"`;
+    const new_country_code_val = await queryAsync(new_country_code_query);
+    console.log("new_country_code_val", new_country_code_val);
+    var new_country_code = new_country_code_val[0].shortname;
+    console.log("new_country_code", new_country_code);
+        var [globalPageMeta, getAllLatestDiscussion, getAllPopularDiscussion, getAllDiscussions, getAllViewedDiscussion, getPopularTags, getCountries] = await Promise.all([
+            comFunction2.getPageMetaValues('global'),
+            comFunction2.getAllLatestDiscussion(20, country_name),
+            comFunction2.getAllPopularDiscussion(country_name),
+            comFunction2.getAllDiscussion(country_name),
+            comFunction2.getAllViewedDiscussion(country_name),
+            // comFunction2.getAllLatestDiscussion(20),
+            // comFunction2.getAllPopularDiscussion(),
+            // comFunction2.getAllDiscussion(),
+            // comFunction2.getAllViewedDiscussion(country_name),
+            comFunction2.getPopularTags(country_name,20),
+            comFunction.getCountries(),
+        ]);
+    }else{
+        var [globalPageMeta, getAllLatestDiscussion, getAllPopularDiscussion, getAllDiscussions, getAllViewedDiscussion, getPopularTags, getCountries] = await Promise.all([
+            comFunction2.getPageMetaValues('global'),
+            comFunction2.getAllLatestDiscussion(20),
+            comFunction2.getAllPopularDiscussion(),
+            comFunction2.getAllDiscussion(),
+            comFunction2.getAllViewedDiscussion(),
+            // comFunction2.getAllLatestDiscussion(20),
+            // comFunction2.getAllPopularDiscussion(),
+            // comFunction2.getAllDiscussion(),
+            // comFunction2.getAllViewedDiscussion(country_name),
+            comFunction2.getPopularTags(20),
+            comFunction.getCountries(),
+        ]);
+    }
+
+
+    console.log("getAllLatestDiscussion",getAllLatestDiscussion);
+    console.log("getPopularTags",getPopularTags);
     try {
         // res.json( {
         //     menu_active_id: 'discussion',
@@ -3678,6 +3923,88 @@ router.get('/discussion', checkCookieValue, async (req, res) => {
 
         // });
         res.render('front-end/discussion', {
+            menu_active_id: 'discussion',
+            page_title: 'Queries',
+            currentUserData,
+            globalPageMeta: globalPageMeta,
+            AllLatestDiscussion: getAllLatestDiscussion,
+            AllPopularDiscussion: getAllPopularDiscussion,
+            AllDiscussions: getAllDiscussions,
+            AllViewedDiscussion: getAllViewedDiscussion,
+            PopularTags: getPopularTags,
+            getCountries: getCountries
+
+        });
+    } catch (err) {
+        res.redirect('admin-login');
+        // console.error(err);
+        // res.status(500).send('An error occurred');
+    }
+});
+router.get('/discussion/:getcountryname', checkCookieValue, async (req, res) => {
+    var getcountryname = req.params.getcountryname;
+    let currentUserData = JSON.parse(req.userData);
+
+    const apiKey = process.env.GEO_LOCATION_API_KEY;
+    //console.log("apiKey", apiKey);
+
+    let country_name = req.cookies.countryName || 'India';
+    let country_code = req.cookies.countryCode || 'IN';
+
+    console.log("country_names", country_name);
+    console.log("country_codes", country_code);
+
+    if (req.cookies.countryCode !== 'All') {
+        const new_country_code_query = `SELECT shortname FROM countries WHERE name="${country_name}"`;
+        const new_country_code_val = await queryAsync(new_country_code_query);
+        console.log("new_country_code_val", new_country_code_val);
+        var new_country_code = new_country_code_val[0].shortname;
+        console.log("new_country_code", new_country_code);
+    
+        var [globalPageMeta, getAllLatestDiscussion, getAllPopularDiscussion, getAllDiscussions, getAllViewedDiscussion, getPopularTags, getCountries] = await Promise.all([
+            comFunction2.getPageMetaValues('global'),
+            comFunction2.getAllLatestDiscussion(20, country_name),
+            comFunction2.getAllPopularDiscussion(country_name),
+            comFunction2.getAllDiscussion(country_name),
+            comFunction2.getAllViewedDiscussion(country_name),
+            // comFunction2.getAllLatestDiscussion(20),
+            // comFunction2.getAllPopularDiscussion(),
+            // comFunction2.getAllDiscussion(),
+            comFunction2.getAllViewedDiscussion(country_name),
+            comFunction2.getPopularTags(20),
+            comFunction.getCountries(),
+        ]);
+    }else{
+        var [globalPageMeta, getAllLatestDiscussion, getAllPopularDiscussion, getAllDiscussions, getAllViewedDiscussion, getPopularTags, getCountries] = await Promise.all([
+            comFunction2.getPageMetaValues('global'),
+            comFunction2.getAllLatestDiscussion(20),
+            comFunction2.getAllPopularDiscussion(),
+            comFunction2.getAllDiscussion(),
+            comFunction2.getAllViewedDiscussion(),
+            // comFunction2.getAllLatestDiscussion(20),
+            // comFunction2.getAllPopularDiscussion(),
+            // comFunction2.getAllDiscussion(),
+            comFunction2.getAllViewedDiscussion(),
+            comFunction2.getPopularTags(20),
+            comFunction.getCountries(),
+        ]);
+    }
+    //console.log(getAllLatestDiscussion);
+    console.log("getPopularTags",getPopularTags);
+    try {
+        // res.json( {
+        //     menu_active_id: 'discussion',
+        //     page_title: 'Discussions',
+        //     currentUserData,
+        //     globalPageMeta:globalPageMeta,
+        //     AllLatestDiscussion: getAllLatestDiscussion,
+        //     AllPopularDiscussion: getAllPopularDiscussion,
+        //     AllDiscussions: getAllDiscussions,
+        //     AllViewedDiscussion: getAllViewedDiscussion,
+        //     PopularTags: getPopularTags
+
+        // });
+        res.render('front-end/country_discussion', {
             menu_active_id: 'discussion',
             page_title: 'Queries',
             currentUserData,
