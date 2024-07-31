@@ -6916,8 +6916,9 @@ router.get('/new-companies', checkLoggedIn, async (req, res) => {
             }
         }));
         res.render('temp-company', {
-            menu_active_id: 'Newly Created Organizations',
+            menu_active_id: 'company',
             page_title: 'Organizations',
+            currentUserData,
             currentUserData,
             allcompany: allcompany,
             countries: countries
