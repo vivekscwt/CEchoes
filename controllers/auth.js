@@ -6559,78 +6559,7 @@ exports.updatePremiumCompany = async (req, res) => {
                             status: 'err',
                             data: '',
                             message: 'An error occurred while processing your request'
-                        }
-                    )
-                } else {
-                    if (check_result.length > 0) {
-
-                        //console.log(check_result[0]);
-                        //return false;
-                        const gallery_img = JSON.parse(check_result[0].gallery_img);
-
-                        if (galleryImages.length > 0) {
-                            galleryImages.forEach(function (img, index, arr) {
-                                gallery_img.push(img);
-                            })
-                        }
-                        //gallery_img.push(galleryImages);
-
-                        console.log('merge_img:',gallery_img);
-
-
-                        const promotionSQL = JSON.parse(check_result[0].promotions);
-                        console.log('promotionSQL',promotionSQL);
-                        //return false;
-                        if (promotionSQL.length > 0) {
-                            promotionSQL.forEach(function (promotionImg, index, arr) {
-                                if (promotionImg.promotion_image != null) {
-                                    console.log('promotion_image',promotionImg.promotion_image);
-                                    if (promotion_image && promotion_image[index] == '') {
-
-                                        PromotionalData[index].promotion_image = promotionSQL[index].promotion_image;
-                                    }
-                                }
-                            })
-                        }
-                        const productSQL = JSON.parse(check_result[0].products);
-                        if (productSQL.length > 0) {
-                            productSQL.forEach(function (productImg, index, arr) {
-                                if (productImg.product_image != null) {
-                                    if (product_image && product_image[index] == '') {
-                                        ProductData[index].product_image = productSQL[index].product_image;
-                                    }
-                                }
-                            })
-                        }
-                        // console.log('allPromotionalData',PromotionalData);
-                        // console.log('allProductData',ProductData);
-                        const galleryimg = JSON.stringify(gallery_img);
-                        const Products = JSON.stringify(ProductData);
-                        const Promotion = JSON.stringify(PromotionalData);
-
-
-                        //return false;
-                        const update_query = `UPDATE premium_company_data SET cover_img = ?, gallery_img = ?, youtube_iframe = ?,promotions = ?, products = ?, facebook_url = ?, twitter_url = ?, instagram_url = ?, linkedin_url = ?, youtube_url = ?, support_email = ?, escalation_one = ?, escalation_two = ?, escalation_three = ? WHERE company_id = ? `;
-                        const update_data = [coverImg, galleryimg, youtube_iframe, Promotion, Products, facebook_url, twitter_url, instagram_url, linkedin_url, youtube_url, support_email, escalation_one, escalation_two, escalation_three, companyID];
-                        db.query(update_query, update_data, (update_err, update_result) => {
-                            if (update_err) {
-                                // Handle the error
-                                return res.send({
-                                    status: 'err',
-                                    data: '',
-                                    message: '2 An error occurred while updating the company details: ' + update_err
-                                });
-                            } else {
-                                return res.send(
-                                    {
-                                        status: 'ok',
-                                        data: companySlug,
-                                        message: 'Successfully Updated'
-                                    }
-                                )
-                            }
-                        })
-
+                        });
                     } else {
                         if (check_result.length > 0) {
                             console.log(check_result[0]);
