@@ -1464,7 +1464,7 @@ router.get('/review/:getcountryname', checkCookieValue, async (req, res) => {
         //     globalPageMeta:globalPageMeta,
         //     homePageMeta:homePageMeta
         // });
-        res.render('front-end/review', {
+        res.render('front-end/country-review', {
             menu_active_id: 'review',
             page_title: 'Customer Reviews',
             currentUserData,
@@ -1561,18 +1561,28 @@ router.get('/faq', checkCookieValue, async (req, res) => {
         console.log("country_namesfaq", country_name);
         console.log("country_codesfaq", country_code);
 
-        if (country_code != 'UK' && country_code != 'JP') {
+        if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
             country_code = 'US';
         }
 
-        console.log("apiKey", apiKey);
-        const [faqPageData, faqCategoriesData, faqItemsData, globalPageMeta] = await Promise.all([
-            comFunction2.getFaqPages(country_code),
-            comFunction2.getFaqCategories(country_code),
-            comFunction2.getFaqItems(country_code),
-            comFunction2.getPageMetaValues('global'),
-        ]);
+        if(country_code != 'All'){
+            var [faqPageData, faqCategoriesData, faqItemsData, globalPageMeta] = await Promise.all([
+                comFunction2.getFaqPages(country_code),
+                comFunction2.getFaqCategories(country_code),
+                comFunction2.getFaqItems(country_code),
+                comFunction2.getPageMetaValues('global'),
+            ]);
+    
+        } else{
+            var [faqPageData, faqCategoriesData, faqItemsData, globalPageMeta] = await Promise.all([
+                comFunction2.getFaqPages('US'),
+                comFunction2.getFaqCategories('US'),
+                comFunction2.getFaqItems('US'),
+                comFunction2.getPageMetaValues('global'),
+            ]);
+        }
 
+        //console.log("apiKey", apiKey);
         console.log("faqPageData", faqPageData);
         console.log("faqPageDataabanner_img_1", faqPageData[0].banner_img_1);
         // Render the 'add-page' EJS view and pass the data
@@ -1595,7 +1605,7 @@ router.get('/faq', checkCookieValue, async (req, res) => {
         //     globalPageMeta: globalPageMeta
         // });
     } catch (error) {
-        console.error(err);
+        console.error("error",error);
         res.status(500).send('An error occurred');
     }
 
@@ -1612,12 +1622,34 @@ router.get('/faq/:getcountryname', checkCookieValue, async (req, res) => {
         console.log("getcountrynamefaq", getcountryname);
         const apiKey = process.env.GEO_LOCATION_API_KEY;
         console.log("apiKey", apiKey);
-        const [faqPageData, faqCategoriesData, faqItemsData, globalPageMeta] = await Promise.all([
-            comFunction2.getFaqPages(getcountryname),
-            comFunction2.getFaqCategories(getcountryname),
-            comFunction2.getFaqItems(getcountryname),
-            comFunction2.getPageMetaValues('global')
-        ]);
+
+        let country_name = req.cookies.countryName
+        || 'India';
+        let country_code = req.cookies.countryCode
+            || 'IN';
+        console.log("country_namesfaq", country_name);
+        console.log("country_codesfaq", country_code);
+
+        if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+            country_code = 'US';
+        }
+
+        if(country_code != 'All'){
+            var [faqPageData, faqCategoriesData, faqItemsData, globalPageMeta] = await Promise.all([
+                comFunction2.getFaqPages(country_code),
+                comFunction2.getFaqCategories(country_code),
+                comFunction2.getFaqItems(country_code),
+                comFunction2.getPageMetaValues('global'),
+            ]);
+    
+        } else{
+            var [faqPageData, faqCategoriesData, faqItemsData, globalPageMeta] = await Promise.all([
+                comFunction2.getFaqPages('US'),
+                comFunction2.getFaqCategories('US'),
+                comFunction2.getFaqItems('US'),
+                comFunction2.getPageMetaValues('global'),
+            ]);
+        }
         console.log("faqPageDataa", faqPageData);
         console.log("faqPageDataabanner_img_1", faqPageData.banner_img_1);
         res.render('front-end/faq', {
@@ -1630,7 +1662,7 @@ router.get('/faq/:getcountryname', checkCookieValue, async (req, res) => {
             globalPageMeta: globalPageMeta
         });
     } catch (error) {
-        console.error(err);
+        console.error(error);
         res.status(500).send('An error occurred');
     }
 });
@@ -1930,7 +1962,7 @@ router.get('/business/:getcountryname', checkCookieValue, async (req, res) => {
         console.log("currentUserData", currentUserData);
         const apiKey = process.env.GEO_LOCATION_API_KEY;
         console.log("apiKey", apiKey);
-        const getcountryname = req.params.getcountryname;
+        let getcountryname = req.params.getcountryname;
         console.log("getcountrynamebusiness", getcountryname);
 
         if (currentUserData) {
@@ -1962,50 +1994,85 @@ router.get('/business/:getcountryname', checkCookieValue, async (req, res) => {
                     comFunction2.getplans('US'),
                     comFunction2.getSubscribedUsers(user_id)
                 ]);
+                console.log("getplans", getplans);
+                console.log("getSubscribedUsers", getSubscribedUsers);
+        
+                const sql = `SELECT * FROM page_info where secret_Key = 'business' AND country = "US"`;
+                db.query(sql, (err, results, fields) => {
+                    if (err) throw err;
+                    const common = results[0];
+                    const meta_sql = `SELECT * FROM page_meta where page_id = ${common.id}`;
+                    db.query(meta_sql, async (meta_err, _meta_result) => {
+                        if (meta_err) throw meta_err;
+        
+                        const meta_values = _meta_result;
+                        let meta_values_array = {};
+                        await meta_values.forEach((item) => {
+                            meta_values_array[item.page_meta_key] = item.page_meta_value;
+                        })
+                        const UpcomingBusinessFeature = await comFunction2.getUpcomingBusinessFeature();
+                        const BusinessFeature = await comFunction2.getBusinessFeature();
+                        //console.log(meta_values_array);
+                        res.render('front-end/business', {
+                            menu_active_id: 'business',
+                            page_title: common.title,
+                            currentUserData,
+                            common,
+                            meta_values_array,
+                            UpcomingBusinessFeature,
+                            BusinessFeature,
+                            globalPageMeta: globalPageMeta,
+                            getplans: getplans,
+                            country_name: country_name,
+                            getSubscribedUsers: getSubscribedUsers,
+                            encryptedEmail: encryptedEmail
+                        });
+                    })
+        
+                })
             } else{
                 var [globalPageMeta, getplans, getSubscribedUsers] = await Promise.all([
                     comFunction2.getPageMetaValues('global'),
                     comFunction2.getplans(country_name),
                     comFunction2.getSubscribedUsers(user_id)
                 ]);
-            }
-
-        console.log("getplans", getplans);
-        console.log("getSubscribedUsers", getSubscribedUsers);
-
-        const sql = `SELECT * FROM page_info where secret_Key = 'business' AND country = "${getcountryname}"`;
-        db.query(sql, (err, results, fields) => {
-            if (err) throw err;
-            const common = results[0];
-            const meta_sql = `SELECT * FROM page_meta where page_id = ${common.id}`;
-            db.query(meta_sql, async (meta_err, _meta_result) => {
-                if (meta_err) throw meta_err;
-
-                const meta_values = _meta_result;
-                let meta_values_array = {};
-                await meta_values.forEach((item) => {
-                    meta_values_array[item.page_meta_key] = item.page_meta_value;
+                console.log("getplans", getplans);
+                console.log("getSubscribedUsers", getSubscribedUsers);
+        
+                const sql = `SELECT * FROM page_info where secret_Key = 'business' AND country = "${getcountryname}"`;
+                db.query(sql, (err, results, fields) => {
+                    if (err) throw err;
+                    const common = results[0];
+                    const meta_sql = `SELECT * FROM page_meta where page_id = ${common.id}`;
+                    db.query(meta_sql, async (meta_err, _meta_result) => {
+                        if (meta_err) throw meta_err;
+        
+                        const meta_values = _meta_result;
+                        let meta_values_array = {};
+                        await meta_values.forEach((item) => {
+                            meta_values_array[item.page_meta_key] = item.page_meta_value;
+                        })
+                        const UpcomingBusinessFeature = await comFunction2.getUpcomingBusinessFeature();
+                        const BusinessFeature = await comFunction2.getBusinessFeature();
+                        //console.log(meta_values_array);
+                        res.render('front-end/business', {
+                            menu_active_id: 'business',
+                            page_title: common.title,
+                            currentUserData,
+                            common,
+                            meta_values_array,
+                            UpcomingBusinessFeature,
+                            BusinessFeature,
+                            globalPageMeta: globalPageMeta,
+                            getplans: getplans,
+                            country_name: country_name,
+                            getSubscribedUsers: getSubscribedUsers,
+                            encryptedEmail: encryptedEmail
+                        });
+                    })
+        
                 })
-                const UpcomingBusinessFeature = await comFunction2.getUpcomingBusinessFeature();
-                const BusinessFeature = await comFunction2.getBusinessFeature();
-                //console.log(meta_values_array);
-                res.render('front-end/business', {
-                    menu_active_id: 'business',
-                    page_title: common.title,
-                    currentUserData,
-                    common,
-                    meta_values_array,
-                    UpcomingBusinessFeature,
-                    BusinessFeature,
-                    globalPageMeta: globalPageMeta,
-                    getplans: getplans,
-                    country_name: country_name,
-                    getSubscribedUsers: getSubscribedUsers,
-                    encryptedEmail: encryptedEmail
-                });
-            })
-
-        })
+            }
 
     } catch (err) {
         console.error(err);
@@ -2498,18 +2565,27 @@ router.get('/privacy-policy', checkCookieValue, async (req, res) => {
         comFunction2.getPageMetaValues('global'),
     ]);
 
-    const country_name = req.cookies.countryName
+    let country_name = req.cookies.countryName
         || 'India';
     let country_code = req.cookies.countryCode
         || 'IN';
     console.log("country_namesprivacy", country_name);
     console.log("country_codesprivacy", country_code);
 
-    if (country_code != 'UK' && country_code != 'JP') {
+    // if (country_code != 'UK' && country_code != 'JP') {
+    //     country_code = 'US';
+    // }
+
+    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
         country_code = 'US';
+    }
+    if(country_code == 'All'){
+        country_name= 'India'
     }
 
     try {
+        if(country_code != 'All'){
+            console.log("NOTALL");
         const sql = `SELECT * FROM page_info where secret_Key = 'privacy' AND country= "${country_code}"`;
         console.log("fsdasdf", country_code);
         db.query(sql, (err, results, fields) => {
@@ -2539,35 +2615,9 @@ router.get('/privacy-policy', checkCookieValue, async (req, res) => {
             })
 
         })
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('An error occurred');
-    }
-});
-router.get('/privacy-policy/:getcountryname', checkCookieValue, async (req, res) => {
-    let currentUserData = JSON.parse(req.userData);
-    const apiKey = process.env.GEO_LOCATION_API_KEY;
-    console.log("apiKey", apiKey);
-    let getcountryname = req.params.getcountryname;
-    console.log("privacygetcountryname", getcountryname);
-
-    const [globalPageMeta] = await Promise.all([
-        comFunction2.getPageMetaValues('global'),
-    ]);
-
-    const country_name = req.cookies.countryName
-        || 'India';
-    let country_code = req.cookies.countryCode
-        || 'IN';
-    console.log("country_namesprivacy", country_name);
-    console.log("country_codesprivacy", country_code);
-
-    if (country_code != 'UK' && country_code != 'JP') {
-        country_code = 'US';
-    }
-
-    try {
-        const sql = `SELECT * FROM page_info where secret_Key = 'privacy' AND country= "${getcountryname}"`;
+    } else{
+        console.log("ALLss");
+        const sql = `SELECT * FROM page_info where secret_Key = 'privacy' AND country= "US"`;
         console.log("fsdasdf", country_code);
         db.query(sql, (err, results, fields) => {
             if (err) throw err;
@@ -2596,6 +2646,99 @@ router.get('/privacy-policy/:getcountryname', checkCookieValue, async (req, res)
             })
 
         })
+    }
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('An error occurred');
+    }
+});
+router.get('/privacy-policy/:getcountryname', checkCookieValue, async (req, res) => {
+    let currentUserData = JSON.parse(req.userData);
+    const apiKey = process.env.GEO_LOCATION_API_KEY;
+    console.log("apiKey", apiKey);
+    let getcountryname = req.params.getcountryname;
+    console.log("privacygetcountryname", getcountryname);
+
+    const [globalPageMeta] = await Promise.all([
+        comFunction2.getPageMetaValues('global'),
+    ]);
+
+    let country_name = req.cookies.countryName
+        || 'India';
+    let country_code = req.cookies.countryCode
+        || 'IN';
+    console.log("country_namesprivacy", country_name);
+    console.log("country_codesprivacy", country_code);
+
+    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+        country_code = 'US';
+    }
+    if(country_code == 'All'){
+        country_name= 'India'
+    }
+
+    try {
+        if(country_code != 'All'){
+            const sql = `SELECT * FROM page_info where secret_Key = 'privacy' AND country= "${getcountryname}"`;
+            console.log("fsdasdf", country_code);
+            db.query(sql, (err, results, fields) => {
+                if (err) throw err;
+                const common = results[0];
+                console.log("common", common);
+
+                const meta_sql = `SELECT * FROM page_meta where page_id = ${common.id}`;
+                db.query(meta_sql, async (meta_err, _meta_result) => {
+                    if (meta_err) throw meta_err;
+
+                    const meta_values = _meta_result;
+                    let meta_values_array = {};
+                    await meta_values.forEach((item) => {
+                        meta_values_array[item.page_meta_key] = item.page_meta_value;
+                    })
+                    console.log("meta_values_arraySS", meta_values_array);
+                    res.render('front-end/privacy-policy', {
+                        menu_active_id: 'privacy-policy',
+                        page_title: common.title,
+                        currentUserData,
+                        common,
+                        meta_values_array,
+                        globalPageMeta: globalPageMeta,
+                        apiKey
+                    });
+                })
+
+            })
+        } else{
+            const sql = `SELECT * FROM page_info where secret_Key = 'privacy' AND country= "US"`;
+            console.log("fsdasdf", country_code);
+            db.query(sql, (err, results, fields) => {
+                if (err) throw err;
+                const common = results[0];
+                console.log("common", common);
+
+                const meta_sql = `SELECT * FROM page_meta where page_id = ${common.id}`;
+                db.query(meta_sql, async (meta_err, _meta_result) => {
+                    if (meta_err) throw meta_err;
+
+                    const meta_values = _meta_result;
+                    let meta_values_array = {};
+                    await meta_values.forEach((item) => {
+                        meta_values_array[item.page_meta_key] = item.page_meta_value;
+                    })
+                    console.log("meta_values_arraySS", meta_values_array);
+                    res.render('front-end/privacy-policy', {
+                        menu_active_id: 'privacy-policy',
+                        page_title: common.title,
+                        currentUserData,
+                        common,
+                        meta_values_array,
+                        globalPageMeta: globalPageMeta,
+                        apiKey
+                    });
+                })
+
+            })
+        }
     } catch (err) {
         console.error(err);
         res.status(500).send('An error occurred');
@@ -2614,38 +2757,68 @@ router.get('/disclaimer', checkCookieValue, async (req, res) => {
     console.log("country_namesprivacy", country_name);
     console.log("country_codesprivacy", country_code);
 
-    if (country_code != 'UK' && country_code != 'JP') {
+    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
         country_code = 'US';
     }
     const [globalPageMeta] = await Promise.all([
         comFunction2.getPageMetaValues('global'),
     ]);
     try {
-        const sql = `SELECT * FROM page_info where secret_Key = 'disclaimer' AND country= "${country_code}" `;
-        db.query(sql, (err, results, fields) => {
-            if (err) throw err;
-            const common = results[0];
-            const meta_sql = `SELECT * FROM page_meta where page_id = ${common.id}`;
-            db.query(meta_sql, async (meta_err, _meta_result) => {
-                if (meta_err) throw meta_err;
-
-                const meta_values = _meta_result;
-                let meta_values_array = {};
-                await meta_values.forEach((item) => {
-                    meta_values_array[item.page_meta_key] = item.page_meta_value;
+        if (country_code !='All') {
+            console.log("notall");
+            const sql = `SELECT * FROM page_info where secret_Key = 'disclaimer' AND country= "${country_code}" `;
+            db.query(sql, (err, results, fields) => {
+                if (err) throw err;
+                const common = results[0];
+                const meta_sql = `SELECT * FROM page_meta where page_id = ${common.id}`;
+                db.query(meta_sql, async (meta_err, _meta_result) => {
+                    if (meta_err) throw meta_err;
+    
+                    const meta_values = _meta_result;
+                    let meta_values_array = {};
+                    await meta_values.forEach((item) => {
+                        meta_values_array[item.page_meta_key] = item.page_meta_value;
+                    })
+                    console.log(meta_values_array);
+                    res.render('front-end/disclaimer', {
+                        menu_active_id: 'disclaimer',
+                        page_title: common.title,
+                        currentUserData,
+                        common,
+                        meta_values_array,
+                        globalPageMeta: globalPageMeta
+                    });
                 })
-                console.log(meta_values_array);
-                res.render('front-end/disclaimer', {
-                    menu_active_id: 'disclaimer',
-                    page_title: common.title,
-                    currentUserData,
-                    common,
-                    meta_values_array,
-                    globalPageMeta: globalPageMeta
-                });
+    
             })
-
-        })
+        }else{
+            console.log("alll");
+            const sql = `SELECT * FROM page_info where secret_Key = 'disclaimer' AND country= "US" `;
+            db.query(sql, (err, results, fields) => {
+                if (err) throw err;
+                const common = results[0];
+                const meta_sql = `SELECT * FROM page_meta where page_id = ${common.id}`;
+                db.query(meta_sql, async (meta_err, _meta_result) => {
+                    if (meta_err) throw meta_err;
+    
+                    const meta_values = _meta_result;
+                    let meta_values_array = {};
+                    await meta_values.forEach((item) => {
+                        meta_values_array[item.page_meta_key] = item.page_meta_value;
+                    })
+                    console.log(meta_values_array);
+                    res.render('front-end/disclaimer', {
+                        menu_active_id: 'disclaimer',
+                        page_title: common.title,
+                        currentUserData,
+                        common,
+                        meta_values_array,
+                        globalPageMeta: globalPageMeta
+                    });
+                })
+    
+            })
+        }
     } catch (err) {
         console.error(err);
         res.status(500).send('An error occurred');
@@ -2673,32 +2846,62 @@ router.get('/disclaimer/:getcountryname', checkCookieValue, async (req, res) => 
         comFunction2.getPageMetaValues('global'),
     ]);
     try {
-        const sql = `SELECT * FROM page_info where secret_Key = 'disclaimer' AND country= "${getcountryname}" `;
-        db.query(sql, (err, results, fields) => {
-            if (err) throw err;
-            const common = results[0];
-            const meta_sql = `SELECT * FROM page_meta where page_id = ${common.id}`;
-            db.query(meta_sql, async (meta_err, _meta_result) => {
-                if (meta_err) throw meta_err;
-
-                const meta_values = _meta_result;
-                let meta_values_array = {};
-                await meta_values.forEach((item) => {
-                    meta_values_array[item.page_meta_key] = item.page_meta_value;
+        if (country_code !='All') {
+            console.log("notall");
+            const sql = `SELECT * FROM page_info where secret_Key = 'disclaimer' AND country= "${country_code}" `;
+            db.query(sql, (err, results, fields) => {
+                if (err) throw err;
+                const common = results[0];
+                const meta_sql = `SELECT * FROM page_meta where page_id = ${common.id}`;
+                db.query(meta_sql, async (meta_err, _meta_result) => {
+                    if (meta_err) throw meta_err;
+    
+                    const meta_values = _meta_result;
+                    let meta_values_array = {};
+                    await meta_values.forEach((item) => {
+                        meta_values_array[item.page_meta_key] = item.page_meta_value;
+                    })
+                    console.log(meta_values_array);
+                    res.render('front-end/disclaimer', {
+                        menu_active_id: 'disclaimer',
+                        page_title: common.title,
+                        currentUserData,
+                        common,
+                        meta_values_array,
+                        globalPageMeta: globalPageMeta
+                    });
                 })
-                console.log(meta_values_array);
-                res.render('front-end/disclaimer', {
-                    menu_active_id: 'disclaimer',
-                    page_title: common.title,
-                    currentUserData,
-                    common,
-                    meta_values_array,
-                    globalPageMeta: globalPageMeta
-                });
+    
             })
-
-        })
-    } catch (err) {
+        }else{
+            console.log("alll");
+            const sql = `SELECT * FROM page_info where secret_Key = 'disclaimer' AND country= "US" `;
+            db.query(sql, (err, results, fields) => {
+                if (err) throw err;
+                const common = results[0];
+                const meta_sql = `SELECT * FROM page_meta where page_id = ${common.id}`;
+                db.query(meta_sql, async (meta_err, _meta_result) => {
+                    if (meta_err) throw meta_err;
+    
+                    const meta_values = _meta_result;
+                    let meta_values_array = {};
+                    await meta_values.forEach((item) => {
+                        meta_values_array[item.page_meta_key] = item.page_meta_value;
+                    })
+                    console.log(meta_values_array);
+                    res.render('front-end/disclaimer', {
+                        menu_active_id: 'disclaimer',
+                        page_title: common.title,
+                        currentUserData,
+                        common,
+                        meta_values_array,
+                        globalPageMeta: globalPageMeta
+                    });
+                })
+    
+            })
+        }
+    }catch (err) {
         console.error(err);
         res.status(500).send('An error occurred');
     }
@@ -2715,7 +2918,7 @@ router.get('/terms-of-service', checkCookieValue, async (req, res) => {
     console.log("country_namesprivacy", country_name);
     console.log("country_codesprivacy", country_code);
 
-    if (country_code != 'UK' && country_code != 'JP') {
+    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
         country_code = 'US';
     }
 
@@ -2724,31 +2927,60 @@ router.get('/terms-of-service', checkCookieValue, async (req, res) => {
         comFunction2.getPageMetaValues('global'),
     ]);
     try {
-        const sql = `SELECT * FROM page_info where secret_Key = 'terms_of_service' AND country="${country_code}"`;
-        db.query(sql, (err, results, fields) => {
-            if (err) throw err;
-            const common = results[0];
-            const meta_sql = `SELECT * FROM page_meta where page_id = ${common.id}`;
-            db.query(meta_sql, async (meta_err, _meta_result) => {
-                if (meta_err) throw meta_err;
-
-                const meta_values = _meta_result;
-                let meta_values_array = {};
-                await meta_values.forEach((item) => {
-                    meta_values_array[item.page_meta_key] = item.page_meta_value;
+        if(country_code!='All'){
+            const sql = `SELECT * FROM page_info where secret_Key = 'terms_of_service' AND country="${country_code}"`;
+            db.query(sql, (err, results, fields) => {
+                if (err) throw err;
+                const common = results[0];
+                const meta_sql = `SELECT * FROM page_meta where page_id = ${common.id}`;
+                db.query(meta_sql, async (meta_err, _meta_result) => {
+                    if (meta_err) throw meta_err;
+    
+                    const meta_values = _meta_result;
+                    let meta_values_array = {};
+                    await meta_values.forEach((item) => {
+                        meta_values_array[item.page_meta_key] = item.page_meta_value;
+                    })
+                    console.log(meta_values_array);
+                    res.render('front-end/terms-of-service', {
+                        menu_active_id: 'terms-of-service',
+                        page_title: common.title,
+                        currentUserData,
+                        common,
+                        meta_values_array,
+                        globalPageMeta: globalPageMeta
+                    });
                 })
-                console.log(meta_values_array);
-                res.render('front-end/terms-of-service', {
-                    menu_active_id: 'terms-of-service',
-                    page_title: common.title,
-                    currentUserData,
-                    common,
-                    meta_values_array,
-                    globalPageMeta: globalPageMeta
-                });
+    
             })
+        } else{
+            const sql = `SELECT * FROM page_info where secret_Key = 'terms_of_service' AND country="US"`;
+            db.query(sql, (err, results, fields) => {
+                if (err) throw err;
+                const common = results[0];
+                const meta_sql = `SELECT * FROM page_meta where page_id = ${common.id}`;
+                db.query(meta_sql, async (meta_err, _meta_result) => {
+                    if (meta_err) throw meta_err;
+    
+                    const meta_values = _meta_result;
+                    let meta_values_array = {};
+                    await meta_values.forEach((item) => {
+                        meta_values_array[item.page_meta_key] = item.page_meta_value;
+                    })
+                    console.log(meta_values_array);
+                    res.render('front-end/terms-of-service', {
+                        menu_active_id: 'terms-of-service',
+                        page_title: common.title,
+                        currentUserData,
+                        common,
+                        meta_values_array,
+                        globalPageMeta: globalPageMeta
+                    });
+                })
+    
+            })
+        }
 
-        })
     } catch (err) {
         console.error(err);
         res.status(500).send('An error occurred');
@@ -2767,7 +2999,7 @@ router.get('/terms-of-service/:getcountryname', checkCookieValue, async (req, re
     console.log("country_namesprivacy", country_name);
     console.log("country_codesprivacy", country_code);
 
-    if (country_code != 'UK' && country_code != 'JP') {
+    if (country_code != 'UK' && country_code != 'JP' && country_code!= 'All') {
         country_code = 'US';
     }
 
@@ -2776,31 +3008,60 @@ router.get('/terms-of-service/:getcountryname', checkCookieValue, async (req, re
         comFunction2.getPageMetaValues('global'),
     ]);
     try {
-        const sql = `SELECT * FROM page_info where secret_Key = 'terms_of_service' AND country="${getcountryname}"`;
-        db.query(sql, (err, results, fields) => {
-            if (err) throw err;
-            const common = results[0];
-            const meta_sql = `SELECT * FROM page_meta where page_id = ${common.id}`;
-            db.query(meta_sql, async (meta_err, _meta_result) => {
-                if (meta_err) throw meta_err;
-
-                const meta_values = _meta_result;
-                let meta_values_array = {};
-                await meta_values.forEach((item) => {
-                    meta_values_array[item.page_meta_key] = item.page_meta_value;
+        if(country_code != 'All'){
+            const sql = `SELECT * FROM page_info where secret_Key = 'terms_of_service' AND country="${getcountryname}"`;
+            db.query(sql, (err, results, fields) => {
+                if (err) throw err;
+                const common = results[0];
+                const meta_sql = `SELECT * FROM page_meta where page_id = ${common.id}`;
+                db.query(meta_sql, async (meta_err, _meta_result) => {
+                    if (meta_err) throw meta_err;
+    
+                    const meta_values = _meta_result;
+                    let meta_values_array = {};
+                    await meta_values.forEach((item) => {
+                        meta_values_array[item.page_meta_key] = item.page_meta_value;
+                    })
+                    console.log(meta_values_array);
+                    res.render('front-end/terms-of-service', {
+                        menu_active_id: 'terms-of-service',
+                        page_title: common.title,
+                        currentUserData,
+                        common,
+                        meta_values_array,
+                        globalPageMeta: globalPageMeta
+                    });
                 })
-                console.log(meta_values_array);
-                res.render('front-end/terms-of-service', {
-                    menu_active_id: 'terms-of-service',
-                    page_title: common.title,
-                    currentUserData,
-                    common,
-                    meta_values_array,
-                    globalPageMeta: globalPageMeta
-                });
+    
             })
+        } else{
+            const sql = `SELECT * FROM page_info where secret_Key = 'terms_of_service' AND country="US"`;
+            db.query(sql, (err, results, fields) => {
+                if (err) throw err;
+                const common = results[0];
+                const meta_sql = `SELECT * FROM page_meta where page_id = ${common.id}`;
+                db.query(meta_sql, async (meta_err, _meta_result) => {
+                    if (meta_err) throw meta_err;
+    
+                    const meta_values = _meta_result;
+                    let meta_values_array = {};
+                    await meta_values.forEach((item) => {
+                        meta_values_array[item.page_meta_key] = item.page_meta_value;
+                    })
+                    console.log(meta_values_array);
+                    res.render('front-end/terms-of-service', {
+                        menu_active_id: 'terms-of-service',
+                        page_title: common.title,
+                        currentUserData,
+                        common,
+                        meta_values_array,
+                        globalPageMeta: globalPageMeta
+                    });
+                })
+    
+            })
+        }
 
-        })
     } catch (err) {
         console.error(err);
         res.status(500).send('An error occurred');

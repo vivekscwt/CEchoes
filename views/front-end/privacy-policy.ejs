@@ -12,7 +12,7 @@
 
 <%- include('common/footer') -%>   
 <script>
- document.addEventListener("DOMContentLoaded", async function () {
+document.addEventListener("DOMContentLoaded", async function () {
         console.log("DOM content loaded");
 
         try {
@@ -23,6 +23,7 @@
             'UK': 'United Kingdom',
             'JP': 'Japan',
             'US': 'United States',
+            'All': 'All'
           };
 
           // const countryDropdown = document.querySelector('.country-dropdown');
@@ -56,14 +57,15 @@
             // setCookie('countryCode', selectedCountryCode, 365);
 
             const selectedCountryCode = event.target.value;
-            const selectedCountryName = countryMap[selectedCountryCode] || 'India';
+            const selectedCountryName = countryMap[selectedCountryCode] 
+            //|| 'India';
             console.log("Selected country code:", selectedCountryCode);
             console.log("Selected country names:", selectedCountryName);
 
             // Update cookies with selected country code and name
             setCookie('countryCode', selectedCountryCode, 365);
             setCookie('countryName', selectedCountryName, 365);
-
+            
             const redirectUrl = `/privacy-policy/${selectedCountryCode}`;
             window.location.href = redirectUrl;
           });
