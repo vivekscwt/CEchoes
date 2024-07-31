@@ -1945,18 +1945,31 @@ router.get('/business/:getcountryname', checkCookieValue, async (req, res) => {
         console.log("country_names", country_name);
         console.log("country_codes", country_code);
 
-        if (country_code != 'UK' && country_code != 'JP' && country_code!= 'All') {
-            country_code = 'US';
-        }
-        if(country_name == 'All'){
-            country_name= 'US'
-        }
+        // if (country_code != 'UK' && country_code != 'JP' && country_code!= 'All') {
+        //     country_code = 'US';
+        // }
+        // if(country_name == 'All'){
+        //     country_name= 'US'
+        // }
 
-        const [globalPageMeta, getplans, getSubscribedUsers] = await Promise.all([
-            comFunction2.getPageMetaValues('global'),
-            comFunction2.getplans(country_name),
-            comFunction2.getSubscribedUsers(user_id)
-        ]);
+            if (getcountryname != 'UK' && getcountryname != 'JP' && getcountryname != 'All') {
+                getcountryname = 'US';
+            }
+            if(getcountryname == 'All'){  
+                console.log("fggfgfh");        
+                var [globalPageMeta, getplans, getSubscribedUsers] = await Promise.all([
+                    comFunction2.getPageMetaValues('global'),
+                    comFunction2.getplans('US'),
+                    comFunction2.getSubscribedUsers(user_id)
+                ]);
+            } else{
+                var [globalPageMeta, getplans, getSubscribedUsers] = await Promise.all([
+                    comFunction2.getPageMetaValues('global'),
+                    comFunction2.getplans(country_name),
+                    comFunction2.getSubscribedUsers(user_id)
+                ]);
+            }
+
         console.log("getplans", getplans);
         console.log("getSubscribedUsers", getSubscribedUsers);
 
