@@ -12,29 +12,59 @@
 
 <%- include('common/footer') -%>   
 <script>
-          document.addEventListener("DOMContentLoaded", async function () {
+document.addEventListener("DOMContentLoaded", async function () {
         console.log("DOM content loaded");
 
         try {
           const { countryName, countryCode } = await fetchGeolocationAndSetCountryInfo();
           console.log("Initial CountryName:", countryName);
           console.log("Initial CountryCode:", countryCode);
+          const countryMap = {
+            'UK': 'United Kingdom',
+            'JP': 'Japan',
+            'US': 'United States',
+            'All': 'All'
+          };
 
+          // const countryDropdown = document.querySelector('.country-dropdown');
+          // if (countryCode == 'UK') {
+          //   countryDropdown.value = 'UK';
+          // } else if (countryCode == 'JP') {
+          //   countryDropdown.value = 'JP';
+          // } else {
+          //   countryDropdown.value = 'US';
+          // }
           const countryDropdown = document.querySelector('.country-dropdown');
-          if (countryCode == 'UK') {
-            countryDropdown.value = 'UK';
-          } else if (countryCode == 'JP') {
-            countryDropdown.value = 'JP';
+          if (countryCode in countryMap) {
+            countryDropdown.value = countryCode;
           } else {
             countryDropdown.value = 'US';
           }
-          // updateCountryInfo(countryName, countryCode);
-          // setDefaultLanguage(countryName);
+
+          function setCookie(name, value, days) {
+            const d = new Date();
+            d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+            const expires = "expires=" + d.toUTCString();
+            document.cookie = name + "=" + value + ";" + expires + ";path=/";
+          }
+
           countryDropdown.addEventListener('change', function (event) {
+            //previous
+            // const selectedCountryCode = event.target.value;
+            // const selectedCountryName = event.target.options[event.target.selectedIndex].text;
+            // console.log("Selected country code:", selectedCountryCode);
+            // console.log("Selected country name:", selectedCountryName);
+            // setCookie('countryCode', selectedCountryCode, 365);
+
             const selectedCountryCode = event.target.value;
-            const selectedCountryName = event.target.options[event.target.selectedIndex].text;
+            const selectedCountryName = countryMap[selectedCountryCode] 
+            //|| 'India';
             console.log("Selected country code:", selectedCountryCode);
-            console.log("Selected country name:", selectedCountryName);
+            console.log("Selected country names:", selectedCountryName);
+
+            // Update cookies with selected country code and name
+            setCookie('countryCode', selectedCountryCode, 365);
+            setCookie('countryName', selectedCountryName, 365);
 
             const redirectUrl = `/disclaimer/${selectedCountryCode}`;
             window.location.href = redirectUrl;
