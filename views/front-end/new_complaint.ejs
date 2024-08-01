@@ -566,22 +566,18 @@
                                                                         <%=user.level_user_type %>
                                                                     </div>
                                                                     <div class="col-md-1">
-                                                                        <div class="management_user_listing_box_btn">
-                                                                            <button type="button"
-                                                                                class="btn-default btn-warning each_form_submut delete_user"
-                                                                                data-bs-toggle="modal"
-                                                                                data-bs-target="#exampleModals_1" id=""
-                                                                                data-email="<%= user.email %>"
-                                                                                data-first-name="<%= user.first_name %>"
-                                                                                data-last-name="<%= user.last_name %>"
-                                                                                data-level="<%= user.level_user_type %>">
-                                                                                <i class="fa fa-trash"
-                                                                                    aria-hidden="true"
-                                                                                    style="color: #000;"></i>
-                                                                            </button>
-                                                                        </div>
-                                                                            
+                                                                    <div class="management_user_listing_box_btn">
+                                                                        <button type="button"
+                                                                            class="btn-default btn-warning each_form_submit delete_management_users"
+                                                                            id="deleteusers-<%= user.id %>"
+                                                                            data-email="<%= user.emails %>"
+                                                                            data-first-name="<%= user.first_name %>"
+                                                                            data-last-name="<%= user.last_name %>"
+                                                                            data-level="<%= user.level_user_type %>">
+                                                                            <i class="fa fa-trash" aria-hidden="true" style="color: #000;"></i>
+                                                                        </button>
                                                                     </div>
+                                                                </div>
                                                                 </div>
                                                             </li>
                                                             <% }); %>
@@ -1118,16 +1114,38 @@
                                 }, 2000);
                             }
                             if (status == '1') {
-                                Swal.fire({
-                                    icon: 'warning',
-                                    title: 'Complaint Status',
-                                    //text: 'Complaint status activated and You should add management users.',
-                                    text: 'Complaint status activated.',
-                                    confirmButtonText: 'Okay'
+                                $.ajax({
+                                    url: '/get-management-users',
+                                    method: 'GET',
+                                    data: {
+                                        company_id: companyId
+                                    },
+                                    success: function (response) {
+                                        var hasManagers = response.some(user => user.level_user_type === 'manager');
+                                        var hasHelpdesks = response.some(user => user.level_user_type === 'help_desk');
+
+                                        var message = 'Complaint status activated.You should add management users.';
+                                        if (hasManagers && !hasHelpdesks) {
+                                            message = ' You should a add help desk user.';
+                                        } else if (!hasManagers && hasHelpdesks) {
+                                            message = ' You should add a manager user.';
+                                        }
+
+                                        Swal.fire({
+                                            icon: 'warning',
+                                            title: 'Complaint Status',
+                                            text: message,
+                                            confirmButtonText: 'Okay'
+                                        });
+
+                                        setTimeout(function () {
+                                            window.location.reload();
+                                        }, 2000);
+                                    },
+                                    error: function (error) {
+                                        console.error('Error fetching management users:', error);
+                                    }
                                 });
-                                setTimeout(function () {
-                                    window.location.reload();
-                                }, 2000);
                             }
 
 

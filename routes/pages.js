@@ -489,7 +489,7 @@ router.get('', checkCookieValue, async (req, res) => {
     // console.log("getPositiveReviewsCompany",PositiveReviewsCompany);
     // console.log("getNegativeReviewsCompany",NegativeReviewsCompany);
     // console.log("getCountries", getCountries);
-    console.log("HomeMeta", HomeMeta);
+    //console.log("HomeMeta", HomeMeta);
 
     try {
         // Make API request to fetch blog posts
@@ -521,7 +521,7 @@ router.get('', checkCookieValue, async (req, res) => {
                 await meta_values.forEach((item) => {
                     meta_values_array[item.page_meta_key] = item.page_meta_value;
                 })
-                console.log("meta_values_array", meta_values_array);
+                //console.log("meta_values_array", meta_values_array);
                 //console.log(allRatingTags);
                 // const featured_sql = `SELECT featured_companies.id,featured_companies.company_id,featured_companies.short_desc,featured_companies.link,company.logo,company.slug, company.company_name FROM featured_companies 
                 //         JOIN company ON featured_companies.company_id = company.ID 
@@ -5166,15 +5166,30 @@ async function checkClientClaimedCompany(req, res, next) {
     //const userId = UserJsonData.user_id;
     //try {
 
+    // if (req.cookies.user) {
+    //     const encodedUserData = req.cookies.user;
+    //     const UserJsonData = JSON.parse(encodedUserData);
+    //     if (UserJsonData && UserJsonData.claimed_comp_slug == req.params.slug) {
+    //         next();
+    //     } else {
+    //         res.redirect('/logout');
+    //     }
+
+    // } else {
+    //     res.redirect('/');
+    // }
     if (req.cookies.user) {
         const encodedUserData = req.cookies.user;
+        console.log("encodedUserData",encodedUserData);
         const UserJsonData = JSON.parse(encodedUserData);
-        if (UserJsonData && UserJsonData.claimed_comp_slug == req.params.slug) {
+        console.log("UserJsonData",UserJsonData);
+
+        if (UserJsonData && UserJsonData.claimed_comp_slug == req.params.slug || UserJsonData.emails == UserJsonData.email) {
             next();
-        } else {
+        }else{
             res.redirect('/logout');
         }
-
+        
     } else {
         res.redirect('/');
     }
@@ -6171,6 +6186,22 @@ router.get('/getuserss/:companyId/:level/:category_id', (req, res) => {
     });
 });
 
+router.get('/get-management-users', async (req, res) => {
+    try{
+        const companyId = req.query.company_id;
+        const managementquery = `SELECT level_user_type FROM company_level_manage_users WHERE company_id= "${companyId}"`;
+        const managementUsers = await queryAsync(managementquery);
+    
+        console.log("managementUsers",managementUsers);
+    
+        return res.json(managementUsers);
+
+    } catch(error){
+        console.error('Error while fetching data:', error);
+        return res.status(500).send('Internal Server Error');
+    }
+})
+
 //send survey invitation page
 router.get('/new_complain/:slug', checkClientClaimedCompany, async (req, res) => {
     //new_complain
@@ -6220,7 +6251,7 @@ router.get('/new_complain/:slug', checkClientClaimedCompany, async (req, res) =>
         // console.log("geCompanyCategories",geCompanyCategories);
         // console.log("getcategoriesUsers",getcategoriesUsers);
         // console.log("getEtaDays",getEtaDays);
-        // console.log("getmanagementUsers",getmanagementUsers);
+        console.log("getmanagementUsers",getmanagementUsers);
     
         console.log("geCompanyCategories",geCompanyCategories);
         console.log("geCompanyCategorieslength",geCompanyCategorieslength);
@@ -11600,6 +11631,18 @@ router.get('/myprofile', checkFrontEndLoggedIn, async (req, res) => {
         const userId = currentUserData.user_id;
         //console.log('editUserID: ', currentUserData);
 
+        const email_query = `SELECT email FROM users WHERE user_id =?`;
+        const emailData = await query(email_query,[userId]);
+        console.log("emailData",emailData[0].email);
+
+        const getManagerQuery = `SELECT company_level_manage_users.*,company.slug FROM company_level_manage_users LEFT JOIN company ON company_level_manage_users.company_id = company.ID WHERE company_level_manage_users.emails=?`;
+        const getManagerData = await query(getManagerQuery, [emailData[0].email]);
+        //console.log("getManagerData", getManagerData[0]);
+
+        const getQuery = `SELECT complaint_assigned_users.*,company.slug FROM complaint_assigned_users LEFT JOIN company ON complaint_assigned_users.company_id = company.ID WHERE complaint_assigned_users.user_email=?`;
+        const getData = await query(getQuery, [emailData[0].email]);
+        // console.log("getData", getData[0]);
+
         // Fetch all the required data asynchronously
         const [user, userMeta, globalPageMeta, AllCompaniesReviews] = await Promise.all([
             comFunction.getUser(userId),
@@ -11616,7 +11659,9 @@ router.get('/myprofile', checkFrontEndLoggedIn, async (req, res) => {
             user: user,
             userMeta: userMeta,
             globalPageMeta: globalPageMeta,
-            AllCompaniesReviews: AllCompaniesReviews
+            AllCompaniesReviews: AllCompaniesReviews,
+            getManagerData: getManagerData,
+            getData: getData
         });
     } catch (err) {
         console.error(err);
@@ -11632,8 +11677,20 @@ router.get('/profile-dashboard', checkFrontEndLoggedIn, async (req, res) => {
         const userId = currentUserData.user_id;
         console.log('editUserID: ', userId);
 
+        const email_query = `SELECT email FROM users WHERE user_id =?`;
+        const emailData = await query(email_query,[userId]);
+        console.log("emailData",emailData[0].email);
+
+        const getManagerQuery = `SELECT company_level_manage_users.*,company.slug FROM company_level_manage_users LEFT JOIN company ON company_level_manage_users.company_id = company.ID WHERE company_level_manage_users.emails=?`;
+        const getManagerData = await query(getManagerQuery, [emailData[0].email]);
+        console.log("getManagerData", getManagerData[0]);
+
+        const getQuery = `SELECT complaint_assigned_users.*,company.slug FROM complaint_assigned_users LEFT JOIN company ON complaint_assigned_users.company_id = company.ID WHERE complaint_assigned_users.user_email=?`;
+        const getData = await query(getQuery, [emailData[0].email]);
+        console.log("getData", getData[0]);
+
         // Fetch all the required data asynchronously
-        const [user, userMeta, ReviewedCompanies, AllCompaniesReviews, AllReviewTags, allRatingTags, globalPageMeta, AllReviewVoting] = await Promise.all([
+        const [user, userMeta, ReviewedCompanies, AllCompaniesReviews, AllReviewTags, allRatingTags, globalPageMeta,AllReviewVoting] = await Promise.all([
             comFunction.getUser(userId),
             comFunction.getUserMeta(userId),
             comFunction2.getReviewedCompanies(userId),
@@ -11641,8 +11698,9 @@ router.get('/profile-dashboard', checkFrontEndLoggedIn, async (req, res) => {
             comFunction2.getAllReviewTags(),
             comFunction.getAllRatingTags(),
             comFunction2.getPageMetaValues('global'),
-            comFunction2.getAllReviewVoting(),
+            comFunction2.getAllReviewVoting()
         ]);
+        log("userMeta",userMeta);
         // res.json( {
         //     menu_active_id: 'profile-dashboard',
         //     page_title: 'My Dashboard',
@@ -11664,10 +11722,12 @@ router.get('/profile-dashboard', checkFrontEndLoggedIn, async (req, res) => {
             userMeta: userMeta,
             ReviewedCompanies: ReviewedCompanies,
             AllCompaniesReviews: AllCompaniesReviews,
-            allRatingTags: allRatingTags,
-            AllReviewTags: AllReviewTags,
-            globalPageMeta: globalPageMeta,
-            AllReviewVoting: AllReviewVoting
+            allRatingTags:allRatingTags,
+            AllReviewTags:AllReviewTags,
+            globalPageMeta:globalPageMeta,
+            AllReviewVoting:AllReviewVoting,
+            getManagerData: getManagerData,
+            getData: getData
         });
     } catch (err) {
         console.error(err);
@@ -11730,6 +11790,17 @@ router.get('/edit-myprofile', checkFrontEndLoggedIn, async (req, res) => {
         const userId = currentUserData.user_id;
         console.log('editUserID: ', userId);
 
+        const email_query = `SELECT email FROM users WHERE user_id =?`;
+        const emailData = await query(email_query,[userId]);
+        console.log("emailData",emailData[0].email);
+
+        const getManagerQuery = `SELECT company_level_manage_users.*,company.slug FROM company_level_manage_users LEFT JOIN company ON company_level_manage_users.company_id = company.ID WHERE company_level_manage_users.emails=?`;
+        const getManagerData = await query(getManagerQuery, [emailData[0].email]);
+        console.log("getManagerData", getManagerData[0]);
+        const getQuery = `SELECT complaint_assigned_users.*,company.slug FROM complaint_assigned_users LEFT JOIN company ON complaint_assigned_users.company_id = company.ID WHERE complaint_assigned_users.user_email=?`;
+        const getData = await query(getQuery, [emailData[0].email]);
+        // console.log("getData", getData[0]);
+
         // Fetch all the required data asynchronously
         const [user, userMeta, countries, states, globalPageMeta, AllCompaniesReviews] = await Promise.all([
             comFunction.getUser(userId),
@@ -11750,7 +11821,9 @@ router.get('/edit-myprofile', checkFrontEndLoggedIn, async (req, res) => {
             countries: countries,
             states: states,
             globalPageMeta: globalPageMeta,
-            AllCompaniesReviews: AllCompaniesReviews
+            AllCompaniesReviews: AllCompaniesReviews,
+            getData: getData,
+            getManagerData: getManagerData
         });
     } catch (err) {
         console.error(err);
@@ -12027,6 +12100,7 @@ router.get('/:getcountryname/register-cechoes-complaint', checkFrontEndLoggedIn,
 router.get('/my-complaints', checkFrontEndLoggedIn, async (req, res) => {
     const encodedUserData = req.cookies.user;
     const currentUserData = JSON.parse(encodedUserData);
+    console.log("currentUserData/my-complaints",currentUserData);
     const userId = currentUserData.user_id;
     const [user, userMeta, globalPageMeta, AllCompaniesReviews, getAllComplaintsByUserId] = await Promise.all([
         comFunction.getUser(userId),
@@ -12035,6 +12109,19 @@ router.get('/my-complaints', checkFrontEndLoggedIn, async (req, res) => {
         comFunction2.getAllCompaniesReviews(userId),
         comFunction2.getAllComplaintsByUserId(userId),
     ]);
+
+    const email_query = `SELECT email FROM users WHERE user_id =?`;
+    const emailData = await query(email_query,[userId]);
+    console.log("emailData",emailData);
+    console.log("emailData",emailData[0].email);
+
+    const getManagerQuery = `SELECT company_level_manage_users.*,company.slug FROM company_level_manage_users LEFT JOIN company ON company_level_manage_users.company_id = company.ID WHERE company_level_manage_users.emails=?`;
+    const getManagerData = await query(getManagerQuery, [emailData[0].email]);
+    //console.log("getManagerData", getManagerData[0]);
+
+    const getQuery = `SELECT complaint_assigned_users.*,company.slug FROM complaint_assigned_users LEFT JOIN company ON complaint_assigned_users.company_id = company.ID WHERE complaint_assigned_users.user_email=?`;
+    const getData = await query(getQuery, [emailData[0].email]);
+    // console.log("getData", getData[0]);
 
     const formattedCoplaintData = getAllComplaintsByUserId.map(item => {
         let responsesArray = [];
@@ -12078,7 +12165,9 @@ router.get('/my-complaints', checkFrontEndLoggedIn, async (req, res) => {
             userMeta: userMeta,
             globalPageMeta: globalPageMeta,
             AllCompaniesReviews: AllCompaniesReviews,
-            AllComplaintsByUserId: formattedCoplaintData
+            AllComplaintsByUserId: formattedCoplaintData,
+            getManagerData: getManagerData,
+            getData: getData
         });
     } catch (err) {
         console.error(err);
@@ -12100,6 +12189,16 @@ router.get('/user-compnaint-details/:complainId', checkFrontEndLoggedIn, async (
         comFunction2.getAllComplaintsByComplaintId(complaintId),
         comFunction2.updateUserNotificationStatus(complaintId),
     ]);
+    const email_query = `SELECT email FROM users WHERE user_id =?`;
+    const emailData = await query(email_query,[userId]);
+    console.log("emailData",emailData[0].email);
+
+    const getManagerQuery = `SELECT company_level_manage_users.*,company.slug FROM company_level_manage_users LEFT JOIN company ON company_level_manage_users.company_id = company.ID WHERE company_level_manage_users.emails=?`;
+    const getManagerData = await query(getManagerQuery, [emailData[0].email]);
+    //console.log("getManagerData", getManagerData[0]);
+
+    const getQuery = `SELECT complaint_assigned_users.*,company.slug FROM complaint_assigned_users LEFT JOIN company ON complaint_assigned_users.company_id = company.ID WHERE complaint_assigned_users.user_email=?`;
+    const getData = await query(getQuery, [emailData[0].email]);
     try {
 
         // res.json( {
@@ -12120,7 +12219,9 @@ router.get('/user-compnaint-details/:complainId', checkFrontEndLoggedIn, async (
             userMeta: userMeta,
             globalPageMeta: globalPageMeta,
             AllCompaniesReviews: AllCompaniesReviews,
-            ComplaintsByComplaintId: getAllComplaintsByComplaintId[0]
+            ComplaintsByComplaintId: getAllComplaintsByComplaintId[0],
+            getManagerData: getManagerData,
+            getData: getData
         });
     } catch (err) {
         console.error(err);
