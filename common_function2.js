@@ -3838,7 +3838,7 @@ async function complaintSuccessEmailToUser(userId, tokenId, insertId) {
             message: 'Something went wrong'
           });
         } else {
-          console.log('Mail Send: ', info.response);
+          console.log('Mail Send to user: ', info.response);
 
         }
       })
@@ -8362,6 +8362,248 @@ await mdlconfig.transporter.sendMail(mailOptions, function (err, info) {
 })
 }
 
+//send email to levelUsers after expiring eta days 
+async function sendemailtolevelUsers() {
+
+  const currentDate = new Date();
+  console.log("currentDate", currentDate);
+
+//   const sql = `
+//   SELECT *, DATEDIFF(NOW(), created_at) AS daysDifference
+//   FROM complaint_level_management 
+//   WHERE DATE(created_at) < '${currentDate.toISOString().slice(0, 19).replace('T', ' ')}';
+// `;
+    // const sql = `
+    //   SELECT clm.*, DATEDIFF(NOW(), clm.created_at) AS daysDifference, c.status
+    //   FROM complaint_level_management clm
+    //   JOIN complaint c ON clm.complaint_id = c.id
+    //   WHERE DATE(clm.created_at) < '${currentDate.toISOString().slice(0, 19).replace('T', ' ')}'
+    //     AND c.status IN (0, 2);
+    // `;
+    const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ');
+    
+    const sql = `
+SELECT
+    clm.id AS clm_id,
+    clm.level,
+    clm.eta_days,
+    clm.emails,
+    clm.company_id,
+    DATEDIFF(NOW(), c.created_at) AS daysDifference,
+    c.id AS complaint_id,
+    c.status
+FROM complaint_level_management clm
+JOIN complaint c ON clm.company_id = c.company_id
+WHERE DATE(c.created_at) < '${formattedDate}'
+  AND DATEDIFF(NOW(), c.created_at) > clm.eta_days
+  AND c.status IN (0, 2)
+  AND c.id IS NOT NULL
+GROUP BY clm.id
+ORDER BY c.id;
+
+    `;
+  
+  
+  
+
+
+  try {
+    const results = await query(sql);
+    if (results.length > 0) {
+      console.log("results", results);
+      let emailContent = '';
+      for (const result of results) {
+        var eta_days = result.eta_days;
+        console.log("ETA days:", eta_days);
+        var daysDifference = result.daysDifference;
+        console.log("Days difference:", daysDifference);
+        var level = result.level;
+        console.log("level", level);
+        var company_id = result.company_id;
+        console.log("company_id", company_id);
+        // var useremail = result.emails;
+        // console.log("useremail",useremail);
+        var expiration_days = daysDifference - eta_days;
+        console.log("expiration_days", expiration_days);
+
+        if (daysDifference > eta_days) {
+          var userEmail = result.emails;
+          console.log("userEmailsssss", userEmail);
+
+
+
+          const complaint_query = `SELECT complaint_assigned_users.complaint_id, complaint.created_at 
+        FROM complaint_assigned_users 
+        LEFT JOIN complaint ON complaint_assigned_users.complaint_id = complaint.id 
+        WHERE complaint_assigned_users.user_email = ?`;
+
+          const complaint_value = await query(complaint_query, [userEmail]);
+          console.log("complaint_value", complaint_value);
+
+          if (complaint_value && complaint_value.length > 0) {
+            // Accessing the first row of the result
+            const firstRow = complaint_value[0];
+
+            // Extracting complaint_id and created_at from the first row
+            var complaintId = firstRow.complaint_id;
+            console.log("complaintId", complaintId);
+
+            var createdAt = firstRow.created_at;
+            console.log("createdAt", createdAt);
+
+            console.log(`Complaints found for useremail ${userEmail}:`, complaint_value);
+          } else {
+            console.log(`No complaints found for useremail ${userEmail}`);
+          }
+
+
+
+
+          const leveluseremails = `SELECT emails FROM company_level_manage_users WHERE company_id = "${company_id}" AND level_user_type = 'manager'`;
+          const levelvalue = await query(leveluseremails);
+          var level_email = levelvalue[0].emails;
+          console.log("levelvalue", levelvalue[0].emails);
+          var expirationdays = daysDifference - eta_days;
+          console.log("expirationdays", expirationdays);
+
+          // const complaint_query = `SELECT complaint_assigned_users.complaint_id,complaint.created_at FROM complaint_assigned_users LEFT JOIN complaint ON complaint_assigned_users.complaint_id = complaint.id WHERE complaint_assigned_users.user_email = "${useremail}"`;
+
+
+
+          emailContent += `
+        <tr>
+            <td>${complaintId}</td>
+            <td>${level}</td>
+            <td>${userEmail}</td>
+            <td>${createdAt}</td>
+            <td>${expiration_days}</td>
+        </tr>
+    `;
+
+          // Construct the final HTML content including the dynamic rows
+          var htmlContent = `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+        <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
+            <tbody>
+                <tr>
+                    <td align="center" valign="top">
+                        <div id="template_header_image">
+                            <p style="margin-top: 0;"></p>
+                        </div>
+                        <table id="template_container" style="box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important; background-color: #fdfdfd; border: 1px solid #dcdcdc; border-radius: 3px !important;" border="0" cellpadding="0" cellspacing="0" width="600">
+                            <tbody>
+                                <tr>
+                                    <td align="center" valign="top">
+                                        <!-- Header -->
+                                        <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/logo.png" style="padding: 30px 40px; display: block;  width: 70px;" />
+                                                    </td>
+                                                    <td id="header_wrapper" style="padding: 36px 48px; display: block;">
+                                                        <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">ETA date expiration email</h1>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <!-- End Header -->
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="center" valign="top">
+                                        <!-- Body -->
+                                        <table id="template_body" border="0" cellpadding="0" cellspacing="0" width="600">
+                                            <tbody>
+                                                <tr>
+                                                    <td id="body_content" style="background-color: #fdfdfd;" valign="top">
+                                                        <!-- Content -->
+                                                        <table border="1" cellpadding="4" cellspacing="0" width="100%">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Complaint ID</th>
+                                                                    <th>Level</th>
+                                                                    <th>Assigned User</th>
+                                                                    <th>Complaint generation date</th>
+                                                                    <th>Number of expired days</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                ${emailContent} <!-- Dynamic rows for each user -->
+                                                            </tbody>
+                                                        </table>
+                                                        <!-- End Content -->
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <!-- End Body -->
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="center" valign="top">
+                                        <!-- Footer -->
+                                        <table id="template_footer" border="0" cellpadding="10" cellspacing="0" width="600">
+                                            <tbody>
+                                                <tr>
+                                                    <td style="padding: 0; -webkit-border-radius: 6px;" valign="top">
+                                                        <table border="0" cellpadding="10" cellspacing="0" width="100%">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
+                                                                        <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology</a></p>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <!-- End Footer -->
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>`;
+
+
+        }
+      }
+      var mailOptions = {
+        from: process.env.MAIL_USER,
+        //to: 'dev2.scwt@gmail.com',
+        to: level_email,
+        subject: 'ETA date expiration email',
+        html: htmlContent
+      }
+      await mdlconfig.transporter.sendMail(mailOptions, function (err, info) {
+        if (err) {
+          console.log(err);
+          return res.send({
+            status: 'not ok',
+            message: 'Something went wrong'
+          });
+        } else {
+          console.log('Mail Send: ', info.response);
+          return res.send({
+            status: 'ok',
+            message: 'Flag Approve'
+          });
+        }
+      })
+      console.log(`Email sent to ${level_email} because days difference (${daysDifference}) is greater than ETA days (${eta_days})`);
+      return results;
+    }
+  } catch (error) {
+    console.error("Error:", error);
+  }
+}
+//sendemailtolevelUsers()
+
 module.exports = {
   getFaqPage,
   getFaqPages,
@@ -8513,5 +8755,6 @@ module.exports = {
   getcomplaintHistory,//
   getresolvedcomplaints,
   getreopencomplaints,
-  getlevelusersres
+  getlevelusersres,
+  sendemailtolevelUsers,//
 };

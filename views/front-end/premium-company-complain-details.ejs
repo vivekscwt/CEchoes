@@ -5,9 +5,13 @@
 <!-- ============== Section1 start =============== -->
 <section class="main-content premium_company_profile bottom-main-content">
     <div class="container">
-       <div class="main_box">
-         <%- include('common/premium-company-sidebar') -%>
-       </div>
+      <div class="main_box">
+         <% if (currentUserData.level_user_type=='manager' || currentUserData.level_user_type=='help_desk' ) { %>
+            <%- include('common/level-manager-sidebar') -%>
+               <% } else { %>
+                  <%- include('common/premium-company-sidebar') -%>
+                     <% } %>
+      </div>
        <% if(company && company.membership_type_id>=3 ){ %>
        <div class="company-user-complain-wrapper">
          <div class="c-u-top-head">
@@ -255,6 +259,14 @@
             data-bs-target="#respondcustomermodal"
             class="btn-default btn-warning mt-4 respond-link ">Respond to customer & Close</a>
          <% } %>
+         <div class="custom-text-label">
+            History
+         </div>
+         <div class="custom-text-box">
+            <% getcomplaintHistory.forEach(function(history, index) { %>
+                <strong><%= index + 1 %>.</strong> <%= history.history_details %><br>
+            <% }); %>
+        </div>
            
        </div>
        <% }else{ %>

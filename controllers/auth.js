@@ -17354,7 +17354,7 @@ exports.assignUsers = async (req, res) => {
                                       <tr>
                                         <td colspan="2">
                                         <strong>Hello ${fullName},</strong>
-                                        <p style="font-size:15px; line-height:20px">You have assigned for this complaint<i><b> </b></i> Please visit<a  href="${process.env.MAIN_URL}${additionalPath}">the complaint</a> .</p>
+                                        <p style="font-size:15px; line-height:20px">You have assigned for this complaint<i><b> </b></i> Please visit<a  href="${process.env.MAIN_URL}${additionalPath}"> the complaint</a> .</p>
                                         </td>
                                       </tr>
                                     </table>
@@ -17821,3 +17821,9 @@ cron.schedule('0 0 * * *', async () => {
         console.error('Error syncing subscriptions:', error);
     }
 });
+
+//for expiration eta dates mail to the manager type user
+cron.schedule('0 5 * * *', async () => {
+    console.log('running a task every minute');
+    await comFunction2.sendemailtolevelUsers();
+})

@@ -1149,6 +1149,7 @@
                             }
 
 
+
                             $.ajax({
                                 url: '/auth/update-complaint-status',
                                 method: 'POST',
@@ -1597,8 +1598,7 @@
                         $('#verifyUserBtn').click(function (e) {
                             e.preventDefault();
                             var email = $('#user_verify_email').val();
-                            console.log("email", email);
-
+                            
                             if (email === "") {
                                 Swal.fire({
                                     icon: 'error',
@@ -1610,7 +1610,6 @@
                                 });
                                 return;
                             }
-
 
                             var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                             if (!emailPattern.test(email)) {
@@ -1628,13 +1627,16 @@
                                 data: { email: email },
                                 success: function (response) {
                                     console.log("response", response);
-                                    emailVerified = true
+                                    console.log("response.userExists", response.userExists);
+                                    
+                                    emailVerified = true;
                                     if (response.userExists) {
-                                        $('input[name="first_name"]').val(response.firstName);
-                                        $('input[name="last_name"]').val(response.lastName);
+                                        $('#first_nameField').val(response.firstName);
+                                        $('#last_nameField').val(response.lastName);
+                                        
                                         $('.password').hide();
-                                        $('.first_name').hide();
-                                        $('.last_name').hide();
+                                        $('.first_name').show();
+                                        $('.last_name').show();
                                     } else {
                                         $('.password').show();
                                         $('.first_name').show();
@@ -1646,6 +1648,7 @@
                                 }
                             });
                         });
+
 
                         $('#deleteuserForm').submit(function (event) {
                             event.preventDefault();
@@ -2074,28 +2077,26 @@
                                 method: 'POST',
                                 data: { email: email },
                                 success: function (response) {
-                                    emailVerification = true
                                     console.log("response", response);
+                                    
+                                    if (response.userExists == true) {
+                                        $('#first_nameFields').val(response.firstName);
+                                        $('#last_nameFields').val(response.lastName);
 
-                                    if (response.userExists) {
-                                        $('input[name="first_name"]').val(response.firstName);
-                                        $('input[name="last_name"]').val(response.lastName);
-                                        $('.passwords').hide();
                                         $('.first_names').show();
                                         $('.last_names').show();
-                                        emailVerified = true;
+                                        $('.passwords').hide(); // Hide password for existing user
                                     } else {
-                                        $('.passwords').show();
                                         $('.first_names').show();
                                         $('.last_names').show();
-                                        emailVerified = true;
+                                        $('.passwords').show(); // Show password for new user
                                     }
                                 },
                                 error: function (xhr, status, error) {
                                     console.error('Error verifying user:', error);
-                                    emailVerified = false;
                                 }
                             });
+                        
                         });
 
 

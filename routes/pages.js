@@ -6806,9 +6806,17 @@ router.get('/company-compnaint-details/:slug/:complaintId', checkClientClaimedCo
         comFunction.getAllRatingTags(),
         comFunction2.getPremiumCompanyData(companyId),
         comFunction2.getAllComplaintsByComplaintId(complaintId),
-        comFunction2.updateCompanyrNotificationStatus(complaintId)
+        comFunction2.updateCompanyrNotificationStatus(complaintId),
+      
     ]);
-
+    try {
+        var complaintHistory = await comFunction2.getcomplaintHistory(complaintId);
+        console.log("complaintHistory", complaintHistory);
+        // Continue with using complaintHistory
+    } catch (error) {
+        console.error('Error fetching complaint history:', error);
+        var complaintHistory = [];
+    }
 
     const companyPaidStatus = company.paid_status.trim();;
     if (companyPaidStatus == 'free') {
@@ -6867,7 +6875,8 @@ router.get('/company-compnaint-details/:slug/:complaintId', checkClientClaimedCo
                 instagram_url: instagram_url,
                 linkedin_url: linkedin_url,
                 youtube_url: youtube_url,
-                ComplaintsByComplaintId: getAllComplaintsByComplaintId[0]
+                ComplaintsByComplaintId: getAllComplaintsByComplaintId[0],
+                getcomplaintHistory: complaintHistory,
             });
     }
 });
