@@ -646,12 +646,18 @@
     const { countryName, countryCode } = await fetchGeolocationAndSetCountryInfo();
     console.log("Initial CountryName:", countryName);
     console.log("Initial CountryCode:", countryCode);
+    
+    const countryMap = {
+      'UK': 'United Kingdom',
+      'JP': 'Japan',
+      'US': 'United States',
+      'All': 'All'
+    };
 
     const countryDropdown = document.querySelector('.country-dropdown');
-    if (countryCode == 'UK') {
-      countryDropdown.value = 'UK';
-    } else if (countryCode == 'JP') {
-      countryDropdown.value = 'JP';
+
+    if (countryCode in countryMap) {
+      countryDropdown.value = countryCode;
     } else {
       countryDropdown.value = 'US';
     }
@@ -665,22 +671,24 @@
 
     countryDropdown.addEventListener('change', function(event) {
       const selectedCountryCode = event.target.value;
-      const selectedCountryName = event.target.options[event.target.selectedIndex].text;
+      const selectedCountryName = countryMap[selectedCountryCode];
+      
       console.log("Selected country code:", selectedCountryCode);
       console.log("Selected country name:", selectedCountryName);
 
-      // Update the cookie with the selected country code
+      // Update cookies with selected country code and name
       setCookie('countryCode', selectedCountryCode, 365);
+      setCookie('countryName', selectedCountryName, 365);
 
-      // // // Redirect if needed
-      // const redirectUrl = `/${selectedCountr
-      // yCode}`;
-      //window.location.href = redirectUrl;
+      // Redirect if needed
+      // const redirectUrl = `/${selectedCountryCode}`;
+      // window.location.href = redirectUrl;
     });
   } catch (error) {
     console.error('Error initializing country info:', error);
   }
 });
+
 
 
 </script>

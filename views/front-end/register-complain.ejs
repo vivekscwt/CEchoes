@@ -184,49 +184,53 @@
 <script>
 $(document).ready(function () {
    $('#select_company').change(function() {
-      
-      //$("#select_state").prop('required',false);
-      $('#dynamic_state_field_wrapper').hide();
-      var company_id = $(this).val();
-      //alert(company_id);
-      //return false;
-      //$('#country_name').val(this.options[this.selectedIndex].text);
-      $.ajax({
-         url: '/api/complain_category',
-         method: 'POST',
-         data: {company_id:company_id},
-         ContentType: 'application/json',
-         success: function (data) {
+    // Hide the dynamic state field initially
+    $('#dynamic_state_field_wrapper').hide();
+    var company_id = $(this).val();
+
+    $.ajax({
+        url: '/api/complain_category',
+        method: 'POST',
+        data: {company_id: company_id},
+        ContentType: 'application/json',
+        success: function(data) {
             if (data.status == 'ok') {
-               $('#dynamic_state_field_wrapper').show();
-               //$("#select_state").prop('required',true);
-               //$('#select_category').empty().append($('<option value="">Select Category</option>'));
-               $.each(data.data, function (i, item) {
-                     $('#select_category').append($('<option>', { 
+                $('#dynamic_state_field_wrapper').show();
+
+                $('#select_category').empty();
+
+
+                $('#select_category').append($('<option>', { 
+                    value: 0,
+                    text: 'General'
+                }));
+
+                $.each(data.data, function(i, item) {
+                    $('#select_category').append($('<option>', { 
                         value: item.id,
-                        text : item.category_name 
-                     }));
-               });                
+                        text: item.category_name
+                    }));
+                });
             } else {
-               $('#dynamic_state_field_wrapper').hide();
-               $("#select_category").prop('required',false);
+                $('#dynamic_state_field_wrapper').hide();
+                $("#select_category").prop('required', false);
             }
-         },
-         error: function (error) {
+        },
+        error: function(error) {
             // Handle any errors
             Swal.fire({
-               text: error,
-               icon: "error",
-               buttonsStyling: false,
-               confirmButtonText: "Ok, got it!",
-               customClass: {
-                     confirmButton: "btn btn-primary"
-               }
+                text: error.responseText || "An error occurred",
+                icon: "error",
+                buttonsStyling: false,
+                confirmButtonText: "Ok, got it!",
+                customClass: {
+                    confirmButton: "btn btn-primary"
+                }
             });
             submitButton.disabled = false;
-         }
-      });    
-   });
+        }
+    });
+});
 
    $('#select_category').change(function() {
     $('#select_sub_category').empty().append($('<option value="" disabled selected>Select Sub Category</option>')); // Default option

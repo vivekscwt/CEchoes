@@ -6,11 +6,6 @@
 <section class="main-content premium_company_profile bottom-main-content">
     <div class="container">
       <div class="main_box">
-         <% if (currentUserData.level_user_type=='manager' || currentUserData.level_user_type=='help_desk' ) { %>
-            <%- include('common/level-manager-sidebar') -%>
-               <% } else { %>
-                  <%- include('common/premium-company-sidebar') -%>
-                     <% } %>
       </div>
        <% if(company && company.membership_type_id>=3 ){ %>
        <div class="company-user-complain-wrapper">
@@ -79,6 +74,11 @@
                <div class="col-md-12">
                   <div class="c-u-layer-part">
                      <strong>Message:</strong> <%= ComplaintsByComplaintId.message %>
+                  </div>
+               </div>
+               <div class="col-md-12">
+                  <div class="c-u-layer-part">
+                     <strong>Overall Days:</strong> <%= approximateDifferenceInDays %>
                   </div>
                </div>
             </div>
@@ -267,6 +267,7 @@
                 <strong><%= index + 1 %>.</strong> <%= history.history_details %><br>
             <% }); %>
         </div>
+        
            
        </div>
        <% }else{ %>
@@ -367,7 +368,7 @@
                   $('.frm-loading').hide();
                   setTimeout(function () {
                      //window.location.reload();
-                     window.location.href="/company-complaint-listing/"+data.slug;
+                     window.location.href="/manage-complaint-listing/"+data.slug;
                   }, 2000);
                } else {
                   $('.response-message').text(data.message);
@@ -415,7 +416,7 @@
                   $('#query_submit_btn').prop('disabled', false);
                   $('.frm-loading').hide();
                   setTimeout(function () {
-                     window.location.href="/company-complaint-listing/"+data.slug;
+                     window.location.href="/manage-complaint-listing/"+data.slug;
                   }, 2000);
                } else {
                   $('.response-message').text(data.message);
@@ -432,5 +433,6 @@
          });
 
       });
+
    })
 </script>
