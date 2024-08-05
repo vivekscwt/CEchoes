@@ -213,13 +213,13 @@ router.get('', checkCookieValue, async (req, res) => {
         const response = await axios.get(apiUrl);
         const blogPosts = response.data;
         const restructuredResponse = {
-            "status": blogPosts.status,
-            "data": blogPosts.data.map(item => ({
+                "status": blogPosts.status,
+                "data": blogPosts.data.map(item => ({
                 ...item,
-                "title": decodeHTMLEntities(item.title)
-            })),
-            "success_message": blogPosts.success_message,
-            "error_message": blogPosts.error_message
+            "title": decodeHTMLEntities(item.title)
+        })),
+                "success_message": blogPosts.success_message,
+                "error_message": blogPosts.error_message
         };
         //console.log('restructuredResponse', restructuredResponse);
 
