@@ -149,10 +149,8 @@ router.get('', checkCookieValue, async (req, res) => {
     console.log("apiKey",apiKey);
     console.log("currentUserData",currentUserData);
 
-    const country_name = req.cookies.countryName
-     || 'India';
-    let country_code = req.cookies.countryCode 
-    || 'IN';
+    const country_name = req.cookies.countryName || 'India';
+    let country_code = req.cookies.countryCode || 'IN';
     console.log("country_namesland", country_name);
     console.log("country_codesland", country_code);
 
