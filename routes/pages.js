@@ -655,10 +655,10 @@ router.get('/home/:getcountryhome', checkCookieValue, async (req, res) => {
     console.log("currentUserData", currentUserData);
 
     const country_name = req.cookies.countryName
-        //|| 'India';
+        || 'India';
 
     let country_code = req.cookies.countryCode
-       // || 'IN';
+       || 'IN';
     console.log("country_namesland", country_name);
     console.log("country_codesland", country_code);
 
