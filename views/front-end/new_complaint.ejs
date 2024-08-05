@@ -6,159 +6,955 @@
         <section class="main-content premium_company_profile bottom-main-content C_l_managment">
             <div class="container">
                 <div class="main_box">
-                    <%- include('common/premium-company-sidebar') -%>
+                    <% if (currentUserData.level_user_type=='manager' || currentUserData.level_user_type=='help_desk' )
+                        { %>
+                        <%- include('common/level-manager-sidebar') -%>
+                            <% } else { %>
+                                <%- include('common/premium-company-sidebar') -%>
+                                    <% } %>
                 </div>
                 <div class="premium-complain-m-head">
                     <h2 class="inner-main-head">Complaint Level Management </h2>
                 </div>
-                <div class="premium-complain-m-wrap">
-                    <div class="row g-2 align-items-center justify-content-arround mb-2 C_status">
-                        <div class="col-sm-6">
-                            <label for="" class="col-form-label"><strong>Complaint Status</strong></label>
-                        </div>
-                        <div class="col-sm-6">
-                            <div class="custom-form mb-0 text-end">
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input inactive-level" type="radio" name="complaint_status"
-                                        id="inlineRadio1" value="0" checked=""><label class="form-check-label"
-                                        for="inlineRadio1">Inactive</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input active-level form-check-inline" type="radio"
-                                        name="complaint_status" id="inlineRadio2" value="1"
-                                        data-gtm-form-interact-field-id="0"><label class="form-check-label"
-                                        for="inlineRadio2">Active</label>
-                                </div>
+                <!-- ========================================================= -->
+                <% if (company && company.membership_type_id==3) { %>
+                    <div class="premium-complain-m-wrap">
+                        <div class="row g-2 align-items-center justify-content-arround mb-2 C_status">
+                            <div class="col-sm-6">
+                                <label for="" class="col-form-label"><strong>Complaint Status</strong></label>
                             </div>
-                        </div>
-                    </div>
-                    <div class="premium-complain-m-content-body">
-                        <form class="level_form" data-gtm-form-interact-id="0">
-                            <input type="hidden" value="1" name="label_count" class="label_count">
-                            <input type="hidden" name="company_id" value="1" class="">
+                            <div class="col-sm-6">
+                                <% if (currentUserData.claimed_comp_id !=null) { %>
+                                    <div class="custom-form mb-0 text-end" data-company-id="<%= company.id %>">
 
-                            <div class="toggle-emails" style="display: block;">
-                                <!-- head section start -->
-                                <div class="premium-complain-m-content-head">
-                                    <div class="premium-complain-m-content-part">
-                                        Level 1
-                                    </div>
-                                    <!-- <div class="premium-complain-m-content-part">
-                           Action
-                        </div> -->
-                                </div>
-
-                                <!-- edit email slide down start -->
-                                <div class="level_box mb-27">
-                                    <div class="edit-email" style="display: block;">
-
-                                        <div class="row g-2 align-items-center justify-content-around  eta_day">
-                                            <div class="col-sm-6">
-                                                <label for="" class="col-form-label"><strong>ETA Days</strong></label>
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <input type="number" name="eta_days_1" id=""
-                                                    class="form-control required" required="">
-                                            </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input inactive-level" type="radio"
+                                                name="complaint_status" id="inlineRadio1" value="0" <% if(company &&
+                                                company.complaint_status !='1' ) { %> checked <% } %> ><label
+                                                    class="form-check-label" for="inlineRadio1">Inactive</label>
                                         </div>
 
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input active-level form-check-inline" type="radio"
+                                                name="complaint_status" id="inlineRadio2" value="1" <% if(company &&
+                                                company.complaint_status=='1' ) { %> checked <% } %> ><label
+                                                    class="form-check-label" for="inlineRadio2">Active</label>
+                                        </div>
                                     </div>
-                                    <div class="d-flex justify-content-center align-items-center">
-                                        <button type="button" class="btn-default btn-warning each_form_submut add_new_user"
-                                            data-bs-toggle="modal" data-bs-target="#exampleModal" id="">Add
-                                            New user</button>
 
-                                    </div>
+                                    <% } else if (currentUserData.email==currentUserData.emails) { %>
 
+                                        <div class="custom-form mb-0 text-end" data-company-id="<%= company.id %>">
 
-                                </div>
-
-                            </div>
-                            <div class="toggle-emails border_none mt-3" style="display: block;">
-                                <!-- head section start -->
-                                <div class="premium-complain-m-content-head">
-                                    <div class="premium-complain-m-content-part">
-                                        Level 2
-                                    </div>
-                                    <!-- <div class="premium-complain-m-content-part">
-                           Action
-                        </div> -->
-                                </div>
-
-                                <!-- edit email slide down start -->
-                                <div class="level_box mb-27">
-                                    <div class="edit-email" style="display: block;">
-                             
-                                        <div class="row g-2 align-items-center justify-content-around  eta_day">
-                                            <div class="col-sm-6">
-                                                <label for="" class="col-form-label"><strong>ETA Days</strong></label>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input inactive-level" type="radio"
+                                                    name="complaint_status" id="inlineRadio1" value="0" <% if(company &&
+                                                    company.complaint_status !='1' ) { %> checked <% } %>
+                                                    disabled><label class="form-check-label"
+                                                        for="inlineRadio1">Inactive</label>
                                             </div>
-                                            <div class="col-sm-6">
-                                                <input type="number" name="eta_days_1" id=""
-                                                    class="form-control required" required="">
+
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input active-level form-check-inline"
+                                                    type="radio" name="complaint_status" id="inlineRadio2" value="1" <%
+                                                    if(company && company.complaint_status=='1' ) { %> checked <% } %>
+                                                    disabled><label class="form-check-label"
+                                                        for="inlineRadio2">Active</label>
                                             </div>
                                         </div>
-
-                                    </div>
-                                    <div class="d-flex justify-content-center align-items-center">
-                                        <button type="button" class="btn-default btn-warning each_form_submut add_new_user">Add New
-                                            user</button>
-                                    </div>
-                                </div>
+                                        <% } else { %>
+                                            <div class="text-center">
+                                                <p>Unexpected condition. Please contact support.</p>
+                                            </div>
+                                            <% } %>
                             </div>
-                            <div class="d-flex justify-content-end align-items-center Save_btn">
-                                <button type="submit"
-                                    class="btn-default btn-warning each_form_submut save_btn">Save</button>
-                            </div>
-
-                        </form>
-                        <!-- edit email slide down end -->
-
-                    </div>
-                    <!-- Modal -->
-                    <div class="popup">
-                        <div class="popup__content">
-                            <div class="close">
-                                <span></span>
-                                <span></span>
-                            </div>
-                            <h4 class="add_user_heading">Add user details</h4>
-                            <form id="addNewUserForm" action="#" method="POST">
-                                <div class="add_user_input">
-                                    <label for="">First Name</label>
-                                    <input name="firstName" type="text" placeholder="Tell me who are you" required>
-                                </div>
-                                <div class="add_user_input">
-                                    <label for="">Last Name</label>
-                                    <input name="lastName" type="text" placeholder="Tell me who are you" required>
-                                </div>
-                                <div class="add_user_input">
-                                    <label for="">Email</label>
-                                    <input name="email" type="email" placeholder="May I know your Email id." required>
-                                </div>
-                                <div class="add_user_input">
-                                    <label for="">Password</label>
-                                    <input name="password" type="password" placeholder="Please! Keep it secret always" required>
-                                </div>
-                                <div class="add_user_input">
-                                    <label for="category">Web Developer</label>
-                                    <select name="category" id="cars">
-                                        <option value="item-1">Item-1</option>
-                                        <option value="item-2">Item-2</option>
-                                        <option value="item-3">Item-3</option>
-                                        <option value="item-4">Item-4</option>
-                                    </select>
-                                </div>
-                                <div class="add_user_submit_btn">
-                                    <input type="submit" value="Save">
-                                </div>
-                            </form>
                         </div>
+                        <div class="premium-complain-m-content-body">
+                            <% if (geCompanyCategorieslength<=0 && company.complaint_status=='0' ) { %>
+                                <P>The company doest not have any category.Please add a category first.</P>
+                                <% } %>
+                                    <% let hasManager=getmanagementUsers.some(user=> user.level_user_type ===
+                                        'manager');
+                                        let hasHelpDesk = getmanagementUsers.some(user => user.level_user_type ===
+                                        'help_desk');
+                                        if (getmanagementUsers && getmanagementUsers.length> 0 &&
+                                        company.complaint_status=='1') { %>
+                                        <% if (currentUserData.claimed_comp_id !=null && company &&
+                                            company.complaint_status=='1' ) { %>
+                                                <% if (geCompanyCategorieslength <= 0) { %>
+                                                                    <div class="alert alert-warning" role="alert">
+                                                                        Please add categories first.
+                                                                    </div>
+                                                                <% } else { %>
+                                                                    <% } %>
+                                            <div
+                                                class="management-users-list management_user_listing_box level_box mb-27">
+                                                <h3>Management Users</h3>
+                                                <ul>
+                                                    <% getmanagementUsers.forEach(function(user) { %>
+                                                        <li class="category_list_edit_row">
+                                                            <div class="row align-items-center" style="width: 100%;">
+                                                                <div class="col-md-3">
+                                                                    <%= user.first_name %>
+                                                                        <%= user.last_name %>
+                                                                </div>
+                                                                <div class="col-md-5">
+                                                                    <%= user.emails %>
+                                                                </div>
+                                                                <div class="col-md-3">
+                                                                    <%=user.level_user_type %>
+                                                                </div>
+                                                                <div class="col-md-1">
+                                                                    <div class="management_user_listing_box_btn">
+                                                                        <button type="button"
+                                                                            class="btn-default btn-warning each_form_submit delete_management_users"
+                                                                            id="deleteusers-<%= user.id %>"
+                                                                            data-email="<%= user.emails %>"
+                                                                            data-first-name="<%= user.first_name %>"
+                                                                            data-last-name="<%= user.last_name %>"
+                                                                            data-level="<%= user.level_user_type %>">
+                                                                            <i class="fa fa-trash" aria-hidden="true" style="color: #000;"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        <% }); %>
+                                                </ul>
+                                            </div>
+                                            <% } %>
+                                                <% } %>
+                                                    <% if (!hasManager || !hasHelpDesk) {%>
+                                                        <% if (currentUserData.claimed_comp_id !=null && company &&
+                                                            company.complaint_status=='1' ) { %>
+                                                                <% if (geCompanyCategorieslength <= 0) { %>
+                                                                    <div class="alert alert-warning" role="alert">
+                                                                        Please add categories first.
+                                                                    </div>
+                                                                <% } else { %>
+                                                                    <% } %>
+                                                            <div
+                                                                class="d-flex justify-content-center align-items-center">
+                                                                <button type="button"
+                                                                    class="btn-default btn-warning each_form_submut add_new_User"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#exampleModals_<%= i %>" id="">Add
+                                                                    Management Users</button>
+                                                            </div>
+                                                            <% } %>
+                                                                <% } %>
+
+                                                                    <form class="level_form"
+                                                                        data-gtm-form-interact-id="1">
+                                                                        <div class="toggle-emails"
+                                                                            style="display: block;">
+                                                                            <!-- head section start -->
+                                                                            <div
+                                                                                class="premium-complain-m-content-head">
+                                                                                <div
+                                                                                    class="premium-complain-m-content-part">
+                                                                                    Level 1
+                                                                                </div>
+                                                                            </div>
+                                                                            <input type="hidden"
+                                                                                name="complaint_status_1"
+                                                                                value="<%= complaintStatus %>">
+                                                                            <input type="hidden" name="company_id_1"
+                                                                                value="<%= companyId %>" class="">
+                                                                            <input type="hidden" name="email_1"
+                                                                                id="emailDisplay_1"
+                                                                                class="email_display" value="">
+                                                                            <!-- edit email slide down start -->
+                                                                            <div class="level_box mb-27">
+                                                                                <div class="edit-email"
+                                                                                    style="display: block;">
+                                                                                    <% if (getEtaDays.length===0) { %>
+                                                                                        <div
+                                                                                            class="row g-2 align-items-center justify-content-around eta_day">
+                                                                                            <div class="col-sm-6">
+                                                                                                <label for=""
+                                                                                                    class="col-form-label"><strong>ETA
+                                                                                                        Days</strong></label>
+                                                                                            </div>
+                                                                                            <div class="col-sm-6">
+                                                                                                <input type="number"
+                                                                                                    min="0"
+                                                                                                    name="etaDays"
+                                                                                                    id="etaDays_1"
+                                                                                                    class="form-control required"
+                                                                                                    required>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <% } else { %>
+                                                                                            <% getEtaDays.forEach(function
+                                                                                                (eta) { %>
+                                                                                                <div
+                                                                                                    class="row g-2 align-items-center justify-content-around eta_day">
+                                                                                                    <div
+                                                                                                        class="col-sm-6">
+                                                                                                        <label for=""
+                                                                                                            class="col-form-label"><strong>ETA
+                                                                                                                Days</strong></label>
+                                                                                                    </div>
+                                                                                                    <div
+                                                                                                        class="col-sm-6">
+                                                                                                        <input
+                                                                                                            type="number"
+                                                                                                            min="0"
+                                                                                                            name="etaDays"
+                                                                                                            id="etaDays_1"
+                                                                                                            class="form-control required"
+                                                                                                            required
+                                                                                                            value="<%= eta.eta_days %>">
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <% }); %>
+                                                                                                    <% } %>
+
+                                                                                </div>
+                                                                                <div id="addedUsersContainer">
+                                                                                    <% let displayedCategories=[];
+                                                                                        getcategoriesUsers.forEach(function(user)
+                                                                                        { if
+                                                                                        (!displayedCategories.includes(user.category_id))
+                                                                                        { %>
+                                                                                        <div class="category_list">
+                                                                                            <div
+                                                                                                class="category_list_heading">
+                                                                                                <h3>
+                                                                                                    <%= user.category_name
+                                                                                                        %>
+                                                                                                </h3>
+                                                                                            </div>
+                                                                                            <% displayedCategories.push(user.category_id);
+                                                                                                %>
+                                                                                                <% getcategoriesUsers.forEach(function(userItem)
+                                                                                                    { if
+                                                                                                    (userItem.category_id==user.category_id)
+                                                                                                    { %>
+                                                                                                    <div
+                                                                                                        class="category_list_edit_sec">
+                                                                                                        <div
+                                                                                                            class="category_list_edit_row">
+                                                                                                            <div>
+                                                                                                                <h4>
+                                                                                                                    <span
+                                                                                                                        class="first_name">
+                                                                                                                        <%= userItem.first_name
+                                                                                                                            %>
+                                                                                                                    </span>
+                                                                                                                    <span
+                                                                                                                        class="last_name">
+                                                                                                                        <%= userItem.last_name
+                                                                                                                            %>
+                                                                                                                    </span>
+                                                                                                                </h4>
+                                                                                                            </div>
+                                                                                                            <div>
+                                                                                                                <h5>
+                                                                                                                    <%= userItem.emails
+                                                                                                                        %>
+                                                                                                                </h5>
+                                                                                                            </div>
+                                                                                                            <div
+                                                                                                                class="management_user_listing_box_btn">
+                                                                                                                <button
+                                                                                                                    type="button"
+                                                                                                                    class="btn-default btn-warning each_form_submut editModals"
+                                                                                                                    data-bs-toggle="modal"
+                                                                                                                    data-bs-target="#exampleModals_1"
+                                                                                                                    id="">
+                                                                                                                    <i class="fas fa-edit"
+                                                                                                                        style="color: #000;"></i>
+                                                                                                                </button>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                    <% } }); %>
+                                                                                        </div>
+                                                                                        <% } }); %>
+                                                                                </div>
+                                                                                <div
+                                                                                    class="d-flex justify-content-center align-items-center">
+                                                                                    <button type="button"
+                                                                                        class="btn-default btn-warning each_form_submut add_new_userss"
+                                                                                        data-bs-toggle="modal"
+                                                                                        data-bs-target="#exampleModals_<%= i %>">
+                                                                                        Add New User
+                                                                                    </button>
+                                                                                </div>
+
+                                                                            </div>
+                                                                            <div
+                                                                                class="d-flex justify-content-center mt-3">
+                                                                                <button type="submit"
+                                                                                    class="btn-default btn-warning each_form_submut save_btns">Save</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </form>
+                                                                    <!-- edit email slide down end -->
+                        </div>
+
+
+                        <!-- Modal -->
+                        <div class="popup" id="userss">
+                            <div class="popup__content" id="user">
+                                <div class="close">
+                                    <span></span>
+                                    <span></span>
+                                </div>
+                                <h4 class="add_user_heading">Add user details</h4>
+                                <form id="addNewUserForms" action="#">
+                                    <input type="hidden" class="level_field" name="level" readonly>
+                                    <input type="hidden" name="company_id" value="<%= companyId %>" class="">
+                                    <input type="hidden" name="complaint_status" value="<%=complaintStatus%>">
+                                    <div class="add_user_input">
+                                        <label for="">First Name</label>
+                                        <input name="first_name" type="text" placeholder="Tell me who are you" required>
+                                    </div>
+
+                                    <div class="add_user_input">
+                                        <label for="">Last Name</label>
+                                        <input name="last_name" type="text" placeholder="Tell me who are you" required>
+                                    </div>
+                                    <div class="add_user_input">
+                                        <label for="">Email</label>
+                                        <input name="email" type="email" placeholder="May I know your Email id."
+                                            required>
+                                    </div>
+                                    <div class="add_user_input">
+                                        <label for="">Password</label>
+                                        <input name="password" type="password"
+                                            placeholder="Please! Keep it secret always" required>
+                                    </div>
+                                    <div class="add_user_input">
+                                        <label for="">Select Category</label>
+                                        <select name="category" id="category">
+                                            <% geCompanyCategories.forEach(function(category) { %>
+                                                <option value="<%= category.category_id %>">
+                                                    <%= category.category_name %>
+                                                </option>
+                                                <% }); %>
+                                        </select>
+                                    </div>
+
+                                    <div class="add_user_submit_btn">
+                                        <input type="submit" value="Save">
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <!-- modal-end -->
+
+                        <!-- Modal -->
+                        <div class="popup" id="editmodals">
+                            <div class="popup__content" id="user">
+                                <div class="close">
+                                    <span></span>
+                                    <span></span>
+                                </div>
+                                <h4 class="add_user_heading">Add user details</h4>
+                                <form id="editusers" action="#">
+                                    <input type="hidden" name="company_id" value="<%=companyId%>">
+                                    <input type="hidden" name="complaint_status" value="<%=complaintStatus%>">
+                                    <input type="hidden" class="level_field" name="level" readonly>
+
+                                    <div class="add_user_input">
+                                        <label for="">First Name</label>
+                                        <input name="first_name" type="text" placeholder="Tell me who are you" required>
+                                    </div>
+                                    <div class="add_user_input">
+                                        <label for="">Last Name</label>
+                                        <input name="last_name" type="text" placeholder="Tell me who are you" required>
+                                    </div>
+                                    <div class="add_user_input">
+                                        <label for="">Email</label>
+                                        <input name="email" type="email" placeholder="May I know your Email id."
+                                            readonly>
+                                    </div>
+                                    <div class="add_user_input">
+                                        <label for="">Select Category</label>
+                                        <select name="category" id="category">
+                                            <% geCompanyCategories.forEach(function(category) { %>
+                                                <option value="<%= category.category_id %>">
+                                                    <%= category.category_name %>
+                                                </option>
+                                                <% }); %>
+                                        </select>
+                                    </div>
+                                    <div class="add_user_submit_btn">
+                                        <input type="submit" value="Save">
+                                    </div>
+                                </form>
+
+
+
+                            </div>
+                        </div>
+
+                        <!-- modal-end -->
+
+
+                        <div class="popup" id="addUser">
+                            <div class="popup__content" id="users">
+                                <div class="close">
+                                    <span></span>
+                                    <span></span>
+                                </div>
+                                <h4 class="add_user_heading">Add user details</h4>
+                                <form id="leveluserForms" action="#">
+                                    <input type="hidden" class="level_field" name="level" readonly>
+                                    <div class="add_user_input verify_btn">
+                                        <label for="">Email</label>
+                                        <input id="user_verify_emails" name="email" type="email"
+                                            placeholder="May I know your Email id." required>
+                                        <button type="button" id="verifyUserBtns">Verify</button>
+                                    </div>
+
+
+
+                                    <input type="hidden" name="company_id" value="<%=companyId%>">
+                                    <input type="hidden" name="complaint_status" value="<%=complaintStatus%>">
+
+                                    <div class="add_user_input first_names" style="display: none;">
+                                        <label for="">First Name</label>
+                                        <input name="first_name" id="first_nameFields" type="text"
+                                            placeholder="Tell me who you are">
+                                    </div>
+                                    <div class="add_user_input last_names" style="display: none;">
+                                        <label for="">Last Name</label>
+                                        <input name="last_name" id="last_nameFields" type="text"
+                                            placeholder="Tell me who you are">
+                                    </div>
+
+
+                                    <div class="add_user_input passwords" style="display: none;">
+                                        <label for="">Password</label>
+                                        <input name="password" id="passwordFields" type="password"
+                                            placeholder="Please keep it secret always">
+                                    </div>
+
+
+                                    <div class="add_user_input">
+                                        <label for="">Select User Category</label>
+                                        <select name="category" id="category">
+                                            <option value="manager">Manager</option>
+                                            <option value="help_desk">Helpdesk</option>
+                                        </select>
+                                    </div>
+                                    <div class="add_user_submit_btn">
+                                        <input type="submit" value="Save">
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- delete user form for membership_id==3 -->
+                        <div class="popup" id="deleteuser">
+                            <div class="popup__content" id="users">
+                                <div class="close">
+                                    <span></span>
+                                    <span></span>
+                                </div>
+                                <h4 class="add_user_heading">Add user details</h4>
+                                <form id="deleteuserForms" action="#">
+                                    <input type="hidden" class="level_field" name="level" readonly>
+                                    <div class="add_user_input verify_btn">
+                                        <label for="">Email</label>
+                                        <input id="delete_users_verify_email" name="email" type="email"
+                                            placeholder="May I know your Email id." required>
+                                        <button type="button" id="verifydeleteUserBtns">Verify</button>
+                                    </div>
+
+
+
+                                    <input type="hidden" name="company_id" value="<%=companyId%>">
+                                    <input type="hidden" name="complaint_status" value="<%=complaintStatus%>">
+
+                                    <div class="add_user_input first_name" style="display: none;">
+                                        <label for="">First Name</label>
+                                        <input name="first_name" id="delete_first_nameFields" type="text"
+                                            placeholder="Tell me who you are">
+                                    </div>
+                                    <div class="add_user_input last_name" style="display: none;">
+                                        <label for="">Last Name</label>
+                                        <input name="last_name" id="delete_last_nameFields" type="text"
+                                            placeholder="Tell me who you are">
+                                    </div>
+
+
+                                    <div class="add_user_input password" style="display: none;">
+                                        <label for="">Password</label>
+                                        <input name="password" id="delete_passwordFields" type="password"
+                                            placeholder="Please keep it secret always">
+                                    </div>
+
+
+                                    <div class="add_user_input">
+                                        <label for="">Select User Category</label>
+                                        <select name="category" id="deleteuser_category">
+                                            <option value="manager">Manager</option>
+                                            <option value="help_desk">Helpdesk</option>
+                                        </select>
+                                    </div>
+                                    <div class="add_user_submit_btn">
+                                        <input type="submit" value="Save">
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+
                     </div>
-                    <!-- modal-end -->
-                </div>
+                    <% } else if (company && (company.membership_type_id==4 || company.membership_type_id==5)) { %>
+                        <div class="premium-complain-m-wrap">
+                            <div class="row g-2 align-items-center justify-content-arround mb-2 C_status">
+                                <div class="col-sm-6">
+                                    <label for="" class="col-form-label"><strong>Complaint Status</strong></label>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="custom-form mb-0 text-end" data-company-id="<%= company.id %>">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input inactive-level" type="radio"
+                                                name="complaint_status" id="inlineRadio1" value="0" <% if(company &&
+                                                company.complaint_status !='1' ) { %> checked <% } %> ><label
+                                                    class="form-check-label" for="inlineRadio1">Inactive</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input active-level form-check-inline" type="radio"
+                                                name="complaint_status" id="inlineRadio2" value="1" <% if(company &&
+                                                company.complaint_status=='1' ) { %> checked <% } %> ><label
+                                                    class="form-check-label" for="inlineRadio2">Active</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="premium-complain-m-content-body">
+                                <% if (geCompanyCategorieslength<=0 && company.complaint_status=='0' ) { %>
+                                    <P>The company doest not have any category.Please add a category first.</P>
+                                    <% } %>
+                                        <% let hasManager=getmanagementUsers.some(user=> user.level_user_type ===
+                                            'manager');
+                                            let hasHelpDesk = getmanagementUsers.some(user => user.level_user_type ===
+                                            'help_desk');
+                                            if (getmanagementUsers && getmanagementUsers.length> 0 &&
+                                            company.complaint_status=='1') { %>
+                                            <% if (currentUserData.claimed_comp_id !=null && company &&
+                                                company.complaint_status=='1' ) { %>
+                                                    <% if (geCompanyCategorieslength <= 0) { %>
+                                                                    <div class="alert alert-warning" role="alert">
+                                                                        Please add categories first.
+                                                                    </div>
+                                                                <% } else { %>
+                                                                    <% } %>
+                                                <div
+                                                    class="management-users-list management_user_listing_box level_box mb-27">
+                                                    <h3>Management Users</h3>
+                                                    <ul>
+                                                        <% getmanagementUsers.forEach(function(user) { %>
+                                                            <li class="category_list_edit_row">
+                                                                <div class="row align-items-center"
+                                                                    style="width: 100%;">
+                                                                    <div class="col-md-3">
+                                                                        <%= user.first_name %>
+                                                                            <%= user.last_name %>
+                                                                    </div>
+                                                                    <div class="col-md-5">
+                                                                        <%= user.emails %>
+                                                                    </div>
+                                                                    <div class="col-md-3">
+                                                                        <%=user.level_user_type %>
+                                                                    </div>
+                                                                    <div class="col-md-1">
+                                                                    <div class="management_user_listing_box_btn">
+                                                                        <button type="button"
+                                                                            class="btn-default btn-warning each_form_submit delete_management_users"
+                                                                            id="deleteusers-<%= user.id %>"
+                                                                            data-email="<%= user.emails %>"
+                                                                            data-first-name="<%= user.first_name %>"
+                                                                            data-last-name="<%= user.last_name %>"
+                                                                            data-level="<%= user.level_user_type %>">
+                                                                            <i class="fa fa-trash" aria-hidden="true" style="color: #000;"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                                </div>
+                                                            </li>
+                                                            <% }); %>
+                                                    </ul>
+                                                </div>
+                                                <% } %>
+                                                    <% } %>
+
+
+                                                        <% if (!hasManager || !hasHelpDesk) {%>
+                                                            <% if (currentUserData.claimed_comp_id !=null && company &&
+                                                                company.complaint_status=='1' ) { %>
+                                                                    <% if (geCompanyCategorieslength <= 0) { %>
+                                                                    <div class="alert alert-warning" role="alert">
+                                                                        Please add categories first.
+                                                                    </div>
+                                                                <% } else { %>
+                                                                    <% } %>
+                                                                <div
+                                                                    class="d-flex justify-content-center align-items-center">
+                                                                    <button type="button"
+                                                                        class="btn-default btn-warning each_form_submut add_new_users"
+                                                                        data-bs-toggle="modal"
+                                                                        data-bs-target="#exampleModals_<%= i %>"
+                                                                        id="">Add
+                                                                        Management Users</button>
+                                                                </div>
+                                                                <% } %>
+                                                                    <% } %>
+                                                                        <% for (var i=1; i <=complaintLevel; i++) { %>
+
+                                                                            <form class="level_form"
+                                                                                data-gtm-form-interact-id="<%= i %>">
+                                                                                <div class="toggle-emails<%= i == 1 ? '' : ' border_none mt-3' %>"
+                                                                                    style="display: block;">
+                                                                                    <!-- head section start -->
+                                                                                    <div
+                                                                                        class="premium-complain-m-content-head">
+                                                                                        <div
+                                                                                            class="premium-complain-m-content-part">
+                                                                                            Level <%= i %>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <input type="hidden"
+                                                                                        name="complaint_status_<%= i %>"
+                                                                                        value="<%= complaintStatus %>">
+                                                                                    <input type="hidden"
+                                                                                        name="company_id_<%= i %>"
+                                                                                        value="<%= companyId %>"
+                                                                                        class="">
+                                                                                    <input type="hidden"
+                                                                                        name="email_<%= i %>"
+                                                                                        id="emailDisplay_<%= i %>"
+                                                                                        class="email_display" value="">
+                                                                                    <!-- edit email slide down start -->
+                                                                                    <div class="level_box mb-27">
+                                                                                        <div class="edit-email"
+                                                                                            style="display: block;">
+                                                                                            <div
+                                                                                                class="row g-2 align-items-center justify-content-around eta_day">
+                                                                                                <div class="col-sm-6">
+                                                                                                    <label for=""
+                                                                                                        class="col-form-label"><strong>ETA
+                                                                                                            Days</strong></label>
+                                                                                                </div>
+                                                                                                <div class="col-sm-6">
+                                                                                                    <input type="number"
+                                                                                                        min="0"
+                                                                                                        name="eta_days_<%= i %>"
+                                                                                                        id=""
+                                                                                                        class="form-control required"
+                                                                                                        required="">
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <% let displayedCategories=[];
+                                                                                            getcategoriesUsers.forEach(function(user)
+                                                                                            { if
+                                                                                            (!displayedCategories.includes(user.category_id)
+                                                                                            && user.level===i) { %>
+                                                                                            <div class="category_list">
+                                                                                                <div
+                                                                                                    class="category_list_heading">
+                                                                                                    <h3>
+                                                                                                        <%= user.category_name
+                                                                                                            %>
+                                                                                                    </h3>
+                                                                                                </div>
+                                                                                                <% displayedCategories.push(user.category_id);
+                                                                                                    %>
+                                                                                                    <% getcategoriesUsers.forEach(function(userItem)
+                                                                                                        { if
+                                                                                                        (userItem.category_id==user.category_id
+                                                                                                        &&
+                                                                                                        userItem.level==i)
+                                                                                                        { %>
+                                                                                                        <div
+                                                                                                            class="category_list_edit_sec">
+                                                                                                            <div
+                                                                                                                class="category_list_edit_row">
+                                                                                                                <div>
+                                                                                                                    <h4>
+                                                                                                                        <span
+                                                                                                                            class="first_name">
+                                                                                                                            <%= userItem.first_name
+                                                                                                                                %>
+                                                                                                                        </span>
+                                                                                                                        <span
+                                                                                                                            class="last_name">
+                                                                                                                            <%= userItem.last_name
+                                                                                                                                %>
+                                                                                                                        </span>
+                                                                                                                    </h4>
+                                                                                                                </div>
+                                                                                                                <div>
+                                                                                                                    <h5>
+                                                                                                                        <%= userItem.emails
+                                                                                                                            %>
+                                                                                                                    </h5>
+                                                                                                                </div>
+                                                                                                                <div
+                                                                                                                    class="management_user_listing_box_btn">
+                                                                                                                    <button
+                                                                                                                        type="button"
+                                                                                                                        class="btn-default btn-warning each_form_submut editModal"
+                                                                                                                        data-bs-toggle="modal"
+                                                                                                                        data-bs-target="#exampleModals_<%= i %>"
+                                                                                                                        id="">
+                                                                                                                        <i class="fas fa-edit"
+                                                                                                                            style="color: #000;"></i>
+                                                                                                                    </button>
+                                                                                                                </div>
+
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                        <% } }); %>
+                                                                                            </div>
+                                                                                            <% } }); %>
+
+                                                                                                <div
+                                                                                                    class="d-flex justify-content-center align-items-center">
+                                                                                                    <button
+                                                                                                        type="button"
+                                                                                                        class="btn-default btn-warning each_form_submut add_new_user"
+                                                                                                        data-bs-toggle="modal"
+                                                                                                        data-bs-target="#exampleModals_<%= i %>">
+                                                                                                        Add New User
+                                                                                                    </button>
+                                                                                                </div>
+
+                                                                                    </div>
+                                                                                    <div
+                                                                                        class="d-flex justify-content-center mt-3">
+                                                                                        <button type="submit"
+                                                                                            class="btn-default btn-warning each_form_submut save_btn">Save</button>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </form>
+                                                                            <!-- edit email slide down end -->
+                                                                            <% } %>
+                            </div>
+
+
+                            <!-- Modal -->
+                            <div class="popup" id="editmodal">
+                                <div class="popup__content" id="user">
+                                    <div class="close">
+                                        <span></span>
+                                        <span></span>
+                                    </div>
+                                    <h4 class="add_user_heading">Add user details</h4>
+                                    <form id="edituser" action="#">
+                                        <input type="hidden" name="company_id" value="<%=companyId%>">
+                                        <input type="hidden" name="complaint_status" value="<%=complaintStatus%>">
+                                        <input type="hidden" class="level_field" name="level" readonly>
+
+                                        <div class="add_user_input">
+                                            <label for="">First Name</label>
+                                            <input name="first_name" type="text" placeholder="Tell me who are you"
+                                                required>
+                                        </div>
+                                        <div class="add_user_input">
+                                            <label for="">Last Name</label>
+                                            <input name="last_name" type="text" placeholder="Tell me who are you"
+                                                required>
+                                        </div>
+                                        <div class="add_user_input">
+                                            <label for="">Email</label>
+                                            <input name="email" type="email" placeholder="May I know your Email id."
+                                                readonly>
+                                        </div>
+                                        <div class="add_user_input">
+                                            <label for="">Select Category</label>
+                                            <select name="category" id="category">
+                                                <% geCompanyCategories.forEach(function(category) { %>
+                                                    <option value="<%= category.category_id %>">
+                                                        <%= category.category_name %>
+                                                    </option>
+                                                    <% }); %>
+                                            </select>
+                                        </div>
+                                        <div class="add_user_submit_btn">
+                                            <input type="submit" value="Save">
+                                        </div>
+                                    </form>
+
+
+
+                                </div>
+                            </div>
+
+                            <!-- modal-end -->
+
+                            <!-- Modal -->
+                            <div class="popup" id="adduser">
+                                <div class="popup__content" id="user">
+                                    <div class="close">
+                                        <span></span>
+                                        <span></span>
+                                    </div>
+                                    <h4 class="add_user_heading">Add user details</h4>
+                                    <form id="addNewUserForm" action="#">
+                                        <input type="hidden" class="level_field" name="level" readonly>
+                                        <div class="add_user_input">
+                                            <label for="">First Name</label>
+                                            <input name="first_name" type="text" placeholder="Tell me who are you"
+                                                required>
+                                        </div>
+
+                                        <input type="hidden" name="company_id" value="<%=companyId%>">
+                                        <input type="hidden" name="complaint_status" value="<%=complaintStatus%>">
+                                        <div class="add_user_input">
+                                            <label for="">Last Name</label>
+                                            <input name="last_name" type="text" placeholder="Tell me who are you"
+                                                required>
+                                        </div>
+                                        <div class="add_user_input">
+                                            <label for="">Email</label>
+                                            <input name="email" type="email" placeholder="May I know your Email id."
+                                                required>
+                                        </div>
+                                        <div class="add_user_input">
+                                            <label for="">Password</label>
+                                            <input name="password" type="password"
+                                                placeholder="Please! Keep it secret always" required>
+                                        </div>
+                                        <div class="add_user_input">
+                                            <label for="">Select Category</label>
+                                            <select name="category" id="category">
+                                                <% geCompanyCategories.forEach(function(category) { %>
+                                                    <option value="<%= category.category_id %>">
+                                                        <%= category.category_name %>
+                                                    </option>
+                                                    <% }); %>
+                                            </select>
+                                        </div>
+
+                                        <div class="add_user_submit_btn">
+                                            <input type="submit" value="Save">
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <!-- modal-end -->
+                            <div class="popup" id="addusers">
+                                <div class="popup__content" id="users">
+                                    <div class="close">
+                                        <span></span>
+                                        <span></span>
+                                    </div>
+                                    <h4 class="add_user_heading">Add user details</h4>
+                                    <form id="leveluserForm" action="#">
+                                        <input type="hidden" class="level_field" name="level" readonly>
+                                        <div class="add_user_input verify_btn">
+                                            <label for="">Email</label>
+                                            <input id="user_verify_email" name="email" type="email"
+                                                placeholder="May I know your Email id." required>
+                                            <button type="button" id="verifyUserBtn">Verify</button>
+                                        </div>
+
+
+
+                                        <input type="hidden" name="company_id" value="<%=companyId%>">
+                                        <input type="hidden" name="complaint_status" value="<%=complaintStatus%>">
+
+                                        <div class="add_user_input first_name" style="display: none;">
+                                            <label for="">First Name</label>
+                                            <input name="first_name" id="first_nameField" type="text"
+                                                placeholder="Tell me who you are">
+                                        </div>
+                                        <div class="add_user_input last_name" style="display: none;">
+                                            <label for="">Last Name</label>
+                                            <input name="last_name" id="last_nameField" type="text"
+                                                placeholder="Tell me who you are">
+                                        </div>
+
+
+                                        <div class="add_user_input password" style="display: none;">
+                                            <label for="">Password</label>
+                                            <input name="password" id="passwordField" type="password"
+                                                placeholder="Please keep it secret always">
+                                        </div>
+
+
+                                        <div class="add_user_input">
+                                            <label for="">Select User Category</label>
+                                            <select name="category" id="category">
+                                                <option value="manager">Manager</option>
+                                                <option value="help_desk">Helpdesk</option>
+                                            </select>
+                                        </div>
+                                        <div class="add_user_submit_btn">
+                                            <input type="submit" value="Save">
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <!-- delete user form for membership_id>3 -->
+                            <div class="popup" id="deleteusers">
+                                <div class="popup__content" id="users">
+                                    <div class="close">
+                                        <span></span>
+                                        <span></span>
+                                    </div>
+                                    <h4 class="add_user_heading">Add user details</h4>
+                                    <form id="deleteuserForm" action="#">
+                                        <input type="hidden" class="level_field" name="level" readonly>
+                                        <div class="add_user_input verify_btn">
+                                            <label for="">Email</label>
+                                            <input id="delete_user_verify_email" name="email" type="email"
+                                                placeholder="May I know your Email id." required>
+                                            <button type="button" id="verifydeleteUserBtn">Verify</button>
+                                        </div>
+
+
+
+                                        <input type="hidden" name="company_id" value="<%=companyId%>">
+                                        <input type="hidden" name="complaint_status" value="<%=complaintStatus%>">
+
+                                        <div class="add_user_input first_name" style="display: none;">
+                                            <label for="">First Name</label>
+                                            <input name="first_name" id="delete_first_nameField" type="text"
+                                                placeholder="Tell me who you are">
+                                        </div>
+                                        <div class="add_user_input last_name" style="display: none;">
+                                            <label for="">Last Name</label>
+                                            <input name="last_name" id="delete_last_nameField" type="text"
+                                                placeholder="Tell me who you are">
+                                        </div>
+
+
+                                        <div class="add_user_input password" style="display: none;">
+                                            <label for="">Password</label>
+                                            <input name="password" id="delete_passwordField" type="password"
+                                                placeholder="Please keep it secret always">
+                                        </div>
+
+
+                                        <div class="add_user_input">
+                                            <label for="">Select User Category</label>
+                                            <select name="category" id="deleteusers_category">
+                                                <option value="manager">Manager</option>
+                                                <option value="help_desk">Helpdesk</option>
+                                            </select>
+                                        </div>
+                                        <div class="add_user_submit_btn">
+                                            <input type="submit" value="Save">
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
+                        </div>
+                        <% } %>
             </div>
-            
+
             <div class="fish_icon">
                 <img src="/front-end/images/fish_icon.png" alt="">
             </div>
@@ -170,47 +966,1571 @@
 
 
         <%- include('common/footer') -%>
+            <style>
+                .verify_btn {
+                    display: flex;
+                    align-items: center;
+                }
 
+                .verify_btn input {
+                    margin-right: 20px;
+                }
+
+                #verifyUserBtn {
+                    margin-bottom: 31px;
+                    border-radius: 5px;
+                    padding: 5px 10px;
+                    margin-bottom: 31px;
+                    border-radius: 10px;
+                    padding: 12px 14px;
+                    border: 1px solid #FCCB06;
+                    background-color: #FCCB06;
+
+                }
+
+                #verifyUserBtns {
+                    margin-bottom: 31px;
+                    border-radius: 5px;
+                    padding: 5px 10px;
+                    margin-bottom: 31px;
+                    border-radius: 10px;
+                    padding: 12px 14px;
+                    border: 1px solid #FCCB06;
+                    background-color: #FCCB06;
+
+                }
+
+                #verifydeleteUserBtn {
+                    margin-bottom: 31px;
+                    border-radius: 5px;
+                    padding: 5px 10px;
+                    margin-bottom: 31px;
+                    border-radius: 10px;
+                    padding: 12px 14px;
+                    border: 1px solid #FCCB06;
+                    background-color: #FCCB06;
+
+                }
+                #verifydeleteUserBtns {
+                    margin-bottom: 31px;
+                    border-radius: 5px;
+                    padding: 5px 10px;
+                    margin-bottom: 31px;
+                    border-radius: 10px;
+                    padding: 12px 14px;
+                    border: 1px solid #FCCB06;
+                    background-color: #FCCB06;
+
+                }
+                
+
+                .management_user_listing_box h3 {
+                    text-align: center;
+                    font-family: Nunito;
+                    font-size: 24px;
+                    font-weight: 700;
+                    line-height: 32.74px;
+                    margin-bottom: 20px;
+                    text-align: center;
+                }
+                
+                
+
+                .management_user_listing_box ul {
+                    padding-left: 0;
+                }
+
+                .management_user_listing_box ul li {
+                    padding: 15px 20PX;
+                }
+
+                .management_user_listing_box ul li:last-child {
+                    margin-bottom: 0;
+                }
+
+                .management_user_listing_box_btn .btn-default {
+                    min-width: 40px !important;
+                    padding: 8px !important;
+                }
+            </style>
+
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
             <script>
-                // active
-                $('input[name="complaint_status"]').change(function(){
-                    if ($(this).val() == '0') {
+                let complaintLevel = "<%= complaintLevel %>"
+                console.log("complaintLevel", complaintLevel);
+                var emailVerified = false;
+                var emailVerification = false;
+                var deleteemailVerified = false;
+                //for level 3
+                var deleteemailVerification = false;
+                let compID = "<%=companyId%>"
+                var levelToDisplayName = {
+                    "help_desk": "Helpdesk",
+                    "manager": "Manager"
+                };
+
+
+                $(document).ready(function () {
+                    jQuery(function ($) {
+
+                        function isFieldEmpty(field) {
+                            return field.trim() === '';
+                        }
+                        var geCompanyCategorieslength = "<%= geCompanyCategorieslength %>"
+                        console.log("geCompanyCategorieslength", geCompanyCategorieslength);
+
+                        if (geCompanyCategorieslength <= 0) {
+                            $("#inlineRadio2").attr("disabled", true);
+                            $("#inlineRadio1").prop("checked", true);
+                        }
+
+                        function checkCompanyHasCategories(companyId) {
+                            return $.ajax({
+                                url: `/auth/getcategoriess/${compID}`,
+                                method: 'GET',
+                                dataType: 'json'
+                            });
+                        }
+
+
+                        $('.form-check-input').change(function () {
+                            var status = $(this).val();
+                            console.log("status", status);
+                            var companyId = $('[name="company_id"]').val();
+                            console.log("companyId", companyId);
+
+                            var companyId = $('[name="company_id"]').val();
+                            console.log("companyId", companyId);
+                            if (status == '0') {
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: 'Complaint Status',
+                                    text: 'Complaint status deactivated.',
+                                    confirmButtonText: 'Okay'
+                                });
+                                setTimeout(function () {
+                                    window.location.reload();
+                                }, 2000);
+                            }
+                            if (status == '1') {
+                                $.ajax({
+                                    url: '/get-management-users',
+                                    method: 'GET',
+                                    data: {
+                                        company_id: companyId
+                                    },
+                                    success: function (response) {
+                                        var hasManagers = response.some(user => user.level_user_type === 'manager');
+                                        var hasHelpdesks = response.some(user => user.level_user_type === 'help_desk');
+
+                                        var message = 'Complaint status activated.You should add management users.';
+                                        if (hasManagers && !hasHelpdesks) {
+                                            message = ' You should a add help desk user.';
+                                        } else if (!hasManagers && hasHelpdesks) {
+                                            message = ' You should add a manager user.';
+                                        }
+
+                                        Swal.fire({
+                                            icon: 'warning',
+                                            title: 'Complaint Status',
+                                            text: message,
+                                            confirmButtonText: 'Okay'
+                                        });
+
+                                        setTimeout(function () {
+                                            window.location.reload();
+                                        }, 2000);
+                                    },
+                                    error: function (error) {
+                                        console.error('Error fetching management users:', error);
+                                    }
+                                });
+                            }
+
+
+
+                            $.ajax({
+                                url: '/auth/update-complaint-status',
+                                method: 'POST',
+                                data: {
+                                    company_id: companyId,
+                                    complaint_status: status
+                                },
+                                success: function (response) {
+                                    console.log('Complaint status updated successfully');
+                                },
+                                error: function (error) {
+                                    console.error('Error updating complaint status:', error);
+                                }
+                            });
+                        });
+
+
+
+
+                        // active
+                        $('input[name="complaint_status"]').change(function () {
+                            if ($(this).val() == '0') {
+                                $('.toggle-emails').hide();
+                                $('.required').prop('required', false);
+                            } else {
+                                $('.toggle-emails').show();
+                                $('.required').prop('required', true);
+                            }
+                        });
+                        if ($('input[name="complaint_status"]:checked').val() == '0') {
                             $('.toggle-emails').hide();
                             $('.required').prop('required', false);
-                    } else {
-                            $('.toggle-emails').show();
+                        } else {
+
                             $('.required').prop('required', true);
-                    }
-                });
-                if ($('input[name="complaint_status"]:checked').val() == '0') {
-                    $('.toggle-emails').hide();
-                    $('.required').prop('required', false);
-                } else {
+                        }
+                        $('input[name="complaint_status"]').change(function () {
+                            var complaintStatus = $('input[name="complaint_status"]:checked').val();
+                            console.log("complaintStatus", complaintStatus);
+                            if (complaintStatus == '0') { // If inactive
+                                $('.each_form_submut.add_new_User').hide();
+                            } else {
+                                $('.each_form_submut.add_new_User').show(); // Show the button and surrounding div
+                            }
+                        });
+                        $('input[name="complaint_status"]').change(function () {
+                            var complaintStatus = $('input[name="complaint_status"]:checked').val();
+                            console.log("complaintStatus", complaintStatus);
+                            if (complaintStatus == '0') {
+                                $('.each_form_submut.add_new_users').hide();
+                            } else {
+                                $('.each_form_submut.add_new_users').show();
+                            }
+                        });
 
-                    $('.required').prop('required', true);
+
+                        // pop-up
+                        $(".add_new_user").click(function () {
+                            var level = $(this).closest('form.level_form').data('gtm-form-interact-id');
+                            console.log("levelssss", level);
+                            $('#user').data('level', level);
+                            $("#adduser").fadeIn(500);
+                            var emailValue = $("#addNewUserForm input[name='email']").val();
+
+                            var $currentForm = $(".premium-complain-m-content-body form.level_form[data-gtm-form-interact-id='" + level + "']");
+                            var $emailInput = $currentForm.find("input[name='email_" + level + "']");
+                            $emailInput.val(emailValue);
+                            $('#user').find('.level_field').val(level);
+
+                            // Update the email field in the #addNewUserForm form
+                            $("#addNewUserForm input[name='email']").val(emailValue);
+                            $("#addNewUserForm .level_field").val(level);
+                        });
+
+
+                        $(".close").click(function () {
+                            $(".popup").fadeOut(500);
+                        });
+                        $(".add_new_users").click(function () {
+                            var level = $(this).closest('form.level_form').data('gtm-form-interact-id');
+                            $('#users').data('level', level);
+                            $("#addusers").fadeIn(500);
+                            var emailValue = $("#addNewUserForm input[name='email']").val();
+
+                            var $currentForm = $(".premium-complain-m-content-body form.level_form[data-gtm-form-interact-id='" + level + "']");
+                            var $emailInput = $currentForm.find("input[name='email_" + level + "']");
+                            $emailInput.val(emailValue);
+                            $('#users').find('.level_field').val(level);
+
+                            // Update the email field in the #addNewUserForm form
+                            $("#addNewUserForm input[name='email']").val(emailValue);
+                        });
+
+                        $(".add_new_userss").click(function () {
+                            var level = $(this).closest('form.level_form').data('gtm-form-interact-id');
+                            //console.log("levelsssff",level)
+                            $('#users').data('level', level);
+                            $("#userss").fadeIn(500);
+                            var emailValue = $("#addNewUserForm input[name='email']").val();
+
+                            var $currentForm = $(".premium-complain-m-content-body form.level_form[data-gtm-form-interact-id='" + level + "']");
+                            var $emailInput = $currentForm.find("input[name='email_" + level + "']");
+                            $emailInput.val(emailValue);
+                            $('#users').find('.level_field').val(level);
+
+                            // Update the email field in the #addNewUserForm form
+                            $("#addNewUserForms input[name='email']").val(emailValue);
+                            $("#addNewUserForms input[name='level']").val(level);
+                        });
+
+                        $(".add_new_User").click(function () {
+                            var level = $(this).closest('form.level_form').data('gtm-form-interact-id');
+                            $('#users').data('level', level);
+                            $("#addUser").fadeIn(500);
+                            var emailValue = $("#addNewUserForms input[name='email']").val();
+
+                            var $currentForm = $(".premium-complain-m-content-body form.level_form[data-gtm-form-interact-id='" + level + "']");
+                            var $emailInput = $currentForm.find("input[name='email_" + level + "']");
+                            $emailInput.val(emailValue);
+                            $('#users').find('.level_field').val(level);
+
+                            // Update the email field in the #addNewUserForm form
+                            $("#addNewUserForms input[name='email']").val(emailValue);
+                        });
+
+
+
+                        $("#addNewUserForms").submit(function (event) {
+                            event.preventDefault(); // Prevent default form submission
+
+                            var emailValue = $(this).find('input[name="email"]').val();
+                            console.log("emailValue", emailValue);
+                            var levelValue = $(this).find('.level_field').val(); // Get the specified level
+                            console.log("levelValue", levelValue);
+
+                            // Update email input only for the specified level form
+                            $(".premium-complain-m-content-body .level_form").each(function () {
+                                var level = $(this).data('gtm-form-interact-id');
+                                if (level.toString() === levelValue) { // Check if this is the form of the specified level
+                                    $(this).find('input[name="email_' + level + '"]').val(emailValue);
+                                }
+                            });
+
+                            // Append the user email HTML markup to the appropriate container
+                            var userEmailHTML = '<div class="user-email"><p>Email: ' + emailValue + '</p></div>';
+                            $(this).closest('.premium-complain-m-content-body').find('#addedUsersContainer').append(userEmailHTML);
+
+                            // Submit the form data via AJAX
+                            var formData = $(this).serialize();
+                            $.ajax({
+                                url: '/auth/create-company-level',
+                                method: 'POST',
+                                data: formData,
+                                success: function (response) {
+                                    console.log('Form submitted successfully!');
+                                    alertMessage('success', response.success_message);
+                                    setTimeout(function () {
+                                        window.location.reload();
+                                    }, 2000);
+                                },
+                                error: function (xhr, status, error) {
+                                    console.error('Error submitting form:', error);
+
+                                    var errorMessage;
+                                    if (xhr.responseJSON && xhr.responseJSON.error_message) {
+                                        errorMessage = xhr.responseJSON.error_message;
+                                    } else {
+                                        errorMessage = 'An error occurred while submitting the form. Please try again later.';
+                                    }
+
+                                    alertMessage('error', errorMessage);
+                                }
+                            });
+                        });
+
+
+
+                        $(".close").click(function () {
+                            $("#addusers").fadeOut(500);
+                        });
+
+                        // $('.editButton').click(function () {
+                        //     $("#editmodal").fadeIn(500);
+                        // });
+                        $(".editModal").click(function () {
+                            $("#editmodal").fadeIn(500);
+                        });
+
+                        $(".editModals").click(function () {
+                            $("#editmodals").fadeIn(500);
+                        });
+                        $(".editssModals").click(function () {
+                            $("#editssmodals").fadeIn(500);
+                        });
+
+
+                        //new for delete management user for membership_id>3
+                        $(".delete_user").click(function () {
+                            var level = $(this).closest('form.level_form').data('gtm-form-interact-id');
+                            $('#users').data('level', level);
+                            $("#deleteusers").fadeIn(500);
+                            var emailValue = $("#addNewUserForm input[name='email']").val();
+
+                            var $currentForm = $(".premium-complain-m-content-body form.level_form[data-gtm-form-interact-id='" + level + "']");
+                            var $emailInput = $currentForm.find("input[name='email_" + level + "']");
+                            $emailInput.val(emailValue);
+                            $('#users').find('.level_field').val(level);
+
+                            // Update the email field in the #addNewUserForm form
+                            $("#addNewUserForm input[name='email']").val(emailValue);
+                            //////
+                            //deleteusers_category
+
+                            var level = $(this).data('level');
+                            console.log("Retrieved level:", level);
+
+                            // Get the display name for the level
+                            var displayName = levelToDisplayName[level]; 
+                            console.log("Display name:", displayName);
+
+                            // Clear any existing options in the dropdown
+                            $("#deleteusers_category").empty(); 
+
+                            // Create a new option with the correct display name
+                            var newOption = $("<option>").val(level).text(displayName); 
+
+                            // Append the new option to the dropdown
+                            $("#deleteusers_category").append(newOption); 
+
+                            // Set the correct value in the dropdown
+                            $("#deleteusers_category").val(level); 
+
+
+
+
+
+                        });
+
+                        //new for delete management user for membership_id == 3
+                        $(".delete_users").click(function () {
+                            var level = $(this).closest('form.level_form').data('gtm-form-interact-id');
+                            $('#users').data('level', level);
+
+                            var emailValue = $("#addNewUserForm input[name='email']").val();
+
+                            var $currentForm = $(".premium-complain-m-content-body form.level_form[data-gtm-form-interact-id='" + level + "']");
+                            var $emailInput = $currentForm.find("input[name='email_" + level + "']");
+                            $emailInput.val(emailValue);
+                            $('#users').find('.level_field').val(level);
+
+                            // Update the email field in the #addNewUserForm form
+                            $("#addNewUserForm input[name='email']").val(emailValue);
+                            /////
+
+                            var level = $(this).data('level');
+                            console.log("Retrieved level:", level);
+
+                            // Get the display name for the level
+                            var displayName = levelToDisplayName[level]; 
+                            console.log("Display name:", displayName);
+
+                            // Clear any existing options in the dropdown
+                            $("#deleteuser_category").empty(); 
+
+                            // Create a new option with the correct display name
+                            var newOption = $("<option>").val(level).text(displayName); 
+
+                            // Append the new option to the dropdown
+                            $("#deleteuser_category").append(newOption); 
+
+                            // Set the correct value in the dropdown
+                            $("#deleteuser_category").val(level); 
+                            $("#deleteuser").fadeIn(500);
+                        });
+
+
+
+                        $("#addNewUserForm").submit(function (event) {
+                            event.preventDefault();
+
+                            var emailValue = $(this).find('input[name="email"]').val();
+                            var levelValue = $(this).find('.level_field').val(); // Get the specified level
+
+                            // Update email input only for the specified level form
+                            $(".premium-complain-m-content-body .level_form").each(function () {
+                                var level = $(this).data('gtm-form-interact-id');
+                                if (level.toString() === levelValue) { // Check if this is the form of the specified level
+                                    $(this).find('input[name="email_' + level + '"]').val(emailValue);
+                                }
+                            });
+
+                            var formData = $(this).serialize();
+                            console.log("formData", formData);
+
+                            $.ajax({
+                                url: '/auth/create-company-level',
+                                method: 'POST',
+                                data: formData,
+                                success: function (response) {
+                                    console.log('Form submitted successfully!');
+                                    alertMessage('success', response.success_message);
+                                    setTimeout(function () {
+                                        window.location.reload();
+                                    }, 2000);
+                                },
+                                error: function (xhr, status, error) {
+                                    console.error('Error submitting form:', error);
+
+                                    var errorMessage;
+                                    if (xhr.responseJSON && xhr.responseJSON.error_message) {
+                                        errorMessage = xhr.responseJSON.error_message;
+                                    } else {
+                                        errorMessage = 'An error occurred while submitting the form. Please try again later.';
+                                    }
+
+                                    alertMessage('error', errorMessage);
+                                }
+                            });
+
+
+                        });
+
+                        $(".level_form").submit(function (event) {
+                            event.preventDefault();
+
+                            var formData = $(this).serialize();
+                            console.log("formDatass", formData);
+                            $.ajax({
+                                url: '/auth/company-level',
+                                method: 'POST',
+                                data: formData,
+                                success: function (response) {
+                                    console.log('Form submitted successfully!');
+                                    alertMessage('success', response.success_message);
+                                },
+                                error: function (xhr, status, error) {
+                                    console.error('Error submitting form:', error);
+
+                                    var errorMessage;
+                                    if (xhr.responseJSON && xhr.responseJSON.error_message) {
+                                        errorMessage = xhr.responseJSON.error_message;
+                                    } else {
+                                        errorMessage = 'An error occurred while submitting the form. Please try again later.';
+                                    }
+
+                                    alertMessage('error', errorMessage);
+                                }
+                            });
+                        });
+
+
+                        $('#leveluserForm').submit(function (event) {
+                            event.preventDefault();
+                            var email = $('#user_verify_email').val();
+                            var firstName = $('#first_nameField').val();
+                            var lastName = $('#last_nameField').val();
+                            var password = $('#passwordField').val();
+
+                            // if (!email || !firstName || !lastName || !password) {
+                            //     Swal.fire({
+                            //         icon: 'error',
+                            //         title: 'Oops...',
+                            //         text: 'Please fill in all required fields.',
+                            //         timer: 2000,
+                            //         position: 'center',
+                            //         showConfirmButton: false,
+                            //     });
+                            //     return;
+                            // }
+
+                            if (emailVerified == false) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: 'Please verify your email before submitting the form.',
+                                    timer: 2000,
+                                    position: 'center',
+                                    showConfirmButton: false,
+                                });
+                                return;
+                            }
+                            var isExistingUser = !$('.password').is(':visible'); // If password field is hidden, user is existing
+
+                            if (isExistingUser) {
+                                // Validate only email, first name, and last name
+                                if (!email || !firstName || !lastName) {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Required Fields Missing',
+                                        text: 'Please fill in all required fields.',
+                                        timer: 2000,
+                                        position: 'center',
+                                        showConfirmButton: false,
+                                    });
+                                    return;
+                                }
+                            } else {
+                                // Validate email, first name, last name, and password
+                                if (!email || !firstName || !lastName || !password) {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Required Fields Missing',
+                                        text: 'Please fill in all required fields including password.',
+                                        timer: 2000,
+                                        position: 'center',
+                                        showConfirmButton: false,
+                                    });
+                                    return;
+                                }
+                            }
+                            var formData = $(this).serialize();
+                            console.log("levelformData", formData);
+                            // Send AJAX request
+                            $.ajax({
+                                url: '/auth/create-level-users',
+                                method: 'POST',
+                                data: formData,
+                                success: function (response) {
+                                    if (response.success_message) {
+                                        // Display success message
+                                        alertMessage('success', response.success_message);
+                                        setTimeout(function () {
+                                            window.location.reload();
+                                        }, 2000);
+                                    } else {
+                                        console.log('Form submitted successfully!');
+                                    }
+                                },
+                                error: function (xhr, status, error) {
+                                    console.error('Error submitting form:', error);
+                                    var errorMessage;
+                                    if (xhr.responseJSON && xhr.responseJSON.error_message) {
+                                        // Display error message
+                                        errorMessage = xhr.responseJSON.error_message;
+                                        alertMessage('error', errorMessage);
+                                    } else {
+                                        // Handle other error scenarios
+                                        errorMessage = 'An error occurred while submitting the form. Please try again later.';
+                                        alertMessage('error', errorMessage);
+                                    }
+                                }
+                            });
+                        });
+
+
+                        $('#verifyUserBtn').click(function (e) {
+                            e.preventDefault();
+                            var email = $('#user_verify_email').val();
+                            
+                            if (email === "") {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: 'Please enter your email.',
+                                    timer: 2000,
+                                    position: 'center',
+                                    showConfirmButton: false,
+                                });
+                                return;
+                            }
+
+                            var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                            if (!emailPattern.test(email)) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Invalid email',
+                                    text: 'Please enter a valid email.'
+                                });
+                                return;
+                            }
+
+                            $.ajax({
+                                url: '/auth/verify-user',
+                                method: 'POST',
+                                data: { email: email },
+                                success: function (response) {
+                                    console.log("response", response);
+                                    console.log("response.userExists", response.userExists);
+                                    
+                                    emailVerified = true;
+                                    if (response.userExists) {
+                                        $('#first_nameField').val(response.firstName);
+                                        $('#last_nameField').val(response.lastName);
+                                        
+                                        $('.password').hide();
+                                        $('.first_name').show();
+                                        $('.last_name').show();
+                                    } else {
+                                        $('.password').show();
+                                        $('.first_name').show();
+                                        $('.last_name').show();
+                                    }
+                                },
+                                error: function (xhr, status, error) {
+                                    console.error('Error verifying user:', error);
+                                }
+                            });
+                        });
+
+
+                        $('#deleteuserForm').submit(function (event) {
+                            event.preventDefault();
+                            var email = $('#delete_user_verify_email').val();
+                            var firstName = $('#delete_first_nameField').val();
+                            var lastName = $('#delete_last_nameField').val();
+                            var password = $('#delete_passwordField').val();
+
+                            console.log("deleteemail", email);
+                            console.log("deletefirstName", firstName);
+                            console.log("deletelastName", lastName);
+                            console.log("deletepassword", password);
+
+                            if (deleteemailVerified == false) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: 'Please verify your email before submitting the form.',
+                                    timer: 2000,
+                                    position: 'center',
+                                    showConfirmButton: false,
+                                });
+                                return;
+                            }
+                            var isExistingUser = !$('.password').is(':visible');
+
+                            if (isExistingUser) {
+                                // Validate only email, first name, and last name
+                                if (!email || !firstName || !lastName) {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Required Fields Missing',
+                                        text: 'Please fill in all required fields.',
+                                        timer: 2000,
+                                        position: 'center',
+                                        showConfirmButton: false,
+                                    });
+                                    return;
+                                }
+                            } else {
+                                // Validate email, first name, last name, and password
+                                if (!email || !firstName || !lastName || !password) {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Required Fields Missing',
+                                        text: 'Please fill in all required fields including password.',
+                                        timer: 2000,
+                                        position: 'center',
+                                        showConfirmButton: false,
+                                    });
+                                    return;
+                                }
+                            }
+                            var formData = $(this).serialize();
+                            console.log("deleteuserForm", formData);
+                            // Send AJAX request
+                            $.ajax({
+                                url: '/auth/create-new-level-users',
+                                method: 'POST',
+                                data: formData,
+                                success: function (response) {
+                                    if (response.success_message) {
+                                        // Display success message
+                                        alertMessage('success', response.success_message);
+                                        setTimeout(function () {
+                                            window.location.reload();
+                                        }, 2000);
+                                    } else {
+                                        console.log('Form submitted successfully!');
+                                    }
+                                },
+                                error: function (xhr, status, error) {
+                                    console.error('Error submitting form:', error);
+                                    var errorMessage;
+                                    if (xhr.responseJSON && xhr.responseJSON.error_message) {
+                                        // Display error message
+                                        errorMessage = xhr.responseJSON.error_message;
+                                        alertMessage('error', errorMessage);
+                                    } else {
+                                        // Handle other error scenarios
+                                        errorMessage = 'An error occurred while submitting the form. Please try again later.';
+                                        alertMessage('error', errorMessage);
+                                    }
+                                }
+                            });
+                        });
+
+                        $('#verifydeleteUserBtn').click(function (e) {
+                            e.preventDefault();
+                            var email = $('#delete_user_verify_email').val();
+                            console.log("delete_user_verify_email", email);
+
+                            if (email === "") {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: 'Please enter your email.',
+                                    timer: 2000,
+                                    position: 'center',
+                                    showConfirmButton: false,
+                                });
+                                return;
+                            }
+
+                            var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                            if (!emailPattern.test(email)) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Invalid email',
+                                    text: 'Please enter a valid email.'
+                                });
+                                return;
+                            }
+
+                            $.ajax({
+                                url: '/auth/verify-user',
+                                method: 'POST',
+                                data: { email: email },
+                                success: function (response) {
+                                    console.log("response", response);
+                                    if (response.userExists) {
+                                        $('#delete_first_nameField').val(response.firstName);
+                                        $('#delete_last_nameField').val(response.lastName);
+                                        $('.first_name, .last_name').show(); // Show the name fields only if user exists
+                                        $('.password').hide();
+                                        deleteemailVerified = true; // Assume no need to show password if existing user
+                                    } else {
+                                        // If user doesn't exist, presumably you want to allow entry of new user details
+                                        $('#delete_first_nameField').val(''); // Clear fields if not existing user
+                                        $('#delete_last_nameField').val('');
+                                        $('.first_name, .last_name, .password').show();
+                                        deleteemailVerified = true; // Show all fields for new user entry
+                                    }
+                                },
+                                error: function (xhr, status, error) {
+                                    console.error('Error verifying user:', error);
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: 'Failed to verify user due to server error.'
+                                    });
+                                    deleteemailVerified = false;
+                                }
+                            });
+                        });
+
+
+                        $('#deleteuserForms').submit(function (event) {
+                            event.preventDefault();
+                            var email = $('#delete_users_verify_email').val();
+                            var firstName = $('#delete_first_nameFields').val();
+                            var lastName = $('#delete_last_nameFields').val();
+                            var password = $('#delete_passwordFields').val();
+
+                            console.log("deleteemail", email);
+                            console.log("deletefirstName", firstName);
+                            console.log("deletelastName", lastName);
+                            console.log("deletepassword", password);
+
+                            if (deleteemailVerification == false) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: 'Please verify your email before submitting the form.',
+                                    timer: 2000,
+                                    position: 'center',
+                                    showConfirmButton: false,
+                                });
+                                return;
+                            }
+                            var isExistingUser = !$('.password').is(':visible');
+
+                            if (isExistingUser) {
+                                // Validate only email, first name, and last name
+                                if (!email || !firstName || !lastName) {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Required Fields Missing',
+                                        text: 'Please fill in all required fields.',
+                                        timer: 2000,
+                                        position: 'center',
+                                        showConfirmButton: false,
+                                    });
+                                    return;
+                                }
+                            } else {
+                                // Validate email, first name, last name, and password
+                                if (!email || !firstName || !lastName || !password) {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Required Fields Missing',
+                                        text: 'Please fill in all required fields including password.',
+                                        timer: 2000,
+                                        position: 'center',
+                                        showConfirmButton: false,
+                                    });
+                                    return;
+                                }
+                            }
+                            var formData = $(this).serialize();
+                            console.log("deleteuserForm", formData);
+                            // Send AJAX request
+                            $.ajax({
+                                url: '/auth/create-new-level-users',
+                                method: 'POST',
+                                data: formData,
+                                success: function (response) {
+                                    if (response.success_message) {
+                                        // Display success message
+                                        alertMessage('success', response.success_message);
+                                        setTimeout(function () {
+                                            window.location.reload();
+                                        }, 2000);
+                                    } else {
+                                        console.log('Form submitted successfully!');
+                                    }
+                                },
+                                error: function (xhr, status, error) {
+                                    console.error('Error submitting form:', error);
+                                    var errorMessage;
+                                    if (xhr.responseJSON && xhr.responseJSON.error_message) {
+                                        // Display error message
+                                        errorMessage = xhr.responseJSON.error_message;
+                                        alertMessage('error', errorMessage);
+                                        setTimeout(function () {
+                                            window.location.reload();
+                                        }, 2000);
+                                    } else {
+                                        // Handle other error scenarios
+                                        errorMessage = 'An error occurred while submitting the form. Please try again later.';
+                                        alertMessage('error', errorMessage);
+                                        setTimeout(function () {
+                                            window.location.reload();
+                                        }, 2000);
+                                    }
+                                }
+                            });
+                        });
+
+                        $('#verifydeleteUserBtns').click(function (e) {
+                            e.preventDefault();
+                            var email = $('#delete_users_verify_email').val();
+                            console.log("delete_user_verify_email", email);
+
+                            if (email === "") {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: 'Please enter your email.',
+                                    timer: 2000,
+                                    position: 'center',
+                                    showConfirmButton: false,
+                                });
+                                return;
+                            }
+
+                            var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                            if (!emailPattern.test(email)) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Invalid email',
+                                    text: 'Please enter a valid email.'
+                                });
+                                return;
+                            }
+
+                            $.ajax({
+                                url: '/auth/verify-user',
+                                method: 'POST',
+                                data: { email: email },
+                                success: function (response) {
+                                    console.log("response", response);
+                                    if (response.userExists) {
+                                        $('#delete_first_nameFields').val(response.firstName);
+                                        $('#delete_last_nameFields').val(response.lastName);
+                                        $('.first_name, .last_name').show();
+                                        $('.password').hide();
+                                        deleteemailVerification = true;
+                                    } else {
+                                        $('#delete_first_nameFields').val('');
+                                        $('#delete_last_nameFields').val('');
+                                        $('.first_name, .last_name, .password').show();
+                                        deleteemailVerification = true;
+                                    }
+                                },
+                                error: function (xhr, status, error) {
+                                    console.error('Error verifying user:', error);
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: 'Failed to verify user due to server error.'
+                                    });
+                                    deleteemailVerification = false;
+                                }
+                            });
+                        });
+
+
+
+
+                        // Form submission
+                        $('#leveluserForms').submit(function (event) {
+                            event.preventDefault();
+
+                            var email = $('#user_verify_emails').val();
+                            var firstName = $('#first_nameFields').val();
+                            var lastName = $('#last_nameFields').val();
+                            var password = $('#passwordFields').val();
+                            console.log("password", password);
+
+                            if (emailVerification == false) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: 'Please verify your email before submitting the form.',
+                                    timer: 2000,
+                                    position: 'center',
+                                    showConfirmButton: false,
+                                });
+                                return;
+                            }
+
+                            var isExistingUser = !$('.passwords').is(':visible');
+
+                            if (isExistingUser) {
+                                // Validate only email, first name, and last name
+                                if (!email || !firstName || !lastName) {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Required Fields Missing',
+                                        text: 'Please fill in all required fields.',
+                                        timer: 2000,
+                                        position: 'center',
+                                        showConfirmButton: false,
+                                    });
+                                    return;
+                                }
+                            } else {
+                                // Validate email, first name, last name, and password
+                                if (!email || !firstName || !lastName || !password) {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Required Fields Missing',
+                                        text: 'Please fill in all required fields including password.',
+                                        timer: 2000,
+                                        position: 'center',
+                                        showConfirmButton: false,
+                                    });
+                                    return;
+                                }
+                            }
+
+
+                            var formData = $(this).serialize();
+                            // Send AJAX request
+                            $.ajax({
+                                url: '/auth/create-level-users',
+                                method: 'POST',
+                                data: formData,
+                                success: function (response) {
+                                    if (response.success_message) {
+                                        // Display success message
+                                        alertMessage('success', response.success_message);
+                                        setTimeout(function () {
+                                            window.location.reload();
+                                        }, 2000);
+                                    } else {
+                                        console.log('Form submitted successfully!');
+                                    }
+                                },
+                                error: function (xhr, status, error) {
+                                    console.error('Error submitting form:', error);
+                                    var errorMessage;
+                                    if (xhr.responseJSON && xhr.responseJSON.error_message) {
+                                        // Display error message
+                                        errorMessage = xhr.responseJSON.error_message;
+                                        alertMessage('error', errorMessage);
+                                    } else {
+                                        // Handle other error scenarios
+                                        errorMessage = 'An error occurred while submitting the form. Please try again later.';
+                                        alertMessage('error', errorMessage);
+                                    }
+                                }
+                            });
+                        });
+                        $('#verifyUserBtns').click(function (e) {
+                            e.preventDefault();
+                            var email = $('#user_verify_emails').val();
+                            console.log("email", email);
+                            if (email === "") {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: 'Please enter your email.',
+                                    timer: 2000,
+                                    position: 'center',
+                                    showConfirmButton: false,
+                                });
+                                return;
+                            }
+                            if (email === "") {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: 'Please enter your email.',
+                                    timer: 2000,
+                                    position: 'center',
+                                    showConfirmButton: false,
+                                });
+                                return;
+                            }
+
+
+                            var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                            if (!emailPattern.test(email)) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Invalid email',
+                                    text: 'Please enter a valid email.'
+                                });
+                                return;
+                            }
+
+                            $.ajax({
+                                url: '/auth/verify-user',
+                                method: 'POST',
+                                data: { email: email },
+                                success: function (response) {
+                                    console.log("response", response);
+                                    
+                                    if (response.userExists == true) {
+                                        $('#first_nameFields').val(response.firstName);
+                                        $('#last_nameFields').val(response.lastName);
+
+                                        $('.first_names').show();
+                                        $('.last_names').show();
+                                        $('.passwords').hide(); // Hide password for existing user
+                                    } else {
+                                        $('.first_names').show();
+                                        $('.last_names').show();
+                                        $('.passwords').show(); // Show password for new user
+                                    }
+                                },
+                                error: function (xhr, status, error) {
+                                    console.error('Error verifying user:', error);
+                                }
+                            });
+                        
+                        });
+
+
+                        $('#edituser').submit(function (event) {
+                            event.preventDefault();
+
+                            var formData = $(this).serialize();
+                            console.log("editusersformData", formData);
+                            $.ajax({
+                                url: '/auth/editnewusers',
+                                method: 'POST',
+                                data: formData,
+                                success: function (response) {
+                                    if (response.success_message) {
+                                        alertMessage('success', response.success_message);
+                                        setTimeout(function () {
+                                            window.location.reload();
+                                        }, 2000);
+                                    } else {
+                                        console.log('Form submitted successfully!');
+                                    }
+                                },
+                                error: function (xhr, status, error) {
+                                    console.error('Error submitting form:', error);
+                                    var errorMessage;
+                                    if (xhr.responseJSON && xhr.responseJSON.error_message) {
+                                        errorMessage = xhr.responseJSON.error_message;
+                                        alertMessage('error', errorMessage);
+                                    } else {
+                                        errorMessage = 'An error occurred while submitting the form. Please try again later.';
+                                        alertMessage('error', errorMessage);
+                                    }
+                                }
+                            });
+                        });
+
+
+                        $('.editModal').click(function () {
+                            var firstName = $(this).closest('.category_list_edit_row').find('.first_name').text().trim();
+                            var lastName = $(this).closest('.category_list_edit_row').find('.last_name').text().trim();
+                            var email = $(this).closest('.category_list_edit_row').find('h5').text().trim();
+                            var categoryName = $(this).closest('.category_list').find('.category_list_heading h3').text().trim();
+                            console.log("categoryName", categoryName);
+
+                            $('#edituser input[name="first_name"]').val(firstName);
+                            $('#edituser input[name="last_name"]').val(lastName);
+                            $('#edituser input[name="email"]').val(email);
+                            $('#edituser select[name="category"] option').each(function () {
+                                if ($(this).text().trim() == categoryName) {
+                                    $(this).prop('selected', true);
+                                }
+                            });
+
+                            // Show the edit modal
+                            $('#editmodal').addClass('show');
+                        });
+
+
+                        $('#editusers').submit(function (event) {
+                            event.preventDefault();
+
+                            var formData = $(this).serialize();
+                            console.log("editusersformData", formData);
+                            $.ajax({
+                                url: '/auth/editnewusers',
+                                method: 'POST',
+                                data: formData,
+                                success: function (response) {
+                                    console.log(("responseedit", response));
+                                    if (response.success_message) {
+                                        alertMessage('success', response.success_message);
+                                        setTimeout(function () {
+                                            window.location.reload();
+                                        }, 2000);
+                                    } else {
+                                        console.log('Form submitted successfully!');
+                                    }
+                                },
+                                error: function (xhr, status, error) {
+                                    console.error('Error submitting form:', error);
+                                    var errorMessage;
+                                    if (xhr.responseJSON && xhr.responseJSON.error_message) {
+                                        errorMessage = xhr.responseJSON.error_message;
+                                        alertMessage('error', errorMessage);
+                                    } else {
+                                        errorMessage = 'An error occurred while submitting the form. Please try again later.';
+                                        alertMessage('error', errorMessage);
+                                    }
+                                }
+                            });
+                        });
+
+                        $('.editModals').click(function () {
+                            var firstName = $(this).closest('.category_list_edit_row').find('.first_name').text().trim();
+                            var lastName = $(this).closest('.category_list_edit_row').find('.last_name').text().trim();
+                            var email = $(this).closest('.category_list_edit_row').find('h5').text().trim();
+                            var categoryName = $(this).closest('.category_list').find('.category_list_heading h3').text().trim();
+                            console.log("categoryName", categoryName);
+
+                            $('#editusers input[name="first_name"]').val(firstName);
+                            $('#editusers input[name="last_name"]').val(lastName);
+                            $('#editusers input[name="email"]').val(email);
+                            $('#editusers select[name="category"] option').each(function () {
+                                if ($(this).text().trim() == categoryName) {
+                                    $(this).prop('selected', true);
+                                }
+                            });
+
+                            $('#editmodals').addClass('show');
+                        });
+
+
+
+
+                        //
+                        // $('.editssModals').click(function () {
+                        //     var $closestRow = $(this).closest('.category_list_edit_row');
+
+                        //     var fullName = $closestRow.find('.col-md-3').first().text().trim();
+                        //     fullName = fullName.replace(/\s+/g, ' ').trim();
+                        //     var names = fullName.split(' ');
+                        //     var firstName = names[0];
+                        //     var lastName = names.length > 1 ? names[names.length - 1] : '';
+                        //     var middleNames = names.length > 2 ? names.slice(1, -1).join(' ') : '';
+
+                        //     console.log("First Name:", firstName);
+                        //     console.log("Last Name:", lastName);
+                        //     console.log("Middle Names:", middleNames);
+
+                        //     var email = $closestRow.find('.col-md-5').text().trim();
+                        //     var category = $closestRow.find('.col-md-3').last().text().trim();
+
+                        //     console.log("Extracted data:", { firstName, lastName, email, category });
+
+                        //     $('#editssmodalsusers input[name="first_name"]').val(firstName);
+                        //     $('#editssmodalsusers input[name="last_name"]').val(lastName);
+                        //     $('#editssmodalsusers input[name="email"]').val(email);
+                        //     var $categorySelect = $('#editssmodalsusers select[name="category"]');
+                        //     $categorySelect.find('option').each(function () {
+                        //         var optionText = $(this).text().trim();
+                        //         if (optionText.toLowerCase() === category.toLowerCase()) {
+                        //             $(this).prop('selected', true);
+                        //         }
+                        //     });
+
+                        //     $('#editssmodals').addClass('show');
+                        // });
+
+
+
+                        // $('#editssmodalsusers').submit(function (event) {
+                        //     event.preventDefault();
+
+                        //     var formData = $(this).serialize();
+                        //     console.log("editusersformData", formData);
+                        //     $.ajax({
+                        //         url: '/auth/editnewusers',
+                        //         method: 'POST',
+                        //         data: formData,
+                        //         success: function (response) {
+                        //             console.log(("responseedit", response));
+                        //             if (response.success_message) {
+                        //                 alertMessage('success', response.success_message);
+                        //                 // setTimeout(function () {
+                        //                 //     window.location.reload();
+                        //                 // }, 2000);
+                        //             } else {
+                        //                 console.log('Form submitted successfully!');
+                        //             }
+                        //         },
+                        //         error: function (xhr, status, error) {
+                        //             console.error('Error submitting form:', error);
+                        //             var errorMessage;
+                        //             if (xhr.responseJSON && xhr.responseJSON.error_message) {
+                        //                 errorMessage = xhr.responseJSON.error_message;
+                        //                 alertMessage('error', errorMessage);
+                        //             } else {
+                        //                 errorMessage = 'An error occurred while submitting the form. Please try again later.';
+                        //                 alertMessage('error', errorMessage);
+                        //             }
+                        //         }
+                        //     });
+                        // });
+
+
+                        $(document).on('click', '.save_btn', function (event) {
+                            // Prevent the default form submission behavior
+                            event.preventDefault();
+
+                            // Get the parent form of the clicked save button
+                            let $form = $(this).closest('.level_form');
+
+                            // Define arrays to store the data
+                            let emails = [];
+                            let levels = [];
+                            let companyIds = [];
+                            let etaDays = [];
+
+                            let level = $form.data('gtm-form-interact-id');
+
+                            let companyId = $(`input[name="company_id_${level}"]`, $form).val();
+
+                            let etaDay = $(`input[name="eta_days_${level}"]`, $form).val();
+
+                            // Find all <h5> elements within the category_list_edit_sec class (for emails)
+                            $('.category_list_edit_sec h5', $form).each(function () {
+                                emails.push($(this).text().trim());
+                                levels.push(level);
+                                companyIds.push(companyId);
+                                etaDays.push(etaDay);
+                            });
+
+                            console.log('Emails:', emails);
+                            console.log('Levels:', levels);
+                            console.log('Company IDs:', companyIds);
+                            console.log('ETA Days:', etaDays);
+
+                            if (etaDay === '') {
+                                alertMessage('error', 'ETA Days is required.');
+                                return;
+                            }
+
+                            if (emails.length === 0) {
+                                alertMessage('error', 'At least one added user is needed for updating ETA days.');  // Custom alert for no users
+                                return;  // Exit the function
+                            }
+
+                            $.ajax({
+                                url: '/auth/update-eta-days',
+                                method: 'POST',
+                                contentType: 'application/json',
+                                data: JSON.stringify({ emails: emails, levels: levels, companyIds: companyIds, etaDays: etaDays }),
+                                success: function (response) {
+                                    if (response.success_message) {
+                                        alertMessage('success', response.success_message);
+                                        setTimeout(function () {
+                                            window.location.reload();
+                                        }, 2000);
+                                    } else {
+                                        console.log('Form submitted successfully!');
+                                    }
+                                },
+                                error: function (xhr, status, error) {
+                                    console.error('Error submitting form:', error);
+                                    var errorMessage;
+                                    if (xhr.responseJSON && xhr.responseJSON.error_message) {
+                                        // Display error message
+                                        errorMessage = xhr.responseJSON.error_message;
+                                        alertMessage('error', errorMessage);
+                                    } else {
+                                        // Handle other error scenarios
+                                        errorMessage = 'An error occurred while submitting the form. Please try again later.';
+                                        alertMessage('error', errorMessage);
+                                    }
+                                }
+                            });
+                        });
+
+                        $(document).on('click', '.save_btns', function (event) {
+                            // Prevent the default form submission behavior
+                            event.preventDefault();
+
+                            // Get the parent form of the clicked save button
+                            let $form = $(this).closest('.level_form');
+
+                            // Define arrays to store the data
+                            let emails = [];
+                            let levels = [];
+                            let companyIds = [];
+                            let etaDays = [];
+
+                            let level = $form.data('gtm-form-interact-id');
+                            console.log("level", level);
+                            console.log("companyIds", companyIds)
+
+                            let companyId = $(`input[name="company_id_${level}"]`, $form).val();
+
+                            //let etaDay = $(`input[name="eta_days_${level}"]`, $form).val();
+                            let etaDay = $(`input[name="etaDays"]`, $form).val();
+
+                            console.log("etaDay", etaDay);
+
+
+                            // Find all <h5> elements within the category_list_edit_sec class (for emails)
+                            $('.category_list_edit_sec h5', $form).each(function () {
+                                emails.push($(this).text().trim());
+                                levels.push(level);
+                                companyIds.push(companyId);
+                                etaDays.push(etaDay);
+                            });
+
+                            // Now the arrays contain all the extracted data for this level
+                            console.log('Emails:', emails);
+                            console.log('Levels:', levels);
+                            console.log('Company IDs:', companyIds);
+                            console.log('ETA Days:', etaDays);
+
+                            if (etaDay === '') {
+                                alertMessage('error', 'ETA Days is required.');
+                                return;
+                            }
+
+                            if (emails.length === 0) {
+                                alertMessage('error', 'At least one added user is needed for updating ETA days.');  // Custom alert for no users
+                                return;  // Exit the function
+                            }
+
+                            // Send the data to your server using AJAX
+                            $.ajax({
+                                url: '/auth/update-eta-days',
+                                method: 'POST',
+                                contentType: 'application/json',
+                                data: JSON.stringify({ emails: emails, levels: levels, companyIds: companyIds, etaDays: etaDays }),
+                                success: function (response) {
+                                    if (response.success_message) {
+                                        // Display success message
+                                        alertMessage('success', response.success_message);
+                                        setTimeout(function () {
+                                            window.location.reload();
+                                        }, 2000);
+                                    } else {
+                                        // Handle other success scenarios if needed
+                                        console.log('Form submitted successfully!');
+                                    }
+                                },
+                                error: function (xhr, status, error) {
+                                    console.error('Error submitting form:', error);
+                                    var errorMessage;
+                                    if (xhr.responseJSON && xhr.responseJSON.error_message) {
+                                        // Display error message
+                                        errorMessage = xhr.responseJSON.error_message;
+                                        alertMessage('error', errorMessage);
+                                    } else {
+                                        // Handle other error scenarios
+                                        errorMessage = 'An error occurred while submitting the form. Please try again later.';
+                                        alertMessage('error', errorMessage);
+                                    }
+                                }
+                            });
+
+                        });
+
+                        let companyId = "<%=companyId%>"
+                        console.log("companyId", companyId);
+
+                        $.ajax({
+                            url: `/get-eta-days/${companyId}`,
+                            type: 'GET',
+                            success: function (response) {
+                                if (Array.isArray(response)) {
+                                    response.forEach(function (item) {
+                                        const level = item.level;
+                                        const etaDays = item.eta_days;
+
+                                        const inputSelector = `input[name='eta_days_${level}']`;
+                                        $(inputSelector).val(etaDays);
+                                    });
+                                } else {
+                                    console.error('Unexpected response format:', response);
+                                }
+                            },
+                            error: function (xhr, status, error) {
+                                console.error('Error fetching ETA days:', error);
+                            },
+                        });
+
+
+
+                        function alertMessage(type, msg) {
+                            Swal.fire({
+                                position: 'center',
+                                icon: type,
+                                title: msg,
+                                showConfirmButton: false,
+                                timer: 2000
+                            })
+                        }
+
+                    })
+
+        $('.delete_management_users').on('click', function() {
+            console.log("Clicked button:", this);
+            var email = $(this).attr('data-email');
+            var firstName = $(this).attr('data-first-name');
+            var lastName = $(this).attr('data-last-name');
+            var level = $(this).attr('data-level');
+
+            console.log("Email:", email);
+            console.log("First Name:", firstName);
+            console.log("Last Name:", lastName);
+            console.log("Level:", level);
+            if (!email) {
+                console.error('Email is empty');
+            }
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: `Do you really want to delete ${firstName} ${lastName}?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, keep it'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/auth/delete-management-user', 
+                        type: 'POST',
+                        data: {
+                            email: email,
+                            // first_name: firstName,
+                            // last_name: lastName,
+                            // level: level
+                        },
+                        success: function(response) {
+                            Swal.fire(
+                                'Deleted!',
+                                'User has been deleted.',
+                                'success'
+                            ).then(() => {
+                                location.reload();
+                            });
+                        },
+                        error: function(xhr, status, error) {
+                            Swal.fire(
+                                'Failed!',
+                                'Failed to delete user.',
+                                'error'
+                            );
+                        }
+                    });
                 }
-                // pop-up
-                $(".add_new_user").click(function () {
-                    $(".popup").fadeIn(500);
-                });
-                $(".close").click(function () {
-                    $(".popup").fadeOut(500);
-                });
-
-                $("#addNewUserForm").submit(function(event){
-                event.preventDefault(); // Prevent default form submission
-
-                    // Get form data
-                    var formData = {
-                        firstName: $('input[name="firstName"]').val(),
-                        lastName: $('input[name="lastName"]').val(),
-                        email: $('input[name="email"]').val(),
-                        password: $('input[name="password"]').val(),
-                        category: $('#cars').val()
-                    };
-
-                    console.log("formData", formData);
-                });
+            });
+        });
 
 
+                })
             </script>

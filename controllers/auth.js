@@ -748,15 +748,33 @@ exports.frontendUserLogin = (req, res) => {
                     if (result) {
                         //check Customer Login
                         if (user.user_type_id == 2 && user.user_status == 1) {
+                            // const query = `
+                            //             SELECT user_meta.*, c.name as country_name, s.name as state_name, ccr.company_id as claimed_comp_id, company.slug
+                            //             FROM user_customer_meta user_meta
+                            //             LEFT JOIN countries c ON user_meta.country = c.id
+                            //             LEFT JOIN states s ON user_meta.state = s.id
+                            //             LEFT JOIN company_claim_request ccr ON user_meta.user_id = ccr.claimed_by
+                            //             LEFT JOIN company ON company.ID = ccr.company_id
+                            //             WHERE user_id = ?
+                            //             `;
+
                             const query = `
-                                        SELECT user_meta.*, c.name as country_name, s.name as state_name, ccr.company_id as claimed_comp_id, company.slug
-                                        FROM user_customer_meta user_meta
-                                        LEFT JOIN countries c ON user_meta.country = c.id
-                                        LEFT JOIN states s ON user_meta.state = s.id
-                                        LEFT JOIN company_claim_request ccr ON user_meta.user_id = ccr.claimed_by
-                                        LEFT JOIN company ON company.ID = ccr.company_id
-                                        WHERE user_id = ?
-                                        `;
+                            SELECT user_meta.*, 
+                                   c.name as country_name, 
+                                   s.name as state_name, 
+                                   ccr.company_id as claimed_comp_id, 
+                                   company.slug,
+                                   company_level_manage_users.emails,
+                                   company_level_manage_users.level_user_type,
+                                   company_level_manage_users.company_id
+                            FROM user_customer_meta user_meta
+                            LEFT JOIN countries c ON user_meta.country = c.id
+                            LEFT JOIN states s ON user_meta.state = s.id
+                            LEFT JOIN company_claim_request ccr ON user_meta.user_id = ccr.claimed_by
+                            LEFT JOIN company ON company.ID = ccr.company_id
+                            LEFT JOIN company_level_manage_users ON user_meta.user_id = company_level_manage_users.user_id
+                            WHERE user_meta.user_id = ?
+                        `;
                             db.query(query, [user.user_id], async (err, results) => {
                                 let userData = {};
                                 if (results.length > 0) {
@@ -788,7 +806,12 @@ exports.frontendUserLogin = (req, res) => {
                                         gender: user_meta.gender,
                                         profile_pic: user_meta.profile_pic,
                                         claimed_comp_id: user_meta.claimed_comp_id,
-                                        claimed_comp_slug: user_meta.slug
+                                        claimed_comp_slug: user_meta.slug,
+                                        manager_email: user_meta.manger_email,
+                                        helpdesk_email: user_meta.help_desk_email,
+                                        emails: user_meta.emails,
+                                        level_user_type: user_meta.level_user_type,
+                                        company_id: user_meta.company_id,
                                     };
                                     const encodedUserData = JSON.stringify(userData);
                                     res.cookie('user', encodedUserData);
@@ -2934,6 +2957,7 @@ exports.companyBulkUpload = async (req, res) => {
                 }
 
                 cleanedCompany[21] = 0; // Default value
+                cleanedCompany[22] = 0; // Default value
 
                 cleanedCompany[22] = 0; // Default value
 
@@ -9058,8 +9082,8 @@ exports.deleteCompanyComplaintLevel = async (req, res) => {
 }
 
 //Complaint Register
-exports.complaintRegister = async (req, res) => {
-    console.log('complaintRegister', req.body);
+exports.complaintRegister = (req, res) => {
+    //console.log('complaintRegister',req.body ); 
     // const authenticatedUserId = parseInt(req.user.user_id);
     // const ApiuserId = parseInt(req.body.user_id);
     // if (isNaN(ApiuserId)) {
@@ -9076,55 +9100,13 @@ exports.complaintRegister = async (req, res) => {
     // }
 
     const { company_id, user_id, category_id, sub_category_id, model_no, allTags, transaction_date, location, message } = req.body;
+    console.log("company_idsss", req.body.company_id);
     //return false;
     //const uuid = uuidv4();  
     const randomNo = Math.floor(Math.random() * (100 - 0 + 1)) + 0;
     const currentDate = new Date();
     const ticket_no = randomNo + currentDate.getTime();
     const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ');
-
-    const country_name_query = `SELECT name,id FROM countries WHERE shortname = "${req.body.main_address_country}"`;
-    const country_name_value = await query(country_name_query);
-    if (country_name_value.length > 0) {
-        var country_name = country_name_value[0].name;
-        console.log("country_name", country_name);
-        var country_id = country_name_value[0].id;
-        console.log("country_id", country_id);
-    }
-
-    const state_name_query = `SELECT * FROM states WHERE id = "${req.body.main_address_state}"`;
-    const state_name_value = await query(state_name_query);
-    if (state_name_value.length > 0) {
-        var state_name = state_name_value[0].name;
-        console.log("state_name", state_name);
-    }
-
-    var city_value = req.body['review-address'];
-    console.log("city_value", city_value);
-
-    let concatenatedAddress = '';
-
-    if (city_value) {
-        concatenatedAddress += city_value;
-    }
-
-    if (state_name) {
-        if (concatenatedAddress.length > 0) {
-            concatenatedAddress += ', ';
-        }
-        concatenatedAddress += state_name;
-    }
-
-    if (country_name) {
-        if (concatenatedAddress.length > 0) {
-            concatenatedAddress += ', ';
-        }
-        concatenatedAddress += country_name;
-    }
-
-    console.log(concatenatedAddress);
-
-
     const data = {
         user_id: user_id,
         company_id: company_id,
@@ -9133,13 +9115,14 @@ exports.complaintRegister = async (req, res) => {
         sub_cat_id: sub_category_id && sub_category_id !== undefined ? sub_category_id : 0,
         model_desc: model_no,
         purchase_date: transaction_date,
-        purchase_place: concatenatedAddress,
+        purchase_place: location,
         message: message,
         tags: JSON.stringify(allTags),
         level_id: '1',
         status: '2',
         created_at: formattedDate,
-        level_update_at: formattedDate
+        level_update_at: formattedDate,
+        assigned_status: '0'
     }
 
 
@@ -9152,19 +9135,79 @@ exports.complaintRegister = async (req, res) => {
                 message: 'Something went wrong  ' + err
             });
         } else {
-            //console.log(company_id[0],user_id[0], uuid, result.insertId)
-            const [complaintEmailToCompany, complaintSuccessEmailToUser] = await Promise.all([
-                // comFunction2.complaintEmailToCompany(company_id[0], ticket_no, result.insertId),
-                // comFunction2.complaintSuccessEmailToUser(user_id[0], ticket_no, result.insertId)
-                comFunction2.complaintEmailToCompany(company_id, ticket_no, result.insertId),
-                comFunction2.complaintSuccessEmailToUser(user_id, ticket_no, result.insertId)
+            const level_manage_users_query = `SELECT emails FROM company_level_manage_users WHERE company_id = ?`;
+            const level_queryData = await query(level_manage_users_query, [company_id]);
+
+            if (level_queryData.length > 0 && level_queryData[0].emails) {
+                var leveluseremail = level_queryData.emails;
+
+
+
+            } else {
+                console.log("No level managed user emails found for the provided company_id.");
+            }
+            console.log("leveluseremail", leveluseremail);
+
+
+            const [complaintSuccessEmailToUser, complaintEmailToCompanylevelUsers] = await Promise.all([
+                //comFunction2.complaintEmailToCompany(company_id[0], ticket_no, result.insertId),
+                comFunction2.complaintSuccessEmailToUser(user_id, ticket_no, result.insertId),
+                comFunction2.complaintEmailToCompanylevelUsers(company_id, ticket_no, result.insertId)
             ]);
-            return res.send({
-                status: 'ok',
-                message: 'Complaint Registered  successfully !'
+            const cat_name = `SELECT category_name FROM complaint_category WHERE ID= "${category_id}"`;
+            const cat_data = await query(cat_name);
+            if (cat_data.length > 0) {
+                var category_name = cat_data[0].category_name;
+                console.log("Category Name:", category_name);
+            } else {
+                var category_name = 'general';
+                console.log("Category Name:", category_name);
+            }
+
+
+            const user_name = `SELECT first_name, last_name FROM users WHERE user_id="${user_id}"`;
+            const usernameData = await query(user_name);
+            if (usernameData.length > 0) {
+                var fullName = `${usernameData[0].first_name} ${usernameData[0].last_name}`;
+                console.log("Full Name:", fullName);
+            } else {
+                console.log("User not found or no data returned from the query.");
+            }
+            const catId = result.insertId;
+            const dateResult = await query(`SELECT created_at FROM complaint WHERE id= "${catId}"`);
+            if (dateResult.length > 0) {
+                var date = dateResult[0].created_at;
+                console.log("Date:", date);
+                var dateOnly = currentDate.toISOString().split('T')[0];
+
+                console.log("Date only:", dateOnly);
+            } else {
+                console.log("No data returned from the query.");
+            }
+
+            var history_details = `The complaint id ${catId} about ${category_name} is created by ${fullName} on ${dateOnly}.`
+            const history_data = {
+                complaint_id: result.insertId,
+                history_details: history_details,
+                created_at: formattedDate
+            }
+
+            const historyQuery = `INSERT INTO complaint_history SET ?  `;
+            db.query(historyQuery, history_data, async (err, result) => {
+                if (err) {
+                    return res.send({
+                        status: 'not ok',
+                        message: 'Something went wrong  ' + err
+                    });
+                } else {
+                    return res.send({
+                        status: 'ok',
+                        message: 'Complaint Registered  successfully !'
+                    });
+                }
             });
         }
-    })
+    });
 }
 
 //Complaint Register against CEchoes
@@ -15273,7 +15316,7 @@ const createRazorpayPlan = async (plan, billingCycle, memberCount, country_code)
                 if (isNaN(totalPrice) || totalPrice <= 0) {
                     throw new Error('Invalid total price');
                 }
-                console.log("totalPrice", totalPrice);
+                console.log("totalPricein", totalPrice);
             } else if (country_code == "JP") {
                 var toalbasePrice = basePrice * jp_currency;
                 var totaladdonPrice = addonPrice * jp_currency;
@@ -15281,13 +15324,13 @@ const createRazorpayPlan = async (plan, billingCycle, memberCount, country_code)
                 if (isNaN(totalPrice) || totalPrice <= 0) {
                     throw new Error('Invalid total price');
                 }
-                console.log("totalPrice", totalPrice);
+                console.log("totalPricejp", totalPrice);
             } else {
                 var totalPrice = parseFloat(basePrice) + parseFloat(addonPrice);
                 if (isNaN(totalPrice) || totalPrice <= 0) {
                     throw new Error('Invalid total price');
                 }
-                console.log("totalPrice", totalPrice);
+                console.log("totalPriceelse", totalPrice);
             }
         }
 
@@ -17311,7 +17354,7 @@ exports.assignUsers = async (req, res) => {
                                       <tr>
                                         <td colspan="2">
                                         <strong>Hello ${fullName},</strong>
-                                        <p style="font-size:15px; line-height:20px">You have assigned for this complaint<i><b> </b></i> Please visit<a  href="${process.env.MAIN_URL}${additionalPath}">the complaint</a> .</p>
+                                        <p style="font-size:15px; line-height:20px">You have assigned for this complaint<i><b> </b></i> Please visit<a  href="${process.env.MAIN_URL}${additionalPath}"> the complaint</a> .</p>
                                         </td>
                                       </tr>
                                     </table>
@@ -17619,6 +17662,91 @@ exports.updateCategorys = async (req, res) => {
     }
 }
 
+
+exports.deletemanagementuser = async (req, res) => {
+    try {
+        console.log("deletemanagementuser",req.body);
+
+        const userEmail = req.body.email;
+        console.log("userEmail",userEmail);
+        const usergetquery = `SELECT * FROM users WHERE email=?`;
+        const userval = await query(usergetquery,[userEmail]);
+        console.log("userval",userval);
+        if(userval.length>0){
+            var userId= userval[0].user_id;
+            console.log("userId",userId);
+        }
+
+        const deleteQueries = [
+            `DELETE FROM user_code_verify WHERE user_id = '${userId}'`,
+            `DELETE FROM users WHERE user_id = '${userId}'`,
+            `DELETE FROM user_customer_meta WHERE user_id = ${userId}`,
+
+            `DELETE bg_users, bg_usermeta
+            FROM bg_users
+            LEFT JOIN bg_usermeta ON bg_users.ID = bg_usermeta.user_id
+            WHERE bg_users.user_login = '${userEmail}';
+            `,
+
+            `DELETE FROM user_device_info WHERE user_id = '${userId}'`,
+            `DELETE discussions, discussions_user_response
+            FROM discussions
+            LEFT JOIN discussions_user_response ON discussions.id = discussions_user_response.discussion_id
+            WHERE discussions.user_id = '${userId}';
+            `,
+            `DELETE complaint, complaint_rating,complaint_query_response
+            FROM complaint
+            LEFT JOIN complaint_rating ON complaint.id = complaint_rating.complaint_id
+            LEFT JOIN complaint_query_response ON complaint.id = complaint_query_response.complaint_id                               
+            WHERE complaint.user_id = '${userId}';
+            `,
+            `DELETE FROM poll_voting WHERE user_id = '${userId}'`,
+            `DELETE reviews,review_reply,review_voting
+            FROM reviews
+            LEFT JOIN review_reply ON reviews.id = review_reply.review_id 
+            LEFT JOIN review_voting ON reviews.id = review_voting.review_id                           
+            WHERE reviews.customer_id = '${userId}';
+            `,
+            `DELETE FROM survey_customer_answers WHERE customer_id = '${userId}'`,
+            `DELETE FROM company_claim_request WHERE claimed_by = '${userId}'`,
+            `DELETE FROM company_level_manage_users WHERE user_id ='${userId}'`
+        ];
+
+        const executeDeleteQuery = (index) => {
+            if (index < deleteQueries.length) {
+                const query = deleteQueries[index];
+                db.query(query, (err, result) => {
+                    if (err) {
+                        console.error('Query error:', err);
+
+                        return res.send({
+                            status: 'error',
+                            message: `Failed to execute query: ${query}`,
+                        });
+                    }
+
+                    // Continue with the next query
+                    executeDeleteQuery(index + 1);
+                });
+            } else {
+                return res.send({
+                    status: 'ok',
+                    message: 'Manangment User permanently deleted.',
+                });
+            }
+        };
+
+        executeDeleteQuery(0);
+    } catch (error) {
+        console.error('Error:', error);
+        return res.send({
+            status: 'err',
+            data: companies,
+            message: error.message
+        });
+    }
+};
+
 // const syncPlansWithStripe = async () => {
 //     const plans = await getPlanFromDatabase();
 //     for (const plan of plans) {
@@ -17693,3 +17821,9 @@ cron.schedule('0 0 * * *', async () => {
         console.error('Error syncing subscriptions:', error);
     }
 });
+
+//for expiration eta dates mail to the manager type user
+cron.schedule('0 5 * * *', async () => {
+    console.log('running a task every minute');
+    await comFunction2.sendemailtolevelUsers();
+})

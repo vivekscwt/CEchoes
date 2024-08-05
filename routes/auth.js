@@ -546,4 +546,8 @@ router.post('/assign-users',authController.assignUsers);
 router.post('/escalate-assign-users',authController.escalateassignUsers);
 //updateCategory
 router.post('/updatecategory',authController.updateCategorys);
+
+//complaint section management//
+router.post('/delete-management-user',authController.deletemanagementuser)
+
 module.exports = router;

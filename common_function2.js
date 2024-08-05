@@ -268,8 +268,51 @@ function getAlltempReviewTags() {
 }
 
 
-//Function to fetch latest Reviews from the  reviews,company,company_location,users,user_customer_meta table
-// async function getlatestReviews(reviewCount,country) {
+
+async function getlatestReviews(reviewCount, country) {
+  let get_latest_review_query = `
+     SELECT r.*, c.company_name, c.logo, c.slug, cl.address, cl.country, cl.state, cl.city, cl.zip, u.first_name, 
+    u.last_name,u.alise_name, u.user_id, u.user_status, ucm.profile_pic, COUNT(review_reply.id) as review_reply_count, cc.category_name, cp.product_title 
+      FROM reviews r
+      LEFT JOIN company c ON r.company_id = c.ID 
+      LEFT JOIN company_location cl ON r.company_location_id = cl.ID 
+       LEFT JOIN users u ON r.customer_id = u.user_id 
+      LEFT JOIN user_customer_meta ucm ON ucm.user_id = u.user_id 
+      LEFT JOIN review_reply ON review_reply.review_id = r.id
+       LEFT JOIN complaint_category cc ON r.category_id = cc.id 
+       LEFT JOIN company_products cp ON r.product_id = cp.id 
+    WHERE r.review_status = "1" AND c.status = "1" AND (r.flag_status != '0' OR r.flag_status IS NULL) 
+  `;
+
+  if (country) {
+    console.log("latestcountry", country);
+    get_latest_review_query += ` AND c.main_address_country = '${country}'`;
+  }
+
+  get_latest_review_query += `
+    GROUP BY r.id
+    ORDER BY r.created_at DESC
+    LIMIT ${reviewCount};
+  `;
+
+  //console.log("Constructed SQL Query:", get_latest_review_query); 
+  try {
+    const get_latest_review_results = await query(get_latest_review_query);
+    console.log("get_latest_review_results", get_latest_review_results);
+    if (get_latest_review_results.length > 0) {
+      return get_latest_review_results;
+    } else {
+      return [];
+    }
+  } catch (error) {
+    console.error('Error during user get_latest_review_query:', error);
+  }
+}
+
+
+
+
+// async function getlatestReviews(reviewCount) {
 //   const get_latest_review_query = `
 //     SELECT r.*, c.company_name, c.logo, c.slug, cl.address, cl.country, cl.state, cl.city, cl.zip, u.first_name, 
 //     u.last_name,u.alise_name, u.user_id, u.user_status, ucm.profile_pic, COUNT(review_reply.id) as review_reply_count, cc.category_name, cp.product_title 
@@ -281,7 +324,7 @@ function getAlltempReviewTags() {
 //       LEFT JOIN review_reply ON review_reply.review_id = r.id
 //       LEFT JOIN complaint_category cc ON r.category_id = cc.id 
 //       LEFT JOIN company_products cp ON r.product_id = cp.id 
-//       WHERE r.review_status = "1" AND c.status = "1" AND (r.flag_status != '0' OR r.flag_status IS NULL)
+//       WHERE r.review_status = "1" AND c.status = "1" AND (r.flag_status != '0' OR r.flag_status IS NULL) 
 //       GROUP BY r.id
 //       ORDER BY r.created_at DESC
 //       LIMIT ${reviewCount};
@@ -299,36 +342,6 @@ function getAlltempReviewTags() {
 //   }
 
 // }
-async function getlatestReviews(reviewCount) {
-  const get_latest_review_query = `
-    SELECT r.*, c.company_name, c.logo, c.slug, cl.address, cl.country, cl.state, cl.city, cl.zip, u.first_name, 
-    u.last_name,u.alise_name, u.user_id, u.user_status, ucm.profile_pic, COUNT(review_reply.id) as review_reply_count, cc.category_name, cp.product_title 
-      FROM reviews r
-      LEFT JOIN company c ON r.company_id = c.ID 
-      LEFT JOIN company_location cl ON r.company_location_id = cl.ID 
-      LEFT JOIN users u ON r.customer_id = u.user_id 
-      LEFT JOIN user_customer_meta ucm ON ucm.user_id = u.user_id 
-      LEFT JOIN review_reply ON review_reply.review_id = r.id
-      LEFT JOIN complaint_category cc ON r.category_id = cc.id 
-      LEFT JOIN company_products cp ON r.product_id = cp.id 
-      WHERE r.review_status = "1" AND c.status = "1" AND (r.flag_status != '0' OR r.flag_status IS NULL) 
-      GROUP BY r.id
-      ORDER BY r.created_at DESC
-      LIMIT ${reviewCount};
-  `;
-  try {
-    const get_latest_review_results = await query(get_latest_review_query);
-    if (get_latest_review_results.length > 0) {
-      //console.log(get_latest_review_results);
-      return get_latest_review_results;
-    } else {
-      return [];
-    }
-  } catch (error) {
-    console.error('Error during user get_latest_review_query:', error);
-  }
-
-}
 
 // async function getlatestReviews(reviewCount,country) {
 //   console.log("latestReviewscountry",country);
@@ -363,8 +376,37 @@ async function getlatestReviews(reviewCount) {
 // }
 
 //Function to fetch All Trending Reviews from the  reviews,company,company_location,users,user_customer_meta table
-async function getAllTrendingReviews() {
-  const get_latest_review_query = `
+// async function getAllTrendingReviews() {
+//   const get_latest_review_query = `
+//     SELECT r.*, c.company_name, c.logo, c.slug, cl.address, cl.country, cl.state, cl.city, cl.zip, u.first_name, 
+//     u.last_name, u.alise_name, u.user_id, u.user_status, ucm.profile_pic, COUNT(review_reply.id) as review_reply_count, cc.category_name, cp.product_title
+//       FROM reviews r
+//       LEFT JOIN company c ON r.company_id = c.ID 
+//       LEFT JOIN company_location cl ON r.company_location_id = cl.ID 
+//       LEFT JOIN users u ON r.customer_id = u.user_id 
+//       LEFT JOIN user_customer_meta ucm ON ucm.user_id = u.user_id 
+//       LEFT JOIN review_reply ON review_reply.review_id = r.id
+//       LEFT JOIN complaint_category cc ON r.category_id = cc.id 
+//       LEFT JOIN company_products cp ON r.product_id = cp.id 
+//       WHERE r.review_status = "1" AND c.status = "1" AND c.trending = "1" AND (r.flag_status != '0' OR r.flag_status IS NULL)
+//       GROUP BY r.id
+//       ORDER BY r.created_at DESC
+//   `;
+//   try {
+//     const get_latest_review_results = await query(get_latest_review_query);
+//     if (get_latest_review_results.length > 0) {
+//       //console.log(get_latest_review_results);
+//       return get_latest_review_results;
+//     } else {
+//       return [];
+//     }
+//   } catch (error) {
+//     console.error('Error during user get_latest_review_query:', error);
+//   }
+
+// }
+async function getAllTrendingReviews(country) {
+  let get_latest_review_query = `
     SELECT r.*, c.company_name, c.logo, c.slug, cl.address, cl.country, cl.state, cl.city, cl.zip, u.first_name, 
     u.last_name, u.alise_name, u.user_id, u.user_status, ucm.profile_pic, COUNT(review_reply.id) as review_reply_count, cc.category_name, cp.product_title
       FROM reviews r
@@ -376,11 +418,21 @@ async function getAllTrendingReviews() {
       LEFT JOIN complaint_category cc ON r.category_id = cc.id 
       LEFT JOIN company_products cp ON r.product_id = cp.id 
       WHERE r.review_status = "1" AND c.status = "1" AND c.trending = "1" AND (r.flag_status != '0' OR r.flag_status IS NULL)
-      GROUP BY r.id
-      ORDER BY r.created_at DESC
   `;
+
+  if (country) {
+    console.log("latestcountry", country);
+    get_latest_review_query += ` AND c.main_address_country = '${country}'`;
+  }
+
+  get_latest_review_query += `
+    GROUP BY r.id
+    ORDER BY r.created_at DESC
+  `;
+
+  //console.log("Constructed SQL Query:", get_latest_review_query); 
   try {
-    const get_latest_review_results = await query(get_latest_review_query);
+    const get_latest_review_results = await query(get_latest_review_query,[country]);
     if (get_latest_review_results.length > 0) {
       //console.log(get_latest_review_results);
       return get_latest_review_results;
@@ -392,7 +444,9 @@ async function getAllTrendingReviews() {
   }
 
 }
-// async function getAllTrendingReviews(country) {
+
+//Function to fetch All  Reviews from the  reviews,company,company_location,users,user_customer_meta table
+// async function getAllReviews() {
 //   const get_latest_review_query = `
 //     SELECT r.*, c.company_name, c.logo, c.slug, cl.address, cl.country, cl.state, cl.city, cl.zip, u.first_name, 
 //     u.last_name, u.alise_name, u.user_id, u.user_status, ucm.profile_pic, COUNT(review_reply.id) as review_reply_count, cc.category_name, cp.product_title
@@ -404,12 +458,12 @@ async function getAllTrendingReviews() {
 //       LEFT JOIN review_reply ON review_reply.review_id = r.id
 //       LEFT JOIN complaint_category cc ON r.category_id = cc.id 
 //       LEFT JOIN company_products cp ON r.product_id = cp.id 
-//       WHERE r.review_status = "1" AND c.status = "1" AND c.trending = "1" AND (r.flag_status != '0' OR r.flag_status IS NULL) AND cl.country =?
+//       WHERE r.review_status = "1" AND c.status = "1" AND (r.flag_status != '0' OR r.flag_status IS NULL)
 //       GROUP BY r.id
 //       ORDER BY r.created_at DESC
 //   `;
 //   try {
-//     const get_latest_review_results = await query(get_latest_review_query,[country]);
+//     const get_latest_review_results = await query(get_latest_review_query);
 //     if (get_latest_review_results.length > 0) {
 //       //console.log(get_latest_review_results);
 //       return get_latest_review_results;
@@ -422,9 +476,8 @@ async function getAllTrendingReviews() {
 
 // }
 
-//Function to fetch All  Reviews from the  reviews,company,company_location,users,user_customer_meta table
-async function getAllReviews() {
-  const get_latest_review_query = `
+async function getAllReviews(country) {
+  let  get_latest_review_query = `
     SELECT r.*, c.company_name, c.logo, c.slug, cl.address, cl.country, cl.state, cl.city, cl.zip, u.first_name, 
     u.last_name, u.alise_name, u.user_id, u.user_status, ucm.profile_pic, COUNT(review_reply.id) as review_reply_count, cc.category_name, cp.product_title
       FROM reviews r
@@ -435,12 +488,20 @@ async function getAllReviews() {
       LEFT JOIN review_reply ON review_reply.review_id = r.id
       LEFT JOIN complaint_category cc ON r.category_id = cc.id 
       LEFT JOIN company_products cp ON r.product_id = cp.id 
-      WHERE r.review_status = "1" AND c.status = "1" AND (r.flag_status != '0' OR r.flag_status IS NULL)
-      GROUP BY r.id
-      ORDER BY r.created_at DESC
-  `;
+      WHERE r.review_status = "1" AND c.status = "1" AND (r.flag_status != '0' OR r.flag_status IS NULL) `
+     
+
+      if (country) {
+        console.log("allcountry", country);
+        get_latest_review_query += ` AND c.main_address_country = '${country}'`;
+      }
+    
+      get_latest_review_query += `
+        GROUP BY r.id
+        ORDER BY r.created_at DESC
+      `;
   try {
-    const get_latest_review_results = await query(get_latest_review_query);
+    const get_latest_review_results = await query(get_latest_review_query,[country]);
     if (get_latest_review_results.length > 0) {
       //console.log(get_latest_review_results);
       return get_latest_review_results;
@@ -452,36 +513,6 @@ async function getAllReviews() {
   }
 
 }
-
-// async function getAllReviews(country) {
-//   const get_latest_review_query = `
-//     SELECT r.*, c.company_name, c.logo, c.slug, cl.address, cl.country, cl.state, cl.city, cl.zip, u.first_name, 
-//     u.last_name, u.alise_name, u.user_id, u.user_status, ucm.profile_pic, COUNT(review_reply.id) as review_reply_count, cc.category_name, cp.product_title
-//       FROM reviews r
-//       LEFT JOIN company c ON r.company_id = c.ID 
-//       LEFT JOIN company_location cl ON r.company_location_id = cl.ID 
-//       LEFT JOIN users u ON r.customer_id = u.user_id 
-//       LEFT JOIN user_customer_meta ucm ON ucm.user_id = u.user_id 
-//       LEFT JOIN review_reply ON review_reply.review_id = r.id
-//       LEFT JOIN complaint_category cc ON r.category_id = cc.id 
-//       LEFT JOIN company_products cp ON r.product_id = cp.id 
-//       WHERE r.review_status = "1" AND c.status = "1" AND (r.flag_status != '0' OR r.flag_status IS NULL) AND cl.country =?
-//       GROUP BY r.id
-//       ORDER BY r.created_at DESC
-//   `;
-//   try {
-//     const get_latest_review_results = await query(get_latest_review_query,[country]);
-//     if (get_latest_review_results.length > 0) {
-//       //console.log(get_latest_review_results);
-//       return get_latest_review_results;
-//     } else {
-//       return [];
-//     }
-//   } catch (error) {
-//     console.error('Error during user get_latest_review_query:', error);
-//   }
-
-// }
 
 //Function to fetch Page Info Content from the  page_info table
 async function getPageInfo(pageName) {
@@ -685,7 +716,7 @@ async function reviewApprovedEmail(req) {
                      <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
                        <tbody>
                          <tr>
-                         <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/email-template-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+                         <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
                           <td id="header_wrapper" style="padding: 36px 48px; display: block;">
                              <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Review received</h1>
                           </td>
@@ -2396,7 +2427,7 @@ async function flagApprovedEmail(req) {
                  <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
                    <tbody>
                      <tr>
-                     <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/email-template-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+                     <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
                       <td id="header_wrapper" style="padding: 36px 48px; display: block;">
                          <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Flag Approval Email</h1>
                       </td>
@@ -2707,50 +2738,8 @@ async function getAllReviewsByCompanyID(companyId) {
 // }
 
 //ac
-// async function getAllLatestDiscussion(limit, country) {
-//   console.log("country",country);
-//   let sql = `
-//     SELECT
-//       discussions.*,
-//       u.first_name,
-//       u.last_name,
-//       COALESCE(comments.total_comments, 0) as total_comments,
-//       COALESCE(views.total_views, 0) as total_views
-//     FROM discussions
-//     LEFT JOIN users u ON discussions.user_id = u.user_id
-//     LEFT JOIN (
-//       SELECT discussion_id, COUNT(*) as total_comments
-//       FROM discussions_user_response
-//       WHERE comment_status = 1
-//       GROUP BY discussion_id
-//     ) comments ON discussions.id = comments.discussion_id
-//     LEFT JOIN (
-//       SELECT discussion_id, COUNT(*) as total_views
-//       FROM discussions_user_view
-//       GROUP BY discussion_id
-//     ) views ON discussions.id = views.discussion_id
-//     WHERE discussions.discussion_status = 1
-//   `;
-
-//   if (country !== 'Worldwide') {
-//     sql += ` AND discussions.location = "${country}"`;
-//   }
-
-//   sql += `
-//     ORDER BY discussions.id DESC
-//     LIMIT ${limit};
-//   `;
-
-//   try {
-//     const results = await query(sql);
-//     return results.length > 0 ? results : [];
-//   } catch (error) {
-//     console.error('Error during fetch All Latest Discussion:', error);
-//     return [];
-//   }
-// }
-
-async function getAllLatestDiscussion(limit) {
+async function getAllLatestDiscussion(limit, country) {
+  console.log("getAllLatestDiscussioncountry",country);
   let sql = `
     SELECT
       discussions.*,
@@ -2774,6 +2763,10 @@ async function getAllLatestDiscussion(limit) {
     WHERE discussions.discussion_status = 1
   `;
 
+  if (country && country !== 'Worldwide') {
+    sql += ` AND discussions.location = "${country}"`;
+  }
+
   sql += `
     ORDER BY discussions.id DESC
     LIMIT ${limit};
@@ -2787,6 +2780,46 @@ async function getAllLatestDiscussion(limit) {
     return [];
   }
 }
+
+
+
+// async function getAllLatestDiscussion(limit) {
+//   let sql = `
+//     SELECT
+//       discussions.*,
+//       u.first_name,
+//       u.last_name,
+//       COALESCE(comments.total_comments, 0) as total_comments,
+//       COALESCE(views.total_views, 0) as total_views
+//     FROM discussions
+//     LEFT JOIN users u ON discussions.user_id = u.user_id
+//     LEFT JOIN (
+//       SELECT discussion_id, COUNT(*) as total_comments
+//       FROM discussions_user_response
+//       WHERE comment_status = 1
+//       GROUP BY discussion_id
+//     ) comments ON discussions.id = comments.discussion_id
+//     LEFT JOIN (
+//       SELECT discussion_id, COUNT(*) as total_views
+//       FROM discussions_user_view
+//       GROUP BY discussion_id
+//     ) views ON discussions.id = views.discussion_id
+//     WHERE discussions.discussion_status = 1
+//   `;
+
+//   sql += `
+//     ORDER BY discussions.id DESC
+//     LIMIT ${limit};
+//   `;
+
+//   try {
+//     const results = await query(sql);
+//     return results.length > 0 ? results : [];
+//   } catch (error) {
+//     console.error('Error during fetch All Latest Discussion:', error);
+//     return [];
+//   }
+// }
 
 
 //Function to get popular discussion from discussions table
@@ -2828,14 +2861,39 @@ async function getAllLatestDiscussion(limit) {
 //   }
 // }
 
-async function getAllPopularDiscussion() {
-  const sql = `
+async function getAllPopularDiscussion(country) {
+  // const sql = `
+  // SELECT
+  //   discussions.*,
+  //   u.first_name,
+  //   u.last_name,
+  //   COALESCE(comments.total_comments, 0) as total_comments,
+  //   COALESCE(views.total_views, 0) as total_views
+  // FROM discussions
+  // LEFT JOIN users u ON discussions.user_id = u.user_id
+  // LEFT JOIN (
+  //   SELECT discussion_id, COUNT(*) as total_comments
+  //   FROM discussions_user_response
+  //   GROUP BY discussion_id
+  // ) comments ON discussions.id = comments.discussion_id
+  // LEFT JOIN (
+  //   SELECT discussion_id, COUNT(*) as total_views
+  //   FROM discussions_user_view
+  //   GROUP BY discussion_id
+  // ) views ON discussions.id = views.discussion_id
+  // WHERE discussions.discussion_status = 1
+  // ORDER BY total_comments DESC;
+  // ;
+  // `;
+
+  let sql = `
   SELECT
     discussions.*,
     u.first_name,
     u.last_name,
     COALESCE(comments.total_comments, 0) as total_comments,
-    COALESCE(views.total_views, 0) as total_views
+    COALESCE(views.total_views, 0) as total_views,
+    discussions.location
   FROM discussions
   LEFT JOIN users u ON discussions.user_id = u.user_id
   LEFT JOIN (
@@ -2849,9 +2907,15 @@ async function getAllPopularDiscussion() {
     GROUP BY discussion_id
   ) views ON discussions.id = views.discussion_id
   WHERE discussions.discussion_status = 1
-  ORDER BY total_comments DESC;
-  ;
   `;
+
+  if (country && country !== 'Worldwide') {
+    sql += ` AND discussions.location = "${country}"`;
+  }
+
+  sql += ' ORDER BY total_comments DESC;';
+
+
   try {
     const results = await query(sql);
     if (results.length > 0) {
@@ -2867,47 +2931,8 @@ async function getAllPopularDiscussion() {
 }
 
 //Function to get viewed discussion from discussions table
-// async function getAllViewedDiscussion(country) {
-//   const sql = `
-//   SELECT
-//     discussions.*,
-//     u.first_name,
-//     u.last_name,
-//     COALESCE(comments.total_comments, 0) as total_comments,
-//     COALESCE(views.total_views, 0) as total_views
-//   FROM discussions
-//   LEFT JOIN users u ON discussions.user_id = u.user_id
-//   LEFT JOIN (
-//     SELECT discussion_id, COUNT(*) as total_comments
-//     FROM discussions_user_response
-//     WHERE comment_status = 1
-//     GROUP BY discussion_id
-//   ) comments ON discussions.id = comments.discussion_id
-//   LEFT JOIN (
-//     SELECT discussion_id, COUNT(*) as total_views
-//     FROM discussions_user_view
-//     GROUP BY discussion_id
-//   ) views ON discussions.id = views.discussion_id
-//   WHERE discussions.discussion_status = 1 AND discussions.location = "${country}"
-//   ORDER BY total_views DESC;
-//   ;
-//   `;
-//   try {
-//     const results = await query(sql);
-//     if (results.length > 0) {
-
-//       return results;
-//     } else {
-//       return [];
-//     }
-//   }
-//   catch (error) {
-//     console.error('Error during fetch All viewed discussion Discussion:', error);
-//   }
-// }
-
-async function getAllViewedDiscussion() {
-  const sql = `
+async function getAllViewedDiscussion(country) {
+  let sql = `
   SELECT
     discussions.*,
     u.first_name,
@@ -2928,9 +2953,16 @@ async function getAllViewedDiscussion() {
     GROUP BY discussion_id
   ) views ON discussions.id = views.discussion_id
   WHERE discussions.discussion_status = 1
-  ORDER BY total_views DESC;
-  ;
   `;
+  
+
+  if (country) {
+    sql += ` AND (discussions.location = "${country}" OR discussions.location = "Worldwide")`;
+  }
+  
+  sql += ' ORDER BY total_views DESC;';
+  
+  
   try {
     const results = await query(sql);
     if (results.length > 0) {
@@ -2944,6 +2976,45 @@ async function getAllViewedDiscussion() {
     console.error('Error during fetch All viewed discussion Discussion:', error);
   }
 }
+
+// async function getAllViewedDiscussion() {
+//   const sql = `
+//   SELECT
+//     discussions.*,
+//     u.first_name,
+//     u.last_name,
+//     COALESCE(comments.total_comments, 0) as total_comments,
+//     COALESCE(views.total_views, 0) as total_views
+//   FROM discussions
+//   LEFT JOIN users u ON discussions.user_id = u.user_id
+//   LEFT JOIN (
+//     SELECT discussion_id, COUNT(*) as total_comments
+//     FROM discussions_user_response
+//     WHERE comment_status = 1
+//     GROUP BY discussion_id
+//   ) comments ON discussions.id = comments.discussion_id
+//   LEFT JOIN (
+//     SELECT discussion_id, COUNT(*) as total_views
+//     FROM discussions_user_view
+//     GROUP BY discussion_id
+//   ) views ON discussions.id = views.discussion_id
+//   WHERE discussions.discussion_status = 1
+//   ORDER BY total_views DESC;
+//   ;
+//   `;
+//   try {
+//     const results = await query(sql);
+//     if (results.length > 0) {
+
+//       return results;
+//     } else {
+//       return [];
+//     }
+//   }
+//   catch (error) {
+//     console.error('Error during fetch All viewed discussion Discussion:', error);
+//   }
+// }
 
 //Function to get latest discussion from discussions table
 async function getAllDiscussions() {
@@ -2982,7 +3053,52 @@ async function getAllDiscussions() {
   }
 }
 //get all discussions when discussion_status =1 
-// async function getAllDiscussion(country) {
+async function getAllDiscussion(country) {
+
+let sql = `
+SELECT
+  discussions.*,
+  u.first_name,
+  u.last_name,
+  COALESCE(comments.total_comments, 0) as total_comments,
+  COALESCE(views.total_views, 0) as total_views
+FROM discussions
+LEFT JOIN users u ON discussions.user_id = u.user_id
+LEFT JOIN (
+  SELECT discussion_id, COUNT(*) as total_comments
+  FROM discussions_user_response
+  GROUP BY discussion_id
+) comments ON discussions.id = comments.discussion_id
+LEFT JOIN (
+  SELECT discussion_id, COUNT(*) as total_views
+  FROM discussions_user_view
+  GROUP BY discussion_id
+) views ON discussions.id = views.discussion_id
+WHERE discussions.discussion_status = 1
+`;
+
+if (country) {
+  sql += ` AND (discussions.location = "${country}" OR discussions.location = "Worldwide")`;
+}
+
+sql += ' ORDER BY discussions.id DESC;';
+
+
+  try {
+    const results = await query(sql);
+    if (results.length > 0) {
+
+      return results;
+    } else {
+      return [];
+    }
+  }
+  catch (error) {
+    console.error('Error during fetch All Latest Discussion:', error);
+  }
+}
+
+// async function getAllDiscussion() {
 //   const sql = `
 //   SELECT
 //     discussions.*,
@@ -3002,7 +3118,7 @@ async function getAllDiscussions() {
 //     FROM discussions_user_view
 //     GROUP BY discussion_id
 //   ) views ON discussions.id = views.discussion_id
-//   WHERE discussions.discussion_status = 1 AND (discussions.location = "${country}" OR discussions.location = "Worldwide")
+//   WHERE discussions.discussion_status = 1
 //   ORDER BY discussions.id DESC
 //   `;
 //   try {
@@ -3018,43 +3134,6 @@ async function getAllDiscussions() {
 //     console.error('Error during fetch All Latest Discussion:', error);
 //   }
 // }
-
-async function getAllDiscussion() {
-  const sql = `
-  SELECT
-    discussions.*,
-    u.first_name,
-    u.last_name,
-    COALESCE(comments.total_comments, 0) as total_comments,
-    COALESCE(views.total_views, 0) as total_views
-  FROM discussions
-  LEFT JOIN users u ON discussions.user_id = u.user_id
-  LEFT JOIN (
-    SELECT discussion_id, COUNT(*) as total_comments
-    FROM discussions_user_response
-    GROUP BY discussion_id
-  ) comments ON discussions.id = comments.discussion_id
-  LEFT JOIN (
-    SELECT discussion_id, COUNT(*) as total_views
-    FROM discussions_user_view
-    GROUP BY discussion_id
-  ) views ON discussions.id = views.discussion_id
-  WHERE discussions.discussion_status = 1
-  ORDER BY discussions.id DESC
-  `;
-  try {
-    const results = await query(sql);
-    if (results.length > 0) {
-
-      return results;
-    } else {
-      return [];
-    }
-  }
-  catch (error) {
-    console.error('Error during fetch All Latest Discussion:', error);
-  }
-}
 
 
 //Function to insert discussion response in discussions_user_response table
@@ -3347,6 +3426,41 @@ async function getAllComplaintsByComplaintId(ComplaintId) {
   }
 }
 
+async function getAllComplaintsByCompanyuserId(companyId,usermail) {
+  const sql = `
+  SELECT 
+  complaint.*,
+  c.company_name, 
+  cc.category_name, 
+  subcat.category_name AS sub_category_name,
+  GROUP_CONCAT(cqr.notification_status) AS notification_statuses,
+  GROUP_CONCAT(cqr.query) AS company_query,
+  GROUP_CONCAT(cqr.response) AS user_response
+  FROM complaint
+  LEFT JOIN complaint_category cc ON complaint.category_id = cc.id
+  LEFT JOIN complaint_category subcat ON complaint.sub_cat_id = subcat.id
+  LEFT JOIN company c ON complaint.company_id = c.ID
+  LEFT JOIN complaint_query_response cqr ON complaint.id = cqr.complaint_id
+  LEFT JOIN complaint_assigned_users ON complaint.id = complaint_assigned_users.complaint_id
+  WHERE complaint.company_id = '${companyId}' AND complaint_assigned_users.user_email='${usermail}' 
+  GROUP BY complaint.id
+  ORDER BY complaint.id DESC;
+  `;
+
+  try {
+    const results = await query(sql);
+    if (results.length > 0) {
+      return results;
+    } else {
+      return [];
+    }
+  }
+  catch (error) {
+    console.error('Error during fetch all complaint details: ', error);
+
+  }
+}
+
 //Function to get All Complaints By userID from complaint table
 async function getAllComplaintsByUserId(user_id) {
   const sql = `
@@ -3390,11 +3504,43 @@ async function updateComplaintStatus(complaint_id, status) {
   const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ');
 
   const sql = `
-  UPDATE complaint SET status='${status}', reopen_date = '${formattedDate}', level_id = '1', level_update_at = '${formattedDate}' WHERE id = '${complaint_id}'
+  UPDATE complaint SET status='${status}', reopen_date = '${formattedDate}', level_id = '1', level_update_at = '${formattedDate}',assigned_status = '0' WHERE id = '${complaint_id}'
   `;
+  
+  const deleteAssignedUsersSql = `DELETE FROM complaint_assigned_users WHERE complaint_id = ?`;//new
 
   try {
+    const assignuservalue= await query(deleteAssignedUsersSql, [complaint_id]);
     const results = await query(sql);
+    var history_details = `The complaint ${complaint_id} has reopend on "${formattedDate}".`
+    //console.log("history_details",history_details);
+    const updatequery = `INSERT INTO complaint_history SET history_details =?,complaint_id=?,created_at=?`;
+    const updatevalue = await query(updatequery,[history_details,complaint_id,formattedDate]);
+    return true;
+  }
+  catch (error) {
+    console.error('Error during fetch all complaint details: ', error);
+
+  }
+}
+async function updateresolveComplaintStatus(complaint_id, status) {
+
+  const currentDate = new Date();
+  const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ');
+
+  const sql = `
+  UPDATE complaint SET status='${status}' WHERE id = '${complaint_id}'
+  `;
+  
+  //const deleteAssignedUsersSql = `DELETE FROM complaint_assigned_users WHERE complaint_id = ?`;//new
+
+  try {
+    //const assignuservalue= await query(deleteAssignedUsersSql, [complaint_id]);
+    const results = await query(sql);
+    var history_details = `The complaint ${complaint_id} has resolved on "${formattedDate}".`
+    //console.log("history_details",history_details);
+    const updatequery = `INSERT INTO complaint_history SET history_details =?,complaint_id=?,created_at=?`;
+    const updatevalue = await query(updatequery,[history_details,complaint_id,formattedDate]);
     return true;
   }
   catch (error) {
@@ -3692,7 +3838,7 @@ async function complaintSuccessEmailToUser(userId, tokenId, insertId) {
             message: 'Something went wrong'
           });
         } else {
-          console.log('Mail Send: ', info.response);
+          console.log('Mail Send to user: ', info.response);
 
         }
       })
@@ -3704,6 +3850,419 @@ async function complaintSuccessEmailToUser(userId, tokenId, insertId) {
     console.error('Error during fetch All Latest Discussion:', error);
   }
 }
+
+async function complaintEmailToCompanylevelUsers(companyId, tokenId, insertId) {
+  //console.log("companyIdss",companyId);
+  // const sql = `
+  // SELECT users.email, users.first_name, c.slug,c.manger_email,c.help_desk_email
+  // FROM users 
+  // LEFT JOIN company_level_manage_users ccr ON ccr.emails = users.email 
+  // LEFT JOIN company c ON c.ID = ccr.company_id
+  // WHERE ccr.company_id = '${companyId}'
+  // `;
+  const sql = `
+  SELECT slug,manger_email,help_desk_email FROM company WHERE ID = ?;`
+  try {
+    const results = await query(sql,[companyId]);
+    //console.log("SQL Query Results:", results);
+
+    if(results.length>0){
+      
+    var manger_email = results[0].manger_email;
+    console.log("manger_email",manger_email);
+
+    var help_desk_email = results[0].help_desk_email;
+    console.log("help_desk_email",help_desk_email);
+
+    // console.log("manger_email",results[0].manger_email);
+    // console.log("help_desk_email",results[0].help_desk_email);
+
+    const managerquery = `SELECT first_name,last_name FROM users WHERE email = ?`;
+    const managervalue = await query(managerquery,[manger_email]);
+    console.log("managervalue",managervalue);
+
+    if (managervalue.length === 0) {
+      console.error("No user found with the given email:", manger_email);
+  } else {
+      var manager_first_name = managervalue[0].first_name;
+      var manager_last_name = managervalue[0].last_name;
+      console.log("Manager's First Name:", manager_first_name);
+      console.log("Manager's Last Name:", manager_last_name);
+    }
+    // var manager_first_name = managervalue[0].first_name;
+    // var manager_last_name = managervalue[0].last_name;
+
+    const helpdeskquery = `SELECT first_name,last_name FROM users WHERE email = ?`;
+    const helpdeskvalue = await query(helpdeskquery,[manger_email]);
+
+    if (helpdeskvalue.length === 0) {
+      console.error("No user found with the given email:", manger_email);
+  } else {
+    var helpdesk_first_name = helpdeskvalue[0].first_name;
+    var helpdesk_last_name = helpdeskvalue[0].last_name;
+      console.log("helpdesk_first_name", manager_first_name);
+      console.log("Manager's Last Name:", manager_last_name);
+    }
+
+    
+    // var helpdesk_first_name = helpdeskvalue[0].first_name;
+    // var helpdesk_last_name = helpdeskvalue[0].last_name;
+
+      if(help_desk_email.length> 0){
+        console.log(("help_desk_emailsss"));
+      var mailOptions = {
+        from: process.env.MAIL_USER,
+        //to: 'pranab@scwebtech.com',
+        to: help_desk_email,
+        //to: toEmails.join(', '),
+        subject: 'New Complaint Email',
+        html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+      <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
+       <tbody>
+        <tr>
+         <td align="center" valign="top">
+           <div id="template_header_image"><p style="margin-top: 0;"></p></div>
+           <table id="template_container" style="box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important; background-color: #fdfdfd; border: 1px solid #dcdcdc; border-radius: 3px !important;" border="0" cellpadding="0" cellspacing="0" width="600">
+            <tbody>
+              <tr>
+               <td align="center" valign="top">
+                 <!-- Header -->
+                 <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
+                   <tbody>
+                     <tr>
+                     <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+                      <td id="header_wrapper" style="padding: 36px 48px; display: block;">
+                         <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">New Complaint Email</h1>
+                      </td>
+  
+                     </tr>
+                   </tbody>
+                 </table>
+           <!-- End Header -->
+           </td>
+              </tr>
+              <tr>
+               <td align="center" valign="top">
+                 <!-- Body -->
+                 <table id="template_body" border="0" cellpadding="0" cellspacing="0" width="600">
+                   <tbody>
+                     <tr>
+                      <td id="body_content" style="background-color: #fdfdfd;" valign="top">
+                        <!-- Content -->
+                        <table border="0" cellpadding="20" cellspacing="0" width="100%">
+                         <tbody>
+                          <tr>
+                           <td style="padding: 48px;" valign="top">
+                             <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
+                              
+                              <table border="0" cellpadding="4" cellspacing="0" width="90%">
+                                <tr>
+                                  <td colspan="2">
+                                  <strong>Hello ${helpdesk_first_name} ${helpdesk_last_name},</strong>
+                                  <p style="font-size:15px; line-height:20px">A customer has registered a complaint to your company. It's Token Id is: <a  href="${process.env.MAIN_URL}company-compnaint-details/${results[0].slug}/${insertId}">${tokenId}</a>. 
+                                  </p>
+                                  </td>
+                                </tr>
+                              </table>
+                              
+                             </div>
+                           </td>
+                          </tr>
+                         </tbody>
+                        </table>
+                      <!-- End Content -->
+                      </td>
+                     </tr>
+                   </tbody>
+                 </table>
+               <!-- End Body -->
+               </td>
+              </tr>
+              <tr>
+               <td align="center" valign="top">
+                 <!-- Footer -->
+                 <table id="template_footer" border="0" cellpadding="10" cellspacing="0" width="600">
+                  <tbody>
+                   <tr>
+                    <td style="padding: 0; -webkit-border-radius: 6px;" valign="top">
+                     <table border="0" cellpadding="10" cellspacing="0" width="100%">
+                       <tbody>
+                         <tr>
+                          <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
+                               <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology</a></p>
+                          </td>
+                         </tr>
+                       </tbody>
+                     </table>
+                    </td>
+                   </tr>
+                  </tbody>
+                 </table>
+               <!-- End Footer -->
+               </td>
+              </tr>
+            </tbody>
+           </table>
+         </td>
+        </tr>
+       </tbody>
+      </table>
+     </div>`
+      }
+      mdlconfig.transporter.sendMail(mailOptions, function (err, info) {
+        if (err) {
+          console.log(err);
+          return res.send({
+            status: 'not ok',
+            message: 'Something went wrong'
+          });
+        } else {
+          console.log("mail sending to level management users.");
+          console.log('Mail Send: ', info.response);
+
+        }
+      })
+    }
+    if(manger_email.length> 0){
+      console.log("manger_emailsss");
+      var mailOptions = {
+        from: process.env.MAIL_USER,
+        //to: 'pranab@scwebtech.com',
+        to: manger_email,
+        //to: toEmails.join(', '),
+        subject: 'New Complaint Email',
+        html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+      <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
+       <tbody>
+        <tr>
+         <td align="center" valign="top">
+           <div id="template_header_image"><p style="margin-top: 0;"></p></div>
+           <table id="template_container" style="box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important; background-color: #fdfdfd; border: 1px solid #dcdcdc; border-radius: 3px !important;" border="0" cellpadding="0" cellspacing="0" width="600">
+            <tbody>
+              <tr>
+               <td align="center" valign="top">
+                 <!-- Header -->
+                 <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
+                   <tbody>
+                     <tr>
+                     <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+                      <td id="header_wrapper" style="padding: 36px 48px; display: block;">
+                         <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">New Complaint Email</h1>
+                      </td>
+  
+                     </tr>
+                   </tbody>
+                 </table>
+           <!-- End Header -->
+           </td>
+              </tr>
+              <tr>
+               <td align="center" valign="top">
+                 <!-- Body -->
+                 <table id="template_body" border="0" cellpadding="0" cellspacing="0" width="600">
+                   <tbody>
+                     <tr>
+                      <td id="body_content" style="background-color: #fdfdfd;" valign="top">
+                        <!-- Content -->
+                        <table border="0" cellpadding="20" cellspacing="0" width="100%">
+                         <tbody>
+                          <tr>
+                           <td style="padding: 48px;" valign="top">
+                             <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
+                              
+                              <table border="0" cellpadding="4" cellspacing="0" width="90%">
+                                <tr>
+                                  <td colspan="2">
+                                  <strong>Hello ${manager_first_name} ${manager_last_name},</strong>
+                                  <p style="font-size:15px; line-height:20px">A customer has registered a complaint to your company. It's Token Id is: <a  href="${process.env.MAIN_URL}company-compnaint-details/${results[0].slug}/${insertId}">${tokenId}</a>. 
+                                  </p>
+                                  </td>
+                                </tr>
+                              </table>
+                              
+                             </div>
+                           </td>
+                          </tr>
+                         </tbody>
+                        </table>
+                      <!-- End Content -->
+                      </td>
+                     </tr>
+                   </tbody>
+                 </table>
+               <!-- End Body -->
+               </td>
+              </tr>
+              <tr>
+               <td align="center" valign="top">
+                 <!-- Footer -->
+                 <table id="template_footer" border="0" cellpadding="10" cellspacing="0" width="600">
+                  <tbody>
+                   <tr>
+                    <td style="padding: 0; -webkit-border-radius: 6px;" valign="top">
+                     <table border="0" cellpadding="10" cellspacing="0" width="100%">
+                       <tbody>
+                         <tr>
+                          <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
+                               <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology</a></p>
+                          </td>
+                         </tr>
+                       </tbody>
+                     </table>
+                    </td>
+                   </tr>
+                  </tbody>
+                 </table>
+               <!-- End Footer -->
+               </td>
+              </tr>
+            </tbody>
+           </table>
+         </td>
+        </tr>
+       </tbody>
+      </table>
+     </div>`
+      }
+      mdlconfig.transporter.sendMail(mailOptions, function (err, info) {
+        if (err) {
+          console.log(err);
+          return res.send({
+            status: 'not ok',
+            message: 'Something went wrong'
+          });
+        } else {
+          console.log("mail sending to level management users.");
+          console.log('Mail Send: ', info.response);
+
+        }
+      })
+    }
+    } else {
+      return false;
+    }
+  }
+  catch (error) {
+    console.error('Error during sedning mail to level users:', error);
+  }
+}
+
+/////new
+
+async function getcomplaintHistory(complaint_id) {
+  const sql = `
+    SELECT history_details FROM complaint_history WHERE complaint_id = ?
+  `;
+  try {
+    const results = await query(sql, [complaint_id]);
+    if (results && results.length > 0) {
+      console.log("complaintHistoryresults", results);
+      return results;
+    } else {
+      console.log("No complaint history found for complaint_id:", complaint_id);
+      return [];
+    }
+  } catch (error) {
+    console.error('Error during fetch all complaint details: ', error);
+    throw error;
+  }
+}
+//resolved complaint 
+async function getresolvedcomplaints() {
+  const sql = `
+  SELECT *
+  FROM 
+  complaint
+  WHERE status = ?
+  `;
+
+  try {
+    var currentDate = new Date();
+    var formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ');
+    const results = await query(sql,['1']);
+    //console.log("resulttssss",results);
+    if (results.length > 0) {
+      for (const result of results) {
+    var complaint_id = result.id;
+    //console.log("complaint_idDD",complaint_id);
+    var company_id = result.company_id;
+    //console.log("company_id",company_id);
+    var history_details = `The complaint ${complaint_id} has resolved.`
+    //console.log("history_details",history_details);
+    const updatequery = `INSERT INTO complaint_history SET history_details =?,complaint_id=?,created_at=?`;
+    const updatevalue = await query(updatequery,[history_details,complaint_id,formattedDate]);
+    //console.log("updatevalue",updatevalue[0]);
+  }
+      return results;
+    } else {
+      return [];
+    }
+  }
+  catch (error) {
+    console.error('Error during fetch all complaint details: ', error);
+
+  }
+}
+async function getreopencomplaints() {
+  const sql = `
+  SELECT *
+  FROM 
+  complaint
+  WHERE status = ?
+  `;
+
+  try {
+    var currentDate = new Date();
+    var formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ');
+    const results = await query(sql,['0']);
+    //console.log("resulttssss",results);
+    if (results.length > 0) {
+      for (const result of results) {
+    var complaint_id = result.id;
+    //console.log("complaint_idDD",complaint_id);
+    var company_id = result.company_id;
+    //console.log("company_id",company_id);
+    var history_details = `The complaint ${complaint_id} has resolved.`
+    //console.log("history_details",history_details);
+    const updatequery = `INSERT INTO complaint_history SET history_details =?,complaint_id=?,created_at=?`;
+    const updatevalue = await query(updatequery,[history_details,complaint_id,formattedDate]);
+    //console.log("updatevalue",updatevalue[0]);
+  }
+      return results;
+    } else {
+      return [];
+    }
+  }
+  catch (error) {
+    console.error('Error during fetch all complaint details: ', error);
+
+  }
+}
+//
+async function getlevelusersres(email){
+  const sql = `
+  SELECT *
+  FROM 
+  complaint_level_management
+  WHERE emails = ?
+  `;
+
+  try {
+  const sql_value = await query(sql,[email]);
+  console.log("sql_value",sql_value);
+  if(sql_value.length> 0){
+      return sql_value;
+    } else {
+      return [];
+    }
+  }
+  catch (error) {
+    console.error('Error during fetch all complaint details: ', error);
+
+  }
+}
+
+
 
 //Function send Company Response Email email to customer by complaint_id 
 async function complaintCompanyResponseEmail(complaint_id) {
@@ -3990,6 +4549,10 @@ async function complaintCompanyResolvedEmail(complaint_id) {
   `;
   try {
     const results = await query(sql);
+    var history_details = `The complaint ${complaint_id} has resolved on "${formattedDate}".`
+    //console.log("history_details",history_details);
+    const updatequery = `INSERT INTO complaint_history SET history_details =?,complaint_id=?,created_at=?`;
+    const updatevalue = await query(updatequery,[history_details,complaint_id,formattedDate]);
     if (results.length > 0) {
       var mailOptions = {
         from: process.env.MAIL_USER,
@@ -4895,18 +5458,67 @@ async function SurveyInvitationByArray(req) {
 
 }
 
-async function getPopularTags(limit = 20) {
+// async function getPopularTags(limit = 20) {
+//   try {
+//     const sql = `
+//       SELECT JSON_UNQUOTE(JSON_EXTRACT(tags, '$[*]')) as tags
+//       FROM discussions
+//       WHERE JSON_UNQUOTE(JSON_EXTRACT(tags, '$[*]')) IS NOT NULL
+//       LIMIT ${limit};
+//     `;
+
+//     const rows = await query(sql);
+
+//     // Process the result to extract individual tags
+//     const tags = rows.reduce((accumulator, row) => {
+//       const parsedTags = JSON.parse(row.tags);
+//       accumulator.push(...parsedTags);
+//       return accumulator;
+//     }, []);
+
+//     // Count the occurrences of each tag
+//     const tagCounts = {};
+//     tags.forEach(tag => {
+//       if (tagCounts[tag]) {
+//         tagCounts[tag]++;
+//       } else {
+//         tagCounts[tag] = 1;
+//       }
+//     });
+
+//     const popularTags = Object.entries(tagCounts).map(([tag, tagCount]) => ({
+//       tag,
+//       tag_count: tagCount,
+//     }));
+
+//     // Sort the popularTags by tag_count in descending order
+//     popularTags.sort((a, b) => b.tag_count - a.tag_count);
+
+//     return popularTags;
+//   } catch (error) {
+//     console.error('Error getting popular tags:', error);
+//     throw error;
+//   }
+// }
+
+async function getPopularTags(country, limit = 20) {
   try {
-    const sql = `
+    let sql = `
       SELECT JSON_UNQUOTE(JSON_EXTRACT(tags, '$[*]')) as tags
       FROM discussions
       WHERE JSON_UNQUOTE(JSON_EXTRACT(tags, '$[*]')) IS NOT NULL
+    `;
+
+    if (country) {
+      sql += ` AND location = "${country}"`;
+    }
+
+    sql += `
       LIMIT ${limit};
     `;
 
     const rows = await query(sql);
 
-    // Process the result to extract individual tags
     const tags = rows.reduce((accumulator, row) => {
       const parsedTags = JSON.parse(row.tags);
       accumulator.push(...parsedTags);
@@ -4937,6 +5549,7 @@ async function getPopularTags(limit = 20) {
     throw error;
   }
 }
+
 
 async function getDiscussionListingByTag(tag) {
   try {
@@ -7282,7 +7895,7 @@ async function userActivation(name,email) {
                <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
                  <tbody>
                    <tr>
-                   <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/email-template-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+                   <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
                     <td id="header_wrapper" style="padding: 36px 48px; display: block;">
                        <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Welcome</h1>
                     </td>
@@ -7407,7 +8020,7 @@ async function userActivationmailtoAdmin(name, email, phone) {
                <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
                  <tbody>
                    <tr>
-                   <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/email-template-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+                   <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
                     <td id="header_wrapper" style="padding: 36px 48px; display: block;">
                        <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">New User Activation</h1>
                     </td>
@@ -7530,7 +8143,7 @@ async function companyActivationmailtoAdmin(name) {
                <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
                  <tbody>
                    <tr>
-                   <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/email-template-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+                   <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
                     <td id="header_wrapper" style="padding: 36px 48px; display: block;">
                        <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">New User Activation</h1>
                     </td>
@@ -7652,7 +8265,7 @@ async function reviewActivationmailtoAdmin(name) {
                <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
                  <tbody>
                    <tr>
-                   <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/email-template-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+                   <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
                     <td id="header_wrapper" style="padding: 36px 48px; display: block;">
                        <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">New User Activation</h1>
                     </td>
@@ -7749,6 +8362,248 @@ await mdlconfig.transporter.sendMail(mailOptions, function (err, info) {
 })
 }
 
+//send email to levelUsers after expiring eta days 
+async function sendemailtolevelUsers() {
+
+  const currentDate = new Date();
+  console.log("currentDate", currentDate);
+
+//   const sql = `
+//   SELECT *, DATEDIFF(NOW(), created_at) AS daysDifference
+//   FROM complaint_level_management 
+//   WHERE DATE(created_at) < '${currentDate.toISOString().slice(0, 19).replace('T', ' ')}';
+// `;
+    // const sql = `
+    //   SELECT clm.*, DATEDIFF(NOW(), clm.created_at) AS daysDifference, c.status
+    //   FROM complaint_level_management clm
+    //   JOIN complaint c ON clm.complaint_id = c.id
+    //   WHERE DATE(clm.created_at) < '${currentDate.toISOString().slice(0, 19).replace('T', ' ')}'
+    //     AND c.status IN (0, 2);
+    // `;
+    const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ');
+    
+    const sql = `
+SELECT
+    clm.id AS clm_id,
+    clm.level,
+    clm.eta_days,
+    clm.emails,
+    clm.company_id,
+    DATEDIFF(NOW(), c.created_at) AS daysDifference,
+    c.id AS complaint_id,
+    c.status
+FROM complaint_level_management clm
+JOIN complaint c ON clm.company_id = c.company_id
+WHERE DATE(c.created_at) < '${formattedDate}'
+  AND DATEDIFF(NOW(), c.created_at) > clm.eta_days
+  AND c.status IN (0, 2)
+  AND c.id IS NOT NULL
+GROUP BY clm.id
+ORDER BY c.id;
+
+    `;
+  
+  
+  
+
+
+  try {
+    const results = await query(sql);
+    if (results.length > 0) {
+      console.log("results", results);
+      let emailContent = '';
+      for (const result of results) {
+        var eta_days = result.eta_days;
+        console.log("ETA days:", eta_days);
+        var daysDifference = result.daysDifference;
+        console.log("Days difference:", daysDifference);
+        var level = result.level;
+        console.log("level", level);
+        var company_id = result.company_id;
+        console.log("company_id", company_id);
+        // var useremail = result.emails;
+        // console.log("useremail",useremail);
+        var expiration_days = daysDifference - eta_days;
+        console.log("expiration_days", expiration_days);
+
+        if (daysDifference > eta_days) {
+          var userEmail = result.emails;
+          console.log("userEmailsssss", userEmail);
+
+
+
+          const complaint_query = `SELECT complaint_assigned_users.complaint_id, complaint.created_at 
+        FROM complaint_assigned_users 
+        LEFT JOIN complaint ON complaint_assigned_users.complaint_id = complaint.id 
+        WHERE complaint_assigned_users.user_email = ?`;
+
+          const complaint_value = await query(complaint_query, [userEmail]);
+          console.log("complaint_value", complaint_value);
+
+          if (complaint_value && complaint_value.length > 0) {
+            // Accessing the first row of the result
+            const firstRow = complaint_value[0];
+
+            // Extracting complaint_id and created_at from the first row
+            var complaintId = firstRow.complaint_id;
+            console.log("complaintId", complaintId);
+
+            var createdAt = firstRow.created_at;
+            console.log("createdAt", createdAt);
+
+            console.log(`Complaints found for useremail ${userEmail}:`, complaint_value);
+          } else {
+            console.log(`No complaints found for useremail ${userEmail}`);
+          }
+
+
+
+
+          const leveluseremails = `SELECT emails FROM company_level_manage_users WHERE company_id = "${company_id}" AND level_user_type = 'manager'`;
+          const levelvalue = await query(leveluseremails);
+          var level_email = levelvalue[0].emails;
+          console.log("levelvalue", levelvalue[0].emails);
+          var expirationdays = daysDifference - eta_days;
+          console.log("expirationdays", expirationdays);
+
+          // const complaint_query = `SELECT complaint_assigned_users.complaint_id,complaint.created_at FROM complaint_assigned_users LEFT JOIN complaint ON complaint_assigned_users.complaint_id = complaint.id WHERE complaint_assigned_users.user_email = "${useremail}"`;
+
+
+
+          emailContent += `
+        <tr>
+            <td>${complaintId}</td>
+            <td>${level}</td>
+            <td>${userEmail}</td>
+            <td>${createdAt}</td>
+            <td>${expiration_days}</td>
+        </tr>
+    `;
+
+          // Construct the final HTML content including the dynamic rows
+          var htmlContent = `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+        <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
+            <tbody>
+                <tr>
+                    <td align="center" valign="top">
+                        <div id="template_header_image">
+                            <p style="margin-top: 0;"></p>
+                        </div>
+                        <table id="template_container" style="box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important; background-color: #fdfdfd; border: 1px solid #dcdcdc; border-radius: 3px !important;" border="0" cellpadding="0" cellspacing="0" width="600">
+                            <tbody>
+                                <tr>
+                                    <td align="center" valign="top">
+                                        <!-- Header -->
+                                        <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/logo.png" style="padding: 30px 40px; display: block;  width: 70px;" />
+                                                    </td>
+                                                    <td id="header_wrapper" style="padding: 36px 48px; display: block;">
+                                                        <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">ETA date expiration email</h1>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <!-- End Header -->
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="center" valign="top">
+                                        <!-- Body -->
+                                        <table id="template_body" border="0" cellpadding="0" cellspacing="0" width="600">
+                                            <tbody>
+                                                <tr>
+                                                    <td id="body_content" style="background-color: #fdfdfd;" valign="top">
+                                                        <!-- Content -->
+                                                        <table border="1" cellpadding="4" cellspacing="0" width="100%">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Complaint ID</th>
+                                                                    <th>Level</th>
+                                                                    <th>Assigned User</th>
+                                                                    <th>Complaint generation date</th>
+                                                                    <th>Number of expired days</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                ${emailContent} <!-- Dynamic rows for each user -->
+                                                            </tbody>
+                                                        </table>
+                                                        <!-- End Content -->
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <!-- End Body -->
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td align="center" valign="top">
+                                        <!-- Footer -->
+                                        <table id="template_footer" border="0" cellpadding="10" cellspacing="0" width="600">
+                                            <tbody>
+                                                <tr>
+                                                    <td style="padding: 0; -webkit-border-radius: 6px;" valign="top">
+                                                        <table border="0" cellpadding="10" cellspacing="0" width="100%">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
+                                                                        <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology</a></p>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <!-- End Footer -->
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>`;
+
+
+        }
+      }
+      var mailOptions = {
+        from: process.env.MAIL_USER,
+        //to: 'dev2.scwt@gmail.com',
+        to: level_email,
+        subject: 'ETA date expiration email',
+        html: htmlContent
+      }
+      await mdlconfig.transporter.sendMail(mailOptions, function (err, info) {
+        if (err) {
+          console.log(err);
+          return res.send({
+            status: 'not ok',
+            message: 'Something went wrong'
+          });
+        } else {
+          console.log('Mail Send: ', info.response);
+          return res.send({
+            status: 'ok',
+            message: 'Flag Approve'
+          });
+        }
+      })
+      console.log(`Email sent to ${level_email} because days difference (${daysDifference}) is greater than ETA days (${eta_days})`);
+      return results;
+    }
+  } catch (error) {
+    console.error("Error:", error);
+  }
+}
+//sendemailtolevelUsers()
+
 module.exports = {
   getFaqPage,
   getFaqPages,
@@ -7828,12 +8683,15 @@ module.exports = {
   getuserslistofescalatecategory,//
   getAllComplaintsByUserId,
   getAllComplaintsByComplaintId,
+  getAllComplaintsByCompanyuserId,//
   updateComplaintStatus,
+  updateresolveComplaintStatus,//
   complaintEmailToCompany,
   complaintCompanyResponseEmail,
   complaintScheduleEmail,
   getAllPremiumCompany,
   complaintSuccessEmailToUser,
+  complaintEmailToCompanylevelUsers,//
   complaintCompanyResolvedEmail,
   updateUserNotificationStatus,
   updateCompanyrNotificationStatus,
@@ -7893,5 +8751,10 @@ module.exports = {
   userActivation,
   userActivationmailtoAdmin,
   companyActivationmailtoAdmin,
-  reviewActivationmailtoAdmin
+  reviewActivationmailtoAdmin,
+  getcomplaintHistory,//
+  getresolvedcomplaints,
+  getreopencomplaints,
+  getlevelusersres,
+  sendemailtolevelUsers,//
 };
