@@ -207,18 +207,18 @@ router.get('', checkCookieValue, async (req, res) => {
 
     try {
         // Make API request to fetch blog posts
-        // const apiUrl = process.env.BLOG_API_ENDPOINT + '/home-blog';
-        // const response = await axios.get(apiUrl);
-        // const blogPosts = response.data;
-        // const restructuredResponse = {
-        //         "status": blogPosts.status,
-        //         "data": blogPosts.data.map(item => ({
-        //         ...item,
-        //     "title": decodeHTMLEntities(item.title)
-        // })),
-        //         "success_message": blogPosts.success_message,
-        //         "error_message": blogPosts.error_message
-        // };
+        const apiUrl = process.env.BLOG_API_ENDPOINT + '/home-blog';
+        const response = await axios.get(apiUrl);
+        const blogPosts = response.data;
+        const restructuredResponse = {
+                "status": blogPosts.status,
+                "data": blogPosts.data.map(item => ({
+                ...item,
+            "title": decodeHTMLEntities(item.title)
+        })),
+                "success_message": blogPosts.success_message,
+                "error_message": blogPosts.error_message
+        };
         //console.log('restructuredResponse', restructuredResponse);
 
         const sql = `SELECT * FROM page_info where secret_Key = 'home' AND country= "${country_code}"`;
@@ -274,7 +274,7 @@ router.get('', checkCookieValue, async (req, res) => {
                         menu_active_id: 'landing',
                         page_title: home.title,
                         currentUserData: currentUserData,
-                        //homePosts: restructuredResponse.status === 'ok' ? restructuredResponse.data : [],
+                        homePosts: restructuredResponse.status === 'ok' ? restructuredResponse.data : [],
                         home,
                         meta_values_array,
                         featured_comps,
