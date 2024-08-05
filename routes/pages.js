@@ -274,7 +274,7 @@ router.get('', checkCookieValue, async (req, res) => {
                         menu_active_id: 'landing',
                         page_title: home.title,
                         currentUserData: currentUserData,
-                        homePosts: restructuredResponse.status === 'ok' ? restructuredResponse.data : [],
+                        //homePosts: restructuredResponse.status === 'ok' ? restructuredResponse.data : [],
                         home,
                         meta_values_array,
                         featured_comps,
