@@ -9393,7 +9393,7 @@ exports.updateEnterprise = async (req, res) => {
 //Insert Company Query and  to user
 //Insert Company Query and  to user
 exports.companyQuery = async (req, res) => {
-    //console.log('companyQuery',req.body ); 
+    console.log('companyQuery',req.body ); 
     //return false;
     const { company_id, user_id, complaint_id, message, complaint_status, complaint_level, company_slug } = req.body;
 
@@ -9405,19 +9405,65 @@ exports.companyQuery = async (req, res) => {
     // } else {
     //     await comFunction2.complaintCompanyResponseEmail(complaint_id)
     // }
+
+    const getusercomquery = `SELECT user_id FROM complaint WHERE id="${complaint_id}"`;
+    const getusercompval = await query(getusercomquery);
+    if(getusercompval.length>0){
+        var user_comp_id = getusercompval[0].user_id;
+        console.log("user_comp_id",user_comp_id);
+        
+    }
+
+    var usernamequery = `SELECT first_name, last_name,email FROM users WHERE user_id = "${user_comp_id}"`;
+    var usernameval = await query(usernamequery);
+    console.log("usernameval",usernameval);
+
+    if (usernameval.length > 0) {
+        const firstName = usernameval[0].first_name;
+        const lastName = usernameval[0].last_name;
+        var email_val = usernameval[0].email;
+        var fullName = firstName + ' ' + lastName;
+        console.log("Full Name:", fullName);
+        console.log("email_val",email_val);
+        
+      } else {
+        console.log("No user found with the provided ID.");
+      }
+
+      var complaintquery = `SELECT ticket_id,created_at FROM complaint WHERE id="${complaint_id}"`;
+      var complaintval = await query(complaintquery);
+      console.log("complaintval",complaintval);
+
+      var ticketid = complaintval[0].ticket_id;
+      var complainttime = complaintval[0].created_at;
+      console.log("ticketid",ticketid);
+      console.log("complainttime",complainttime);
+
+      var dateObject = new Date(complainttime);
+      var dateOnly = dateObject.toISOString().split('T')[0];
+
+      var maskedTicketId = ticketid.substring(0, 4) + 'xxxx';
     if (complaint_status == '0') {
         // Reopen complaint and send an email
         const [updateComplaintStatus, sendEmail] = await Promise.all([
             comFunction2.updateComplaintStatus(complaint_id, '0'),
             comFunction2.complaintUserReopenEmail(complaint_id),
+           
         ]);
-
+        await comFunction2.complaintcompanyuserResponseEmail(complaint_id)
         console.log('Complaint reopened and email sent.');
     } else if (complaint_status == '1') {
         await comFunction2.complaintUserResponseEmail(complaint_id);
         await comFunction2.updateresolveComplaintStatus(complaint_id, '1');
 
+        await comFunction2.complaintcompanyuserResponseEmail(complaint_id,fullName,maskedTicketId,dateOnly,email_val)
+
         console.log('Complaint resolved and email sent.');
+    }
+    else if(complaint_status == '2'){
+        await comFunction2.complaintcompanyuserResponseEmail(complaint_id,fullName,maskedTicketId,dateOnly,email_val)
+
+        console.log('Complaint 2 status and email sent.');
     }
 
     const currentDate = new Date();
