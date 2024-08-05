@@ -543,13 +543,14 @@
                               <div class="autofield-dropdown-review"></div>
                             </div>
                           </div>
+                          <% var countrynames = 'JP' %>
                           <div class="col-md-12">
                             <div class="custom-form">
                               <select name="main_address_country" id="country_review" class="form-control" required>
-                                <option value="" disabled <% if (!countryname) { %>selected<% } %>>Select a country
+                                <option value="" disabled <% if (!countrynames) { %>selected<% } %>>Select a country
                                 </option>
                                 <% getCountries.forEach(function(country) { %>
-                                  <option value="<%= country.shortname %>" <%=country.shortname==countryname
+                                  <option value="<%= country.shortname %>" <%=country.shortname==countrynames
                                     ? 'selected' : '' %>><%= country.name %>
                                   </option>
                                   <% }); %>
