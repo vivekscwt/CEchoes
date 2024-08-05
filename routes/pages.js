@@ -3317,6 +3317,214 @@ router.get('/company/:slug', checkCookieValue, async (req, res) => {
 
 });
 
+router.get('/home/company/:slug', checkCookieValue, async (req, res) => {
+    const slug = req.params.slug;
+    console.log("slug", slug);
+    const labeltype = req.query.type || null;
+    console.log(labeltype)
+    let currentUserData = JSON.parse(req.userData);
+    const apiKey = process.env.GEO_LOCATION_API_KEY;
+    console.log("apiKey", apiKey);
+
+    const comp_res = await comFunction2.getCompanyIdBySlug(slug);
+    console.log("comp_res", comp_res);
+
+    if (typeof comp_res == 'undefined') {
+        const [globalPageMeta] = await Promise.all([
+            comFunction2.getPageMetaValues('global'),
+        ]);
+        res.render('front-end/404', {
+            menu_active_id: '404',
+            page_title: '404',
+            currentUserData,
+            globalPageMeta: globalPageMeta
+        });
+    } else {
+        console.log('comp_res', comp_res);
+        const companyID = comp_res.ID;
+        console.log("fggfgh");
+        // console.log(companyID);
+        // countInvitationLabels 1=No Labels,2=Invitation
+        const [allRatingTags, CompanyInfo, companyReviewNumbers, getCompanyReviews, globalPageMeta, PremiumCompanyData, CompanyPollDetails, countInvitationLabels, CompanySurveyDetails, CompanySurveySubmitionsCount, getCompanyCategory] = await Promise.all([
+            comFunction.getAllRatingTags(),
+            comFunction.getCompany(companyID),
+            comFunction.getCompanyReviewNumbers(companyID),
+            comFunction.getCompanyReviews(companyID),
+            comFunction2.getPageMetaValues('global'),
+            comFunction2.getPremiumCompanyData(companyID),
+            comFunction2.getCompanyPollDetails(companyID),
+            comFunction2.countInvitationLabels('2', companyID),
+            comFunction.getCompanyOngoingSurveyDetails(companyID),
+            comFunction.getCompanySurveySubmitionsCount(),
+            comFunction2.getCompanyCategory(companyID),
+        ]);
+
+        // console.log(get_company_id.ID)
+        // console.log(slug)
+        // return false;
+        // console.log("CompanyInfo",CompanyInfo);
+
+
+        let cover_img = '';
+        let youtube_iframe = '';
+        let gallery_img = [];
+        let products = [];
+        let promotions = [];
+        let facebook_url = '';
+        let twitter_url = '';
+        let instagram_url = '';
+        let linkedin_url = '';
+        let youtube_url = '';
+        let support_data = {};
+
+        if (typeof PremiumCompanyData !== 'undefined') {
+            cover_img = PremiumCompanyData.cover_img;
+            youtube_iframe = PremiumCompanyData.youtube_iframe;
+            gallery_img = JSON.parse(PremiumCompanyData.gallery_img);
+            products = JSON.parse(PremiumCompanyData.products);
+            promotions = JSON.parse(PremiumCompanyData.promotions);
+            facebook_url = PremiumCompanyData.facebook_url;
+            twitter_url = PremiumCompanyData.twitter_url;
+            instagram_url = PremiumCompanyData.instagram_url;
+            linkedin_url = PremiumCompanyData.linkedin_url;
+            youtube_url = PremiumCompanyData.youtube_url;
+            support_data = { support_email: PremiumCompanyData.support_email, escalation_one: PremiumCompanyData.escalation_one, escalation_two: PremiumCompanyData.escalation_two, escalation_three: PremiumCompanyData.escalation_three }
+
+        }
+        console.log("products", products);
+
+        if (CompanyInfo) {
+            //console.log("CompanyInfo",CompanyInfo);
+            //if (CompanyInfo.paid_status.trim() == 'paid' && CompanyInfo.membership_type_id) {
+            if (CompanyInfo.paid_status && CompanyInfo.paid_status.trim() === 'paid' && CompanyInfo.membership_type_id) {
+                console.log("bbbbbbbbbb");
+                const PollDetails = CompanyPollDetails.map((row) => ({
+                    poll_id: row.id,
+                    company_id: row.company_id,
+                    poll_creator_id: row.poll_creator_id,
+                    created_at: row.created_at,
+                    expired_at: row.expired_at,
+                    question: row.question,
+                    poll_answer: row.poll_answer ? row.poll_answer.split(',') : [],
+                    poll_answer_id: row.poll_answer_id ? row.poll_answer_id.split(',') : [],
+                    voting_answer_id: row.voting_answer_id ? row.voting_answer_id.split(',') : [],
+                    voting_user_id: row.voting_user_id ? row.voting_user_id.split(',') : [],
+                }));
+
+
+                const submitionsCountMap = CompanySurveySubmitionsCount.reduce((map, item) => {
+                    map[item.survey_unique_id] = item;
+                    return map;
+                }, {});
+
+                const CompanySurveyDetails_formatted = CompanySurveyDetails.map(detail => ({
+                    ...detail,
+                    ...(submitionsCountMap[detail.unique_id] || {}) // Add submitionsCount if it exists
+                }));
+
+                // res.json(
+                // {
+                //     menu_active_id: 'company',
+                //     page_title: 'Organization Details',
+                //     currentUserData,
+                //     allRatingTags,
+                //     company:CompanyInfo,
+                //     CompanyInfo,
+                //     companyReviewNumbers,
+                //     getCompanyReviews,
+                //     globalPageMeta:globalPageMeta,
+                //     cover_img:cover_img,
+                //     gallery_img:gallery_img,
+                //     youtube_iframe:youtube_iframe,
+                //     products:products,
+                //     promotions:promotions,
+                //     facebook_url:facebook_url,
+                //     twitter_url:twitter_url,
+                //     instagram_url:instagram_url,
+                //     linkedin_url:linkedin_url,
+                //     youtube_url:youtube_url,
+                //     support_data:support_data,
+                //     PollDetails,
+                //     labeltype,
+                //     countInvitationLabels,
+                //     CompanySurveyDetails_formatted,
+                //     CompanyCategory:getCompanyCategory
+                // });
+                res.render('front-end/category-details-premium',
+                    {
+                        menu_active_id: 'company',
+                        page_title: 'Organization Details',
+                        currentUserData,
+                        allRatingTags,
+                        company: CompanyInfo,
+                        CompanyInfo,
+                        companyReviewNumbers,
+                        getCompanyReviews,
+                        globalPageMeta: globalPageMeta,
+                        cover_img: cover_img,
+                        gallery_img: gallery_img,
+                        youtube_iframe: youtube_iframe,
+                        products: products,
+                        promotions: promotions,
+                        facebook_url: facebook_url,
+                        twitter_url: twitter_url,
+                        instagram_url: instagram_url,
+                        linkedin_url: linkedin_url,
+                        youtube_url: youtube_url,
+                        support_data: support_data,
+                        PollDetails,
+                        labeltype,
+                        countInvitationLabels,
+                        CompanySurveyDetails_formatted,
+                        CompanyCategory: getCompanyCategory
+                    });
+            } else {
+                console.log("aaaaa");
+                // res.json(
+                // {
+                //     menu_active_id: 'company',
+                //     page_title: 'Organization Details',
+                //     currentUserData,
+                //     allRatingTags,
+                //     company:CompanyInfo,
+                //     CompanyInfo,
+                //     companyReviewNumbers,
+                //     getCompanyReviews,
+                //     globalPageMeta:globalPageMeta,
+                //     labeltype,
+                //     countInvitationLabels,
+                //     gallery_img:gallery_img
+                // });
+                res.render('front-end/company-details',
+                    {
+                        menu_active_id: 'company',
+                        page_title: 'Organization Details',
+                        currentUserData,
+                        allRatingTags,
+                        company: CompanyInfo,
+                        CompanyInfo,
+                        companyReviewNumbers,
+                        getCompanyReviews,
+                        globalPageMeta: globalPageMeta,
+                        labeltype,
+                        countInvitationLabels,
+                        gallery_img: gallery_img,
+                        CompanyCategory: getCompanyCategory
+                    });
+            }
+        } else {
+            res.render('front-end/404', {
+                menu_active_id: '404',
+                page_title: '404',
+                currentUserData,
+                globalPageMeta: globalPageMeta
+            });
+        }
+    }
+
+
+});
+
 // category listing page
 // router.get('/categories', checkCookieValue, async (req, res) => {
 //     let currentUserData = JSON.parse(req.userData);
