@@ -1802,9 +1802,8 @@
 
 
 
-        //console.log("country_name from server:", country_name);
-
-        var country_name = "IN";
+        var country_name = "<%= countryname %>";
+        console.log("country_name from server:", country_name);
 
         if (country_name) {
           $('#country').val(country_name).trigger('change');
