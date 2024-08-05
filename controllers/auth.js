@@ -9515,12 +9515,40 @@ exports.userComplaintRating = async (req, res) => {
 
 //Insert user Complaint Response  to company
 exports.userComplaintResponse = async (req, res) => {
-    //console.log('userComplaintResponse',req.body ); 
+    console.log('userComplaintResponse',req.body ); 
     //return false;
     const { company_id, user_id, complaint_id, message, complaint_level, complaint_status } = req.body;
+    
 
     const currentDate = new Date();
     const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ');
+
+    var usernamequery = `SELECT first_name, last_name FROM users WHERE user_id = "${user_id}"`;
+    var usernameval = await query(usernamequery);
+    console.log("usernameval",usernameval);
+
+    if (usernameval.length > 0) {
+        const firstName = usernameval[0].first_name;
+        const lastName = usernameval[0].last_name;
+        var fullName = firstName + ' ' + lastName;
+        console.log("Full Name:", fullName);
+      } else {
+        console.log("No user found with the provided ID.");
+      }
+
+      var complaintquery = `SELECT ticket_id,created_at FROM complaint WHERE id="${complaint_id}"`;
+      var complaintval = await query(complaintquery);
+      console.log("complaintval",complaintval);
+
+      var ticketid = complaintval[0].ticket_id;
+      var complainttime = complaintval[0].created_at;
+      console.log("ticketid",ticketid);
+      console.log("complainttime",complainttime);
+
+      var dateObject = new Date(complainttime);
+      var dateOnly = dateObject.toISOString().split('T')[0];
+
+      var maskedTicketId = ticketid.substring(0, 4) + 'xxxx';
 
 
     if (complaint_status == '0') {
@@ -9529,7 +9557,7 @@ exports.userComplaintResponse = async (req, res) => {
             comFunction2.complaintUserReopenEmail(complaint_id)
         ]);
     } else {
-        await comFunction2.complaintUserResponseEmail(complaint_id);
+        await comFunction2.complaintUserResponseEmail(complaint_id,fullName,maskedTicketId,dateOnly);
     }
 
     const data = {
@@ -10291,6 +10319,7 @@ exports.escalateNextLevel = async (req, res) => {
     LEFT JOIN users u ON u.user_id = c.user_id 
     LEFT JOIN company comp ON comp.ID = c.company_id 
     WHERE c.id = '${complaintId}' `;
+
     const results = await query(sql);
     const emails = JSON.parse(results[0].emails);
     var mailOptions = {

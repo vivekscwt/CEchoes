@@ -3842,7 +3842,7 @@ async function complaintCompanyResponseEmail(complaint_id) {
 }
 
 //Function send User Response Email  to company by complaint_id 
-async function complaintUserResponseEmail(complaint_id) {
+async function complaintUserResponseEmail(complaint_id,fullName,maskedTicketId,dateOnly) {
   const sql = `
   SELECT users.email, users.first_name, c.slug, complaint.ticket_id
   FROM users 
@@ -3857,15 +3857,11 @@ async function complaintUserResponseEmail(complaint_id) {
     if (results.length > 0) {
       var mailOptions = {
         from: process.env.MAIL_USER,
-        //to: 'pranab@scwebtech.com',
+        //to: 'dev2.scwt@gmail.com',
         to: results[0].email,
-        subject: `Email response from customer`,
+        //subject: `Email response from customer`,
+        subject: `Email response from ${fullName}`,
         html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
-        <style>
-            body, table, td, p, a, h1, h2, h3, h4, h5, h6, div {
-                font-family: Calibri, 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif !important;
-            }
-        </style>
         <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
          <tbody>
           <tr>
@@ -3879,9 +3875,9 @@ async function complaintUserResponseEmail(complaint_id) {
                    <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
                      <tbody>
                        <tr>
-                       <td><img alt="Logo" src="${process.env.MAIN_URL}front-end/images/cechoes-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+                       <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
                         <td id="header_wrapper" style="padding: 36px 48px; display: block;">
-                           <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Email response from customer </h1>
+                           <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Email response from ${fullName} </h1>
                         </td>
     
                        </tr>
@@ -3907,9 +3903,19 @@ async function complaintUserResponseEmail(complaint_id) {
                                 <table border="0" cellpadding="4" cellspacing="0" width="90%">
                                   <tr>
                                     <td colspan="2">
-                                    <strong>Hello ${results[0].first_name},</strong>
-                                    <p style="font-size:15px; line-height:20px">A customer has responded on your query. <a href="${process.env.MAIN_URL}company-compnaint-details/${results[0].slug}/${complaint_id}">Click here</a> to view datails.
+                                    <strong>Dear Sir/Madam,</strong>
+                                    <p style="font-size:15px; line-height:20px">This is to confirm that "${fullName}" has responded to the Complaint registered with ticket id: "${maskedTicketId}" on "${dateOnly}". <a href="${process.env.MAIN_URL}company-compnaint-details/${results[0].slug}/${complaint_id}">Click here</a> to view datails.
                                     </p>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td colspan="2">
+                                      <p style="font-size:15px; line-height:20px; margin-top: 10px;">
+                                        Thanks,
+                                      </p>
+                                      <p style="font-size:15px; line-height:20px; margin-top: 0;">
+                                        Admin Desk
+                                      </p>
                                     </td>
                                   </tr>
                                 </table>
@@ -3966,7 +3972,7 @@ async function complaintUserResponseEmail(complaint_id) {
             message: 'Something went wrong'
           });
         } else {
-          console.log('Mail Send: ', info.response);
+          console.log('Mail Send dev2.scwt@gmail.com: ', info.response);
 
         }
       })
