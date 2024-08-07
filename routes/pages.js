@@ -531,6 +531,8 @@ router.get('', checkCookieValue, async (req, res) => {
 
                 db.query(featured_sql, (featured_err, featured_result) => {
                     var featured_comps = featured_result;
+                    console.log("featured_comps",featured_comps);
+                    
                     // res.json( {
                     //     menu_active_id: 'landing',
                     //     page_title: home.title,
@@ -609,6 +611,7 @@ router.get('', checkCookieValue, async (req, res) => {
                         ORDER BY featured_companies.ordering ASC `;
                 db.query(featured_sql, (featured_err, featured_result) => {
                     var featured_comps = featured_result;
+                    console.log("featured_comps",featured_comps);
                     res.render('front-end/landing', {
                         menu_active_id: 'landing',
                         page_title: home.title,
@@ -811,6 +814,7 @@ router.get('/home/:getcountryhome', checkCookieValue, async (req, res) => {
 
                 db.query(featured_sql, (featured_err, featured_result) => {
                     var featured_comps = featured_result;
+                    console.log("featured_comps",featured_comps);
                     res.render('front-end/us_landing', {
                         menu_active_id: 'landing',
                         page_title: home.title,
@@ -867,6 +871,7 @@ router.get('/home/:getcountryhome', checkCookieValue, async (req, res) => {
                     ORDER BY featured_companies.ordering ASC `;
                 db.query(featured_sql, (featured_err, featured_result) => {
                     var featured_comps = featured_result;
+                    console.log("featured_comps",featured_comps);
                     res.render('front-end/us_landing', {
                         menu_active_id: 'landing',
                         page_title: home.title,

@@ -455,13 +455,13 @@
                       <% featured_comps.forEach( company=> { %>
                         <div class="item">
                           <div class="feature-box">
-                            <a href="/company/<%= company.slug %>"><img src="/<%= company.logo %>" alt="img" width="118"
+                            <a href="/company/<%= company[0].slug %>"><img src="/<%= company[0].logo %>" alt="img" width="118"
                                 height="45" class="mx-auto"></a>
                             <h5>
-                              <%= company.company_name %>
+                              <%= company[0].company_name %>
                             </h5>
                             <p class="m-0">
-                              <% var txt=company.short_desc; %>
+                              <% var txt=company[0].short_desc; %>
                                 <% if(txt.length> 100) {
                                   txt = txt.substr(0,100) + "...";
                                   } %>
