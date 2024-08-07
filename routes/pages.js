@@ -605,7 +605,7 @@ router.get('', checkCookieValue, async (req, res) => {
                     meta_values_array[item.page_meta_key] = item.page_meta_value;
                 })
 
-                const featured_sql = `SELECT featured_companies.id,featured_companies.company_id,featured_companies.short_desc,featured_companies.link,company.logo,company.company_name FROM featured_companies 
+                const featured_sql = `SELECT featured_companies.id,featured_companies.company_id,featured_companies.short_desc,featured_companies.link,company.slug,company.logo,company.company_name FROM featured_companies 
                         JOIN company ON featured_companies.company_id = company.ID 
                         WHERE featured_companies.status = 'active' 
                         ORDER BY featured_companies.ordering ASC `;
@@ -10668,7 +10668,7 @@ router.get('/view-featured-companies', checkLoggedIn, async (req, res) => {
     try {
         const encodedUserData = req.cookies.user;
         const currentUserData = JSON.parse(encodedUserData);
-        const featured_sql = `SELECT featured_companies.id,featured_companies.company_id,featured_companies.status,featured_companies.ordering,featured_companies.short_desc,featured_companies.link,company.logo,company.company_name FROM featured_companies 
+        const featured_sql = `SELECT featured_companies.id,featured_companies.company_id,featured_companies.status,featured_companies.ordering,featured_companies.short_desc,featured_companies.link,company.logo, ,company.slug, company.company_name FROM featured_companies 
                         JOIN company ON featured_companies.company_id = company.ID 
                         ORDER BY featured_companies.ordering ASC `;
 
