@@ -3985,6 +3985,32 @@ async function complaintUserResponseEmail(complaint_id,fullName,maskedTicketId,d
   }
 }
 
+async function updateresolveComplaintStatus(complaint_id, status) {
+
+  const currentDate = new Date();
+  const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ');
+
+  const sql = `
+  UPDATE complaint SET status='${status}' WHERE id = '${complaint_id}'
+  `;
+  
+  //const deleteAssignedUsersSql = `DELETE FROM complaint_assigned_users WHERE complaint_id = ?`;//new
+
+  try {
+    //const assignuservalue= await query(deleteAssignedUsersSql, [complaint_id]);
+    const results = await query(sql);
+    var history_details = `The complaint ${complaint_id} has resolved on "${formattedDate}".`
+    //console.log("history_details",history_details);
+    const updatequery = `INSERT INTO complaint_history SET history_details =?,complaint_id=?,created_at=?`;
+    const updatevalue = await query(updatequery,[history_details,complaint_id,formattedDate]);
+    return true;
+  }
+  catch (error) {
+    console.error('Error during fetch all complaint details: ', error);
+
+  }
+}
+
 async function complaintcompanyuserResponseEmail(complaint_id,fullName,maskedTicketId,dateOnly,email_val) {
   const sql = `
   SELECT users.email, users.first_name, c.slug, complaint.ticket_id
@@ -4049,7 +4075,7 @@ async function complaintcompanyuserResponseEmail(complaint_id,fullName,maskedTic
                                   <tr>
                                     <td colspan="2">
                                     <strong>Dear Sir/Madam,</strong>
-                                    <p style="font-size:15px; line-height:20px">This is to confirm that "${fullName}" has responded to the Complaint registered with ticket id: "${maskedTicketId}" on "${dateOnly}". <a href="${process.env.MAIN_URL}company-compnaint-details/${results[0].slug}/${complaint_id}">Click here</a> to view datails.
+                                    <p style="font-size:15px; line-height:20px">This is to confirm that "${fullName}" has responded to the Complaint registered with ticket id: "${maskedTicketId}" on "${dateOnly}". <a href="${process.env.MAIN_URL}user-compnaint-details/${complaint_id}">Click here</a> to view datails.
                                     </p>
                                     </td>
                                   </tr>
@@ -7990,6 +8016,7 @@ module.exports = {
   updateUserNotificationStatus,
   updateCompanyrNotificationStatus,
   complaintUserResponseEmail,
+  updateresolveComplaintStatus,//
   complaintcompanyuserResponseEmail,//
   complaintUserReopenEmail,
   sendSurveyInvitationEmail,

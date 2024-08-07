@@ -9406,11 +9406,18 @@ exports.companyQuery = async (req, res) => {
     //     await comFunction2.complaintCompanyResponseEmail(complaint_id)
     // }
 
-    const getusercomquery = `SELECT user_id FROM complaint WHERE id="${complaint_id}"`;
+    const getusercomquery = `SELECT claimed_by FROM company_claim_request WHERE company_id="${company_id}"`;
     const getusercompval = await query(getusercomquery);
     if(getusercompval.length>0){
-        var user_comp_id = getusercompval[0].user_id;
+        var user_comp_id = getusercompval[0].claimed_by;
         console.log("user_comp_id",user_comp_id);
+        
+    }
+    const getuserquery = `SELECT user_id FROM complaint WHERE id="${complaint_id}"`;
+    const getuscompval = await query(getuserquery);
+    if(getuscompval.length>0){
+        var user_comp_ids = getuscompval[0].user_id;
+        console.log("user_comp_id",user_comp_ids);
         
     }
 
@@ -9421,14 +9428,19 @@ exports.companyQuery = async (req, res) => {
     if (usernameval.length > 0) {
         const firstName = usernameval[0].first_name;
         const lastName = usernameval[0].last_name;
-        var email_val = usernameval[0].email;
         var fullName = firstName + ' ' + lastName;
         console.log("Full Name:", fullName);
-        console.log("email_val",email_val);
+        // console.log("email_val",email_val);
         
       } else {
         console.log("No user found with the provided ID.");
       }
+
+      var usernamesquery = `SELECT first_name, last_name,email FROM users WHERE user_id = "${user_comp_ids}"`;
+      var usernamesval = await query(usernamesquery);
+      console.log("usernamesval",usernamesval);
+      var email_val = usernamesval[0].email;
+      console.log("email_val",email_val);
 
       var complaintquery = `SELECT ticket_id,created_at FROM complaint WHERE id="${complaint_id}"`;
       var complaintval = await query(complaintquery);
