@@ -9436,7 +9436,7 @@ exports.updateEnterprise = async (req, res) => {
 //Insert Company Query and  to user
 //Insert Company Query and  to user
 exports.companyQuery = async (req, res) => {
-    //console.log('companyQuery',req.body ); 
+    console.log('companyQuery',req.body ); 
     //return false;
     const { company_id, user_id, complaint_id, message, complaint_status, complaint_level, company_slug } = req.body;
 
@@ -9448,19 +9448,77 @@ exports.companyQuery = async (req, res) => {
     // } else {
     //     await comFunction2.complaintCompanyResponseEmail(complaint_id)
     // }
+
+    const getusercomquery = `SELECT claimed_by FROM company_claim_request WHERE company_id="${company_id}"`;
+    const getusercompval = await query(getusercomquery);
+    if(getusercompval.length>0){
+        var user_comp_id = getusercompval[0].claimed_by;
+        console.log("user_comp_id",user_comp_id);
+        
+    }
+    const getuserquery = `SELECT user_id FROM complaint WHERE id="${complaint_id}"`;
+    const getuscompval = await query(getuserquery);
+    if(getuscompval.length>0){
+        var user_comp_ids = getuscompval[0].user_id;
+        console.log("user_comp_id",user_comp_ids);
+        
+    }
+
+    var usernamequery = `SELECT first_name, last_name,email FROM users WHERE user_id = "${user_comp_id}"`;
+    var usernameval = await query(usernamequery);
+    console.log("usernameval",usernameval);
+
+    if (usernameval.length > 0) {
+        const firstName = usernameval[0].first_name;
+        const lastName = usernameval[0].last_name;
+        var fullName = firstName + ' ' + lastName;
+        console.log("Full Name:", fullName);
+        // console.log("email_val",email_val);
+        
+      } else {
+        console.log("No user found with the provided ID.");
+      }
+
+      var usernamesquery = `SELECT first_name, last_name,email FROM users WHERE user_id = "${user_comp_ids}"`;
+      var usernamesval = await query(usernamesquery);
+      console.log("usernamesval",usernamesval);
+      var email_val = usernamesval[0].email;
+      console.log("email_val",email_val);
+
+      var complaintquery = `SELECT ticket_id,created_at FROM complaint WHERE id="${complaint_id}"`;
+      var complaintval = await query(complaintquery);
+      console.log("complaintval",complaintval);
+
+      var ticketid = complaintval[0].ticket_id;
+      var complainttime = complaintval[0].created_at;
+      console.log("ticketid",ticketid);
+      console.log("complainttime",complainttime);
+
+      var dateObject = new Date(complainttime);
+      var dateOnly = dateObject.toISOString().split('T')[0];
+
+      var maskedTicketId = ticketid.substring(0, 4) + 'xxxx';
     if (complaint_status == '0') {
         // Reopen complaint and send an email
         const [updateComplaintStatus, sendEmail] = await Promise.all([
             comFunction2.updateComplaintStatus(complaint_id, '0'),
             comFunction2.complaintUserReopenEmail(complaint_id),
+           
         ]);
-
+        await comFunction2.complaintcompanyuserResponseEmail(complaint_id)
         console.log('Complaint reopened and email sent.');
     } else if (complaint_status == '1') {
         await comFunction2.complaintUserResponseEmail(complaint_id);
         await comFunction2.updateresolveComplaintStatus(complaint_id, '1');
 
+        await comFunction2.complaintcompanyuserResponseEmail(complaint_id,fullName,maskedTicketId,dateOnly,email_val)
+
         console.log('Complaint resolved and email sent.');
+    }
+    else if(complaint_status == '2'){
+        await comFunction2.complaintcompanyuserResponseEmail(complaint_id,fullName,maskedTicketId,dateOnly,email_val)
+
+        console.log('Complaint 2 status and email sent.');
     }
 
     const currentDate = new Date();
@@ -9558,12 +9616,40 @@ exports.userComplaintRating = async (req, res) => {
 
 //Insert user Complaint Response  to company
 exports.userComplaintResponse = async (req, res) => {
-    //console.log('userComplaintResponse',req.body ); 
+    console.log('userComplaintResponse',req.body ); 
     //return false;
     const { company_id, user_id, complaint_id, message, complaint_level, complaint_status } = req.body;
+    
 
     const currentDate = new Date();
     const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ');
+
+    var usernamequery = `SELECT first_name, last_name FROM users WHERE user_id = "${user_id}"`;
+    var usernameval = await query(usernamequery);
+    console.log("usernameval",usernameval);
+
+    if (usernameval.length > 0) {
+        const firstName = usernameval[0].first_name;
+        const lastName = usernameval[0].last_name;
+        var fullName = firstName + ' ' + lastName;
+        console.log("Full Name:", fullName);
+      } else {
+        console.log("No user found with the provided ID.");
+      }
+
+      var complaintquery = `SELECT ticket_id,created_at FROM complaint WHERE id="${complaint_id}"`;
+      var complaintval = await query(complaintquery);
+      console.log("complaintval",complaintval);
+
+      var ticketid = complaintval[0].ticket_id;
+      var complainttime = complaintval[0].created_at;
+      console.log("ticketid",ticketid);
+      console.log("complainttime",complainttime);
+
+      var dateObject = new Date(complainttime);
+      var dateOnly = dateObject.toISOString().split('T')[0];
+
+      var maskedTicketId = ticketid.substring(0, 4) + 'xxxx';
 
 
     if (complaint_status == '0') {
@@ -9572,7 +9658,7 @@ exports.userComplaintResponse = async (req, res) => {
             comFunction2.complaintUserReopenEmail(complaint_id)
         ]);
     } else {
-        await comFunction2.complaintUserResponseEmail(complaint_id);
+        await comFunction2.complaintUserResponseEmail(complaint_id,fullName,maskedTicketId,dateOnly);
     }
 
     const data = {
@@ -10334,6 +10420,7 @@ exports.escalateNextLevel = async (req, res) => {
     LEFT JOIN users u ON u.user_id = c.user_id 
     LEFT JOIN company comp ON comp.ID = c.company_id 
     WHERE c.id = '${complaintId}' `;
+
     const results = await query(sql);
     const emails = JSON.parse(results[0].emails);
     var mailOptions = {
