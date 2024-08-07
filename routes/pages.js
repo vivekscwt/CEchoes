@@ -10784,6 +10784,55 @@ router.get('/register-complaint', checkFrontEndLoggedIn, async (req, res) => {
     //res.render('front-end/terms-of-service', { menu_active_id: 'terms-of-service', page_title: 'Terms Of Service', currentUserData });
 });
 
+router.get('/register-complaint/:getcountryname', checkFrontEndLoggedIn, async (req, res) => {
+    const encodedUserData = req.cookies.user;
+    const currentUserData = JSON.parse(encodedUserData);
+    
+
+    const getcountryname = req.params.getcountryname;
+    console.log("getcountrynamebusiness",getcountryname);
+
+    if (currentUserData) {
+        var user_id = currentUserData.user_id;
+        console.log("user_id", user_id);
+        var encryptedEmail = await comFunction2.encryptEmail(currentUserData.email);
+        console.log("encryptedEmail",encryptedEmail);
+    }
+    const api_key = process.env.GEO_LOCATION_API_KEY;
+    let country_name = req.cookies.countryName || 'India';
+    let country_code = req.cookies.countryCode || 'IN';
+    console.log("country_names", country_name);
+    console.log("country_codes", country_code);
+
+    if (country_code != 'UK' && country_code != 'JP') {
+        country_code = 'US';
+    }
+
+    const [globalPageMeta, PageMetaValues, getAllPremiumCompany, getCountries] = await Promise.all([
+        comFunction2.getPageMetaValues('global'),
+        comFunction2.getPageMetaValues('complaint'),
+        comFunction2.getAllPremiumCompany(),
+        comFunction.getCountries()
+    ]);
+    console.log("getCountries",getCountries);
+    try {
+
+        res.render('front-end/register-complain', {
+            menu_active_id: 'register-complaint',
+            page_title: 'Complaint Registration',
+            currentUserData,
+            globalPageMeta: globalPageMeta,
+            meta_values_array: PageMetaValues,
+            AllCompany: getAllPremiumCompany,
+            getCountries: getCountries
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('An error occurred');
+    }
+    //res.render('front-end/terms-of-service', { menu_active_id: 'terms-of-service', page_title: 'Terms Of Service', currentUserData });
+});
+
 //register complaint page
 router.get('/register-cechoes-complaint', checkFrontEndLoggedIn, async (req, res) => {
     const encodedUserData = req.cookies.user;
