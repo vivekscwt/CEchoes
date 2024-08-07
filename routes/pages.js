@@ -5229,6 +5229,9 @@ router.get('/update-survey/:slug/:survey_id', checkClientClaimedCompany, async (
             ...detail,
             ...(submitionsCountMap[detail.unique_id] || {}) // Add submitionsCount if it exists
         }));
+
+        console.log("CompanySurveyDetails_formatted",CompanySurveyDetails_formatted);
+        
         // res.json(
         // { 
         //     menu_active_id: 'survey',

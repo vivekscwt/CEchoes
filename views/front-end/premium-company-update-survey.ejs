@@ -39,14 +39,8 @@
                      %>
 
                      <% const daysDiff = Math.round((date - date2)/(1000 * 60 * 60 * 24)) %>
-                     <% if( SurveyAnswerCount[0].total_ans > 0 ){ %>
-                        
-                              <div class="each_box update_basic_information all_review_listing_for_company">
-                                 <h5>Cannot update survey because participants have already participated.</h5>
-                              </div>
-                           <div style="width: 85%; text-align: center; display: block; border: 2px solid #fccb06; padding: 6px; margin: 0 auto; border-radius: 5px; display: none;" class="poll-create-message"></div>
-                       
-                    <% } else { %>
+
+                     
                      <div class="create-survey-field">
                         
                      <%= //jsonString %>
@@ -272,7 +266,8 @@
                         </div>
                         <div style="width: 85%; text-align: center; display: block; border: 2px solid #fccb06; padding: 6px; margin: 0 auto; border-radius: 5px; display: none;" class="poll-create-message"></div>
                      </div>
-                     <% } %>       
+
+
                   <% } %>
 
             <% }else{ %>

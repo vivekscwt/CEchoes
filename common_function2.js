@@ -7066,6 +7066,20 @@ function getSurveyDetails(surveyId) {
   });
 }
 
+// async function getSurveyDetailsByUniqueId(unique_id) {
+//   const get_company_survey_details_query = `
+//   SELECT survey.*
+//   FROM survey
+//   WHERE survey.unique_id = ${unique_id};
+//   `;
+//   try {
+//     const get_company_survey_details_result = await query(get_company_survey_details_query);
+//     return get_company_survey_details_result;
+//   } catch (error) {
+//     return 'Error during user get_survey_details_query:' + error;
+//   }
+// }
+
 async function getSurveyDetailsByUniqueId(unique_id) {
   const get_company_survey_details_query = `
   SELECT survey.*
