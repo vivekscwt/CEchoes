@@ -505,7 +505,7 @@ router.get('', checkCookieValue, async (req, res) => {
                 "success_message": blogPosts.success_message,
                 "error_message": blogPosts.error_message
         };
-        //console.log('restructuredResponse', restructuredResponse);
+        console.log('restructuredResponse', restructuredResponse);
 
         const sql = `SELECT * FROM page_info where secret_Key = 'home' AND country= "${country_code}"`;
         db.query(sql, (err, results, fields) => {
