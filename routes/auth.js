@@ -366,6 +366,8 @@ router.post('/add-comment', authController.addComment);
 
 router.post('/edit-discussion', authController.editDiscussion);
 
+router.post('/edit-comment',authController.editDiscussioncomment);
+
 //Create create-company-category
 router.post('/create-company-category',upload.fields([
 

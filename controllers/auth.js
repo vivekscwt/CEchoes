@@ -2156,9 +2156,9 @@ exports.createCompany = async (req, res) => {
                 console.log('companySlug', companySlug);
                 var insert_values = [];
                 if (req.file) {
-                    insert_values = [currentUserData.user_id, req.body.company_name, req.body.heading, req.file.filename, req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, req.body.status, req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.main_address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug, req.body.parent_id,'0'];
+                    insert_values = [currentUserData.user_id, req.body.company_name, req.body.heading, req.file.filename, req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, req.body.status, req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.main_address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug, req.body.parent_id, '0'];
                 } else {
-                    insert_values = [currentUserData.user_id, req.body.company_name, req.body.heading, '', req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, req.body.status, req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.main_address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug, req.body.parent_id,'0'];
+                    insert_values = [currentUserData.user_id, req.body.company_name, req.body.heading, '', req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, req.body.status, req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.main_address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug, req.body.parent_id, '0'];
                 }
 
                 const insertQuery = 'INSERT INTO company (user_created_by, company_name, heading, logo, about_company, comp_phone, comp_email, comp_registration_id, status, trending, created_date, updated_date, tollfree_number, main_address, main_address_pin_code, address_map_url, main_address_country, main_address_state, main_address_city, verified, paid_status, slug,parent_id,temp_comp_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)';
@@ -9436,7 +9436,7 @@ exports.updateEnterprise = async (req, res) => {
 //Insert Company Query and  to user
 //Insert Company Query and  to user
 exports.companyQuery = async (req, res) => {
-    console.log('companyQuery',req.body ); 
+    console.log('companyQuery', req.body);
     //return false;
     const { company_id, user_id, complaint_id, message, complaint_status, complaint_level, company_slug } = req.body;
 
@@ -9451,22 +9451,22 @@ exports.companyQuery = async (req, res) => {
 
     const getusercomquery = `SELECT claimed_by FROM company_claim_request WHERE company_id="${company_id}"`;
     const getusercompval = await query(getusercomquery);
-    if(getusercompval.length>0){
+    if (getusercompval.length > 0) {
         var user_comp_id = getusercompval[0].claimed_by;
-        console.log("user_comp_id",user_comp_id);
-        
+        console.log("user_comp_id", user_comp_id);
+
     }
     const getuserquery = `SELECT user_id FROM complaint WHERE id="${complaint_id}"`;
     const getuscompval = await query(getuserquery);
-    if(getuscompval.length>0){
+    if (getuscompval.length > 0) {
         var user_comp_ids = getuscompval[0].user_id;
-        console.log("user_comp_id",user_comp_ids);
-        
+        console.log("user_comp_id", user_comp_ids);
+
     }
 
     var usernamequery = `SELECT first_name, last_name,email FROM users WHERE user_id = "${user_comp_id}"`;
     var usernameval = await query(usernamequery);
-    console.log("usernameval",usernameval);
+    console.log("usernameval", usernameval);
 
     if (usernameval.length > 0) {
         const firstName = usernameval[0].first_name;
@@ -9474,36 +9474,36 @@ exports.companyQuery = async (req, res) => {
         var fullName = firstName + ' ' + lastName;
         console.log("Full Name:", fullName);
         // console.log("email_val",email_val);
-        
-      } else {
+
+    } else {
         console.log("No user found with the provided ID.");
-      }
+    }
 
-      var usernamesquery = `SELECT first_name, last_name,email FROM users WHERE user_id = "${user_comp_ids}"`;
-      var usernamesval = await query(usernamesquery);
-      console.log("usernamesval",usernamesval);
-      var email_val = usernamesval[0].email;
-      console.log("email_val",email_val);
+    var usernamesquery = `SELECT first_name, last_name,email FROM users WHERE user_id = "${user_comp_ids}"`;
+    var usernamesval = await query(usernamesquery);
+    console.log("usernamesval", usernamesval);
+    var email_val = usernamesval[0].email;
+    console.log("email_val", email_val);
 
-      var complaintquery = `SELECT ticket_id,created_at FROM complaint WHERE id="${complaint_id}"`;
-      var complaintval = await query(complaintquery);
-      console.log("complaintval",complaintval);
+    var complaintquery = `SELECT ticket_id,created_at FROM complaint WHERE id="${complaint_id}"`;
+    var complaintval = await query(complaintquery);
+    console.log("complaintval", complaintval);
 
-      var ticketid = complaintval[0].ticket_id;
-      var complainttime = complaintval[0].created_at;
-      console.log("ticketid",ticketid);
-      console.log("complainttime",complainttime);
+    var ticketid = complaintval[0].ticket_id;
+    var complainttime = complaintval[0].created_at;
+    console.log("ticketid", ticketid);
+    console.log("complainttime", complainttime);
 
-      var dateObject = new Date(complainttime);
-      var dateOnly = dateObject.toISOString().split('T')[0];
+    var dateObject = new Date(complainttime);
+    var dateOnly = dateObject.toISOString().split('T')[0];
 
-      var maskedTicketId = ticketid.substring(0, 4) + 'xxxx';
+    var maskedTicketId = ticketid.substring(0, 4) + 'xxxx';
     if (complaint_status == '0') {
         // Reopen complaint and send an email
         const [updateComplaintStatus, sendEmail] = await Promise.all([
             comFunction2.updateComplaintStatus(complaint_id, '0'),
             comFunction2.complaintUserReopenEmail(complaint_id),
-           
+
         ]);
         await comFunction2.complaintcompanyuserResponseEmail(complaint_id)
         console.log('Complaint reopened and email sent.');
@@ -9511,12 +9511,12 @@ exports.companyQuery = async (req, res) => {
         await comFunction2.complaintUserResponseEmail(complaint_id);
         await comFunction2.updateresolveComplaintStatus(complaint_id, '1');
 
-        await comFunction2.complaintcompanyuserResponseEmail(complaint_id,fullName,maskedTicketId,dateOnly,email_val)
+        await comFunction2.complaintcompanyuserResponseEmail(complaint_id, fullName, maskedTicketId, dateOnly, email_val)
 
         console.log('Complaint resolved and email sent.');
     }
-    else if(complaint_status == '2'){
-        await comFunction2.complaintcompanyuserResponseEmail(complaint_id,fullName,maskedTicketId,dateOnly,email_val)
+    else if (complaint_status == '2') {
+        await comFunction2.complaintcompanyuserResponseEmail(complaint_id, fullName, maskedTicketId, dateOnly, email_val)
 
         console.log('Complaint 2 status and email sent.');
     }
@@ -9616,40 +9616,40 @@ exports.userComplaintRating = async (req, res) => {
 
 //Insert user Complaint Response  to company
 exports.userComplaintResponse = async (req, res) => {
-    console.log('userComplaintResponse',req.body ); 
+    console.log('userComplaintResponse', req.body);
     //return false;
     const { company_id, user_id, complaint_id, message, complaint_level, complaint_status } = req.body;
-    
+
 
     const currentDate = new Date();
     const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ');
 
     var usernamequery = `SELECT first_name, last_name FROM users WHERE user_id = "${user_id}"`;
     var usernameval = await query(usernamequery);
-    console.log("usernameval",usernameval);
+    console.log("usernameval", usernameval);
 
     if (usernameval.length > 0) {
         const firstName = usernameval[0].first_name;
         const lastName = usernameval[0].last_name;
         var fullName = firstName + ' ' + lastName;
         console.log("Full Name:", fullName);
-      } else {
+    } else {
         console.log("No user found with the provided ID.");
-      }
+    }
 
-      var complaintquery = `SELECT ticket_id,created_at FROM complaint WHERE id="${complaint_id}"`;
-      var complaintval = await query(complaintquery);
-      console.log("complaintval",complaintval);
+    var complaintquery = `SELECT ticket_id,created_at FROM complaint WHERE id="${complaint_id}"`;
+    var complaintval = await query(complaintquery);
+    console.log("complaintval", complaintval);
 
-      var ticketid = complaintval[0].ticket_id;
-      var complainttime = complaintval[0].created_at;
-      console.log("ticketid",ticketid);
-      console.log("complainttime",complainttime);
+    var ticketid = complaintval[0].ticket_id;
+    var complainttime = complaintval[0].created_at;
+    console.log("ticketid", ticketid);
+    console.log("complainttime", complainttime);
 
-      var dateObject = new Date(complainttime);
-      var dateOnly = dateObject.toISOString().split('T')[0];
+    var dateObject = new Date(complainttime);
+    var dateOnly = dateObject.toISOString().split('T')[0];
 
-      var maskedTicketId = ticketid.substring(0, 4) + 'xxxx';
+    var maskedTicketId = ticketid.substring(0, 4) + 'xxxx';
 
 
     if (complaint_status == '0') {
@@ -9658,7 +9658,7 @@ exports.userComplaintResponse = async (req, res) => {
             comFunction2.complaintUserReopenEmail(complaint_id)
         ]);
     } else {
-        await comFunction2.complaintUserResponseEmail(complaint_id,fullName,maskedTicketId,dateOnly);
+        await comFunction2.complaintUserResponseEmail(complaint_id, fullName, maskedTicketId, dateOnly);
     }
 
     const data = {
@@ -9726,6 +9726,7 @@ exports.createSurvey = async (req, res) => {
                 const [SurveyInvitationFile] = await Promise.all([
                     comFunction2.SurveyInvitationFile(req.body)
                 ]);
+                console.log("SurveyInvitationFilesss", SurveyInvitationFile);
 
             } else {
 
@@ -9769,6 +9770,8 @@ exports.createSurvey = async (req, res) => {
         questions,
         invitation_type[0],
     ];
+    console.log("surveyInsertData", surveyInsertData);
+
     const sql = "INSERT INTO survey (unique_id, company_id, created_at, expire_at, title, questions, invitation_type) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
     db.query(sql, surveyInsertData, async (err, result) => {
@@ -9788,8 +9791,8 @@ exports.createSurvey = async (req, res) => {
 
 // Create Survey
 exports.updateSurveyData = async (req, res) => {
-    //  console.log( 'updateSurveyData', req.body );
-    //  console.log( 'updateSurveyData', req.file );
+    console.log('updateSurveyData', req.body);
+    console.log('updateSurveyData', req.file);
     //return false;
     const { unique_id, created_at, expire_at, title, invitation_type, email, email_body, company_id, questions } = req.body;
     // const jsonString = Object.keys(req.body)[0];
@@ -9856,6 +9859,23 @@ exports.updateSurveyData = async (req, res) => {
 
             }
         }
+    }
+
+    const checkOngoingSurveySql = `
+        SELECT COUNT(*) as ongoingSurveys
+        FROM survey
+        WHERE expire_at > NOW() AND unique_id != ?
+    `;
+    const rows = await query(checkOngoingSurveySql, [unique_id[0]]);
+    const ongoingSurveys = rows;
+    console.log("ongoingSurveys", ongoingSurveys);
+
+
+    if (ongoingSurveys > 0) {
+        return res.send({
+            status: 'error',
+            message: 'Another survey is already ongoing. Please wait until it is completed.'
+        });
     }
 
     const surveyInsertData = [
@@ -11592,6 +11612,44 @@ exports.editDiscussion = (req, res) => {
 
 }
 
+exports.editDiscussioncomment = async (req, res) => {
+    try {
+        const {
+            commentId,
+            updatedComment
+        } = req.body;
+
+        console.log("editDiscussioncomment", req.body);
+
+        const commentData = {
+            comment: updatedComment
+        };
+
+        const commentQuery = `UPDATE discussions_user_response SET ? WHERE id = ${commentId} `;
+        return new Promise((resolve, reject) => {
+            db.query(commentQuery, commentData, (err, results) => {
+                console.log("discussioncommentresults",results);
+
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(results);
+                }
+            });
+        });
+
+    } catch (error) {
+        console.error('error editDiscussioncomment:', error);
+        return res.send(
+            {
+                status: 'err',
+                message: error
+            }
+        )
+    }
+}
+
+
 exports.likeComment = (req, res) => {
     const encodedUserData = req.cookies.user;
     const currentUserData = JSON.parse(encodedUserData);
@@ -13082,58 +13140,58 @@ exports.confirmCompany = async (req, res) => {
             const adminMail = process.env.MAIL_USER;
 
 
-                    // const companyDetails = {
-                    //     user_created_by: result[0].user_created_by,
-                    //     company_name: result[0].company_name,
-                    //     status: result[0].status,
-                    //     created_date: result[0].created_date,
-                    //     updated_date: result[0].updated_date,
-                    //     main_address_country: result[0].main_address_country,
-                    //     main_address_state: result[0].main_address_state,
-                    //     main_address_city: result[0].main_address_city,
-                    //     verified: result[0].verified,
-                    //     paid_status: result[0].paid_status,
-                    //     slug: companySlug,
-                    //     parent_id: result[0].parent_id,
-                    // }
+            // const companyDetails = {
+            //     user_created_by: result[0].user_created_by,
+            //     company_name: result[0].company_name,
+            //     status: result[0].status,
+            //     created_date: result[0].created_date,
+            //     updated_date: result[0].updated_date,
+            //     main_address_country: result[0].main_address_country,
+            //     main_address_state: result[0].main_address_state,
+            //     main_address_city: result[0].main_address_city,
+            //     verified: result[0].verified,
+            //     paid_status: result[0].paid_status,
+            //     slug: companySlug,
+            //     parent_id: result[0].parent_id,
+            // }
 
-                    if (result && result.length > 0) {
-                        const updateQuery = `UPDATE company SET temp_comp_status = ?,status=? WHERE ID = ?`;
-                        const updateResult = await query(updateQuery, [activationId,'1', id]);
+            if (result && result.length > 0) {
+                const updateQuery = `UPDATE company SET temp_comp_status = ?,status=? WHERE ID = ?`;
+                const updateResult = await query(updateQuery, [activationId, '1', id]);
 
-                        // Check if the update was successful
-                        if (updateResult && updateResult.affectedRows > 0) {
+                // Check if the update was successful
+                if (updateResult && updateResult.affectedRows > 0) {
 
-                            // const insercompanyquery = `INSERT INTO company SET ?`;
-                            // const insertcompanyval = await query(insercompanyquery, companyDetails);
-                            // console.log("insertcompanyval", insertcompanyval);
+                    // const insercompanyquery = `INSERT INTO company SET ?`;
+                    // const insertcompanyval = await query(insercompanyquery, companyDetails);
+                    // console.log("insertcompanyval", insertcompanyval);
 
-                            const userActivationHtmlForAdmin = comFunction2.companyActivationmailtoAdmin(userDetails.fullName,);
+                    const userActivationHtmlForAdmin = comFunction2.companyActivationmailtoAdmin(userDetails.fullName,);
 
-                            if (userActivationHtmlForAdmin) {
-                                return res.status(200).json({
-                                    status: "ok",
-                                    message: 'Company activation has been successful, and activation emails have been forwarded to the admin.',
-                                });
-                            } else {
-                                return res.status(500).json({
-                                    status: "error",
-                                    message: "Failed to send activation email",
-                                });
-                            }
-
-                        } else {
-
-                            return res.status(400).json({ message: 'Activation failed' });
-                        }
+                    if (userActivationHtmlForAdmin) {
+                        return res.status(200).json({
+                            status: "ok",
+                            message: 'Company activation has been successful, and activation emails have been forwarded to the admin.',
+                        });
                     } else {
-                        // User not found
-                        return res.status(404).json({ message: 'Company not found' });
+                        return res.status(500).json({
+                            status: "error",
+                            message: "Failed to send activation email",
+                        });
                     }
+
+                } else {
+
+                    return res.status(400).json({ message: 'Activation failed' });
                 }
-            //})
+            } else {
+                // User not found
+                return res.status(404).json({ message: 'Company not found' });
+            }
         }
-     catch (error) {
+        //})
+    }
+    catch (error) {
         console.log(error);
         return res.status(500).json({ message: 'Internal Server Error' });
     }
@@ -13171,38 +13229,38 @@ exports.confirmReview = async (req, res) => {
 
 
 
-                    if (result && result.length > 0) {
-                        const updateQuery = `UPDATE reviews SET temp_review_status = ? WHERE id = ?`;
-                        const updateResult = await query(updateQuery, [activationId, id]);
+            if (result && result.length > 0) {
+                const updateQuery = `UPDATE reviews SET temp_review_status = ? WHERE id = ?`;
+                const updateResult = await query(updateQuery, [activationId, id]);
 
-                        // Check if the update was successful
-                        if (updateResult && updateResult.affectedRows > 0) {
+                // Check if the update was successful
+                if (updateResult && updateResult.affectedRows > 0) {
 
-                            const userActivationHtmlForAdmin = comFunction2.reviewActivationmailtoAdmin(companyDetails.fullName,);
+                    const userActivationHtmlForAdmin = comFunction2.reviewActivationmailtoAdmin(companyDetails.fullName,);
 
-                            if (userActivationHtmlForAdmin) {
-                                return res.status(200).json({
-                                    status: "ok",
-                                    message: 'Review activation has been successful, and activation emails have been forwarded to the admin.',
-                                });
-                            } else {
-                                return res.status(500).json({
-                                    status: "error",
-                                    message: "Failed to send activation email",
-                                });
-                            }
-
-                        } else {
-
-                            return res.status(400).json({ message: 'Activation failed' });
-                        }
+                    if (userActivationHtmlForAdmin) {
+                        return res.status(200).json({
+                            status: "ok",
+                            message: 'Review activation has been successful, and activation emails have been forwarded to the admin.',
+                        });
                     } else {
-                        // User not found
-                        return res.status(404).json({ message: 'Company not found' }); 
+                        return res.status(500).json({
+                            status: "error",
+                            message: "Failed to send activation email",
+                        });
+                    }
+
+                } else {
+
+                    return res.status(400).json({ message: 'Activation failed' });
                 }
+            } else {
+                // User not found
+                return res.status(404).json({ message: 'Company not found' });
             }
         }
-     catch (error) {
+    }
+    catch (error) {
         console.log(error);
         return res.status(500).json({ message: 'Internal Server Error' });
     }
@@ -13983,7 +14041,7 @@ exports.createexternalSubscription = async (req, res) => {
         console.log("Created Razorpay plan:", priceId);
 
         const amount = priceId.item.amount;
-        console.log("amount",amount);
+        console.log("amount", amount);
 
         // Create subscription with Razorpay
         const subscriptionParams = {
@@ -15135,8 +15193,8 @@ const findOrCreateCustomer = async (email, name, phone, address, city, state, zi
                 }
             }, {
                 auth: {
-                  username: process.env.RAZORPAY_KEY_ID,
-                  password: process.env.RAZORPAY_KEY_SECRET
+                    username: process.env.RAZORPAY_KEY_ID,
+                    password: process.env.RAZORPAY_KEY_SECRET
                 }
             });
             console.log('Created new customer:', customer.data.id);
@@ -15284,26 +15342,26 @@ const CreateCustomer = async (email, name, phone, address, city, state, zip) => 
 //       if (isNaN(memberCount) || memberCount < 0) {
 //         throw new Error('Invalid memberCount');
 //       }
-  
+
 //       const basePrice = billingCycle === 'yearly' ? plan.yearly_price : plan.monthly_price;
 //       if (isNaN(basePrice) || basePrice <= 0) {
 //         throw new Error('Invalid base price');
 //       }
-  
+
 //       let addonPrice = 0;
 //       if (memberCount > 0) {
 //         const userAddonPrice = plan.per_user_price;
 //         addonPrice = userAddonPrice * memberCount;
 //       }
-  
+
 //       const getCurrencyQuery = `SELECT * FROM currency_conversion`;
 //       const getCurrencyVal = await queryAsync(getCurrencyQuery);
-  
+
 //       let totalPrice;
 //       if (getCurrencyVal.length > 0) {
 //         const indianCurrency = getCurrencyVal[0].inr_currency;
 //         const jpCurrency = getCurrencyVal[0].jpy_currency;
-  
+
 //         if (country_code == "IN") {
 //           const totalBasePrice = basePrice * indianCurrency;
 //           const totalAddonPrice = addonPrice * indianCurrency;
@@ -15316,11 +15374,11 @@ const CreateCustomer = async (email, name, phone, address, city, state, zip) => 
 //           totalPrice = parseFloat(basePrice) + parseFloat(addonPrice);
 //         }
 //       }
-  
+
 //       if (isNaN(totalPrice) || totalPrice <= 0) {
 //         throw new Error('Invalid total price');
 //       }
-  
+
 //       let totalPriceInPaise;
 //       if (country_code == "IN") {
 //         totalPriceInPaise = totalPrice * 100;
@@ -15329,7 +15387,7 @@ const CreateCustomer = async (email, name, phone, address, city, state, zip) => 
 //       } else {
 //         totalPriceInPaise = totalPrice * 100;
 //       }
-  
+
 //       let period, interval;
 //       if (billingCycle === 'yearly') {
 //         period = 'yearly';
@@ -15343,7 +15401,7 @@ const CreateCustomer = async (email, name, phone, address, city, state, zip) => 
 //       } else {
 //         throw new Error('Invalid billing cycle');
 //       }
-  
+
 //       const razorpayPlan = await razorpay.plans.create({
 //         period: period,
 //         interval: interval,
@@ -15354,14 +15412,14 @@ const CreateCustomer = async (email, name, phone, address, city, state, zip) => 
 //           currency: 'INR'
 //         }
 //       });
-  
+
 //       return razorpayPlan;
 //     } catch (error) {
 //       console.error('Error creating Razorpay plan:', error);
 //       throw error;
 //     }
 //   };
-  
+
 
 const createRazorpayPlan = async (plan, billingCycle, memberCount, country_code) => {
     try {
@@ -17752,16 +17810,16 @@ exports.updateCategorys = async (req, res) => {
 
 exports.deletemanagementuser = async (req, res) => {
     try {
-        console.log("deletemanagementuser",req.body);
+        console.log("deletemanagementuser", req.body);
 
         const userEmail = req.body.email;
-        console.log("userEmail",userEmail);
+        console.log("userEmail", userEmail);
         const usergetquery = `SELECT * FROM users WHERE email=?`;
-        const userval = await query(usergetquery,[userEmail]);
-        console.log("userval",userval);
-        if(userval.length>0){
-            var userId= userval[0].user_id;
-            console.log("userId",userId);
+        const userval = await query(usergetquery, [userEmail]);
+        console.log("userval", userval);
+        if (userval.length > 0) {
+            var userId = userval[0].user_id;
+            console.log("userId", userId);
         }
 
         const deleteQueries = [

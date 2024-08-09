@@ -5278,13 +5278,192 @@ async function sendSurveyInvitationEmail(req) {
 }
 
 //Function to send Survey Invitation email 
+// async function SurveyInvitationFile(req) {
+//   console.log('SurveyInvitationFile',req)
+//   //return false;
+//   const { emails, email_body, user_id, company_id, company_name, company_slug, unique_id } = req;
+//   const currentDate = new Date();
+//   const year = currentDate.getFullYear();
+//   const month = currentDate.getMonth() + 1; // Months are zero-based (0 = January, 11 = December), so add 1
+//   const day = currentDate.getDate();
+//   const formattedDate = `${year}-${month < 10 ? '0' : ''}${month}-${day < 10 ? '0' : ''}${day}`;
+
+//   let uniqueIdValue;
+//   if (Array.isArray(unique_id)) {
+//     uniqueIdValue = unique_id[0];
+//   } else {
+//     uniqueIdValue = unique_id;
+//   }
+//   if (emails.length > 0) {
+//     emails.forEach(async (email) => {
+
+//       const encryptEmail = await bcrypt.hash(email, 8);
+//       const hashedEmail = base64url(encryptEmail);
+//       //console.log(hashedEmail);
+
+//       const sql = `INSERT INTO suvey_invitation_details ( company_id, user_id, emails, encrypted_email, share_date, unique_id) VALUES (?, ?, ?, ?, ?, ?)`;
+//       const data = [
+//         company_id[0],
+//         user_id[0],
+//         email,
+//         hashedEmail,
+//         formattedDate,
+//         uniqueIdValue
+//       ]
+//       const connection = await mysql.createConnection({
+//         host: process.env.DATABASE_HOST,
+//         user: process.env.DATABASE_USER,
+//         password: process.env.DATABASE_PASSWORD,
+//         database: process.env.DATABASE
+//       });
+
+//       var [insertRes] = await connection.query(sql, data);
+
+//       var mailOptions = {
+//         from: process.env.MAIL_USER,
+//         //to: 'pranab@scwebtech.com',
+//         to: email,
+//         subject: 'Survey Invitation Email',
+//         html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+//         <style>
+//             body, table, td, p, a, h1, h2, h3, h4, h5, h6, div {
+//                 font-family: Calibri, 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif !important;
+//             }
+//         </style>
+//         <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
+//         <tbody>
+//           <tr>
+//           <td align="center" valign="top">
+//             <div id="template_header_image"><p style="margin-top: 0;"></p></div>
+//             <table id="template_container" style="box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important; background-color: #fdfdfd; border: 1px solid #dcdcdc; border-radius: 3px !important;" border="0" cellpadding="0" cellspacing="0" width="600">
+//               <tbody>
+//                 <tr>
+//                 <td align="center" valign="top">
+//                   <!-- Header -->
+//                   <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
+//                     <tbody>
+//                       <tr>
+//                       <td><img alt="Logo" src="${process.env.MAIN_URL}front-end/images/cechoes-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+//                         <td id="header_wrapper" style="padding: 36px 48px; display: block;">
+//                           <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Survey Invitation Email</h1>
+//                         </td>
+    
+//                       </tr>
+//                     </tbody>
+//                   </table>
+//             <!-- End Header -->
+//             </td>
+//                 </tr>
+//                 <tr>
+//                 <td align="center" valign="top">
+//                   <!-- Body -->
+//                   <table id="template_body" border="0" cellpadding="0" cellspacing="0" width="600">
+//                     <tbody>
+//                       <tr>
+//                         <td id="body_content" style="background-color: #fdfdfd;" valign="top">
+//                           <!-- Content -->
+//                           <table border="0" cellpadding="20" cellspacing="0" width="100%">
+//                           <tbody>
+//                             <tr>
+//                             <td style="padding: 48px;" valign="top">
+//                               <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
+                                
+//                                 <table border="0" cellpadding="4" cellspacing="0" width="90%">
+//                                   <tr>
+//                                     <td colspan="2">
+//                                     <p style="font-size:15px; line-height:20px">Dear Sir / Madam,</p>
+//                                     </td>
+//                                   </tr>
+//                                   <tr>
+//                                     <td colspan="2">
+//                                     <p style="font-size:15px; line-height:20px">${email_body[0]}</p>
+//                                     </td>
+//                                   </tr>
+//                                   <tr>
+//                                     <td colspan="2">
+//                                     <p style="font-size:15px; line-height:20px">
+//                                     “Please <a href="${process.env.MAIN_URL}${company_slug[0]}/survey/${uniqueIdValue}/${hashedEmail}">click on the link</a> to start the survey. Your feedback is important to “${company_name[0]}” and will help us improve our products and services.”
+//                                     </p>
+//                                     </td>
+//                                   </tr>
+//                                   <tr>
+//                                     <td colspan="2">
+//                                     <p style="font-size:15px; line-height:20px">
+//                                     Thanking you, </p>
+//                                     <p style="font-size:15px; line-height:20px">
+//                                     “${company_name[0]}” & Team CEchoesTechnology </p>
+//                                     </td>
+//                                   </tr>
+//                                 </table>
+                                
+//                               </div>
+//                             </td>
+//                             </tr>
+//                           </tbody>
+//                           </table>
+//                         <!-- End Content -->
+//                         </td>
+//                       </tr>
+//                     </tbody>
+//                   </table>
+//                 <!-- End Body -->
+//                 </td>
+//                 </tr>
+//                 <tr>
+//                 <td align="center" valign="top">
+//                   <!-- Footer -->
+//                   <table id="template_footer" border="0" cellpadding="10" cellspacing="0" width="600">
+//                     <tbody>
+//                     <tr>
+//                       <td style="padding: 0; -webkit-border-radius: 6px;" valign="top">
+//                       <table border="0" cellpadding="10" cellspacing="0" width="100%">
+//                         <tbody>
+//                           <tr>
+//                             <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
+//                                 <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology</a></p>
+//                             </td>
+//                           </tr>
+//                         </tbody>
+//                       </table>
+//                       </td>
+//                     </tr>
+//                     </tbody>
+//                   </table>
+//                 <!-- End Footer -->
+//                 </td>
+//                 </tr>
+//               </tbody>
+//             </table>
+//           </td>
+//           </tr>
+//         </tbody>
+//         </table>
+//       </div>`
+//       }
+//       await mdlconfig.transporter.sendMail(mailOptions, function (err, info) {
+//         if (err) {
+//           console.log(err);
+//           return false;
+//         } else {
+//           console.log('Mail Send: ', info.response);
+
+//         }
+//       })
+
+//     })
+//    // return true;
+//     return insertRes
+//   }
+
+// }
+
 async function SurveyInvitationFile(req) {
-  //console.log('SurveyInvitation',req)
-  //return false;
+  console.log('SurveyInvitationFile', req);
+
   const { emails, email_body, user_id, company_id, company_name, company_slug, unique_id } = req;
   const currentDate = new Date();
   const year = currentDate.getFullYear();
-  const month = currentDate.getMonth() + 1; // Months are zero-based (0 = January, 11 = December), so add 1
+  const month = currentDate.getMonth() + 1;
   const day = currentDate.getDate();
   const formattedDate = `${year}-${month < 10 ? '0' : ''}${month}-${day < 10 ? '0' : ''}${day}`;
 
@@ -5294,167 +5473,185 @@ async function SurveyInvitationFile(req) {
   } else {
     uniqueIdValue = unique_id;
   }
-  if (emails.length > 0) {
-    emails.forEach(async (email) => {
 
-      const encryptEmail = await bcrypt.hash(email, 8);
-      const hashedEmail = base64url(encryptEmail);
-      //console.log(hashedEmail);
+  if (emails.length === 0) {
+    throw new Error('No emails provided');
+  }
 
-      const sql = `INSERT INTO suvey_invitation_details ( company_id, user_id, emails, encrypted_email, share_date, unique_id) VALUES (?, ?, ?, ?, ?, ?)`;
-      const data = [
-        company_id[0],
-        user_id[0],
-        email,
-        hashedEmail,
-        formattedDate,
-        uniqueIdValue
-      ]
-      const connection = await mysql.createConnection({
-        host: process.env.DATABASE_HOST,
-        user: process.env.DATABASE_USER,
-        password: process.env.DATABASE_PASSWORD,
-        database: process.env.DATABASE
-      });
+  const emailPromises = emails.map(async (email) => {
+    const encryptEmail = await bcrypt.hash(email, 8);
+    const hashedEmail = base64url(encryptEmail);
 
-      const [insertRes] = await connection.query(sql, data);
+    
+    const deletsqlquery = `DELETE FROM suvey_invitation_details WHERE unique_id="${uniqueIdValue}"`;
+    const deletesqlval = await query(deletsqlquery);
+    console.log("deletesqlval",deletesqlval);
+    
+    const sql = `INSERT INTO suvey_invitation_details (company_id, user_id, emails, encrypted_email, share_date, unique_id) VALUES (?, ?, ?, ?, ?, ?)`;
+    const data = [
+      company_id[0],
+      user_id[0],
+      email,
+      hashedEmail,
+      formattedDate,
+      uniqueIdValue
+    ];
 
-      var mailOptions = {
-        from: process.env.MAIL_USER,
-        //to: 'pranab@scwebtech.com',
-        to: email,
-        subject: 'Survey Invitation Email',
-        html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
-        <style>
-            body, table, td, p, a, h1, h2, h3, h4, h5, h6, div {
-                font-family: Calibri, 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif !important;
-            }
-        </style>
-        <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
-        <tbody>
-          <tr>
-          <td align="center" valign="top">
-            <div id="template_header_image"><p style="margin-top: 0;"></p></div>
-            <table id="template_container" style="box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important; background-color: #fdfdfd; border: 1px solid #dcdcdc; border-radius: 3px !important;" border="0" cellpadding="0" cellspacing="0" width="600">
+    const connection = await mysql.createConnection({
+      host: process.env.DATABASE_HOST,
+      user: process.env.DATABASE_USER,
+      password: process.env.DATABASE_PASSWORD,
+      database: process.env.DATABASE
+    });
+
+    const [insertRes] = await connection.query(sql, data);
+
+    // Log the insertId and other details
+    console.log("insertRes", insertRes);
+    console.log("insertId", insertRes.insertId);
+
+    const mailOptions = {
+      from: process.env.MAIL_USER,
+      to: email,
+      subject: 'Survey Invitation Email',
+      html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+              <style>
+                  body, table, td, p, a, h1, h2, h3, h4, h5, h6, div {
+                      font-family: Calibri, 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif !important;
+                  }
+              </style>
+              <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
               <tbody>
                 <tr>
                 <td align="center" valign="top">
-                  <!-- Header -->
-                  <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
+                  <div id="template_header_image"><p style="margin-top: 0;"></p></div>
+                  <table id="template_container" style="box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important; background-color: #fdfdfd; border: 1px solid #dcdcdc; border-radius: 3px !important;" border="0" cellpadding="0" cellspacing="0" width="600">
                     <tbody>
                       <tr>
-                      <td><img alt="Logo" src="${process.env.MAIN_URL}front-end/images/cechoes-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
-                        <td id="header_wrapper" style="padding: 36px 48px; display: block;">
-                          <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Survey Invitation Email</h1>
-                        </td>
-    
-                      </tr>
-                    </tbody>
-                  </table>
-            <!-- End Header -->
-            </td>
-                </tr>
-                <tr>
-                <td align="center" valign="top">
-                  <!-- Body -->
-                  <table id="template_body" border="0" cellpadding="0" cellspacing="0" width="600">
-                    <tbody>
-                      <tr>
-                        <td id="body_content" style="background-color: #fdfdfd;" valign="top">
-                          <!-- Content -->
-                          <table border="0" cellpadding="20" cellspacing="0" width="100%">
+                      <td align="center" valign="top">
+                        <!-- Header -->
+                        <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
                           <tbody>
                             <tr>
-                            <td style="padding: 48px;" valign="top">
-                              <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
-                                
-                                <table border="0" cellpadding="4" cellspacing="0" width="90%">
-                                  <tr>
-                                    <td colspan="2">
-                                    <p style="font-size:15px; line-height:20px">Dear Sir / Madam,</p>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td colspan="2">
-                                    <p style="font-size:15px; line-height:20px">${email_body[0]}</p>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td colspan="2">
-                                    <p style="font-size:15px; line-height:20px">
-                                    “Please <a href="${process.env.MAIN_URL}${company_slug[0]}/survey/${uniqueIdValue}/${hashedEmail}">click on the link</a> to start the survey. Your feedback is important to “${company_name[0]}” and will help us improve our products and services.”
-                                    </p>
-                                    </td>
-                                  </tr>
-                                  <tr>
-                                    <td colspan="2">
-                                    <p style="font-size:15px; line-height:20px">
-                                    Thanking you, </p>
-                                    <p style="font-size:15px; line-height:20px">
-                                    “${company_name[0]}” & Team CEchoesTechnology </p>
-                                    </td>
-                                  </tr>
-                                </table>
-                                
-                              </div>
-                            </td>
+                            <td><img alt="Logo" src="${process.env.MAIN_URL}front-end/images/cechoes-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+                              <td id="header_wrapper" style="padding: 36px 48px; display: block;">
+                                <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Survey Invitation Email</h1>
+                              </td>
+          
                             </tr>
                           </tbody>
-                          </table>
-                        <!-- End Content -->
-                        </td>
+                        </table>
+                  <!-- End Header -->
+                  </td>
+                      </tr>
+                      <tr>
+                      <td align="center" valign="top">
+                        <!-- Body -->
+                        <table id="template_body" border="0" cellpadding="0" cellspacing="0" width="600">
+                          <tbody>
+                            <tr>
+                              <td id="body_content" style="background-color: #fdfdfd;" valign="top">
+                                <!-- Content -->
+                                <table border="0" cellpadding="20" cellspacing="0" width="100%">
+                                <tbody>
+                                  <tr>
+                                  <td style="padding: 48px;" valign="top">
+                                    <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
+                                      
+                                      <table border="0" cellpadding="4" cellspacing="0" width="90%">
+                                        <tr>
+                                          <td colspan="2">
+                                          <p style="font-size:15px; line-height:20px">Dear Sir / Madam,</p>
+                                          </td>
+                                        </tr>
+                                        <tr>
+                                          <td colspan="2">
+                                          <p style="font-size:15px; line-height:20px">${email_body[0]}</p>
+                                          </td>
+                                        </tr>
+                                        <tr>
+                                          <td colspan="2">
+                                          <p style="font-size:15px; line-height:20px">
+                                          “Please <a href="${process.env.MAIN_URL}${company_slug[0]}/survey/${uniqueIdValue}/${hashedEmail}">click on the link</a> to start the survey. Your feedback is important to “${company_name[0]}” and will help us improve our products and services.”
+                                          </p>
+                                          </td>
+                                        </tr>
+                                        <tr>
+                                          <td colspan="2">
+                                          <p style="font-size:15px; line-height:20px">
+                                          Thanking you, </p>
+                                          <p style="font-size:15px; line-height:20px">
+                                          “${company_name[0]}” & Team CEchoesTechnology </p>
+                                          </td>
+                                        </tr>
+                                      </table>
+                                      
+                                    </div>
+                                  </td>
+                                  </tr>
+                                </tbody>
+                                </table>
+                              <!-- End Content -->
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      <!-- End Body -->
+                      </td>
+                      </tr>
+                      <tr>
+                      <td align="center" valign="top">
+                        <!-- Footer -->
+                        <table id="template_footer" border="0" cellpadding="10" cellspacing="0" width="600">
+                          <tbody>
+                          <tr>
+                            <td style="padding: 0; -webkit-border-radius: 6px;" valign="top">
+                            <table border="0" cellpadding="10" cellspacing="0" width="100%">
+                              <tbody>
+                                <tr>
+                                  <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
+                                      <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology</a></p>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                            </td>
+                          </tr>
+                          </tbody>
+                        </table>
+                      <!-- End Footer -->
+                      </td>
                       </tr>
                     </tbody>
                   </table>
-                <!-- End Body -->
-                </td>
-                </tr>
-                <tr>
-                <td align="center" valign="top">
-                  <!-- Footer -->
-                  <table id="template_footer" border="0" cellpadding="10" cellspacing="0" width="600">
-                    <tbody>
-                    <tr>
-                      <td style="padding: 0; -webkit-border-radius: 6px;" valign="top">
-                      <table border="0" cellpadding="10" cellspacing="0" width="100%">
-                        <tbody>
-                          <tr>
-                            <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
-                                <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology</a></p>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                      </td>
-                    </tr>
-                    </tbody>
-                  </table>
-                <!-- End Footer -->
                 </td>
                 </tr>
               </tbody>
-            </table>
-          </td>
-          </tr>
-        </tbody>
-        </table>
-      </div>`
+              </table>
+            </div>`
+    };
+
+    await mdlconfig.transporter.sendMail(mailOptions, function (err, info) {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log('Mail Send: ', info.response);
       }
-      await mdlconfig.transporter.sendMail(mailOptions, function (err, info) {
-        if (err) {
-          console.log(err);
-          return false;
-        } else {
-          console.log('Mail Send: ', info.response);
+    });
 
-        }
-      })
+    return insertRes;
+  });
 
-    })
-    return true;
-  }
+  const results = await Promise.all(emailPromises);
 
+  console.log("surveyresultsss", results);
+  console.log("surveyresultsss[0]", results[0]);
+  return results;
 }
+
+
+
+
 //Function to send Survey Invitation email 
 async function SurveyInvitationByArray(req) {
   //console.log('SurveyInvitation',req)
@@ -5479,6 +5676,10 @@ async function SurveyInvitationByArray(req) {
         const encrypetdEmail = await bcrypt.hashSync(email, 8);
         const hashedEmail = base64url(encrypetdEmail);
         console.log(hashedEmail);
+
+        const deletsqlquery = `DELETE FROM suvey_invitation_details WHERE unique_id="${uniqueIdValue}"`;
+        const deletesqlval = await query(deletsqlquery);
+        console.log("deletesqlval",deletesqlval);
 
         const sql = `INSERT INTO suvey_invitation_details ( company_id, user_id, emails, encrypted_email, share_date, unique_id) VALUES (?, ?, ?, ?, ?, ?)`;
         const data = [
@@ -7066,20 +7267,6 @@ function getSurveyDetails(surveyId) {
   });
 }
 
-// async function getSurveyDetailsByUniqueId(unique_id) {
-//   const get_company_survey_details_query = `
-//   SELECT survey.*
-//   FROM survey
-//   WHERE survey.unique_id = ${unique_id};
-//   `;
-//   try {
-//     const get_company_survey_details_result = await query(get_company_survey_details_query);
-//     return get_company_survey_details_result;
-//   } catch (error) {
-//     return 'Error during user get_survey_details_query:' + error;
-//   }
-// }
-
 async function getSurveyDetailsByUniqueId(unique_id) {
   const get_company_survey_details_query = `
   SELECT survey.*
@@ -7088,6 +7275,23 @@ async function getSurveyDetailsByUniqueId(unique_id) {
   `;
   try {
     const get_company_survey_details_result = await query(get_company_survey_details_query);
+    return get_company_survey_details_result;
+  } catch (error) {
+    return 'Error during user get_survey_details_query:' + error;
+  }
+}
+
+async function getSurveyemailDetailsByUniqueId(unique_id) {
+  const get_company_survey_details_query = `
+  SELECT suvey_invitation_details.emails
+  FROM survey
+  LEFT JOIN suvey_invitation_details ON survey.unique_id = suvey_invitation_details.unique_id
+  WHERE survey.unique_id = ${unique_id};
+  `;
+  try {
+    const get_company_survey_details_result = await query(get_company_survey_details_query);
+    console.log("get_company_survey_details_result",get_company_survey_details_result);
+    
     return get_company_survey_details_result;
   } catch (error) {
     return 'Error during user get_survey_details_query:' + error;
@@ -8918,6 +9122,7 @@ module.exports = {
   getSurveyInvitedEmail,
   getSurveyDetails,
   getSurveyDetailsByUniqueId,
+  getSurveyemailDetailsByUniqueId,
   countSurveyAnswerByUniqueId,
   getDiscussionByDiscusId,
   getcommentsCount,
