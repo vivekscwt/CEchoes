@@ -3498,6 +3498,33 @@ exports.companyDetails = async (req, res) => {
     }
 }
 
+exports.companyDetailsbyId= async (req, res) => {
+    try {
+        const company_id = req.body.company_id;
+        console.log("company_id", company_id);
+        const getcompanyquery = `SELECT * FROM company WHERE ID=?`;
+        const companyvalue = await query(getcompanyquery, [company_id]);
+
+        if (companyvalue.length > 0) {
+            var company_name = companyvalue[0].company_name;
+            console.log("company_name", company_name);
+
+            res.status(200).json({
+                status: 'ok',
+                company_name
+            });
+        } else {
+            res.status(404).json({
+                status: 'error',
+                message: 'Company not found'
+            });
+        }
+    } catch (error) {
+        console.error('Error getcompanyDetails:', error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+}
+
 exports.currencyConvert = async (req, res) => {
     try {
         const { inr_currency, jpy_currency } = req.body;
@@ -8342,6 +8369,72 @@ exports.updateCompanyProduct = async (req, res) => {
     })
 }
 
+// exports.addCompanyProduct = async (req, res) => {
+//     console.log('addCompanyProduct', req.body);
+//     console.log('addCompanyProduct', req.files);
+//     //return false;
+//     const { category_id, parent_id, company_id, product_title, product_desc } = req.body;
+//     const { product_image } = req.files;
+
+//     if (typeof product_title !== 'undefined') {
+//         if (typeof product_title == 'string') {
+//             //console.log(result.insertId);
+//             //return false;
+//             const productQuery = `INSERT INTO company_products SET ? `;
+//             const productData = {
+//                 company_id: company_id,
+//                 category_id: category_id,
+//                 parent_id: parent_id,
+//                 product_title: product_title,
+//                 product_desc: product_desc,
+//                 product_img: product_image[0].filename,
+//             }
+//             db.query(productQuery, productData, (productErr, productResult) => {
+//                 if (productErr) {
+//                     return res.send({
+//                         status: 'not ok',
+//                         message: 'Something went wrong ' + productErr
+//                     });
+//                 } else {
+//                     return res.send({
+//                         status: 'ok',
+//                         message: 'Product added successfully !'
+//                     });
+//                 }
+//             });
+//         } else {
+//             await product_title.forEach((product, index) => {
+//                 const productQuery = `INSERT INTO company_products SET ? `;
+//                 const productData = {
+//                     company_id: company_id,
+//                     category_id: category_id,
+//                     parent_id: parent_id,
+//                     product_title: product,
+//                     product_desc: product_desc[index],
+//                     product_img: product_image[index].filename,
+//                 }
+//                 db.query(productQuery, productData, (productErr, productResult) => {
+//                     if (productErr) {
+//                         return res.send({
+//                             status: 'not ok',
+//                             message: 'Something went wrong ' + productErr
+//                         });
+//                     }
+//                 });
+//             })
+//             return res.send({
+//                 status: 'ok',
+//                 message: 'Products added successfully . '
+//             });
+//         }
+//     } else {
+//         return res.send({
+//             status: 'ok',
+//             message: 'Please add products. '
+//         });
+//     }
+// }
+
 //Add  company product
 exports.addCompanyProduct = async (req, res) => {
     console.log('addCompanyProduct', req.body);
@@ -8354,38 +8447,15 @@ exports.addCompanyProduct = async (req, res) => {
         if (typeof product_title == 'string') {
             //console.log(result.insertId);
             //return false;
-            const productQuery = `INSERT INTO company_products SET ? `;
-            const productData = {
-                company_id: company_id,
-                category_id: category_id,
-                parent_id: parent_id,
-                product_title: product_title,
-                product_desc: product_desc,
-                product_img: product_image[0].filename,
-            }
-            db.query(productQuery, productData, (productErr, productResult) => {
-                if (productErr) {
-                    return res.send({
-                        status: 'not ok',
-                        message: 'Something went wrong ' + productErr
-                    });
-                } else {
-                    return res.send({
-                        status: 'ok',
-                        message: 'Product added successfully !'
-                    });
-                }
-            });
-        } else {
-            await product_title.forEach((product, index) => {
+            if(product_image){
                 const productQuery = `INSERT INTO company_products SET ? `;
                 const productData = {
                     company_id: company_id,
                     category_id: category_id,
                     parent_id: parent_id,
-                    product_title: product,
-                    product_desc: product_desc[index],
-                    product_img: product_image[index].filename,
+                    product_title: product_title,
+                    product_desc: product_desc,
+                    product_img: product_image[0].filename,
                 }
                 db.query(productQuery, productData, (productErr, productResult) => {
                     if (productErr) {
@@ -8393,9 +8463,79 @@ exports.addCompanyProduct = async (req, res) => {
                             status: 'not ok',
                             message: 'Something went wrong ' + productErr
                         });
+                    } else {
+                        return res.send({
+                            status: 'ok',
+                            message: 'Product added successfully !'
+                        });
                     }
                 });
-            })
+            } else{
+                const productQuery = `INSERT INTO company_products SET ? `;
+                const productData = {
+                    company_id: company_id,
+                    category_id: category_id,
+                    parent_id: parent_id,
+                    product_title: product_title,
+                    product_desc: product_desc,
+                    //product_img: product_image[0].filename,
+                }
+                db.query(productQuery, productData, (productErr, productResult) => {
+                    if (productErr) {
+                        return res.send({
+                            status: 'not ok',
+                            message: 'Something went wrong ' + productErr
+                        });
+                    } else {
+                        return res.send({
+                            status: 'ok',
+                            message: 'Product added successfully !'
+                        });
+                    }
+                });
+            }
+        } else {
+            if(product_image){
+                await product_title.forEach((product, index) => {
+                    const productQuery = `INSERT INTO company_products SET ? `;
+                    const productData = {
+                        company_id: company_id,
+                        category_id: category_id,
+                        parent_id: parent_id,
+                        product_title: product,
+                        product_desc: product_desc[index],
+                        product_img: product_image[index].filename,
+                    }
+                    db.query(productQuery, productData, (productErr, productResult) => {
+                        if (productErr) {
+                            return res.send({
+                                status: 'not ok',
+                                message: 'Something went wrong ' + productErr
+                            });
+                        }
+                    });
+                })
+            } else{
+                await product_title.forEach((product, index) => {
+                    const productQuery = `INSERT INTO company_products SET ? `;
+                    const productData = {
+                        company_id: company_id,
+                        category_id: category_id,
+                        parent_id: parent_id,
+                        product_title: product,
+                        product_desc: product_desc[index],
+                        //product_img: product_image[index].filename,
+                    }
+                    db.query(productQuery, productData, (productErr, productResult) => {
+                        if (productErr) {
+                            return res.send({
+                                status: 'not ok',
+                                message: 'Something went wrong ' + productErr
+                            });
+                        }
+                    });
+                })
+            }
             return res.send({
                 status: 'ok',
                 message: 'Products added successfully . '
@@ -8408,7 +8548,6 @@ exports.addCompanyProduct = async (req, res) => {
         });
     }
 }
-
 //Update complaint company category
 exports.updateCompanyCategory = async (req, res) => {
     //console.log('updateCompanyCategory',req.body ); 
@@ -9509,7 +9648,7 @@ exports.companyQuery = async (req, res) => {
                 return res.send({
                     status: 'ok',
                     slug: company_slug,
-                    message: 'Complaint query send successfully !'
+                    message: 'Complaint  / Query successfully submitted.'
                 });
             }
 
@@ -11547,6 +11686,1242 @@ exports.editDiscussion = (req, res) => {
     }
 
 
+}
+
+
+// exports.editDiscussions = (req, res) => {
+//     const {
+//         discussion_id,
+//         content,
+//         tags,
+//         discussion_status,
+//         coment,
+//         ...commentStatuses
+//     } = req.body;
+
+//     console.log("edit-discussion", req.body);
+//     console.log("commentStatuses", commentStatuses);
+
+//     if (Object.keys(commentStatuses).length > 0) {
+//         //console.log("aaaaabbba");
+//         const allTags = tags ? JSON.parse(tags).map(item => item.value) : [];
+
+
+//         const discussionQuery = 'UPDATE discussions SET ? WHERE id = ?';
+//         const discussionData = {
+//             topic: content,
+//             tags: JSON.stringify(allTags),
+//             discussion_status
+//         };
+//         console.log("discussionData", discussionData);
+
+//         db.query(discussionQuery, [discussionData, discussion_id], (err, results) => {
+//             if (err) {
+//                 console.error('Error updating discussions table:', err);
+//                 return;
+//             }
+//             console.log('Discussions table updated successfully');
+//         });
+
+
+//         const promises = Object.keys(commentStatuses).map(commentId => {
+//             const commentData = {
+//                 comment_status: commentStatuses[commentId]
+//             };
+
+//             const extractedCommentId = commentId.replace('comment_status_', '');
+
+//             console.log(`Comment ${extractedCommentId} status: ${commentStatuses[commentId]}`);
+
+//             ///
+
+//             if (commentStatuses[commentId] == 1) {
+//                 const getCommentQuery = 'SELECT user_id FROM discussions_user_response WHERE id = ?';
+//                 db.query(getCommentQuery, [extractedCommentId], (commentError, commentResults) => {
+//                     if (commentError) {
+//                         console.error('Error fetching comment details:', commentError);
+//                         return;
+//                     }
+
+//                     const user_id = commentResults[0].user_id;
+//                     console.log("user_id", user_id);
+
+//                     const user_query = 'SELECT email,first_name,last_name FROM users WHERE user_id = ?';
+//                     db.query(user_query, [user_id], (error, results) => {
+//                         if (error) {
+//                             console.error('Error fetching user details:', error);
+//                             return;
+//                         }
+
+//                         if (results.length > 0) {
+//                             var userEmail = results[0].email;
+//                             // console.log("User email:", userEmail);
+//                             // console.log("User first_name:", results[0].first_name);
+//                             // console.log("User last_name:", results[0].last_name);
+//                             const full_name = `${results[0].first_name} ${results[0].last_name}`;
+//                             console.log("full_name", full_name);
+
+//                             const mailOptions = {
+//                                 from: process.env.MAIL_USER,
+//                                 to: userEmail,
+//                                 //to: "dev2.scwt@gmail.com",
+//                                 subject: 'Comment approval mail',
+//                                 html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+//                                 <style>
+//                                 body, table, td, p, a, h1, h2, h3, h4, h5, h6, div {
+//                                     font-family: Calibri, 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif !important;
+//                                 }
+//                                 </style>
+//                                 <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
+//                                  <tbody>
+//                                   <tr>
+//                                    <td align="center" valign="top">
+//                                      <div id="template_header_image"><p style="margin-top: 0;"></p></div>
+//                                      <table id="template_container" style="box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important; background-color: #fdfdfd; border: 1px solid #dcdcdc; border-radius: 3px !important;" border="0" cellpadding="0" cellspacing="0" width="600">
+//                                       <tbody>
+//                                         <tr>
+//                                          <td align="center" valign="top">
+//                                            <!-- Header -->
+//                                            <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
+//                                              <tbody>
+//                                                <tr>
+//                                                <td><img alt="Logo" src="${process.env.MAIN_URL}front-end/images/cechoes-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+//                                                 <td id="header_wrapper" style="padding: 36px 48px; display: block;">
+//                                                    <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;"> Comment on ${content} has been approved.</h1>
+//                                                 </td>
+                          
+//                                                </tr>
+//                                              </tbody>
+//                                            </table>
+//                                      <!-- End Header -->
+//                                      </td>
+//                                         </tr>
+//                                         <tr>
+//                                          <td align="center" valign="top">
+//                                            <!-- Body -->
+//                                            <table id="template_body" border="0" cellpadding="0" cellspacing="0" width="600">
+//                                              <tbody>
+//                                                <tr>
+//                                                 <td id="body_content" style="background-color: #fdfdfd;" valign="top">
+//                                                   <!-- Content -->
+//                                                   <table border="0" cellpadding="20" cellspacing="0" width="100%">
+//                                                    <tbody>
+//                                                     <tr>
+//                                                      <td style="padding: 48px;" valign="top">
+//                                                        <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
+                                                        
+//                                                         <table border="0" cellpadding="4" cellspacing="0" width="90%">
+//                                                           <tr>
+//                                                             <td colspan="2">
+//                                                             <strong>Hello ${full_name},</strong>
+//                                                             <p style="font-size:15px; line-height:20px">Your comment for the discussion has been approved. Now you can see your comment on the <a href="${process.env.MAIN_URL}discussion-details/${discussion_id}">here</a>.</p>
+//                                                             </td>
+//                                                           </tr>
+//                                                         </table>
+                                                        
+//                                                        </div>
+//                                                      </td>
+//                                                     </tr>
+//                                                    </tbody>
+//                                                   </table>
+//                                                 <!-- End Content -->
+//                                                 </td>
+//                                                </tr>
+//                                              </tbody>
+//                                            </table>
+//                                          <!-- End Body -->
+//                                          </td>
+//                                         </tr>
+//                                         <tr>
+//                                          <td align="center" valign="top">
+//                                            <!-- Footer -->
+//                                            <table id="template_footer" border="0" cellpadding="10" cellspacing="0" width="600">
+//                                             <tbody>
+//                                              <tr>
+//                                               <td style="padding: 0; -webkit-border-radius: 6px;" valign="top">
+//                                                <table border="0" cellpadding="10" cellspacing="0" width="100%">
+//                                                  <tbody>
+//                                                    <tr>
+//                                                     <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
+//                                                          <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology</a></p>
+//                                                     </td>
+//                                                    </tr>
+//                                                  </tbody>
+//                                                </table>
+//                                               </td>
+//                                              </tr>
+//                                             </tbody>
+//                                            </table>
+//                                          <!-- End Footer -->
+//                                          </td>
+//                                         </tr>
+//                                       </tbody>
+//                                      </table>
+//                                    </td>
+//                                   </tr>
+//                                  </tbody>
+//                                 </table>
+//                                </div>`
+//                             };
+//                             mdlconfig.transporter.sendMail(mailOptions, function (err, info) {
+//                                 if (err) {
+//                                     console.log(err);
+//                                     return res.send({
+//                                         status: 'not ok',
+//                                         message: 'Something went wrong'
+//                                     });
+//                                 } else {
+//                                     console.log('Mail Send: ', info.response);
+//                                     return res.send({
+//                                         status: 'ok',
+//                                         message: 'discussion Approve'
+//                                     });
+//                                 }
+//                             })
+//                         } else {
+//                             console.log("User not found or has no email");
+//                         }
+//                     });
+
+//                 })
+
+//                 const authorQuery = 'SELECT user_id FROM discussions WHERE id = ?';
+//                 db.query(authorQuery, [discussion_id], (commentError, commentResults) => {
+//                     if (commentError) {
+//                         console.error('Error fetching author details:', commentError);
+//                         return;
+//                     }
+
+//                     const user_id = commentResults[0].user_id;
+//                     //console.log("user_id",user_id);
+
+//                     const user_query = 'SELECT email,first_name,last_name FROM users WHERE user_id = ?';
+//                     db.query(user_query, [user_id], (error, results) => {
+//                         if (error) {
+//                             console.error('Error fetching user details:', error);
+//                             return;
+//                         }
+
+//                         if (results.length > 0) {
+//                             var userEmail = results[0].email;
+//                             // console.log("author email:", userEmail);
+//                             // console.log("author first_name:", results[0].first_name);
+//                             // console.log("author last_name:", results[0].last_name);
+//                             const full_name = `${results[0].first_name} ${results[0].last_name}`;
+//                             //console.log("full_name",full_name);
+
+
+//                             const authormailOptions = {
+//                                 from: process.env.MAIL_USER,
+//                                 to: userEmail,
+//                                 //to: "dev2.scwt@gmail.com",
+//                                 subject: 'Comment Approval',
+//                                 html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+//                                 <style>
+//                                 body, table, td, p, a, h1, h2, h3, h4, h5, h6, div {
+//                                     font-family: Calibri, 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif !important;
+//                                 }
+//                                 </style>
+//                                 <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
+//                                  <tbody>
+//                                   <tr>
+//                                    <td align="center" valign="top">
+//                                      <div id="template_header_image"><p style="margin-top: 0;"></p></div>
+//                                      <table id="template_container" style="box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important; background-color: #fdfdfd; border: 1px solid #dcdcdc; border-radius: 3px !important;" border="0" cellpadding="0" cellspacing="0" width="600">
+//                                       <tbody>
+//                                         <tr>
+//                                          <td align="center" valign="top">
+//                                            <!-- Header -->
+//                                            <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
+//                                              <tbody>
+//                                                <tr>
+//                                                <td><img alt="Logo" src="${process.env.MAIN_URL}front-end/images/cechoes-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+//                                                 <td id="header_wrapper" style="padding: 36px 48px; display: block;">
+//                                                    <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Comment on ${content} has been approved.</h1>
+//                                                 </td>
+                          
+//                                                </tr>
+//                                              </tbody>
+//                                            </table>
+//                                      <!-- End Header -->
+//                                      </td>
+//                                         </tr>
+//                                         <tr>
+//                                          <td align="center" valign="top">
+//                                            <!-- Body -->
+//                                            <table id="template_body" border="0" cellpadding="0" cellspacing="0" width="600">
+//                                              <tbody>
+//                                                <tr>
+//                                                 <td id="body_content" style="background-color: #fdfdfd;" valign="top">
+//                                                   <!-- Content -->
+//                                                   <table border="0" cellpadding="20" cellspacing="0" width="100%">
+//                                                    <tbody>
+//                                                     <tr>
+//                                                      <td style="padding: 48px;" valign="top">
+//                                                        <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
+                                                        
+//                                                         <table border="0" cellpadding="4" cellspacing="0" width="90%">
+//                                                           <tr>
+//                                                             <td colspan="2">
+//                                                             <strong>Hello ${full_name},</strong>
+//                                                             <p style="font-size:15px; line-height:20px">Comment for the ${content} discussion has been approved. Now you can see the discusion comment on the <a href="${process.env.MAIN_URL}discussion-details/${discussion_id}">here</a>.</p>
+//                                                             </td>
+//                                                           </tr>
+//                                                         </table>
+                                                        
+//                                                        </div>
+//                                                      </td>
+//                                                     </tr>
+//                                                    </tbody>
+//                                                   </table>
+//                                                 <!-- End Content -->
+//                                                 </td>
+//                                                </tr>
+//                                              </tbody>
+//                                            </table>
+//                                          <!-- End Body -->
+//                                          </td>
+//                                         </tr>
+//                                         <tr>
+//                                          <td align="center" valign="top">
+//                                            <!-- Footer -->
+//                                            <table id="template_footer" border="0" cellpadding="10" cellspacing="0" width="600">
+//                                             <tbody>
+//                                              <tr>
+//                                               <td style="padding: 0; -webkit-border-radius: 6px;" valign="top">
+//                                                <table border="0" cellpadding="10" cellspacing="0" width="100%">
+//                                                  <tbody>
+//                                                    <tr>
+//                                                     <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
+//                                                          <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology</a></p>
+//                                                     </td>
+//                                                    </tr>
+//                                                  </tbody>
+//                                                </table>
+//                                               </td>
+//                                              </tr>
+//                                             </tbody>
+//                                            </table>
+//                                          <!-- End Footer -->
+//                                          </td>
+//                                         </tr>
+//                                       </tbody>
+//                                      </table>
+//                                    </td>
+//                                   </tr>
+//                                  </tbody>
+//                                 </table>
+//                                </div>`
+//                             };
+//                             mdlconfig.transporter.sendMail(authormailOptions, function (err, info) {
+//                                 if (err) {
+//                                     console.log(err);
+//                                     return res.send({
+//                                         status: 'not ok',
+//                                         message: 'Something went wrong'
+//                                     });
+//                                 } else {
+//                                     console.log('Mail Send: ', info.response);
+//                                     return res.send({
+//                                         status: 'ok',
+//                                         message: 'Review Approve'
+//                                     });
+//                                 }
+//                             })
+//                         } else {
+//                             console.log("User not found or has no email");
+//                         }
+//                     });
+
+//                 })
+//             }
+
+
+
+//             const commentQuery = `UPDATE discussions_user_response SET ? WHERE id = ${extractedCommentId} `;
+//             return new Promise((resolve, reject) => {
+//                 db.query(commentQuery, commentData, (err, results) => {
+//                     if (err) {
+//                         reject(err);
+//                     } else {
+//                         resolve(results);
+//                     }
+//                 });
+//             });
+
+//         });
+
+//         Promise.all(promises)
+//             .then(() => {
+//                 return res.send({
+//                     status: 'ok',
+//                     message: 'Discussion details updated successfully.'
+//                 });
+//             })
+//             .catch(err => {
+//                 return res.send({
+//                     status: 'not ok',
+//                     message: 'Error updating comments ' + err
+//                 });
+//             });
+//     }
+//     else {
+//         console.log('commentStatuses is empty');
+//         const allTags = tags ? JSON.parse(tags).map(item => item.value) : [];
+
+//         const discussionData = {
+//             topic: content,
+//             tags: JSON.stringify(allTags),
+//             discussion_status
+//         };
+//         console.log("discussionData", discussionData);
+
+//         const discussionQuery = `UPDATE discussions SET ? WHERE id = ${discussion_id} `;
+//         db.query(discussionQuery, discussionData, async (err, result) => {
+//             if (err) {
+//                 return res.send({
+//                     status: 'not ok',
+//                     message: 'Something went wrong ' + err
+//                 });
+//             } else {
+//                 const discussion_status = discussionData.discussion_status
+//                 console.log("discussion_status", discussion_status);
+//                 if (discussion_status == 1) {
+//                     const disuser_query = `SELECT discussions.user_id,users.first_name,users.last_name,users.email FROM discussions LEFT JOIN users ON discussions.user_id = users.user_id WHERE discussions.id = ${discussion_id}`;
+//                     const disuser_value = await query(disuser_query);
+//                     console.log("disuser_value", disuser_value);
+
+//                     const full_name = `${disuser_value[0].first_name} ${disuser_value[0].last_name}`;
+//                     //console.log("full_name",full_name);
+//                     var email = disuser_value[0].email;
+//                     //console.log("email",email);
+
+
+
+//                     const mailOptions = {
+//                         from: process.env.MAIL_USER,
+//                         to: email,
+//                         //to: "dev2.scwt@gmail.com",
+//                         subject: 'Discussion approval mail',
+//                         html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+//                         <style>
+//                                 body, table, td, p, a, h1, h2, h3, h4, h5, h6, div {
+//                                     font-family: Calibri, 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif !important;
+//                                 }
+//                         </style>
+//                     <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
+//                     <tbody>
+//                     <tr>
+//                     <td align="center" valign="top">
+//                         <div id="template_header_image"><p style="margin-top: 0;"></p></div>
+//                         <table id="template_container" style="box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important; background-color: #fdfdfd; border: 1px solid #dcdcdc; border-radius: 3px !important;" border="0" cellpadding="0" cellspacing="0" width="600">
+//                         <tbody>
+//                             <tr>
+//                             <td align="center" valign="top">
+//                             <!-- Header -->
+//                             <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
+//                                 <tbody>
+//                                 <tr>
+//                                 <td><img alt="Logo" src="${process.env.MAIN_URL}front-end/images/cechoes-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+//                                     <td id="header_wrapper" style="padding: 36px 48px; display: block;">
+//                                     <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;"> Your discussion ${content} has been approved.</h1>
+//                                     </td>
+    
+//                                 </tr>
+//                                 </tbody>
+//                             </table>
+//                         <!-- End Header -->
+//                         </td>
+//                             </tr>
+//                             <tr>
+//                             <td align="center" valign="top">
+//                             <!-- Body -->
+//                             <table id="template_body" border="0" cellpadding="0" cellspacing="0" width="600">
+//                                 <tbody>
+//                                 <tr>
+//                                     <td id="body_content" style="background-color: #fdfdfd;" valign="top">
+//                                     <!-- Content -->
+//                                     <table border="0" cellpadding="20" cellspacing="0" width="100%">
+//                                     <tbody>
+//                                         <tr>
+//                                         <td style="padding: 48px;" valign="top">
+//                                         <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
+                                            
+//                                             <table border="0" cellpadding="4" cellspacing="0" width="90%">
+//                                             <tr>
+//                                                 <td colspan="2">
+//                                                 <strong>Hello ${full_name},</strong>
+//                                                 <p style="font-size:15px; line-height:20px">Your discussion has been approved. Now you can see your discussion on the <a href="${process.env.MAIN_URL}discussion-details/${discussion_id}">here</a> after login.</p>
+//                                                 </td>
+//                                             </tr>
+//                                             </table>
+                                            
+//                                         </div>
+//                                         </td>
+//                                         </tr>
+//                                     </tbody>
+//                                     </table>
+//                                     <!-- End Content -->
+//                                     </td>
+//                                 </tr>
+//                                 </tbody>
+//                             </table>
+//                             <!-- End Body -->
+//                             </td>
+//                             </tr>
+//                             <tr>
+//                             <td align="center" valign="top">
+//                             <!-- Footer -->
+//                             <table id="template_footer" border="0" cellpadding="10" cellspacing="0" width="600">
+//                                 <tbody>
+//                                 <tr>
+//                                 <td style="padding: 0; -webkit-border-radius: 6px;" valign="top">
+//                                 <table border="0" cellpadding="10" cellspacing="0" width="100%">
+//                                     <tbody>
+//                                     <tr>
+//                                         <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
+//                                             <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology</a></p>
+//                                         </td>
+//                                     </tr>
+//                                     </tbody>
+//                                 </table>
+//                                 </td>
+//                                 </tr>
+//                                 </tbody>
+//                             </table>
+//                             <!-- End Footer -->
+//                             </td>
+//                             </tr>
+//                         </tbody>
+//                         </table>
+//                     </td>
+//                     </tr>
+//                     </tbody>
+//                     </table>
+//                 </div>`
+//                     };
+//                     mdlconfig.transporter.sendMail(mailOptions, function (err, info) {
+//                         if (err) {
+//                             console.log(err);
+//                             return res.send({
+//                                 status: 'not ok',
+//                                 message: 'Something went wrong'
+//                             });
+//                         } else {
+//                             console.log('Mail Send: ', info.response);
+//                             return res.send({
+//                                 status: 'ok',
+//                                 message: 'Discussion details updated successfully.'
+//                             });
+//                         }
+//                     })
+//                 } else {
+//                     return res.send({
+//                         status: 'ok',
+//                         message: 'Discussion details updated successfully!'
+//                     });
+//                 }
+
+//                 function sendEmail(to, subject, text) {
+//                     const transporter = nodemailer.createTransport({
+//                         service: 'gmail',
+//                         auth: {
+//                             user: 'your_email@gmail.com',
+//                             pass: 'your_password',
+//                         },
+//                     });
+
+//                     const mailOptions = {
+//                         from: 'your_email@gmail.com',
+//                         to: to,
+//                         subject: subject,
+//                         text: text,
+//                     };
+
+//                     transporter.sendMail(mailOptions, (error, info) => {
+//                         if (error) {
+//                             console.error('Error sending email:', error);
+//                         } else {
+//                             console.log('Email sent:', info.response);
+//                         }
+//                     });
+//                 }
+//             };
+//         })
+
+//     }
+
+
+// }
+
+// exports.editDiscussions = (req, res) => {
+//     const {
+//         discussion_id,
+//         content,
+//         tags,
+//         discussion_status,
+//         comment,
+//         ...commentStatusesAndContents
+//     } = req.body;
+
+//     console.log("edit-discussion", req.body);
+//     console.log("commentStatusesAndContents", commentStatusesAndContents);
+
+//     if (Object.keys(commentStatusesAndContents).length > 0) {
+//         const allTags = tags ? JSON.parse(tags).map(item => item.value) : [];
+
+//         const discussionQuery = 'UPDATE discussions SET ? WHERE id = ?';
+//         const discussionData = {
+//             topic: content,
+//             tags: JSON.stringify(allTags),
+//             discussion_status
+//         };
+//         console.log("discussionData", discussionData);
+
+//         db.query(discussionQuery, [discussionData, discussion_id], (err, results) => {
+//             if (err) {
+//                 console.error('Error updating discussions table:', err);
+//                 return;
+//             }
+//             console.log('Discussions table updated successfully');
+//         });
+
+   
+//             const promises = Object.keys(commentStatusesAndContents).map(commentId => {
+//                 const commentData = {
+//                     comment_status: commentStatusesAndContents[commentId],
+//                     comment: req.body['comment_content_' + commentId] // Update content with the received data
+//                 };
+            
+//                 console.log("commentDatasssss",commentData);
+                
+//                 const extractedCommentId = commentId.replace('comment_status_', '');
+//                 console.log("extractedCommentId",extractedCommentId);
+                
+//             if (commentStatusesAndContents[commentId] == 1) {
+//                 // Send emails as before
+//                 const getCommentQuery = 'SELECT user_id FROM discussions_user_response WHERE id = ?';
+//                 db.query(getCommentQuery, [extractedCommentId], (commentError, commentResults) => {
+//                     if (commentError) {
+//                         console.error('Error fetching comment details:', commentError);
+//                         return;
+//                     }
+
+//                     console.log("commentResults",commentResults);
+                    
+
+//                     const user_id = commentResults[0].user_id;
+//                     console.log("user_id", user_id);
+
+//                     const user_query = 'SELECT email,first_name,last_name FROM users WHERE user_id = ?';
+//                     db.query(user_query, [user_id], (error, results) => {
+//                         if (error) {
+//                             console.error('Error fetching user details:', error);
+//                             return;
+//                         }
+
+//                         if (results.length > 0) {
+//                             var userEmail = results[0].email;
+//                             const full_name = `${results[0].first_name} ${results[0].last_name}`;
+//                             console.log("full_name", full_name);
+
+//                             const mailOptions = {
+//                                 from: process.env.MAIL_USER,
+//                                 to: userEmail,
+//                                 subject: 'Comment approval mail',
+//                                 html:  `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+//                                 <style>
+//                                 body, table, td, p, a, h1, h2, h3, h4, h5, h6, div {
+//                                     font-family: Calibri, 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif !important;
+//                                 }
+//                                 </style>
+//                                 <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
+//                                  <tbody>
+//                                   <tr>
+//                                    <td align="center" valign="top">
+//                                      <div id="template_header_image"><p style="margin-top: 0;"></p></div>
+//                                      <table id="template_container" style="box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important; background-color: #fdfdfd; border: 1px solid #dcdcdc; border-radius: 3px !important;" border="0" cellpadding="0" cellspacing="0" width="600">
+//                                       <tbody>
+//                                         <tr>
+//                                          <td align="center" valign="top">
+//                                            <!-- Header -->
+//                                            <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
+//                                              <tbody>
+//                                                <tr>
+//                                                <td><img alt="Logo" src="${process.env.MAIN_URL}front-end/images/cechoes-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+//                                                 <td id="header_wrapper" style="padding: 36px 48px; display: block;">
+//                                                    <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;"> Comment on ${content} has been approved.</h1>
+//                                                 </td>
+                          
+//                                                </tr>
+//                                              </tbody>
+//                                            </table>
+//                                      <!-- End Header -->
+//                                      </td>
+//                                         </tr>
+//                                         <tr>
+//                                          <td align="center" valign="top">
+//                                            <!-- Body -->
+//                                            <table id="template_body" border="0" cellpadding="0" cellspacing="0" width="600">
+//                                              <tbody>
+//                                                <tr>
+//                                                 <td id="body_content" style="background-color: #fdfdfd;" valign="top">
+//                                                   <!-- Content -->
+//                                                   <table border="0" cellpadding="20" cellspacing="0" width="100%">
+//                                                    <tbody>
+//                                                     <tr>
+//                                                      <td style="padding: 48px;" valign="top">
+//                                                        <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
+                                                        
+//                                                         <table border="0" cellpadding="4" cellspacing="0" width="90%">
+//                                                           <tr>
+//                                                             <td colspan="2">
+//                                                             <strong>Hello ${full_name},</strong>
+//                                                             <p style="font-size:15px; line-height:20px">Your comment for the discussion has been approved. Now you can see your comment on the <a href="${process.env.MAIN_URL}discussion-details/${discussion_id}">here</a>.</p>
+//                                                             </td>
+//                                                           </tr>
+//                                                         </table>
+                                                        
+//                                                        </div>
+//                                                      </td>
+//                                                     </tr>
+//                                                    </tbody>
+//                                                   </table>
+//                                                 <!-- End Content -->
+//                                                 </td>
+//                                                </tr>
+//                                              </tbody>
+//                                            </table>
+//                                          <!-- End Body -->
+//                                          </td>
+//                                         </tr>
+//                                         <tr>
+//                                          <td align="center" valign="top">
+//                                            <!-- Footer -->
+//                                            <table id="template_footer" border="0" cellpadding="10" cellspacing="0" width="600">
+//                                             <tbody>
+//                                              <tr>
+//                                               <td style="padding: 0; -webkit-border-radius: 6px;" valign="top">
+//                                                <table border="0" cellpadding="10" cellspacing="0" width="100%">
+//                                                  <tbody>
+//                                                    <tr>
+//                                                     <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
+//                                                          <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology</a></p>
+//                                                     </td>
+//                                                    </tr>
+//                                                  </tbody>
+//                                                </table>
+//                                               </td>
+//                                              </tr>
+//                                             </tbody>
+//                                            </table>
+//                                          <!-- End Footer -->
+//                                          </td>
+//                                         </tr>
+//                                       </tbody>
+//                                      </table>
+//                                    </td>
+//                                   </tr>
+//                                  </tbody>
+//                                 </table>
+//                                </div>`
+//                             };
+//                             mdlconfig.transporter.sendMail(mailOptions, function (err, info) {
+//                                 if (err) {
+//                                     console.log(err);
+//                                     return res.send({
+//                                         status: 'not ok',
+//                                         message: 'Something went wrong'
+//                                     });
+//                                 } else {
+//                                     console.log('Mail Send: ', info.response);
+//                                     return res.send({
+//                                         status: 'ok',
+//                                         message: 'discussion Approve'
+//                                     });
+//                                 }
+//                             })
+//                         } else {
+//                             console.log("User not found or has no email");
+//                         }
+//                     });
+
+//                 });
+
+//                 const authorQuery = 'SELECT user_id FROM discussions WHERE id = ?';
+//                 db.query(authorQuery, [discussion_id], (commentError, commentResults) => {
+//                     if (commentError) {
+//                         console.error('Error fetching author details:', commentError);
+//                         return;
+//                     }
+
+//                     const user_id = commentResults[0].user_id;
+
+//                     const user_query = 'SELECT email,first_name,last_name FROM users WHERE user_id = ?';
+//                     db.query(user_query, [user_id], (error, results) => {
+//                         if (error) {
+//                             console.error('Error fetching user details:', error);
+//                             return;
+//                         }
+
+//                         if (results.length > 0) {
+//                             var userEmail = results[0].email;
+//                             const full_name = `${results[0].first_name} ${results[0].last_name}`;
+
+//                             const authormailOptions = {
+//                                 from: process.env.MAIL_USER,
+//                                 to: userEmail,
+//                                 subject: 'Comment Approval',
+//                                 html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+//                                 <style>
+//                                 body, table, td, p, a, h1, h2, h3, h4, h5, h6, div {
+//                                     font-family: Calibri, 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif !important;
+//                                 }
+//                                 </style>
+//                                 <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
+//                                  <tbody>
+//                                   <tr>
+//                                    <td align="center" valign="top">
+//                                      <div id="template_header_image"><p style="margin-top: 0;"></p></div>
+//                                      <table id="template_container" style="box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important; background-color: #fdfdfd; border: 1px solid #dcdcdc; border-radius: 3px !important;" border="0" cellpadding="0" cellspacing="0" width="600">
+//                                       <tbody>
+//                                         <tr>
+//                                          <td align="center" valign="top">
+//                                            <!-- Header -->
+//                                            <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
+//                                              <tbody>
+//                                                <tr>
+//                                                <td><img alt="Logo" src="${process.env.MAIN_URL}front-end/images/cechoes-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+//                                                 <td id="header_wrapper" style="padding: 36px 48px; display: block;">
+//                                                    <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Comment on ${content} has been approved.</h1>
+//                                                 </td>
+                          
+//                                                </tr>
+//                                              </tbody>
+//                                            </table>
+//                                      <!-- End Header -->
+//                                      </td>
+//                                         </tr>
+//                                         <tr>
+//                                          <td align="center" valign="top">
+//                                            <!-- Body -->
+//                                            <table id="template_body" border="0" cellpadding="0" cellspacing="0" width="600">
+//                                              <tbody>
+//                                                <tr>
+//                                                 <td id="body_content" style="background-color: #fdfdfd;" valign="top">
+//                                                   <!-- Content -->
+//                                                   <table border="0" cellpadding="20" cellspacing="0" width="100%">
+//                                                    <tbody>
+//                                                     <tr>
+//                                                      <td style="padding: 48px;" valign="top">
+//                                                        <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
+                                                        
+//                                                         <table border="0" cellpadding="4" cellspacing="0" width="90%">
+//                                                           <tr>
+//                                                             <td colspan="2">
+//                                                             <strong>Hello ${full_name},</strong>
+//                                                             <p style="font-size:15px; line-height:20px">Comment for the ${content} discussion has been approved. Now you can see the discusion comment on the <a href="${process.env.MAIN_URL}discussion-details/${discussion_id}">here</a>.</p>
+//                                                             </td>
+//                                                           </tr>
+//                                                         </table>
+                                                        
+//                                                        </div>
+//                                                      </td>
+//                                                     </tr>
+//                                                    </tbody>
+//                                                   </table>
+//                                                 <!-- End Content -->
+//                                                 </td>
+//                                                </tr>
+//                                              </tbody>
+//                                            </table>
+//                                          <!-- End Body -->
+//                                          </td>
+//                                         </tr>
+//                                         <tr>
+//                                          <td align="center" valign="top">
+//                                            <!-- Footer -->
+//                                            <table id="template_footer" border="0" cellpadding="10" cellspacing="0" width="600">
+//                                             <tbody>
+//                                              <tr>
+//                                               <td style="padding: 0; -webkit-border-radius: 6px;" valign="top">
+//                                                <table border="0" cellpadding="10" cellspacing="0" width="100%">
+//                                                  <tbody>
+//                                                    <tr>
+//                                                     <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
+//                                                          <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology</a></p>
+//                                                     </td>
+//                                                    </tr>
+//                                                  </tbody>
+//                                                </table>
+//                                               </td>
+//                                              </tr>
+//                                             </tbody>
+//                                            </table>
+//                                          <!-- End Footer -->
+//                                          </td>
+//                                         </tr>
+//                                       </tbody>
+//                                      </table>
+//                                    </td>
+//                                   </tr>
+//                                  </tbody>
+//                                 </table>
+//                                </div>`
+//                             };
+//                             mdlconfig.transporter.sendMail(authormailOptions, function (err, info) {
+//                                 if (err) {
+//                                     console.log(err);
+//                                     return res.send({
+//                                         status: 'not ok',
+//                                         message: 'Something went wrong'
+//                                     });
+//                                 } else {
+//                                     console.log('Mail Send: ', info.response);
+//                                     return res.send({
+//                                         status: 'ok',
+//                                         message: 'Review Approve'
+//                                     });
+//                                 }
+//                             })
+//                         } else {
+//                             console.log("User not found or has no email");
+//                         }
+//                     });
+
+//                 });
+//             }
+
+//             const commentQuery = `UPDATE discussions_user_response SET ? WHERE id = ?`;
+//             return new Promise((resolve, reject) => {
+//                 db.query(commentQuery, [commentData, extractedCommentId], (err, results) => {
+//                     if (err) {
+//                         reject(err);
+//                     } else {
+//                         resolve(results);
+//                     }
+//                 });
+//             });
+
+//         });
+
+//         Promise.all(promises)
+//             .then(() => {
+//                 return res.send({
+//                     status: 'ok',
+//                     message: 'Discussion details updated successfully.'
+//                 });
+//             })
+//             .catch(err => {
+//                 return res.send({
+//                     status: 'not ok',
+//                     message: 'Error updating comments ' + err
+//                 });
+//             });
+//     } else {
+//         console.log('commentStatusesAndContents is empty');
+//         const allTags = tags ? JSON.parse(tags).map(item => item.value) : [];
+
+//         const discussionData = {
+//             topic: content,
+//             tags: JSON.stringify(allTags),
+//             discussion_status
+//         };
+//         console.log("discussionData", discussionData);
+
+//         const discussionQuery = `UPDATE discussions SET ? WHERE id = ${discussion_id} `;
+//         db.query(discussionQuery, discussionData, async (err, result) => {
+//             if (err) {
+//                 return res.send({
+//                     status: 'not ok',
+//                     message: 'Something went wrong ' + err
+//                 });
+//             } else {
+//                 const discussion_status = discussionData.discussion_status
+//                 console.log("discussion_status", discussion_status);
+//                 if (discussion_status == 1) {
+//                     const disuser_query = `SELECT discussions.user_id,users.first_name,users.last_name,users.email FROM discussions LEFT JOIN users ON discussions.user_id = users.user_id WHERE discussions.id = ${discussion_id}`;
+//                     const disuser_value = await query(disuser_query);
+//                     console.log("disuser_value", disuser_value);
+
+//                     const full_name = `${disuser_value[0].first_name} ${disuser_value[0].last_name}`;
+//                     var email = disuser_value[0].email;
+
+//                     const mailOptions = {
+//                         from: process.env.MAIL_USER,
+//                         to: email,
+//                         subject: 'Discussion approval mail',
+//                         html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+//                         <style>
+//                                 body, table, td, p, a, h1, h2, h3, h4, h5, h6, div {
+//                                     font-family: Calibri, 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif !important;
+//                                 }
+//                         </style>
+//                     <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
+//                     <tbody>
+//                     <tr>
+//                     <td align="center" valign="top">
+//                         <div id="template_header_image"><p style="margin-top: 0;"></p></div>
+//                         <table id="template_container" style="box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important; background-color: #fdfdfd; border: 1px solid #dcdcdc; border-radius: 3px !important;" border="0" cellpadding="0" cellspacing="0" width="600">
+//                         <tbody>
+//                             <tr>
+//                             <td align="center" valign="top">
+//                             <!-- Header -->
+//                             <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
+//                                 <tbody>
+//                                 <tr>
+//                                 <td><img alt="Logo" src="${process.env.MAIN_URL}front-end/images/cechoes-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+//                                     <td id="header_wrapper" style="padding: 36px 48px; display: block;">
+//                                     <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;"> Your discussion ${content} has been approved.</h1>
+//                                     </td>
+    
+//                                 </tr>
+//                                 </tbody>
+//                             </table>
+//                         <!-- End Header -->
+//                         </td>
+//                             </tr>
+//                             <tr>
+//                             <td align="center" valign="top">
+//                             <!-- Body -->
+//                             <table id="template_body" border="0" cellpadding="0" cellspacing="0" width="600">
+//                                 <tbody>
+//                                 <tr>
+//                                     <td id="body_content" style="background-color: #fdfdfd;" valign="top">
+//                                     <!-- Content -->
+//                                     <table border="0" cellpadding="20" cellspacing="0" width="100%">
+//                                     <tbody>
+//                                         <tr>
+//                                         <td style="padding: 48px;" valign="top">
+//                                         <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
+                                            
+//                                             <table border="0" cellpadding="4" cellspacing="0" width="90%">
+//                                             <tr>
+//                                                 <td colspan="2">
+//                                                 <strong>Hello ${full_name},</strong>
+//                                                 <p style="font-size:15px; line-height:20px">Your discussion has been approved. Now you can see your discussion on the <a href="${process.env.MAIN_URL}discussion-details/${discussion_id}">here</a> after login.</p>
+//                                                 </td>
+//                                             </tr>
+//                                             </table>
+                                            
+//                                         </div>
+//                                         </td>
+//                                         </tr>
+//                                     </tbody>
+//                                     </table>
+//                                     <!-- End Content -->
+//                                     </td>
+//                                 </tr>
+//                                 </tbody>
+//                             </table>
+//                             <!-- End Body -->
+//                             </td>
+//                             </tr>
+//                             <tr>
+//                             <td align="center" valign="top">
+//                             <!-- Footer -->
+//                             <table id="template_footer" border="0" cellpadding="10" cellspacing="0" width="600">
+//                                 <tbody>
+//                                 <tr>
+//                                 <td style="padding: 0; -webkit-border-radius: 6px;" valign="top">
+//                                 <table border="0" cellpadding="10" cellspacing="0" width="100%">
+//                                     <tbody>
+//                                     <tr>
+//                                         <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
+//                                             <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology</a></p>
+//                                         </td>
+//                                     </tr>
+//                                     </tbody>
+//                                 </table>
+//                                 </td>
+//                                 </tr>
+//                                 </tbody>
+//                             </table>
+//                             <!-- End Footer -->
+//                             </td>
+//                             </tr>
+//                         </tbody>
+//                         </table>
+//                     </td>
+//                     </tr>
+//                     </tbody>
+//                     </table>
+//                 </div>`
+//                     };
+//                     mdlconfig.transporter.sendMail(mailOptions, function (err, info) {
+//                         if (err) {
+//                             console.log(err);
+//                             return res.send({
+//                                 status: 'not ok',
+//                                 message: 'Something went wrong'
+//                             });
+//                         } else {
+//                             console.log('Mail Send: ', info.response);
+//                             return res.send({
+//                                 status: 'ok',
+//                                 message: 'Discussion details updated successfully.'
+//                             });
+//                         }
+//                     })
+//                 } else {
+//                     return res.send({
+//                         status: 'ok',
+//                         message: 'Discussion details updated successfully!'
+//                     });
+//                 }
+//             };
+//         });
+//     }
+// }
+
+
+exports.editDiscussions = async (req, res) => {
+    try {
+        const {
+            discussion_id,
+            content,
+            tags,
+            discussion_status,
+            ...commentStatusesAndContents
+        } = req.body;
+
+        console.log("edit-discussion", req.body);
+
+        const allTags = tags ? JSON.parse(tags).map(item => item.value) : [];
+
+        const discussionQuery = 'UPDATE discussions SET ? WHERE id = ?';
+        const discussionData = {
+            topic: content,
+            tags: JSON.stringify(allTags),
+            discussion_status
+        };
+
+        console.log("discussionData", discussionData);
+        await query(discussionQuery, [discussionData, discussion_id]);
+
+        const promises = Object.keys(commentStatusesAndContents).filter(key => key.startsWith('comment_status_')).map(async (commentStatusKey) => {
+            const commentId = commentStatusKey.replace('comment_status_', '');
+            const commentStatus = commentStatusesAndContents[commentStatusKey];
+            const commentContentKey = 'comment_content_' + commentId;
+
+            // Access comment content
+            const commentContent = req.body[commentContentKey] || '';
+
+            const commentData = {
+                comment_status: commentStatus,
+                comment: commentContent.trim() // Ensure whitespace is handled
+            };
+
+            console.log("commentData", commentData);
+
+            if (commentStatus === '1') {
+                // Process for approved comments
+                const getCommentQuery = 'SELECT user_id FROM discussions_user_response WHERE id = ?';
+                const commentResults = await query(getCommentQuery, [commentId]);
+                const user_id = commentResults[0].user_id;
+
+                const userQuery = 'SELECT email, first_name, last_name FROM users WHERE user_id = ?';
+                const userResults = await query(userQuery, [user_id]);
+
+                if (userResults.length > 0) {
+                    const { email: userEmail, first_name: firstName, last_name: lastName } = userResults[0];
+                    const fullName = `${firstName} ${lastName}`;
+
+                    const mailOptions = {
+                        from: process.env.MAIL_USER,
+                        to: userEmail,
+                        subject: 'Comment approval mail',
+                        html: `<p>Hello ${fullName},</p><p>Your comment has been approved.</p>`
+                    };
+
+                    await mdlconfig.transporter.sendMail(mailOptions);
+                } else {
+                    console.log("User not found or has no email");
+                }
+
+                const authorQuery = 'SELECT user_id FROM discussions WHERE id = ?';
+                const authorResults = await query(authorQuery, [discussion_id]);
+                const authorId = authorResults[0].user_id;
+
+                const authorUserQuery = 'SELECT email, first_name, last_name FROM users WHERE user_id = ?';
+                const authorUserResults = await query(authorUserQuery, [authorId]);
+
+                if (authorUserResults.length > 0) {
+                    const { email: authorEmail, first_name: authorFirstName, last_name: authorLastName } = authorUserResults[0];
+                    const authorFullName = `${authorFirstName} ${authorLastName}`;
+
+                    const authorMailOptions = {
+                        from: process.env.MAIL_USER,
+                        to: authorEmail,
+                        subject: 'Comment Approval',
+                        html: `<p>Hello ${authorFullName},</p><p>Your discussion has received an approved comment.</p>`
+                    };
+
+                    await mdlconfig.transporter.sendMail(authorMailOptions);
+                } else {
+                    console.log("Author not found or has no email");
+                }
+            }
+
+            const commentQuery = 'UPDATE discussions_user_response SET ? WHERE id = ?';
+            await query(commentQuery, [commentData, commentId]);
+        });
+
+        await Promise.all(promises);
+
+        res.send({
+            status: 'ok',
+            message: 'Discussion details updated successfully.'
+        });
+    } catch (err) {
+        console.error('Error in editDiscussions:', err);
+        res.send({
+            status: 'not ok',
+            message: 'Error updating discussions: ' + err.message
+        });
+    }
+};
+
+
+
+
+
+
+exports.editDiscussioncomment = async (req, res) => {
+    try {
+        const {
+            commentId,
+            updatedComment
+        } = req.body;
+
+        console.log("editDiscussioncomment", req.body);
+
+        const commentData = {
+            comment: updatedComment
+        };
+
+        const commentQuery = `UPDATE discussions_user_response SET ? WHERE id = ${commentId} `;
+        return new Promise((resolve, reject) => {
+            db.query(commentQuery, commentData, (err, results) => {
+                console.log("discussioncommentresults",results);
+
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(results);
+                }
+            });
+        });
+
+    } catch (error) {
+        console.error('error editDiscussioncomment:', error);
+        return res.send(
+            {
+                status: 'err',
+                message: error
+            }
+        )
+    }
 }
 
 exports.likeComment = (req, res) => {

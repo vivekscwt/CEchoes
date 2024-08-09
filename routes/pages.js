@@ -10900,6 +10900,7 @@ router.get('/:getcountryname/register-cechoes-complaint', checkFrontEndLoggedIn,
     }
 });
 
+
 //user complain listing page
 router.get('/my-complaints', checkFrontEndLoggedIn, async (req, res) => {
     const encodedUserData = req.cookies.user;
@@ -11125,6 +11126,36 @@ router.get('/getcatsbyCountry', async (req, res) => {
         });
     }
 });
+
+router.get('/getcompany-details-by-id', async (req, res) => {
+    try {
+        const company_id = req.query.company_id;
+        console.log("company_id", company_id);
+
+        const getcompanyquery = `SELECT * FROM company WHERE ID=?`;
+        const companyvalue = await query(getcompanyquery, [company_id]);
+
+        if (companyvalue.length > 0) {
+            const company_name = companyvalue[0].company_name;
+            console.log("company_name", company_name);
+            
+            res.status(200).json({
+                status: 'ok',
+                companyName: company_name
+            });
+        } else {
+            res.status(404).json({
+                status: 'error',
+                message: 'Company not found'
+            });
+        }
+        
+    } catch (error) {
+        console.error('Error getcompanyDetails:', error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
+
 //-----------------------------------------------------------------//
 
 
