@@ -181,7 +181,11 @@
                      <input type="hidden" id="complaint-id-resolve" name="complaint_id" value="">
                      <input type="hidden"  name="complaint_status" value="1">
                      <input type="hidden" id="complaint-resolve-level" name="complaint_level" value="">
-                     <input type="submit" class="btn-default btn-warning submit_btn" id="" value="Resolved">
+                     <!-- <input type="submit" class="btn-default btn-warning submit_btn" id="" value="Resolved"> -->
+                     <div class="form-buttons">
+                        <input type="submit" class="btn-default btn-warning submit_btn" id="" value="Resolved">
+                        <button type="button" class="btn-default btn-secondary go-back-btn" style="background-color: #FCCB06; border-radius: 8px;" onclick="window.location.href='/company-complaint-listing/<%= company.slug %>'">Go Back</button>
+                    </div>
                   </form>
                   <div class="register-now frm-loading" style=" display: none; ">
                      <span class="indicator-progress">Please wait...
