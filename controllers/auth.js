@@ -9238,8 +9238,10 @@ exports.complaintRegister = (req, res) => {
     // });
     // }
 
-    const { company_id, user_id, category_id, sub_category_id, model_no, allTags, transaction_date, location, message } = req.body;
+    const { company_id, user_id, category_id, sub_category_id, model_no, allTags, transaction_date, location, message, select_complaint_product } = req.body;
     console.log("company_idsss", req.body.company_id);
+    console.log("complaintss",req.body);
+    
     //return false;
     //const uuid = uuidv4();  
     const randomNo = Math.floor(Math.random() * (100 - 0 + 1)) + 0;
@@ -9261,7 +9263,8 @@ exports.complaintRegister = (req, res) => {
         status: '2',
         created_at: formattedDate,
         level_update_at: formattedDate,
-        assigned_status: '0'
+        assigned_status: '0',
+        product_id: select_complaint_product
     }
 
 
@@ -9701,14 +9704,15 @@ exports.companyQuery = async (req, res) => {
 
 //user Complaint Rating
 exports.userComplaintRating = async (req, res) => {
-    //console.log('userComplaintRating',req.body ); 
+    console.log('userComplaintRating',req.body ); 
     //return false;
-    const { user_id, complaint_id, rating } = req.body;
+    const { user_id, complaint_id, rating,feedback_comment } = req.body;
 
     const data = {
         user_id: user_id,
         complaint_id: complaint_id,
         rating: rating,
+        feedback: feedback_comment
     }
     const checkQuery = `SELECT id FROM complaint_rating WHERE complaint_id = '${complaint_id}' AND user_id = '${user_id}' `;
     db.query(checkQuery, (checkErr, checkResult) => {
@@ -9719,7 +9723,7 @@ exports.userComplaintRating = async (req, res) => {
             });
         }
         if (checkResult.length > 0) {
-            const updateQuery = `UPDATE complaint_rating SET rating='${rating}' WHERE complaint_id = '${complaint_id}' AND user_id = '${user_id}' `;
+            const updateQuery = `UPDATE complaint_rating SET rating='${rating}', feedback= "${feedback_comment}" WHERE complaint_id = '${complaint_id}' AND user_id = '${user_id}'`;
             db.query(updateQuery, (updateErr, updateResult) => {
                 if (updateErr) {
                     return res.send({
@@ -9750,7 +9754,6 @@ exports.userComplaintRating = async (req, res) => {
             })
         }
     })
-
 }
 
 //Insert user Complaint Response  to company
@@ -9793,7 +9796,7 @@ exports.userComplaintResponse = async (req, res) => {
 
     if (complaint_status == '0') {
         const [updateComplaintStatus, complaintCompanyResolvedEmail] = await Promise.all([
-            comFunction2.updateComplaintStatus(complaint_id, '0'),
+            comFunction2.updateComplaintStatus(complaint_id, '0', message),
             comFunction2.complaintUserReopenEmail(complaint_id)
         ]);
     } else {

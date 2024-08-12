@@ -107,7 +107,7 @@
                         </div>
                         <div class="col-sm-6">
                            <div class="custom-form">
-                              <div class="custom-form m-0 dynamic_sub_category_field_wrapper" >
+                              <div class="custom-form m-0 dynamic_product_field_wrapper" >
                                  <select id="select_sub_category" name="sub_category_id"  class="form-select" required>
                                      <option value="" disabled>Sub-Category</option>
                                      <option value="0">General</option>
@@ -115,7 +115,17 @@
                              </div>
                            </div>
                         </div>
-                        <div class="col-sm-12">
+                        <div class="col-sm-6">
+                            <div class="custom-form">
+                               <div class="custom-form m-0 dynamic_sub_category_field_wrapper" >
+                                  <select id="select_complaint_product" name="select_complaint_product"  class="form-select" required>
+                                    <option value="0" disabled>Product</option>
+                                    <!-- <option value="0">General</option> -->
+                                  </select>
+                              </div>
+                            </div>
+                         </div>
+                        <div class="col-sm-6">
                            <div class="custom-form">
                               <input type="text" name="model_no" id="model_no" class="form-control" placeholder="Product Model / Serial No">
                            </div>
@@ -240,9 +250,60 @@ $(document).ready(function () {
     });
 });
 
-   $('#select_category').change(function() {
+//    $('#select_category').change(function() {
+//     $('#select_sub_category').empty().append($('<option value="" disabled selected>Sub Category</option>')); // Default option
+//     $('#dynamic_sub_category_field_wrapper').hide();
+//     var category_id = $(this).val();
+
+//     $.ajax({
+//         url: '/api/complain_sub_category',
+//         method: 'POST',
+//         data: { category_id: category_id },
+//         ContentType: 'application/json',
+//         success: function(data) {
+//              $('#select_sub_category').append($('<option value="0">General</option>')); // General option
+
+//             if (data.status == 'ok' && data.data.length > 0) {
+//                 $('#dynamic_sub_category_field_wrapper').show();
+                
+//                 $.each(data.data, function(i, item) {
+//                     $('#select_sub_category').append($('<option>', { 
+//                         value: item.id,
+//                         text: item.category_name 
+//                     }));
+//                 });
+//             } else {
+//                 $('#dynamic_sub_category_field_wrapper').hide();
+//                 $("#select_sub_category").prop('required', false);
+//             }
+//         },
+//         error: function(error) {
+//             // Handle any errors
+//             Swal.fire({
+//                 text: error.responseText || "An error occurred",
+//                 icon: "error",
+//                 buttonsStyling: false,
+//                 confirmButtonText: "Ok, got it!",
+//                 customClass: {
+//                     confirmButton: "btn btn-primary"
+//                 }
+//             });
+//             submitButton.disabled = false;
+//         }
+//     });
+// });
+
+
+
+$('#select_category').change(function() {
     $('#select_sub_category').empty().append($('<option value="" disabled selected>Sub Category</option>')); // Default option
+
+    $('#select_complaint_product').empty().append($('<option value="" disabled selected>Product</option>')); // Default option
+
     $('#dynamic_sub_category_field_wrapper').hide();
+    $('#dynamic_product_field_wrapper').hide();
+
+    
     var category_id = $(this).val();
 
     $.ajax({
@@ -265,6 +326,44 @@ $(document).ready(function () {
             } else {
                 $('#dynamic_sub_category_field_wrapper').hide();
                 $("#select_sub_category").prop('required', false);
+            }
+        },
+        error: function(error) {
+            // Handle any errors
+            Swal.fire({
+                text: error.responseText || "An error occurred",
+                icon: "error",
+                buttonsStyling: false,
+                confirmButtonText: "Ok, got it!",
+                customClass: {
+                    confirmButton: "btn btn-primary"
+                }
+            });
+            submitButton.disabled = false;
+        }
+    });
+
+
+    $.ajax({
+        url: '/api/company_product',
+        method: 'POST',
+        data: { category_id: category_id },
+        ContentType: 'application/json',
+        success: function(data) {
+             $('#select_complaint_product').append($('<option value="0">General</option>')); // General option
+
+            if (data.status == 'ok' && data.data.length > 0) {
+                $('#dynamic_product_field_wrapper').show();
+                
+                $.each(data.data, function(i, item) {
+                    $('#select_complaint_product').append($('<option>', { 
+                        value: item.id,
+                        text : item.product_title 
+                    }));
+                });
+            } else {
+                $('#dynamic_product_field_wrapper').hide();
+                $("#select_complaint_product").prop('required', false);
             }
         },
         error: function(error) {

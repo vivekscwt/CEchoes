@@ -82,9 +82,11 @@
                                                    <li>
                                                       <a href="#" data-bs-toggle="modal"
                                                       data-complaint-id="<%= compnaint.id %>" data-level-id="<%= compnaint.level_id %>" data-customer-id="<%= compnaint.user_id %>" data-company-id="<%= compnaint.company_id %>"
-                                                      data-bs-target="#customerquerymodal" class="respond-link">Reopen</a>
+                                                      data-bs-target="#customerquerymodal" class="respond-link"> 
+                                                      <i class="fas fa-folder-open"></i> Reopen Ticket
+                                                   </a>
                                                    </li>
-                                                   <li><a href="#" class="respond-link" data-complaint-id="<%= compnaint.id %>" data-customer-id="<%= compnaint.user_id %>" data-bs-toggle="modal" data-bs-target="#giveratingmodal">Give your rating</a></li>
+                                                   <li><a href="#" class="respond-link" data-complaint-id="<%= compnaint.id %>" data-customer-id="<%= compnaint.user_id %>" data-bs-toggle="modal" data-bs-target="#giveratingmodal">Rate your Experience</a></li>
                                                 </ul>
                                              </div>
                                           </span>
@@ -154,6 +156,10 @@
                   </div>
                </div>
             </div>
+            <div class="form-group mt-3">
+               <label for="feedback_comment"><strong>Feedback</strong></label>
+               <textarea class="form-control" id="feedback_comment" name="feedback_comment" rows="4" placeholder="Please provide additional comments"></textarea>
+           </div>
             <input type="hidden" name="user_id" id="customer-id-query" value="" />
             <input type="hidden" id="complaint-id-input" name="complaint_id" value="">
             <input type="submit" class="btn-default btn-warning mt-3" value="Submit"> 
@@ -186,7 +192,7 @@
          <div class="modal-body">
             <form id="user_reopen" class="">
                <div class="custom-form">
-                  <label for=""><span>Enter Your Reopen Reason</span><span style="color: red;">*</span></label>
+                  <label for=""><span>Reason for reopening Ticket</span><span style="color: red;">*</span></label>
                   <textarea name="message" id="" class="form-control" required></textarea>
                </div>
                <input type="hidden" name="user_id" id="customer-id" value="" />

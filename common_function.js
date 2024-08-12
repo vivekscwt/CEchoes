@@ -2030,8 +2030,8 @@ async function createreview(reviewIfo, userId, comInfo) {
   //   var country_name = country_name_value[0].name;
   //   console.log("country_name",country_name);
   // }
-  const create_review_query = 'INSERT INTO reviews (company_id, customer_id, company_location, company_location_id, review_title, rating, review_content, user_privacy, review_status, created_at, updated_at, labels, user_contact, category_id, product_id,temp_review_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)';
-  const create_review_values = [CompanyID, userId, concatenatedAddress, CompanylocID, reviewIfo.review_title, reviewIfo.rating, reviewIfo.review_content, reviewIfo.user_privacy, '2', formattedDate, formattedDate, reviewIfo.review_lable, reviewIfo.user_contact, reviewIfo.category_id, reviewIfo.product_id,temp_review_status];
+  const create_review_query = 'INSERT INTO reviews (company_id, customer_id, company_location, company_location_id, review_title, rating, review_content, user_privacy, review_status, created_at, updated_at, labels, user_contact, category_id, sub_cat_id, product_id,temp_review_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?)';
+  const create_review_values = [CompanyID, userId, concatenatedAddress, CompanylocID, reviewIfo.review_title, reviewIfo.rating, reviewIfo.review_content, reviewIfo.user_privacy, '2', formattedDate, formattedDate, reviewIfo.review_lable, reviewIfo.user_contact, reviewIfo.category_id, reviewIfo.review_sub_id, reviewIfo.product_id,temp_review_status];
 
   try {
     const create_review_results = await query(create_review_query, create_review_values);

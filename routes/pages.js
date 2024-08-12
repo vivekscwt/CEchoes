@@ -6879,10 +6879,10 @@ router.get('/company-complaint-listing/:slug', checkClientClaimedCompany, async 
         comFunction2.geCompanyCategorieslength(companyId)
         //comFunction2.sendemailtolevelUsers(),
     ]);
-    //console.log("getAllComplaintsByCompanyId",getAllComplaintsByCompanyId);
-    console.log("getuserslistofcompanycategory", getuserslistofcompanycategory);
+    // console.log("getAllComplaintsByCompanyId",getAllComplaintsByCompanyId);
+    //console.log("getuserslistofcompanycategory", getuserslistofcompanycategory);
     var company_level = company.complaint_level;
-    console.log("company_level", company_level);
+    //console.log("company_level", company_level);
     const get_complaint_level = `SELECT complaint_level FROM company WHERE ID= "${companyId}"`;
     const complaintlevelResult = await query(get_complaint_level);
 
@@ -6911,9 +6911,9 @@ router.get('/company-complaint-listing/:slug', checkClientClaimedCompany, async 
         };
     });
 
-    //console.log("formattedCoplaintData",formattedCoplaintData);
+    console.log("formattedCoplaintData",formattedCoplaintData[0]);
     //console.log("getuserslistofcompanycategory",getuserslistofcompanycategory);
-    console.log("geCompanyCategorieslength", geCompanyCategorieslength);
+    //console.log("geCompanyCategorieslength", geCompanyCategorieslength);
     const companyPaidStatus = company.paid_status.trim();;
     if (companyPaidStatus == 'free') {
         res.render('front-end/basic-complaint-listing',

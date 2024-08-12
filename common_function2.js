@@ -1021,9 +1021,9 @@ async function geCompanyCategories(companyId) {
   `;
   try {
     const results = await query(sql);
-    console.log("results", results);
+    //console.log("results", results);
     if (results.length > 0) {
-      console.log("results", results);
+      //console.log("results", results);
       return results;
     } else {
       return [];
@@ -3504,7 +3504,7 @@ async function updateComplaintStatus(complaint_id, status) {
   const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ');
 
   const sql = `
-  UPDATE complaint SET status='${status}', reopen_date = '${formattedDate}', level_id = '1', level_update_at = '${formattedDate}',assigned_status = '0' WHERE id = '${complaint_id}'
+  UPDATE complaint SET status='${status}', reopen_date = '${formattedDate}', level_id = '1', level_update_at = '${formattedDate}',assigned_status = '0', reopen_message= "${message}" WHERE id = '${complaint_id}'
   `;
   
   const deleteAssignedUsersSql = `DELETE FROM complaint_assigned_users WHERE complaint_id = ?`;//new
@@ -7389,7 +7389,7 @@ async function getcategories(company_id) {
       if (err) {
         reject('An error occurred while processing your request ' + err);
       } else {
-        console.log('results', results);
+        //console.log('results', results);
         // const filteredResults = results.filter(item => item.product_id !== null);
         //console.log("filteredResults",filteredResults);
         resolve(results);
