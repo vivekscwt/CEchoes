@@ -39,14 +39,8 @@
                      %>
 
                      <% const daysDiff = Math.round((date - date2)/(1000 * 60 * 60 * 24)) %>
-                     <% if( SurveyAnswerCount[0].total_ans > 0 ){ %>
-                        
-                              <div class="each_box update_basic_information all_review_listing_for_company">
-                                 <h5>Cannot update survey because participants have already participated.</h5>
-                              </div>
-                           <div style="width: 85%; text-align: center; display: block; border: 2px solid #fccb06; padding: 6px; margin: 0 auto; border-radius: 5px; display: none;" class="poll-create-message"></div>
-                       
-                    <% } else { %>
+
+                     
                      <div class="create-survey-field">
                         
                      <%= //jsonString %>
@@ -236,27 +230,34 @@
                                  </div>
                               </div>
 
-                              <div id="invitation_fields" class="send-review-invitation" >
+                              <% var tagss = JSON.parse(jsonStringa) %>
+                              <%= console.log("tagasasass",tagss);
+                               %>
+                              <div id="invitation_fields" class="send-review-invitation">
                                  <div style="margin: 10px; display: flex; justify-content: flex-end">
-                                    <button type="button" class="btn btn-warning" id="bulk-upload" data-bs-whatever="@fat">Bulk Upload</button>
+                                     <button type="button" class="btn btn-warning" id="bulk-upload" data-bs-whatever="@fat">Bulk Upload</button>
                                  </div>
                                  <h4>Send Survey Invitation:</h4>
                                  <div id="sendreviewtags_invitation" class="custom-form">
-                                    <label><small style="font-size: 18px; background-color: #ffffff; display: inline-block; padding: 0 7px 0 5px; position: relative;">Add Emails</small></label>
-                                    <input type="text" name="email" placeholder="Add an email" />
-                                 </div>
+                                    <label>
+                                        <small style="font-size: 18px; background-color: #ffffff; display: inline-block; padding: 0 7px 0 5px; position: relative;">
+                                            Add Emails
+                                        </small>
+                                    </label>
+                                    <input class="form-control" name="email" id="sendreviewtags_invitation" 
+                                           value="<% if(tagss.length > 0){ %><% tagss.forEach(function(tag) { %><%= tag %>, <% }); %><% } %>" />
+                                </div>
                                  <div class="custom-form d-none" id="csv-field">
-                                    <label><span>Choose a CSV file:</span></label>
-                                    <input type="file" name="email_file" class="form-control" id="recipient-name">
+                                     <label><span>Choose a CSV file:</span></label>
+                                     <input type="file" name="email_file" class="form-control" id="recipient-name">
                                  </div>
                                  <div class="custom-form">
-                                    <label><span>Message</span></label>
-                                    <textarea name="email_body" id="email_body" class="form-control mb-4">
-                                       We appreciate your feedback and would like to invite you to participate in our online survey.
-                                        
-                                    </textarea>
+                                     <label><span>Message</span></label>
+                                     <textarea name="email_body" id="email_body" class="form-control mb-4">
+                                         We appreciate your feedback and would like to invite you to participate in our online survey.
+                                     </textarea>
                                  </div>
-                              </div>
+                             </div>
                               
                               <input type="hidden" name="company_id" value="<%- company.ID %>">
                               <input type="hidden" name="company_name" value="<%- company.company_name %>">
@@ -272,7 +273,8 @@
                         </div>
                         <div style="width: 85%; text-align: center; display: block; border: 2px solid #fccb06; padding: 6px; margin: 0 auto; border-radius: 5px; display: none;" class="poll-create-message"></div>
                      </div>
-                     <% } %>       
+
+
                   <% } %>
 
             <% }else{ %>
@@ -401,6 +403,7 @@
 <script src="https://cdn.datatables.net/1.10.5/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/plug-ins/f2c75b7247b/integration/bootstrap/3/dataTables.bootstrap.js"></script>
 <script src="https://cdn.datatables.net/responsive/1.0.4/js/dataTables.responsive.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.min.js"></script>
 <script>
 // JavaScript code to disable previous dates
 // const datePicker = document.getElementById("todatePicker");
@@ -697,3 +700,13 @@ function isValidEmail(email) {
  });
  /*=========================== Send survey request tags End =================*/
 </script>
+<script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify@latest/dist/tagify.min.js"></script>
+<script>
+
+var rating_tags = document.getElementById("#sendreviewtags_invitation");
+console.log("rating_tags",rating_tags);
+
+</script>
+
+
+

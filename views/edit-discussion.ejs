@@ -122,7 +122,11 @@
                                             <div class="mt-3">
                                                 <div class="mt-3">
                                                     <label class="form-check form-check-inline">
+<<<<<<< HEAD
                                                         <input class="form-check-input edit-comment" type="radio" name="comment_content_<%= coment.id %>" data-comment-id="<%= coment.id %>">
+=======
+                                                        <input class="form-check-input edit-comment" type="radio" name="action_<%= coment.id %>" value="edit" data-comment-id="<%= coment.id %>">
+>>>>>>> staging-2-8-24
                                                         <span class="fw-bold fs-6 badge badge-light-primary fw-bolder px-4 py-3">Edit</span>
                                                     </label>
                                                     <label class="form-check form-check-inline">
@@ -142,7 +146,11 @@
                                                     <input class="form-check-input" type="radio" name="comment_status_<%= coment.id %>" value="2" <% if (coment.comment_status === '2') { %>checked<% } %>>
                                                     <span class="fw-bold fs-6 badge badge-light-danger fw-bolder px-4 py-3">Rejected</span>
                                                 </label>
+<<<<<<< HEAD
                                                 <!-- <button class="btn btn-primary mt-2 save-comment" data-comment-id="<%= coment.id %>" style="display: none;">Save</button> -->
+=======
+                                                <button class="btn btn-primary mt-2 save-comment" data-comment-id="<%= coment.id %>" style="display: none;">Save</button>
+>>>>>>> staging-2-8-24
                                             </div>
                                         </div>
                                         
@@ -454,6 +462,11 @@ $(document).ready(function () {
         console.log("commentId",commentId);
         console.log("textarea",textarea);
         console.log("textarea",textarea);
+        const saveButton = $(`.save-comment[data-comment-id="${commentId}"]`);
+
+        console.log("commentId",commentId);
+        console.log("textarea",textarea);
+        console.log("saveButton",saveButton);
         
 
         if ($(this).is(':checked')) {
@@ -537,6 +550,39 @@ $(document).ready(function () {
     
                 });
     
+    $('.save-comment').click(function () {
+        const commentId = $(this).data('commentId');
+        const textarea = $(`#comment_text_${commentId}`);
+        const updatedComment = textarea.val();
+
+        console.log("commentId",commentId);
+        console.log("updatedComment",updatedComment);
+        console.log("textarea",textarea);
+        
+
+        $.ajax({
+            url: '/auth/edit-comment',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                commentId: commentId,
+                updatedComment: updatedComment
+            }),
+            success: function (result) {
+                if (result.status === 'ok') {
+                    textarea.attr('readonly', 'readonly');
+                    $(`.save-comment[data-comment-id="${commentId}"]`).hide();
+                    alert('Comment updated successfully');
+                } else {
+                    alert('Failed to update comment');
+                }
+            },
+            error: function (error) {
+                console.error('Error saving comment:', error);
+                alert('Failed to update comment');
+            }
+        });
+    });
 });
 
 </script>

@@ -36,7 +36,8 @@
                                     <input type="date" class="form-control" name="expire_at" value="<%- formatted_expire_at_Date %>">
                                     </div>
                                     <input type="hidden" name="survey_id" value="<%- CompanySurveyDetails[0].id %>">
-                                    <input type="submit" name="update_survey" class="btn-default btn-dark" value="Update">
+                                    <!-- <input type="submit" name="update_survey" class="btn-default btn-dark" value="Update"> -->
+                                    <a href="/update-survey/<%- company.slug -%>/<%- CompanySurveyDetails[0].unique_id-%>" id="update_survey_anchor" class="btn-default btn-dark">Update</a>
                                 </div>
                             </form>
                             <p class="survey-update-message" style="display: none;"></p>

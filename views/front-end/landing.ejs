@@ -455,7 +455,7 @@
                       <% featured_comps.forEach( company=> { %>
                         <div class="item">
                           <div class="feature-box">
-                            <a href="company/<%= company.slug %>"><img src="/<%= company.logo %>" alt="img" width="118"
+                            <a href="/company/<%= company.slug %>"><img src="/<%= company.logo %>" alt="img" width="118"
                                 height="45" class="mx-auto"></a>
                             <h5>
                               <%= company.company_name %>
@@ -542,13 +542,14 @@
                               <div class="autofield-dropdown-review"></div>
                             </div>
                           </div>
+                          <% var countrynames = 'US' %>
                           <div class="col-md-12">
                             <div class="custom-form">
                               <select name="main_address_country" id="country_review" class="form-control" required>
-                                <option value="" disabled <% if (!countryname) { %>selected<% } %>>Select a country
+                                <option value="" disabled <% if (!countrynames) { %>selected<% } %>>Select a country
                                 </option>
                                 <% getCountries.forEach(function(country) { %>
-                                  <option value="<%= country.shortname %>" <%=country.shortname==countryname
+                                  <option value="<%= country.shortname %>" <%=country.shortname==countrynames
                                     ? 'selected' : '' %>><%= country.name %>
                                   </option>
                                   <% }); %>
@@ -1800,8 +1801,9 @@
         //  }
 
 
-        var country_name = "<%= countryname %>";
-        //console.log("country_name from server:", country_name);
+
+        var country_name = "US";
+        console.log("country_name from server:", country_name);
 
         if (country_name) {
           $('#country').val(country_name).trigger('change');
@@ -2421,29 +2423,47 @@
 
       });
 
-      document.addEventListener("DOMContentLoaded", async function () {
-        console.log("DOM content loaded");
+      document.addEventListener("DOMContentLoaded", async function() {
+  console.log("DOM content loaded");
 
-        try {
-          const { countryName, countryCode } = await fetchGeolocationAndSetCountryInfo();
-          console.log("Initial CountryName:", countryName);
-          console.log("Initial CountryCode:", countryCode);
+  try {
+    const { countryName, countryCode } = await fetchGeolocationAndSetCountryInfo();
+    console.log("Initial CountryName:", countryName);
+    console.log("Initial CountryCode:", countryCode);
+    
+    const countryMap = {
+      'UK': 'United Kingdom',
+      'JP': 'Japan',
+      'US': 'United States',
+      'All': 'All'
+    };
 
-          const countryDropdown = document.querySelector('.country-dropdown');
-          if (countryCode == 'UK') {
-            countryDropdown.value = 'UK';
-          } else if (countryCode == 'JP') {
-            countryDropdown.value = 'JP';
-          } else {
-            countryDropdown.value = 'US';
-          }
-          // updateCountryInfo(countryName, countryCode);
-          // setDefaultLanguage(countryName);
-          countryDropdown.addEventListener('change', function (event) {
-            const selectedCountryCode = event.target.value;
-            const selectedCountryName = event.target.options[event.target.selectedIndex].text;
-            console.log("Selected country code:", selectedCountryCode);
-            console.log("Selected country name:", selectedCountryName);
+    const countryDropdown = document.querySelector('.country-dropdown');
+
+    if (countryCode in countryMap) {
+      countryDropdown.value = countryCode;
+    } else {
+      countryDropdown.value = 'US';
+    }
+
+    function setCookie(name, value, days) {
+      const d = new Date();
+      d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+      const expires = "expires=" + d.toUTCString();
+      document.cookie = name + "=" + value + ";" + expires + ";path=/";
+    }
+
+    countryDropdown.addEventListener('change', function(event) {
+      const selectedCountryCode = event.target.value;
+      const selectedCountryName = countryMap[selectedCountryCode];
+      
+      console.log("Selected country code:", selectedCountryCode);
+      console.log("Selected country name:", selectedCountryName);
+
+      // Update cookies with selected country code and name
+      setCookie('countryCode', selectedCountryCode, 365);
+      setCookie('countryName', selectedCountryName, 365);
+
 
             const redirectUrl = `/home/${selectedCountryCode}`;
             window.location.href = redirectUrl;
@@ -2581,7 +2601,7 @@
                   // if (data.data.length === 0) {
                   //   html += '<li><a href="#" id="create-new-company">Create New Company: ' + keyword + '</a></li>';
                   // }
-                } 
+                }
                 // else {
                 //   html += '<li><a href="#" id="create-new-company">Create New Company: ' + keyword + '</a></li>';
                 // }
