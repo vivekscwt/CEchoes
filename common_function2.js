@@ -570,6 +570,8 @@ async function reviewApprovedEmail(req) {
 `;
 
   const approveReviewData = await query(sql);
+  console.log("approveReviewData",approveReviewData);
+  
 
 
   if (approveReviewData.length > 0) {
@@ -745,7 +747,7 @@ async function reviewApprovedEmail(req) {
                                     <tr>
                                       <td colspan="2">
                                       <strong>Hello ${approveReviewData[0].claimed_user_name},</strong>
-                                      <p style="font-size:15px; line-height:20px">A user reviewed on your organization <i><b>"on ${reviewDate}"</b></i>. Now you can see this review on the <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology</a> website.</p>
+                                      <p style="font-size:15px; line-height:20px">A user reviewed on your organization <i><b>"on ${reviewDate}"</b></i>. Now you can see this review on the <a style="color:#FCCB06" href="${process.env.MAIN_URL}company/${approveReviewData[0].slug}">CEchoesTechnology</a> website.</p>
                                       </td>
                                     </tr>
                                   </table>
