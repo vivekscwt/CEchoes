@@ -9859,7 +9859,7 @@ exports.createSurvey = async (req, res) => {
             const worksheet = workbook.getWorksheet(1);
             const emailsArr = await processReviewCSVRows(worksheet);
             const emails = emailsArr.flat();
-            console.log(emails);
+            console.log("surveyemails",emails);
             if (emails.length > 0) {
                 req.body.emails = emails;
                 // console.log('emails',emails);
@@ -9982,7 +9982,7 @@ exports.updateSurveyData = async (req, res) => {
             }
         } else {
 
-            if (email.length > 1) {
+            if (email.length > 2) {
                 // console.log('emails',emails);
                 // console.log('req.body',req.body);
 
@@ -13266,7 +13266,6 @@ exports.editDiscussions = async (req, res) => {
         });
     }
 };
-
 
 
 

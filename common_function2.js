@@ -5828,6 +5828,8 @@ async function SurveyInvitationByArray(req) {
             return false;
           } else {
             console.log('Mail Send: ', info.response);
+            console.log("Mail Send to email: ",email);
+            
 
           }
         })

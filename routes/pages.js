@@ -3146,7 +3146,7 @@ router.get('/company/:slug', checkCookieValue, async (req, res) => {
         const [allRatingTags, CompanyInfo, companyReviewNumbers, getCompanyReviews, globalPageMeta, PremiumCompanyData, CompanyPollDetails, countInvitationLabels, CompanySurveyDetails, CompanySurveySubmitionsCount, getCompanyCategory] = await Promise.all([
             comFunction.getAllRatingTags(),
             comFunction.getCompany(companyID),
-            comFunction.getCompanyReviewNumbers(companyID),
+            comFunction.getCompanyReviewNumberss(companyID),
             comFunction.getCompanyReviews(companyID),
             comFunction2.getPageMetaValues('global'),
             comFunction2.getPremiumCompanyData(companyID),
@@ -4917,7 +4917,8 @@ router.get('/:slug/survey/:id', checkCookieValue, async (req, res) => {
                 company: company,
                 companySurveyQuestions,
                 AllRatingTags,
-                companySurveyAnswersByUser
+                companySurveyAnswersByUser,
+                survey_uniqueid: survey_uniqueid
             });
         } else {
             res.render('front-end/404', {
@@ -4999,7 +5000,8 @@ router.get('/:slug/survey/:id/:email', checkCookieValue, async (req, res) => {
                 companySurveyQuestions,
                 AllRatingTags,
                 SurveyInvitedEmail: getSurveyInvitedEmail,
-                userEmail
+                userEmail,
+                encryptEmail: encryptEmail
                 //userData
             });
         } else {
@@ -5182,6 +5184,11 @@ router.get('/update-survey/:slug/:survey_id', checkClientClaimedCompany, async (
     console.log('SurveyAnswerCount', SurveyAnswerCount);
     console.log("getSurveyemailDetailsByUniqueId",getSurveyemailDetailsByUniqueId);
 
+    const getsurveyquery = `SELECT * FROM survey WHERE expire_at >= CURDATE();`;
+    const getsurveyval = await query(getsurveyquery);
+
+    console.log("getsurveyval",getsurveyval);
+
     var emailAddresses = getSurveyemailDetailsByUniqueId.map(function(item) {
         return item.emails;
     });
@@ -5284,7 +5291,8 @@ router.get('/update-survey/:slug/:survey_id', checkClientClaimedCompany, async (
                 youtube_url: youtube_url,
                 CompanySurveyDetails_formatted,
                 SurveyAnswerCount,
-                jsonStringa: jsonStringa
+                jsonStringa: jsonStringa,
+                getsurveyval: getsurveyval
             });
     }
 });

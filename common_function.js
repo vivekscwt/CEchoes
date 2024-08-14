@@ -2634,6 +2634,32 @@ async function getCompanyReviewNumbers(companyID) {
     return 'Error during user get_company_rewiew_count_query:' + error;
   }
 }
+
+async function getCompanyReviewNumberss(companyID){
+  const get_company_rewiew_count_query = `
+    SELECT COUNT(*) AS total_review_count, AVG(rating) AS total_review_average
+    FROM reviews
+    WHERE company_id = ? AND review_status = ?`;
+  const get_company_rewiew_count_value = [companyID, '1'];
+  try{
+    const get_company_rewiew_count_result = await query(get_company_rewiew_count_query, get_company_rewiew_count_value);
+    const get_company_rewiew_rating_count_query = `
+    SELECT rating,count(rating) AS cnt_rat, created_at, review_rating_tags.rating_image
+    FROM reviews
+    LEFT JOIN review_rating_tags ON reviews.rating = review_rating_tags.review_rating_value
+    WHERE company_id = ? AND review_status = '1'
+    group by rating ORDER by rating DESC`;
+    try{
+      const get_company_rewiew_rating_count_result = await query(get_company_rewiew_rating_count_query, get_company_rewiew_count_value);
+      return {rewiew_count:get_company_rewiew_count_result[0], rewiew_rating_count: get_company_rewiew_rating_count_result};
+    }catch(error){
+      return 'Error during user get_company_rewiew_rating_count_query:'+error;
+    }
+    
+  }catch(error){
+    return 'Error during user get_company_rewiew_count_query:'+error;
+  }
+}
 function getDefaultFromDate() {
   const currentDate = new Date();
   return currentDate.toISOString().split('T')[0]; // Returns current date in 'YYYY-MM-DD' format
@@ -3357,6 +3383,7 @@ module.exports = {
   newsearchCompany,//
   fetchChildCompanies,//
   getCompanyReviewNumbers,
+  getCompanyReviewNumberss,//
   getCompanyReviews,
   getUsersByRole,
   getAllReviewsByCompanyID,
