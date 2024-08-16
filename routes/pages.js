@@ -385,13 +385,13 @@ router.get('', checkCookieValue, async (req, res) => {
         country_code = 'US';
     }
 
-    if(req.cookies.countryCode != 'All'){
+    if (req.cookies.countryCode != 'All') {
         const new_country_code_query = `SELECT shortname FROM countries WHERE name="${country_name}"`;
         const new_country_code_val = await queryAsync(new_country_code_query);
         console.log("new_country_code_val", new_country_code_val);
         var new_country_code = new_country_code_val[0].shortname;
         console.log("new_country_code", new_country_code);
-    
+
         const getbusinessquery = `SELECT * FROM users WHERE user_id= "${userId}"`;
         const getbusinessvalue = await queryAsync(getbusinessquery);
         if (getbusinessvalue.length > 0) {
@@ -402,7 +402,7 @@ router.get('', checkCookieValue, async (req, res) => {
                 res.redirect('/logout');
             }
         }
-    
+
         var [allRatingTags, globalPageMeta, latestReviews, AllReviewTags, AllReviewVoting, PopularCategories, ReviewCount, UserCount, PositiveReviewsCompany, NegativeReviewsCompany, HomeMeta, VisitorCheck, getAllLatestDiscussion, getAllPopularDiscussion, getAllDiscussions, getCountries] = await Promise.all([
             comFunction.getAllRatingTags(),
             comFunction2.getPageMetaValues('global'),
@@ -418,7 +418,7 @@ router.get('', checkCookieValue, async (req, res) => {
             // comFunction.getNegativeReviewsCompany(),
             comFunction.getPositiveReviewsCompany(new_country_code),
             comFunction.getNegativeReviewsCompany(new_country_code),
-    
+
             //comFunction2.getPageMetaValues('home'),
             comFunction2.getPageMetaValue('home', country_code),
             comFunction.getVisitorCheck(requestIp.getClientIp(req)),
@@ -436,7 +436,7 @@ router.get('', checkCookieValue, async (req, res) => {
         WHERE featured_companies.status = 'active' AND company.main_address_country = "${new_country_code}"
         ORDER BY featured_companies.ordering ASC `;
     }
-    else{
+    else {
         const getbusinessquery = `SELECT * FROM users WHERE user_id= "${userId}"`;
         const getbusinessvalue = await queryAsync(getbusinessquery);
         if (getbusinessvalue.length > 0) {
@@ -447,11 +447,11 @@ router.get('', checkCookieValue, async (req, res) => {
                 res.redirect('/logout');
             }
         }
-    
+
         var [allRatingTags, globalPageMeta, latestReviews, AllReviewTags, AllReviewVoting, PopularCategories, ReviewCount, UserCount, PositiveReviewsCompany, NegativeReviewsCompany, HomeMeta, VisitorCheck, getAllLatestDiscussion, getAllPopularDiscussion, getAllDiscussions, getCountries] = await Promise.all([
             comFunction.getAllRatingTags(),
             comFunction2.getPageMetaValues('global'),
-            comFunction2.getlatestReviews(18, ),
+            comFunction2.getlatestReviews(18,),
             //comFunction2.getlatestReviews(18),
             comFunction2.getAllReviewTags(),
             comFunction2.getAllReviewVoting(),
@@ -463,7 +463,7 @@ router.get('', checkCookieValue, async (req, res) => {
             // comFunction.getNegativeReviewsCompany(),
             comFunction.getPositiveReviewsCompany(),
             comFunction.getNegativeReviewsCompany(),
-    
+
             //comFunction2.getPageMetaValues('home'),
             comFunction2.getPageMetaValue('home', country_code),
             comFunction.getVisitorCheck(requestIp.getClientIp(req)),
@@ -497,13 +497,13 @@ router.get('', checkCookieValue, async (req, res) => {
         const response = await axios.get(apiUrl);
         const blogPosts = response.data;
         const restructuredResponse = {
-                "status": blogPosts.status,
-                "data": blogPosts.data.map(item => ({
+            "status": blogPosts.status,
+            "data": blogPosts.data.map(item => ({
                 ...item,
-            "title": decodeHTMLEntities(item.title)
-        })),
-                "success_message": blogPosts.success_message,
-                "error_message": blogPosts.error_message
+                "title": decodeHTMLEntities(item.title)
+            })),
+            "success_message": blogPosts.success_message,
+            "error_message": blogPosts.error_message
         };
         console.log('restructuredResponse', restructuredResponse);
 
@@ -531,8 +531,8 @@ router.get('', checkCookieValue, async (req, res) => {
 
                 db.query(featured_sql, (featured_err, featured_result) => {
                     var featured_comps = featured_result;
-                    console.log("featured_comps",featured_comps);
-                    
+                    console.log("featured_comps", featured_comps);
+
                     // res.json( {
                     //     menu_active_id: 'landing',
                     //     page_title: home.title,
@@ -611,7 +611,7 @@ router.get('', checkCookieValue, async (req, res) => {
                         ORDER BY featured_companies.ordering ASC `;
                 db.query(featured_sql, (featured_err, featured_result) => {
                     var featured_comps = featured_result;
-                    console.log("featured_comps",featured_comps);
+                    console.log("featured_comps", featured_comps);
                     res.render('front-end/landing', {
                         menu_active_id: 'landing',
                         page_title: home.title,
@@ -661,7 +661,7 @@ router.get('/home/:getcountryhome', checkCookieValue, async (req, res) => {
         || 'India';
 
     let country_code = req.cookies.countryCode
-       || 'IN';
+        || 'IN';
     console.log("country_namesland", country_name);
     console.log("country_codesland", country_code);
 
@@ -669,14 +669,14 @@ router.get('/home/:getcountryhome', checkCookieValue, async (req, res) => {
         country_code = 'US';
     }
 
-    if(req.cookies.countryCode != 'All'){
+    if (req.cookies.countryCode != 'All') {
         console.log("notall");
         const new_country_code_query = `SELECT name FROM countries WHERE shortname="${country_code}"`;
         const new_country_code_val = await queryAsync(new_country_code_query);
         console.log("new_country_code_val", new_country_code_val);
         var new_country_name = new_country_code_val[0].name;
         console.log("new_country_name", new_country_name);
-    
+
         const getbusinessquery = `SELECT * FROM users WHERE user_id= "${userId}"`;
         const getbusinessvalue = await queryAsync(getbusinessquery);
         if (getbusinessvalue.length > 0) {
@@ -687,7 +687,7 @@ router.get('/home/:getcountryhome', checkCookieValue, async (req, res) => {
                 res.redirect('/logout');
             }
         }
-    
+
         var [allRatingTags, globalPageMeta, latestReviews, AllReviewTags, AllReviewVoting, PopularCategories, ReviewCount, UserCount, PositiveReviewsCompany, NegativeReviewsCompany, HomeMeta, VisitorCheck, getAllLatestDiscussion, getAllPopularDiscussion, getAllDiscussions, getCountries] = await Promise.all([
             comFunction.getAllRatingTags(),
             comFunction2.getPageMetaValues('global'),
@@ -703,7 +703,7 @@ router.get('/home/:getcountryhome', checkCookieValue, async (req, res) => {
             // comFunction.getNegativeReviewsCompany(),
             comFunction.getPositiveReviewsCompany(country_code),
             comFunction.getNegativeReviewsCompany(country_code),
-    
+
             //comFunction2.getPageMetaValues('home'),
             comFunction2.getPageMetaValue('home', country_code),
             comFunction.getVisitorCheck(requestIp.getClientIp(req)),
@@ -721,7 +721,7 @@ router.get('/home/:getcountryhome', checkCookieValue, async (req, res) => {
         WHERE featured_companies.status = 'active' AND company.main_address_country = "${country_code}"
         ORDER BY featured_companies.ordering ASC `;
     }
-    else{
+    else {
         console.log("allll");
         const getbusinessquery = `SELECT * FROM users WHERE user_id= "${userId}"`;
         const getbusinessvalue = await queryAsync(getbusinessquery);
@@ -733,7 +733,7 @@ router.get('/home/:getcountryhome', checkCookieValue, async (req, res) => {
                 res.redirect('/logout');
             }
         }
-    
+
         var [allRatingTags, globalPageMeta, latestReviews, AllReviewTags, AllReviewVoting, PopularCategories, ReviewCount, UserCount, PositiveReviewsCompany, NegativeReviewsCompany, HomeMeta, VisitorCheck, getAllLatestDiscussion, getAllPopularDiscussion, getAllDiscussions, getCountries] = await Promise.all([
             comFunction.getAllRatingTags(),
             comFunction2.getPageMetaValues('global'),
@@ -749,11 +749,11 @@ router.get('/home/:getcountryhome', checkCookieValue, async (req, res) => {
             // comFunction.getNegativeReviewsCompany(),
             comFunction.getPositiveReviewsCompany(),
             comFunction.getNegativeReviewsCompany(),
-    
+
             //comFunction2.getPageMetaValues('home'),
             comFunction2.getPageMetaValue('home', country_code),
             comFunction.getVisitorCheck(requestIp.getClientIp(req)),
-            comFunction2.getAllLatestDiscussion(20, ),
+            comFunction2.getAllLatestDiscussion(20,),
             //comFunction2.getAllLatestDiscussion(20),
             comFunction2.getAllPopularDiscussion(),
             //comFunction2.getAllPopularDiscussion(),
@@ -814,7 +814,7 @@ router.get('/home/:getcountryhome', checkCookieValue, async (req, res) => {
 
                 db.query(featured_sql, (featured_err, featured_result) => {
                     var featured_comps = featured_result;
-                    console.log("featured_comps",featured_comps);
+                    console.log("featured_comps", featured_comps);
                     res.render('front-end/us_landing', {
                         menu_active_id: 'landing',
                         page_title: home.title,
@@ -869,10 +869,10 @@ router.get('/home/:getcountryhome', checkCookieValue, async (req, res) => {
                 JOIN company ON featured_companies.company_id = company.ID 
                 WHERE featured_companies.status = 'active'
                 ORDER BY featured_companies.ordering ASC `;
-                    
+
                 db.query(featured_sql, (featured_err, featured_result) => {
                     var featured_comps = featured_result;
-                    console.log("featured_comps",featured_comps);
+                    console.log("featured_comps", featured_comps);
                     res.render('front-end/us_landing', {
                         menu_active_id: 'landing',
                         page_title: home.title,
@@ -1248,7 +1248,7 @@ router.get('/about-us', checkCookieValue, async (req, res) => {
 router.get('/about-us/:getcountryname', checkCookieValue, async (req, res) => {
     let currentUserData = JSON.parse(req.userData);
     const apiKey = process.env.GEO_LOCATION_API_KEY;
-   // console.log("apiKey", apiKey);
+    // console.log("apiKey", apiKey);
 
     let getcountryname = req.params.getcountryname;
     console.log("getcountryname", getcountryname);
@@ -1257,21 +1257,21 @@ router.get('/about-us/:getcountryname', checkCookieValue, async (req, res) => {
         let country_name = req.cookies.countryName
         //|| 'India';
         let country_code = req.cookies.countryCode
-            //|| 'IN';
+        //|| 'IN';
         console.log("country_namesland", country_name);
         console.log("country_codesland", country_code);
 
         if (getcountryname != 'UK' && getcountryname != 'JP' && getcountryname != 'All') {
             getcountryname = 'US';
         }
-        if(getcountryname == 'All'){  
-            console.log("fggfgfh");        
+        if (getcountryname == 'All') {
+            console.log("fggfgfh");
             var [PageInfo, PageMetaValues, globalPageMeta] = await Promise.all([
                 comFunction2.getPageInfo('about'),
                 comFunction2.getPageMetaValue('about', 'US'),
                 comFunction2.getPageMetaValues('global'),
             ]);
-        } else{
+        } else {
             var [PageInfo, PageMetaValues, globalPageMeta] = await Promise.all([
                 comFunction2.getPageInfo('about'),
                 comFunction2.getPageMetaValue('about', getcountryname),
@@ -1310,14 +1310,14 @@ router.get('/review', checkCookieValue, async (req, res) => {
 
         let new_country_code;
 
-        if(req.cookies.countryCode != 'All'){
+        if (req.cookies.countryCode != 'All') {
             const new_country_code_query = `SELECT shortname FROM countries WHERE name="${country_name}"`;
             const new_country_code_val = await queryAsync(new_country_code_query);
             console.log("new_country_code_val", new_country_code_val);
             new_country_code = new_country_code_val[0].shortname;
             console.log("new_country_code", new_country_code);
             var [latestReviews, AllReviews, AllTrendingReviews, AllReviewTags, allRatingTags, globalPageMeta, homePageMeta, AllReviewVoting, getCountries] = await Promise.all([
-                comFunction2.getlatestReviews(20,new_country_code),
+                comFunction2.getlatestReviews(20, new_country_code),
                 comFunction2.getAllReviews(new_country_code),
                 comFunction2.getAllTrendingReviews(new_country_code),
                 //comFunction2.getlatestReviews(20),
@@ -1329,7 +1329,7 @@ router.get('/review', checkCookieValue, async (req, res) => {
                 comFunction2.getPageMetaValues('home'),
                 comFunction2.getAllReviewVoting(),
                 comFunction.getCountries(),
-    
+
             ]);
         } else {
             var [latestReviews, AllReviews, AllTrendingReviews, AllReviewTags, allRatingTags, globalPageMeta, homePageMeta, AllReviewVoting, getCountries] = await Promise.all([
@@ -1345,12 +1345,12 @@ router.get('/review', checkCookieValue, async (req, res) => {
                 comFunction2.getPageMetaValues('home'),
                 comFunction2.getAllReviewVoting(),
                 comFunction.getCountries(),
-    
+
             ]);
         }
         const api_key = process.env.GEO_LOCATION_API_KEY
         //console.log("getCountries",getCountries);
-       // console.log("AllTrendingReviews", AllTrendingReviews);
+        // console.log("AllTrendingReviews", AllTrendingReviews);
         // res.json({
         //     menu_active_id: 'review',
         //     page_title: 'Customer Reviews',
@@ -1415,7 +1415,7 @@ router.get('/review/:getcountryname', checkCookieValue, async (req, res) => {
             var new_country_code = new_country_code_val[0].shortname;
             console.log("new_country_code", new_country_code);
             var [latestReviews, AllReviews, AllTrendingReviews, AllReviewTags, allRatingTags, globalPageMeta, homePageMeta, AllReviewVoting, getCountries] = await Promise.all([
-                comFunction2.getlatestReviews(20,country_code),
+                comFunction2.getlatestReviews(20, country_code),
                 comFunction2.getAllReviews(country_code),
                 comFunction2.getAllTrendingReviews(country_code),
                 //comFunction2.getlatestReviews(20),
@@ -1427,10 +1427,10 @@ router.get('/review/:getcountryname', checkCookieValue, async (req, res) => {
                 comFunction2.getPageMetaValues('home'),
                 comFunction2.getAllReviewVoting(),
                 comFunction.getCountries(),
-    
+
             ]);
         }
-        else{
+        else {
             var [latestReviews, AllReviews, AllTrendingReviews, AllReviewTags, allRatingTags, globalPageMeta, homePageMeta, AllReviewVoting, getCountries] = await Promise.all([
                 comFunction2.getlatestReviews(20),
                 comFunction2.getAllReviews(),
@@ -1444,7 +1444,7 @@ router.get('/review/:getcountryname', checkCookieValue, async (req, res) => {
                 comFunction2.getPageMetaValues('home'),
                 comFunction2.getAllReviewVoting(),
                 comFunction.getCountries(),
-    
+
             ]);
         }
 
@@ -1457,7 +1457,7 @@ router.get('/review/:getcountryname', checkCookieValue, async (req, res) => {
 
 
         //console.log("getCountries",getCountries);
-       // console.log("AllTrendingReviews", AllTrendingReviews);
+        // console.log("AllTrendingReviews", AllTrendingReviews);
         // res.json({
         //     menu_active_id: 'review',
         //     page_title: 'Customer Reviews',
@@ -1571,15 +1571,15 @@ router.get('/faq', checkCookieValue, async (req, res) => {
             country_code = 'US';
         }
 
-        if(country_code != 'All'){
+        if (country_code != 'All') {
             var [faqPageData, faqCategoriesData, faqItemsData, globalPageMeta] = await Promise.all([
                 comFunction2.getFaqPages(country_code),
                 comFunction2.getFaqCategories(country_code),
                 comFunction2.getFaqItems(country_code),
                 comFunction2.getPageMetaValues('global'),
             ]);
-    
-        } else{
+
+        } else {
             var [faqPageData, faqCategoriesData, faqItemsData, globalPageMeta] = await Promise.all([
                 comFunction2.getFaqPages('US'),
                 comFunction2.getFaqCategories('US'),
@@ -1611,7 +1611,7 @@ router.get('/faq', checkCookieValue, async (req, res) => {
         //     globalPageMeta: globalPageMeta
         // });
     } catch (error) {
-        console.error("error",error);
+        console.error("error", error);
         res.status(500).send('An error occurred');
     }
 
@@ -1630,7 +1630,7 @@ router.get('/faq/:getcountryname', checkCookieValue, async (req, res) => {
         console.log("apiKey", apiKey);
 
         let country_name = req.cookies.countryName
-        || 'India';
+            || 'India';
         let country_code = req.cookies.countryCode
             || 'IN';
         console.log("country_namesfaq", country_name);
@@ -1640,15 +1640,15 @@ router.get('/faq/:getcountryname', checkCookieValue, async (req, res) => {
             country_code = 'US';
         }
 
-        if(country_code != 'All'){
+        if (country_code != 'All') {
             var [faqPageData, faqCategoriesData, faqItemsData, globalPageMeta] = await Promise.all([
                 comFunction2.getFaqPages(country_code),
                 comFunction2.getFaqCategories(country_code),
                 comFunction2.getFaqItems(country_code),
                 comFunction2.getPageMetaValues('global'),
             ]);
-    
-        } else{
+
+        } else {
             var [faqPageData, faqCategoriesData, faqItemsData, globalPageMeta] = await Promise.all([
                 comFunction2.getFaqPages('US'),
                 comFunction2.getFaqCategories('US'),
@@ -1907,11 +1907,11 @@ router.get('/business', checkCookieValue, async (req, res) => {
         if (country_code != 'UK' && country_code != 'JP') {
             country_code = 'US';
         }
-        if(country_name == 'All'){
-            country_name= 'India'
+        if (country_name == 'All') {
+            country_name = 'India'
         }
 
-        console.log("country_code",country_code);
+        console.log("country_code", country_code);
 
 
         const [globalPageMeta, getplans, getSubscribedUsers] = await Promise.all([
@@ -1990,95 +1990,95 @@ router.get('/business/:getcountryname', checkCookieValue, async (req, res) => {
         //     country_name= 'US'
         // }
 
-            if (getcountryname != 'UK' && getcountryname != 'JP' && getcountryname != 'All') {
-                getcountryname = 'US';
-            }
-            if(getcountryname == 'All'){  
-                console.log("fggfgfh");        
-                var [globalPageMeta, getplans, getSubscribedUsers] = await Promise.all([
-                    comFunction2.getPageMetaValues('global'),
-                    comFunction2.getplans('US'),
-                    comFunction2.getSubscribedUsers(user_id)
-                ]);
-                console.log("getplans", getplans);
-                console.log("getSubscribedUsers", getSubscribedUsers);
-        
-                const sql = `SELECT * FROM page_info where secret_Key = 'business' AND country = "US"`;
-                db.query(sql, (err, results, fields) => {
-                    if (err) throw err;
-                    const common = results[0];
-                    const meta_sql = `SELECT * FROM page_meta where page_id = ${common.id}`;
-                    db.query(meta_sql, async (meta_err, _meta_result) => {
-                        if (meta_err) throw meta_err;
-        
-                        const meta_values = _meta_result;
-                        let meta_values_array = {};
-                        await meta_values.forEach((item) => {
-                            meta_values_array[item.page_meta_key] = item.page_meta_value;
-                        })
-                        const UpcomingBusinessFeature = await comFunction2.getUpcomingBusinessFeature();
-                        const BusinessFeature = await comFunction2.getBusinessFeature();
-                        //console.log(meta_values_array);
-                        res.render('front-end/business', {
-                            menu_active_id: 'business',
-                            page_title: common.title,
-                            currentUserData,
-                            common,
-                            meta_values_array,
-                            UpcomingBusinessFeature,
-                            BusinessFeature,
-                            globalPageMeta: globalPageMeta,
-                            getplans: getplans,
-                            country_name: country_name,
-                            getSubscribedUsers: getSubscribedUsers,
-                            encryptedEmail: encryptedEmail
-                        });
+        if (getcountryname != 'UK' && getcountryname != 'JP' && getcountryname != 'All') {
+            getcountryname = 'US';
+        }
+        if (getcountryname == 'All') {
+            console.log("fggfgfh");
+            var [globalPageMeta, getplans, getSubscribedUsers] = await Promise.all([
+                comFunction2.getPageMetaValues('global'),
+                comFunction2.getplans('US'),
+                comFunction2.getSubscribedUsers(user_id)
+            ]);
+            console.log("getplans", getplans);
+            console.log("getSubscribedUsers", getSubscribedUsers);
+
+            const sql = `SELECT * FROM page_info where secret_Key = 'business' AND country = "US"`;
+            db.query(sql, (err, results, fields) => {
+                if (err) throw err;
+                const common = results[0];
+                const meta_sql = `SELECT * FROM page_meta where page_id = ${common.id}`;
+                db.query(meta_sql, async (meta_err, _meta_result) => {
+                    if (meta_err) throw meta_err;
+
+                    const meta_values = _meta_result;
+                    let meta_values_array = {};
+                    await meta_values.forEach((item) => {
+                        meta_values_array[item.page_meta_key] = item.page_meta_value;
                     })
-        
+                    const UpcomingBusinessFeature = await comFunction2.getUpcomingBusinessFeature();
+                    const BusinessFeature = await comFunction2.getBusinessFeature();
+                    //console.log(meta_values_array);
+                    res.render('front-end/business', {
+                        menu_active_id: 'business',
+                        page_title: common.title,
+                        currentUserData,
+                        common,
+                        meta_values_array,
+                        UpcomingBusinessFeature,
+                        BusinessFeature,
+                        globalPageMeta: globalPageMeta,
+                        getplans: getplans,
+                        country_name: country_name,
+                        getSubscribedUsers: getSubscribedUsers,
+                        encryptedEmail: encryptedEmail
+                    });
                 })
-            } else{
-                var [globalPageMeta, getplans, getSubscribedUsers] = await Promise.all([
-                    comFunction2.getPageMetaValues('global'),
-                    comFunction2.getplans(country_name),
-                    comFunction2.getSubscribedUsers(user_id)
-                ]);
-                console.log("getplans", getplans);
-                console.log("getSubscribedUsers", getSubscribedUsers);
-        
-                const sql = `SELECT * FROM page_info where secret_Key = 'business' AND country = "${getcountryname}"`;
-                db.query(sql, (err, results, fields) => {
-                    if (err) throw err;
-                    const common = results[0];
-                    const meta_sql = `SELECT * FROM page_meta where page_id = ${common.id}`;
-                    db.query(meta_sql, async (meta_err, _meta_result) => {
-                        if (meta_err) throw meta_err;
-        
-                        const meta_values = _meta_result;
-                        let meta_values_array = {};
-                        await meta_values.forEach((item) => {
-                            meta_values_array[item.page_meta_key] = item.page_meta_value;
-                        })
-                        const UpcomingBusinessFeature = await comFunction2.getUpcomingBusinessFeature();
-                        const BusinessFeature = await comFunction2.getBusinessFeature();
-                        //console.log(meta_values_array);
-                        res.render('front-end/business', {
-                            menu_active_id: 'business',
-                            page_title: common.title,
-                            currentUserData,
-                            common,
-                            meta_values_array,
-                            UpcomingBusinessFeature,
-                            BusinessFeature,
-                            globalPageMeta: globalPageMeta,
-                            getplans: getplans,
-                            country_name: country_name,
-                            getSubscribedUsers: getSubscribedUsers,
-                            encryptedEmail: encryptedEmail
-                        });
+
+            })
+        } else {
+            var [globalPageMeta, getplans, getSubscribedUsers] = await Promise.all([
+                comFunction2.getPageMetaValues('global'),
+                comFunction2.getplans(country_name),
+                comFunction2.getSubscribedUsers(user_id)
+            ]);
+            console.log("getplans", getplans);
+            console.log("getSubscribedUsers", getSubscribedUsers);
+
+            const sql = `SELECT * FROM page_info where secret_Key = 'business' AND country = "${getcountryname}"`;
+            db.query(sql, (err, results, fields) => {
+                if (err) throw err;
+                const common = results[0];
+                const meta_sql = `SELECT * FROM page_meta where page_id = ${common.id}`;
+                db.query(meta_sql, async (meta_err, _meta_result) => {
+                    if (meta_err) throw meta_err;
+
+                    const meta_values = _meta_result;
+                    let meta_values_array = {};
+                    await meta_values.forEach((item) => {
+                        meta_values_array[item.page_meta_key] = item.page_meta_value;
                     })
-        
+                    const UpcomingBusinessFeature = await comFunction2.getUpcomingBusinessFeature();
+                    const BusinessFeature = await comFunction2.getBusinessFeature();
+                    //console.log(meta_values_array);
+                    res.render('front-end/business', {
+                        menu_active_id: 'business',
+                        page_title: common.title,
+                        currentUserData,
+                        common,
+                        meta_values_array,
+                        UpcomingBusinessFeature,
+                        BusinessFeature,
+                        globalPageMeta: globalPageMeta,
+                        getplans: getplans,
+                        country_name: country_name,
+                        getSubscribedUsers: getSubscribedUsers,
+                        encryptedEmail: encryptedEmail
+                    });
                 })
-            }
+
+            })
+        }
 
     } catch (err) {
         console.error(err);
@@ -2585,74 +2585,74 @@ router.get('/privacy-policy', checkCookieValue, async (req, res) => {
     if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
         country_code = 'US';
     }
-    if(country_code == 'All'){
-        country_name= 'India'
+    if (country_code == 'All') {
+        country_name = 'India'
     }
 
     try {
-        if(country_code != 'All'){
+        if (country_code != 'All') {
             console.log("NOTALL");
-        const sql = `SELECT * FROM page_info where secret_Key = 'privacy' AND country= "${country_code}"`;
-        console.log("fsdasdf", country_code);
-        db.query(sql, (err, results, fields) => {
-            if (err) throw err;
-            const common = results[0];
-            console.log("common", common);
+            const sql = `SELECT * FROM page_info where secret_Key = 'privacy' AND country= "${country_code}"`;
+            console.log("fsdasdf", country_code);
+            db.query(sql, (err, results, fields) => {
+                if (err) throw err;
+                const common = results[0];
+                console.log("common", common);
 
-            const meta_sql = `SELECT * FROM page_meta where page_id = ${common.id}`;
-            db.query(meta_sql, async (meta_err, _meta_result) => {
-                if (meta_err) throw meta_err;
+                const meta_sql = `SELECT * FROM page_meta where page_id = ${common.id}`;
+                db.query(meta_sql, async (meta_err, _meta_result) => {
+                    if (meta_err) throw meta_err;
 
-                const meta_values = _meta_result;
-                let meta_values_array = {};
-                await meta_values.forEach((item) => {
-                    meta_values_array[item.page_meta_key] = item.page_meta_value;
+                    const meta_values = _meta_result;
+                    let meta_values_array = {};
+                    await meta_values.forEach((item) => {
+                        meta_values_array[item.page_meta_key] = item.page_meta_value;
+                    })
+                    console.log("meta_values_arraySS", meta_values_array);
+                    res.render('front-end/privacy-policy', {
+                        menu_active_id: 'privacy-policy',
+                        page_title: common.title,
+                        currentUserData,
+                        common,
+                        meta_values_array,
+                        globalPageMeta: globalPageMeta,
+                        apiKey
+                    });
                 })
-                console.log("meta_values_arraySS", meta_values_array);
-                res.render('front-end/privacy-policy', {
-                    menu_active_id: 'privacy-policy',
-                    page_title: common.title,
-                    currentUserData,
-                    common,
-                    meta_values_array,
-                    globalPageMeta: globalPageMeta,
-                    apiKey
-                });
+
             })
+        } else {
+            console.log("ALLss");
+            const sql = `SELECT * FROM page_info where secret_Key = 'privacy' AND country= "US"`;
+            console.log("fsdasdf", country_code);
+            db.query(sql, (err, results, fields) => {
+                if (err) throw err;
+                const common = results[0];
+                console.log("common", common);
 
-        })
-    } else{
-        console.log("ALLss");
-        const sql = `SELECT * FROM page_info where secret_Key = 'privacy' AND country= "US"`;
-        console.log("fsdasdf", country_code);
-        db.query(sql, (err, results, fields) => {
-            if (err) throw err;
-            const common = results[0];
-            console.log("common", common);
+                const meta_sql = `SELECT * FROM page_meta where page_id = ${common.id}`;
+                db.query(meta_sql, async (meta_err, _meta_result) => {
+                    if (meta_err) throw meta_err;
 
-            const meta_sql = `SELECT * FROM page_meta where page_id = ${common.id}`;
-            db.query(meta_sql, async (meta_err, _meta_result) => {
-                if (meta_err) throw meta_err;
-
-                const meta_values = _meta_result;
-                let meta_values_array = {};
-                await meta_values.forEach((item) => {
-                    meta_values_array[item.page_meta_key] = item.page_meta_value;
+                    const meta_values = _meta_result;
+                    let meta_values_array = {};
+                    await meta_values.forEach((item) => {
+                        meta_values_array[item.page_meta_key] = item.page_meta_value;
+                    })
+                    console.log("meta_values_arraySS", meta_values_array);
+                    res.render('front-end/privacy-policy', {
+                        menu_active_id: 'privacy-policy',
+                        page_title: common.title,
+                        currentUserData,
+                        common,
+                        meta_values_array,
+                        globalPageMeta: globalPageMeta,
+                        apiKey
+                    });
                 })
-                console.log("meta_values_arraySS", meta_values_array);
-                res.render('front-end/privacy-policy', {
-                    menu_active_id: 'privacy-policy',
-                    page_title: common.title,
-                    currentUserData,
-                    common,
-                    meta_values_array,
-                    globalPageMeta: globalPageMeta,
-                    apiKey
-                });
-            })
 
-        })
-    }
+            })
+        }
     } catch (err) {
         console.error(err);
         res.status(500).send('An error occurred');
@@ -2679,12 +2679,12 @@ router.get('/privacy-policy/:getcountryname', checkCookieValue, async (req, res)
     if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
         country_code = 'US';
     }
-    if(country_code == 'All'){
-        country_name= 'India'
+    if (country_code == 'All') {
+        country_name = 'India'
     }
 
     try {
-        if(country_code != 'All'){
+        if (country_code != 'All') {
             const sql = `SELECT * FROM page_info where secret_Key = 'privacy' AND country= "${getcountryname}"`;
             console.log("fsdasdf", country_code);
             db.query(sql, (err, results, fields) => {
@@ -2714,7 +2714,7 @@ router.get('/privacy-policy/:getcountryname', checkCookieValue, async (req, res)
                 })
 
             })
-        } else{
+        } else {
             const sql = `SELECT * FROM page_info where secret_Key = 'privacy' AND country= "US"`;
             console.log("fsdasdf", country_code);
             db.query(sql, (err, results, fields) => {
@@ -2770,7 +2770,7 @@ router.get('/disclaimer', checkCookieValue, async (req, res) => {
         comFunction2.getPageMetaValues('global'),
     ]);
     try {
-        if (country_code !='All') {
+        if (country_code != 'All') {
             console.log("notall");
             const sql = `SELECT * FROM page_info where secret_Key = 'disclaimer' AND country= "${country_code}" `;
             db.query(sql, (err, results, fields) => {
@@ -2779,7 +2779,7 @@ router.get('/disclaimer', checkCookieValue, async (req, res) => {
                 const meta_sql = `SELECT * FROM page_meta where page_id = ${common.id}`;
                 db.query(meta_sql, async (meta_err, _meta_result) => {
                     if (meta_err) throw meta_err;
-    
+
                     const meta_values = _meta_result;
                     let meta_values_array = {};
                     await meta_values.forEach((item) => {
@@ -2795,9 +2795,9 @@ router.get('/disclaimer', checkCookieValue, async (req, res) => {
                         globalPageMeta: globalPageMeta
                     });
                 })
-    
+
             })
-        }else{
+        } else {
             console.log("alll");
             const sql = `SELECT * FROM page_info where secret_Key = 'disclaimer' AND country= "US" `;
             db.query(sql, (err, results, fields) => {
@@ -2806,7 +2806,7 @@ router.get('/disclaimer', checkCookieValue, async (req, res) => {
                 const meta_sql = `SELECT * FROM page_meta where page_id = ${common.id}`;
                 db.query(meta_sql, async (meta_err, _meta_result) => {
                     if (meta_err) throw meta_err;
-    
+
                     const meta_values = _meta_result;
                     let meta_values_array = {};
                     await meta_values.forEach((item) => {
@@ -2822,7 +2822,7 @@ router.get('/disclaimer', checkCookieValue, async (req, res) => {
                         globalPageMeta: globalPageMeta
                     });
                 })
-    
+
             })
         }
     } catch (err) {
@@ -2852,7 +2852,7 @@ router.get('/disclaimer/:getcountryname', checkCookieValue, async (req, res) => 
         comFunction2.getPageMetaValues('global'),
     ]);
     try {
-        if (country_code !='All') {
+        if (country_code != 'All') {
             console.log("notall");
             const sql = `SELECT * FROM page_info where secret_Key = 'disclaimer' AND country= "${country_code}" `;
             db.query(sql, (err, results, fields) => {
@@ -2861,7 +2861,7 @@ router.get('/disclaimer/:getcountryname', checkCookieValue, async (req, res) => 
                 const meta_sql = `SELECT * FROM page_meta where page_id = ${common.id}`;
                 db.query(meta_sql, async (meta_err, _meta_result) => {
                     if (meta_err) throw meta_err;
-    
+
                     const meta_values = _meta_result;
                     let meta_values_array = {};
                     await meta_values.forEach((item) => {
@@ -2877,9 +2877,9 @@ router.get('/disclaimer/:getcountryname', checkCookieValue, async (req, res) => 
                         globalPageMeta: globalPageMeta
                     });
                 })
-    
+
             })
-        }else{
+        } else {
             console.log("alll");
             const sql = `SELECT * FROM page_info where secret_Key = 'disclaimer' AND country= "US" `;
             db.query(sql, (err, results, fields) => {
@@ -2888,7 +2888,7 @@ router.get('/disclaimer/:getcountryname', checkCookieValue, async (req, res) => 
                 const meta_sql = `SELECT * FROM page_meta where page_id = ${common.id}`;
                 db.query(meta_sql, async (meta_err, _meta_result) => {
                     if (meta_err) throw meta_err;
-    
+
                     const meta_values = _meta_result;
                     let meta_values_array = {};
                     await meta_values.forEach((item) => {
@@ -2904,10 +2904,10 @@ router.get('/disclaimer/:getcountryname', checkCookieValue, async (req, res) => 
                         globalPageMeta: globalPageMeta
                     });
                 })
-    
+
             })
         }
-    }catch (err) {
+    } catch (err) {
         console.error(err);
         res.status(500).send('An error occurred');
     }
@@ -2933,7 +2933,7 @@ router.get('/terms-of-service', checkCookieValue, async (req, res) => {
         comFunction2.getPageMetaValues('global'),
     ]);
     try {
-        if(country_code!='All'){
+        if (country_code != 'All') {
             const sql = `SELECT * FROM page_info where secret_Key = 'terms_of_service' AND country="${country_code}"`;
             db.query(sql, (err, results, fields) => {
                 if (err) throw err;
@@ -2941,7 +2941,7 @@ router.get('/terms-of-service', checkCookieValue, async (req, res) => {
                 const meta_sql = `SELECT * FROM page_meta where page_id = ${common.id}`;
                 db.query(meta_sql, async (meta_err, _meta_result) => {
                     if (meta_err) throw meta_err;
-    
+
                     const meta_values = _meta_result;
                     let meta_values_array = {};
                     await meta_values.forEach((item) => {
@@ -2957,9 +2957,9 @@ router.get('/terms-of-service', checkCookieValue, async (req, res) => {
                         globalPageMeta: globalPageMeta
                     });
                 })
-    
+
             })
-        } else{
+        } else {
             const sql = `SELECT * FROM page_info where secret_Key = 'terms_of_service' AND country="US"`;
             db.query(sql, (err, results, fields) => {
                 if (err) throw err;
@@ -2967,7 +2967,7 @@ router.get('/terms-of-service', checkCookieValue, async (req, res) => {
                 const meta_sql = `SELECT * FROM page_meta where page_id = ${common.id}`;
                 db.query(meta_sql, async (meta_err, _meta_result) => {
                     if (meta_err) throw meta_err;
-    
+
                     const meta_values = _meta_result;
                     let meta_values_array = {};
                     await meta_values.forEach((item) => {
@@ -2983,7 +2983,7 @@ router.get('/terms-of-service', checkCookieValue, async (req, res) => {
                         globalPageMeta: globalPageMeta
                     });
                 })
-    
+
             })
         }
 
@@ -3005,7 +3005,7 @@ router.get('/terms-of-service/:getcountryname', checkCookieValue, async (req, re
     console.log("country_namesprivacy", country_name);
     console.log("country_codesprivacy", country_code);
 
-    if (country_code != 'UK' && country_code != 'JP' && country_code!= 'All') {
+    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
         country_code = 'US';
     }
 
@@ -3014,7 +3014,7 @@ router.get('/terms-of-service/:getcountryname', checkCookieValue, async (req, re
         comFunction2.getPageMetaValues('global'),
     ]);
     try {
-        if(country_code != 'All'){
+        if (country_code != 'All') {
             const sql = `SELECT * FROM page_info where secret_Key = 'terms_of_service' AND country="${getcountryname}"`;
             db.query(sql, (err, results, fields) => {
                 if (err) throw err;
@@ -3022,7 +3022,7 @@ router.get('/terms-of-service/:getcountryname', checkCookieValue, async (req, re
                 const meta_sql = `SELECT * FROM page_meta where page_id = ${common.id}`;
                 db.query(meta_sql, async (meta_err, _meta_result) => {
                     if (meta_err) throw meta_err;
-    
+
                     const meta_values = _meta_result;
                     let meta_values_array = {};
                     await meta_values.forEach((item) => {
@@ -3038,9 +3038,9 @@ router.get('/terms-of-service/:getcountryname', checkCookieValue, async (req, re
                         globalPageMeta: globalPageMeta
                     });
                 })
-    
+
             })
-        } else{
+        } else {
             const sql = `SELECT * FROM page_info where secret_Key = 'terms_of_service' AND country="US"`;
             db.query(sql, (err, results, fields) => {
                 if (err) throw err;
@@ -3048,7 +3048,7 @@ router.get('/terms-of-service/:getcountryname', checkCookieValue, async (req, re
                 const meta_sql = `SELECT * FROM page_meta where page_id = ${common.id}`;
                 db.query(meta_sql, async (meta_err, _meta_result) => {
                     if (meta_err) throw meta_err;
-    
+
                     const meta_values = _meta_result;
                     let meta_values_array = {};
                     await meta_values.forEach((item) => {
@@ -3064,7 +3064,7 @@ router.get('/terms-of-service/:getcountryname', checkCookieValue, async (req, re
                         globalPageMeta: globalPageMeta
                     });
                 })
-    
+
             })
         }
 
@@ -3532,15 +3532,15 @@ router.get('/home/company/:slug', checkCookieValue, async (req, res) => {
 });
 router.get('/home/company/:slug', checkCookieValue, async (req, res) => {
     const slug = req.params.slug;
-    console.log("slug",slug);
+    console.log("slug", slug);
     const labeltype = req.query.type || null;
     console.log(labeltype)
     let currentUserData = JSON.parse(req.userData);
     const apiKey = process.env.GEO_LOCATION_API_KEY;
-    console.log("apiKey",apiKey);
+    console.log("apiKey", apiKey);
 
     const comp_res = await comFunction2.getCompanyIdBySlug(slug);
-    console.log("comp_res",comp_res);
+    console.log("comp_res", comp_res);
 
     if (typeof comp_res == 'undefined') {
         const [globalPageMeta] = await Promise.all([
@@ -4566,12 +4566,12 @@ router.get('/discussion', checkCookieValue, async (req, res) => {
     console.log("country_names", country_name);
     console.log("country_codes", country_code);
 
-    if (req.cookies.countryCode !== 'All') {       
-    const new_country_code_query = `SELECT shortname FROM countries WHERE name="${country_name}"`;
-    const new_country_code_val = await queryAsync(new_country_code_query);
-    console.log("new_country_code_val", new_country_code_val);
-    var new_country_code = new_country_code_val[0].shortname;
-    console.log("new_country_code", new_country_code);
+    if (req.cookies.countryCode !== 'All') {
+        const new_country_code_query = `SELECT shortname FROM countries WHERE name="${country_name}"`;
+        const new_country_code_val = await queryAsync(new_country_code_query);
+        console.log("new_country_code_val", new_country_code_val);
+        var new_country_code = new_country_code_val[0].shortname;
+        console.log("new_country_code", new_country_code);
         var [globalPageMeta, getAllLatestDiscussion, getAllPopularDiscussion, getAllDiscussions, getAllViewedDiscussion, getPopularTags, getCountries] = await Promise.all([
             comFunction2.getPageMetaValues('global'),
             comFunction2.getAllLatestDiscussion(20, country_name),
@@ -4582,10 +4582,10 @@ router.get('/discussion', checkCookieValue, async (req, res) => {
             // comFunction2.getAllPopularDiscussion(),
             // comFunction2.getAllDiscussion(),
             // comFunction2.getAllViewedDiscussion(country_name),
-            comFunction2.getPopularTags(country_name,20),
+            comFunction2.getPopularTags(country_name, 20),
             comFunction.getCountries(),
         ]);
-    }else{
+    } else {
         var [globalPageMeta, getAllLatestDiscussion, getAllPopularDiscussion, getAllDiscussions, getAllViewedDiscussion, getPopularTags, getCountries] = await Promise.all([
             comFunction2.getPageMetaValues('global'),
             comFunction2.getAllLatestDiscussion(20),
@@ -4602,8 +4602,8 @@ router.get('/discussion', checkCookieValue, async (req, res) => {
     }
 
 
-    console.log("getAllLatestDiscussion",getAllLatestDiscussion);
-    console.log("getPopularTags",getPopularTags);
+    console.log("getAllLatestDiscussion", getAllLatestDiscussion);
+    console.log("getPopularTags", getPopularTags);
     try {
         // res.json( {
         //     menu_active_id: 'discussion',
@@ -4655,7 +4655,7 @@ router.get('/discussion/:getcountryname', checkCookieValue, async (req, res) => 
         console.log("new_country_code_val", new_country_code_val);
         var new_country_code = new_country_code_val[0].shortname;
         console.log("new_country_code", new_country_code);
-    
+
         var [globalPageMeta, getAllLatestDiscussion, getAllPopularDiscussion, getAllDiscussions, getAllViewedDiscussion, getPopularTags, getCountries] = await Promise.all([
             comFunction2.getPageMetaValues('global'),
             comFunction2.getAllLatestDiscussion(20, country_name),
@@ -4669,7 +4669,7 @@ router.get('/discussion/:getcountryname', checkCookieValue, async (req, res) => 
             comFunction2.getPopularTags(20),
             comFunction.getCountries(),
         ]);
-    }else{
+    } else {
         var [globalPageMeta, getAllLatestDiscussion, getAllPopularDiscussion, getAllDiscussions, getAllViewedDiscussion, getPopularTags, getCountries] = await Promise.all([
             comFunction2.getPageMetaValues('global'),
             comFunction2.getAllLatestDiscussion(20),
@@ -4685,7 +4685,7 @@ router.get('/discussion/:getcountryname', checkCookieValue, async (req, res) => 
         ]);
     }
     //console.log(getAllLatestDiscussion);
-    console.log("getPopularTags",getPopularTags);
+    console.log("getPopularTags", getPopularTags);
     try {
         // res.json( {
         //     menu_active_id: 'discussion',
@@ -4716,6 +4716,95 @@ router.get('/discussion/:getcountryname', checkCookieValue, async (req, res) => 
         res.redirect('admin-login');
         // console.error(err);
         // res.status(500).send('An error occurred');
+    }
+});
+
+
+router.get('/matching-query', checkCookieValue, async (req, res) => {
+    let currentUserData = JSON.parse(req.userData);
+    console.log("currentUserData", currentUserData);
+
+    var claimed_comp_id = currentUserData.claimed_comp_id;
+    console.log("claimed_comp_id", claimed_comp_id);
+
+    let country_name = req.cookies.countryName || 'India';
+    let country_code = req.cookies.countryCode || 'IN';
+
+    console.log("country_names", country_name);
+    console.log("country_codes", country_code);
+
+    var [globalPageMeta, getAllLatestDiscussion, getAllPopularDiscussion, getAllDiscussions, getAllViewedDiscussion, getPopularTags, getCountries] = await Promise.all([
+        comFunction2.getPageMetaValues('global'),
+        comFunction2.getAllLatestDiscussion(20),
+        comFunction2.getAllPopularDiscussion(),
+        comFunction2.getAllDiscussion(),
+        comFunction2.getAllViewedDiscussion(),
+        comFunction2.getPopularTags(20),
+        comFunction.getCountries(),
+    ]);
+
+    var companytagquery = `SELECT * FROM duscussions_company_tags WHERE company_id="${claimed_comp_id}"`;
+    var companytagval = await queryAsync(companytagquery);
+    console.log("companytagval", companytagval);
+    const companyTags = JSON.parse(companytagval[0].tags);
+    console.log("companyTags", companyTags);
+
+    var similarquery = `
+        SELECT
+        discussions.*,
+        u.first_name,
+        u.last_name,
+        COALESCE(comments.total_comments, 0) as total_comments,
+        COALESCE(views.total_views, 0) as total_views
+        FROM discussions
+        LEFT JOIN users u ON discussions.user_id = u.user_id
+        LEFT JOIN (
+        SELECT discussion_id, COUNT(*) as total_comments
+        FROM discussions_user_response
+        GROUP BY discussion_id
+        ) comments ON discussions.id = comments.discussion_id
+        LEFT JOIN (
+        SELECT discussion_id, COUNT(*) as total_views
+        FROM discussions_user_view
+        GROUP BY discussion_id
+        ) views ON discussions.id = views.discussion_id
+        WHERE discussions.discussion_status = 1
+        `
+    var discussions = await queryAsync(similarquery);
+
+    const matchingDiscussions = [];
+
+    discussions.forEach(discussion => {
+        const discussionTags = JSON.parse(discussion.tags);
+        const hasMatchingTags = companyTags.some(tag => discussionTags.includes(tag));
+
+        if (hasMatchingTags) {
+            matchingDiscussions.push(discussion);
+        }
+    });
+    // console.log("Matching discussions:", matchingDiscussions);
+    // console.log("Matching discussions count:", matchingDiscussions.length);
+    // console.log("getAllLatestDiscussion", getAllLatestDiscussion);
+    // console.log("getPopularTags", getPopularTags);
+
+    try {
+        res.render('front-end/matching-query', {
+            menu_active_id: 'Similar Queries',
+            page_title: 'Similar Queries',
+            currentUserData,
+            globalPageMeta: globalPageMeta,
+            AllLatestDiscussion: getAllLatestDiscussion,
+            AllPopularDiscussion: getAllPopularDiscussion,
+            AllDiscussions: getAllDiscussions,
+            AllViewedDiscussion: getAllViewedDiscussion,
+            PopularTags: getPopularTags,
+            getCountries: getCountries,
+            matchingDiscussions: matchingDiscussions
+
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('An error occurred');
     }
 });
 
@@ -5182,19 +5271,19 @@ router.get('/update-survey/:slug/:survey_id', checkClientClaimedCompany, async (
         comFunction2.getSurveyemailDetailsByUniqueId(surveyUniqueId)
     ]);
     console.log('SurveyAnswerCount', SurveyAnswerCount);
-    console.log("getSurveyemailDetailsByUniqueId",getSurveyemailDetailsByUniqueId);
+    console.log("getSurveyemailDetailsByUniqueId", getSurveyemailDetailsByUniqueId);
 
     const getsurveyquery = `SELECT * FROM survey WHERE expire_at >= CURDATE();`;
     const getsurveyval = await query(getsurveyquery);
 
-    console.log("getsurveyval",getsurveyval);
+    console.log("getsurveyval", getsurveyval);
 
-    var emailAddresses = getSurveyemailDetailsByUniqueId.map(function(item) {
+    var emailAddresses = getSurveyemailDetailsByUniqueId.map(function (item) {
         return item.emails;
     });
     var jsonStringa = JSON.stringify(emailAddresses);
-    console.log("jsonStringa",jsonStringa);
-    
+    console.log("jsonStringa", jsonStringa);
+
 
     let facebook_url = '';
     let twitter_url = '';
@@ -5246,8 +5335,8 @@ router.get('/update-survey/:slug/:survey_id', checkClientClaimedCompany, async (
             ...(submitionsCountMap[detail.unique_id] || {}) // Add submitionsCount if it exists
         }));
 
-        console.log("CompanySurveyDetails_formatted",CompanySurveyDetails_formatted);
-        
+        console.log("CompanySurveyDetails_formatted", CompanySurveyDetails_formatted);
+
         // res.json(
         // { 
         //     menu_active_id: 'survey',
@@ -5622,16 +5711,16 @@ async function checkClientClaimedCompany(req, res, next) {
     // }
     if (req.cookies.user) {
         const encodedUserData = req.cookies.user;
-        console.log("encodedUserData",encodedUserData);
+        console.log("encodedUserData", encodedUserData);
         const UserJsonData = JSON.parse(encodedUserData);
-        console.log("UserJsonData",UserJsonData);
+        console.log("UserJsonData", UserJsonData);
 
         if (UserJsonData && UserJsonData.claimed_comp_slug == req.params.slug || UserJsonData.emails == UserJsonData.email) {
             next();
-        }else{
+        } else {
             res.redirect('/logout');
         }
-        
+
     } else {
         res.redirect('/');
     }
@@ -6629,16 +6718,16 @@ router.get('/getuserss/:companyId/:level/:category_id', (req, res) => {
 });
 
 router.get('/get-management-users', async (req, res) => {
-    try{
+    try {
         const companyId = req.query.company_id;
         const managementquery = `SELECT level_user_type FROM company_level_manage_users WHERE company_id= "${companyId}"`;
         const managementUsers = await queryAsync(managementquery);
-    
-        console.log("managementUsers",managementUsers);
-    
+
+        console.log("managementUsers", managementUsers);
+
         return res.json(managementUsers);
 
-    } catch(error){
+    } catch (error) {
         console.error('Error while fetching data:', error);
         return res.status(500).send('Internal Server Error');
     }
@@ -6647,70 +6736,70 @@ router.get('/get-management-users', async (req, res) => {
 //send survey invitation page
 router.get('/new_complain/:slug', checkClientClaimedCompany, async (req, res) => {
     //new_complain
-        const encodedUserData = req.cookies.user;
-        const currentUserData = JSON.parse(encodedUserData);
-        //console.log("currentUserData,",currentUserData);
-        const slug = req.params.slug;
-        console.log("req.params.slug",slug);
-    
-        //const company_id = req.params.company_Id;
-        const comp_res =await comFunction2.getCompanyIdBySlug(slug);
-        console.log("comp_res",comp_res);
-        const companyId = comp_res.ID;
-        console.log("companyId",companyId);
-    
-        const get_complaint_status = `SELECT complaint_status FROM company WHERE ID= "${companyId}"`;
-        const complaintStatusResult = await query(get_complaint_status);
-        if (complaintStatusResult && complaintStatusResult.length > 0) {
-            var complaintStatus = complaintStatusResult[0].complaint_status;
-            //console.log("complaintStatus", complaintStatus); 
-        }
-    
-        const get_complaint_level = `SELECT complaint_level FROM company WHERE ID= "${companyId}"`;
-        const complaintlevelResult = await query(get_complaint_level);
-        
-        if (complaintlevelResult && complaintlevelResult.length > 0) {
-            var complaintLevel = complaintlevelResult[0].complaint_level;
-            //console.log("complaintLevel", complaintLevel); 
-        }
-    
-        //const companyId = req.params.companyId;
-        const [globalPageMeta, company, companyReviewNumbers, PremiumCompanyData, allRatingTags, getComplaintLevelDetails, geCompanyCategories, getcategoriesUsers, getEtaDays,geCompanyCategorieslength,getmanagementUsers ] = await Promise.all([
-            comFunction2.getPageMetaValues('global'),
-            comFunction.getCompany(companyId),
-            comFunction.getCompanyReviewNumbers(companyId),
-            comFunction2.getPremiumCompanyData(companyId),
-            comFunction.getAllRatingTags(),
-            comFunction2.getComplaintAllLevelDetails(companyId),
-            comFunction2.geCompanyCategories(companyId),
-            comFunction2.getcategoriesUsers(companyId),
-            comFunction2.getEtaDays(companyId),
-            comFunction2.geCompanyCategorieslength(companyId),
-            comFunction2.getmanagementUsers(companyId)
-        ]);
-    
-        // console.log("getCompany",company);
-        // console.log("geCompanyCategories",geCompanyCategories);
-        // console.log("getcategoriesUsers",getcategoriesUsers);
-        // console.log("getEtaDays",getEtaDays);
-        console.log("getmanagementUsers",getmanagementUsers);
-    
-        console.log("geCompanyCategories",geCompanyCategories);
-        console.log("geCompanyCategorieslength",geCompanyCategorieslength);
-    
-        const companyPaidStatus = company.paid_status.trim();
-        //console.log("companyPaidStatus",companyPaidStatus);
-        if(companyPaidStatus=='free'){
-            res.render('front-end/basic-complain-management',
+    const encodedUserData = req.cookies.user;
+    const currentUserData = JSON.parse(encodedUserData);
+    //console.log("currentUserData,",currentUserData);
+    const slug = req.params.slug;
+    console.log("req.params.slug", slug);
+
+    //const company_id = req.params.company_Id;
+    const comp_res = await comFunction2.getCompanyIdBySlug(slug);
+    console.log("comp_res", comp_res);
+    const companyId = comp_res.ID;
+    console.log("companyId", companyId);
+
+    const get_complaint_status = `SELECT complaint_status FROM company WHERE ID= "${companyId}"`;
+    const complaintStatusResult = await query(get_complaint_status);
+    if (complaintStatusResult && complaintStatusResult.length > 0) {
+        var complaintStatus = complaintStatusResult[0].complaint_status;
+        //console.log("complaintStatus", complaintStatus); 
+    }
+
+    const get_complaint_level = `SELECT complaint_level FROM company WHERE ID= "${companyId}"`;
+    const complaintlevelResult = await query(get_complaint_level);
+
+    if (complaintlevelResult && complaintlevelResult.length > 0) {
+        var complaintLevel = complaintlevelResult[0].complaint_level;
+        //console.log("complaintLevel", complaintLevel); 
+    }
+
+    //const companyId = req.params.companyId;
+    const [globalPageMeta, company, companyReviewNumbers, PremiumCompanyData, allRatingTags, getComplaintLevelDetails, geCompanyCategories, getcategoriesUsers, getEtaDays, geCompanyCategorieslength, getmanagementUsers] = await Promise.all([
+        comFunction2.getPageMetaValues('global'),
+        comFunction.getCompany(companyId),
+        comFunction.getCompanyReviewNumbers(companyId),
+        comFunction2.getPremiumCompanyData(companyId),
+        comFunction.getAllRatingTags(),
+        comFunction2.getComplaintAllLevelDetails(companyId),
+        comFunction2.geCompanyCategories(companyId),
+        comFunction2.getcategoriesUsers(companyId),
+        comFunction2.getEtaDays(companyId),
+        comFunction2.geCompanyCategorieslength(companyId),
+        comFunction2.getmanagementUsers(companyId)
+    ]);
+
+    // console.log("getCompany",company);
+    // console.log("geCompanyCategories",geCompanyCategories);
+    // console.log("getcategoriesUsers",getcategoriesUsers);
+    // console.log("getEtaDays",getEtaDays);
+    console.log("getmanagementUsers", getmanagementUsers);
+
+    console.log("geCompanyCategories", geCompanyCategories);
+    console.log("geCompanyCategorieslength", geCompanyCategorieslength);
+
+    const companyPaidStatus = company.paid_status.trim();
+    //console.log("companyPaidStatus",companyPaidStatus);
+    if (companyPaidStatus == 'free') {
+        res.render('front-end/basic-complain-management',
             {
                 menu_active_id: 'settings',
                 page_title: 'Complaint Management',
                 currentUserData,
-                globalPageMeta:globalPageMeta,
-                company:company,
+                globalPageMeta: globalPageMeta,
+                company: company,
                 companyReviewNumbers,
                 allRatingTags,
-                ComplaintLevelDetails:getComplaintLevelDetails,
+                ComplaintLevelDetails: getComplaintLevelDetails,
                 companyId: companyId,
                 complaintStatus: complaintStatus,
                 geCompanyCategories: geCompanyCategories,
@@ -6719,68 +6808,68 @@ router.get('/new_complain/:slug', checkClientClaimedCompany, async (req, res) =>
                 geCompanyCategorieslength: geCompanyCategorieslength,
                 getmanagementUsers: getmanagementUsers
             });
-        }else{
-            let facebook_url = '';
-            let twitter_url = '';
-            let instagram_url = '';
-            let linkedin_url = '';
-            let youtube_url = '';
-        
-            if(typeof PremiumCompanyData !== 'undefined' ){
-                 facebook_url = PremiumCompanyData.facebook_url;
-                 twitter_url = PremiumCompanyData.twitter_url;
-                 instagram_url = PremiumCompanyData.instagram_url;
-                 linkedin_url = PremiumCompanyData.linkedin_url;
-                 youtube_url = PremiumCompanyData.youtube_url;
-            }
-    
-            // res.json(
-            // {
-            //     menu_active_id: 'complaint',
-            //     page_title: 'Complaint Management',
-            //     currentUserData,
-            //     globalPageMeta:globalPageMeta,
-            //     company:company,
-            //     companyReviewNumbers,
-            //     allRatingTags,
-            //     facebook_url:facebook_url,
-            //     twitter_url:twitter_url,
-            //     instagram_url:instagram_url,
-            //     linkedin_url:linkedin_url,
-            //     youtube_url:youtube_url,
-            //     ComplaintLevelDetails:getComplaintLevelDetails,
-            // });
-    
-            res.render('front-end/new_complaint',
+    } else {
+        let facebook_url = '';
+        let twitter_url = '';
+        let instagram_url = '';
+        let linkedin_url = '';
+        let youtube_url = '';
+
+        if (typeof PremiumCompanyData !== 'undefined') {
+            facebook_url = PremiumCompanyData.facebook_url;
+            twitter_url = PremiumCompanyData.twitter_url;
+            instagram_url = PremiumCompanyData.instagram_url;
+            linkedin_url = PremiumCompanyData.linkedin_url;
+            youtube_url = PremiumCompanyData.youtube_url;
+        }
+
+        // res.json(
+        // {
+        //     menu_active_id: 'complaint',
+        //     page_title: 'Complaint Management',
+        //     currentUserData,
+        //     globalPageMeta:globalPageMeta,
+        //     company:company,
+        //     companyReviewNumbers,
+        //     allRatingTags,
+        //     facebook_url:facebook_url,
+        //     twitter_url:twitter_url,
+        //     instagram_url:instagram_url,
+        //     linkedin_url:linkedin_url,
+        //     youtube_url:youtube_url,
+        //     ComplaintLevelDetails:getComplaintLevelDetails,
+        // });
+
+        res.render('front-end/new_complaint',
             {
                 menu_active_id: 'complaint',
                 page_title: 'Complaint Management',
                 currentUserData,
-                globalPageMeta:globalPageMeta,
-                company:company,
+                globalPageMeta: globalPageMeta,
+                company: company,
                 companyReviewNumbers,
                 allRatingTags,
-                facebook_url:facebook_url,
-                twitter_url:twitter_url,
-                instagram_url:instagram_url,
-                linkedin_url:linkedin_url,
-                youtube_url:youtube_url,
-                ComplaintLevelDetails:getComplaintLevelDetails,
+                facebook_url: facebook_url,
+                twitter_url: twitter_url,
+                instagram_url: instagram_url,
+                linkedin_url: linkedin_url,
+                youtube_url: youtube_url,
+                ComplaintLevelDetails: getComplaintLevelDetails,
                 companyId: companyId,
                 complaintStatus: complaintStatus,
                 geCompanyCategories: geCompanyCategories,
                 complaintLevel: complaintLevel,
-                getcategoriesUsers:getcategoriesUsers,
+                getcategoriesUsers: getcategoriesUsers,
                 getEtaDays: getEtaDays,
                 geCompanyCategorieslength: geCompanyCategorieslength,
                 getmanagementUsers: getmanagementUsers
             });
-            
-        }
-        /////////////////////////////////////////////////
-      
-    });
-    
+
+    }
+    /////////////////////////////////////////////////
+
+});
+
 
 //company complaint-level-management Page 
 router.get('/complaint-level-management/:slug', checkClientClaimedCompany, async (req, res) => {
@@ -6919,7 +7008,7 @@ router.get('/company-complaint-listing/:slug', checkClientClaimedCompany, async 
         };
     });
 
-    console.log("formattedCoplaintData",formattedCoplaintData[0]);
+    console.log("formattedCoplaintData", formattedCoplaintData[0]);
     //console.log("getuserslistofcompanycategory",getuserslistofcompanycategory);
     //console.log("geCompanyCategorieslength", geCompanyCategorieslength);
     const companyPaidStatus = company.paid_status.trim();;
@@ -7002,7 +7091,7 @@ router.get('/company-complaint-listing/:slug', checkClientClaimedCompany, async 
     }
 });
 
-router.get('/manage-complaint-listing/:slug',checkFrontEndLoggedIn,async(req, res) => {
+router.get('/manage-complaint-listing/:slug', checkFrontEndLoggedIn, async (req, res) => {
     //company-complaint-listing
     const encodedUserData = req.cookies.user;
     const currentUserData = JSON.parse(encodedUserData);
@@ -7010,20 +7099,20 @@ router.get('/manage-complaint-listing/:slug',checkFrontEndLoggedIn,async(req, re
     var email = currentUserData.email;
     //console.log("currentUserData.email",email);
     const slug = req.params.slug;
-    const comp_res =await comFunction2.getCompanyIdBySlug(slug);
+    const comp_res = await comFunction2.getCompanyIdBySlug(slug);
     const companyId = comp_res.ID;
-    log("companyId",companyId)
+    log("companyId", companyId)
     //const companyId = req.params.compID;
-    const [globalPageMeta, company, companyReviewNumbers, allRatingTags, PremiumCompanyData, getAllComplaintsByCompanyId, getAllComplaintsByUserId,getuserslistofcompanycategory,getcategories] = await Promise.all([
+    const [globalPageMeta, company, companyReviewNumbers, allRatingTags, PremiumCompanyData, getAllComplaintsByCompanyId, getAllComplaintsByUserId, getuserslistofcompanycategory, getcategories] = await Promise.all([
         comFunction2.getPageMetaValues('global'),
         comFunction.getCompany(companyId),
         comFunction.getCompanyReviewNumbers(companyId),
         comFunction.getAllRatingTags(),
         comFunction2.getPremiumCompanyData(companyId),
-        comFunction2.getAllComplaintsByCompanyuserId(companyId,email),
+        comFunction2.getAllComplaintsByCompanyuserId(companyId, email),
         //getAllComplaintsByCompanyuserId
         comFunction2.getAllComplaintsByUserId(companyId),
-        
+
         comFunction2.getuserslistofcompanycategory(companyId),
         comFunction2.getcategories(companyId),
         //comFunction2.sendemailtolevelUsers(),
@@ -7031,61 +7120,61 @@ router.get('/manage-complaint-listing/:slug',checkFrontEndLoggedIn,async(req, re
     var company_level = company.complaint_level;
     // console.log("company_level",company_level);
     // console.log("getAllComplaintsByCompanyId",getAllComplaintsByCompanyId);
-        const formattedCoplaintData = getAllComplaintsByCompanyId.map(item => {
-            let responsesArray = [];
-            let comp_query = [];
-            let cus_response = [];
-            if (item.notification_statuses != null) {
-                    responsesArray = item.notification_statuses.split(',');
-            }
-            if (item.company_query != null) {
-                comp_query = item.company_query.split(',');
-            }
-            if (item.user_response != null) {
-                cus_response = item.user_response.split(',');
-            }
-            return {
-                ...item,
-                notification_statuses: responsesArray,
-                company_query : comp_query,
-                customer_response:cus_response
-            };
-        });
-        
-        //console.log("formattedCoplaintData",formattedCoplaintData);
-        //console.log("getuserslistofcompanycategory",getuserslistofcompanycategory);
+    const formattedCoplaintData = getAllComplaintsByCompanyId.map(item => {
+        let responsesArray = [];
+        let comp_query = [];
+        let cus_response = [];
+        if (item.notification_statuses != null) {
+            responsesArray = item.notification_statuses.split(',');
+        }
+        if (item.company_query != null) {
+            comp_query = item.company_query.split(',');
+        }
+        if (item.user_response != null) {
+            cus_response = item.user_response.split(',');
+        }
+        return {
+            ...item,
+            notification_statuses: responsesArray,
+            company_query: comp_query,
+            customer_response: cus_response
+        };
+    });
+
+    //console.log("formattedCoplaintData",formattedCoplaintData);
+    //console.log("getuserslistofcompanycategory",getuserslistofcompanycategory);
     const companyPaidStatus = company.paid_status.trim();;
-    if(companyPaidStatus=='free'){
+    if (companyPaidStatus == 'free') {
         res.render('front-end/basic-complaint-listing',
-        {
-            menu_active_id: 'complaint',
-            page_title: 'Complaint Listing',
-            currentUserData,
-            globalPageMeta:globalPageMeta,
-            company:company,
-            companyReviewNumbers,
-            allRatingTags,
-            AllComplaintsByCompanyId:formattedCoplaintData,
-            getuserslistofcompanycategory: getuserslistofcompanycategory,
-            companyId: companyId,
-            company_level: company_level,
-            getcategories: getcategories,
-            getAllComplaintsByUserId: getAllComplaintsByUserId
-            //sendemailtolevelUsers: sendemailtolevelUsers
-        });
-    }else{
+            {
+                menu_active_id: 'complaint',
+                page_title: 'Complaint Listing',
+                currentUserData,
+                globalPageMeta: globalPageMeta,
+                company: company,
+                companyReviewNumbers,
+                allRatingTags,
+                AllComplaintsByCompanyId: formattedCoplaintData,
+                getuserslistofcompanycategory: getuserslistofcompanycategory,
+                companyId: companyId,
+                company_level: company_level,
+                getcategories: getcategories,
+                getAllComplaintsByUserId: getAllComplaintsByUserId
+                //sendemailtolevelUsers: sendemailtolevelUsers
+            });
+    } else {
         let facebook_url = '';
         let twitter_url = '';
         let instagram_url = '';
         let linkedin_url = '';
         let youtube_url = '';
-    
-        if(typeof PremiumCompanyData !== 'undefined' ){
-             facebook_url = PremiumCompanyData.facebook_url;
-             twitter_url = PremiumCompanyData.twitter_url;
-             instagram_url = PremiumCompanyData.instagram_url;
-             linkedin_url = PremiumCompanyData.linkedin_url;
-             youtube_url = PremiumCompanyData.youtube_url;
+
+        if (typeof PremiumCompanyData !== 'undefined') {
+            facebook_url = PremiumCompanyData.facebook_url;
+            twitter_url = PremiumCompanyData.twitter_url;
+            instagram_url = PremiumCompanyData.instagram_url;
+            linkedin_url = PremiumCompanyData.linkedin_url;
+            youtube_url = PremiumCompanyData.youtube_url;
         }
         // res.json(
         // {
@@ -7104,27 +7193,27 @@ router.get('/manage-complaint-listing/:slug',checkFrontEndLoggedIn,async(req, re
         //     AllComplaintsByCompanyId:formattedCoplaintData
         // });
         res.render('front-end/manage-complaint-listing',
-        {
-            menu_active_id: 'complaint',
-            page_title: 'Complaint Listing',
-            currentUserData,
-            globalPageMeta:globalPageMeta,
-            company:company,
-            companyReviewNumbers,
-            allRatingTags,
-            facebook_url:facebook_url,
-            twitter_url:twitter_url,
-            instagram_url:instagram_url,
-            linkedin_url:linkedin_url,
-            youtube_url:youtube_url,
-            AllComplaintsByCompanyId:formattedCoplaintData,
-            getuserslistofcompanycategory: getuserslistofcompanycategory,
-            companyId: companyId,
-            company_level: company_level,
-            getcategories: getcategories,
-            getAllComplaintsByUserId: getAllComplaintsByUserId
-            //sendemailtolevelUsers: sendemailtolevelUsers
-        });
+            {
+                menu_active_id: 'complaint',
+                page_title: 'Complaint Listing',
+                currentUserData,
+                globalPageMeta: globalPageMeta,
+                company: company,
+                companyReviewNumbers,
+                allRatingTags,
+                facebook_url: facebook_url,
+                twitter_url: twitter_url,
+                instagram_url: instagram_url,
+                linkedin_url: linkedin_url,
+                youtube_url: youtube_url,
+                AllComplaintsByCompanyId: formattedCoplaintData,
+                getuserslistofcompanycategory: getuserslistofcompanycategory,
+                companyId: companyId,
+                company_level: company_level,
+                getcategories: getcategories,
+                getAllComplaintsByUserId: getAllComplaintsByUserId
+                //sendemailtolevelUsers: sendemailtolevelUsers
+            });
     }
 })
 router.get('/manage-compnaint-details/:slug/:complaintId', checkFrontEndLoggedIn, async (req, res) => {
@@ -7137,13 +7226,13 @@ router.get('/manage-compnaint-details/:slug/:complaintId', checkFrontEndLoggedIn
     // const companyId = req.params.compID;
 
     const user_email = currentUserData.email;
-    console.log("user_email",user_email);
+    console.log("user_email", user_email);
     const leveluserquery = `SELECT * FROM complaint_level_management WHERE emails="${user_email}"`;
     const leveluservalue = await query(leveluserquery);
     //console.log("leveluservalue",leveluservalue[0]);
     var leveluservalues = leveluservalue[0];
-    if(leveluservalue.length> 0){
-        console.log(("leveluservalue",leveluservalue));
+    if (leveluservalue.length > 0) {
+        console.log(("leveluservalue", leveluservalue));
     }
     try {
         const [globalPageMeta, company, companyReviewNumbers, allRatingTags, PremiumCompanyData, getAllComplaintsByComplaintId, updateCompanyrNotificationStatus, complaintHistory] = await Promise.all([
@@ -7159,7 +7248,7 @@ router.get('/manage-compnaint-details/:slug/:complaintId', checkFrontEndLoggedIn
         ]);
 
         const overallDaysquery = `SELECT created_at FROM complaint WHERE id=?`;
-        const overallDaysvalue = await query(overallDaysquery,[complaintId]);
+        const overallDaysvalue = await query(overallDaysquery, [complaintId]);
         const overalldays = overallDaysvalue[0].created_at;
         //console.log("overalldays",overalldays);
         const givenDate = new Date(overalldays);
@@ -7168,10 +7257,10 @@ router.get('/manage-compnaint-details/:slug/:complaintId', checkFrontEndLoggedIn
         const differenceInDays = differenceInMs / (1000 * 60 * 60 * 24);
         const approximateDifferenceInDays = Math.round(differenceInDays);
         //console.log("Difference in days:", approximateDifferenceInDays);
-        
+
 
         //console.log("complaintHistory", complaintHistory);
-        
+
         const companyPaidStatus = company.paid_status.trim();
         if (companyPaidStatus == 'free') {
             res.render('front-end/basic-company-complain-details', {
@@ -7249,7 +7338,7 @@ router.get('/company-compnaint-details/:slug/:complaintId', checkClientClaimedCo
         comFunction2.getPremiumCompanyData(companyId),
         comFunction2.getAllComplaintsByComplaintId(complaintId),
         comFunction2.updateCompanyrNotificationStatus(complaintId),
-      
+
     ]);
     try {
         var complaintHistory = await comFunction2.getcomplaintHistory(complaintId);
@@ -7332,13 +7421,13 @@ router.get('/company-compnaint-detail/:slug/:complaintId', async (req, res) => {
     // const companyId = req.params.compID;
 
     const user_email = currentUserData.email;
-    console.log("user_email",user_email);
+    console.log("user_email", user_email);
     const leveluserquery = `SELECT * FROM complaint_level_management WHERE emails="${user_email}"`;
     const leveluservalue = await query(leveluserquery);
     //console.log("leveluservalue",leveluservalue[0]);
     var leveluservalues = leveluservalue[0];
-    if(leveluservalue.length> 0){
-        console.log(("leveluservalue",leveluservalue));
+    if (leveluservalue.length > 0) {
+        console.log(("leveluservalue", leveluservalue));
     }
     try {
         const [globalPageMeta, company, companyReviewNumbers, allRatingTags, PremiumCompanyData, getAllComplaintsByComplaintId, updateCompanyrNotificationStatus, complaintHistory] = await Promise.all([
@@ -7354,7 +7443,7 @@ router.get('/company-compnaint-detail/:slug/:complaintId', async (req, res) => {
         ]);
 
         const overallDaysquery = `SELECT created_at FROM complaint WHERE id=?`;
-        const overallDaysvalue = await query(overallDaysquery,[complaintId]);
+        const overallDaysvalue = await query(overallDaysquery, [complaintId]);
         const overalldays = overallDaysvalue[0].created_at;
         //console.log("overalldays",overalldays);
         const givenDate = new Date(overalldays);
@@ -7363,10 +7452,10 @@ router.get('/company-compnaint-detail/:slug/:complaintId', async (req, res) => {
         const differenceInDays = differenceInMs / (1000 * 60 * 60 * 24);
         const approximateDifferenceInDays = Math.round(differenceInDays);
         //console.log("Difference in days:", approximateDifferenceInDays);
-        
+
 
         //console.log("complaintHistory", complaintHistory);
-        
+
         const companyPaidStatus = company.paid_status.trim();
         if (companyPaidStatus == 'free') {
             res.render('front-end/basic-company-complain-details', {
@@ -7830,6 +7919,9 @@ router.get('/discussion-tag-management/:slug', checkClientClaimedCompany, async 
         comFunction.getAllRatingTags(),
         comFunction2.getCompanyCreatedTags(companyId),
     ]);
+
+    console.log("getCompanyCreatedTags", getCompanyCreatedTags);
+
 
     try {
         let cover_img = '';
@@ -12083,8 +12175,8 @@ router.get('/myprofile', checkFrontEndLoggedIn, async (req, res) => {
         //console.log('editUserID: ', currentUserData);
 
         const email_query = `SELECT email FROM users WHERE user_id =?`;
-        const emailData = await query(email_query,[userId]);
-        console.log("emailData",emailData[0].email);
+        const emailData = await query(email_query, [userId]);
+        console.log("emailData", emailData[0].email);
 
         const getManagerQuery = `SELECT company_level_manage_users.*,company.slug FROM company_level_manage_users LEFT JOIN company ON company_level_manage_users.company_id = company.ID WHERE company_level_manage_users.emails=?`;
         const getManagerData = await query(getManagerQuery, [emailData[0].email]);
@@ -12129,8 +12221,8 @@ router.get('/profile-dashboard', checkFrontEndLoggedIn, async (req, res) => {
         console.log('editUserID: ', userId);
 
         const email_query = `SELECT email FROM users WHERE user_id =?`;
-        const emailData = await query(email_query,[userId]);
-        console.log("emailData",emailData[0].email);
+        const emailData = await query(email_query, [userId]);
+        console.log("emailData", emailData[0].email);
 
         const getManagerQuery = `SELECT company_level_manage_users.*,company.slug FROM company_level_manage_users LEFT JOIN company ON company_level_manage_users.company_id = company.ID WHERE company_level_manage_users.emails=?`;
         const getManagerData = await query(getManagerQuery, [emailData[0].email]);
@@ -12141,7 +12233,7 @@ router.get('/profile-dashboard', checkFrontEndLoggedIn, async (req, res) => {
         console.log("getData", getData[0]);
 
         // Fetch all the required data asynchronously
-        const [user, userMeta, ReviewedCompanies, AllCompaniesReviews, AllReviewTags, allRatingTags, globalPageMeta,AllReviewVoting] = await Promise.all([
+        const [user, userMeta, ReviewedCompanies, AllCompaniesReviews, AllReviewTags, allRatingTags, globalPageMeta, AllReviewVoting] = await Promise.all([
             comFunction.getUser(userId),
             comFunction.getUserMeta(userId),
             comFunction2.getReviewedCompanies(userId),
@@ -12151,7 +12243,7 @@ router.get('/profile-dashboard', checkFrontEndLoggedIn, async (req, res) => {
             comFunction2.getPageMetaValues('global'),
             comFunction2.getAllReviewVoting()
         ]);
-        log("userMeta",userMeta);
+        log("userMeta", userMeta);
         // res.json( {
         //     menu_active_id: 'profile-dashboard',
         //     page_title: 'My Dashboard',
@@ -12173,10 +12265,10 @@ router.get('/profile-dashboard', checkFrontEndLoggedIn, async (req, res) => {
             userMeta: userMeta,
             ReviewedCompanies: ReviewedCompanies,
             AllCompaniesReviews: AllCompaniesReviews,
-            allRatingTags:allRatingTags,
-            AllReviewTags:AllReviewTags,
-            globalPageMeta:globalPageMeta,
-            AllReviewVoting:AllReviewVoting,
+            allRatingTags: allRatingTags,
+            AllReviewTags: AllReviewTags,
+            globalPageMeta: globalPageMeta,
+            AllReviewVoting: AllReviewVoting,
             getManagerData: getManagerData,
             getData: getData
         });
@@ -12242,8 +12334,8 @@ router.get('/edit-myprofile', checkFrontEndLoggedIn, async (req, res) => {
         console.log('editUserID: ', userId);
 
         const email_query = `SELECT email FROM users WHERE user_id =?`;
-        const emailData = await query(email_query,[userId]);
-        console.log("emailData",emailData[0].email);
+        const emailData = await query(email_query, [userId]);
+        console.log("emailData", emailData[0].email);
 
         const getManagerQuery = `SELECT company_level_manage_users.*,company.slug FROM company_level_manage_users LEFT JOIN company ON company_level_manage_users.company_id = company.ID WHERE company_level_manage_users.emails=?`;
         const getManagerData = await query(getManagerQuery, [emailData[0].email]);
@@ -12483,16 +12575,16 @@ router.get('/register-complaint', checkFrontEndLoggedIn, async (req, res) => {
 router.get('/register-complaint/:getcountryname', checkFrontEndLoggedIn, async (req, res) => {
     const encodedUserData = req.cookies.user;
     const currentUserData = JSON.parse(encodedUserData);
-    
+
 
     const getcountryname = req.params.getcountryname;
-    console.log("getcountrynamebusiness",getcountryname);
+    console.log("getcountrynamebusiness", getcountryname);
 
     if (currentUserData) {
         var user_id = currentUserData.user_id;
         console.log("user_id", user_id);
         var encryptedEmail = await comFunction2.encryptEmail(currentUserData.email);
-        console.log("encryptedEmail",encryptedEmail);
+        console.log("encryptedEmail", encryptedEmail);
     }
     const api_key = process.env.GEO_LOCATION_API_KEY;
     let country_name = req.cookies.countryName || 'India';
@@ -12510,7 +12602,7 @@ router.get('/register-complaint/:getcountryname', checkFrontEndLoggedIn, async (
         comFunction2.getAllPremiumCompany(),
         comFunction.getCountries()
     ]);
-    console.log("getCountries",getCountries);
+    console.log("getCountries", getCountries);
     try {
 
         res.render('front-end/register-complain', {
@@ -12601,7 +12693,7 @@ router.get('/:getcountryname/register-cechoes-complaint', checkFrontEndLoggedIn,
 router.get('/my-complaints', checkFrontEndLoggedIn, async (req, res) => {
     const encodedUserData = req.cookies.user;
     const currentUserData = JSON.parse(encodedUserData);
-    console.log("currentUserData/my-complaints",currentUserData);
+    console.log("currentUserData/my-complaints", currentUserData);
     const userId = currentUserData.user_id;
     const [user, userMeta, globalPageMeta, AllCompaniesReviews, getAllComplaintsByUserId] = await Promise.all([
         comFunction.getUser(userId),
@@ -12612,9 +12704,9 @@ router.get('/my-complaints', checkFrontEndLoggedIn, async (req, res) => {
     ]);
 
     const email_query = `SELECT email FROM users WHERE user_id =?`;
-    const emailData = await query(email_query,[userId]);
-    console.log("emailData",emailData);
-    console.log("emailData",emailData[0].email);
+    const emailData = await query(email_query, [userId]);
+    console.log("emailData", emailData);
+    console.log("emailData", emailData[0].email);
 
     const getManagerQuery = `SELECT company_level_manage_users.*,company.slug FROM company_level_manage_users LEFT JOIN company ON company_level_manage_users.company_id = company.ID WHERE company_level_manage_users.emails=?`;
     const getManagerData = await query(getManagerQuery, [emailData[0].email]);
@@ -12691,8 +12783,8 @@ router.get('/user-compnaint-details/:complainId', checkFrontEndLoggedIn, async (
         comFunction2.updateUserNotificationStatus(complaintId),
     ]);
     const email_query = `SELECT email FROM users WHERE user_id =?`;
-    const emailData = await query(email_query,[userId]);
-    console.log("emailData",emailData[0].email);
+    const emailData = await query(email_query, [userId]);
+    console.log("emailData", emailData[0].email);
 
     const getManagerQuery = `SELECT company_level_manage_users.*,company.slug FROM company_level_manage_users LEFT JOIN company ON company_level_manage_users.company_id = company.ID WHERE company_level_manage_users.emails=?`;
     const getManagerData = await query(getManagerQuery, [emailData[0].email]);
@@ -12862,7 +12954,7 @@ router.get('/getcompany-details-by-id', async (req, res) => {
         if (companyvalue.length > 0) {
             const company_name = companyvalue[0].company_name;
             console.log("company_name", company_name);
-            
+
             res.status(200).json({
                 status: 'ok',
                 companyName: company_name
@@ -12873,7 +12965,7 @@ router.get('/getcompany-details-by-id', async (req, res) => {
                 message: 'Company not found'
             });
         }
-        
+
     } catch (error) {
         console.error('Error getcompanyDetails:', error);
         res.status(500).json({ success: false, message: 'Server error' });

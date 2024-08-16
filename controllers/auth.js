@@ -44,6 +44,7 @@ const comFunction = require('../common_function');
 const comFunction2 = require('../common_function2');
 const axios = require('axios');
 const { log } = require('console');
+const { Logger } = require('simple-node-logger');
 
 const formatter = new Intl.DateTimeFormat('en-US', {
     timeZone: process.env.DESIRED_TIMEZONE,
@@ -3522,7 +3523,7 @@ exports.companyDetails = async (req, res) => {
     }
 }
 
-exports.companyDetailsbyId= async (req, res) => {
+exports.companyDetailsbyId = async (req, res) => {
     try {
         const company_id = req.body.company_id;
         console.log("company_id", company_id);
@@ -7596,57 +7597,216 @@ exports.updateReviewFlag = async (req, res) => {
 // }
 
 exports.createDiscussion = async (req, res) => {
-    //console.log('createDiscussion',req.body ); 
-    //return false;
-    const { user_id, tags, topic, from_data, expire_date, location } = req.body;
-    const strTags = JSON.stringify(tags);
-    //console.log("strTagssss", strTags);
+    try {
+        console.log('createDiscussion', req.body);
+        //return false;
+        const { user_id, tags, topic, from_data, expire_date, location } = req.body;
+        const strTags = JSON.stringify(tags);
+        //console.log("strTagssss", strTags);
 
-    const user_location = `SELECT * FROM user_customer_meta WHERE user_id =?`;
-    const user_location_data = await query(user_location, [user_id]);
+        const user_location = `SELECT * FROM user_customer_meta WHERE user_id =?`;
+        const user_location_data = await query(user_location, [user_id]);
 
-    if (user_location_data.length > 0) {
-        //var user_locations = user_location_data[0].address;
-        var user_locations = user_location_data[0].country;
-        //console.log("user_locations",user_locations);
+        if (user_location_data.length > 0) {
+            //var user_locations = user_location_data[0].address;
+            var user_locations = user_location_data[0].country;
+            //console.log("user_locations",user_locations);
 
-        var userData = `SELECT name FROM countries WHERE id=?`;
-        var user_val = await query(userData, [user_locations]);
-        //console.log("user_val",user_val[0].name);
-    }
+            var userData = `SELECT name FROM countries WHERE id=?`;
+            var user_val = await query(userData, [user_locations]);
+            //console.log("user_val",user_val[0].name);
+        }
+        //var companytagsquery = `SELECT * FROM duscussions_company_tags WHERE tags`
 
-    const sql = `INSERT INTO discussions ( user_id, topic, tags, created_at, expired_at, query_alert_status,discussion_status, location) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
-    const data = [user_id, topic, strTags, from_data, expire_date, '0', '0', location];
-    db.query(sql, data, (err, result) => {
-        if (err) {
-            return res.send({
-                status: 'not ok',
-                message: 'Something went wrong ' + err
-            });
-        } else {
-            const discussion_id = result.insertId;
-            console.log("discussion_id", discussion_id);
-
-            const user_query = `SELECT email FROM users WHERE user_id = ?`;
-            const user_data = [user_id];
-
-            db.query(user_query, user_data, (userQueryErr, userQueryResult) => {
-                if (userQueryErr) {
-                    return res.send({
-                        status: 'not ok',
-                        message: 'Error retrieving user email: ' + userQueryErr
-                    });
-                } else {
-                    const user_email = userQueryResult[0].email;
-                    console.log("user_email", user_email);
+        const companiesTagsQuery = `SELECT company_id, tags FROM duscussions_company_tags`;
+        const companiesData = await query(companiesTagsQuery);
 
 
+        let matchedCompanyId = null;
+
+        for (const company of companiesData) {
+            const companyTags = JSON.parse(company.tags);
+            console.log("companyTags", companyTags);
+
+            const matchedTags = tags.filter(tag => companyTags.includes(tag));
+            console.log("matchedTags", matchedTags);
+
+
+            if (matchedTags.length > 0) {
+                matchedCompanyId = company.company_id;
+                console.log("Matching company found:", matchedCompanyId);
+
+                var comp_email_query = `SELECT company.comp_email, company_claim_request.claimed_by, users.user_id, users.email 
+                FROM company 
+                LEFT JOIN company_claim_request ON company.ID = company_claim_request.company_id
+                LEFT JOIN users ON company_claim_request.claimed_by = users.user_id
+                WHERE company.ID = "${matchedCompanyId}"`;
+                var comp_email_val = await queryAsync(comp_email_query);
+                console.log("comp_email_val", comp_email_val);
+                var company_email = comp_email_val[0].comp_email;
+                console.log("company_email", company_email);
+                var users_email = comp_email_val[0].email;
+                console.log("users_email", users_email);
+            }
+        }
+
+        if (!matchedCompanyId) {
+            console.log("No matching company found.");
+        }
+
+
+
+        const sql = `INSERT INTO discussions ( user_id, topic, tags, created_at, expired_at, query_alert_status,discussion_status, location) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+        const data = [user_id, topic, strTags, from_data, expire_date, '0', '0', location];
+        db.query(sql, data, (err, result) => {
+            if (err) {
+                return res.send({
+                    status: 'not ok',
+                    message: 'Something went wrong ' + err
+                });
+            } else {
+                const discussion_id = result.insertId;
+                console.log("discussion_id", discussion_id);
+
+
+                if (comp_email_val) {
                     var mailOptions = {
                         from: process.env.MAIL_USER,
-                        to: process.env.MAIL_USER,
+                        to: company_email,
                         //to: "dev2.scwt@gmail.com",
-                        subject: 'Discussion approval',
+                        subject: 'Discussion tag matched with your company',
                         html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+                <style>
+                body, table, td, p, a, h1, h2, h3, h4, h5, h6, div {
+                    font-family: Calibri, 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif !important;
+                }
+                </style>
+        <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
+          <tbody>
+          <tr>
+            <td align="center" valign="top">
+              <div id="template_header_image"><p style="margin-top: 0;"></p></div>
+              <table id="template_container" style="box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important; background-color: #fdfdfd; border: 1px solid #dcdcdc; border-radius: 3px !important;" border="0" cellpadding="0" cellspacing="0" width="600">
+              <tbody>
+                <tr>
+                  <td align="center" valign="top">
+                    <!-- Header -->
+                    <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
+                      <tbody>
+                        <tr>
+                        <td><img alt="Logo" src="${process.env.MAIN_URL}front-end/images/cechoes-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+                        <td id="header_wrapper" style="padding: 36px 48px; display: block;">
+                            <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Discussion tag matched with your company</h1>
+                        </td>
+    
+                        </tr>
+                      </tbody>
+                    </table>
+              <!-- End Header -->
+              </td>
+                </tr>
+                <tr>
+                  <td align="center" valign="top">
+                    <!-- Body -->
+                    <table id="template_body" border="0" cellpadding="0" cellspacing="0" width="600">
+                      <tbody>
+                        <tr>
+                        <td id="body_content" style="background-color: #fdfdfd;" valign="top">
+                          <!-- Content -->
+                          <table border="0" cellpadding="20" cellspacing="0" width="100%">
+                            <tbody>
+                            <tr>
+                              <td style="padding: 48px;" valign="top">
+                                <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
+                                
+                                <table border="0" cellpadding="4" cellspacing="0" width="90%">
+                                <tr>
+                                  <td colspan="2">
+                                    <strong>Hello Dear,</strong>
+                                    <p style="font-size: 15px; line-height: 20px">
+                                        A discussion has been created with tags similar to those used in your company's query management. Please review it by clicking 
+                                        <a href="${process.env.MAIN_URL}discussion-details/${discussion_id}"> here</a>.
+                                    </p>
+                                  </td>
+                                </tr>
+                                  <tr>
+                                  </tr>
+                                </table>
+                                </div>
+                              </td>
+                            </tr>
+                            </tbody>
+                          </table>
+                        <!-- End Content -->
+                        </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  <!-- End Body -->
+                  </td>
+                </tr>
+                <tr>
+                  <td align="center" valign="top">
+                    <!-- Footer -->
+                    <table id="template_footer" border="0" cellpadding="10" cellspacing="0" width="600">
+                    <tbody>
+                      <tr>
+                      <td style="padding: 0; -webkit-border-radius: 6px;" valign="top">
+                        <table border="0" cellpadding="10" cellspacing="0" width="100%">
+                          <tbody>
+                            <tr>
+                            <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
+                                  <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology</a></p>
+                            </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                      </tr>
+                    </tbody>
+                    </table>
+                  <!-- End Footer -->
+                  </td>
+                </tr>
+              </tbody>
+              </table>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+                    </div>`
+                    }
+                    mdlconfig.transporter.sendMail(mailOptions, function (err, info) {
+                        if (err) {
+                            console.log(err);
+                            return false;
+                        } else {
+                            console.log('Mail Send to company owner: ', info.response);
+                        }
+                    })
+
+                }
+
+                const user_query = `SELECT email FROM users WHERE user_id = ?`;
+                const user_data = [user_id];
+
+                db.query(user_query, user_data, (userQueryErr, userQueryResult) => {
+                    if (userQueryErr) {
+                        return res.send({
+                            status: 'not ok',
+                            message: 'Error retrieving user email: ' + userQueryErr
+                        });
+                    } else {
+                        const user_email = userQueryResult[0].email;
+                        console.log("user_email", user_email);
+
+
+                        var mailOptions = {
+                            from: process.env.MAIL_USER,
+                            to: process.env.MAIL_USER,
+                            //to: "dev2.scwt@gmail.com",
+                            subject: 'Discussion approval',
+                            html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
                         <style>
                         body, table, td, p, a, h1, h2, h3, h4, h5, h6, div {
                             font-family: Calibri, 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif !important;
@@ -7746,23 +7906,30 @@ exports.createDiscussion = async (req, res) => {
                   </tbody>
                 </table>
                 </div>`
-                    }
-                    mdlconfig.transporter.sendMail(mailOptions, function (err, info) {
-                        if (err) {
-                            console.log(err);
-                            return false;
-                        } else {
-                            console.log('Mail Send: ', info.response);
                         }
-                    })
-                    return res.send({
-                        status: 'ok',
-                        message: 'Your Discussion Topic Added Successfully.'
-                    });
-                }
-            });
-        }
-    })
+                        mdlconfig.transporter.sendMail(mailOptions, function (err, info) {
+                            if (err) {
+                                console.log(err);
+                                return false;
+                            } else {
+                                console.log('Mail Send: ', info.response);
+                            }
+                        })
+                        return res.send({
+                            status: 'ok',
+                            message: 'Your Discussion Topic Added Successfully.'
+                        });
+                    }
+                });
+            }
+        })
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            status: 'error',
+            message: 'An error occurred while processing your request.'
+        });
+    }
 }
 
 
@@ -8471,7 +8638,7 @@ exports.addCompanyProduct = async (req, res) => {
         if (typeof product_title == 'string') {
             //console.log(result.insertId);
             //return false;
-            if(product_image){
+            if (product_image) {
                 const productQuery = `INSERT INTO company_products SET ? `;
                 const productData = {
                     company_id: company_id,
@@ -8494,7 +8661,7 @@ exports.addCompanyProduct = async (req, res) => {
                         });
                     }
                 });
-            } else{
+            } else {
                 const productQuery = `INSERT INTO company_products SET ? `;
                 const productData = {
                     company_id: company_id,
@@ -8519,7 +8686,7 @@ exports.addCompanyProduct = async (req, res) => {
                 });
             }
         } else {
-            if(product_image){
+            if (product_image) {
                 await product_title.forEach((product, index) => {
                     const productQuery = `INSERT INTO company_products SET ? `;
                     const productData = {
@@ -8539,7 +8706,7 @@ exports.addCompanyProduct = async (req, res) => {
                         }
                     });
                 })
-            } else{
+            } else {
                 await product_title.forEach((product, index) => {
                     const productQuery = `INSERT INTO company_products SET ? `;
                     const productData = {
@@ -9240,8 +9407,8 @@ exports.complaintRegister = (req, res) => {
 
     const { company_id, user_id, category_id, sub_category_id, model_no, allTags, transaction_date, location, message, select_complaint_product } = req.body;
     console.log("company_idsss", req.body.company_id);
-    console.log("complaintss",req.body);
-    
+    console.log("complaintss", req.body);
+
     //return false;
     //const uuid = uuidv4();  
     const randomNo = Math.floor(Math.random() * (100 - 0 + 1)) + 0;
@@ -9704,9 +9871,9 @@ exports.companyQuery = async (req, res) => {
 
 //user Complaint Rating
 exports.userComplaintRating = async (req, res) => {
-    console.log('userComplaintRating',req.body ); 
+    console.log('userComplaintRating', req.body);
     //return false;
-    const { user_id, complaint_id, rating,feedback_comment } = req.body;
+    const { user_id, complaint_id, rating, feedback_comment } = req.body;
 
     const data = {
         user_id: user_id,
@@ -9859,7 +10026,7 @@ exports.createSurvey = async (req, res) => {
             const worksheet = workbook.getWorksheet(1);
             const emailsArr = await processReviewCSVRows(worksheet);
             const emails = emailsArr.flat();
-            console.log("surveyemails",emails);
+            console.log("surveyemails", emails);
             if (emails.length > 0) {
                 req.body.emails = emails;
                 // console.log('emails',emails);
@@ -10450,6 +10617,8 @@ exports.updateCompanyTags = async (req, res) => {
     const strTags = JSON.stringify(tags);
     const sql = `UPDATE duscussions_company_tags SET tags = ? WHERE company_id = ? `;
     const data = [strTags, company_id];
+    console.log("datadd", data);
+
     db.query(sql, data, (err, result) => {
         if (err) {
             return res.send({
@@ -10463,7 +10632,6 @@ exports.updateCompanyTags = async (req, res) => {
             });
         }
     })
-
 }
 
 //Notification Content
@@ -11855,7 +12023,7 @@ exports.editDiscussion = (req, res) => {
 //                                                 <td id="header_wrapper" style="padding: 36px 48px; display: block;">
 //                                                    <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;"> Comment on ${content} has been approved.</h1>
 //                                                 </td>
-                          
+
 //                                                </tr>
 //                                              </tbody>
 //                                            </table>
@@ -11875,7 +12043,7 @@ exports.editDiscussion = (req, res) => {
 //                                                     <tr>
 //                                                      <td style="padding: 48px;" valign="top">
 //                                                        <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
-                                                        
+
 //                                                         <table border="0" cellpadding="4" cellspacing="0" width="90%">
 //                                                           <tr>
 //                                                             <td colspan="2">
@@ -11884,7 +12052,7 @@ exports.editDiscussion = (req, res) => {
 //                                                             </td>
 //                                                           </tr>
 //                                                         </table>
-                                                        
+
 //                                                        </div>
 //                                                      </td>
 //                                                     </tr>
@@ -12005,7 +12173,7 @@ exports.editDiscussion = (req, res) => {
 //                                                 <td id="header_wrapper" style="padding: 36px 48px; display: block;">
 //                                                    <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Comment on ${content} has been approved.</h1>
 //                                                 </td>
-                          
+
 //                                                </tr>
 //                                              </tbody>
 //                                            </table>
@@ -12025,7 +12193,7 @@ exports.editDiscussion = (req, res) => {
 //                                                     <tr>
 //                                                      <td style="padding: 48px;" valign="top">
 //                                                        <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
-                                                        
+
 //                                                         <table border="0" cellpadding="4" cellspacing="0" width="90%">
 //                                                           <tr>
 //                                                             <td colspan="2">
@@ -12034,7 +12202,7 @@ exports.editDiscussion = (req, res) => {
 //                                                             </td>
 //                                                           </tr>
 //                                                         </table>
-                                                        
+
 //                                                        </div>
 //                                                      </td>
 //                                                     </tr>
@@ -12192,7 +12360,7 @@ exports.editDiscussion = (req, res) => {
 //                                     <td id="header_wrapper" style="padding: 36px 48px; display: block;">
 //                                     <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;"> Your discussion ${content} has been approved.</h1>
 //                                     </td>
-    
+
 //                                 </tr>
 //                                 </tbody>
 //                             </table>
@@ -12212,7 +12380,7 @@ exports.editDiscussion = (req, res) => {
 //                                         <tr>
 //                                         <td style="padding: 48px;" valign="top">
 //                                         <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
-                                            
+
 //                                             <table border="0" cellpadding="4" cellspacing="0" width="90%">
 //                                             <tr>
 //                                                 <td colspan="2">
@@ -12221,7 +12389,7 @@ exports.editDiscussion = (req, res) => {
 //                                                 </td>
 //                                             </tr>
 //                                             </table>
-                                            
+
 //                                         </div>
 //                                         </td>
 //                                         </tr>
@@ -12352,18 +12520,18 @@ exports.editDiscussion = (req, res) => {
 //             console.log('Discussions table updated successfully');
 //         });
 
-   
+
 //             const promises = Object.keys(commentStatusesAndContents).map(commentId => {
 //                 const commentData = {
 //                     comment_status: commentStatusesAndContents[commentId],
 //                     comment: req.body['comment_content_' + commentId] // Update content with the received data
 //                 };
-            
+
 //                 console.log("commentDatasssss",commentData);
-                
+
 //                 const extractedCommentId = commentId.replace('comment_status_', '');
 //                 console.log("extractedCommentId",extractedCommentId);
-                
+
 //             if (commentStatusesAndContents[commentId] == 1) {
 //                 // Send emails as before
 //                 const getCommentQuery = 'SELECT user_id FROM discussions_user_response WHERE id = ?';
@@ -12374,7 +12542,7 @@ exports.editDiscussion = (req, res) => {
 //                     }
 
 //                     console.log("commentResults",commentResults);
-                    
+
 
 //                     const user_id = commentResults[0].user_id;
 //                     console.log("user_id", user_id);
@@ -12418,7 +12586,7 @@ exports.editDiscussion = (req, res) => {
 //                                                 <td id="header_wrapper" style="padding: 36px 48px; display: block;">
 //                                                    <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;"> Comment on ${content} has been approved.</h1>
 //                                                 </td>
-                          
+
 //                                                </tr>
 //                                              </tbody>
 //                                            </table>
@@ -12438,7 +12606,7 @@ exports.editDiscussion = (req, res) => {
 //                                                     <tr>
 //                                                      <td style="padding: 48px;" valign="top">
 //                                                        <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
-                                                        
+
 //                                                         <table border="0" cellpadding="4" cellspacing="0" width="90%">
 //                                                           <tr>
 //                                                             <td colspan="2">
@@ -12447,7 +12615,7 @@ exports.editDiscussion = (req, res) => {
 //                                                             </td>
 //                                                           </tr>
 //                                                         </table>
-                                                        
+
 //                                                        </div>
 //                                                      </td>
 //                                                     </tr>
@@ -12561,7 +12729,7 @@ exports.editDiscussion = (req, res) => {
 //                                                 <td id="header_wrapper" style="padding: 36px 48px; display: block;">
 //                                                    <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Comment on ${content} has been approved.</h1>
 //                                                 </td>
-                          
+
 //                                                </tr>
 //                                              </tbody>
 //                                            </table>
@@ -12581,7 +12749,7 @@ exports.editDiscussion = (req, res) => {
 //                                                     <tr>
 //                                                      <td style="padding: 48px;" valign="top">
 //                                                        <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
-                                                        
+
 //                                                         <table border="0" cellpadding="4" cellspacing="0" width="90%">
 //                                                           <tr>
 //                                                             <td colspan="2">
@@ -12590,7 +12758,7 @@ exports.editDiscussion = (req, res) => {
 //                                                             </td>
 //                                                           </tr>
 //                                                         </table>
-                                                        
+
 //                                                        </div>
 //                                                      </td>
 //                                                     </tr>
@@ -12740,7 +12908,7 @@ exports.editDiscussion = (req, res) => {
 //                                     <td id="header_wrapper" style="padding: 36px 48px; display: block;">
 //                                     <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;"> Your discussion ${content} has been approved.</h1>
 //                                     </td>
-    
+
 //                                 </tr>
 //                                 </tbody>
 //                             </table>
@@ -12760,7 +12928,7 @@ exports.editDiscussion = (req, res) => {
 //                                         <tr>
 //                                         <td style="padding: 48px;" valign="top">
 //                                         <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
-                                            
+
 //                                             <table border="0" cellpadding="4" cellspacing="0" width="90%">
 //                                             <tr>
 //                                                 <td colspan="2">
@@ -12769,7 +12937,7 @@ exports.editDiscussion = (req, res) => {
 //                                                 </td>
 //                                             </tr>
 //                                             </table>
-                                            
+
 //                                         </div>
 //                                         </td>
 //                                         </tr>
@@ -12866,33 +13034,33 @@ exports.editDiscussions = async (req, res) => {
         await query(discussionQuery, [discussionData, discussion_id]);
 
         var getdiscussionquery = `SELECT * FROM discussions WHERE id=?`;
-        var getdiscussionval = await query(getdiscussionquery,[discussion_id]);
-        console.log("getdiscussionval",getdiscussionval);
-        if(getdiscussionval.length>0){
+        var getdiscussionval = await query(getdiscussionquery, [discussion_id]);
+        console.log("getdiscussionval", getdiscussionval);
+        if (getdiscussionval.length > 0) {
             var getuserofdiscussion = getdiscussionval[0].user_id;
-            console.log("getuserofdiscussion",getuserofdiscussion);
+            console.log("getuserofdiscussion", getuserofdiscussion);
 
             var user_get_mail = `SELECT * FROM users WHERE user_id=?`;
-            var user_get_val = await query(user_get_mail,[getuserofdiscussion]);
-            console.log("user_get_val",user_get_val);
+            var user_get_val = await query(user_get_mail, [getuserofdiscussion]);
+            console.log("user_get_val", user_get_val);
 
-            if(user_get_val.length>0){
+            if (user_get_val.length > 0) {
                 var query_user_email = user_get_val[0].email;
-                console.log("query_user_email",query_user_email);
+                console.log("query_user_email", query_user_email);
 
                 var query_user_firstname = user_get_val[0].first_name;
-                console.log("query_user_firstname",query_user_firstname);
+                console.log("query_user_firstname", query_user_firstname);
 
                 var query_user_lastname = user_get_val[0].last_name;
-                console.log("query_user_lastname",query_user_lastname);
+                console.log("query_user_lastname", query_user_lastname);
 
                 var fullNames = `${query_user_firstname} ${query_user_lastname}`;
-                console.log("fullName",fullNames);
-                
+                console.log("fullName", fullNames);
+
             }
-            
+
         }
-       
+
         const mailOptions = {
             from: process.env.MAIL_USER,
             to: query_user_email,
@@ -12990,8 +13158,8 @@ exports.editDiscussions = async (req, res) => {
         </table>
     </div>`
         };
-        var  ee = await mdlconfig.transporter.sendMail(mailOptions);
-        console.log("ee",ee);
+        var ee = await mdlconfig.transporter.sendMail(mailOptions);
+        console.log("ee", ee);
 
         const promises = Object.keys(commentStatusesAndContents).filter(key => key.startsWith('comment_status_')).map(async (commentStatusKey) => {
             const commentId = commentStatusKey.replace('comment_status_', '');
@@ -13144,7 +13312,7 @@ exports.editDiscussions = async (req, res) => {
                         to: authorEmail,
                         subject: 'Comment Approval',
                         html: 'Comment Approval',
-                                html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+                        html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
                                 <style>
                                 body, table, td, p, a, h1, h2, h3, h4, h5, h6, div {
                                     font-family: Calibri, 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif !important;
@@ -13287,7 +13455,7 @@ exports.editDiscussioncomment = async (req, res) => {
         const commentQuery = `UPDATE discussions_user_response SET ? WHERE id = ${commentId} `;
         return new Promise((resolve, reject) => {
             db.query(commentQuery, commentData, (err, results) => {
-                console.log("discussioncommentresults",results);
+                console.log("discussioncommentresults", results);
 
                 if (err) {
                     reject(err);
