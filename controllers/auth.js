@@ -18,6 +18,7 @@ const path = require('path');
 const crypto = require('crypto');
 const { v4: uuidv4 } = require('uuid');
 var cron = require('node-cron');
+const nodemailer = require('nodemailer');
 const base64url = require('base64url');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const Razorpay = require('razorpay');
@@ -7441,32 +7442,173 @@ exports.reviewInvitation = async (req, res) => {
     });
 }
 
-//--- review Bulk Invitation ----//
+
+const transporter = nodemailer.createTransport({
+    service: 'gmail', // or your email service
+    auth: {
+        user: process.env.MAIL_USER,
+        pass: process.env.MAIL_PASSWORD
+    }
+});
+
+
+const sendIndividualEmail = ({ to, subject, html }) => {
+    return transporter.sendMail({
+        from: 'your-email@example.com',
+        to,
+        subject,
+        html
+    });
+};
+
+
+
+const newprocessReviewsCSVRows = async (worksheet) => {
+    return new Promise((resolve, reject) => {
+        const emails = [];
+
+        worksheet.eachRow({ includeEmpty: false }, (row, rowNumber) => {
+            if (rowNumber > 1) { // Skip the header row
+                const first_name = row.getCell(1).value;
+                const last_name = row.getCell(2).value;
+                const email = row.getCell(3).value;
+
+                if (email) { // Ensure there's an email
+                    emails.push({
+                        first_name,
+                        last_name,
+                        email
+                    });
+                }
+            }
+        });
+
+        // Resolve the promise after all rows have been processed
+        resolve(emails);
+    });
+};
+
+const getEmailContent = (company_name, first_name, last_name, company_slug, email_body) => `
+<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+    <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tbody>
+            <tr>
+                <td align="center" valign="top">
+                    <div id="template_header_image"><p style="margin-top: 0;"></p></div>
+                    <table id="template_container" style="box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important; background-color: #fdfdfd; border: 1px solid #dcdcdc; border-radius: 3px !important;" border="0" cellpadding="0" cellspacing="0" width="600">
+                        <tbody>
+                            <tr>
+                                <td align="center" valign="top">
+                                    <!-- Header -->
+                                    <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
+                                        <tbody>
+                                            <tr>
+                                                <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/email-template-logo.png" style="padding: 30px 40px; display: block; width: 70px;" /></td>
+                                                <td id="header_wrapper" style="padding: 36px 48px; display: block;">
+                                                    <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Review Invitation Email</h1>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <!-- End Header -->
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="center" valign="top">
+                                    <!-- Body -->
+                                    <table id="template_body" border="0" cellpadding="0" cellspacing="0" width="600">
+                                        <tbody>
+                                            <tr>
+                                                <td id="body_content" style="background-color: #fdfdfd;" valign="top">
+                                                    <!-- Content -->
+                                                    <table border="0" cellpadding="20" cellspacing="0" width="100%">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td style="padding: 48px;" valign="top">
+                                                                    <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
+                                                                        <table border="0" cellpadding="4" cellspacing="0" width="90%">
+                                                                            <tr>
+                                                                                <td colspan="2">
+                                                                                    <p style="font-size:15px; line-height:20px">${email_body}</p>
+                                                                                </td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td colspan="2">
+                                                                                    <p style="font-size:15px; line-height:20px">Please <a href="${process.env.MAIN_URL}company/${company_slug}?type=invitation">click here</a> to submit your opinion.</p>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </table>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    <!-- End Content -->
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <!-- End Body -->
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="center" valign="top">
+                                    <!-- Footer -->
+                                    <table id="template_footer" border="0" cellpadding="10" cellspacing="0" width="600">
+                                        <tbody>
+                                            <tr>
+                                                <td style="padding: 0; -webkit-border-radius: 6px;" valign="top">
+                                                    <table border="0" cellpadding="10" cellspacing="0" width="100%">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
+                                                                    <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">Ce</a></p>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <!-- End Footer -->
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+`;
+
+
+
 exports.reviewBulkInvitation = async (req, res) => {
-    //console.log('reviewBulkInvitation',req.body);
-    //console.log('reviewBulkInvitation',req.file);
-    const { email_body, user_id, company_id, company_name } = req.body;
+    console.log('reviewBulkInvitation', req.body);
+    console.log('reviewBulkInvitation', req.file);
+    const { email_body, user_id, company_id, company_name, company_slug } = req.body;
 
     if (!req.file) {
-        return res.send(
-            {
-                status: 'err',
-                data: '',
-                message: 'No file uploaded.'
-            }
-        )
+        return res.send({
+            status: 'err',
+            data: '',
+            message: 'No file uploaded.'
+        });
     }
     const csvFilePath = path.join(__dirname, '..', 'company-csv', req.file.filename);
-    try {
-        const connection = await mysql.createConnection(dbConfig);
 
+    try {
         const workbook = new ExcelJS.Workbook();
         await workbook.csv.readFile(csvFilePath);
 
         const worksheet = workbook.getWorksheet(1);
-        const emailsArr = await processReviewCSVRows(worksheet);
+        const emailsArr = await newprocessReviewsCSVRows(worksheet);
         const emails = emailsArr.flat();
 
+
+        // Your existing logic for handling limits
         const currentYear = new Date().getFullYear();
         const currentMonth = new Date().getMonth() + 1;
 
@@ -7476,40 +7618,45 @@ exports.reviewBulkInvitation = async (req, res) => {
             WHERE company_id = ${company_id}
             AND YEAR(share_date) = ${currentYear}
             AND MONTH(share_date) = ${currentMonth}
-            ORDER BY id DESC 
+            ORDER BY id DESC
             `;
 
         const get_company_review_invite_request_result = await query(get_company_review_invite_request_query);
         let total_count = 0;
         if (get_company_review_invite_request_result.length > 0) {
             get_company_review_invite_request_result.forEach(count => {
-                total_count = total_count + count.count;
-            })
+                total_count += count.count;
+            });
         }
+
         if (emails.length + total_count > req.body.email_limite) {
-            return res.send(
-                {
-                    status: 'err',
-                    message: 'You have reached your maximum limit of emails allowed on your current membership for this month.'
-                }
-            )
-        } else {
-            req.body.emails = emails;
-            console.log('emails', emails);
-            console.log('req.body', req.body);
-            const [InvitationDetails, sendInvitationEmail] = await Promise.all([
-                comFunction2.insertInvitationDetails(req.body),
-                comFunction2.sendInvitationEmail(req.body)
-            ]);
-
-            return res.send(
-                {
-                    status: 'ok',
-                    message: 'Invitation emails send successfully.'
-                }
-            )
+            return res.send({
+                status: 'err',
+                message: 'You have reached your maximum limit of emails allowed on your current membership for this month.'
+            });
         }
 
+        // Prepare and send emails
+        const emailTasks = emails.map(({ first_name, last_name, email }) => {
+            const htmlContent = getEmailContent(company_name, first_name, last_name, company_slug, email_body);
+
+            return sendIndividualEmail({
+                to: email,
+                subject: `Invitation from ${company_name}`,
+                html: htmlContent
+            });
+        });
+
+        // Save invitation details and send emails concurrently
+        await Promise.all([
+            comFunction2.insertInvitationDetails({ company_id, company_name, emails, user_id }),
+            ...emailTasks
+        ]);
+
+        return res.send({
+            status: 'ok',
+            message: 'Invitation emails sent successfully.'
+        });
 
     } catch (error) {
         console.error('Error:', error);
@@ -7518,10 +7665,96 @@ exports.reviewBulkInvitation = async (req, res) => {
             message: error.message
         });
     } finally {
-        // Delete the uploaded CSV file
-        //fs.unlinkSync(csvFilePath);
+        // Optionally delete the uploaded CSV file
+        // fs.unlinkSync(csvFilePath);
     }
-}
+};
+
+
+
+
+
+//--- review Bulk Invitation ----//
+// exports.reviewBulkInvitation = async (req, res) => {
+//     //console.log('reviewBulkInvitation',req.body);
+//     //console.log('reviewBulkInvitation',req.file);
+//     const { email_body, user_id, company_id, company_name } = req.body;
+
+//     if (!req.file) {
+//         return res.send(
+//             {
+//                 status: 'err',
+//                 data: '',
+//                 message: 'No file uploaded.'
+//             }
+//         )
+//     }
+//     const csvFilePath = path.join(__dirname, '..', 'company-csv', req.file.filename);
+//     try {
+//         const connection = await mysql.createConnection(dbConfig);
+
+//         const workbook = new ExcelJS.Workbook();
+//         await workbook.csv.readFile(csvFilePath);
+
+//         const worksheet = workbook.getWorksheet(1);
+//         const emailsArr = await processReviewCSVRows(worksheet);
+//         const emails = emailsArr.flat();
+
+//         const currentYear = new Date().getFullYear();
+//         const currentMonth = new Date().getMonth() + 1;
+
+//         const get_company_review_invite_request_query = `
+//             SELECT *
+//             FROM review_invite_request
+//             WHERE company_id = ${company_id}
+//             AND YEAR(share_date) = ${currentYear}
+//             AND MONTH(share_date) = ${currentMonth}
+//             ORDER BY id DESC 
+//             `;
+
+//         const get_company_review_invite_request_result = await query(get_company_review_invite_request_query);
+//         let total_count = 0;
+//         if (get_company_review_invite_request_result.length > 0) {
+//             get_company_review_invite_request_result.forEach(count => {
+//                 total_count = total_count + count.count;
+//             })
+//         }
+//         if (emails.length + total_count > req.body.email_limite) {
+//             return res.send(
+//                 {
+//                     status: 'err',
+//                     message: 'You have reached your maximum limit of emails allowed on your current membership for this month.'
+//                 }
+//             )
+//         } else {
+//             req.body.emails = emails;
+//             console.log('emails', emails);
+//             console.log('req.body', req.body);
+//             const [InvitationDetails, sendInvitationEmail] = await Promise.all([
+//                 comFunction2.insertInvitationDetails(req.body),
+//                 comFunction2.sendInvitationEmail(req.body)
+//             ]);
+
+//             return res.send(
+//                 {
+//                     status: 'ok',
+//                     message: 'Invitation emails send successfully.'
+//                 }
+//             )
+//         }
+
+
+//     } catch (error) {
+//         console.error('Error:', error);
+//         return res.send({
+//             status: 'err',
+//             message: error.message
+//         });
+//     } finally {
+//         // Delete the uploaded CSV file
+//         //fs.unlinkSync(csvFilePath);
+//     }
+// }
 
 // Define a promise-based function for processing review invitation csv
 function processReviewCSVRows(worksheet) {
@@ -7669,7 +7902,7 @@ exports.createDiscussion = async (req, res) => {
                 console.log("discussion_id", discussion_id);
 
 
-                if (comp_email_val) {
+                if (company_email) {
                     var mailOptions = {
                         from: process.env.MAIL_USER,
                         to: company_email,
@@ -9120,7 +9353,7 @@ exports.createCompanyLevel = async (req, res) => {
                                                     </td>
                                                   </tr>
                                                 </table>
-                                                <p style="font-size:15px; line-height:20px">Download the app from Google Playstore or visit  <a style="color:#FCCB06" href="${process.env.MAIN_URL}">BoloGrahak.com </a>.</p>
+                                                <p style="font-size:15px; line-height:20px">Download the app from Google Playstore or visit  <a style="color:#FCCB06" href="${process.env.MAIN_URL}">Cechoes.com </a>.</p>
                                                </div>
                                              </td>
                                             </tr>
@@ -9145,7 +9378,7 @@ exports.createCompanyLevel = async (req, res) => {
                                          <tbody>
                                            <tr>
                                             <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
-                                                 <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">BoloGrahak</a></p>
+                                                 <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology</a></p>
                                             </td>
                                            </tr>
                                          </tbody>
@@ -10834,7 +11067,7 @@ exports.escalateNextLevel = async (req, res) => {
                           <tbody>
                             <tr>
                             <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
-                                  <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">BoloGrahak</a></p>
+                                  <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology</a></p>
                             </td>
                             </tr>
                           </tbody>
@@ -18031,7 +18264,7 @@ exports.createLevelusers = async (req, res) => {
                                          <tbody>
                                            <tr>
                                             <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
-                                                 <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">BoloGrahak</a></p>
+                                                 <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology</a></p>
                                             </td>
                                            </tr>
                                          </tbody>
@@ -18176,7 +18409,7 @@ exports.createLevelusers = async (req, res) => {
                                                     </td>
                                                   </tr>
                                                 </table>
-                                                <p style="font-size:15px; line-height:20px">Download the app from Google Playstore or visit  <a style="color:#FCCB06" href="${process.env.MAIN_URL}">BoloGrahak.com </a>.</p>
+                                                <p style="font-size:15px; line-height:20px">Download the app from Google Playstore or visit  <a style="color:#FCCB06" href="${process.env.MAIN_URL}">Cechoes.com </a>.</p>
                                                </div>
                                              </td>
                                             </tr>
@@ -18201,7 +18434,7 @@ exports.createLevelusers = async (req, res) => {
                                          <tbody>
                                            <tr>
                                             <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
-                                                 <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">BoloGrahak</a></p>
+                                                 <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology</a></p>
                                             </td>
                                            </tr>
                                          </tbody>
@@ -18472,7 +18705,7 @@ exports.createLevelusers = async (req, res) => {
                                          <tbody>
                                            <tr>
                                             <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
-                                                 <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">BoloGrahak</a></p>
+                                                 <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology</a></p>
                                             </td>
                                            </tr>
                                          </tbody>
@@ -18698,7 +18931,7 @@ exports.createnewLevelusers = async (req, res) => {
                                          <tbody>
                                            <tr>
                                             <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
-                                                 <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">BoloGrahak</a></p>
+                                                 <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology</a></p>
                                             </td>
                                            </tr>
                                          </tbody>
@@ -18827,7 +19060,7 @@ exports.createnewLevelusers = async (req, res) => {
                                                     </td>
                                                   </tr>
                                                 </table>
-                                                <p style="font-size:15px; line-height:20px">Download the app from Google Playstore or visit  <a style="color:#FCCB06" href="${process.env.MAIN_URL}">BoloGrahak.com </a>.</p>
+                                                <p style="font-size:15px; line-height:20px">Download the app from Google Playstore or visit  <a style="color:#FCCB06" href="${process.env.MAIN_URL}">Cechoes.com </a>.</p>
                                                </div>
                                              </td>
                                             </tr>
@@ -18852,7 +19085,7 @@ exports.createnewLevelusers = async (req, res) => {
                                          <tbody>
                                            <tr>
                                             <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
-                                                 <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">BoloGrahak</a></p>
+                                                 <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology</a></p>
                                             </td>
                                            </tr>
                                          </tbody>
@@ -19081,7 +19314,7 @@ exports.createnewLevelusers = async (req, res) => {
                                              <tbody>
                                                <tr>
                                                 <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
-                                                     <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">BoloGrahak</a></p>
+                                                     <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology</a></p>
                                                 </td>
                                                </tr>
                                              </tbody>
@@ -19354,7 +19587,7 @@ exports.assignUsers = async (req, res) => {
                              <tbody>
                                <tr>
                                 <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
-                                     <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">BoloGrahak</a></p>
+                                     <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology</a></p>
                                 </td>
                                </tr>
                              </tbody>
@@ -19556,7 +19789,7 @@ exports.escalateassignUsers = async (req, res) => {
                              <tbody>
                                <tr>
                                 <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
-                                     <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">BoloGrahak</a></p>
+                                     <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology</a></p>
                                 </td>
                                </tr>
                              </tbody>
