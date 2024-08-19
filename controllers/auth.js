@@ -15429,86 +15429,86 @@ exports.confirmReview = async (req, res) => {
 
 
 
-const getPlanFromDatabase = async (planId) => {
-    console.log("planferrg", planId);
-    const sql = 'SELECT name, description, monthly_price, yearly_price, currency,per_user_price FROM plan_management WHERE id = ?';
-    const result = await queryAsync(sql, [planId]);
-    console.log(`Database query result for planId ${planId}:`, result);
+// const getPlanFromDatabase = async (planId) => {
+//     console.log("planferrg", planId);
+//     const sql = 'SELECT name, description, monthly_price, yearly_price, currency,per_user_price FROM plan_management WHERE id = ?';
+//     const result = await queryAsync(sql, [planId]);
+//     console.log(`Database query result for planId ${planId}:`, result);
 
-    if (result.length === 0) {
-        throw new Error(`Plan with ID ${planId} not found`);
-    }
+//     if (result.length === 0) {
+//         throw new Error(`Plan with ID ${planId} not found`);
+//     }
 
-    return result[0];
-};
+//     return result[0];
+// };
 
-const createStripeProductAndPrice = async (plan, billingCycle, memberCount) => {
-    try {
-        memberCount = parseInt(memberCount);
-        if (isNaN(memberCount) || memberCount < 0) {
-            throw new Error('Invalid memberCount');
-        }
-        //console.log('Creating Stripe product with plan:', plan);
-        const product = await stripe.products.create({
-            name: plan.name,
-            description: plan.description,
-        });
+// const createStripeProductAndPrice = async (plan, billingCycle, memberCount) => {
+//     try {
+//         memberCount = parseInt(memberCount);
+//         if (isNaN(memberCount) || memberCount < 0) {
+//             throw new Error('Invalid memberCount');
+//         }
+//         //console.log('Creating Stripe product with plan:', plan);
+//         const product = await stripe.products.create({
+//             name: plan.name,
+//             description: plan.description,
+//         });
 
-        const basePrice = billingCycle === 'yearly' ? plan.yearly_price : plan.monthly_price;
-        if (isNaN(basePrice) || basePrice <= 0) {
-            throw new Error('Invalid base price');
-        }
+//         const basePrice = billingCycle === 'yearly' ? plan.yearly_price : plan.monthly_price;
+//         if (isNaN(basePrice) || basePrice <= 0) {
+//             throw new Error('Invalid base price');
+//         }
 
-        let AddonPrice = 0;
-        if (memberCount > 0) {
-            const user_addon_price = plan.per_user_price;
-            //console.log("user_addon_price", user_addon_price);
+//         let AddonPrice = 0;
+//         if (memberCount > 0) {
+//             const user_addon_price = plan.per_user_price;
+//             //console.log("user_addon_price", user_addon_price);
 
-            AddonPrice = user_addon_price * memberCount;
-            //console.log("AddonPrice", AddonPrice);
-        }
+//             AddonPrice = user_addon_price * memberCount;
+//             //console.log("AddonPrice", AddonPrice);
+//         }
 
-        const totalPrice = parseFloat(basePrice) + parseFloat(AddonPrice);
-        //console.log("totalPrice", totalPrice);
-        if (isNaN(totalPrice) || totalPrice <= 0) {
-            throw new Error('Invalid total price');
-        }
+//         const totalPrice = parseFloat(basePrice) + parseFloat(AddonPrice);
+//         //console.log("totalPrice", totalPrice);
+//         if (isNaN(totalPrice) || totalPrice <= 0) {
+//             throw new Error('Invalid total price');
+//         }
 
-        console.log(`Base Price: ${basePrice}, Member Count: ${memberCount}, Total Price: ${totalPrice}`);
-        const totalPriceInCents = totalPrice * 100;
+//         console.log(`Base Price: ${basePrice}, Member Count: ${memberCount}, Total Price: ${totalPrice}`);
+//         const totalPriceInCents = totalPrice * 100;
 
 
 
-        const priceParams = {
-            unit_amount: totalPriceInCents,
-            currency: 'usd',
-            product: product.id,
-            recurring: {
-                interval: billingCycle === 'yearly' ? 'month' : 'month',
-                interval_count: billingCycle === 'yearly' ? 1 : 1,
-            },
-        };
+//         const priceParams = {
+//             unit_amount: totalPriceInCents,
+//             currency: 'usd',
+//             product: product.id,
+//             recurring: {
+//                 interval: billingCycle === 'yearly' ? 'month' : 'month',
+//                 interval_count: billingCycle === 'yearly' ? 1 : 1,
+//             },
+//         };
 
-        if (billingCycle === 'yearly') {
-            priceParams.recurring.interval_count = 13;
-        }
-        const price = await stripe.prices.create(priceParams);
-        // const price = await stripe.prices.create(priceParams);
+//         if (billingCycle === 'yearly') {
+//             priceParams.recurring.interval_count = 13;
+//         }
+//         const price = await stripe.prices.create(priceParams);
+//         // const price = await stripe.prices.create(priceParams);
 
-        // const price = await stripe.prices.create({
-        //     unit_amount: totalPriceInCents,
-        //     currency: 'usd',
-        //     //recurring: { interval: 'day' },
-        //     recurring: { interval: billingCycle === 'yearly' ? 'year' : 'month' },
-        //     product: product.id,
-        // });
+//         // const price = await stripe.prices.create({
+//         //     unit_amount: totalPriceInCents,
+//         //     currency: 'usd',
+//         //     //recurring: { interval: 'day' },
+//         //     recurring: { interval: billingCycle === 'yearly' ? 'year' : 'month' },
+//         //     product: product.id,
+//         // });
 
-        return price.id;
-    } catch (error) {
-        console.error('Error creating Stripe product:', error);
-        throw error;
-    }
-};
+//         return price.id;
+//     } catch (error) {
+//         console.error('Error creating Stripe product:', error);
+//         throw error;
+//     }
+// };
 
 //before subscription
 // exports.createSubscription = async (req, res) => {
@@ -15931,129 +15931,129 @@ exports.updateOrderHistory = async (req, res) => {
     }
 };
 
-exports.createSubscription = async (req, res) => {
-    try {
-        const { name, email, phone, address, city, state, zip, planId, billingCycle, memberCount, } = req.body;
-        console.log("Subscription request body:", req.body);
+// exports.createSubscription = async (req, res) => {
+//     try {
+//         const { name, email, phone, address, city, state, zip, planId, billingCycle, memberCount, } = req.body;
+//         console.log("Subscription request body:", req.body);
 
 
-        const getidquery = `SELECT * FROM users WHERE email = "${email}"`;
-        const getidvalue = await queryAsync(getidquery);
-        var userId = getidvalue[0].user_id;
-        console.log("userId", userId);
+//         const getidquery = `SELECT * FROM users WHERE email = "${email}"`;
+//         const getidvalue = await queryAsync(getidquery);
+//         var userId = getidvalue[0].user_id;
+//         console.log("userId", userId);
 
-        let customerId = await findOrCreateCustomer(email, name, phone, address, city, state, zip);
-        console.log("customerId", customerId);
+//         let customerId = await findOrCreateCustomer(email, name, phone, address, city, state, zip);
+//         console.log("customerId", customerId);
 
-        let country_name = req.cookies.countryName
-        //|| 'India';
-        let country_code = req.cookies.countryCode
-        //|| 'IN';
-        console.log("country_codesdf", country_code);
-        console.log("country_namesdf", country_name);
+//         let country_name = req.cookies.countryName
+//         //|| 'India';
+//         let country_code = req.cookies.countryCode
+//         //|| 'IN';
+//         console.log("country_codesdf", country_code);
+//         console.log("country_namesdf", country_name);
 
-        // const customerId = customer.id.startsWith('cust_') ? customer.id : `cust_${customer.id}`;
-        // console.log('Formatted Customer ID:', customerId);
+//         // const customerId = customer.id.startsWith('cust_') ? customer.id : `cust_${customer.id}`;
+//         // console.log('Formatted Customer ID:', customerId);
 
-        // const customerId = "cust_" + customer.id;
-        // console.log("Formatted Customer ID:", customerId);
+//         // const customerId = "cust_" + customer.id;
+//         // console.log("Formatted Customer ID:", customerId);
 
-        const plan = await getPlanFromDatabase(planId);
-        if (!plan) {
-            return res.status(404).send({ error: 'Plan not found' });
-        }
+//         const plan = await getPlanFromDatabase(planId);
+//         if (!plan) {
+//             return res.status(404).send({ error: 'Plan not found' });
+//         }
 
-        const priceId = await createRazorpayPlanprevioususer(plan, billingCycle, memberCount, country_code);
-        if (!priceId) {
-            return res.status(500).send({ error: 'Failed to create price for the plan' });
-        }
-        console.log("Created Razorpay plan:", priceId);
+//         const priceId = await createRazorpayPlanprevioususer(plan, billingCycle, memberCount, country_code);
+//         if (!priceId) {
+//             return res.status(500).send({ error: 'Failed to create price for the plan' });
+//         }
+//         console.log("Created Razorpay plan:", priceId);
 
-        var amountss = priceId.item.amount;
-        console.log("amountss", amountss);
+//         var amountss = priceId.item.amount;
+//         console.log("amountss", amountss);
 
-        const subscriptionParams = {
-            plan_id: priceId.id,
-            customer_id: customerId,
-            //total_count: 1200,
-            total_count: 92,
-            // shipping_address: {
-            //     name: name,
-            //     phone: phone,
-            //     address: address,
-            //     city: city,
-            //     state: state,
-            //     zip: zip
-            // }
-        };
+//         const subscriptionParams = {
+//             plan_id: priceId.id,
+//             customer_id: customerId,
+//             //total_count: 1200,
+//             total_count: 92,
+//             // shipping_address: {
+//             //     name: name,
+//             //     phone: phone,
+//             //     address: address,
+//             //     city: city,
+//             //     state: state,
+//             //     zip: zip
+//             // }
+//         };
 
-        console.log("subscriptionParams", subscriptionParams);
-        const subscription = await razorpay.subscriptions.create(subscriptionParams);
-        console.log("Created subscription:", subscription);
+//         console.log("subscriptionParams", subscriptionParams);
+//         const subscription = await razorpay.subscriptions.create(subscriptionParams);
+//         console.log("Created subscription:", subscription);
 
-        // const itemss_id = priceId.item.id;
-        // console.log("itemss_id",itemss_id);
+//         // const itemss_id = priceId.item.id;
+//         // console.log("itemss_id",itemss_id);
 
-        // const invoiceParams = {
-        //     type: 'invoice',
-        //     date: Math.floor(Date.now() / 1000),
-        //     customer_id: customerId,
-        //     subscription_id: subscription.id, 
-        //     line_items: [
-        //         {
-        //             item_id: itemss_id, 
-        //             amount: amountss,
-        //             currency: 'INR', 
-        //             description: 'Subscription Invoice', 
-        //             quantity: 1 
-        //         }
-        //     ]
-        // };
-        // const invoice = await razorpay.invoices.create(invoiceParams);
-        // console.log('Invoice created successfully:', invoice);
+//         // const invoiceParams = {
+//         //     type: 'invoice',
+//         //     date: Math.floor(Date.now() / 1000),
+//         //     customer_id: customerId,
+//         //     subscription_id: subscription.id, 
+//         //     line_items: [
+//         //         {
+//         //             item_id: itemss_id, 
+//         //             amount: amountss,
+//         //             currency: 'INR', 
+//         //             description: 'Subscription Invoice', 
+//         //             quantity: 1 
+//         //         }
+//         //     ]
+//         // };
+//         // const invoice = await razorpay.invoices.create(invoiceParams);
+//         // console.log('Invoice created successfully:', invoice);
 
-        const invoices = await razorpay.invoices.all({
-            'subscription_id': subscription.id
-        });
-        console.log('Invoices for subscription:', invoices);
+//         const invoices = await razorpay.invoices.all({
+//             'subscription_id': subscription.id
+//         });
+//         console.log('Invoices for subscription:', invoices);
 
-        req.subscriptionId = subscription.id;
+//         req.subscriptionId = subscription.id;
 
-        console.log("Subscription current start timestamp:", subscription.current_start);
-        console.log("Subscription charge at timestamp:", subscription.charge_at);
+//         console.log("Subscription current start timestamp:", subscription.current_start);
+//         console.log("Subscription charge at timestamp:", subscription.charge_at);
 
-        const subscriptionStartDate = new Date(subscription.current_start * 1000);
-        const subscriptionEndDate = new Date(subscription.charge_at * 1000);
+//         const subscriptionStartDate = new Date(subscription.current_start * 1000);
+//         const subscriptionEndDate = new Date(subscription.charge_at * 1000);
 
-        console.log("Subscription start date:", subscriptionStartDate);
-        console.log("Subscription end date:", subscriptionEndDate);
+//         console.log("Subscription start date:", subscriptionStartDate);
+//         console.log("Subscription end date:", subscriptionEndDate);
 
-        const order_history_data = {
-            user_id: userId,
-            stripe_subscription_id: subscription.id,
-            plan_id: planId,
-            //payment_status: 'pending',
-            payment_status: 'success',
-            subscription_details: JSON.stringify(subscription),
-            subscription_duration: billingCycle,
-            subscription_start_date: new Date(subscription.current_start * 1000),
-            subscription_end_date: new Date(subscription.charge_at * 1000),
-            added_user_number: memberCount
-        };
-        const order_history_query = `INSERT INTO order_history SET ?`;
-        await queryAsync(order_history_query, [order_history_data]);
+//         const order_history_data = {
+//             user_id: userId,
+//             stripe_subscription_id: subscription.id,
+//             plan_id: planId,
+//             //payment_status: 'pending',
+//             payment_status: 'success',
+//             subscription_details: JSON.stringify(subscription),
+//             subscription_duration: billingCycle,
+//             subscription_start_date: new Date(subscription.current_start * 1000),
+//             subscription_end_date: new Date(subscription.charge_at * 1000),
+//             added_user_number: memberCount
+//         };
+//         const order_history_query = `INSERT INTO order_history SET ?`;
+//         await queryAsync(order_history_query, [order_history_data]);
 
-        res.status(200).send({
-            message: 'Subscription created successfully',
-            subscription: subscription,
-            amount
-                : amountss
-        });
-    } catch (error) {
-        console.error('Error creating subscription flow:', error);
-        res.status(500).send({ error: error.message });
-    }
-};
+//         res.status(200).send({
+//             message: 'Subscription created successfully',
+//             subscription: subscription,
+//             amount
+//                 : amountss
+//         });
+//     } catch (error) {
+//         console.error('Error creating subscription flow:', error);
+//         res.status(500).send({ error: error.message });
+//     }
+// };
 
 const getInvoicesForSubscription = async (subscriptionId) => {
     try {
@@ -20283,6 +20283,324 @@ exports.deletemanagementuser = async (req, res) => {
         });
     }
 };
+
+
+
+
+/////////newly subscriptionss////
+
+const getPlanFromDatabase = async (planId) => {
+    const sql = 'SELECT name, description, monthly_price, yearly_price, currency,per_user_price FROM plan_management WHERE id = ?';
+    const result = await queryAsync(sql, [planId]);
+    console.log(`Database query result for planId ${planId}:`, result);
+
+    if (result.length === 0) {
+        throw new Error(`Plan with ID ${planId} not found`);
+    }
+
+    return result[0];
+};
+
+const createStripeProductAndPrice = async (plan, billingCycle, memberCount) => {
+    // try {
+    //     memberCount = parseInt(memberCount);
+    //     if (isNaN(memberCount) || memberCount < 0) {
+    //         throw new Error('Invalid memberCount');
+    //     }
+
+    //     console.log('Creating Stripe product with plan:', plan);
+
+    //     const product = await stripe.products.create({
+    //         name: plan.name,
+    //         description: plan.description,
+    //     });
+
+    //     const basePrice = billingCycle === 'yearly' ? plan.yearly_price : plan.monthly_price;
+    //     if (isNaN(basePrice) || basePrice <= 0) {
+    //         throw new Error('Invalid base price');
+    //     }
+
+    //     const user_addon_price = plan.per_user_price;
+    //     console.log("user_addon_price",user_addon_price);
+
+    //     const AddonPrice= user_addon_price * memberCount;
+    //     console.log("AddonPrice",AddonPrice);
+
+
+    //     const totalPrice = parseFloat(basePrice) + parseFloat(AddonPrice);
+    //     console.log("totalPrice", totalPrice);
+    //     if (isNaN(totalPrice) || totalPrice <= 0) {
+    //         throw new Error('Invalid total price');
+    //     }
+
+    //     console.log(`Base Price: ${basePrice}, Member Count: ${memberCount}, Total Price: ${totalPrice}`);
+    //     const totalPriceInCents = totalPrice * 100;
+
+    //     const price = await stripe.prices.create({
+    //         unit_amount: totalPriceInCents,
+    //         currency: 'usd',
+    //         // recurring: { interval: billingCycle === 'yearly' ? 'year' : 'month' },
+    //         recurring: { interval: 'day' },
+    //         product: product.id,
+    //     });
+
+    //     return price.id;
+    // } catch (error) {
+    //     console.error('Error creating Stripe product and prices:', error);
+    //     throw error;
+    // }
+
+    try {
+        memberCount = parseInt(memberCount);
+        if (isNaN(memberCount) || memberCount < 0) {
+            throw new Error('Invalid memberCount');
+        }
+        //console.log('Creating Stripe product with plan:', plan);
+        const product = await stripe.products.create({
+            name: plan.name,
+            description: plan.description,
+        });
+    
+        const basePrice = billingCycle === 'yearly' ? plan.yearly_price : plan.monthly_price;
+        if (isNaN(basePrice) || basePrice <= 0) {
+            throw new Error('Invalid base price');
+        }
+    
+        let AddonPrice = 0; 
+        if (memberCount > 0) {
+            const user_addon_price = plan.per_user_price;
+            //console.log("user_addon_price", user_addon_price);
+    
+            AddonPrice = user_addon_price * memberCount;
+            //console.log("AddonPrice", AddonPrice);
+        }
+    
+        const totalPrice = parseFloat(basePrice) + parseFloat(AddonPrice);
+        //console.log("totalPrice", totalPrice);
+        if (isNaN(totalPrice) || totalPrice <= 0) {
+            throw new Error('Invalid total price');
+        }
+    
+        console.log(`Base Price: ${basePrice}, Member Count: ${memberCount}, Total Price: ${totalPrice}`);
+        const totalPriceInCents = totalPrice * 100;
+
+
+
+        const priceParams = {
+            unit_amount: totalPriceInCents,
+            currency: 'usd',
+            product: product.id,
+            recurring: {
+                interval: billingCycle === 'yearly' ? 'month' : 'month',
+                interval_count: billingCycle === 'yearly' ? 1 : 1, // Default to 1 for monthly, 13 for yearly handled below
+            },
+        };
+        
+        if (billingCycle === 'yearly') {
+            priceParams.recurring.interval_count = 13; // Billing every 13 months for yearly subscription
+        }
+        const price = await stripe.prices.create(priceParams);
+        // const price = await stripe.prices.create(priceParams);
+    
+        // const price = await stripe.prices.create({
+        //     unit_amount: totalPriceInCents,
+        //     currency: 'usd',
+        //     //recurring: { interval: 'day' },
+        //     recurring: { interval: billingCycle === 'yearly' ? 'year' : 'month' },
+        //     product: product.id,
+        // });
+    
+        return price.id;
+    } catch (error) {
+        console.error('Error creating Stripe product:', error);
+        throw error;
+    }    
+};
+
+
+exports.createSubscription = async (req, res) => {
+    try {
+        const { name, email, address, city, state, zip, cardNum, expMonth, expYear, cvv, planId, billingCycle, memberCount } = req.body;
+        console.log("createSubscriptionreq.body",req.body);
+
+        const userQuery = 'SELECT user_id, email FROM users WHERE email = ?';
+        const userResult = await queryAsync(userQuery, [email]);
+
+        if (userResult.length === 0) {
+            return res.status(404).send({ error: 'User not found' });
+        }
+        const userId = userResult[0].user_id;
+
+
+        const plan = await getPlanFromDatabase(planId);
+        if (!plan) {
+            return res.status(404).send({ error: 'Plan not found' });
+        }
+
+        const priceId = await createStripeProductAndPrice(plan, billingCycle, memberCount);
+        if (!priceId) {
+            return res.status(500).send({ error: 'Failed to create price for the plan' });
+        }
+
+        const customer = await stripe.customers.create({
+            email: email,
+            name: name,
+            address: {
+                line1: address,
+                city: city,
+                state: state,
+                postal_code: zip,
+            }
+        });
+
+        const paymentMethod = await stripe.paymentMethods.create({
+            type: 'card',
+            card: {
+                number: cardNum,
+                exp_month: expMonth,
+                exp_year: expYear,
+                cvc: cvv
+            },
+            billing_details: {
+                name: name,
+                address: {
+                    line1: address,
+                    city: city,
+                    state: state,
+                    postal_code: zip,
+                }
+            }
+        });
+        await stripe.paymentMethods.attach(paymentMethod.id, { customer: customer.id });
+
+        await stripe.customers.update(customer.id, {
+            invoice_settings: {
+                default_payment_method: paymentMethod.id,
+            }
+        });
+
+
+        // const subscription = await stripe.subscriptions.create({
+        //     customer: customer.id,
+        //     items: [{ price: priceId }],
+        //     expand: ['latest_invoice.payment_intent'],
+        // });
+        const startDate = new Date();  // Set the start date dynamically
+        const trialEndTimestamp = Math.floor(startDate.getTime() / 1000) + (365 * 24 * 60 * 60) + (30 * 24 * 60 * 60);
+
+
+
+        let subscriptionParams = {
+            customer: customer.id,
+            items: [{ price: priceId }],
+            expand: ['latest_invoice.payment_intent'],
+            //trial_end: trialEndTimestamp,
+        };
+
+        const subscription = await stripe.subscriptions.create(subscriptionParams);
+
+        console.log("createsubscription",subscription);
+
+        const invoice = await stripe.invoices.retrieve(subscription.latest_invoice.id);
+
+
+        const paymentIntent = invoice.payment_intent;
+        if (!paymentIntent) {
+            return res.status(500).send({ error: 'Payment intent not found in invoice' });
+        }
+
+        const paymentIntentStatus = await stripe.paymentIntents.retrieve(paymentIntent);
+
+       // console.log("paymentIntentStatus",paymentIntentStatus);
+
+        if (!paymentIntentStatus || !paymentIntentStatus.status) {
+            return res.status(500).send({ error: 'Failed to retrieve payment intent status' });
+        }
+
+        let paymentStatus = paymentIntentStatus.status;
+        if (paymentStatus === 'succeeded') {
+
+            const updatedSubscription = await stripe.subscriptions.retrieve(subscription.id);
+
+            //console.log("subscriptiondetails",updatedSubscription);
+            const invoiceUrl = invoice.invoice_pdf;
+
+            //const planInterval = updatedSubscription.plan.interval;
+
+            var planInterva =updatedSubscription.plan.interval_count;
+            if(planInterva == "13"){
+                var planInterval= 'year'
+            }else{
+                var planInterval= 'month'
+            }
+
+            console.log("Plan Interval:", planInterval);
+
+            const order_history_data={
+                user_id: userId,
+                stripe_subscription_id: subscription.id,
+                plan_id: planId,
+                payment_status: paymentIntentStatus.status,
+                subscription_details: JSON.stringify(subscription),
+                payment_details: JSON.stringify(paymentIntentStatus),
+                subscription_duration: planInterval,
+                subscription_start_date: new Date(subscription.current_period_start * 1000),
+                subscription_end_date: new Date(subscription.current_period_end * 1000),
+                added_user_number: memberCount
+            }
+
+            const order_history_query= `INSERT INTO order_history SET ?`;
+            const order_history_value = await queryAsync(order_history_query,[order_history_data])
+
+            const getcompany_query = `SELECT * FROM company LEFT JOIN company_claim_request ON company.ID = company_claim_request.company_id WHERE company_claim_request.claimed_by= "${userId}"`;
+            const getcompany_value  = await queryAsync(getcompany_query);
+            var companyID = getcompany_value[0].ID;
+            console.log("companyID",companyID);
+
+            const updatecompany_query = `UPDATE company SET membership_type_id = ? WHERE ID = "${companyID}"`;
+            const updatecompany_value = await queryAsync(updatecompany_query,[planId]);
+
+            console.log("updatecompany_value",updatecompany_value);
+
+            const mailOptions = {
+                from: process.env.MAIL_USER,
+                // to: email,
+                to: 'dev2.scwt@gmail.com',
+                subject: 'Your Subscription Invoice',
+                html: `<p>Hello ${name},</p>
+                       <p>Thank you for your subscription. You can view your invoice at the <a href="${invoiceUrl}">following link</a>.</p>
+                       <p>Kind Regards,</p>
+                       <p>CEchoes Technology Team</p>`
+            };
+
+            await mdlconfig.transporter.sendMail(mailOptions);
+
+            return res.send({
+                status: 'ok',
+                message: 'Your payment has been successfully processed.',
+                subscriptionId: updatedSubscription.id,
+                invoiceUrl: invoiceUrl
+            });
+        } else if (paymentStatus === 'requires_action') {
+            return res.status(400).send({
+                status: 'requires_action',
+                client_secret: paymentIntent.client_secret,
+                message: 'Payment requires additional actions.'
+            });
+        } else {
+            return res.status(400).send({
+                status: 'failed',
+                message: 'Payment failed or requires a new payment method.'
+            });
+        }
+
+    } catch (error) {
+        console.error('Error creating subscription:', error);
+        return res.status(500).send({ error: error.message });
+    }
+};
+
+
 
 // const syncPlansWithStripe = async () => {
 //     const plans = await getPlanFromDatabase();
