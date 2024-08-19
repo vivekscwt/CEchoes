@@ -11820,7 +11820,18 @@ router.get('/user_payment_history', checkCookieValue, async (req, res) => {
 
         console.log("currentUserData", currentUserData);
 
-        // Fetch all the required data asynchronously
+        const email_query = `SELECT email FROM users WHERE user_id =?`;
+        const emailData = await query(email_query, [userId]);
+        console.log("emailData", emailData[0].email);
+
+        const getManagerQuery = `SELECT company_level_manage_users.*,company.slug FROM company_level_manage_users LEFT JOIN company ON company_level_manage_users.company_id = company.ID WHERE company_level_manage_users.emails=?`;
+        const getManagerData = await query(getManagerQuery, [emailData[0].email]);
+        //console.log("getManagerData", getManagerData[0]);
+
+        const getQuery = `SELECT complaint_assigned_users.*,company.slug FROM complaint_assigned_users LEFT JOIN company ON complaint_assigned_users.company_id = company.ID WHERE complaint_assigned_users.user_email=?`;
+        const getData = await query(getQuery, [emailData[0].email]);
+        // console.log("getData", getData[0]);
+
         const [getAllPayments, getUser, getUserMeta, globalPageMeta, AllCompaniesReviews] = await Promise.all([
             comFunction2.getuserAllPaymentHistory(userId),
             comFunction.getUser(userId),
@@ -11838,7 +11849,9 @@ router.get('/user_payment_history', checkCookieValue, async (req, res) => {
             user: getUser,
             userMeta: getUserMeta,
             globalPageMeta: globalPageMeta,
-            AllCompaniesReviews: AllCompaniesReviews
+            AllCompaniesReviews: AllCompaniesReviews,
+            getManagerData: getManagerData,
+            getData: getData
         });
     } catch (err) {
         console.error(err);

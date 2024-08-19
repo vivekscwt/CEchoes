@@ -7444,7 +7444,7 @@ exports.reviewInvitation = async (req, res) => {
 
 
 const transporter = nodemailer.createTransport({
-    service: 'gmail', // or your email service
+    service: 'gmail', 
     auth: {
         user: process.env.MAIL_USER,
         pass: process.env.MAIL_PASSWORD
@@ -7454,7 +7454,7 @@ const transporter = nodemailer.createTransport({
 
 const sendIndividualEmail = ({ to, subject, html }) => {
     return transporter.sendMail({
-        from: 'your-email@example.com',
+        from: process.env.MAIL_USER,
         to,
         subject,
         html
@@ -7468,12 +7468,12 @@ const newprocessReviewsCSVRows = async (worksheet) => {
         const emails = [];
 
         worksheet.eachRow({ includeEmpty: false }, (row, rowNumber) => {
-            if (rowNumber > 1) { // Skip the header row
+            if (rowNumber > 1) { 
                 const first_name = row.getCell(1).value;
                 const last_name = row.getCell(2).value;
                 const email = row.getCell(3).value;
 
-                if (email) { // Ensure there's an email
+                if (email) { 
                     emails.push({
                         first_name,
                         last_name,
@@ -7483,7 +7483,6 @@ const newprocessReviewsCSVRows = async (worksheet) => {
             }
         });
 
-        // Resolve the promise after all rows have been processed
         resolve(emails);
     });
 };
@@ -9688,13 +9687,27 @@ exports.complaintRegister = (req, res) => {
             } else {
                 console.log("No level managed user emails found for the provided company_id.");
             }
-            console.log("leveluseremail", leveluseremail);
+            //console.log("leveluseremail", leveluseremail);
 
+            const selectQuery = `SELECT created_at FROM complaint WHERE id = ?`;
+            const selectval = await queryAsync(selectQuery, [result.insertId]);
+    
+                if (selectval.length > 0) {
+                    var created_complaint_date = selectval[0].created_at;
+                    var date = new Date(created_complaint_date);
+                    var formattedDates = date.toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit'
+                    });
+                    console.log("formattedDatess", formattedDates);
+                } 
+          
 
             const [complaintSuccessEmailToUser, complaintEmailToCompanylevelUsers] = await Promise.all([
                 //comFunction2.complaintEmailToCompany(company_id[0], ticket_no, result.insertId),
-                comFunction2.complaintSuccessEmailToUser(user_id, ticket_no, result.insertId),
-                comFunction2.complaintEmailToCompanylevelUsers(company_id, ticket_no, result.insertId)
+                comFunction2.complaintSuccessEmailToUser(user_id, ticket_no, result.insertId, formattedDates),
+                comFunction2.complaintEmailToCompanylevelUsers(company_id, ticket_no, result.insertId, formattedDates)
             ]);
             const cat_name = `SELECT category_name FROM complaint_category WHERE ID= "${category_id}"`;
             const cat_data = await query(cat_name);
@@ -19460,12 +19473,14 @@ exports.assignUsers = async (req, res) => {
             return res.status(400).json({ error_message: 'Another user already assigend for this complaint.' });
         }
 
-        const userexistquery = `SELECT * FROM complaint_assigned_users WHERE user_email = ? AND company_id= ? AND complaint_id= ?`;
-        const userValue = await query(userexistquery, [emails, company_id, complaint_id]);
-        //console.log("userValue",userValue);
-        if (userValue.length > 0) {
-            return res.status(400).json({ error_message: 'User already assigend for this complaint.' });
-        }
+        // const userexistquery = `SELECT * FROM complaint_assigned_users WHERE user_email = ? AND company_id= ? AND complaint_id= ?`;
+        // const userValue = await query(userexistquery, [emails, company_id, complaint_id]);
+        // //console.log("userValue",userValue);
+        // if (userValue.length > 0) {
+        //     return res.status(400).json({ error_message: 'User already assigend for this complaint.' });
+        // }
+
+
         const selectquery = `SELECT user_id FROM users WHERE email = "${emails}"`;
         const selectvalue = await query(selectquery);
         const val = selectvalue[0].user_id;
@@ -19561,8 +19576,164 @@ exports.assignUsers = async (req, res) => {
                                         <p style="font-size:15px; line-height:20px">You have assigned for this complaint<i><b> </b></i> Please visit<a  href="${process.env.MAIN_URL}${additionalPath}"> the complaint</a> .</p>
                                         </td>
                                       </tr>
-                                    </table>
+                                    </table>                                  
+                                   </div>
+                                 </td>
+                                </tr>
+                               </tbody>
+                              </table>
+                            <!-- End Content -->
+                            </td>
+                           </tr>
+                         </tbody>
+                       </table>
+                     <!-- End Body -->
+                     </td>
+                    </tr>
+                    <tr>
+                     <td align="center" valign="top">
+                       <!-- Footer -->
+                       <table id="template_footer" border="0" cellpadding="10" cellspacing="0" width="600">
+                        <tbody>
+                         <tr>
+                          <td style="padding: 0; -webkit-border-radius: 6px;" valign="top">
+                           <table border="0" cellpadding="10" cellspacing="0" width="100%">
+                             <tbody>
+                               <tr>
+                                <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
+                                     <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology</a></p>
+                                </td>
+                               </tr>
+                             </tbody>
+                           </table>
+                          </td>
+                         </tr>
+                        </tbody>
+                       </table>
+                     <!-- End Footer -->
+                     </td>
+                    </tr>
+                  </tbody>
+                 </table>
+               </td>
+              </tr>
+             </tbody>
+            </table>
+           </div>`
+        }
+        await mdlconfig.transporter.sendMail(mailOptions, function (err, info) {
+            if (err) {
+                console.log(err);
+                return res.send({
+                    status: 'not ok',
+                    message: 'Something went wrong'
+                });
+            } else {
+                console.log('Mail Send: ', info.response);
+                return res.send({
+                    status: 'ok',
+                    message: 'Flag Approve'
+                });
+            }
+        })
+
+
+        var complainquery = `SELECT * FROM complaint WHERE id="${complaint_id}"`;
+        var complainvalue = await queryAsync(complainquery);
+        console.log("complainvalue",complainvalue);
+
+        var complain_user_id = complainvalue[0].user_id;
+        var complain_ticket_id = complainvalue[0].ticket_id;
+        var complain_date = complainvalue[0].created_at;
+        var date = new Date(complain_date);
+        var formattedDates = date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+        });
+        var level_update_date = complainvalue[0].level_update_at;
+        var date1 = new Date(level_update_date);
+        var formattedDates1 = date1.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+        });
+        console.log("formattedDates", formattedDates); 
+        console.log("formattedDates1", formattedDates1); 
+
+        var company_eta_query = `SELECT * FROM complaint_level_management WHERE company_id="${company_id}"`;
+        var company_eta_val = await queryAsync(company_eta_query);
+        var eta_count = company_eta_val[0].eta_days;
+        console.log("eta_count",eta_count);
+
+        var eta_next_date = new Date(date1);
+        eta_next_date.setDate(eta_next_date.getDate() + eta_count);
+        var formattedEtaNextDate = eta_next_date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+        });
+        console.log("formattedEtaNextDate", formattedEtaNextDate);
+
+        var complain_user_email = `SELECT * FROM users WHERE user_id="${complain_user_id}"`;
+        var complain_email_val = await queryAsync(complain_user_email);
+        var user_email_val = complain_email_val[0].email;
+        console.log("user_email_val",user_email_val);
+        var path2 = `company-compnaint-details/${slug}/${complaint_id}`
+
+
+        var mailOptions = {
+            from: process.env.MAIL_USER,
+            //to: 'dev2.scwt@gmail.com',
+            to: user_email_val,
+            subject: 'Complaint Escalation I',
+            html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+            <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
+             <tbody>
+              <tr>
+               <td align="center" valign="top">
+                 <div id="template_header_image"><p style="margin-top: 0;"></p></div>
+                 <table id="template_container" style="box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important; background-color: #fdfdfd; border: 1px solid #dcdcdc; border-radius: 3px !important;" border="0" cellpadding="0" cellspacing="0" width="600">
+                  <tbody>
+                    <tr>
+                     <td align="center" valign="top">
+                       <!-- Header -->
+                       <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
+                         <tbody>
+                           <tr>
+                           <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/email-template-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+                            <td id="header_wrapper" style="padding: 36px 48px; display: block;">
+                               <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Complaint Escalation I</h1>
+                            </td>
+      
+                           </tr>
+                         </tbody>
+                       </table>
+                 <!-- End Header -->
+                 </td>
+                    </tr>
+                    <tr>
+                     <td align="center" valign="top">
+                       <!-- Body -->
+                       <table id="template_body" border="0" cellpadding="0" cellspacing="0" width="600">
+                         <tbody>
+                           <tr>
+                            <td id="body_content" style="background-color: #fdfdfd;" valign="top">
+                              <!-- Content -->
+                              <table border="0" cellpadding="20" cellspacing="0" width="100%">
+                               <tbody>
+                                <tr>
+                                 <td style="padding: 48px;" valign="top">
+                                   <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
                                     
+                                    <table border="0" cellpadding="4" cellspacing="0" width="90%">
+                                      <tr>
+                                        <td colspan="2">
+                                        <strong>Dear Sir/Madam,</strong>
+                                        <p style="font-size:15px; line-height:20px">This is to confirm that a Complaint registered with ticket id:<a  href="${process.env.MAIN_URL}${path2}"> ${complain_ticket_id}</a> on ${formattedDates} is still pending for resolution/action at your end. If it is not closed by ${eta_count} days, the complaint will be escalated to the next level..</p>
+                                        </td>
+                                      </tr>
+                                    </table>                                  
                                    </div>
                                  </td>
                                 </tr>
@@ -19661,12 +19832,16 @@ exports.escalateassignUsers = async (req, res) => {
         //     return res.status(400).json({ error_message: 'User already assigend for this complaint.' });
         // }
 
-        const userexistquery = `SELECT * FROM complaint_assigned_users WHERE user_email = ? AND company_id= ? AND complaint_id= ?`;
-        const userValue = await query(userexistquery, [emails, company_id, complaint_id]);
-        //console.log("userValue", userValue);
-        if (userValue.length > 0) {
-            return res.status(400).json({ error_message: 'User already assigend for this complaint.' });
-        }
+        //
+        // const userexistquery = `SELECT * FROM complaint_assigned_users WHERE user_email = ? AND company_id= ? AND complaint_id= ?`;
+        // const userValue = await query(userexistquery, [emails, company_id, complaint_id]);
+        // //console.log("userValue", userValue);
+        // if (userValue.length > 0) {
+        //     return res.status(400).json({ error_message: 'User already assigend for this complaint.' });
+        // }
+
+
+
         const selectquery = `SELECT user_id FROM users WHERE email = "${emails}"`;
         const selectvalue = await query(selectquery);
         const val = selectvalue[0].user_id;
@@ -19760,7 +19935,165 @@ exports.escalateassignUsers = async (req, res) => {
                                       <tr>
                                         <td colspan="2">
                                         <strong>Hello ${fullName},</strong>
-                                        <p style="font-size:15px; line-height:20px">You have assigned for this complaint<i><b> </b></i> Please visit<a  href="${process.env.MAIN_URL}${additionalPath}">the complaint</a> .</p>
+                                        <p style="font-size:15px; line-height:20px">You have assigned for this complaint<i><b> </b></i> Please visit  the<a  href="${process.env.MAIN_URL}${additionalPath}"> complaint</a> .</p>
+                                        </td>
+                                      </tr>
+                                    </table>
+                                    
+                                   </div>
+                                 </td>
+                                </tr>
+                               </tbody>
+                              </table>
+                            <!-- End Content -->
+                            </td>
+                           </tr>
+                         </tbody>
+                       </table>
+                     <!-- End Body -->
+                     </td>
+                    </tr>
+                    <tr>
+                     <td align="center" valign="top">
+                       <!-- Footer -->
+                       <table id="template_footer" border="0" cellpadding="10" cellspacing="0" width="600">
+                        <tbody>
+                         <tr>
+                          <td style="padding: 0; -webkit-border-radius: 6px;" valign="top">
+                           <table border="0" cellpadding="10" cellspacing="0" width="100%">
+                             <tbody>
+                               <tr>
+                                <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
+                                     <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology</a></p>
+                                </td>
+                               </tr>
+                             </tbody>
+                           </table>
+                          </td>
+                         </tr>
+                        </tbody>
+                       </table>
+                     <!-- End Footer -->
+                     </td>
+                    </tr>
+                  </tbody>
+                 </table>
+               </td>
+              </tr>
+             </tbody>
+            </table>
+           </div>`
+        }
+        await mdlconfig.transporter.sendMail(mailOptions, function (err, info) {
+            if (err) {
+                console.log(err);
+                return res.send({
+                    status: 'not ok',
+                    message: 'Something went wrong'
+                });
+            } else {
+                console.log('Mail Send: ', info.response);
+                return res.send({
+                    status: 'ok',
+                    message: 'Flag Approve'
+                });
+            }
+        })
+
+
+        var complainquery = `SELECT * FROM complaint WHERE id="${complaint_id}"`;
+        var complainvalue = await queryAsync(complainquery);
+        console.log("complainvalue",complainvalue);
+
+        var complain_user_id = complainvalue[0].user_id;
+        var complain_ticket_id = complainvalue[0].ticket_id;
+        var complain_date = complainvalue[0].created_at;
+        var date = new Date(complain_date);
+        var formattedDates = date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+        });
+        var level_update_date = complainvalue[0].level_update_at;
+        var date1 = new Date(level_update_date);
+        var formattedDates1 = date1.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+        });
+        console.log("formattedDates", formattedDates); 
+        console.log("formattedDates1", formattedDates1); 
+
+        var company_eta_query = `SELECT * FROM complaint_level_management WHERE company_id="${company_id}"`;
+        var company_eta_val = await queryAsync(company_eta_query);
+        var eta_count = company_eta_val[0].eta_days;
+        console.log("eta_count",eta_count);
+
+        var eta_next_date = new Date(date1);
+        eta_next_date.setDate(eta_next_date.getDate() + eta_count);
+        var formattedEtaNextDate = eta_next_date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+        });
+        console.log("formattedEtaNextDate", formattedEtaNextDate);
+
+        var complain_user_email = `SELECT * FROM users WHERE user_id="${complain_user_id}"`;
+        var complain_email_val = await queryAsync(complain_user_email);
+        var user_email_val = complain_email_val[0].email;
+        console.log("user_email_val",user_email_val);
+        
+
+        var path2 = `company-compnaint-details/${slug}/${complaint_id}`
+        var mailOptions = {
+            from: process.env.MAIL_USER,
+            //to: 'dev2.scwt@gmail.com',
+            to: user_email_val,
+            subject: 'Complaint Escalation II',
+            html:  `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+            <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
+             <tbody>
+              <tr>
+               <td align="center" valign="top">
+                 <div id="template_header_image"><p style="margin-top: 0;"></p></div>
+                 <table id="template_container" style="box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important; background-color: #fdfdfd; border: 1px solid #dcdcdc; border-radius: 3px !important;" border="0" cellpadding="0" cellspacing="0" width="600">
+                  <tbody>
+                    <tr>
+                     <td align="center" valign="top">
+                       <!-- Header -->
+                       <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
+                         <tbody>
+                           <tr>
+                           <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/email-template-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+                            <td id="header_wrapper" style="padding: 36px 48px; display: block;">
+                               <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Complaint Escalation II</h1>
+                            </td>
+      
+                           </tr>
+                         </tbody>
+                       </table>
+                 <!-- End Header -->
+                 </td>
+                    </tr>
+                    <tr>
+                     <td align="center" valign="top">
+                       <!-- Body -->
+                       <table id="template_body" border="0" cellpadding="0" cellspacing="0" width="600">
+                         <tbody>
+                           <tr>
+                            <td id="body_content" style="background-color: #fdfdfd;" valign="top">
+                              <!-- Content -->
+                              <table border="0" cellpadding="20" cellspacing="0" width="100%">
+                               <tbody>
+                                <tr>
+                                 <td style="padding: 48px;" valign="top">
+                                   <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
+                                    
+                                    <table border="0" cellpadding="4" cellspacing="0" width="90%">
+                                      <tr>
+                                        <td colspan="2">
+                                        <strong>Dear Sir/Madam,</strong>
+                                        <p style="font-size:15px; line-height:20px">This is to confirm that a Complaint registered with ticket id:<a  href="${process.env.MAIN_URL}${path2}"> ${complain_ticket_id} </a> on ${formattedDates} is still pending for resolution/action at your end. It was escalated from Level I on ${formattedDates1}. This Complaint needs to be closed by ${formattedEtaNextDate}.</p>
                                         </td>
                                       </tr>
                                     </table>
