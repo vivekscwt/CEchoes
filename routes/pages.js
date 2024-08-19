@@ -2086,6 +2086,191 @@ router.get('/business/:getcountryname', checkCookieValue, async (req, res) => {
     }
 });
 
+// router.get('/stripe-payment', checkCookieValue, async (req, res) => {
+//     try {
+//         const { planId, planPrice, monthly, memberCount, total_price, encryptedEmail } = req.query;
+//         console.log("req.query-monthly", req.query);
+//         const apiKey = process.env.GEO_LOCATION_API_KEY;
+//         //console.log("apiKey",apiKey);
+
+//         let currentUserData = JSON.parse(req.userData);
+//         console.log("currentUserData", currentUserData);
+
+//         const razorpay_key = process.env.RAZORPAY_KEY_ID;
+
+//         if (currentUserData != null) {
+//             var user_id = currentUserData.user_id;
+//             console.log("user_idsssss", user_id);
+
+//             const decryptedEmail = await comFunction2.decryptEmail(encryptedEmail);
+//             if (decryptedEmail !== currentUserData.email) {
+//                 return res.status(500).send('You are not authorized to access the payment page.');
+//             }
+//         }
+
+//         let country_name = req.cookies.countryName || 'India';
+//         let country_code = req.cookies.countryCode || 'IN';
+
+//         console.log("country_names", country_name);
+//         console.log("country_codes", country_code);
+
+//         const planids = `SELECT * FROM plan_management WHERE name = "${planId}"`;
+//         const planidvalue = await queryAsync(planids);
+//         //console.log("planidvalue", planidvalue[0].id);
+//         const planID = planidvalue[0].id;
+//         var monthly_plan_price = planidvalue[0].monthly_price;
+//         console.log("monthly_plan_price", monthly_plan_price);
+//         var yearly_price = planidvalue[0].yearly_price;
+//         console.log("yearly_price", yearly_price);
+//         var per_user_prices = planidvalue[0].per_user_price;
+//         console.log("per_user_prices", per_user_prices);
+
+//         const getcurencyquery = `SELECT * FROM currency_conversion`;
+//         const getcurrencyval = await queryAsync(getcurencyquery);
+//         console.log("getcurrencyval", getcurrencyval);
+
+//         var indian_currency = getcurrencyval[0].inr_currency;
+//         console.log("indian_currency", indian_currency);
+//         var jp_currency = getcurrencyval[0].jpy_currency;
+//         console.log("jp_currency", jp_currency);
+
+//         if (country_code == 'IN') {
+//             var per_user_price = per_user_prices * indian_currency;
+//         } else if (country_code == 'JP') {
+//             var per_user_price = per_user_prices * jp_currency;
+//         } else {
+//             var per_user_price = per_user_prices
+//         }
+
+//         const exchangeRates = await comFunction2.getCurrency();
+//         //console.log("exchangeRates",exchangeRates);
+
+//         const [latestReviews, getCountries] = await Promise.all([
+//             comFunction2.getlatestReviews(20),
+//             comFunction.getCountries(),
+//         ]);
+//         console.log("getCountries", getCountries);
+
+//         res.render('front-end/stripe_payment', {
+//             page_title: "Monthly Subscription",
+//             menu_active_id: "Monthly Subscription",
+//             planId,
+//             planPrice,
+//             monthly,
+//             planID,
+//             currentUserData,
+//             memberCount,
+//             total_price,
+//             country_code: country_code,
+//             exchangeRates: exchangeRates,
+//             encryptedEmail,
+//             user_id,
+//             getCountries,
+//             razorpay_key: razorpay_key,
+//             monthly_plan_price,
+//             per_user_price,
+//             yearly_price
+//         });
+//     } catch (err) {
+//         console.error(err);
+//         res.status(500).send('An error occurred');
+//     }
+// });
+// router.get('/stripe-year-payment', checkCookieValue, async (req, res) => {
+//     try {
+//         const { planId, planPrice, yearly, memberCount, total_price, encryptedEmail } = req.query;
+//         console.log("req.query-yearly", req.query);
+//         const apiKey = process.env.GEO_LOCATION_API_KEY;
+//         console.log("apiKey", apiKey);
+
+//         const razorpay_key = process.env.RAZORPAY_KEY_ID;
+
+//         let country_name = req.cookies.countryName || 'India';
+//         let country_code = req.cookies.countryCode || 'IN';
+
+//         console.log("country_names", country_name);
+//         console.log("country_codes", country_code);
+
+//         const getcountrcodequery = `SELECT * FROM countries WHERE shortname= "${country_code}"`;
+//         const getcountrycodeval = await queryAsync(getcountrcodequery);
+//         if (getcountrycodeval.length > 0) {
+//             var country_no = getcountrycodeval[0].id;
+//             console.log("country_no", country_no);
+//         }
+
+//         let currentUserData = JSON.parse(req.userData);
+//         const planids = `SELECT * FROM plan_management WHERE name = "${planId}"`;
+//         const planidvalue = await queryAsync(planids);
+//         const planID = planidvalue[0].id;
+
+//         var monthly_plan_price = planidvalue[0].monthly_price;
+//         console.log("monthly_plan_price", monthly_plan_price);
+//         var yearly_price = planidvalue[0].yearly_price;
+//         console.log("yearly_price", yearly_price);
+//         var per_user_prices = planidvalue[0].per_user_price;
+//         console.log("per_user_prices", per_user_prices);
+
+//         const getcurencyquery = `SELECT * FROM currency_conversion`;
+//         const getcurrencyval = await queryAsync(getcurencyquery);
+//         console.log("getcurrencyval", getcurrencyval);
+
+//         var indian_currency = getcurrencyval[0].inr_currency;
+//         console.log("indian_currency", indian_currency);
+//         var jp_currency = getcurrencyval[0].jpy_currency;
+//         console.log("jp_currency", jp_currency);
+
+//         if (country_code == 'IN') {
+//             var per_user_price = per_user_prices * indian_currency;
+//         } else if (country_code == 'JP') {
+//             var per_user_price = per_user_prices * jp_currency;
+//         } else {
+//             var per_user_price = per_user_prices
+//         }
+
+//         const decryptedEmail = await comFunction2.decryptEmail(encryptedEmail);
+//         if (decryptedEmail !== currentUserData.email) {
+//             return res.status(500).send('You are not authorized to access the payment page.');
+//         }
+
+//         const exchangeRates = await comFunction2.getCurrency();
+//         const getstatesquery = `SELECT * FROM states WHERE country_id = ?`;
+//         const getstatevalue = await queryAsync(getstatesquery, [country_no]);
+//         //console.log("getstatevalue",getstatevalue);
+
+//         const [latestReviews, getCountries, globalPageMeta] = await Promise.all([
+//             comFunction2.getlatestReviews(20),
+//             comFunction.getCountries(),
+//             comFunction2.getPageMetaValues('global'),
+//         ]);
+//         console.log("getCountries", getCountries);
+
+//         res.render('front-end/stripe_payment_yearly', {
+//             menu_active_id: 'Subscription',
+//             page_title: 'Subscription creation',
+//             globalPageMeta,
+//             planId,
+//             planPrice,
+//             yearly,
+//             planID,
+//             memberCount,
+//             currentUserData,
+//             total_price,
+//             country_code: country_code,
+//             exchangeRates: exchangeRates,
+//             getstatevalue: getstatevalue,
+//             getCountries: getCountries,
+//             razorpay_key: razorpay_key,
+//             monthly_plan_price,
+//             per_user_price,
+//             yearly_price
+//         });
+//     } catch (err) {
+//         console.error(err);
+//         res.status(500).send('An error occurred');
+//     }
+// });
+
+
 router.get('/stripe-payment', checkCookieValue, async (req, res) => {
     try {
         const { planId, planPrice, monthly, memberCount, total_price, encryptedEmail } = req.query;
@@ -2095,18 +2280,14 @@ router.get('/stripe-payment', checkCookieValue, async (req, res) => {
 
         let currentUserData = JSON.parse(req.userData);
         console.log("currentUserData", currentUserData);
+        var user_id = currentUserData.user_id;
+        console.log("user_idsssss",user_id);
 
-        const razorpay_key = process.env.RAZORPAY_KEY_ID;
-
-        if (currentUserData != null) {
-            var user_id = currentUserData.user_id;
-            console.log("user_idsssss", user_id);
-
-            const decryptedEmail = await comFunction2.decryptEmail(encryptedEmail);
-            if (decryptedEmail !== currentUserData.email) {
-                return res.status(500).send('You are not authorized to access the payment page.');
-            }
+        const decryptedEmail = await comFunction2.decryptEmail(encryptedEmail);
+        if (decryptedEmail !== currentUserData.email) {
+            return res.status(500).send('You are not authorized to access the payment page.');
         }
+
 
         let country_name = req.cookies.countryName || 'India';
         let country_code = req.cookies.countryCode || 'IN';
@@ -2118,29 +2299,6 @@ router.get('/stripe-payment', checkCookieValue, async (req, res) => {
         const planidvalue = await queryAsync(planids);
         //console.log("planidvalue", planidvalue[0].id);
         const planID = planidvalue[0].id;
-        var monthly_plan_price = planidvalue[0].monthly_price;
-        console.log("monthly_plan_price", monthly_plan_price);
-        var yearly_price = planidvalue[0].yearly_price;
-        console.log("yearly_price", yearly_price);
-        var per_user_prices = planidvalue[0].per_user_price;
-        console.log("per_user_prices", per_user_prices);
-
-        const getcurencyquery = `SELECT * FROM currency_conversion`;
-        const getcurrencyval = await queryAsync(getcurencyquery);
-        console.log("getcurrencyval", getcurrencyval);
-
-        var indian_currency = getcurrencyval[0].inr_currency;
-        console.log("indian_currency", indian_currency);
-        var jp_currency = getcurrencyval[0].jpy_currency;
-        console.log("jp_currency", jp_currency);
-
-        if (country_code == 'IN') {
-            var per_user_price = per_user_prices * indian_currency;
-        } else if (country_code == 'JP') {
-            var per_user_price = per_user_prices * jp_currency;
-        } else {
-            var per_user_price = per_user_prices
-        }
 
         const exchangeRates = await comFunction2.getCurrency();
         //console.log("exchangeRates",exchangeRates);
@@ -2152,8 +2310,8 @@ router.get('/stripe-payment', checkCookieValue, async (req, res) => {
         console.log("getCountries", getCountries);
 
         res.render('front-end/stripe_payment', {
-            page_title: "Monthly Subscription",
-            menu_active_id: "Monthly Subscription",
+            menu_active_id: 'Stripe Payment',
+            page_title: 'Stripe Payment',
             planId,
             planPrice,
             monthly,
@@ -2165,11 +2323,7 @@ router.get('/stripe-payment', checkCookieValue, async (req, res) => {
             exchangeRates: exchangeRates,
             encryptedEmail,
             user_id,
-            getCountries,
-            razorpay_key: razorpay_key,
-            monthly_plan_price,
-            per_user_price,
-            yearly_price
+            getCountries: getCountries
         });
     } catch (err) {
         console.error(err);
@@ -2181,9 +2335,7 @@ router.get('/stripe-year-payment', checkCookieValue, async (req, res) => {
         const { planId, planPrice, yearly, memberCount, total_price, encryptedEmail } = req.query;
         console.log("req.query-yearly", req.query);
         const apiKey = process.env.GEO_LOCATION_API_KEY;
-        console.log("apiKey", apiKey);
-
-        const razorpay_key = process.env.RAZORPAY_KEY_ID;
+        console.log("apiKey",apiKey);
 
         let country_name = req.cookies.countryName || 'India';
         let country_code = req.cookies.countryCode || 'IN';
@@ -2193,39 +2345,13 @@ router.get('/stripe-year-payment', checkCookieValue, async (req, res) => {
 
         const getcountrcodequery = `SELECT * FROM countries WHERE shortname= "${country_code}"`;
         const getcountrycodeval = await queryAsync(getcountrcodequery);
-        if (getcountrycodeval.length > 0) {
-            var country_no = getcountrycodeval[0].id;
-            console.log("country_no", country_no);
-        }
+        const country_no = getcountrycodeval[0].id;
+        console.log("country_no",country_no);
 
         let currentUserData = JSON.parse(req.userData);
         const planids = `SELECT * FROM plan_management WHERE name = "${planId}"`;
         const planidvalue = await queryAsync(planids);
         const planID = planidvalue[0].id;
-
-        var monthly_plan_price = planidvalue[0].monthly_price;
-        console.log("monthly_plan_price", monthly_plan_price);
-        var yearly_price = planidvalue[0].yearly_price;
-        console.log("yearly_price", yearly_price);
-        var per_user_prices = planidvalue[0].per_user_price;
-        console.log("per_user_prices", per_user_prices);
-
-        const getcurencyquery = `SELECT * FROM currency_conversion`;
-        const getcurrencyval = await queryAsync(getcurencyquery);
-        console.log("getcurrencyval", getcurrencyval);
-
-        var indian_currency = getcurrencyval[0].inr_currency;
-        console.log("indian_currency", indian_currency);
-        var jp_currency = getcurrencyval[0].jpy_currency;
-        console.log("jp_currency", jp_currency);
-
-        if (country_code == 'IN') {
-            var per_user_price = per_user_prices * indian_currency;
-        } else if (country_code == 'JP') {
-            var per_user_price = per_user_prices * jp_currency;
-        } else {
-            var per_user_price = per_user_prices
-        }
 
         const decryptedEmail = await comFunction2.decryptEmail(encryptedEmail);
         if (decryptedEmail !== currentUserData.email) {
@@ -2234,20 +2360,13 @@ router.get('/stripe-year-payment', checkCookieValue, async (req, res) => {
 
         const exchangeRates = await comFunction2.getCurrency();
         const getstatesquery = `SELECT * FROM states WHERE country_id = ?`;
-        const getstatevalue = await queryAsync(getstatesquery, [country_no]);
+        const getstatevalue = await queryAsync(getstatesquery,[country_no]);
         //console.log("getstatevalue",getstatevalue);
 
-        const [latestReviews, getCountries, globalPageMeta] = await Promise.all([
-            comFunction2.getlatestReviews(20),
-            comFunction.getCountries(),
-            comFunction2.getPageMetaValues('global'),
-        ]);
-        console.log("getCountries", getCountries);
 
         res.render('front-end/stripe_payment_yearly', {
-            menu_active_id: 'Subscription',
-            page_title: 'Subscription creation',
-            globalPageMeta,
+            menu_active_id: 'Stripe yearly Payment',
+            page_title: 'Stripe yearly Payment',
             planId,
             planPrice,
             yearly,
@@ -2257,18 +2376,41 @@ router.get('/stripe-year-payment', checkCookieValue, async (req, res) => {
             total_price,
             country_code: country_code,
             exchangeRates: exchangeRates,
-            getstatevalue: getstatevalue,
-            getCountries: getCountries,
-            razorpay_key: razorpay_key,
-            monthly_plan_price,
-            per_user_price,
-            yearly_price
+            getstatevalue: getstatevalue
         });
     } catch (err) {
         console.error(err);
         res.status(500).send('An error occurred');
     }
 });
+
+
+router.post('/create-subscription', async (req, res) => {
+    try {
+        const { fullName, email, address } = req.body;
+        const apiKey = process.env.GEO_LOCATION_API_KEY;
+        console.log("apiKey",apiKey);
+
+        const customer = await stripe.customers.create({
+            email: email,
+            name: fullName,
+            address: {
+                line1: address,
+                // Add other address fields as needed
+            }
+        });
+
+        const subscription = await stripe.subscriptions.create({
+            customer: customer.id,
+        });
+
+        res.json(subscription);
+    } catch (error) {
+        console.error('Error creating subscription:', error);
+        res.status(500).json({ error: 'Failed to create subscription' });
+    }
+});
+
 
 router.get('/create-user-company-subscription', checkCookieValue, async (req, res) => {
     try {
