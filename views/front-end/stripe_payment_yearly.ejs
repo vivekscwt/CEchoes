@@ -1,451 +1,240 @@
-<%- include('common/header') -%>
-   <link href="/front-end/css/business-style.css" rel="stylesheet" type="text/css">
-   <%- include('common/header-banner') -%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Payment-Page</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h3 class="title">Amount</h3>
+                <div id="amountDisplay">
+                    <p>Total Amount: <span id="amount">$0.00</span></p>
+                </div>
+            </div>
+            <div class="col">
+                <form id="paymentForm">
+                    <div class="row">
+                        <div class="col">
+                            <h3 class="title">Billing Address</h3>
+                            <div class="inputBox">
+                                <label for="name">Full Name:</label>
+                                <input type="text" id="name" placeholder="Enter your full name" required>
+                            </div>
+                            <div class="inputBox">
+                                <label for="address">Address:</label>
+                                <input type="text" id="address" placeholder="Enter address" required>
+                            </div>
+                            <div class="inputBox">
+                                <label for="city">City:</label>
+                                <input type="text" id="city" placeholder="Enter city" required>
+                            </div>
+                            <div class="inputBox">
+                                <label for="state">State:</label>
+                                <input type="text" id="state" placeholder="Enter state" required>
+                            </div>
+                            <div class="inputBox">
+                                <label for="zip">Zip Code:</label>
+                                <input type="number" id="zip" placeholder="123 456" required>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="submit" value="Proceed to Checkout" class="submit_btn" id="paymentButton">
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
 
-	<div class="container">
-		<div class="row">
-			<div class="col">
-				<h3 class="title">Amount</h3>
-				<div id="amountDisplays">
-					<p>Total Amount: <span id="amountDisplay">₹<%= total_price%></span></p>
-				</div>
-			</div>
-			<div class="col">
-				<form id="paymentForm">
-					<div class="row">
-						<div class="col">
-							<h3 class="title">Billing Address</h3>
-							<div class="inputBox">
-								<label for="memberCount">Add-on Users:</label>
-								<input type="number" min=1 name="memberCount" id="memberCount"
-									placeholder="Enter number of add-on users">
-							</div>
-							<div class="inputBox">
-								<label for="name">Full Name:</label>
-								<input type="text" id="name" name="name" placeholder="Enter your full name" required>
-							</div>
-							<div class="inputBox">
-								<label for="address">Address:</label>
-								<input type="text" name="address" id="address" placeholder="Enter address" required>
-							</div>
-							<div class="inputBox">
-								<label for="city">City:</label>
-								<input type="text" name="city" id="city" placeholder="Enter city" required>
-							</div>
-							<div class="inputBox">
-								<label for="country">Country:</label>
-								<select name="country" id="stripe_month_country" required>
-									<option value="">Select a country</option>
-									<% getCountries.forEach(country=> { %>
-										<option value="<%= country.shortname %>">
-											<%= country.name %>
-										</option>
-										<% }); %>
-								</select>
-							</div>
-							<div class="inputBox">
-								<label for="state">State:</label>
-								<select name="state" id="stripe_month_state" required>
-									<option value="">Select a state</option>
-								</select>
-							</div>
-							<div class="inputBox">
-								<label for="zip">Zip Code:</label>
-								<input type="text" name="zip" id="zip" placeholder="123 456" required>
-							</div>
-						</div>
-					</div>
-					<input type="submit" value="Proceed to Checkout" class="submit_btn" id="paymentButton">
-				</form>
-			</div>
-		</div>
-	</div>
-
-
-
-<style>
-	@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600&display=swap');
-
-	* {
-		margin: 0;
-		padding: 0;
-		box-sizing: border-box;
-		border: none;
-		outline: none;
-		font-family: 'Poppins', sans-serif;
-		text-transform: capitalize;
-		transition: all 0.2s linear;
-	}
-	.container .row>*:nth-child(1) {
-		border: 3px solid black !important;
-		padding: 12px;
-		max-width: 700px;
-    	margin: 0 auto 25px;
-		background-color: #ffc107 !important;
-	}
-	#paymentForm .row .col{
-		background-color: white !important;
-		border: none !important;
-		border-radius: 5px;
-	}
-	#paymentForm .row .col .title{
-		margin-bottom: 20px;
-	}
-	.login-modal,.modal{
-		display: none;
-	}
-	.container {
-		display: block;
-		padding: 25px;
-		background: #fff;
-	}
-	.inner-page-heading {
-		padding: 47px 0 0px;
-		border-bottom: 1px #ACACAC solid;
-	}
-	.container form {
-		max-width: 700px;
-		margin: 0 auto;
-		padding: 20px;
-		background: #fff;
-		box-shadow: 5px 5px 30px rgba(0, 0, 0, 0.2);
-		border-radius: 5px;
-	}
-	.col .title,.col #amountDisplays{
-		max-width: 700px;
-		margin: 0 auto;
-	}
-	.container .row>* {
-		margin-bottom: 25px;
-		border: none !important;
-		background-color: white !important;
-		border-radius: 5px;
-	}
-
-	.container form .row {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 15px;
-	}
-
-	.container form .row .col {
-		flex: 1 1 250px;
-	}
-
-	.col .title {
-		font-size: 20px;
-		color: #ffc107;
-		padding-bottom: 5px;
-		font-weight: 600;
-	}
+	<style>
+		@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600&display=swap');
 	
-	.container .row>*:nth-child(1) .title{
-		color: black !important;
-	}
-	.col .inputBox {
-		margin-bottom: 25px;
-	}
-
-	.col .inputBox label {
-		margin-bottom: 10px;
-		display: block;
-	}
-
-	.col .inputBox input,
-	.col .inputBox select {
-		width: 100%;
-		padding: 13px 22px;
-		border-radius: 5px;
-		border: 1px solid #ffc107;
-	}
-
-	.col .inputBox input:focus,
-	.col .inputBox select:focus {
-		border: 1px solid #000;
-	}
-
-	.col .flex {
-		display: flex;
-		gap: 15px;
-	}
-
-	.col .flex .inputBox {
-		flex: 1 1;
-		margin-top: 5px;
-	}
-
-	.col .inputBox img {
-		height: 34px;
-		margin-top: 5px;
-		filter: drop-shadow(0 0 1px #000);
-	}
-
-	.container form .submit_btn {
-		width: 100%;
-		padding: 12px;
-		font-size: 17px;
-		background:black;
-		color: #ffc107;
-		cursor: pointer;
-		letter-spacing: 1px;
-		max-width: 250px;
-		font-weight: 600;
-		margin: 0 auto;
-		display: block;
-		border-radius: 5px;
-		border: 2px solid #ffc107;
-	}
-
-	.container form .submit_btn:hover {
-		background: #ffc107;
-		color: rgb(3, 3, 3);
-		border: 2px solid black;
-	}
-
-	input::-webkit-inner-spin-button,
-	input::-webkit-outer-spin-button {
-		display: none;
-	}
-	header.main_header .container {
-		display: block;
-    	min-height: auto;
-		background-color: black;
-}
-</style>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-
-
-
-<script>
-	var razorpay_key = '<%= razorpay_key%>';
-	console.log("razorpay_key", razorpay_key);
-	document.addEventListener('DOMContentLoaded', function () {
-		const paymentForm = document.getElementById('paymentForm');
-		if (!paymentForm) {
-			console.error('Element with ID paymentForm not found');
-			return;
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+			border: none;
+			outline: none;
+			font-family: 'Poppins', sans-serif;
+			text-transform: capitalize;
+			transition: all 0.2s linear;
 		}
-
-
-		paymentForm.addEventListener('submit', async function (event) {
-			event.preventDefault();
-			var addonUsersCount = document.getElementById('memberCount').value;
-			console.log('Add-on Users Count:', addonUsersCount);
-
-			try {
-				const formData = {
-					userId: '<%= currentUserData.user_id %>',
-					name: document.getElementById('name').value,
-					email: '<%= currentUserData.email %>',
-					address: document.getElementById('address').value,
-					city: document.getElementById('city').value,
-					state: document.getElementById('stripe_month_state').value,
-					zip: document.getElementById('zip').value,
-					planId: '<%= planID %>',
-					billingCycle: 'yearly',
-					memberCount: addonUsersCount
-				};
-
-				const response = await axios.post('/auth/create-subscription', formData);
-				const { subscription, amount } = response.data;
-
-				console.log("Amount from backend (in paise):", amount);
-
-				formData.subscriptionId = subscription.id;
-
-				const amountInRupees = (amount / 100).toFixed(2);
-
-				const options = {
-					//key: 'rzp_test_FUBQq7lujicpGo',
-					key: razorpay_key,
-					subscription_id: subscription.id,
-					name: 'Subscription Payment',
-					description: `Subscription Payment: ₹${amountInRupees}`,
-					amount: amount,
-					handler: function (response) {
-						Swal.fire({
-							icon: 'success',
-							title: 'Payment Successful!',
-							text: 'Your payment was successful.',
-							confirmButtonText: 'OK'
-						}).then(() => {
-							console.log("ooed");
-							OrderAPI(formData);
-							
-							window.location.href = '/staging-business';
-						});
-						//window.location.href = '/staging-business';
-
-					},
-					prefill: {
-						name: formData.name,
-						email: formData.email,
-					},
-					theme: {
-						color: '#F37254'
-					}
-				};
-
-				const rzp = new Razorpay(options);
-				rzp.open();
-
-				rzp.on('payment.failed', function (response) {
-					Swal.fire({
-						icon: 'error',
-						title: 'Payment Error',
-						text: response.error.description || 'Unknown error occurred.',
-						confirmButtonText: 'OK'
-					});
-				});
-			} catch (error) {
-				console.error('Error initiating payment:', error);
-				Swal.fire({
-					icon: 'error',
-					title: 'Payment Initiation Failed',
-					text: 'Failed to initiate payment. Please try again later.',
-					confirmButtonText: 'OK'
-				});
-			}
-		});
-
-		document.getElementById('stripe_month_country').addEventListener('change', async function () {
-			const countryCode = this.value;
-			const stateDropdown = document.getElementById('stripe_month_state');
-			stateDropdown.innerHTML = '<option value="">Select a state</option>';
-
-			if (countryCode) {
-				try {
-					const response = await axios.get(`/getStates?country=${countryCode}`);
-					const states = response.data;
-
-					states.forEach(state => {
-						const option = document.createElement('option');
-						option.value = state.name;
-						option.textContent = state.name;
-						stateDropdown.appendChild(option);
-					});
-				} catch (error) {
-					console.error('Error fetching states:', error);
-					alert('Failed to load states. Please try again.');
-				}
-			}
-		});
-
-		async function OrderAPI(formData) {
-			try {
-				console.log("OrderAPI", formData);
-				const response = await axios.post('/auth/update-order-history', formData);
-				console.log("OrderAPI Response", response.data);
-				if (response.data.status === 'ok') {
-					Swal.fire({
-						icon: 'success',
-						title: 'Success',
-						text: response.data.message || 'Subscribed successfully.',
-						confirmButtonText: 'OK'
-					}).then(() => {
-						//window.location.href = '/staging-business';
-					});
-				} else {
-					Swal.fire({
-						icon: 'error',
-						title: 'Error',
-						text: response.data.message || 'Failed to subscribe. Please try again later.',
-						confirmButtonText: 'OK'
-					});
-				}
-			} catch (error) {
-				console.error('Error creating user and company:', error);
-				Swal.fire({
-					icon: 'error',
-					title: 'Error',
-					text: error.response.data.message || 'Failed to subscribe. Please try again later.',
-					confirmButtonText: 'OK'
-				});
-			}
+	
+		.container {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			min-height: 100vh;
+			padding: 25px;
+			background: #d6eef1;
 		}
-	});
-	// document.getElementById('zip').addEventListener('input', function (e) {
-	// 	const value = e.target.value;
-	// 	if (value.length > 6) {
-	// 		e.target.value = value.slice(0, 6);
-	// 	}
-	// });
+	
+		.container form {
+			width: 700px;
+			padding: 20px;
+			background: #fff;
+			box-shadow: 5px 5px 30px rgba(0, 0, 0, 0.2);
+		}
+	
+		.container form .row {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 15px;
+		}
+	
+		.container form .row .col {
+			flex: 1 1 250px;
+		}
+	
+		.col .title {
+			font-size: 20px;
+			color: rgb(237, 55, 23);
+			padding-bottom: 5px;
+		}
+	
+		.col .inputBox {
+			margin: 15px 0;
+		}
+	
+		.col .inputBox label {
+			margin-bottom: 10px;
+			display: block;
+		}
+	
+		.col .inputBox input,
+		.col .inputBox select {
+			width: 100%;
+			border: 1px solid #ccc;
+			padding: 10px 15px;
+			font-size: 15px;
+		}
+	
+		.col .inputBox input:focus,
+		.col .inputBox select:focus {
+			border: 1px solid #000;
+		}
+	
+		.col .flex {
+			display: flex;
+			gap: 15px;
+		}
+	
+		.col .flex .inputBox {
+			flex: 1 1;
+			margin-top: 5px;
+		}
+	
+		.col .inputBox img {
+			height: 34px;
+			margin-top: 5px;
+			filter: drop-shadow(0 0 1px #000);
+		}
+	
+		.container form .submit_btn {
+			width: 100%;
+			padding: 12px;
+			font-size: 17px;
+			background: rgb(1, 143, 34);
+			color: #fff;
+			margin-top: 5px;
+			cursor: pointer;
+			letter-spacing: 1px;
+		}
+	
+		.container form .submit_btn:hover {
+			background: #3d17fb;
+		}
+	
+		input::-webkit-inner-spin-button,
+		input::-webkit-outer-spin-button {
+			display: none;
+		}
+	</style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script type="text/javascript">
+        let planid = '<%= planID%>';
+        console.log("planid", planid);
+        let user_email = '<%= currentUserData.email%>';
+        let user_id = '<%= currentUserData.user_id%>';
+        let memberval = '<%= memberCount%>';
+        let key = 'rzp_test_FUBQq7lujicpGo';
+		console.log("membercount",memberval);
 
-	// document.getElementById('zip').addEventListener('blur', function (e) {
-	// 	const value = e.target.value;
-	// 	if (value.length !== 6) {
-	// 		alert('Zip Code must be exactly 6 digits.');
-	// 		//e.target.focus();
-	// 	}
-	// });
+        document.getElementById('paymentForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
 
-	document.getElementById('zip').addEventListener('input', function (e) {
-                const value = e.target.value;
+            try {
+                const formData = {
+                    userId: user_id,
+                    name: document.getElementById('name').value,
+                    email: user_email,
+                    address: document.getElementById('address').value,
+                    city: document.getElementById('city').value,
+                    state: document.getElementById('state').value,
+                    zip: document.getElementById('zip').value,
+                    planId: planid,
+                    billingCycle: 'yearly',
+					//billingCycle: 'daily',
+                    memberCount: memberval
+                };
 
-                // Example: Format input (if needed), e.g., grouping every 4 characters
-                const formattedValue = value.toUpperCase().replace(/[^A-Z0-9]/g, ''); // Remove non-alphanumeric characters and convert to uppercase
+                const response = await axios.post('/auth/create-subscription', formData);
+                const { subscription } = response.data;
 
-                // Update the input field with the formatted value
-                e.target.value = formattedValue;
-            });
+                const options = {
+                    key: key,
+                    subscription_id: subscription.id,
+                    name: 'Subscription Payment',
+                    description: 'Subscription Payment',
+                    handler: function (response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Payment Successful!',
+                            text: 'Your payment was successful.',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            window.location.href = '/business';
+                        });
+                    },
+                    prefill: {
+                        name: formData.name,
+                        email: formData.email,
+                    },
+                    theme: {
+                        color: '#F37254'
+                    }
+                };
 
-	$(document).ready(function () {
-    const urlParams = new URLSearchParams(window.location.search);
-    const subscriptionTypeparams = urlParams.get('billingCycle'); // Ensure this matches your URL query parameter
-    console.log("subscriptionTypeparams:", subscriptionTypeparams);
+                const rzp = new Razorpay(options);
+                rzp.open();
 
-    const total_prices = parseFloat(urlParams.get('total_price')) || 0;
-    console.log("total_prices:", total_prices);
+                rzp.on('payment.failed', function (response) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Payment Error',
+                        text: response.error.description || 'Unknown error occurred.',
+                        confirmButtonText: 'OK'
+                    });
+                });
+            } catch (error) {
+                console.error('Error initiating payment:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Payment Initiation Failed',
+                    text: 'Failed to initiate payment. Please try again later.',
+                    confirmButtonText: 'OK'
+                });
+            }
+        });
+    </script>
 
-    const monthly_price = parseFloat('<%= monthly_plan_price %>') || 0;
-    const yearly_price = parseFloat('<%= yearly_price %>') || 0;
-    const per_user_price = parseFloat('<%= per_user_price %>') || 0;
 
-    console.log("Monthly Price:", monthly_price);
-    console.log("Yearly Price:", yearly_price);
-    console.log("Per User Price:", per_user_price);
-
-	let pricePerUser;
-
-if (subscriptionTypeparams === 'monthly') {
-	pricePerUser = parseFloat(per_user_price);
-} else if (subscriptionTypeparams === 'yearly') {
-	pricePerUser = parseFloat(per_user_price); 
-} else {
-	console.error('Invalid subscription type');
-	return;
-}
-
-console.log("Price per User:", pricePerUser);
-
-    function updateMemberCountDisplay() {
-        var memberCount_val = $('#memberCount').val() || 0; 
-        $('#member-count-display').text(memberCount_val);
-
-        const totalAmount = memberCount_val * pricePerUser;
-        console.log("Total Amount Calculated:", totalAmount.toFixed(2));
-
-        const alltotal_amount = totalAmount + total_prices;
-        console.log("All Total Amount:", alltotal_amount.toFixed(2));
-
-        if (memberCount_val > 0) {
-            $('#amountDisplay').text(`₹${alltotal_amount.toFixed(2)}`);
-        } else {
-            $('#amountDisplay').text(`₹${total_prices.toFixed(2)}`); // Ensure it's using total_prices
-        }
-    }
-
-    // Call updateMemberCountDisplay when needed, e.g., on input change
-    $('#memberCount').on('input', updateMemberCountDisplay);
-
- 
-});
-
-</script>
 
 
 <!-- <script>
