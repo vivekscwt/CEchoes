@@ -186,9 +186,12 @@
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
         <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
+        <script src="https://js.stripe.com/v3/"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
         <script>
-            var razorpay_key = '<%= razorpay_key%>';
-            console.log("razorpay_key", razorpay_key);
+            var stripe_key = '<%= stripe_key%>';
+            console.log("stripe_key", stripe_key);
             var planID = '<%= planID %>';
             // var memberCount = '<%= memberCount %>';
             var subscriptionType = '<%= subscriptionType%>';
@@ -255,11 +258,6 @@
                 }
                 return true;
             }
-
-
-
-
-
             
             // document.getElementById('email').addEventListener('blur', async function () {
             //     const email = this.value.trim();
@@ -276,6 +274,111 @@
             //         }
             //     }
             // });
+
+            // async function handleConfirmation(confirmed) {
+            //     if (confirmed) {
+            //         try {
+            //             const memberCountt = document.getElementById('member-count').value;
+            //             console.log('Member Count:', memberCountt);
+            //             const formData = {
+            //                 name: document.getElementById('first_name').value + ' ' + document.getElementById('last_name').value,
+            //                 first_name: document.getElementById('first_name').value,
+            //                 last_name: document.getElementById('last_name').value,
+            //                 email: document.getElementById('email').value,
+            //                 phone: document.getElementById('phone').value,
+            //                 address: document.getElementById('main_address').value,
+            //                 main_address_country: document.getElementById('main_address_country').value,
+            //                 company_name: document.getElementById('company_name').value,
+            //                 parent_id: document.getElementById('parent_id').value,
+            //                 comp_email: document.getElementById('comp_email').value,
+            //                 comp_phone: document.getElementById('comp_phone').value,
+            //                 city: 'Default City',
+            //                 state: 'Default State',
+            //                 //zip: document.getElementById('main_address_pin_code').value,
+            //                 main_address_pin_code: document.getElementById('main_address_pin_code').value,
+            //                 planId: planID,
+            //                 //billingCycle: 'daily',
+            //                 billingCycle: subscriptionType,
+            //                 memberCount: memberCountt,
+            //                 register_password: document.getElementById('register_password').value,
+            //                 register_confirm_password: document.getElementById('register_confirm_password').value,
+            //                 user_country: document.getElementById('user_country').value,
+            //                 user_state: document.getElementById('user_state').value,
+            //                 //main_address_pin_code: 
+            //             };
+
+            //             const response = await axios.post('/auth/createexternalSubscription', formData);
+            //             const { subscription, amount } = response.data;
+
+            //             formData.subscriptionId = subscription.id;
+
+            //             const options = {
+            //                 //key: 'rzp_test_ivrp5LlA1gQXAT',
+            //                 key: stripe_key,
+            //                 subscription_id: subscription.id,
+            //                 name: 'Subscription Payment',
+            //                 description: `Subscription Payment: ₹${(amount / 100).toFixed(2)}`, // Display amount in rupees
+            //                 amount: amount, // Amount in paise
+            //                 handler: function (response) {
+            //                     // Swal.fire({
+            //                     //     icon: 'success',
+            //                     //     title: 'Payment Successful!',
+            //                     //     text: 'Your payment was successful.',
+            //                     //     confirmButtonText: 'OK'
+            //                     // }).then(() => {
+            //                     //     // Post payment success, create user and company
+            //                     //     createUserAndCompany(formData);
+            //                     // //     Swal.fire({
+            //                     // //     icon: 'success',
+            //                     // //     title: 'Success',
+            //                     // //     text: 'User and company created successfully.Please wait for admin approval',
+            //                     // //     confirmButtonText: 'OK'
+            //                     // // })
+            //                     // });
+            //                     formData.razorpay_payment_id = response.razorpay_payment_id;
+            //                     createUserAndCompany(formData);
+            //                 },
+            //                 prefill: {
+            //                     name: formData.name,
+            //                     email: formData.email
+            //                 },
+            //                 theme: {
+            //                     color: '#F37254'
+            //                 }
+            //             };
+
+            //             const rzp = new Razorpay(options);
+            //             rzp.open();
+
+            //             rzp.on('payment.failed', function (response) {
+            //                 Swal.fire({
+            //                     icon: 'error',
+            //                     title: 'Payment Error',
+            //                     text: response.error.description || 'Unknown error occurred.',
+            //                     confirmButtonText: 'OK'
+            //                 });
+            //             });
+            //         } catch (error) {
+            //             console.error('Error initiating payment:', error);
+            //             let errorMessage = 'Failed to initiate payment. Please try again later.';
+
+            //             if (error.response) {
+            //                 // If error.response exists, use its data
+            //                 errorMessage = error.response.data.message || errorMessage;
+            //             } else if (error.message) {
+            //                 // If error.message exists, use it
+            //                 errorMessage = error.message;
+            //             }
+
+            //             Swal.fire({
+            //                 icon: 'error',
+            //                 title: 'Payment Initiation Failed',
+            //                 text: errorMessage,
+            //                 confirmButtonText: 'OK'
+            //             });
+            //         }
+            //     }
+            // }
 
             async function handleConfirmation(confirmed) {
                 if (confirmed) {
@@ -316,7 +419,7 @@
 
                         const options = {
                             //key: 'rzp_test_ivrp5LlA1gQXAT',
-                            key: razorpay_key,
+                            key: stripe_key,
                             subscription_id: subscription.id,
                             name: 'Subscription Payment',
                             description: `Subscription Payment: ₹${(amount / 100).toFixed(2)}`, // Display amount in rupees
@@ -381,6 +484,67 @@
                     }
                 }
             }
+
+
+
+
+
+    // async function handleConfirmation(confirmed) {
+    //     if (confirmed) {
+    //         try {
+    //             const memberCount = $('#member-count').val();
+    //             console.log('Member Count:', memberCount);
+    //             const formData = {
+    //                 name: $('#first_name').val() + ' ' + $('#last_name').val(),
+    //                 email: $('#email').val(),
+    //                 planId: planID,
+    //                 billingCycle: subscriptionType,
+    //                 memberCount: memberCount,
+    //                 successUrl: window.location.origin + '/success', 
+    //                 cancelUrl: window.location.origin + '/cancel'   
+    //             };
+
+    //             // Create a Checkout Session
+    //             const response = await $.ajax({
+    //                 url: '/create-subscription-checkout-session',
+    //                 method: 'POST',
+    //                 contentType: 'application/json',
+    //                 data: JSON.stringify(formData)
+    //             });
+
+    //             const stripe = Stripe('pk_test_51Pmx4bE9RgUxhHlihWvQ6tCKKz2AeuVE4X2fBtEFHHnKTu4mgcFHPF1rpYDjwgn0vxlCfPEbiQTLy6JBelzwiTJw00p4tIO4NZ');
+    //             const { id: sessionId } = response;
+
+    //             const result = await stripe.redirectToCheckout({ sessionId });
+
+    //             if (result.error) {
+    //                 console.error('Error redirecting to Checkout:', result.error);
+    //                 Swal.fire({
+    //                     icon: 'error',
+    //                     title: 'Checkout Error',
+    //                     text: result.error.message,
+    //                     confirmButtonText: 'OK'
+    //                 });
+    //             }
+    //         } catch (error) {
+    //             console.error('Error initiating Checkout:', error);
+    //             let errorMessage = 'Failed to initiate checkout. Please try again later.';
+
+    //             if (error.response) {
+    //                 errorMessage = error.response.data.message || errorMessage;
+    //             } else if (error.message) {
+    //                 errorMessage = error.message;
+    //             }
+
+    //             Swal.fire({
+    //                 icon: 'error',
+    //                 title: 'Checkout Initiation Failed',
+    //                 text: errorMessage,
+    //                 confirmButtonText: 'OK'
+    //             });
+    //         }
+    //     }
+    // }
 
             async function createUserAndCompany(formData) {
                 try {

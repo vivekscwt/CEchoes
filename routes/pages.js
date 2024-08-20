@@ -2275,7 +2275,7 @@ router.get('/stripe-payment', checkCookieValue, async (req, res) => {
     try {
         const { planId, planPrice, monthly, memberCount, total_price, encryptedEmail } = req.query;
         console.log("req.query-monthly", req.query);
-        const apiKey = process.env.GEO_LOCATION_API_KEY;
+        // const apiKey = process.env.GEO_LOCATION_API_KEY;
         //console.log("apiKey",apiKey);
 
         let currentUserData = JSON.parse(req.userData);
@@ -2334,8 +2334,8 @@ router.get('/stripe-year-payment', checkCookieValue, async (req, res) => {
     try {
         const { planId, planPrice, yearly, memberCount, total_price, encryptedEmail } = req.query;
         console.log("req.query-yearly", req.query);
-        const apiKey = process.env.GEO_LOCATION_API_KEY;
-        console.log("apiKey",apiKey);
+        // const apiKey = process.env.GEO_LOCATION_API_KEY;
+        // console.log("apiKey",apiKey);
 
         let country_name = req.cookies.countryName || 'India';
         let country_code = req.cookies.countryCode || 'IN';
@@ -2385,6 +2385,95 @@ router.get('/stripe-year-payment', checkCookieValue, async (req, res) => {
 });
 
 
+router.post('/create-payment-intent', async (req, res) => {
+    try {
+        const paymentIntent = await stripe.paymentIntents.create({
+            amount: 1000, // Amount in cents
+            currency: 'usd',
+            // Optional: Add more payment intent parameters here
+        });
+        res.json({ client_secret: paymentIntent.client_secret });
+    } catch (error) {
+        res.status(500).send({ error: error.message });
+    }
+});
+
+
+router.post('/create-token', async (req, res) => {
+    const { name, address, city, state, zip, token } = req.body;
+
+    try {
+        // You can now use the token to create a charge or customer
+        const charge = await stripe.charges.create({
+            amount: 1000, // Amount in cents
+            currency: 'usd',
+            source: token,
+            description: 'Test Charge',
+            receipt_email: 'customer@example.com',
+            shipping: {
+                name: name,
+                address: {
+                    line1: address,
+                    city: city,
+                    state: state,
+                    postal_code: zip,
+                    country: 'US',
+                },
+            },
+        });
+
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Error creating charge:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+
+
+
+router.post('/create-checkout-session', async (req, res) => {
+    const { email, paymentMethodId, planId } = req.body;
+
+    try {
+        const customer = await stripe.customers.create({
+            email: email,
+            payment_method: paymentMethodId,
+            invoice_settings: {
+                default_payment_method: paymentMethodId,
+            },
+        });
+
+        // Create a subscription
+        const subscription = await stripe.subscriptions.create({
+            customer: customer.id,
+            items: [{ price: planId }],
+            expand: ['latest_invoice.payment_intent'],
+        });
+
+        // Create a Checkout Session
+        const session = await stripe.checkout.sessions.create({
+            payment_method_types: ['card'],
+            line_items: [
+                {
+                    price: planId,
+                    quantity: 1,
+                },
+            ],
+            mode: 'subscription',
+            customer: customer.id,
+            success_url: `${YOUR_DOMAIN}/success`,
+            cancel_url: `${YOUR_DOMAIN}/cancel`,
+        });
+
+        res.json({ id: session.id });
+    } catch (error) {
+        res.status(500).send({ error: error.message });
+    }
+});
+
+
+
 router.post('/create-subscription', async (req, res) => {
     try {
         const { fullName, email, address } = req.body;
@@ -2419,6 +2508,7 @@ router.get('/create-user-company-subscription', checkCookieValue, async (req, re
         const apiKey = process.env.GEO_LOCATION_API_KEY;
         //console.log("apiKey",apiKey);
         const razorpay_key = process.env.RAZORPAY_KEY_ID;
+        const stripe_key = process.env.STRIPE_SECRET_KEY;
 
         let currentUserData = JSON.parse(req.userData);
         console.log("currentUserData", currentUserData);
@@ -2499,6 +2589,7 @@ router.get('/create-user-company-subscription', checkCookieValue, async (req, re
             getCountries,
             getCountriesList,
             razorpay_key: razorpay_key,
+            stripe_key: stripe_key,
             subscriptionType: subscriptionType,
             monthly_plan_price: monthly_plan_price,
             yearly_price: yearly_price,
@@ -2509,6 +2600,42 @@ router.get('/create-user-company-subscription', checkCookieValue, async (req, re
         res.status(500).send('An error occurred');
     }
 })
+
+router.post('/create-checkout-session', async (req, res) => {
+    try {
+        const { amount, currency, productName } = req.body; // Ensure these values are passed from the frontend
+
+        // Validate that required parameters are provided
+        if (!amount || !currency || !productName) {
+            return res.status(400).send({ error: 'Missing required parameters' });
+        }
+
+        // Create a Checkout Session
+        const session = await stripe.checkout.sessions.create({
+            payment_method_types: ['card'],
+            line_items: [
+                {
+                    price_data: {
+                        currency: currency, // e.g., 'usd'
+                        product_data: {
+                            name: productName, // e.g., 'T-shirt'
+                        },
+                        unit_amount: amount, // Amount in the smallest currency unit (e.g., cents for USD)
+                    },
+                    quantity: 1, // Quantity of the item
+                },
+            ],
+            mode: 'payment',
+            success_url: `${YOUR_DOMAIN}/success`,
+            cancel_url: `${YOUR_DOMAIN}/cancel`,
+        });
+
+        res.json({ id: session.id });
+    } catch (error) {
+        console.error('Error creating checkout session:', error);
+        res.status(500).send({ error: error.message });
+    }
+});
 
 
 

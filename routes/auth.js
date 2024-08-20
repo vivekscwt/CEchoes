@@ -521,6 +521,8 @@ router.post('/externalRegistration',authController.externalRegistration);
 
 router.post('/createexternalSubscription',authController.createexternalSubscription);
 
+router.post('/createCheckoutSession',authController.createCheckoutSession);
+
 router.post('/update-order-history',authController.updateOrderHistory);
 
 //create-subscription-checkout-session
