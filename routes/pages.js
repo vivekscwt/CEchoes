@@ -364,6 +364,7 @@ router.get('/user-company-register', async (req, res) => {
 // });
 
 router.get('', checkCookieValue, async (req, res) => {
+    try {
     let currentUserData = JSON.parse(req.userData);
     let userId = '';
     if (currentUserData) {
@@ -481,17 +482,8 @@ router.get('', checkCookieValue, async (req, res) => {
         WHERE featured_companies.status = 'active'
         ORDER BY featured_companies.ordering ASC `;
     }
-
-
     const rangeTexts = {};
-
-    //console.log("PopularCategories", PopularCategories);
-    // console.log("getPositiveReviewsCompany",PositiveReviewsCompany);
-    // console.log("getNegativeReviewsCompany",NegativeReviewsCompany);
-    // console.log("getCountries", getCountries);
-    //console.log("HomeMeta", HomeMeta);
-
-    try {
+   
         // Make API request to fetch blog posts
         const apiUrl = process.env.BLOG_API_ENDPOINT + '/home-blog';
         const response = await axios.get(apiUrl);
@@ -505,7 +497,6 @@ router.get('', checkCookieValue, async (req, res) => {
                 "success_message": blogPosts.success_message,
                 "error_message": blogPosts.error_message
         };
-        console.log('restructuredResponse', restructuredResponse);
 
         const sql = `SELECT * FROM page_info where secret_Key = 'home' AND country= "${country_code}"`;
         db.query(sql, (err, results, fields) => {
@@ -531,7 +522,6 @@ router.get('', checkCookieValue, async (req, res) => {
 
                 db.query(featured_sql, (featured_err, featured_result) => {
                     var featured_comps = featured_result;
-                    console.log("featured_comps",featured_comps);
                     
                     // res.json( {
                     //     menu_active_id: 'landing',
@@ -1525,7 +1515,7 @@ router.get('/getStates', async (req, res) => {
         console.log("getcountryval", getcountryval[0].id);
 
         const states = await comFunction.getStatesByCountryID(coun);
-        console.log("States:", states);
+        //console.log("States:", states);
 
         return res.json(states);
     } catch (error) {
