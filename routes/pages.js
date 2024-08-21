@@ -581,59 +581,6 @@ router.get('', checkCookieValue, async (req, res) => {
         })
     } catch (error) {
         console.error('Error fetching blog posts:', error);
-        const sql = `SELECT * FROM page_info where secret_Key = 'home' `;
-        db.query(sql, (err, results, fields) => {
-            if (err) throw err;
-            const home = results[0];
-            const meta_sql = `SELECT * FROM page_meta where page_id = ${home.id}`;
-            db.query(meta_sql, async (meta_err, _meta_result) => {
-                if (meta_err) throw meta_err;
-
-                const meta_values = _meta_result;
-                let meta_values_array = {};
-                await meta_values.forEach((item) => {
-                    meta_values_array[item.page_meta_key] = item.page_meta_value;
-                })
-
-                const featured_sql = `SELECT featured_companies.id,featured_companies.company_id,featured_companies.short_desc,featured_companies.link,company.slug,company.logo,company.company_name FROM featured_companies 
-                        JOIN company ON featured_companies.company_id = company.ID 
-                        WHERE featured_companies.status = 'active' 
-                        ORDER BY featured_companies.ordering ASC `;
-                db.query(featured_sql, (featured_err, featured_result) => {
-                    var featured_comps = featured_result;
-                    console.log("featured_comps",featured_comps);
-                    res.render('front-end/landing', {
-                        menu_active_id: 'landing',
-                        page_title: home.title,
-                        currentUserData: currentUserData,
-                        homePosts: [],
-                        home,
-                        meta_values_array,
-                        featured_comps,
-                        allRatingTags: allRatingTags,
-                        AddressapiKey: process.env.ADDRESS_GOOGLE_API_Key,
-                        globalPageMeta: globalPageMeta,
-                        latestReviews: latestReviews,
-                        AllReviewTags: AllReviewTags,
-                        AllReviewVoting: AllReviewVoting,
-                        PositiveReviewsCompany,
-                        NegativeReviewsCompany,
-                        PopularCategories,
-                        ReviewCount,
-                        UserCount,
-                        PositiveReviewsCompany,
-                        NegativeReviewsCompany,
-                        HomeMeta,
-                        VisitorCheck,
-                        AllLatestDiscussion: getAllLatestDiscussion,
-                        AllPopularDiscussion: getAllPopularDiscussion,
-                        AllDiscussions: getAllDiscussions,
-                        getCountries: getCountries,
-                        apiKey
-                    });
-                })
-            })
-        })
     }
 });
 
