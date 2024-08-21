@@ -298,7 +298,7 @@ async function getlatestReviews(reviewCount, country) {
   //console.log("Constructed SQL Query:", get_latest_review_query); 
   try {
     const get_latest_review_results = await query(get_latest_review_query);
-    console.log("get_latest_review_results", get_latest_review_results);
+    //console.log("get_latest_review_results", get_latest_review_results);
     if (get_latest_review_results.length > 0) {
       return get_latest_review_results;
     } else {
