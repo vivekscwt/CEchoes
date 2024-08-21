@@ -385,13 +385,29 @@ router.get('', checkCookieValue, async (req, res) => {
     if (country_code != 'UK' && country_code != 'JP') {
         country_code = 'US';
     }
+    let new_country_code;
 
     if(req.cookies.countryCode != 'All'){
-        const new_country_code_query = `SELECT shortname FROM countries WHERE name="${country_name}"`;
-        const new_country_code_val = await queryAsync(new_country_code_query);
-        console.log("new_country_code_val", new_country_code_val);
-        var new_country_code = new_country_code_val[0].shortname;
-        console.log("new_country_code", new_country_code);
+         const new_country_code_query = `SELECT shortname FROM countries WHERE name="${country_name}"`;
+        // const new_country_code_val = await queryAsync(new_country_code_query);
+        // console.log("new_country_code_val", new_country_code_val);
+        // var new_country_code = new_country_code_val[0].shortname;
+        // console.log("new_country_code", new_country_code);
+
+        db.query(new_country_code_query, [country_name], (err, results) => {
+            if (err) {
+                console.error("Database query failed:", err);
+                return;
+            }
+    
+            if (results.length > 0) {
+             new_country_code = results[0].shortname;
+                console.log("new_country_code", new_country_code);
+            } else {
+                console.log("No results found for the given country name.");
+            }
+
+        });
     
         const getbusinessquery = `SELECT * FROM users WHERE user_id= "${userId}"`;
         const getbusinessvalue = await queryAsync(getbusinessquery);
