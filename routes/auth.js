@@ -517,6 +517,9 @@ router.put('/confirmReview',authController.confirmReview);
 
 router.post('/create-subscription',authController.createSubscription);
 
+router.post('/createextSubscription',authController.createextSubscription);
+
+
 router.post('/externalRegistration',authController.externalRegistration);
 
 router.post('/createexternalSubscription',authController.createexternalSubscription);

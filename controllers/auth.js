@@ -20893,6 +20893,144 @@ exports.createSubscription = async (req, res) => {
 
 
 
+exports.createextSubscription = async (req, res) => {
+  
+    try {
+        const { token, userId, name, email, address, city, state, zip, planId, billingCycle, memberCount } = req.body;
+        console.log("createSubscription req.body", req.body);
+    
+        // Fetch plan data from your database
+        const plan = await getPlanFromDatabase(planId);
+        if (!plan) {
+            return res.status(404).send({ error: 'Plan not found' });
+        }
+    
+        // Create or retrieve the customer
+        let customer;
+        try {
+            customer = await stripe.customers.create({
+                email: email,
+                name: name,
+                address: {
+                    line1: address,
+                    city: city,
+                    state: state,
+                    postal_code: zip,
+                },
+                source: token // Use the Stripe token for payment
+            });
+        } catch (error) {
+            console.error("Error creating customer:", error);
+            return res.status(500).send({ error: 'Failed to create customer' });
+        }
+    
+        // Retrieve or create price ID
+        const priceId = await createStripeProductAndPrice(plan, billingCycle, memberCount);
+        if (!priceId) {
+            return res.status(500).send({ error: 'Failed to create price for the plan' });
+        }
+    
+        // Create the subscription
+        let subscription;
+        try {
+            subscription = await stripe.subscriptions.create({
+                customer: customer.id,
+                items: [{ price: priceId }],
+                expand: ['latest_invoice.payment_intent'],
+            });
+        } catch (error) {
+            console.error("Error creating subscription:", error);
+            return res.status(500).send({ error: 'Failed to create subscription' });
+        }
+    
+        // Retrieve invoice and payment intent
+        const invoice = await stripe.invoices.retrieve(subscription.latest_invoice.id);
+        const paymentIntent = invoice.payment_intent;
+        if (!paymentIntent) {
+            return res.status(500).send({ error: 'Payment intent not found in invoice' });
+        }
+    
+        const paymentIntentStatus = await stripe.paymentIntents.retrieve(paymentIntent);
+        if (!paymentIntentStatus || !paymentIntentStatus.status) {
+            return res.status(500).send({ error: 'Failed to retrieve payment intent status' });
+        }
+    
+        let paymentStatus = paymentIntentStatus.status;
+        if (paymentStatus === 'succeeded') {
+            // Handle successful payment
+            const updatedSubscription = await stripe.subscriptions.retrieve(subscription.id);
+            const invoiceUrl = invoice.invoice_pdf;
+    
+            const planInterval = updatedSubscription.items.data[0].price.recurring.interval === 'year' ? 'year' : 'month';
+            console.log("Plan Interval:", planInterval);
+    
+            // Insert order history
+            const order_history_data = {
+                user_id: userId,
+                stripe_subscription_id: subscription.id,
+                plan_id: planId,
+                payment_status: paymentIntentStatus.status,
+                subscription_details: JSON.stringify(subscription),
+                payment_details: JSON.stringify(paymentIntentStatus),
+                subscription_duration: planInterval,
+                subscription_start_date: new Date(subscription.current_period_start * 1000),
+                subscription_end_date: new Date(subscription.current_period_end * 1000),
+                added_user_number: memberCount
+            };
+    
+            const order_history_query = `INSERT INTO order_history SET ?`;
+            await queryAsync(order_history_query, [order_history_data]);
+    
+            // Update company membership type
+            const getcompany_query = `SELECT * FROM company LEFT JOIN company_claim_request ON company.ID = company_claim_request.company_id WHERE company_claim_request.claimed_by = ?`;
+            const getcompany_value = await queryAsync(getcompany_query, [userId]);
+            if (getcompany_value.length === 0) {
+                return res.status(404).send({ error: 'Company not found' });
+            }
+            const companyID = getcompany_value[0].ID;
+            console.log("companyID", companyID);
+    
+            const updatecompany_query = `UPDATE company SET membership_type_id = ? WHERE ID = ?`;
+            await queryAsync(updatecompany_query, [planId, companyID]);
+    
+            // Send email notification
+            const mailOptions = {
+                from: process.env.MAIL_USER,
+                to: email,
+                subject: 'Your Subscription Invoice',
+                html: `<p>Hello ${name},</p>
+                       <p>Thank you for your subscription. You can view your invoice at the <a href="${invoiceUrl}">following link</a>.</p>
+                       <p>Kind Regards,</p>
+                       <p>CEchoes Technology Team</p>`
+            };
+    
+            await mdlconfig.transporter.sendMail(mailOptions);
+    
+            return res.send({
+                status: 'ok',
+                message: 'Your payment has been successfully processed.',
+                subscriptionId: updatedSubscription.id,
+                invoiceUrl: invoiceUrl
+            });
+        } else if (paymentStatus === 'requires_action') {
+            return res.status(400).send({
+                status: 'requires_action',
+                client_secret: paymentIntent.client_secret,
+                message: 'Payment requires additional actions.'
+            });
+        } else {
+            return res.status(400).send({
+                status: 'failed',
+                message: 'Payment failed or requires a new payment method.'
+            });
+        }
+    } catch (error) {
+        console.error('Error creating subscription:', error);
+        return res.status(500).send({ error: 'An error occurred while creating the subscription.' });
+    }
+    
+};
+
 
 
 
