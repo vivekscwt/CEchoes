@@ -12489,6 +12489,8 @@ router.get('/myprofile', checkFrontEndLoggedIn, async (req, res) => {
 
 //FrontEnd profile-dashboard page
 router.get('/profile-dashboard', checkFrontEndLoggedIn, async (req, res) => {
+    console.log("fgfgfgh");
+    
     try {
         const encodedUserData = req.cookies.user;
         const currentUserData = JSON.parse(encodedUserData);
@@ -12550,7 +12552,7 @@ router.get('/profile-dashboard', checkFrontEndLoggedIn, async (req, res) => {
     } catch (err) {
         console.error(err);
         console.log("err",err);
-        res.status(500).send('An error occurred');
+        res.status(500).send('An error occurred in profile dashboard.');
     }
     //res.render('front-end/profile-dashboard', { menu_active_id: 'profile-dashboard', page_title: 'My Dashboard', currentUserData });
 });
