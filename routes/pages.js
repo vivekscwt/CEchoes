@@ -387,26 +387,11 @@ router.get('', checkCookieValue, async (req, res) => {
     }
 
     if(req.cookies.countryCode != 'All'){
-        // const new_country_code_query = `SELECT shortname FROM countries WHERE name="${country_name}"`;
-        // const new_country_code_val = await queryAsync(new_country_code_query);
-        // console.log("new_country_code_val", new_country_code_val);
-
-        // var new_country_code = new_country_code_val[0].shortname;
-        // console.log("new_country_code", new_country_code);
-
-
-        db.query(query, [country_name], (err, results) => {
-            if (err) {
-                console.error("Database query failed:", err);
-                return;
-            }
-            if (results.length > 0) {
-                var new_country_code = results[0].shortname;
-                console.log("new_country_code", new_country_code);
-            } else {
-                console.log("No results found for the given country name.");
-            }
-        });
+        const new_country_code_query = `SELECT shortname FROM countries WHERE name="${country_name}"`;
+        const new_country_code_val = await queryAsync(new_country_code_query);
+        console.log("new_country_code_val", new_country_code_val);
+        var new_country_code = new_country_code_val[0].shortname;
+        console.log("new_country_code", new_country_code);
     
         const getbusinessquery = `SELECT * FROM users WHERE user_id= "${userId}"`;
         const getbusinessvalue = await queryAsync(getbusinessquery);
@@ -537,6 +522,29 @@ router.get('', checkCookieValue, async (req, res) => {
 
                 db.query(featured_sql, (featured_err, featured_result) => {
                     var featured_comps = featured_result;
+                    
+                    // res.json( {
+                    //     menu_active_id: 'landing',
+                    //     page_title: home.title,
+                    //     currentUserData: currentUserData,
+                    //     homePosts: restructuredResponse.status === 'ok' ? restructuredResponse.data : [],
+                    //     home,
+                    //     meta_values_array,
+                    //     featured_comps,
+                    //     allRatingTags: allRatingTags,
+                    //     AddressapiKey: process.env.ADDRESS_GOOGLE_API_Key,
+                    //     globalPageMeta:globalPageMeta,
+                    //     latestReviews: latestReviews,
+                    //     AllReviewTags: AllReviewTags,
+                    //     AllReviewVoting:AllReviewVoting,
+                    //     PopularCategories,
+                    //     ReviewCount,
+                    //     UserCount,
+                    //     PositiveReviewsCompany,
+                    //     NegativeReviewsCompany,
+                    //     HomeMeta,
+                    //     VisitorCheck
+                    // });
                     res.render('front-end/landing', {
                         menu_active_id: 'landing',
                         page_title: home.title,
@@ -567,7 +575,9 @@ router.get('', checkCookieValue, async (req, res) => {
                         apiKey
                     });
                 })
+
             })
+
         })
     } catch (error) {
         console.error('Error fetching blog posts:', error);
