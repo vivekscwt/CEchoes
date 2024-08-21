@@ -365,6 +365,7 @@ router.get('/user-company-register', async (req, res) => {
 
 router.get('', checkCookieValue, async (req, res) => {
     try {
+        
     let currentUserData = JSON.parse(req.userData);
     let userId = '';
     if (currentUserData) {
