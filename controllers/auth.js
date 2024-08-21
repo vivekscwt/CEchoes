@@ -776,6 +776,8 @@ exports.frontendUserLogin = (req, res) => {
                             WHERE user_meta.user_id = ?
                         `;
                             db.query(query, [user.user_id], async (err, results) => {
+                                console.log("frontendlogin",results);
+                                
                                 let userData = {};
                                 if (results.length > 0) {
                                     const user_meta = results[0];
