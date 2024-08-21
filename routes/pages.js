@@ -391,7 +391,7 @@ router.get('', checkCookieValue, async (req, res) => {
         const new_country_code_query = `SELECT shortname FROM countries WHERE name="${country_name}"`;
         const new_country_code_val = await queryAsync(new_country_code_query);
         console.log("new_country_code_val", new_country_code_val);
-        var new_country_code = new_country_code_val[0].shortname;
+         new_country_code = new_country_code_val[0].shortname;
         console.log("new_country_code", new_country_code);
     
         const getbusinessquery = `SELECT * FROM users WHERE user_id= "${userId}"`;
