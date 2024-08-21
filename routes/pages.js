@@ -12549,7 +12549,7 @@ router.get('/profile-dashboard', checkFrontEndLoggedIn, async (req, res) => {
     } catch (err) {
         console.error(err);
         console.log("err",err);
-        res.status(500).send('An error occurred');
+        res.status(500).send('An error occurred in profile dashboard.');
     }
     //res.render('front-end/profile-dashboard', { menu_active_id: 'profile-dashboard', page_title: 'My Dashboard', currentUserData });
 });
