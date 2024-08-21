@@ -570,6 +570,8 @@ async function reviewApprovedEmail(req) {
 `;
 
   const approveReviewData = await query(sql);
+  console.log("approveReviewData",approveReviewData);
+  
 
 
   if (approveReviewData.length > 0) {
@@ -745,7 +747,7 @@ async function reviewApprovedEmail(req) {
                                     <tr>
                                       <td colspan="2">
                                       <strong>Hello ${approveReviewData[0].claimed_user_name},</strong>
-                                      <p style="font-size:15px; line-height:20px">A user reviewed on your organization <i><b>"on ${reviewDate}"</b></i>. Now you can see this review on the <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology</a> website.</p>
+                                      <p style="font-size:15px; line-height:20px">A user reviewed on your organization <i><b>"on ${reviewDate}"</b></i>. Now you can see this review on the <a style="color:#FCCB06" href="${process.env.MAIN_URL}company/${approveReviewData[0].slug}">CEchoesTechnology</a> website.</p>
                                       </td>
                                     </tr>
                                   </table>
@@ -1021,9 +1023,9 @@ async function geCompanyCategories(companyId) {
   `;
   try {
     const results = await query(sql);
-    console.log("results", results);
+    //console.log("results", results);
     if (results.length > 0) {
-      console.log("results", results);
+      //console.log("results", results);
       return results;
     } else {
       return [];
@@ -3504,7 +3506,7 @@ async function updateComplaintStatus(complaint_id, status) {
   const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ');
 
   const sql = `
-  UPDATE complaint SET status='${status}', reopen_date = '${formattedDate}', level_id = '1', level_update_at = '${formattedDate}',assigned_status = '0' WHERE id = '${complaint_id}'
+  UPDATE complaint SET status='${status}', reopen_date = '${formattedDate}', level_id = '1', level_update_at = '${formattedDate}',assigned_status = '0', reopen_message= "${message}" WHERE id = '${complaint_id}'
   `;
   
   const deleteAssignedUsersSql = `DELETE FROM complaint_assigned_users WHERE complaint_id = ?`;//new
@@ -3718,7 +3720,9 @@ async function complaintEmailToCompany(companyId, tokenId, insertId) {
 }
 
 //Function send success complaint email to user by userID 
-async function complaintSuccessEmailToUser(userId, tokenId, insertId) {
+async function complaintSuccessEmailToUser(userId, tokenId, insertId, formattedDates) {
+  console.log("complaintSuccessEmailToUserformattedDates",formattedDates);
+  
   const sql = `
   SELECT users.email, users.first_name  
   FROM users 
@@ -3731,7 +3735,7 @@ async function complaintSuccessEmailToUser(userId, tokenId, insertId) {
         from: process.env.MAIL_USER,
         //to: 'pranab@scwebtech.com',
         to: results[0].email,
-        subject: 'Complaint registration Email',
+        subject: 'Complaint Registration',
         html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
         <style>
             body, table, td, p, a, h1, h2, h3, h4, h5, h6, div {
@@ -3753,7 +3757,7 @@ async function complaintSuccessEmailToUser(userId, tokenId, insertId) {
                        <tr>
                        <td><img alt="Logo" src="${process.env.MAIN_URL}front-end/images/cechoes-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
                         <td id="header_wrapper" style="padding: 36px 48px; display: block;">
-                           <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Complaint registration Email</h1>
+                           <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Complaint registration</h1>
                         </td>
     
                        </tr>
@@ -3779,8 +3783,8 @@ async function complaintSuccessEmailToUser(userId, tokenId, insertId) {
                                 <table border="0" cellpadding="4" cellspacing="0" width="90%">
                                   <tr>
                                     <td colspan="2">
-                                    <strong>Hello ${results[0].first_name},</strong>
-                                    <p style="font-size:15px; line-height:20px">Your complaint registered successfully.Your Token Id is: <a  href="${process.env.MAIN_URL}user-compnaint-details/${insertId}">${tokenId}</a>. 
+                                    <strong>Dear Sir/Madam,</strong>
+                                    <p style="font-size:15px; line-height:20px">This is to confirm that a Complaint has been registered by you with ticket id: <a  href="${process.env.MAIN_URL}user-compnaint-details/${insertId}">${tokenId}</a> on ${formattedDates}. It is now pending for resolution.
                                     </p>
                                     </td>
                                   </tr>
@@ -5826,6 +5830,8 @@ async function SurveyInvitationByArray(req) {
             return false;
           } else {
             console.log('Mail Send: ', info.response);
+            console.log("Mail Send to email: ",email);
+            
 
           }
         })
@@ -7389,7 +7395,7 @@ async function getcategories(company_id) {
       if (err) {
         reject('An error occurred while processing your request ' + err);
       } else {
-        console.log('results', results);
+        //console.log('results', results);
         // const filteredResults = results.filter(item => item.product_id !== null);
         //console.log("filteredResults",filteredResults);
         resolve(results);

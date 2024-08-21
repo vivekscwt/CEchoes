@@ -91,7 +91,9 @@ router.post('/delete-company', authController.deleteCompany);
 router.post('/deleteCompanies', authController.deleteCompanies);
 
 router.post('/get-company-details', authController.getcompanyDetails);
-router.post('/getcompany-details', authController.companyDetails)
+router.post('/getcompany-details', authController.companyDetails);
+
+router.post('/getcompany-details-by-id', authController.companyDetailsbyId);
 
 router.post("/currency-convert",authController.currencyConvert);
 
@@ -366,6 +368,8 @@ router.post('/add-comment', authController.addComment);
 
 router.post('/edit-discussion', authController.editDiscussion);
 
+router.post('/editDiscussions',authController.editDiscussions);
+
 router.post('/edit-comment',authController.editDiscussioncomment);
 
 //Create create-company-category
@@ -513,9 +517,14 @@ router.put('/confirmReview',authController.confirmReview);
 
 router.post('/create-subscription',authController.createSubscription);
 
+router.post('/createextSubscription',authController.createextSubscription);
+
+
 router.post('/externalRegistration',authController.externalRegistration);
 
 router.post('/createexternalSubscription',authController.createexternalSubscription);
+
+router.post('/createCheckoutSession',authController.createCheckoutSession);
 
 router.post('/update-order-history',authController.updateOrderHistory);
 

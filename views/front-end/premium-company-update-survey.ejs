@@ -59,7 +59,7 @@
                                     </div>
                                     <div class="col-sm-6">
                                        <div class="custom-form mb-sm-0 mb-2">
-                                          <input type="date" class="form-control" name="expire_at" required=""  value="<%= formattedDate %>" >
+                                          <input type="date" class="form-control" id="todatePicker" name="expire_at" required=""  value="<%= formattedDate %>" >
                                           <small>to</small>
                                        </div>
                                     </div>
@@ -244,8 +244,7 @@
                                             Add Emails
                                         </small>
                                     </label>
-                                    <input class="form-control" name="email" id="sendreviewtags_invitation" 
-                                           value="<% if(tagss.length > 0){ %><% tagss.forEach(function(tag) { %><%= tag %>, <% }); %><% } %>" />
+                                    <input type="text" name="email" placeholder="Add an email" />
                                 </div>
                                  <div class="custom-form d-none" id="csv-field">
                                      <label><span>Choose a CSV file:</span></label>
@@ -263,7 +262,8 @@
                               <input type="hidden" name="company_name" value="<%- company.company_name %>">
                               <input type="hidden" name="company_slug" value="<%- company.slug %>">
                               <input type="hidden" name="user_id" id="user_id" value="<%= currentUserData.user_id  %>" />
-                              <input type="submit" class="btn-survey-default btn-dark my-1" value="Update">
+                              <input type="submit" class="btn-survey-default btn-dark my-1" id="submit-button" value="Update">
+                              <p id="survey-message" class="text-danger d-none">One survey is ongoing, so now you can't update the survey.</p>
                            </div>
                         </form>
                         <div class="register-now frm-loading" style="display: none;">
@@ -406,11 +406,11 @@
 <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.min.js"></script>
 <script>
 // JavaScript code to disable previous dates
-// const datePicker = document.getElementById("todatePicker");
-// const today = new Date();
-// today.setDate(today.getDate() + 1); 
-// const minDate = today.toISOString().split('T')[0];
-// datePicker.setAttribute("min", minDate);
+const datePicker = document.getElementById("todatePicker");
+const today = new Date();
+today.setDate(today.getDate() + 1); 
+const minDate = today.toISOString().split('T')[0];
+datePicker.setAttribute("min", minDate);
 
 $('body').on('click', '.add-question', function(e){
    e.preventDefault();
@@ -670,23 +670,26 @@ $('#survey-form-submit').submit( function( event ) {
 //    });
 // });
 
-$("#sendreviewtags_invitation input").on({
-  focusout: function () {
-    var txt = this.value.trim(); // Trim whitespace from the input
+// $("#sendreviewtags_invitation input").on({
+//   focusout: function () {
+//     var txt = this.value.trim(); // Trim whitespace from the input
 
-    // Check if the maximum limit is not reached
-    if ( isValidEmail(txt) ) {
-      $("<span/>", { text: txt.toLowerCase(), insertBefore: this });
-      this.value = "";
-    }else{
-      this.value = "";
-    }
-  },
-  keyup: function (ev) {
-    // if: comma|enter (delimit more keyCodes with | pipe)
-    if (/[,;]/.test(String.fromCharCode(ev.which))) $(this).focusout();
-  },
-});
+//     // Check if the maximum limit is not reached
+//     if ( isValidEmail(txt) ) {
+//       $("<span/>", { text: txt.toLowerCase(), insertBefore: this });
+//       this.value = "";
+//     }else{
+//       this.value = "";
+//     }
+//   },
+//   keyup: function (ev) {
+//     // if: comma|enter (delimit more keyCodes with | pipe)
+//     if (/[,;]/.test(String.fromCharCode(ev.which))) $(this).focusout();
+//   },
+// });
+
+
+
 
 // Function to check if a string is a valid email
 function isValidEmail(email) {
@@ -709,4 +712,91 @@ console.log("rating_tags",rating_tags);
 </script>
 
 
+<script>
 
+$(document).ready(function() {
+  function decodeHtml(html) {
+    var txt = document.createElement("textarea");
+    txt.innerHTML = html;
+    return txt.value;
+  }
+  var tagss = '<%= jsonStringa%>';
+  console.log("tagasasass", tagss);
+
+      var decodedData = decodeHtml(tagss);
+      console.log("Decoded data:", decodedData);
+
+      let emailArrays;
+      try {
+        emailArrays = JSON.parse(decodedData);
+        console.log("Parsed email arrays:", emailArrays);
+      } catch (e) {
+        console.error("Error parsing JSON:", e);
+        emailArrays = [];
+      }
+
+      const emails = processEmails(emailArrays);
+      renderEmails(emails);
+
+  function processEmails(emailArrays) {
+    const allEmails = emailArrays.join(','); 
+    const emailList = allEmails.split(',').map(email => email.trim()).filter(email => email && isValidEmail(email));
+    return emailList;
+  }
+
+  function renderEmails(emails) {
+    const container = $('#sendreviewtags_invitation');
+    emails.forEach(email => {
+      $('<span/>', {
+        text: email.toLowerCase(),
+        class: 'email-tag'
+      })
+      .insertBefore(container.find('input'));
+    });
+  }
+
+  // Function to validate email format
+  function isValidEmail(email) {
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@(([^<>()\[\]\\.,;:\s@"]+\.)+[^<>()\[\]\\.,;:\s@"]{2,})$/i;
+    return re.test(email);
+  }
+
+  // Handle adding new emails
+  $('#sendreviewtags_invitation input').on({
+    focusout: function () {
+      var txt = this.value.trim();
+      if (isValidEmail(txt)) {
+        $('<span/>', {
+          text: txt.toLowerCase(),
+          class: 'email-tag'
+        })
+        .insertBefore(this);
+        this.value = "";
+      } else {
+        this.value = "";
+      }
+    },
+    keyup: function (ev) {
+      if (/[,;]/.test(String.fromCharCode(ev.which))) $(this).focusout();
+    }
+  });
+
+  // Remove email tag on click
+  $('#sendreviewtags_invitation').on('click', '.remove-email', function() {
+    $(this).parent().remove();
+  });
+});
+
+$(document).ready(function() {
+  const getsurveyval = '<%= getsurveyval%>'
+
+  if (getsurveyval.length > 0) {
+   //  $('#submit-button').prop('disabled', true);
+   //  $('#survey-message').removeClass('d-none');
+  } else {
+    $('#submit-button').prop('disabled', false);
+    $('#survey-message').addClass('d-none');
+  }
+});
+
+</script>
