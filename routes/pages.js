@@ -12488,6 +12488,8 @@ router.get('/myprofile', checkFrontEndLoggedIn, async (req, res) => {
 
 //FrontEnd profile-dashboard page
 router.get('/profile-dashboard', checkFrontEndLoggedIn, async (req, res) => {
+    console.log("fgfgfgh");
+    
     try {
         const encodedUserData = req.cookies.user;
         const currentUserData = JSON.parse(encodedUserData);
