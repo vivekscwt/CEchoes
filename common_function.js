@@ -2830,7 +2830,7 @@ async function reviewTagsCountByCompanyID(companyId) {
   `;
   try {
     const get_popular_company_query_result = await query(get_popular_company_query);
-    console.log("get_popular_company_query_result", get_popular_company_query_result);
+    //console.log("get_popular_company_query_result", get_popular_company_query_result);
     
     // Append the country shortname to the category name
     const popularCategories = get_popular_company_query_result.map(row => {
@@ -2893,7 +2893,7 @@ async function getPopularCategories(country) {
 
   try {
     const get_popular_company_query_result = await query(get_popular_company_query, queryParams);
-    console.log("get_popular_company_query_result", get_popular_company_query_result);
+    //console.log("get_popular_company_query_result", get_popular_company_query_result);
     
     // Append the country shortname to the category name
     const popularCategories = get_popular_company_query_result.map(row => {
