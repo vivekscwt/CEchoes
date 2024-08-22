@@ -13488,7 +13488,7 @@ exports.editDiscussions = async (req, res) => {
                                                         <table border="0" cellpadding="4" cellspacing="0" width="90%">
                                                           <tr>
                                                             <td colspan="2">
-                                                            <strong>Hello ${full_name},</strong>
+                                                            <strong>Hello ${fullName},</strong>
                                                             <p style="font-size:15px; line-height:20px">Your comment for the discussion has been approved. Now you can see your comment on the <a href="${process.env.MAIN_URL}discussion-details/${discussion_id}">here</a>.</p>
                                                             </td>
                                                           </tr>
@@ -13607,7 +13607,7 @@ exports.editDiscussions = async (req, res) => {
                                                         <table border="0" cellpadding="4" cellspacing="0" width="90%">
                                                           <tr>
                                                             <td colspan="2">
-                                                            <strong>Hello ${full_name},</strong>
+                                                            <strong>Hello ${authorFullName},</strong>
                                                             <p style="font-size:15px; line-height:20px">Comment for the ${content} discussion has been approved. Now you can see the discusion comment on the <a href="${process.env.MAIN_URL}discussion-details/${discussion_id}">here</a>.</p>
                                                             </td>
                                                           </tr>
