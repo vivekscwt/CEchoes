@@ -5134,10 +5134,13 @@ router.get('/matching-query', checkCookieValue, async (req, res) => {
 
     const matchingDiscussions = [];
 
+    const normalizedCompanyTags = companyTags.map(tag => tag.toLowerCase());
+    
     discussions.forEach(discussion => {
-        const discussionTags = JSON.parse(discussion.tags || '[]');
-        const hasMatchingTags = companyTags.some(tag => discussionTags.includes(tag));
-
+        const discussionTags = JSON.parse(discussion.tags || '[]').map(tag => tag.toLowerCase());
+        
+        const hasMatchingTags = normalizedCompanyTags.some(tag => discussionTags.includes(tag));
+    
         if (hasMatchingTags) {
             matchingDiscussions.push(discussion);
         }
