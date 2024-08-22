@@ -5143,6 +5143,9 @@ router.get('/matching-query', checkCookieValue, async (req, res) => {
         }
     });
 
+    console.log("matchingDiscussions",matchingDiscussions);
+    
+
     try {
         res.render('front-end/matching-query', {
             menu_active_id: 'Similar Queries',
