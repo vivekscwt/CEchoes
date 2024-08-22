@@ -2540,8 +2540,8 @@ exports.createCompany = async (req, res) => {
 // }
 
 exports.editCompany = async (req, res) => {
-    //console.log(req.body);
-    //console.log('editCompany',req.files);
+    console.log("editCompany",req.body);
+    console.log('editCompanyfile',req.files);
     //return false;
     const companyID = req.body.company_id;
     const currentDate = new Date();
