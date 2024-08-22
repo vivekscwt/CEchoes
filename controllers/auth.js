@@ -7445,17 +7445,17 @@ exports.reviewInvitation = async (req, res) => {
 }
 
 
-const transporter = nodemailer.createTransport({
-    service: 'gmail', 
-    auth: {
-        user: process.env.MAIL_USER,
-        pass: process.env.MAIL_PASSWORD
-    }
-});
+// const transporter = nodemailer.createTransport({
+//     service: 'gmail', 
+//     auth: {
+//         user: process.env.MAIL_USER,
+//         pass: process.env.MAIL_PASSWORD
+//     }
+// });
 
 
 const sendIndividualEmail = ({ to, subject, html }) => {
-    return transporter.sendMail({
+    return mdlconfig.transporter.sendMail({
         from: process.env.MAIL_USER,
         to,
         subject,
