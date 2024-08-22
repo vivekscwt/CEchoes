@@ -5007,8 +5007,14 @@ router.get('/matching-query', checkCookieValue, async (req, res) => {
     var companytagquery = `SELECT * FROM duscussions_company_tags WHERE company_id="${claimed_comp_id}"`;
     var companytagval = await queryAsync(companytagquery);
     console.log("companytagval", companytagval);
-    const companyTags = JSON.parse(companytagval[0].tags);
-    console.log("companyTags", companyTags);
+
+    if (companytagval && companytagval[0] && companytagval[0].tags) {
+        var companyTags = JSON.parse(companytagval[0].tags);
+    } else {
+        console.error("No tags found for the company.");
+    }
+    // const companyTags = JSON.parse(companytagval[0].tags);
+    // console.log("companyTags", companyTags);
 
     var similarquery = `
         SELECT
