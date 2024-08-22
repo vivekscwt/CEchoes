@@ -4981,6 +4981,100 @@ router.get('/discussion/:getcountryname', checkCookieValue, async (req, res) => 
 });
 
 
+// router.get('/matching-query', checkCookieValue, async (req, res) => {
+//     let currentUserData = JSON.parse(req.userData);
+//     console.log("currentUserData", currentUserData);
+
+//     var claimed_comp_id = currentUserData.claimed_comp_id;
+//     console.log("claimed_comp_id", claimed_comp_id);
+
+//     let country_name = req.cookies.countryName || 'India';
+//     let country_code = req.cookies.countryCode || 'IN';
+
+//     console.log("country_names", country_name);
+//     console.log("country_codes", country_code);
+
+//     var [globalPageMeta, getAllLatestDiscussion, getAllPopularDiscussion, getAllDiscussions, getAllViewedDiscussion, getPopularTags, getCountries] = await Promise.all([
+//         comFunction2.getPageMetaValues('global'),
+//         comFunction2.getAllLatestDiscussion(20),
+//         comFunction2.getAllPopularDiscussion(),
+//         comFunction2.getAllDiscussion(),
+//         comFunction2.getAllViewedDiscussion(),
+//         comFunction2.getPopularTags(20),
+//         comFunction.getCountries(),
+//     ]);
+
+//     var companytagquery = `SELECT * FROM duscussions_company_tags WHERE company_id="${claimed_comp_id}"`;
+//     var companytagval = await queryAsync(companytagquery);
+//     console.log("companytagval", companytagval);
+
+//     if (companytagval && companytagval[0] && companytagval[0].tags) {
+//         var companyTags = JSON.parse(companytagval[0].tags);
+//     } else {
+//         console.error("No tags found for the company.");
+//     }
+//     // const companyTags = JSON.parse(companytagval[0].tags);
+//     // console.log("companyTags", companyTags);
+
+//     var similarquery = `
+//         SELECT
+//         discussions.*,
+//         u.first_name,
+//         u.last_name,
+//         COALESCE(comments.total_comments, 0) as total_comments,
+//         COALESCE(views.total_views, 0) as total_views
+//         FROM discussions
+//         LEFT JOIN users u ON discussions.user_id = u.user_id
+//         LEFT JOIN (
+//         SELECT discussion_id, COUNT(*) as total_comments
+//         FROM discussions_user_response
+//         GROUP BY discussion_id
+//         ) comments ON discussions.id = comments.discussion_id
+//         LEFT JOIN (
+//         SELECT discussion_id, COUNT(*) as total_views
+//         FROM discussions_user_view
+//         GROUP BY discussion_id
+//         ) views ON discussions.id = views.discussion_id
+//         WHERE discussions.discussion_status = 1
+//         `
+//     var discussions = await queryAsync(similarquery);
+
+//     const matchingDiscussions = [];
+
+//     discussions.forEach(discussion => {
+//         const discussionTags = JSON.parse(discussion.tags);
+//         const hasMatchingTags = companyTags.some(tag => discussionTags.includes(tag));
+
+//         if (hasMatchingTags) {
+//             matchingDiscussions.push(discussion);
+//         }
+//     });
+//     // console.log("Matching discussions:", matchingDiscussions);
+//     // console.log("Matching discussions count:", matchingDiscussions.length);
+//     // console.log("getAllLatestDiscussion", getAllLatestDiscussion);
+//     // console.log("getPopularTags", getPopularTags);
+
+//     try {
+//         res.render('front-end/matching-query', {
+//             menu_active_id: 'Similar Queries',
+//             page_title: 'Similar Queries',
+//             currentUserData,
+//             globalPageMeta: globalPageMeta,
+//             AllLatestDiscussion: getAllLatestDiscussion,
+//             AllPopularDiscussion: getAllPopularDiscussion,
+//             AllDiscussions: getAllDiscussions,
+//             AllViewedDiscussion: getAllViewedDiscussion,
+//             PopularTags: getPopularTags,
+//             getCountries: getCountries,
+//             matchingDiscussions: matchingDiscussions
+
+//         });
+//     } catch (err) {
+//         console.error(err);
+//         res.status(500).send('An error occurred');
+//     }
+// });
+
 router.get('/matching-query', checkCookieValue, async (req, res) => {
     let currentUserData = JSON.parse(req.userData);
     console.log("currentUserData", currentUserData);
@@ -5008,13 +5102,12 @@ router.get('/matching-query', checkCookieValue, async (req, res) => {
     var companytagval = await queryAsync(companytagquery);
     console.log("companytagval", companytagval);
 
+    var companyTags = [];
     if (companytagval && companytagval[0] && companytagval[0].tags) {
-        var companyTags = JSON.parse(companytagval[0].tags);
+        companyTags = JSON.parse(companytagval[0].tags);
     } else {
-        console.error("No tags found for the company.");
+        console.error("No tags found for the company. Using an empty tag list.");
     }
-    // const companyTags = JSON.parse(companytagval[0].tags);
-    // console.log("companyTags", companyTags);
 
     var similarquery = `
         SELECT
@@ -5042,17 +5135,13 @@ router.get('/matching-query', checkCookieValue, async (req, res) => {
     const matchingDiscussions = [];
 
     discussions.forEach(discussion => {
-        const discussionTags = JSON.parse(discussion.tags);
+        const discussionTags = JSON.parse(discussion.tags || '[]');
         const hasMatchingTags = companyTags.some(tag => discussionTags.includes(tag));
 
         if (hasMatchingTags) {
             matchingDiscussions.push(discussion);
         }
     });
-    // console.log("Matching discussions:", matchingDiscussions);
-    // console.log("Matching discussions count:", matchingDiscussions.length);
-    // console.log("getAllLatestDiscussion", getAllLatestDiscussion);
-    // console.log("getPopularTags", getPopularTags);
 
     try {
         res.render('front-end/matching-query', {
@@ -5067,13 +5156,13 @@ router.get('/matching-query', checkCookieValue, async (req, res) => {
             PopularTags: getPopularTags,
             getCountries: getCountries,
             matchingDiscussions: matchingDiscussions
-
         });
     } catch (err) {
         console.error(err);
         res.status(500).send('An error occurred');
     }
 });
+
 
 //Discussion page
 router.get('/translate', async (req, res) => {
