@@ -3500,7 +3500,7 @@ async function getAllComplaintsByUserId(user_id) {
 }
 
 //Function to update complaint status to complaint table
-async function updateComplaintStatus(complaint_id, status) {
+async function updateComplaintStatus(complaint_id, status, message) {
 
   const currentDate = new Date();
   const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ');
