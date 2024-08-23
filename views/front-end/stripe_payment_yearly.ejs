@@ -373,6 +373,10 @@ document.addEventListener('DOMContentLoaded', function() {
         event.preventDefault();
         document.querySelector('button').disabled = true;
 
+		const memberCountInput = document.getElementById('memberCount');
+		var addonUsersCount = memberCountInput.value;
+		console.log('Add-on Users Count on Load:', addonUsersCount);
+
         const { token, error } = await stripe.createToken(cardNumber);
         console.log("Token:", token);
 
@@ -380,13 +384,13 @@ document.addEventListener('DOMContentLoaded', function() {
             errorMessage.textContent = error.message;
             document.querySelector('button').disabled = false;
         } else {
-            await stripeTokenHandler(token);
+            await stripeTokenHandler(token,addonUsersCount);
         }
     });
-	var addonUsersCount = document.getElementById('memberCount').value;
-	console.log('Add-on Users Count:', addonUsersCount);
+	// var addonUsersCount = document.getElementById('memberCount').value;
+	// console.log('Add-on Users Count:', addonUsersCount);
 
-    async function stripeTokenHandler(token) {
+    async function stripeTokenHandler(token,addonUsersCount) {
         const formData = {
             token: token.id,
             userId: '<%= currentUserData.user_id %>',
@@ -398,8 +402,8 @@ document.addEventListener('DOMContentLoaded', function() {
             zip: document.getElementById('zip').value,
             planId: '<%= planID %>',          
 			billingCycle: 'yearly',
-            memberCount: '<%= memberCount %>',
-			// memberCount: addonUsersCount
+            //memberCount: '<%= memberCount %>',
+			memberCount: addonUsersCount
         };
 
         try {

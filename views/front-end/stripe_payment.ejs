@@ -303,8 +303,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const stripe = Stripe('pk_test_51Pmx4bE9RgUxhHlihWvQ6tCKKz2AeuVE4X2fBtEFHHnKTu4mgcFHPF1rpYDjwgn0vxlCfPEbiQTLy6JBelzwiTJw00p4tIO4NZ');
     const elements = stripe.elements();
 
-	var addonUsersCount = document.getElementById('memberCount').value;
-	console.log('Add-on Users Count:', addonUsersCount);
+	// var addonUsersCount = document.getElementById('memberCount').value;
+	// console.log('Add-on Users Count:', addonUsersCount);
 
     // Create and mount the card number Element
     const cardNumber = elements.create('cardNumber', {
@@ -375,6 +375,10 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('paymentForm').addEventListener('submit', async function(event) {
         event.preventDefault();
         document.querySelector('button').disabled = true;
+		
+		const memberCountInput = document.getElementById('memberCount');
+		var addonUsersCount = memberCountInput.value;
+		console.log('Add-on Users Count on Load:', addonUsersCount);
 
         const { token, error } = await stripe.createToken(cardNumber);
         console.log("Token:", token);
@@ -383,13 +387,13 @@ document.addEventListener('DOMContentLoaded', function() {
             errorMessage.textContent = error.message;
             document.querySelector('button').disabled = false;
         } else {
-            await stripeTokenHandler(token);
+            await stripeTokenHandler(token,addonUsersCount);
         }
     });
 
 
 
-    async function stripeTokenHandler(token) {
+    async function stripeTokenHandler(token, addonUsersCount) {
         const formData = {
             token: token.id,
             userId: '<%= currentUserData.user_id %>',
@@ -401,8 +405,8 @@ document.addEventListener('DOMContentLoaded', function() {
             zip: document.getElementById('zip').value,
             planId: '<%= planID %>',          
 			billingCycle: 'monthly',
-            memberCount: '<%= memberCount %>',
-			// memberCount: addonUsersCount
+            //memberCount: '<%= memberCount %>',
+			memberCount: addonUsersCount
         };
 
         try {

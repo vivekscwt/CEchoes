@@ -8112,7 +8112,19 @@ function getUserCurrency(userCountry) {
 
 async function getSubscribedUsers(userId){
   try {
-    const querys = `SELECT order_history.*, plan_management.name as plan_name FROM order_history LEFT JOIN plan_management ON order_history.plan_id = plan_management.id WHERE user_id = "${userId}" AND payment_status= "succeeded"`;
+    // const querys = `SELECT order_history.*, plan_management.name as plan_name FROM order_history LEFT JOIN plan_management ON order_history.plan_id = plan_management.id WHERE user_id = "${userId}" AND payment_status= "succeeded"`;
+    const querys = `
+    SELECT order_history.*, 
+           plan_management.name as plan_name, 
+           CASE 
+             WHEN order_history.subscription_duration = 'month' THEN 'monthly' 
+             WHEN order_history.subscription_duration = 'year' THEN 'yearly' 
+              WHEN order_history.subscription_duration = 'daily' THEN 'daily'
+             ELSE 'other' 
+           END as subscription_duration 
+    FROM order_history 
+    LEFT JOIN plan_management ON order_history.plan_id = plan_management.id 
+    WHERE user_id = "${userId}" AND payment_status = "succeeded"`;
     const querys_val = await query(querys);
 
     if(querys_val.length>0){
