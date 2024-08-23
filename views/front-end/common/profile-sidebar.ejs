@@ -75,6 +75,7 @@
                 <li><a href="/myprofile"><i class="fa-solid fa-user"></i>Profile</a></li>
                 <% if(userMeta && userMeta.claimed_comp_id) { %>
                      <li><a href="/company-dashboard/<%= userMeta.slug %>"><i class="fa-solid fa-briefcase"></i>Organization Dashboard </a></li>
+                     <li><a href="/child-company/<%= userMeta.slug %>"><i class="fa-solid fa-briefcase"></i>Child Organization</a></li>
                   <% } %>
 
                   <% if (getManagerData && getManagerData.length > 0 && userMeta.claimed_comp_id == null) { %>

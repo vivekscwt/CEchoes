@@ -85,6 +85,7 @@ router.put('/edit-company-data',upload.fields([
     { name: 'cover_img', maxCount: 1 },
 ]), authController.editCompany);
 
+router.post('/create-child-company', upload.single('logo'), authController.createChildCompany);
 
 router.post('/company-bulk-upload', csvupload.single('company_file'), authController.companyBulkUpload);
 router.post('/delete-company', authController.deleteCompany);

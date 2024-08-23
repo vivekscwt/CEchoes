@@ -6266,6 +6266,46 @@ router.get('/company-dashboard/:slug', checkClientClaimedCompany, async (req, re
     }
 });
 
+
+
+router.get('/child-company/:slug',checkClientClaimedCompany, async (req, res) => {
+    try {
+        console.log("/child-company");
+        
+        const encodedUserData = req.cookies.user;
+        const currentUserData = JSON.parse(encodedUserData);
+
+        console.log("encodedUserData",encodedUserData);
+        console.log("currentUserData",currentUserData);
+        
+
+        // Fetch all the required data asynchronously
+        const [company_all_categories, getCountries, getParentCompany, globalPageMeta] = await Promise.all([
+            //comFunction.getCompanyCategory(),
+            comFunction2.getCompanyCategoriess(),
+            comFunction.getCountries(),
+            comFunction.getParentCompany(),
+            comFunction2.getPageMetaValues('global')
+
+        ]);
+        // console.log("getCountries", getCountries);
+        // console.log("getParentCompany", getParentCompany);
+
+        res.render('front-end/child-company', {
+            menu_active_id: 'company',
+            globalPageMeta,
+            page_title: 'Add child Organization',
+            currentUserData,
+            company_categories: company_all_categories,
+            getCountries: getCountries,
+            getParentCompany: getParentCompany
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('An error occurred');
+    }
+});
+
 //company dashboard management Page 
 router.get('/company-profile-management/:slug', checkClientClaimedCompany, async (req, res) => {
     const encodedUserData = req.cookies.user;
