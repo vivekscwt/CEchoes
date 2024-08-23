@@ -16727,7 +16727,7 @@ exports.externalRegistration = async (req, res) => {
 
             // Create company logic
             // Check if company exists
-            if (req.body.parent_id == 0) {
+            if (req.body.parent_id == '0') {
                 const companyQuery = `SELECT * FROM company WHERE company_name = ? AND main_address_country = ? `;
                 const companyValue = await query(companyQuery, [req.body.company_name, req.body.main_address_country]);
                 if (companyValue.length > 0) {
