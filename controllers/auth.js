@@ -16728,6 +16728,8 @@ exports.externalRegistration = async (req, res) => {
             // Create company logic
             // Check if company exists
             if (req.body.parent_id == '0') {
+                console.log("vvvvv");
+                
                 const companyQuery = `SELECT * FROM company WHERE company_name = ? AND main_address_country = ? `;
                 const companyValue = await query(companyQuery, [req.body.company_name, req.body.main_address_country]);
                 if (companyValue.length > 0) {
@@ -16740,6 +16742,8 @@ exports.externalRegistration = async (req, res) => {
 
             comFunction2.generateUniqueSlug(req.body.company_name, async (error, companySlug) => {
                 if (error) {
+                    console.log("error slug");
+                    
                     console.log('Err: ', error.message);
                     return res.status(500).json({ status: 'err', data: '', message: 'Error generating company slug' });
                 } else {
@@ -16754,6 +16758,7 @@ exports.externalRegistration = async (req, res) => {
                     const insertQuery = 'INSERT INTO company (user_created_by, company_name, heading, logo, about_company, comp_phone, comp_email, comp_registration_id, status, trending, created_date, updated_date, tollfree_number, main_address, main_address_pin_code, address_map_url, main_address_country, main_address_state, main_address_city, verified, paid_status, slug, parent_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
                     db.query(insertQuery, insertValues, async (err, results, fields) => {
                         if (err) {
+                            console.log("company errror");
                             return res.status(500).json({ status: 'err', data: '', message: 'An error occurred while processing your request' });
                         } else {
                             console.log("company results", results);
