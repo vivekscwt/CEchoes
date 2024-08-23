@@ -16758,7 +16758,7 @@ exports.externalRegistration = async (req, res) => {
                     const insertQuery = 'INSERT INTO company (user_created_by, company_name, heading, logo, about_company, comp_phone, comp_email, comp_registration_id, status, trending, created_date, updated_date, tollfree_number, main_address, main_address_pin_code, address_map_url, main_address_country, main_address_state, main_address_city, verified, paid_status, slug, parent_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
                     db.query(insertQuery, insertValues, async (err, results, fields) => {
                         if (err) {
-                            console.log("company errror");
+                            console.error("Company error:", err);
                             return res.status(500).json({ status: 'err', data: '', message: 'An error occurred while processing your request' });
                         } else {
                             console.log("company results", results);
