@@ -41,8 +41,7 @@
                     <!--begin::Content-->
                     <div id="kt_account_profile_details" class="collapse show">
                         <!--begin::Form-->
-                        <form id="kt_account_profile_details_form" class="form" action="/auth/create-company" onsubmit="ensureParentId()"
-                            method="POST" enctype="multipart/form-data">
+                        <form id="kt_account_profile_details_form" class="form" action="" method="POST" enctype="multipart/form-data">
                             <!--begin::Card body-->
                             <div class="card-body border-top p-9">
                                 <!--begin::Input group-->
@@ -229,14 +228,20 @@
                                         <select name="main_address_country" id="main_address_country"
                                             class="form-control form-control-lg form-control-solid" required>
                                             <option value="" disabled selected>Select a country</option>
-                                            <!-- Default placeholder -->
-                                            <% getCountries.forEach(function(country) { %>
+                                            <!-- Filtered countries -->
+                                            <% 
+                                            const filteredCountries = getCountries.filter(country => 
+                                                ['India', 'United States', 'United Kingdom', 'Japan'].includes(country.name)
+                                            ); 
+                                            filteredCountries.forEach(function(country) { 
+                                            %>
                                                 <option value="<%= country.shortname %>">
                                                     <%= country.name %>
                                                 </option>
-                                                <% }); %>
+                                            <% }); %>
                                         </select>
                                     </div>
+                                    
                                 </div>
 
                                 <div class="row mb-6">
@@ -413,13 +418,10 @@
                                     <!--begin::Col-->
                                     <div class="col-lg-8 fv-row">
                                         <select name="parent_id" class="form-control form-control-lg form-control-solid" required>
-                                            <option value="0" selected>Select as parent company</option>
-                                            <% getParentCompany.forEach(function(company) { %>
-                                                <option value="<%= company.ID %>">
-                                                    <%= company.company_name + "-" + company.main_address_country %> <!-- Concatenated display text -->
-                                                </option>
-                                            <% }); %>
-                                        </select>
+                                            <option value="<%= getParentCompany[0].ID %>"selected>
+                                                <%= getParentCompany[0].company_name + " - " + getParentCompany[0].main_address_country %>
+                                            </option>
+                                        </select>                                       
                                     </div>
                                     <!--end::Col-->
                                 </div>
@@ -443,6 +445,81 @@
                 <!--end::Basic info-->
 
                 <!--end::Modals-->
+
+                <% if (company.parent_id==0) { %>
+                    <!--begin::Another group for editing additional organization details-->
+                    <div class="card mb-5 mb-xl-10">
+                        <!--begin::Card header-->
+                        <div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse" data-bs-target="#kt_additional_organization_details" aria-expanded="true" aria-controls="kt_additional_organization_details">
+                            <!--begin::Card title-->
+                            <div class="card-title m-0">
+                                <h3 class="fw-bolder m-0">Others Organizations</h3>
+                            </div>
+                            <!--end::Card title-->
+                        </div>
+                        <!--end::Card header-->
+                        <!--begin::Card body-->
+                        <div id="kt_additional_organization_details" class="collapse">
+                            <div class="card-body">
+                                <!--begin::Form-->
+                                <form id="child-company">
+                                    <div class="card-body border-top p-9">
+                                        <!-- Loop through each child company -->
+                                        <% getChildCompany.forEach(function(company, index) { %>
+                                        <div class="row mb-6">
+                                            <!-- Field 1 -->
+                                            <!--begin::Label-->
+                                            <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                                <span class="">Name</span>
+                                            </label>
+                                            <!--end::Label-->
+                                            <!--begin::Col-->
+                                            <div class="col-lg-8 fv-row">
+                                                <input type="text" name="company_name_<%= index %>" class="form-control form-control-lg form-control-solid" value="<%= company.company_name %>"/>
+                                            </div>
+                                            <!--end::Col-->
+                
+                                            <!-- Field 2 -->
+                                            <!--begin::Label-->
+                                            <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                                <span class="">Address</span>
+                                            </label>
+                                            <!--end::Label-->
+                                            <!--begin::Col-->
+                                            <div class="col-lg-8 fv-row">
+                                                <input type="text" name="company_address_<%= index %>" class="form-control form-control-lg form-control-solid" value="<%= company.main_address + ' ' + (company.country_name || '') %>"/>
+                                            </div>
+                                            
+                                            <!--end::Col-->
+                
+                                            <!-- Field 3 -->
+                                            <!--begin::Label-->
+                                            <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                                <span class="">Claimed User</span>
+                                            </label>
+                                            <!--end::Label-->
+                                            <!--begin::Col-->
+                                            <div class="col-lg-8 fv-row">
+                                                <input type="text" name="claimed_user_<%= index %>" class="form-control form-control-lg form-control-solid" value="<%= company.claimed_by_user %>"/>
+                                            </div>
+                                            <!--end::Col-->
+                
+                                            <!-- Edit Button -->
+                                            <!--begin::Col-->
+                                            <div class="col-lg-12 d-flex justify-content-end mt-3">
+                                                <a href="/edit-company/<%= company.ID %>" class="btn btn-primary">Edit Company</a>
+                                            </div>
+                                            <!--end::Col-->
+                                        </div>
+                                        <% }); %>
+                                    </div>
+                                </form>
+                                <!--end::Form-->
+                            </div>
+                        </div>
+                        <!--end::Card body-->
+                    </div>
+                <% } %>
             </div>
             <!--end::Container-->
         </div>
@@ -469,6 +546,9 @@
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
         <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
         <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script>
             $('#select_country').change(function () {
                 $('#select_state').empty();
@@ -601,71 +681,73 @@
                         );
 
                         // Handle form submit
-                        submitButton.addEventListener('click', function (e) {
-                            e.preventDefault();
+                        // submitButton.addEventListener('click', function (e) {
+                        //     e.preventDefault();
 
-                            validation.validate().then(function (status) {
-                                if (status == 'Valid') {
-                                    //$('#kt_account_profile_details_form').submit();
-                                    var formElement = document.getElementById('kt_account_profile_details_form');
-                                    var formData = new FormData(formElement);
+                        //     validation.validate().then(function (status) {
+                        //         if (status == 'Valid') {
+                        //             //$('#kt_account_profile_details_form').submit();
+                        //             var formElement = document.getElementById('kt_account_profile_details_form');
+                        //             var formData = new FormData(formElement);
 
-                                    console.log("formData",formData);
+                        //             console.log("formData",formData);
 
-                                    if (!formData.has('parent_id')) {
-                                    formData.append('parent_id', '0'); // Default value
-                                    }
-                                    $.ajax({
-                                        url: '/auth/create-company', // URL for your API endpoint
-                                        type: 'POST',
-                                        data: formData,
-                                        processData: false, // Prevent jQuery from processing the data
-                                        contentType: false, // Let the browser set the content type
-                                        success: function (data) {
-                                            if (data.status == 'ok') {
-                                                Swal.fire({
-                                                    text: data.message,
-                                                    icon: "success",
-                                                    buttonsStyling: false,
-                                                    confirmButtonText: "Ok, got it!",
-                                                    customClass: {
-                                                        confirmButton: "btn btn-primary"
-                                                    }
-                                                }).then(function (result) {
-                                                    if (result.isConfirmed) {
-                                                        window.location.href = "/edit-company/" + data.data;
-                                                    }
-                                                });
-                                            } else {
-                                                Swal.fire({
-                                                    text: data.message,
-                                                    icon: "error",
-                                                    buttonsStyling: false,
-                                                    confirmButtonText: "Ok, got it!",
-                                                    customClass: {
-                                                        confirmButton: "btn btn-primary"
-                                                    }
-                                                });
-                                            }
-                                        },
-                                        error: function (xhr, status, error) {
-                                            // Handle any errors that occur during the request
-                                            console.log(error);
-                                        }
-                                    });
-                                } else {
-                                    swal.fire({
-                                        text: "Sorry, looks like there are some errors detected, please try again.",
-                                        icon: "error",
-                                        buttonsStyling: false,
-                                        confirmButtonText: "Ok, got it!",
-                                        customClass: {
-                                            confirmButton: "btn fw-bold btn-light-primary"
-                                        }
-                                    });
-                                }
-                            });
-                        });
+                        //             if (!formData.has('parent_id')) {
+                        //             formData.append('parent_id', '0'); // Default value
+                        //             }
+                        //             $.ajax({
+                        //                 url: '/auth/create-child-company', // URL for your API endpoint
+                        //                 type: 'POST',
+                        //                 data: formData,
+                        //                 processData: false, // Prevent jQuery from processing the data
+                        //                 contentType: false, // Let the browser set the content type
+                        //                 success: function (data) {
+                        //                     if (data.status == 'ok') {
+                        //                         // Swal.fire({
+                        //                         //     text: data.message,
+                        //                         //     icon: "success",
+                        //                         //     buttonsStyling: false,
+                        //                         //     confirmButtonText: "Ok, got it!",
+                        //                         //     customClass: {
+                        //                         //         confirmButton: "btn btn-primary"
+                        //                         //     }
+                        //                         // })
+                        //                         alert("company added successfully")
+                        //                         // .then(function (result) {
+                        //                         //     if (result.isConfirmed) {
+                        //                         //         window.location.href = "/edit-company/" + data.data;
+                        //                         //     }
+                        //                         // });
+                        //                     } else {
+                        //                         Swal.fire({
+                        //                             text: data.message,
+                        //                             icon: "error",
+                        //                             buttonsStyling: false,
+                        //                             confirmButtonText: "Ok, got it!",
+                        //                             customClass: {
+                        //                                 confirmButton: "btn btn-primary"
+                        //                             }
+                        //                         });
+                        //                     }
+                        //                 },
+                        //                 error: function (xhr, status, error) {
+                        //                     // Handle any errors that occur during the request
+                        //                     console.log(error);
+                        //                 }
+                        //             });
+                        //         } else {
+                        //             swal.fire({
+                        //                 text: "Sorry, looks like there are some errors detected, please try again.",
+                        //                 icon: "error",
+                        //                 buttonsStyling: false,
+                        //                 confirmButtonText: "Ok, got it!",
+                        //                 customClass: {
+                        //                     confirmButton: "btn fw-bold btn-light-primary"
+                        //                 }
+                        //             });
+                        //         }
+                        //     });
+                        // });
 
                     }
 
@@ -748,6 +830,8 @@ var countryId;
 $(document).ready(function() {
     $('#main_address_country').on('change', function() {
         var country = $(this).val(); 
+        console.log("countryval",country);
+        
 
         $.ajax({
             url: '/getCountryIdByShortName',
@@ -816,11 +900,67 @@ $(document).ready(function() {
 
     console.log("selectedCountry",selectedCountry);
 
+
+
     try {
       const response = await fetch(`/categories/${selectedCountry}`); // Assuming your backend API endpoint
       const html = await response.text();
 
       $('#categoryTree').html(html); // Replace content of categoryTree div with HTML received
+
+      
+    $.ajax({
+            url: '/getCountryIdByShortName',
+            method: 'GET',
+            data: { countryShortName: selectedCountry },
+            success: function(response) {
+                console.log("main_address_countryresponse",response);
+                
+                var countryId = response.countryId; 
+                fetchStatesByCountry(countryId); // Fetch states when country is selected
+            },
+            error: function(err) {
+                console.error('Error fetching country ID:', err);
+            }
+        });
+
+    function fetchStatesByCountry(countryId) {
+        $.ajax({
+            url: '/getstatebyCountries', 
+            method: 'GET',
+            data: { country_ID: countryId }, 
+            success: function(response) {
+                populateStatesDropdown(response);
+            },
+            error: function(err) {
+                console.error('Error fetching states:', err);
+            }
+        });
+    }
+
+    function populateStatesDropdown(states) {
+    var $stateDropdown = $('#state');
+
+    // Clear existing options from the state dropdown
+    $stateDropdown.empty();
+
+    // Add a default option
+    $stateDropdown.append($('<option>', {
+        value: '',
+        text: 'Select State',
+        disabled: 'disabled',
+        selected: 'selected'
+    }));
+
+    // Populate the state dropdown with fetched states
+    states.forEach(function(state) {
+        $stateDropdown.append($('<option>', {
+            value: state.id,
+            text: state.name
+        }));
+    });
+}
+
     } catch (error) {
       console.error('Error fetching categories:', error);
       // Handle error display
@@ -832,3 +972,33 @@ $(document).ready(function() {
 });
 
         </script>
+
+
+<script>
+    $(document).ready(function () {
+        $('#kt_account_profile_details_form').on('submit', function (e) {
+            e.preventDefault(); // Prevent the default form submission
+
+            var formData = new FormData(this); // Create a FormData object from the form
+
+            $.ajax({
+                url: '/auth/create-child-company', // Your form action URL
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    // Assuming the response is JSON and contains a 'message' field
+                    if (response.status === 'ok') {
+                        alert(response.message); // Show an alert with the response message
+                    } else {
+                        alert('Something went wrong. Please try again.');
+                    }
+                },
+                error: function () {
+                    alert('An error occurred while submitting the form.');
+                }
+            });
+        });
+    });
+</script>

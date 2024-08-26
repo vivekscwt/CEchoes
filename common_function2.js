@@ -8147,7 +8147,7 @@ async function getCompanyCategoriess(country) {
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE
     });
-    console.log("countryfse",country);
+    //console.log("countryfse",country);
 
     // Query to fetch categories and their associated country_ids
     const [categories] = await connection.query(`
@@ -8158,7 +8158,7 @@ async function getCompanyCategoriess(country) {
       GROUP BY category.ID
     `);
 
-    console.log("categoriessss", categories);
+   // console.log("categoriessss", categories);
     connection.end();
 
     // Build category tree structure

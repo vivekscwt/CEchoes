@@ -6270,26 +6270,35 @@ router.get('/company-dashboard/:slug', checkClientClaimedCompany, async (req, re
 
 router.get('/child-company/:slug',checkClientClaimedCompany, async (req, res) => {
     try {
-        console.log("/child-company");
+        console.log("/child-companyGRGG");
         
         const encodedUserData = req.cookies.user;
         const currentUserData = JSON.parse(encodedUserData);
 
-        console.log("encodedUserData",encodedUserData);
         console.log("currentUserData",currentUserData);
-        
+        console.log("req.params.slug",req.params.slug);
 
-        // Fetch all the required data asynchronously
-        const [company_all_categories, getCountries, getParentCompany, globalPageMeta] = await Promise.all([
+        const compidquery = `SELECT ID FROM company WHERE slug="${req.params.slug}"`;
+        const compidval = await queryAsync(compidquery);
+        var compid = compidval[0].ID;
+        console.log("compid",compid);
+
+        const [company_all_categories, getCountries, getownparentcomp, globalPageMeta, getChildCompany, company] = await Promise.all([
             //comFunction.getCompanyCategory(),
             comFunction2.getCompanyCategoriess(),
             comFunction.getCountries(),
-            comFunction.getParentCompany(),
-            comFunction2.getPageMetaValues('global')
-
+            //comFunction.getParentCompany(),
+            comFunction.getownparentcomp(compid),
+            comFunction2.getPageMetaValues('global'),
+            //comFunction.getownparentcomp(compid)
+            comFunction2.getChildCompany(compid),
+            comFunction.getCompany(compid),
         ]);
-        // console.log("getCountries", getCountries);
-        // console.log("getParentCompany", getParentCompany);
+
+        
+
+        //console.log("getCountries", getCountries);
+        // console.log("getownparentcomp", getownparentcomp);
 
         res.render('front-end/child-company', {
             menu_active_id: 'company',
@@ -6298,7 +6307,9 @@ router.get('/child-company/:slug',checkClientClaimedCompany, async (req, res) =>
             currentUserData,
             company_categories: company_all_categories,
             getCountries: getCountries,
-            getParentCompany: getParentCompany
+            getParentCompany: getownparentcomp,
+            getChildCompany: getChildCompany,
+            company: company
         });
     } catch (err) {
         console.error(err);

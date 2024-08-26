@@ -485,9 +485,9 @@ $('form#complain_register_form').submit(function (e) {
                            $('.response-message').show();
                            $('#submit_btn').prop('disabled', false);
                            $('.frm-loading').hide();
-                           // setTimeout(function() {
-                           //    window.location.href = "/my-complaints";
-                           // }, 2000);
+                           setTimeout(function() {
+                              window.location.href = "/my-complaints";
+                           }, 2000);
                         } else {
                            $('.response-message').text(data.message);
                            $('.response-message').show();

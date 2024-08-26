@@ -2871,7 +2871,10 @@ exports.createChildCompany = async (req, res) => {
     try {
         console.log("createChildCompany", req.body);
         const encodedUserData = req.cookies.user;
+        console.log("encodedUserData",encodedUserData);
+        
         const currentUserData = JSON.parse(encodedUserData);
+        console.log("currentUserData",currentUserData);
 
         const currentDate = new Date();
 
@@ -2912,12 +2915,12 @@ exports.createChildCompany = async (req, res) => {
                 console.log('companySlug', companySlug);
                 var insert_values = [];
                 if (req.file) {
-                    insert_values = [currentUserData.user_id, req.body.company_name, req.body.heading, req.file.filename, req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, req.body.status, req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.main_address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug, req.body.parent_id, '0'];
+                    insert_values = [currentUserData.user_id, req.body.company_name, req.body.heading, req.file.filename, req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, req.body.status, req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.main_address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug, req.body.parent_id, '0', req.body.region, req.body.branch];
                 } else {
-                    insert_values = [currentUserData.user_id, req.body.company_name, req.body.heading, '', req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, req.body.status, req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.main_address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug, req.body.parent_id, '0'];
+                    insert_values = [currentUserData.user_id, req.body.company_name, req.body.heading, '', req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, req.body.status, req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.main_address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug, req.body.parent_id, '0', req.body.region, req.body.branch];
                 }
 
-                const insertQuery = 'INSERT INTO company (user_created_by, company_name, heading, logo, about_company, comp_phone, comp_email, comp_registration_id, status, trending, created_date, updated_date, tollfree_number, main_address, main_address_pin_code, address_map_url, main_address_country, main_address_state, main_address_city, verified, paid_status, slug,parent_id,temp_comp_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)';
+                const insertQuery = 'INSERT INTO company (user_created_by, company_name, heading, logo, about_company, comp_phone, comp_email, comp_registration_id, status, trending, created_date, updated_date, tollfree_number, main_address, main_address_pin_code, address_map_url, main_address_country, main_address_state, main_address_city, verified, paid_status, slug,parent_id,temp_comp_status, region, branch) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?)';
                 db.query(insertQuery, insert_values, (err, results, fields) => {
                     if (err) {
                         return res.send(
@@ -21039,7 +21042,7 @@ exports.createSubscription = async (req, res) => {
         // Create the subscription
         let subscription;
         try {
-            subscription = await stripe.subscriptions.create({
+            subscription = await stripe.subscriptions.create({ 
                 customer: customer.id,
                 items: [{ price: priceId }],
                 expand: ['latest_invoice.payment_intent'],

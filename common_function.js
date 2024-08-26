@@ -368,6 +368,20 @@ async function getParentCompany(country_shortname) {
   }
 }
 
+async function getownparentcomp(compid) {
+  try {
+    const parentcompanyquery = `SELECT * FROM company WHERE ID=?`;
+    constparentvalue = await query(parentcompanyquery, [compid]);
+    if (constparentvalue.length > 0) {
+      return constparentvalue
+    }
+    else {
+      return []
+    }
+  } catch (error) {
+    throw new Error('Error fetching company categories');
+  }
+}
 
 async function getCountriesList() {
   try {
@@ -3428,6 +3442,7 @@ module.exports = {
   getCategorybyCompany,//
   getCompanyCategory,
   getParentCompany,
+  getownparentcomp,//
   getCountriesList,
   renderCategoryTreeHTML,
   getCompanyCategoryBuID,
