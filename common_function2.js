@@ -8071,11 +8071,16 @@ async function convertPrices(plan, userCountry) {
   if (!plan || !userCountry) return null;
 
   const exchangeRates = await getCurrency();
+  console.log("exchangeRates",exchangeRates);
+  
   const userCurrency = getUserCurrency(userCountry);
 
   let monthlyPriceConverted = plan.monthly_price;
   let yearlyPriceConverted = plan.yearly_price;
   let perUserPriceConverted = plan.per_user_price;
+
+  
+  
 
   if (userCurrency !== 'USD') {
       if (!exchangeRates[userCurrency]) {
@@ -8083,10 +8088,15 @@ async function convertPrices(plan, userCountry) {
           return plan;
       }
 
-      monthlyPriceConverted = (parseFloat(plan.monthly_price) * exchangeRates[userCurrency]).toFixed(2);
-      yearlyPriceConverted = (parseFloat(plan.yearly_price) * exchangeRates[userCurrency]).toFixed(2);
-      perUserPriceConverted = (parseFloat(plan.per_user_price) * exchangeRates[userCurrency]).toFixed(2);
+      // monthlyPriceConverted = (parseFloat(plan.monthly_price) * exchangeRates[userCurrency]).toFixed(2);
+      // yearlyPriceConverted = (parseFloat(plan.yearly_price) * exchangeRates[userCurrency]).toFixed(2);
+      // perUserPriceConverted = (parseFloat(plan.per_user_price) * exchangeRates[userCurrency]).toFixed(2);
+      monthlyPriceConverted = (parseFloat(plan.monthly_price));
+      yearlyPriceConverted = (parseFloat(plan.yearly_price));
+      perUserPriceConverted = (parseFloat(plan.per_user_price));
   }
+  console.log("monthlyPriceConverted",monthlyPriceConverted);
+  
 
   const convertedPlan = {
       ...plan,
@@ -8095,6 +8105,8 @@ async function convertPrices(plan, userCountry) {
       per_user_price_local: perUserPriceConverted,
       local_currency: userCurrency
   };
+  console.log("convertedPlan",convertedPlan);
+  
 
   return convertedPlan;
 }
