@@ -73,7 +73,7 @@
 				
 						<div class="inputBox">
 							<label for="zip">Zip Code:</label>
-							<input type="number" id="zip" placeholder="123 456" required>
+							<input type="text" id="zip" placeholder="Enter ZIP code" required>
 						</div>
 					</div>
 					
@@ -460,15 +460,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	document.addEventListener('DOMContentLoaded', function() {
 
-		const zipInput = document.getElementById('zip');
-		if (zipInput) {
-			zipInput.addEventListener('input', function() {
-				const maxLength = 6;
-				if (zipInput.value.length > maxLength) {
-					zipInput.value = zipInput.value.slice(0, maxLength);
-				}
-			});
-		}
+		// const zipInput = document.getElementById('zip');
+		// if (zipInput) {
+		// 	zipInput.addEventListener('input', function() {
+		// 		const maxLength = 6;
+		// 		if (zipInput.value.length > maxLength) {
+		// 			zipInput.value = zipInput.value.slice(0, maxLength);
+		// 		}
+		// 	});
+		// }
 
 		// Limit CVV code length
 		const cvvInput = document.getElementById('cvv');
@@ -625,6 +625,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     text: state.name
                 }));
             });
+        }
+    });
+
+    document.getElementById('zip').addEventListener('input', function() {
+        const zipCode = this.value;
+        const zipPattern = /^[a-zA-Z0-9\s]+$/; // Adjust pattern based on expected formats
+        if (!zipPattern.test(zipCode)) {
+            this.setCustomValidity('Invalid ZIP code format');
+        } else {
+            this.setCustomValidity('');
         }
     });
 </script>
