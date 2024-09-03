@@ -1239,11 +1239,18 @@
 
                     const alltotal_amount = totalAmount + total_prices;
                     console.log("alltotal_amount", alltotal_amount.toFixed(2));
+                    var allamount = alltotal_amount/1;
 
+                    // if (memberCount_val > 0) {
+                    //     $('#amount-count-display').text(alltotal_amount.toFixed(2));
+                    // } else {
+                    //     $('#amount-count-display').text('<%= total_price%>');
+                    // }
                     if (memberCount_val > 0) {
-                        $('#amount-count-display').text(alltotal_amount.toFixed(2));
+                        $('#amount-count-display').text(`$${parseFloat(allamount).toFixed(1).replace(/\.0$/, '')}`);
                     } else {
-                        $('#amount-count-display').text('<%= total_price%>');
+                        const total_price = '<%= total_price %>'; 
+                        $('#amount-count-display').text(`$${parseFloat(total_price).toFixed(1).replace(/\.0$/, '')}`);
                     }
                 }
 
