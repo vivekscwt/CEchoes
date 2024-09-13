@@ -13133,6 +13133,21 @@ router.get('/register-complaint', checkFrontEndLoggedIn, async (req, res) => {
     //res.render('front-end/terms-of-service', { menu_active_id: 'terms-of-service', page_title: 'Terms Of Service', currentUserData });
 });
 
+router.get('/business_plan', checkCookieValue,async (req, res) => {
+    //resp.sendFile(`${publicPath}/index.html`)
+    let currentUserData = JSON.parse(req.userData);
+    const [globalPageMeta] = await Promise.all([
+        comFunction2.getPageMetaValues('global'),
+    ]);
+
+            res.render('front-end/business_plan', {
+                menu_active_id: 'Business Plan',
+                page_title: 'Business Plan',
+                globalPageMeta:globalPageMeta,
+                currentUserData,
+            });
+})
+
 router.get('/register-complaint/:getcountryname', checkFrontEndLoggedIn, async (req, res) => {
     const encodedUserData = req.cookies.user;
     const currentUserData = JSON.parse(encodedUserData);
