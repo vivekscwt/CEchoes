@@ -310,12 +310,8 @@
 
 
 <script>
-	var stripePublicKey='<%=stripe_publish_key %>'
 document.addEventListener('DOMContentLoaded', function() {
-    // const stripe = Stripe('pk_test_51Pmx4bE9RgUxhHlihWvQ6tCKKz2AeuVE4X2fBtEFHHnKTu4mgcFHPF1rpYDjwgn0vxlCfPEbiQTLy6JBelzwiTJw00p4tIO4NZ');
-
-	// const stripe = Stripe('pk_live_51Pmx4bE9RgUxhHliz0axvDt0O52JXlgWxZHE78woIeTHTLGBtOYe0hLPW0NWM3lKbuxvx97uOeo6hdhT9bHSb1nj00dfk77oPs');
-
+    const stripe = Stripe('pk_test_51Pmx4bE9RgUxhHlihWvQ6tCKKz2AeuVE4X2fBtEFHHnKTu4mgcFHPF1rpYDjwgn0vxlCfPEbiQTLy6JBelzwiTJw00p4tIO4NZ');
     const elements = stripe.elements();
 
     // Create and mount the card number Element
@@ -935,4 +931,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	});
 
 </script> -->
+
+
+
 
