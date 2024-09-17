@@ -1262,91 +1262,91 @@ router.get('/staging-business', checkCookieValue, async (req, res) => {
     }
 });
 
-router.get('/staging-business', checkCookieValue, async (req, res) => {
-    try {
-        let currentUserData = JSON.parse(req.userData);
-        console.log("currentUserData", currentUserData);
-        const apiKey = process.env.GEO_LOCATION_API_KEY;
-        console.log("apiKey",apiKey);
+// router.get('/staging-business', checkCookieValue, async (req, res) => {
+//     try {
+//         let currentUserData = JSON.parse(req.userData);
+//         console.log("currentUserData", currentUserData);
+//         const apiKey = process.env.GEO_LOCATION_API_KEY;
+//         console.log("apiKey",apiKey);
 
-        if (currentUserData) {
-            var user_id = currentUserData.user_id;
-            console.log("user_id", user_id);
-            var encryptedEmail = await comFunction2.encryptEmail(currentUserData.email);
-            console.log("encryptedEmail",encryptedEmail);
-        }
+//         if (currentUserData) {
+//             var user_id = currentUserData.user_id;
+//             console.log("user_id", user_id);
+//             var encryptedEmail = await comFunction2.encryptEmail(currentUserData.email);
+//             console.log("encryptedEmail",encryptedEmail);
+//         }
 
 
 
-        const getbusinessquery = `SELECT * FROM users WHERE user_id= "${user_id}"`;
-        const getbusinessvalue = await queryAsync(getbusinessquery);
-        console.log("getbusinessvalue",getbusinessvalue);
-        if(getbusinessvalue.length>0){
-            console.log("getbusinessvalue",getbusinessvalue);
-            var user_status = getbusinessvalue[0].user_status;
-            console.log("user_status",user_status);
-            if (getbusinessvalue[0].user_status == "3") {
-                res.redirect('/logout');
-            }
-        }
+//         const getbusinessquery = `SELECT * FROM users WHERE user_id= "${user_id}"`;
+//         const getbusinessvalue = await queryAsync(getbusinessquery);
+//         console.log("getbusinessvalue",getbusinessvalue);
+//         if(getbusinessvalue.length>0){
+//             console.log("getbusinessvalue",getbusinessvalue);
+//             var user_status = getbusinessvalue[0].user_status;
+//             console.log("user_status",user_status);
+//             if (getbusinessvalue[0].user_status == "3") {
+//                 res.redirect('/logout');
+//             }
+//         }
         
-        const api_key = process.env.GEO_LOCATION_API_KEY;
-        let country_name = req.cookies.countryName || 'India';
-        let country_code = req.cookies.countryCode || 'IN';
-        console.log("country_names", country_name);
-        console.log("country_codes", country_code);
+//         const api_key = process.env.GEO_LOCATION_API_KEY;
+//         let country_name = req.cookies.countryName || 'India';
+//         let country_code = req.cookies.countryCode || 'IN';
+//         console.log("country_names", country_name);
+//         console.log("country_codes", country_code);
 
-        if (country_code != 'UK' && country_code != 'JP') {
-            country_code = 'US';
-        }
+//         if (country_code != 'UK' && country_code != 'JP') {
+//             country_code = 'US';
+//         }
 
-        const [globalPageMeta, getplans, getSubscribedUsers] = await Promise.all([
-            comFunction2.getPageMetaValues('global'),
-            comFunction2.getplans(country_name),
-            comFunction2.getSubscribedUsers(user_id)
-        ]);
-        console.log("getplans", getplans);
-        console.log("getSubscribedUserssss", getSubscribedUsers);
+//         const [globalPageMeta, getplans, getSubscribedUsers] = await Promise.all([
+//             comFunction2.getPageMetaValues('global'),
+//             comFunction2.getplans(country_name),
+//             comFunction2.getSubscribedUsers(user_id)
+//         ]);
+//         console.log("getplans", getplans);
+//         console.log("getSubscribedUserssss", getSubscribedUsers);
 
-        const sql = `SELECT * FROM page_info where secret_Key = 'business' AND country = "${country_code}"`;
-        db.query(sql, (err, results, fields) => {
-            if (err) throw err;
-            const common = results[0];
-            const meta_sql = `SELECT * FROM page_meta where page_id = ${common.id}`;
-            db.query(meta_sql, async (meta_err, _meta_result) => {
-                if (meta_err) throw meta_err;
+//         const sql = `SELECT * FROM page_info where secret_Key = 'business' AND country = "${country_code}"`;
+//         db.query(sql, (err, results, fields) => {
+//             if (err) throw err;
+//             const common = results[0];
+//             const meta_sql = `SELECT * FROM page_meta where page_id = ${common.id}`;
+//             db.query(meta_sql, async (meta_err, _meta_result) => {
+//                 if (meta_err) throw meta_err;
 
-                const meta_values = _meta_result;
-                let meta_values_array = {};
-                await meta_values.forEach((item) => {
-                    meta_values_array[item.page_meta_key] = item.page_meta_value;
-                })
-                const UpcomingBusinessFeature = await comFunction2.getUpcomingBusinessFeature();
-                const BusinessFeature = await comFunction2.getBusinessFeature();
-                //console.log(meta_values_array);
-                res.render('front-end/staging-business', {
-                    menu_active_id: 'business',
-                    page_title: common.title,
-                    currentUserData,
-                    common,
-                    meta_values_array,
-                    UpcomingBusinessFeature,
-                    BusinessFeature,
-                    globalPageMeta: globalPageMeta,
-                    getplans: getplans,
-                    country_name: country_name,
-                    getSubscribedUsers: getSubscribedUsers,
-                    encryptedEmail: encryptedEmail
-                });
-            })
+//                 const meta_values = _meta_result;
+//                 let meta_values_array = {};
+//                 await meta_values.forEach((item) => {
+//                     meta_values_array[item.page_meta_key] = item.page_meta_value;
+//                 })
+//                 const UpcomingBusinessFeature = await comFunction2.getUpcomingBusinessFeature();
+//                 const BusinessFeature = await comFunction2.getBusinessFeature();
+//                 //console.log(meta_values_array);
+//                 res.render('front-end/staging-business', {
+//                     menu_active_id: 'business',
+//                     page_title: common.title,
+//                     currentUserData,
+//                     common,
+//                     meta_values_array,
+//                     UpcomingBusinessFeature,
+//                     BusinessFeature,
+//                     globalPageMeta: globalPageMeta,
+//                     getplans: getplans,
+//                     country_name: country_name,
+//                     getSubscribedUsers: getSubscribedUsers,
+//                     encryptedEmail: encryptedEmail
+//                 });
+//             })
 
-        })
+//         })
 
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('An error occurred');
-    }
-});
+//     } catch (err) {
+//         console.error(err);
+//         res.status(500).send('An error occurred');
+//     }
+// });
 
 router.get('/checkSubscriptionStatus/:subscriptionId', async (req, res) => {
     const { subscriptionId } = req.params.subscriptionId; // Extract subscriptionId from route parameters
