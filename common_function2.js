@@ -7234,33 +7234,46 @@ async function convertPrices(plan, userCountry) {
   if (!plan || !userCountry) return null;
 
   const exchangeRates = await getCurrency();
+  console.log("exchangeRates",exchangeRates);
+  
   const userCurrency = getUserCurrency(userCountry);
 
   let monthlyPriceConverted = plan.monthly_price;
   let yearlyPriceConverted = plan.yearly_price;
   let perUserPriceConverted = plan.per_user_price;
 
-  if (userCurrency !== 'USD') {
-    if (!exchangeRates[userCurrency]) {
-      console.error(`Conversion rate for ${userCurrency} not available`);
-      return plan;
-    }
+  
+  
 
-    monthlyPriceConverted = (parseFloat(plan.monthly_price) * exchangeRates[userCurrency]).toFixed(2);
-    yearlyPriceConverted = (parseFloat(plan.yearly_price) * exchangeRates[userCurrency]).toFixed(2);
-    perUserPriceConverted = (parseFloat(plan.per_user_price) * exchangeRates[userCurrency]).toFixed(2);
+  if (userCurrency !== 'USD') {
+      if (!exchangeRates[userCurrency]) {
+          console.error(`Conversion rate for ${userCurrency} not available`);
+          return plan;
+      }
+
+      // monthlyPriceConverted = (parseFloat(plan.monthly_price) * exchangeRates[userCurrency]).toFixed(2);
+      // yearlyPriceConverted = (parseFloat(plan.yearly_price) * exchangeRates[userCurrency]).toFixed(2);
+      // perUserPriceConverted = (parseFloat(plan.per_user_price) * exchangeRates[userCurrency]).toFixed(2);
+      monthlyPriceConverted = (parseFloat(plan.monthly_price));
+      yearlyPriceConverted = (parseFloat(plan.yearly_price));
+      perUserPriceConverted = (parseFloat(plan.per_user_price));
   }
+  console.log("monthlyPriceConverted",monthlyPriceConverted);
+  
 
   const convertedPlan = {
-    ...plan,
-    monthly_price_local: monthlyPriceConverted,
-    yearly_price_local: yearlyPriceConverted,
-    per_user_price_local: perUserPriceConverted,
-    local_currency: userCurrency
+      ...plan,
+      monthly_price_local: monthlyPriceConverted,
+      yearly_price_local: yearlyPriceConverted,
+      per_user_price_local: perUserPriceConverted,
+      local_currency: userCurrency
   };
+  console.log("convertedPlan",convertedPlan);
+  
 
   return convertedPlan;
 }
+
 
 function getUserCurrency(userCountry) {
   const countryCurrencyMap = {

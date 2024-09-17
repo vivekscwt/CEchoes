@@ -1175,7 +1175,7 @@ router.get('/faq/:getcountryname', checkCookieValue, async (req, res) => {
         res.status(500).send('An error occurred');
     }
 });
-
+//plan-pricing
 router.get('/staging-business', checkCookieValue, async (req, res) => {
     try {
         let currentUserData = JSON.parse(req.userData);
