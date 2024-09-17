@@ -276,6 +276,7 @@
         <script>
             var stripe_key = '<%= stripe_key%>';
             console.log("stripe_key", stripe_key);
+            var stripePublicKey='<%=stripe_publish_key %>';
             var planID = '<%= planID %>';
             // var memberCount = '<%= memberCount %>';
             var subscriptionType = '<%= subscriptionType%>';
@@ -471,7 +472,10 @@
                 }
             }
             document.addEventListener('DOMContentLoaded', function () {
-    const stripe = Stripe('pk_test_51Pmx4bE9RgUxhHlihWvQ6tCKKz2AeuVE4X2fBtEFHHnKTu4mgcFHPF1rpYDjwgn0vxlCfPEbiQTLy6JBelzwiTJw00p4tIO4NZ');
+    // const stripe = Stripe('pk_test_51Pmx4bE9RgUxhHlihWvQ6tCKKz2AeuVE4X2fBtEFHHnKTu4mgcFHPF1rpYDjwgn0vxlCfPEbiQTLy6JBelzwiTJw00p4tIO4NZ');
+    // const stripe = Stripe('pk_live_51Pmx4bE9RgUxhHliz0axvDt0O52JXlgWxZHE78woIeTHTLGBtOYe0hLPW0NWM3lKbuxvx97uOeo6hdhT9bHSb1nj00dfk77oPs');
+    const stripe = Stripe(stripePublicKey);
+
     const elements = stripe.elements();
 
     // Create and mount Stripe Elements
@@ -704,7 +708,7 @@
                 text: 'User and company completed successfully. Please wait for admin approval.',
                 confirmButtonText: 'OK'
             }).then(() => {
-                window.location.href = '/staging-business';
+                window.location.href = '/plan-pricing';
             });
         } else {
             Swal.fire({

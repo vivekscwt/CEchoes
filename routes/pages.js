@@ -1175,8 +1175,8 @@ router.get('/faq/:getcountryname', checkCookieValue, async (req, res) => {
         res.status(500).send('An error occurred');
     }
 });
-//plan-pricing
-router.get('/staging-business', checkCookieValue, async (req, res) => {
+//plan-pricing staging-business
+router.get('/plan-pricing', checkCookieValue, async (req, res) => {
     try {
         let currentUserData = JSON.parse(req.userData);
         console.log("currentUserData", currentUserData);
@@ -1539,6 +1539,7 @@ router.get('/stripe-payment', checkCookieValue, async (req, res) => {
         console.log("req.query-monthly", req.query);
         // const apiKey = process.env.GEO_LOCATION_API_KEY;
         //console.log("apiKey",apiKey);
+        const stripe_publish_key = process.env.stripe_publish_key;
 
         let currentUserData = JSON.parse(req.userData);
         console.log("currentUserData", currentUserData);
@@ -1585,7 +1586,8 @@ router.get('/stripe-payment', checkCookieValue, async (req, res) => {
             exchangeRates: exchangeRates,
             encryptedEmail,
             user_id,
-            getCountries: getCountries
+            getCountries: getCountries,
+            stripe_publish_key: stripe_publish_key
         });
     } catch (err) {
         console.error(err);
@@ -1598,6 +1600,7 @@ router.get('/stripe-year-payment', checkCookieValue, async (req, res) => {
         console.log("req.query-yearly", req.query);
         // const apiKey = process.env.GEO_LOCATION_API_KEY;
         // console.log("apiKey",apiKey);
+        const stripe_publish_key = process.env.stripe_publish_key;
 
         let country_name = req.cookies.countryName || 'India';
         let country_code = req.cookies.countryCode || 'IN';
@@ -1644,7 +1647,8 @@ router.get('/stripe-year-payment', checkCookieValue, async (req, res) => {
             country_code: country_code,
             exchangeRates: exchangeRates,
             getstatevalue: getstatevalue,
-            getCountries
+            getCountries,
+            stripe_publish_key
         });
     } catch (err) {
         console.error(err);
@@ -1663,6 +1667,8 @@ router.get('/create-user-company-subscription', checkCookieValue, async (req, re
         //console.log("apiKey",apiKey);
         const razorpay_key = process.env.RAZORPAY_KEY_ID;
         const stripe_key = process.env.STRIPE_SECRET_KEY;
+
+        const stripe_publish_key = process.env.stripe_publish_key;
 
         let currentUserData = JSON.parse(req.userData);
         console.log("currentUserData", currentUserData);
@@ -1747,7 +1753,8 @@ router.get('/create-user-company-subscription', checkCookieValue, async (req, re
             subscriptionType: subscriptionType,
             monthly_plan_price: monthly_plan_price,
             yearly_price: yearly_price,
-            per_user_price
+            per_user_price,
+            stripe_publish_key: stripe_publish_key
         });
     } catch (err) {
         console.error(err);
