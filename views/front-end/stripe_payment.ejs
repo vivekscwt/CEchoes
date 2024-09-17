@@ -1,65 +1,94 @@
 <%- include('common/header') -%>
    <link href="/front-end/css/business-style.css" rel="stylesheet" type="text/css">
    <%- include('common/header-banner') -%>
-
 	<div class="container">
+
 		<div class="row">
 			<div class="col">
 				<h3 class="title">Amount</h3>
-				<div id="amountDisplays">
-					<p>Total Amount: <span id="amountDisplay">₹<%= total_price%></span></p>
+				<div id="amountDisplay">
+					<p>Total Amount: <span id="amount">$0.00</span></p>
 				</div>
 			</div>
+
 			<div class="col">
 				<form id="paymentForm">
-					<div class="row">
-						<div class="col">
-							<h3 class="title">Billing Address</h3>
-							<div class="inputBox">
-								<label for="memberCount">Add-on Users:</label>
-								<input type="number" min=1 name="memberCount" id="memberCount"
-									placeholder="Enter number of add-on users">
-							</div>
-							<div class="inputBox">
-								<label for="name">Full Name:</label>
-								<input type="text" id="name" name="name" placeholder="Enter your full name" required>
-							</div>
-							<div class="inputBox">
-								<label for="address">Address:</label>
-								<input type="text" name="address" id="address" placeholder="Enter address" required>
-							</div>
-							<div class="inputBox">
-								<label for="city">City:</label>
-								<input type="text" name="city" id="city" placeholder="Enter city" required>
-							</div>
-							<div class="inputBox">
-								<label for="country">Country:</label>
-								<select name="country" id="stripe_month_country" required>
-									<option value="">Select a country</option>
-									<% getCountries.forEach(country=> { %>
-										<option value="<%= country.shortname %>">
-											<%= country.name %>
-										</option>
-										<% }); %>
-								</select>
-							</div>
-							<div class="inputBox">
-								<label for="state">State:</label>
-								<select name="state" id="stripe_month_state" required>
-									<option value="">Select a state</option>
-								</select>
-							</div>
-							<div class="inputBox">
-								<label for="zip">Zip Code:</label>
-								<input type="text" name="zip" id="zip" placeholder="123456"  required>
-							</div>
+					<!-- Stripe Card Number Element Container -->
+					<div class="card-element-container">
+						<label for="card-number">Card Number:</label>
+						<div id="card-number"></div>
+					</div>
+				
+					<!-- Stripe Expiration Date Element Container -->
+					<div class="card-element-container">
+						<label for="card-expiry">Expiration Date:</label>
+						<div id="card-expiry"></div>
+					</div>
+				
+					<!-- Stripe CVV Element Container -->
+					<div class="card-element-container">
+						<label for="card-cvc">CVV:</label>
+						<div id="card-cvc"></div>
+					</div>
+				
+					<!-- Other Billing Address fields -->
+					<div class="billing-address">
+						<h3 class="title">Billing Address</h3>
+						<div class="inputBox">
+							<label for="memberCount">Add-on Users:</label>
+							<input type="number" min=1 name="memberCount" id="memberCount"
+								placeholder="Enter number of add-on users">
+						</div>
+				
+						<div class="inputBox">
+							<label for="name">Full Name:</label>
+							<input type="text" id="name" placeholder="Enter your full name" required>
+						</div>
+						<div class="inputBox">
+							<label for="country">Country:</label>
+							<select id="stripe_country" required>
+								<option value="" disabled selected>Select Country</option>
+								<% getCountries.forEach(function(country) { %>
+									<option value="<%= country.shortname %>"><%= country.name %></option>
+								<% }); %>
+							</select>
+						</div>
+				
+						<div class="inputBox">
+							<label for="state">State:</label>
+							<select id="state" required>
+								<option value="">Select State</option>
+							</select>
+						</div>
+				
+						<div class="inputBox">
+							<label for="address">Address:</label>
+							<input type="text" id="address" placeholder="Enter address" required>
+						</div>
+				
+						<div class="inputBox">
+							<label for="city">City:</label>
+							<input type="text" id="city" placeholder="Enter city" required>
+						</div>
+
+						<div class="inputBox">
+							<label for="zip">Zip Code:</label>
+							<input type="text" id="zip" placeholder="Enter ZIP code" required>
 						</div>
 					</div>
-					<input type="submit" value="Proceed to Checkout" class="submit_btn" id="paymentButton">
+					
+					<button type="submit" value="Proceed to Checkout" class="submit_btn">Proceed to Checkout</button>
+					<div id="error-message"></div>
 				</form>
+				
+				
+				
 			</div>
 		</div>
 	</div>
+	
+	<script type="text/javascript" src="index.js"></script>
+
 
 
 <style>
@@ -210,392 +239,411 @@
     	min-height: auto;
 		background-color: black;
 }
+
+	input::-webkit-inner-spin-button,
+	input::-webkit-outer-spin-button {
+		display: none;
+	}
+
+	#card-element {
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+    gap: 15px; /* Space between fields */
+}
+
+.card-element-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.card-element-container label {
+    margin-bottom: 5px;
+}
+
+.card-element-container div {
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    padding: 12px;
+    background-color: #ffffff;
+}
+
+.billing-address {
+    margin-bottom: 20px;
+}
+
+.inputBox {
+    margin-bottom: 15px;
+}
+
+.inputBox label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.inputBox input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+}
+
+.submit_btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: #ffffff;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#error-message {
+    color: #fa755a;
+    margin-top: 10px;
+}
+
+
 </style>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-<link rel="stylesheet" href="style.css">
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-<!-- <script type="text/javascript">
-        let planid = '<%= planID%>';
-        console.log("planid", planid);
-        let user_email = '<%= currentUserData.email%>';
-        let user_id = '<%= currentUserData.user_id%>';
-        let memberval = '<%= memberCount%>';
-        let key = 'rzp_test_FUBQq7lujicpGo';
-
-        document.getElementById('paymentForm').addEventListener('submit', async function(event) {
-            event.preventDefault();
-
-            try {
-                const formData = {
-                    userId: user_id,
-                    name: document.getElementById('name').value,
-                    email: user_email,
-                    address: document.getElementById('address').value,
-                    city: document.getElementById('city').value,
-                    state: document.getElementById('state').value,
-                    zip: document.getElementById('zip').value,
-                    planId: planid,
-                    //billingCycle: 'monthly',
-					billingCycle: 'daily',
-                    memberCount: memberval
-                };
-
-                const response = await axios.post('/auth/create-subscription', formData);
-                const { subscription } = response.data;
-				console.log("subscription",subscription);
-
-                const options = {
-                    key: key,
-                    subscription_id: subscription.id,
-                    name: 'Subscription Payment',
-                    description: 'Subscription Payment',
-                    handler: function (response) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Payment Successful!',
-                            text: 'Your payment was successful.',
-                            confirmButtonText: 'OK'
-                        }).then(() => {
-                            window.location.href = '/business';
-                        });
-                    },
-                    prefill: {
-                        name: formData.name,
-                        email: formData.email,
-                    },
-                    theme: {
-                        color: '#F37254'
-                    }
-                };
-
-                const rzp = new Razorpay(options);
-                rzp.open();
-
-                rzp.on('payment.failed', function (response) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Payment Error',
-                        text: response.error.description || 'Unknown error occurred.',
-                        confirmButtonText: 'OK'
-                    });
-                });
-            } catch (error) {
-                console.error('Error initiating payment:', error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Payment Initiation Failed',
-                    text: 'Failed to initiate payment. Please try again later.',
-                    confirmButtonText: 'OK'
-                });
-            }
-        });
-    </script> -->
-
+<script src="https://js.stripe.com/v3/"></script>
 
 
 <script>
-	var razorpay_key = '<%= razorpay_key%>';
-	console.log("razorpay_key", razorpay_key);
-	var total_price = '<%= total_price%>';
-	// console.log("total_price",total_price);
+document.addEventListener('DOMContentLoaded', function() {
+    const stripe = Stripe('pk_test_51Pmx4bE9RgUxhHlihWvQ6tCKKz2AeuVE4X2fBtEFHHnKTu4mgcFHPF1rpYDjwgn0vxlCfPEbiQTLy6JBelzwiTJw00p4tIO4NZ');
+    const elements = stripe.elements();
+
+	// var addonUsersCount = document.getElementById('memberCount').value;
+	// console.log('Add-on Users Count:', addonUsersCount);
+
+    // Create and mount the card number Element
+    const cardNumber = elements.create('cardNumber', {
+        style: {
+            base: {
+                fontSize: '16px',
+                color: '#32325d',
+                '::placeholder': {
+                    color: '#aab7c4',
+                },
+            },
+            invalid: {
+                color: '#fa755a',
+                iconColor: '#fa755a',
+            },
+        },
+    });
+
+    const cardExpiry = elements.create('cardExpiry', {
+        style: {
+            base: {
+                fontSize: '16px',
+                color: '#32325d',
+                '::placeholder': {
+                    color: '#aab7c4',
+                },
+            },
+            invalid: {
+                color: '#fa755a',
+                iconColor: '#fa755a',
+            },
+        },
+    });
+
+    const cardCvc = elements.create('cardCvc', {
+        style: {
+            base: {
+                fontSize: '16px',
+                color: '#32325d',
+                '::placeholder': {
+                    color: '#aab7c4',
+                },
+            },
+            invalid: {
+                color: '#fa755a',
+                iconColor: '#fa755a',
+            },
+        },
+    });
+
+    cardNumber.mount('#card-number');
+    cardExpiry.mount('#card-expiry');
+    cardCvc.mount('#card-cvc');
+
+    const errorMessage = document.getElementById('error-message');
+    cardNumber.on('change', handleCardChange);
+    cardExpiry.on('change', handleCardChange);
+    cardCvc.on('change', handleCardChange);
+
+    function handleCardChange(event) {
+        if (event.error) {
+            errorMessage.textContent = event.error.message;
+        } else {
+            errorMessage.textContent = '';
+        }
+    }
+
+    document.getElementById('paymentForm').addEventListener('submit', async function(event) {
+        event.preventDefault();
+        document.querySelector('button').disabled = true;
+		
+		const memberCountInput = document.getElementById('memberCount');
+		var addonUsersCount = memberCountInput.value;
+		console.log('Add-on Users Count on Load:', addonUsersCount);
+
+        const { token, error } = await stripe.createToken(cardNumber);
+        console.log("Token:", token);
+
+        if (error) {
+            errorMessage.textContent = error.message;
+            document.querySelector('button').disabled = false;
+        } else {
+            await stripeTokenHandler(token,addonUsersCount);
+        }
+    });
+
+
+
+    async function stripeTokenHandler(token, addonUsersCount) {
+        const formData = {
+            token: token.id,
+            userId: '<%= currentUserData.user_id %>',
+            name: document.getElementById('name').value,
+            email: '<%= currentUserData.email %>',
+            address: document.getElementById('address').value,
+            city: document.getElementById('city').value,
+            state: document.getElementById('state').value,
+            zip: document.getElementById('zip').value,
+            planId: '<%= planID %>',          
+			billingCycle: 'monthly',
+			// billingCycle: 'daily',
+            //memberCount: '<%= memberCount %>',
+			memberCount: addonUsersCount
+        };
+
+        try {
+            const response = await fetch('/auth/create-subscription', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Payment Successful!',
+                    text: data.message,
+                    confirmButtonText: 'OK',
+                }).then(() => {
+                    window.location.href = '/staging-business';
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Payment Error',
+                    text: data.error ? data.error.message : 'There was an error processing your payment. Please try again later.',
+                    confirmButtonText: 'OK',
+                });
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Payment Error',
+                text: 'There was an error processing your payment. Please try again later.',
+                confirmButtonText: 'OK',
+            });
+        } finally {
+            document.querySelector('button').disabled = false;
+        }
+    }
+});
+
+	document.addEventListener('DOMContentLoaded', function() {
+
+		// const zipInput = document.getElementById('zip');
+		// if (zipInput) {
+		// 	zipInput.addEventListener('input', function() {
+		// 		const maxLength = 6;
+		// 		if (zipInput.value.length > maxLength) {
+		// 			zipInput.value = zipInput.value.slice(0, maxLength);
+		// 		}
+		// 	});
+		// }
+
+		// Limit CVV code length
+		const cvvInput = document.getElementById('cvv');
+		if (cvvInput) {
+			cvvInput.addEventListener('input', function() {
+				const maxLength = 3;
+				if (cvvInput.value.length > maxLength) {
+					cvvInput.value = cvvInput.value.slice(0, maxLength);
+				}
+			});
+		}
+
+		// Populate expiration year dropdown
+		const selectYear = document.getElementById('expYear');
+		if (selectYear) {
+			const currentYear = new Date().getFullYear();
+			const futureYearsCount = 20;
+			for (let i = 0; i <= futureYearsCount; i++) {
+				const year = currentYear + i;
+				const option = document.createElement('option');
+				option.textContent = year;
+				option.value = year;
+				selectYear.appendChild(option);
+			}
+		}
+	});
+	let countryCode = '<%= country_code %>';
+	//console.log("country_code", countryCode);
+	const exchangeRates = '<%- JSON.stringify(exchangeRates) %>';
+	console.log("Exchange Rates:", exchangeRates);
 
 	document.addEventListener('DOMContentLoaded', function () {
-		const paymentForm = document.getElementById('paymentForm');
-		if (!paymentForm) {
-			console.error('Element with ID paymentForm not found');
-			return;
+		function getQueryParams() {
+			const params = {};
+			const queryString = window.location.search.substring(1);
+			const queries = queryString.split('&');
+			queries.forEach(function (query) {
+				const [key, value] = query.split('=');
+				params[decodeURIComponent(key)] = decodeURIComponent(value);
+			});
+			return params;
 		}
 
-		paymentForm.addEventListener('submit', async function (event) {
-			event.preventDefault();
-			var addonUsersCount = document.getElementById('memberCount').value;
-			console.log('Add-on Users Count:', addonUsersCount);
-
+		async function convertToUSD(totalPrice, countryCode) {
 			try {
-				const formData = {
-					userId: '<%= currentUserData.user_id %>',
-					name: document.getElementById('name').value,
-					email: '<%= currentUserData.email %>',
-					address: document.getElementById('address').value,
-					city: document.getElementById('city').value,
-					state: document.getElementById('stripe_month_state').value,
-					zip: document.getElementById('zip').value,
-					planId: '<%= planID %>',
-					billingCycle: 'monthly',
-					//billingCycle: 'daily',
-					memberCount: addonUsersCount
-				};
+				let convertedPrice;
 
-				const response = await axios.post('/auth/create-subscription', formData);
-				const { subscription, amount } = response.data;
-
-				console.log("Amount from backend (in paise):", amount);
-
-				formData.subscriptionId = subscription.id;
-
-				const amountInRupees = (amount / 100).toFixed(2);
-
-				const options = {
-					//key: 'rzp_test_FUBQq7lujicpGo',
-					key: razorpay_key,
-					subscription_id: subscription.id,
-					name: 'Subscription Payment',
-					description: `Subscription Payment: ₹${amountInRupees}`,
-					amount: amount,
-					handler: function (response) {
-						Swal.fire({
-							icon: 'success',
-							title: 'Payment Successful!',
-							text: 'Your payment was successful.',
-							confirmButtonText: 'OK'
-						}).then(() => {
-							OrderAPI(formData);
-							//window.location.href = '/business';
-							window.location.href = '/staging-business';
-						});
-						//window.location.href = '/staging-business';
-					},
-					prefill: {
-						name: formData.name,
-						email: formData.email,
-					},
-					theme: {
-						color: '#F37254'
-					}
-				};
-
-				const rzp = new Razorpay(options);
-				rzp.open();
-
-				rzp.on('payment.failed', function (response) {
-					Swal.fire({
-						icon: 'error',
-						title: 'Payment Error',
-						text: response.error.description || 'Unknown error occurred.',
-						confirmButtonText: 'OK'
-					});
-				});
-			} catch (error) {
-				console.error('Error initiating payment:', error);
-				Swal.fire({
-					icon: 'error',
-					title: 'Payment Initiation Failed',
-					text: 'Failed to initiate payment. Please try again later.',
-					confirmButtonText: 'OK'
-				});
-			}
-		});
-
-		document.getElementById('stripe_month_country').addEventListener('change', async function () {
-			const countryCode = this.value;
-			const stateDropdown = document.getElementById('stripe_month_state');
-			stateDropdown.innerHTML = '<option value="">Select a state</option>';
-
-			if (countryCode) {
-				try {
-					const response = await axios.get(`/getStates?country=${countryCode}`);
-					const states = response.data;
-
-					states.forEach(state => {
-						const option = document.createElement('option');
-						option.value = state.name;
-						option.textContent = state.name;
-						stateDropdown.appendChild(option);
-					});
-				} catch (error) {
-					console.error('Error fetching states:', error);
-					alert('Failed to load states. Please try again.');
-				}
-			}
-		});
-
-		async function OrderAPI(formData) {
-			try {
-				console.log("OrderAPI", formData);
-				const response = await axios.post('/auth/update-order-history', formData);
-				console.log("OrderAPI Response", response.data);
-				if (response.data.status === 'ok') {
-					Swal.fire({
-						icon: 'success',
-						title: 'Success',
-						text: response.data.message || 'Subscribed successfully.',
-						confirmButtonText: 'OK'
-					}).then(() => {
-						//window.location.href = '/staging-business';
-					});
+				if (countryCode === 'IN' && exchangeRates['INR']) {
+					convertedPrice = totalPrice / exchangeRates['INR'];
+				} else if (countryCode === 'JP' && exchangeRates['JPY']) {
+					convertedPrice = totalPrice / exchangeRates['JPY'];
 				} else {
-					Swal.fire({
-						icon: 'error',
-						title: 'Error',
-						text: response.data.message || 'Failed to subscribe. Please try again later.',
-						confirmButtonText: 'OK'
-					});
+					console.log('Unsupported country code or missing exchange rate:', countryCode);
+					return totalPrice;
 				}
+
+				return convertedPrice.toFixed(2);
 			} catch (error) {
-				console.error('Error creating user and company:', error);
-				Swal.fire({
-					icon: 'error',
-					title: 'Error',
-					text: error.response.data.message || 'Failed to subscribe. Please try again later.',
-					confirmButtonText: 'OK'
-				});
+				console.error('Error converting price:', error.message);
+				return totalPrice;
 			}
 		}
-	});
 
-	// document.getElementById('zip').addEventListener('input', function (e) {
-	// 	const value = e.target.value;
-	// 	if (value.length > 6) {
-	// 		e.target.value = value.slice(0, 6);
-	// 	}
-	// });
+		const queryParams = getQueryParams();
+		const totalPrice = parseFloat(queryParams['total_price']);
+		const countryCode = '<%= country_code %>'; 
 
-	// document.getElementById('zip').addEventListener('blur', function (e) {
-	// 	const value = e.target.value;
-	// 	if (value.length !== 6) {
-	// 		alert('Zip Code must be exactly 6 digits.');
-	// 		e.target.focus();
-	// 	}
-	// });
+		const amountElement = document.getElementById('amount');
 
-	document.getElementById('zip').addEventListener('input', function (e) {
-                const value = e.target.value;
-
-                // Example: Format input (if needed), e.g., grouping every 4 characters
-                const formattedValue = value.toUpperCase().replace(/[^A-Z0-9]/g, ''); // Remove non-alphanumeric characters and convert to uppercase
-
-                // Update the input field with the formatted value
-                e.target.value = formattedValue;
-    });
-	$(document).ready(function () {
-		const urlParams = new URLSearchParams(window.location.search);
-		const subscriptionTypeparams = urlParams.get('billingCycle'); // Ensure this matches your URL query parameter
-		console.log("subscriptionTypeparams:", subscriptionTypeparams);
-
-		const total_prices = parseFloat(urlParams.get('total_price')) || 0;
-		console.log("total_prices:", total_prices);
-
-		const monthly_price = parseFloat('<%= monthly_plan_price %>') || 0;
-		const yearly_price = parseFloat('<%= yearly_price %>') || 0;
-		const per_user_price = parseFloat('<%= per_user_price %>') || 0;
-
-		console.log("Monthly Price:", monthly_price);
-		console.log("Yearly Price:", yearly_price);
-		console.log("Per User Price:", per_user_price);
-
-		let pricePerUser;
-
-		if (subscriptionTypeparams === 'monthly') {
-			pricePerUser = parseFloat(per_user_price);
-		} else if (subscriptionTypeparams === 'yearly') {
-			pricePerUser = parseFloat(per_user_price);
-		} else {
-			console.error('Invalid subscription type');
+		if (isNaN(totalPrice)) {
+			console.log('Invalid total price:', queryParams['total_price']);
+			amountElement.textContent = '0.00';
 			return;
 		}
 
-		console.log("Price per User:", pricePerUser);
+		convertToUSD(totalPrice, countryCode)
+			.then(convertedPrice => {
+				if (!isNaN(convertedPrice)) {
+					amountElement.textContent = '$' + convertedPrice;
+					console.log('Converted Total Price to USD:', convertedPrice);
+				} else {
+					amountElement.textContent = '0.00';
+					console.log('Failed to convert total price to USD.');
+				}
+			})
+			.catch(error => {
+				console.error('Error converting total price to USD:', error.message);
+				amountElement.textContent = '0.00';
+			});
 
-		function updateMemberCountDisplay() {
-			var memberCount_val = $('#memberCount').val() || 0;
-			$('#member-count-display').text(memberCount_val);
-
-			const totalAmount = memberCount_val * pricePerUser;
-			console.log("Total Amount Calculated:", totalAmount.toFixed(2));
-
-			const alltotal_amount = totalAmount + total_prices;
-			console.log("All Total Amount:", alltotal_amount.toFixed(2));
-
-			if (memberCount_val > 0) {
-				$('#amountDisplay').text(`₹${alltotal_amount.toFixed(2)}`);
-			} else {
-				$('#amountDisplay').text(`₹${total_prices.toFixed(2)}`); // Ensure it's using total_prices
-			}
-		}
-
-		// Call updateMemberCountDisplay when needed, e.g., on input change
-		$('#memberCount').on('input', updateMemberCountDisplay);
-
-
+		console.log('Query Params:', queryParams);
+		console.log('Total Price:', totalPrice);
 	});
+
 
 </script>
 
 
+<script>
+    $(document).ready(function() {
+        $('#stripe_country').on('change', function() {
+            var country = $(this).val(); 
+            console.log("Selected Country:", country);
 
-
-
-
-
-
-
-
-<!-- <script>
-		let planid = '<%= planID%>'
-	console.log("planid", planid);
-	let user_email = '<%= currentUserData.email%>'
-	console.log("user_email", user_email);
-	let user_id = '<%= currentUserData.user_id%>'
-	console.log("user_id", user_id);
-	let memberval = '<%= memberCount%>'
-	console.log("memberval", memberval);
-	let key = 'rzp_test_FUBQq7lujicpGo'
-
-	try {
-    const response = await axios.post('/auth/create-subscription', formData);
-    console.log("Response from server:", response.data);
-    const { subscription } = response.data;
-
-    const options = {
-        key: key,
-        subscription_id: subscription.id,
-        name: 'Your Company Name',
-        description: 'Subscription Payment',
-        handler: function (response) {
-            Swal.fire({
-                icon: 'success',
-                title: 'Payment Successful!',
-                text: 'Your payment was successful.',
-                confirmButtonText: 'OK'
-            }).then(() => {
-                window.location.href = '/business';
+            // Fetch country ID based on the selected country short name
+            $.ajax({
+                url: '/getCountryIdByShortName',
+                method: 'GET',
+                data: { countryShortName: country },
+                success: function(response) {
+                    var countryId = response.countryId; 
+                    fetchStatesByCountry(countryId); // Fetch states when country is selected
+                },
+                error: function(err) {
+                    console.error('Error fetching country ID:', err);
+                }
             });
-        },
-        prefill: {
-            name: formData.name,
-            email: formData.email,
-            contact: '6294601754'
-        },
-        theme: {
-            color: '#F37254'
-        }
-    };
-
-    const rzp = new Razorpay(options);
-    rzp.open();
-
-    rzp.on('payment.failed', function (response) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Payment Error',
-            text: response.error.description || 'Unknown error occurred.',
-            confirmButtonText: 'OK'
         });
-    });
-} catch (error) {
-    console.error('Error initiating payment:', error);
-    Swal.fire({
-        icon: 'error',
-        title: 'Payment Initiation Failed',
-        text: 'Failed to initiate payment. Please try again later.',
-        confirmButtonText: 'OK'
-    });
-}
 
-</script> -->
+        // Function to fetch states based on country ID
+        function fetchStatesByCountry(countryId) {
+            $.ajax({
+                url: '/getstatebyCountries', 
+                method: 'GET',
+                data: { country_ID: countryId }, 
+                success: function(response) {
+                    populateStatesDropdown(response);
+                },
+                error: function(err) {
+                    console.error('Error fetching states:', err);
+                }
+            });
+        }
+
+        // Function to populate the state dropdown
+        function populateStatesDropdown(states) {
+            var $stateDropdown = $('#state');
+
+            // Clear existing options from the state dropdown
+            $stateDropdown.empty();
+
+            // Add a default option
+            $stateDropdown.append($('<option>', {
+                value: '',
+                text: 'Select State',
+                disabled: true,
+                selected: true
+            }));
+
+            // Populate the state dropdown with fetched states
+            states.forEach(function(state) {
+                $stateDropdown.append($('<option>', {
+                    value: state.id,
+                    text: state.name
+                }));
+            });
+        }
+    });
+
+    document.getElementById('zip').addEventListener('input', function() {
+        const zipCode = this.value;
+        const zipPattern = /^[a-zA-Z0-9\s]+$/; // Adjust pattern based on expected formats
+        if (!zipPattern.test(zipCode)) {
+            this.setCustomValidity('Invalid ZIP code format');
+        } else {
+            this.setCustomValidity('');
+        }
+    });
+
+
+</script>
 
 
 
@@ -623,76 +671,170 @@
 	let memberval = '<%= memberCount%>'
 	console.log("memberval", memberval);
 
+//     document.addEventListener('DOMContentLoaded', function () {
+//         // Initialize Stripe with your public key
+//         const stripe = Stripe('pk_test_0jpk_test_51Pmx4bE9RgUxhHlihWvQ6tCKKz2AeuVE4X2fBtEFHHnKTu4mgcFHPF1rpYDjwgn0vxlCfPEbiQTLy6JBelzwiTJw00p4tIO4NZK4WJkOCbxKTGwExCy11A5R');
+//         const elements = stripe.elements();
+//         const card = elements.create('card');
+//         card.mount('#cardElement');
 
-	document.getElementById('paymentForm').addEventListener('submit', async function (event) {
-		event.preventDefault();
+//         card.addEventListener('change', function (event) {
+//             const displayError = document.getElementById('error-message');
+//             if (event.error) {
+//                 displayError.textContent = event.error.message;
+//             } else {
+//                 displayError.textContent = '';
+//             }
+//         });
 
-		const formData = {
-			userId: user_id,
-			name: document.getElementById('name').value,
-			email: user_email,
-			address: document.getElementById('address').value,
-			city: document.getElementById('city').value,
-			state: document.getElementById('state').value,
-			zip: document.getElementById('zip').value,
-			cardName: document.getElementById('cardName').value,
-			cardNum: document.getElementById('cardNum').value,
-			expMonth: document.getElementById('expMonth').value,
-			expYear: document.getElementById('expYear').value,
-			cvv: document.getElementById('cvv').value,
-			planId: planid,
-			billingCycle: 'monthly',
-			//billingCycle: 'daily',
-			memberCount: memberval
-		};
-		console.log("Name:", formData.name);
-		console.log("Email:", formData.email);
-		console.log("Address:", formData.address);
-		console.log("City:", formData.city);
-		console.log("State:", formData.state);
-		console.log("ZIP:", formData.zip);
-		console.log("Card Name:", formData.cardName);
-		console.log("Card Number:", formData.cardNum);
-		console.log("Expiration Month:", formData.expMonth);
-		console.log("Expiration Year:", formData.expYear);
-		console.log("CVV:", formData.cvv);
-		console.log("Plan ID:", formData.planId);
-		console.log("Billing Cycle:", formData.billingCycle);
-		console.log("Member Count:", formData.memberCount);
+// 	document.getElementById('paymentForm').addEventListener('submit', async function (event) {
+// 		event.preventDefault();
+
+// 		const formData = {
+// 			token: token.id,
+// 			userId: user_id,
+// 			name: document.getElementById('name').value,
+// 			email: user_email,
+// 			address: document.getElementById('address').value,
+// 			city: document.getElementById('city').value,
+// 			state: document.getElementById('state').value,
+// 			zip: document.getElementById('zip').value,
+// 			cardName: document.getElementById('cardName').value,
+// 			cardNum: document.getElementById('cardNum').value,
+// 			expMonth: document.getElementById('expMonth').value,
+// 			expYear: document.getElementById('expYear').value,
+// 			cvv: document.getElementById('cvv').value,
+// 			planId: planid,
+// 			billingCycle: 'monthly',
+// 			//billingCycle: 'daily',
+// 			memberCount: memberval
+// 		};
+// 		console.log("Name:", formData.name);
+// 		console.log("Email:", formData.email);
+// 		console.log("Address:", formData.address);
+// 		console.log("City:", formData.city);
+// 		console.log("State:", formData.state);
+// 		console.log("ZIP:", formData.zip);
+// 		console.log("Card Name:", formData.cardName);
+// 		console.log("Card Number:", formData.cardNum);
+// 		console.log("Expiration Month:", formData.expMonth);
+// 		console.log("Expiration Year:", formData.expYear);
+// 		console.log("CVV:", formData.cvv);
+// 		console.log("Plan ID:", formData.planId);
+// 		console.log("Billing Cycle:", formData.billingCycle);
+// 		console.log("Member Count:", formData.memberCount);
 
 
-		const response = await fetch('/auth/create-subscription', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify(formData)
-		});
+// 		const response = await fetch('/auth/create-subscription', {
+// 			method: 'POST',
+// 			headers: {
+// 				'Content-Type': 'application/json'
+// 			},
+// 			body: JSON.stringify(formData)
+// 		});
 
-		const data = await response.json();
-		console.log(data);
+// 		const data = await response.json();
+// 		console.log(data);
 
-		if (response.ok) {
-			Swal.fire({
-				icon: 'success',
-				title: 'Payment Successful!',
-				text: data.message,
-				confirmButtonText: 'OK'
-			}).then(() => {
-				window.location.href = '/business';
-			});
-		} else {
-			const errorMessage = data.error ? data.error.message : 'There was an error processing your payment. Please try again later.';
-			console.log("errorMessage", errorMessage);
+// 		if (response.ok) {
+// 			Swal.fire({
+// 				icon: 'success',
+// 				title: 'Payment Successful!',
+// 				text: data.message,
+// 				confirmButtonText: 'OK'
+// 			}).then(() => {
+// 				//window.location.href = '/business';
+// 			});
+// 		} else {
+// 			const errorMessage = data.error ? data.error.message : 'There was an error processing your payment. Please try again later.';
+// 			console.log("errorMessage", errorMessage);
 
-			Swal.fire({
-				icon: 'error',
-				title: 'Payment Error',
-				text: data.error,
-				confirmButtonText: 'OK'
-			});
-		}
-	});
+// 			Swal.fire({
+// 				icon: 'error',
+// 				title: 'Payment Error',
+// 				text: data.error,
+// 				confirmButtonText: 'OK'
+// 			});
+// 		}
+// 	});
+// })
+	
+
+
+document.addEventListener('DOMContentLoaded', function () {
+        // Initialize Stripe with your public key
+        const stripe = Stripe('pk_test_0jpk_test_51Pmx4bE9RgUxhHlihWvQ6tCKKz2AeuVE4X2fBtEFHHnKTu4mgcFHPF1rpYDjwgn0vxlCfPEbiQTLy6JBelzwiTJw00p4tIO4NZK4WJkOCbxKTGwExCy11A5R');
+        const elements = stripe.elements();
+        const card = elements.create('card');
+        card.mount('#cardElement');
+
+        card.addEventListener('change', function (event) {
+            const displayError = document.getElementById('error-message');
+            if (event.error) {
+                displayError.textContent = event.error.message;
+            } else {
+                displayError.textContent = '';
+            }
+        });
+
+        document.getElementById('paymentForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
+            const {token, error} = await stripe.createToken(card);
+            if (error) {
+                console.error('Error creating token:', error);
+                document.getElementById('error-message').textContent = error.message;
+            } else {
+                const formData = {
+                    token: token.id,
+                    userId: user_id,
+                    name: document.getElementById('name').value,
+                    email: user_email,
+                    address: document.getElementById('address').value,
+                    city: document.getElementById('city').value,
+                    state: document.getElementById('state').value,
+                    zip: document.getElementById('zip').value,
+                    cardName: document.getElementById('cardName').value,
+                    cardNum: document.getElementById('cardNum').value,
+                    expMonth: document.getElementById('expMonth').value,
+                    expYear: document.getElementById('expYear').value,
+                    cvv: document.getElementById('cvv').value,
+                    planId: planid,
+                    billingCycle: 'monthly',
+                    //billingCycle: 'daily',
+                    memberCount: memberval
+                };
+                console.log("Name:", formData.name);
+                console.log("Email:", formData.email);
+                console.log("Address:", formData.address);
+                console.log("City:", formData.city);
+                console.log("State:", formData.state);
+                console.log("ZIP:", formData.zip);
+                console.log("Card Name:", formData.cardName);
+                console.log("Card Number:", formData.cardNum);
+                console.log("Expiration Month:", formData.expMonth);
+                console.log("Expiration Year:", formData.expYear);
+                console.log("CVV:", formData.cvv);
+                console.log("Plan ID:", formData.planId);
+                console.log("Billing Cycle:", formData.billingCycle);
+                console.log("Member Count:", formData.memberCount);
+
+                const response = await fetch('/auth/create-subscription', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    alert('Payment Successful!');
+                } else {
+                    alert('Payment Error: ' + data.error);
+                }
+            }
+        });
+    });
 
 	document.addEventListener('DOMContentLoaded', function () {
 		const zipInput = document.getElementById('zip');
@@ -746,8 +888,7 @@
 		async function convertToUSD(totalPrice, countryCode) {
 			try {
 				let convertedPrice;
-				console.log("totalPricssse",totalPrice);
-				console.log("countryCodess",countryCode);
+
 				if (countryCode === 'IN') {
 					convertedPrice = totalPrice / parseFloat(exchangeRates['INR']);
 				} else if (countryCode === 'JP') {
@@ -756,14 +897,13 @@
 					console.log('Unsupported country code:', countryCode);
 					return totalPrice;
 				}
-				console.log("convertedPrice",convertedPrice);
+
 				return convertedPrice.toFixed(2);
 			} catch (error) {
 				console.error('Error converting price:', error.message);
 				return totalPrice;
 			}
 		}
-		
 
 		const queryParams = getQueryParams();
 		const totalPrice = parseFloat(queryParams['total_price']);
@@ -794,4 +934,6 @@
 		console.log('Query Params:', queryParams);
 		console.log('Total Price:', totalPrice);
 	});
+
 </script> -->
+
