@@ -13899,6 +13899,82 @@ const getInvoicesForSubscription = async (subscriptionId) => {
     }
 };
 
+const createStripeProductAndPrices = async (plan, billingCycle, memberCount) => {
+    try {
+        memberCount = parseInt(memberCount);
+        if (isNaN(memberCount) || memberCount < 0) {
+            // throw new Error('Invalid memberCount');
+            memberCount= 0;
+        }
+        console.log('Creating Stripe product with plan:', plan);
+
+        console.log('Stripe Secret Key (last 4 chars):', process.env.STRIPE_SECRET_KEY.slice(-4));
+        const product = await stripe.products.create({
+            name: plan.name,
+            description: plan.description,
+        });
+    
+        const basePrice = billingCycle === 'yearly' ? plan.yearly_price : plan.monthly_price;
+        if (isNaN(basePrice) || basePrice <= 0) {
+            throw new Error('Invalid base price');
+        }
+    
+        let AddonPrice = 0; 
+        if (memberCount > 0) {
+            const user_addon_price = plan.per_user_price;
+            console.log("user_addon_price", user_addon_price);
+    
+            AddonPrice = user_addon_price * memberCount;
+            console.log("AddonPrice", AddonPrice);
+        }
+    
+        const totalPrice = parseFloat(basePrice) + parseFloat(AddonPrice);
+        //console.log("totalPrice", totalPrice);
+        if (isNaN(totalPrice) || totalPrice <= 0) {
+            throw new Error('Invalid total price');
+        }
+    
+        console.log(`Base Price: ${basePrice}, Member Count: ${memberCount}, Total Price: ${totalPrice}`);
+        const totalPriceInCents = Math.round(totalPrice * 100);
+
+        console.log(`Base Price: ${basePrice}, Member Count: ${memberCount}, Total Price: ${totalPrice}`);
+        console.log("totalPriceInCents", totalPriceInCents);
+
+
+
+        const priceParams = {
+            unit_amount: totalPriceInCents,
+            currency: 'usd',
+            product: product.id,
+            recurring: {
+                interval: billingCycle === 'yearly' ? 'month' : 'month',
+                interval_count: billingCycle === 'yearly' ? 1 : 1,
+            },
+        };
+        
+        if (billingCycle === 'yearly') {
+            priceParams.recurring.interval_count = 13; 
+        }
+        const price = await stripe.prices.create(priceParams);
+        // const price = await stripe.prices.create(priceParams);
+    
+        // const price = await stripe.prices.create({
+        //     unit_amount: totalPriceInCents,
+        //     currency: 'usd',
+        //     //recurring: { interval: 'day' },
+        //     recurring: { interval: billingCycle === 'yearly' ? 'year' : 'month' },
+        //     product: product.id,
+        // });
+        console.log("pricess",price);
+        
+    
+        return price.id;
+    } catch (error) {
+        console.error('Error creating Stripe product:', error);
+        throw error;
+    }    
+};
+
 
 
 exports.createexternalSubscription = async (req, res) => {
