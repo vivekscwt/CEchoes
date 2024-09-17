@@ -1669,6 +1669,8 @@ router.get('/create-user-company-subscription', checkCookieValue, async (req, re
         const stripe_key = process.env.STRIPE_SECRET_KEY;
 
         const stripe_publish_key = process.env.STRIPE_PUBLISH_KEY
+        console.log("stripe_publish_key",stripe_publish_key);
+        
 
         let currentUserData = JSON.parse(req.userData);
         console.log("currentUserData", currentUserData);
