@@ -1539,7 +1539,7 @@ router.get('/stripe-payment', checkCookieValue, async (req, res) => {
         console.log("req.query-monthly", req.query);
         // const apiKey = process.env.GEO_LOCATION_API_KEY;
         //console.log("apiKey",apiKey);
-        const stripe_publish_key = process.env.stripe_publish_key;
+        const stripe_publish_key = process.env.STRIPE_PUBLISH_KEY;
 
         let currentUserData = JSON.parse(req.userData);
         console.log("currentUserData", currentUserData);
@@ -1668,7 +1668,7 @@ router.get('/create-user-company-subscription', checkCookieValue, async (req, re
         const razorpay_key = process.env.RAZORPAY_KEY_ID;
         const stripe_key = process.env.STRIPE_SECRET_KEY;
 
-        const stripe_publish_key = process.env.stripe_publish_key;
+        const stripe_publish_key = process.env.STRIPE_PUBLISH_KEY
 
         let currentUserData = JSON.parse(req.userData);
         console.log("currentUserData", currentUserData);
