@@ -13905,10 +13905,10 @@ exports.createexternalSubscription = async (req, res) => {
     try {
         const { stripeToken, email, name, address, city, state, zip, planId, billingCycle, memberCount } = req.body;
 
-        console.log("createSubscription req.body", req.body);
+        console.log("createSubscription req.body",req.body);
         if (!stripeToken || !email || !name || !planId || !billingCycle || memberCount === undefined) {
             console.log("vvvvv");
-
+            
             return res.status(400).send({ error: 'Missing required parameters' });
         }
         const plan = await getPlanFromDatabase(planId);
@@ -13942,7 +13942,7 @@ exports.createexternalSubscription = async (req, res) => {
                     },
                 });
             } else {
-                customer = customer.data[0];
+                customer = customer.data[0]; 
             }
 
             await stripe.paymentMethods.attach(paymentMethod.id, { customer: customer.id });
@@ -13957,7 +13957,7 @@ exports.createexternalSubscription = async (req, res) => {
             return res.status(500).send({ error: 'Failed to create/retrieve customer' });
         }
 
-        const priceId = await createStripeProductAndPrice(plan, billingCycle, memberCount);
+        const priceId = await createStripeProductAndPrices(plan, billingCycle, memberCount);
         if (!priceId) {
             return res.status(500).send({ error: 'Failed to create price for the plan' });
         }
@@ -14007,6 +14007,18 @@ exports.createexternalSubscription = async (req, res) => {
             const order_history_query = `INSERT INTO order_history SET ?`;
             await queryAsync(order_history_query, [order_history_data]);
 
+            const mailOptions = {
+                from: process.env.MAIL_USER,
+                to: email,
+                subject: 'Your Subscription Invoice',
+                html: `<p>Hello ${name},</p>
+                       <p>Thank you for your subscription. You can view your invoice at the <a href="${invoiceUrl}">following link</a>.</p>
+                       <p>Kind Regards,</p>
+                       <p>CEchoes Technology Team</p>`
+            };
+    
+            await mdlconfig.transporter.sendMail(mailOptions);
+
             return res.send({
                 status: 'ok',
                 message: 'Your payment has been successfully processed.',
@@ -14030,9 +14042,6 @@ exports.createexternalSubscription = async (req, res) => {
         return res.status(500).send({ error: 'An error occurred while creating the subscription.' });
     }
 };
-
-
-
 
 exports.externalRegistration = async (req, res) => {
     const { first_name, last_name, email, register_password, phone, address, city, state, zip, planId, billingCycle, memberCount, subscriptionId, user_state, user_country, register_confirm_password } = req.body;
@@ -14315,7 +14324,7 @@ exports.externalRegistration = async (req, res) => {
             // Check if company exists
             if (req.body.parent_id == '0') {
                 console.log("vvvvv");
-
+                
                 const companyQuery = `SELECT * FROM company WHERE company_name = ? AND main_address_country = ? `;
                 const companyValue = await query(companyQuery, [req.body.company_name, req.body.main_address_country]);
                 if (companyValue.length > 0) {
@@ -14329,16 +14338,16 @@ exports.externalRegistration = async (req, res) => {
             comFunction2.generateUniqueSlug(req.body.company_name, async (error, companySlug) => {
                 if (error) {
                     console.log("error slug");
-
+                    
                     console.log('Err: ', error.message);
                     return res.status(500).json({ status: 'err', data: '', message: 'Error generating company slug' });
                 } else {
                     console.log('companySlug', companySlug);
                     var insertValues = [];
                     if (req.file) {
-                        insertValues = [userResults.insertId, req.body.company_name, req.body.heading, req.file.filename, req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, '2', req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug, req.body.parent_id, '1'];
+                        insertValues = [userResults.insertId, req.body.company_name, req.body.heading, req.file.filename, req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, '2', req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug, req.body.parent_id,'1'];
                     } else {
-                        insertValues = [userResults.insertId, req.body.company_name, req.body.heading, '', req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, '2', req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.main_address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug, req.body.parent_id, '1'];
+                        insertValues = [userResults.insertId, req.body.company_name, req.body.heading, '', req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, '2', req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.main_address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug, req.body.parent_id,'1'];
                     }
 
                     const insertQuery = 'INSERT INTO company (user_created_by, company_name, heading, logo, about_company, comp_phone, comp_email, comp_registration_id, status, trending, created_date, updated_date, tollfree_number, main_address, main_address_pin_code, address_map_url, main_address_country, main_address_state, main_address_city, verified, paid_status, slug, parent_id,temp_comp_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
@@ -14365,7 +14374,7 @@ exports.externalRegistration = async (req, res) => {
                             const invoice = await stripe.invoices.retrieve(subscriptionDetails.latest_invoice);
                             console.log('Invoices for subscriptions:', invoice);
 
-
+  
 
                             // const getpayments= fetchPaymentsByInvoiceId(invoiceId);
                             // console.log("getpayments",getpayments);
@@ -14481,6 +14490,7 @@ exports.externalRegistration = async (req, res) => {
         return res.status(500).json({ status: 'err', data: '', message: 'An error occurred while processing your request' });
     }
 };
+
 
 
 // exports.externalRegistration = async (req, res) => {

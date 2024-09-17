@@ -153,14 +153,10 @@
                     <div class="formbold-form-confirm" id="confirmed">
                         <p>Number of added users: <span id="member-count-display">0</span></p>
                         <p>Total Amount: <span id="amount-count-display">
-                                <%= total_price%>
-                            </span></p>
+                            $<%= total_price / 1 %>
+                        </span></p>
                         <p>Are you sure you want to submit the form?</p>
-                        <!-- <div>
-                            <button type="button" class="formbold-confirm-btn active"
-                                onclick="handleConfirmation(true)">Proceed</button>
-                            <!-- <button type="button" class="formbold-confirm-btn" onclick="handleConfirmation(false)">No</button> -->
-                        <!-- </div> --> -->
+                        
                         <div>
                             <button type="button" class="formbold-confirm-btn active"
                                 onclick="handleConfirmation(true)">Proceed</button>
@@ -245,7 +241,26 @@
                     justify-content: center;
                     font-weight: 700;
                 }
-
+                @media (max-width:1199px){
+                    #paymentModal .modal-content {
+                    width: 60%;
+                }
+                }
+                @media (max-width:765px){
+                    #paymentModal .modal-content {
+                    width: 80%;
+                }
+                }
+                @media (max-width:575px){
+                    #paymentModal .modal-content {
+                    width: 85%;
+                    padding: 0 20px 70px;
+                }
+                .formbold-form-input {
+                    width: 100%;
+                    padding: 12px 10px;
+                }
+                }
 
         </style>
 
@@ -1224,11 +1239,18 @@
 
                     const alltotal_amount = totalAmount + total_prices;
                     console.log("alltotal_amount", alltotal_amount.toFixed(2));
+                    var allamount = alltotal_amount/1;
 
+                    // if (memberCount_val > 0) {
+                    //     $('#amount-count-display').text(alltotal_amount.toFixed(2));
+                    // } else {
+                    //     $('#amount-count-display').text('<%= total_price%>');
+                    // }
                     if (memberCount_val > 0) {
-                        $('#amount-count-display').text(alltotal_amount.toFixed(2));
+                        $('#amount-count-display').text(`$${parseFloat(allamount).toFixed(1).replace(/\.0$/, '')}`);
                     } else {
-                        $('#amount-count-display').text('<%= total_price%>');
+                        const total_price = '<%= total_price %>'; 
+                        $('#amount-count-display').text(`$${parseFloat(total_price).toFixed(1).replace(/\.0$/, '')}`);
                     }
                 }
 
