@@ -13903,90 +13903,135 @@ const getInvoicesForSubscription = async (subscriptionId) => {
 
 exports.createexternalSubscription = async (req, res) => {
     try {
-        const { name, email, phone, address, city, state, zip, planId, billingCycle, memberCount } = req.body;
-        console.log("Subscription request body:", req.body);
+        const { stripeToken, email, name, address, city, state, zip, planId, billingCycle, memberCount } = req.body;
 
-        const getcountryquery = `SELECT * FROM countries WHERE id = "${req.body.user_country}"`;
-        const getcountryvalue = await queryAsync(getcountryquery);
-        const getstatequery = `SELECT * FROM states WHERE country_id = "${req.body.user_country}"`;
-        const getstatevalue = await queryAsync(getstatequery);
-        var countryNAme = getcountryvalue[0].name;
-        console.log("countryNAme", countryNAme);
-        var stateNAme = getstatevalue[0].name;
-        console.log("countryNAme", countryNAme);
+        console.log("createSubscription req.body", req.body);
+        if (!stripeToken || !email || !name || !planId || !billingCycle || memberCount === undefined) {
+            console.log("vvvvv");
 
-
-        let customerId = await CreateCustomer(email, name, phone, countryNAme, city, stateNAme, zip);
-        console.log("customerId", customerId);
-
-        // Fetch country details from cookies
-        let country_name = req.cookies.countryName;
-        let country_code = req.cookies.countryCode;
-        console.log("Country Code:", country_code);
-        console.log("Country Name:", country_name);
-
-        // Fetch plan details from database
+            return res.status(400).send({ error: 'Missing required parameters' });
+        }
         const plan = await getPlanFromDatabase(planId);
-        console.log("planss", plan);
         if (!plan) {
             return res.status(404).send({ error: 'Plan not found' });
         }
 
-        // Create Razorpay plan
-        const priceId = await createRazorpayPlan(plan, billingCycle, memberCount, country_code);
+        let paymentMethod;
+        try {
+            paymentMethod = await stripe.paymentMethods.create({
+                type: 'card',
+                card: { token: stripeToken },
+            });
+        } catch (error) {
+            console.error("Error creating PaymentMethod:", error);
+            return res.status(500).send({ error: 'Failed to create PaymentMethod' });
+        }
+
+        let customer;
+        try {
+            customer = await stripe.customers.list({ email });
+            if (customer.data.length === 0) {
+                customer = await stripe.customers.create({
+                    email: email,
+                    name: name,
+                    address: {
+                        line1: address,
+                        city: city,
+                        state: state,
+                        postal_code: zip,
+                    },
+                });
+            } else {
+                customer = customer.data[0];
+            }
+
+            await stripe.paymentMethods.attach(paymentMethod.id, { customer: customer.id });
+
+            await stripe.customers.update(customer.id, {
+                invoice_settings: {
+                    default_payment_method: paymentMethod.id,
+                },
+            });
+        } catch (error) {
+            console.error("Error creating/retrieving customer:", error);
+            return res.status(500).send({ error: 'Failed to create/retrieve customer' });
+        }
+
+        const priceId = await createStripeProductAndPrice(plan, billingCycle, memberCount);
         if (!priceId) {
             return res.status(500).send({ error: 'Failed to create price for the plan' });
         }
-        console.log("Created Razorpay plan:", priceId);
 
-        const amount = priceId.item.amount;
-        console.log("amount",amount);
+        let subscription;
+        try {
+            subscription = await stripe.subscriptions.create({
+                customer: customer.id,
+                items: [{ price: priceId }],
+                expand: ['latest_invoice.payment_intent'],
+            });
+        } catch (error) {
+            console.error("Error creating subscription:", error);
+            return res.status(500).send({ error: 'Failed to create subscription' });
+        }
 
-        // Create subscription with Razorpay
-        const subscriptionParams = {
-            plan_id: priceId.id,
-            customer_id: customerId,
-            total_count: 92,
-        };
-        const subscription = await razorpay.subscriptions.create(subscriptionParams);
-        console.log("Created subscription:", subscription);
+        const invoice = await stripe.invoices.retrieve(subscription.latest_invoice.id);
+        const paymentIntent = invoice.payment_intent;
+        if (!paymentIntent) {
+            return res.status(500).send({ error: 'Payment intent not found in invoice' });
+        }
 
-        // Store subscription ID in a variable accessible outside this function
-        //req.subscriptionId = subscription.id;
+        const paymentIntentStatus = await stripe.paymentIntents.retrieve(paymentIntent);
+        if (!paymentIntentStatus || !paymentIntentStatus.status) {
+            return res.status(500).send({ error: 'Failed to retrieve payment intent status' });
+        }
 
-        console.log("Subscription current start timestamp:", subscription.current_start);
-        console.log("Subscription charge at timestamp:", subscription.charge_at);
+        let paymentStatus = paymentIntentStatus.status;
+        if (paymentStatus === 'succeeded') {
+            const updatedSubscription = await stripe.subscriptions.retrieve(subscription.id);
+            const invoiceUrl = invoice.invoice_pdf;
 
-        const subscriptionStartDate = new Date(subscription.current_start * 1000);
-        const subscriptionEndDate = new Date(subscription.charge_at * 1000);
+            const planInterval = updatedSubscription.items.data[0].price.recurring.interval === 'year' ? 'year' : 'month';
 
-        console.log("Subscription start date:", subscriptionStartDate);
-        console.log("Subscription end date:", subscriptionEndDate);
+            const order_history_data = {
+                stripe_subscription_id: subscription.id,
+                plan_id: planId,
+                payment_status: paymentIntentStatus.status,
+                subscription_details: JSON.stringify(subscription),
+                payment_details: JSON.stringify(paymentIntentStatus),
+                subscription_duration: planInterval,
+                subscription_start_date: new Date(subscription.current_period_start * 1000),
+                subscription_end_date: new Date(subscription.current_period_end * 1000),
+                added_user_number: memberCount
+            };
 
-        const order_history_data = {
-            stripe_subscription_id: subscription.id,
-            plan_id: planId,
-            payment_status: 'success',
-            subscription_details: JSON.stringify(subscription),
-            subscription_duration: billingCycle,
-            subscription_start_date: new Date(subscription.current_start * 1000),
-            subscription_end_date: new Date(subscription.charge_at * 1000),
-            added_user_number: memberCount
-        };
-        const order_history_query = `INSERT INTO order_history SET ?`;
-        await queryAsync(order_history_query, [order_history_data]);
+            const order_history_query = `INSERT INTO order_history SET ?`;
+            await queryAsync(order_history_query, [order_history_data]);
 
-        // Send response
-        res.status(200).send({
-            message: 'Subscription created successfully',
-            subscription: subscription,
-            amount: amount
-        });
+            return res.send({
+                status: 'ok',
+                message: 'Your payment has been successfully processed.',
+                subscription: updatedSubscription.id,
+                invoiceUrl: invoiceUrl
+            });
+        } else if (paymentStatus === 'requires_action') {
+            return res.status(400).send({
+                status: 'requires_action',
+                client_secret: paymentIntent.client_secret,
+                message: 'Payment requires additional actions.'
+            });
+        } else {
+            return res.status(400).send({
+                status: 'failed',
+                message: 'Payment failed or requires a new payment method.'
+            });
+        }
     } catch (error) {
-        console.error('Error creating subscription flow:', error);
-        res.status(500).send({ error: error.message });
+        console.error('Error creating subscription:', error);
+        return res.status(500).send({ error: 'An error occurred while creating the subscription.' });
     }
 };
+
+
 
 
 exports.externalRegistration = async (req, res) => {
@@ -14268,33 +14313,38 @@ exports.externalRegistration = async (req, res) => {
 
             // Create company logic
             // Check if company exists
-            if (req.body.parent_id == 0) {
+            if (req.body.parent_id == '0') {
+                console.log("vvvvv");
+
                 const companyQuery = `SELECT * FROM company WHERE company_name = ? AND main_address_country = ? `;
                 const companyValue = await query(companyQuery, [req.body.company_name, req.body.main_address_country]);
                 if (companyValue.length > 0) {
                     return res.status(500).json({ status: 'err', data: '', message: 'Organization name already exists.' });
                 }
             }
-            if (!req.body.parent_id || req.body.parent_id === "Select Parent") {
-                req.body.parent_id = 0;
-            }
+            // if (!req.body.parent_id || req.body.parent_id === "Select Parent") {
+            //     req.body.parent_id = 0;
+            // }
 
             comFunction2.generateUniqueSlug(req.body.company_name, async (error, companySlug) => {
                 if (error) {
+                    console.log("error slug");
+
                     console.log('Err: ', error.message);
                     return res.status(500).json({ status: 'err', data: '', message: 'Error generating company slug' });
                 } else {
                     console.log('companySlug', companySlug);
                     var insertValues = [];
                     if (req.file) {
-                        insertValues = [userResults.insertId, req.body.company_name, req.body.heading, req.file.filename, req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, '2', req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug, req.body.parent_id];
+                        insertValues = [userResults.insertId, req.body.company_name, req.body.heading, req.file.filename, req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, '2', req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug, req.body.parent_id, '1'];
                     } else {
-                        insertValues = [userResults.insertId, req.body.company_name, req.body.heading, '', req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, '2', req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.main_address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug, req.body.parent_id];
+                        insertValues = [userResults.insertId, req.body.company_name, req.body.heading, '', req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, '2', req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.main_address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug, req.body.parent_id, '1'];
                     }
 
-                    const insertQuery = 'INSERT INTO company (user_created_by, company_name, heading, logo, about_company, comp_phone, comp_email, comp_registration_id, status, trending, created_date, updated_date, tollfree_number, main_address, main_address_pin_code, address_map_url, main_address_country, main_address_state, main_address_city, verified, paid_status, slug, parent_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+                    const insertQuery = 'INSERT INTO company (user_created_by, company_name, heading, logo, about_company, comp_phone, comp_email, comp_registration_id, status, trending, created_date, updated_date, tollfree_number, main_address, main_address_pin_code, address_map_url, main_address_country, main_address_state, main_address_city, verified, paid_status, slug, parent_id,temp_comp_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
                     db.query(insertQuery, insertValues, async (err, results, fields) => {
                         if (err) {
+                            console.error("Company error:", err);
                             return res.status(500).json({ status: 'err', data: '', message: 'An error occurred while processing your request' });
                         } else {
                             console.log("company results", results);
@@ -14309,16 +14359,13 @@ exports.externalRegistration = async (req, res) => {
                             const updatecompanyclaim_result = await queryAsync(updatecompanyclaim_query, updatecompanyclaim_values);
                             console.log("Company claim request inserted successfully:", updatecompanyclaim_result);
 
-                            const subscriptionDetails = await razorpay.subscriptions.fetch(subscriptionId);
+                            const subscriptionDetails = await stripe.subscriptions.retrieve(subscriptionId);
                             console.log('Subscription details:', subscriptionDetails);
 
-                            const invoices = await razorpay.invoices.all({
-                                'subscription_id': subscriptionId
-                            });
-                            console.log('Invoices for subscriptions:', invoices);
+                            const invoice = await stripe.invoices.retrieve(subscriptionDetails.latest_invoice);
+                            console.log('Invoices for subscriptions:', invoice);
 
-                            const invoiceId = invoices.items.length > 0 ? invoices.items[0].id : null;
-                            console.log('Invoice IDs:', invoiceId);
+
 
                             // const getpayments= fetchPaymentsByInvoiceId(invoiceId);
                             // console.log("getpayments",getpayments);
@@ -14335,28 +14382,19 @@ exports.externalRegistration = async (req, res) => {
 
                             const order_history_data = {
                                 user_id: userID,
-                                payment_status: 'success',
-                                subscription_details: JSON.stringify(subscriptionDetails),
-                                subscription_start_date: new Date(subscriptionDetails.current_start * 1000),
-                                subscription_end_date: new Date(subscriptionDetails.charge_at * 1000),
                             };
 
                             const update_order_history_query = `
                                 UPDATE order_history
-                                SET user_id = ?, payment_status = ?, subscription_details = ?, subscription_start_date = ?, subscription_end_date = ?
+                                SET user_id = ?
                                 WHERE stripe_subscription_id = ?
                               `;
 
                             const update_values = [
                                 order_history_data.user_id,
-                                order_history_data.payment_status,
-                                order_history_data.subscription_details,
-                                order_history_data.subscription_start_date,
-                                order_history_data.subscription_end_date,
                                 subscriptionId
                             ];
 
-                            // Execute the query
                             try {
                                 const update_result = await queryAsync(update_order_history_query, update_values);
                                 console.log(`Order history updated for subscription ID ${subscriptionId}`);

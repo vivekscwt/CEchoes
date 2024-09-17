@@ -7160,55 +7160,55 @@ async function getcountrynamebyIp(ipAddress, api_key) {
 
 async function getplans(userCountry) {
   try {
-      // Example SQL queries to fetch plans
-      const basic_query = `SELECT * FROM plan_management WHERE name = 'Basic'`;
-      const standard_query = `SELECT * FROM plan_management WHERE name = 'standard'`;
-      const advanced_query = `SELECT * FROM plan_management WHERE name = 'advanced'`;
-      const premium_query = `SELECT * FROM plan_management WHERE name = 'premium'`;
-      const enterprise_query = `SELECT * FROM plan_management WHERE name = 'enterprise'`;
+    // Example SQL queries to fetch plans
+    const basic_query = `SELECT * FROM plan_management WHERE name = 'Basic'`;
+    const standard_query = `SELECT * FROM plan_management WHERE name = 'standard'`;
+    const advanced_query = `SELECT * FROM plan_management WHERE name = 'advanced'`;
+    const premium_query = `SELECT * FROM plan_management WHERE name = 'premium'`;
+    const enterprise_query = `SELECT * FROM plan_management WHERE name = 'enterprise'`;
 
-      // Execute SQL queries concurrently using Promise.all
-      const [
-          basic_value,
-          standard_value,
-          advanced_value,
-          premium_value,
-          enterprise_value
-      ] = await Promise.all([
-          query(basic_query),
-          query(standard_query),
-          query(advanced_query),
-          query(premium_query),
-          query(enterprise_query)
-      ]);
+    // Execute SQL queries concurrently using Promise.all
+    const [
+      basic_value,
+      standard_value,
+      advanced_value,
+      premium_value,
+      enterprise_value
+    ] = await Promise.all([
+      query(basic_query),
+      query(standard_query),
+      query(advanced_query),
+      query(premium_query),
+      query(enterprise_query)
+    ]);
 
-      // Assuming query results are checked for length and have first element accessed
-      const basic_val = basic_value.length > 0 ? basic_value[0] : null;
-      const standard_val = standard_value.length > 0 ? standard_value[0] : null;
-      const advanced_val = advanced_value.length > 0 ? advanced_value[0] : null;
-      const premium_val = premium_value.length > 0 ? premium_value[0] : null;
-      const enterprise_val = enterprise_value.length > 0 ? enterprise_value[0] : null;
+    // Assuming query results are checked for length and have first element accessed
+    const basic_val = basic_value.length > 0 ? basic_value[0] : null;
+    const standard_val = standard_value.length > 0 ? standard_value[0] : null;
+    const advanced_val = advanced_value.length > 0 ? advanced_value[0] : null;
+    const premium_val = premium_value.length > 0 ? premium_value[0] : null;
+    const enterprise_val = enterprise_value.length > 0 ? enterprise_value[0] : null;
 
-      // Convert prices based on user's country
-      const convertedPlans = await Promise.all([
-          convertPrices(basic_val, userCountry),
-          convertPrices(standard_val, userCountry),
-          convertPrices(advanced_val, userCountry),
-          convertPrices(premium_val, userCountry),
-          convertPrices(enterprise_val, userCountry)
-      ]);
+    // Convert prices based on user's country
+    const convertedPlans = await Promise.all([
+      convertPrices(basic_val, userCountry),
+      convertPrices(standard_val, userCountry),
+      convertPrices(advanced_val, userCountry),
+      convertPrices(premium_val, userCountry),
+      convertPrices(enterprise_val, userCountry)
+    ]);
 
-      // Return an object with converted plans
-      return {
-          basic_val: convertedPlans[0],
-          standard_val: convertedPlans[1],
-          advanced_val: convertedPlans[2],
-          premium_val: convertedPlans[3],
-          enterprise_val: convertedPlans[4]
-      };
+    // Return an object with converted plans
+    return {
+      basic_val: convertedPlans[0],
+      standard_val: convertedPlans[1],
+      advanced_val: convertedPlans[2],
+      premium_val: convertedPlans[3],
+      enterprise_val: convertedPlans[4]
+    };
   } catch (error) {
-      console.error('Error fetching plans:', error);
-      throw new Error('An error occurred while fetching plans');
+    console.error('Error fetching plans:', error);
+    throw new Error('An error occurred while fetching plans');
   }
 }
 
@@ -7219,12 +7219,12 @@ async function getCurrency() {
 
   const exchangeRates = {};
   for (const row of getcurrencyvalue) {
-      if (row.inr_currency) {
-          exchangeRates['INR'] = row.inr_currency;
-      }
-      if (row.jpy_currency) {
-          exchangeRates['JPY'] = row.jpy_currency;
-      }
+    if (row.inr_currency) {
+      exchangeRates['INR'] = row.inr_currency;
+    }
+    if (row.jpy_currency) {
+      exchangeRates['JPY'] = row.jpy_currency;
+    }
   }
 
   return exchangeRates;
@@ -7241,22 +7241,22 @@ async function convertPrices(plan, userCountry) {
   let perUserPriceConverted = plan.per_user_price;
 
   if (userCurrency !== 'USD') {
-      if (!exchangeRates[userCurrency]) {
-          console.error(`Conversion rate for ${userCurrency} not available`);
-          return plan;
-      }
+    if (!exchangeRates[userCurrency]) {
+      console.error(`Conversion rate for ${userCurrency} not available`);
+      return plan;
+    }
 
-      monthlyPriceConverted = (parseFloat(plan.monthly_price) * exchangeRates[userCurrency]).toFixed(2);
-      yearlyPriceConverted = (parseFloat(plan.yearly_price) * exchangeRates[userCurrency]).toFixed(2);
-      perUserPriceConverted = (parseFloat(plan.per_user_price) * exchangeRates[userCurrency]).toFixed(2);
+    monthlyPriceConverted = (parseFloat(plan.monthly_price) * exchangeRates[userCurrency]).toFixed(2);
+    yearlyPriceConverted = (parseFloat(plan.yearly_price) * exchangeRates[userCurrency]).toFixed(2);
+    perUserPriceConverted = (parseFloat(plan.per_user_price) * exchangeRates[userCurrency]).toFixed(2);
   }
 
   const convertedPlan = {
-      ...plan,
-      monthly_price_local: monthlyPriceConverted,
-      yearly_price_local: yearlyPriceConverted,
-      per_user_price_local: perUserPriceConverted,
-      local_currency: userCurrency
+    ...plan,
+    monthly_price_local: monthlyPriceConverted,
+    yearly_price_local: yearlyPriceConverted,
+    per_user_price_local: perUserPriceConverted,
+    local_currency: userCurrency
   };
 
   return convertedPlan;
@@ -7264,8 +7264,8 @@ async function convertPrices(plan, userCountry) {
 
 function getUserCurrency(userCountry) {
   const countryCurrencyMap = {
-      'India': 'INR',
-      'Japan': 'JPY',
+    'India': 'INR',
+    'Japan': 'JPY',
   };
 
   return countryCurrencyMap[userCountry] || 'USD';
@@ -7273,20 +7273,32 @@ function getUserCurrency(userCountry) {
 
 
 
-async function getSubscribedUsers(userId){
+async function getSubscribedUsers(userId) {
   try {
-    const querys = `SELECT order_history.*, plan_management.name as plan_name FROM order_history LEFT JOIN plan_management ON order_history.plan_id = plan_management.id WHERE user_id = "${userId}" AND payment_status= "success"`;
+    // const querys = `SELECT order_history.*, plan_management.name as plan_name FROM order_history LEFT JOIN plan_management ON order_history.plan_id = plan_management.id WHERE user_id = "${userId}" AND payment_status= "succeeded"`;
+    const querys = `
+    SELECT order_history.*, 
+           plan_management.name as plan_name, 
+           CASE 
+             WHEN order_history.subscription_duration = 'month' THEN 'monthly' 
+             WHEN order_history.subscription_duration = 'year' THEN 'yearly' 
+              WHEN order_history.subscription_duration = 'daily' THEN 'daily'
+             ELSE 'other' 
+           END as subscription_duration 
+    FROM order_history 
+    LEFT JOIN plan_management ON order_history.plan_id = plan_management.id 
+    WHERE user_id = "${userId}" AND payment_status = "succeeded"`;
     const querys_val = await query(querys);
 
-    if(querys_val.length>0){
-      console.log("querys_val",querys_val);
+    if (querys_val.length > 0) {
+      console.log("querys_val", querys_val);
     }
-    
+
     return querys_val;
-} catch (error) {
+  } catch (error) {
     console.error('Error fetching plans:', error);
     throw new Error('An error occurred while fetching plans');
-}
+  }
 }
 
 

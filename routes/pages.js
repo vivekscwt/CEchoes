@@ -1716,20 +1716,21 @@ router.get('/stripe-year-payment', checkCookieValue, async (req, res) => {
     }
 });
 
-router.get('/create-user-company-subscription', checkCookieValue, async(req, res)=>{
+router.get('/create-user-company-subscription', checkCookieValue, async (req, res) => {
     try {
-        const { planName, planPrice, monthly, memberCount, total_price, encryptedEmail,subscriptionType } = req.query;
+        const { planName, planPrice, monthly, memberCount, total_price, encryptedEmail, subscriptionType } = req.query;
         console.log("req.query-monthly", req.query);
         const apiKey = process.env.GEO_LOCATION_API_KEY;
         //console.log("apiKey",apiKey);
         const razorpay_key = process.env.RAZORPAY_KEY_ID;
+        const stripe_key = process.env.STRIPE_SECRET_KEY;
 
         let currentUserData = JSON.parse(req.userData);
         console.log("currentUserData", currentUserData);
-        if(currentUserData != null){
+        if (currentUserData != null) {
             var user_id = currentUserData.user_id;
-            console.log("user_idsssss",user_id);
-    
+            console.log("user_idsssss", user_id);
+
             // const decryptedEmail = await comFunction2.decryptEmail(encryptedEmail);
             // if (decryptedEmail !== currentUserData.email) {
             //     return res.status(500).send('You are not authorized to access the payment page.');
@@ -1745,15 +1746,15 @@ router.get('/create-user-company-subscription', checkCookieValue, async(req, res
         const planids = `SELECT * FROM plan_management WHERE name = "${planName}"`;
         const planidvalue = await queryAsync(planids);
         //console.log("planidvalue", planidvalue[0].id);
-        if(planidvalue.length>0){
+        if (planidvalue.length > 0) {
             var planID = planidvalue[0].id;
-            console.log("planID",planID);
+            console.log("planID", planID);
             var monthly_plan_price = planidvalue[0].monthly_price;
-            console.log("monthly_plan_price",monthly_plan_price);
+            console.log("monthly_plan_price", monthly_plan_price);
             var yearly_price = planidvalue[0].yearly_price;
-            console.log("yearly_price",yearly_price);         
+            console.log("yearly_price", yearly_price);
             var per_user_prices = planidvalue[0].per_user_price;
-            console.log("per_user_prices",per_user_prices);
+            console.log("per_user_prices", per_user_prices);
         }
         const getcurencyquery = `SELECT * FROM currency_conversion`;
         const getcurrencyval = await queryAsync(getcurencyquery);
@@ -1764,19 +1765,19 @@ router.get('/create-user-company-subscription', checkCookieValue, async(req, res
         var jp_currency = getcurrencyval[0].jpy_currency;
         console.log("jp_currency", jp_currency);
 
-        if(country_code=='IN'){
+        if (country_code == 'IN') {
             var per_user_price = per_user_prices * indian_currency;
-        }else if(country_code=='JP'){
+        } else if (country_code == 'JP') {
             var per_user_price = per_user_prices * jp_currency;
-        } else{
+        } else {
             var per_user_price = per_user_prices
         }
 
-        
+
         const exchangeRates = await comFunction2.getCurrency();
         //console.log("exchangeRates",exchangeRates);
 
-        const [globalPageMeta, getplans,getCountries,getCountriesList] = await Promise.all([
+        const [globalPageMeta, getplans, getCountries, getCountriesList] = await Promise.all([
             comFunction2.getPageMetaValues('global'),
             comFunction2.getplans(country_name),
             comFunction.getCountries(),
@@ -1803,6 +1804,7 @@ router.get('/create-user-company-subscription', checkCookieValue, async(req, res
             getCountries,
             getCountriesList,
             razorpay_key: razorpay_key,
+            stripe_key: stripe_key,
             subscriptionType: subscriptionType,
             monthly_plan_price: monthly_plan_price,
             yearly_price: yearly_price,
@@ -1813,7 +1815,6 @@ router.get('/create-user-company-subscription', checkCookieValue, async(req, res
         res.status(500).send('An error occurred');
     }
 })
-
 
 
 router.get('/checkEmailAvailability', async (req, res) => {
@@ -1846,7 +1847,7 @@ router.get('/checkEmailAvailability', async (req, res) => {
 router.get('/get-exist-company', async (req, res) => {
     try {
         const { company_name, main_address_country, parent_id } = req.query;
-        console.log("getexistcomp",req.query);
+        console.log("getexistcomp", req.query);
         if (parent_id == 0) {
             const companyquery = `SELECT * FROM company WHERE company_name = ? AND main_address_country = ?`;
             const companyvalue = await query(companyquery, [company_name, main_address_country]);
