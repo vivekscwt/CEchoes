@@ -32,9 +32,7 @@
                         const formattedDate = `${year}-${month}-${day}`;
                      %>
                      <% const daysDiff = Math.round((date - date2)/(1000 * 60 * 60 * 24)) %>
-                     <% if(daysDiff >= 0){
-                        //Already running 1 Survey
-                     } else { %>
+
                      <div class="create-survey-field">
                         <form id="survey-form-submit" name="survey-form" method="post">
                            <div class="create-survey-head">
@@ -146,7 +144,7 @@
                         </div>
                         <div style="width: 85%; text-align: center; display: block; border: 2px solid #fccb06; padding: 6px; margin: 0 auto; border-radius: 5px; display: none;" class="poll-create-message"></div>
                      </div>
-                     <% } %>                  
+                           
                   <% }else{ %>
                      <div class="create-survey-field">
                         <form id="survey-form-submit" name="survey-form" method="post">
