@@ -4054,7 +4054,7 @@ router.get('/update-survey/:slug/:survey_id', checkClientClaimedCompany, async (
     const formattedDate = `${day < 10 ? '0' : ''}${day}/${month < 10 ? '0' : ''}${month}/${year}`;
 
 
-    const [globalPageMeta, company, allRatingTags, companyReviewNumbers, allCompanyReviews, allCompanyReviewTags, PremiumCompanyData, reviewTagsCount, CompanySurveyDetails, CompanySurveySubmitionsCount, SurveyAnswerCount, a] = await Promise.all([
+    const [globalPageMeta, company, allRatingTags, companyReviewNumbers, allCompanyReviews, allCompanyReviewTags, PremiumCompanyData, reviewTagsCount, CompanySurveyDetails, CompanySurveySubmitionsCount, SurveyAnswerCount, getSurveyemailDetailsByUniqueId] = await Promise.all([
         comFunction2.getPageMetaValues('global'),
         comFunction.getCompany(companyId),
         comFunction.getAllRatingTags(),
@@ -4066,8 +4066,22 @@ router.get('/update-survey/:slug/:survey_id', checkClientClaimedCompany, async (
         comFunction2.getSurveyDetailsByUniqueId(surveyUniqueId),
         comFunction.getCompanySurveySubmitionsCount(),
         comFunction2.countSurveyAnswerByUniqueId(surveyUniqueId),
+        comFunction2.getSurveyemailDetailsByUniqueId(surveyUniqueId)
     ]);
-    console.log('SurveyAnswerCount', SurveyAnswerCount)
+    console.log('SurveyAnswerCount', SurveyAnswerCount);
+    console.log("getSurveyemailDetailsByUniqueId", getSurveyemailDetailsByUniqueId);
+
+    const getsurveyquery = `SELECT * FROM survey WHERE expire_at >= CURDATE();`;
+    const getsurveyval = await query(getsurveyquery);
+
+    console.log("getsurveyval", getsurveyval);
+
+    var emailAddresses = getSurveyemailDetailsByUniqueId.map(function (item) {
+        return item.emails;
+    });
+    var jsonStringa = JSON.stringify(emailAddresses);
+    console.log("jsonStringa", jsonStringa);
+
 
     let facebook_url = '';
     let twitter_url = '';
@@ -4118,6 +4132,9 @@ router.get('/update-survey/:slug/:survey_id', checkClientClaimedCompany, async (
             ...detail,
             ...(submitionsCountMap[detail.unique_id] || {}) // Add submitionsCount if it exists
         }));
+
+        console.log("CompanySurveyDetails_formatted", CompanySurveyDetails_formatted);
+
         // res.json(
         // { 
         //     menu_active_id: 'survey',
@@ -4160,7 +4177,9 @@ router.get('/update-survey/:slug/:survey_id', checkClientClaimedCompany, async (
                 linkedin_url: linkedin_url,
                 youtube_url: youtube_url,
                 CompanySurveyDetails_formatted,
-                SurveyAnswerCount
+                SurveyAnswerCount,
+                jsonStringa: jsonStringa,
+                getsurveyval: getsurveyval
             });
     }
 });
