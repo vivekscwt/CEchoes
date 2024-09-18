@@ -6481,6 +6481,23 @@ async function countSurveyAnswerByUniqueId(unique_id) {
   }
 }
 
+async function getSurveyemailDetailsByUniqueId(unique_id) {
+  const get_company_survey_details_query = `
+  SELECT suvey_invitation_details.emails
+  FROM survey
+  LEFT JOIN suvey_invitation_details ON survey.unique_id = suvey_invitation_details.unique_id
+  WHERE survey.unique_id = ${unique_id};
+  `;
+  try {
+    const get_company_survey_details_result = await query(get_company_survey_details_query);
+    console.log("get_company_survey_details_result",get_company_survey_details_result);
+    
+    return get_company_survey_details_result;
+  } catch (error) {
+    return 'Error during user get_survey_details_query:' + error;
+  }
+}
+
 //Function to get all comment by discussion from discussions and discussions_user_response table
 async function getDiscussionByDiscusId(discussions_id) {
   const sql = `
@@ -8072,6 +8089,7 @@ module.exports = {
   getSurveyDetails,
   getSurveyDetailsByUniqueId,
   countSurveyAnswerByUniqueId,
+  getSurveyemailDetailsByUniqueId,
   getDiscussionByDiscusId,
   getcommentsCount,
   getCompanyProducts,

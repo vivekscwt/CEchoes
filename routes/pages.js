@@ -4066,7 +4066,8 @@ router.get('/update-survey/:slug/:survey_id', checkClientClaimedCompany, async (
         comFunction2.getSurveyDetailsByUniqueId(surveyUniqueId),
         comFunction.getCompanySurveySubmitionsCount(),
         comFunction2.countSurveyAnswerByUniqueId(surveyUniqueId),
-        comFunction2.getSurveyemailDetailsByUniqueId(surveyUniqueId)
+        comFunction2.getSurveyemailDetailsByUniqueId(surveyUniqueId),
+        
     ]);
     console.log('SurveyAnswerCount', SurveyAnswerCount);
     console.log("getSurveyemailDetailsByUniqueId", getSurveyemailDetailsByUniqueId);
