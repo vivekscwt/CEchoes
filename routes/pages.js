@@ -1239,7 +1239,7 @@ router.get('/plan-pricing', checkCookieValue, async (req, res) => {
                 const BusinessFeature = await comFunction2.getBusinessFeature();
                 //console.log(meta_values_array);
                 res.render('front-end/staging-business', {
-                    menu_active_id: 'business',
+                    menu_active_id: 'Plan Price',
                     page_title: common.title,
                     currentUserData,
                     common,
@@ -4195,9 +4195,6 @@ router.get('/survey-submissions/:slug/:survey_id', checkClientClaimedCompany, as
     companySurveySubmissions.forEach(item => {
         item.answer = JSON.parse(item.answer);
     });
-
-
-
 
     // if (Array.isArray(companySurveySubmissions)) {
     //     // If it's an array, then proceed with forEach
