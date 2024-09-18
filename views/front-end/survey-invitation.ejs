@@ -1,3 +1,4 @@
+
 <%- include('common/header') -%>
 <link href="/front-end/css/survey-style.css" rel="stylesheet" type="text/css">
 <%- include('common/header-banner') -%>
@@ -148,6 +149,7 @@
 <script>
 // -- Form submit -- //
 $('#survey_form').submit( function( event ) {
+    localStorage.removeItem('surveyFormData');
     $('.btn-survey-default').prop("disabled", true);
     $('.frm-loading').show();
     event.preventDefault();
@@ -246,4 +248,42 @@ $('#survey_form').submit( function( event ) {
 // });
 
 
+</script>
+
+<script>
+    $(document).ready(function() {
+    const encryptEmail = "<%= encryptEmail %>"; 
+    console.log("encryptEmail",encryptEmail);
+    
+
+    loadFormData(encryptEmail);
+
+    $('#survey_form input, #survey_form textarea, #survey_form radio, #survey_form checkbox, #survey_form ratings').on('input change', function() {
+        saveFormData(encryptEmail);
+    });
+
+    function saveFormData(encryptEmail) {
+        const formData = $('#survey_form').serializeArray();
+        const formDataObject = {};
+        formData.forEach(field => {
+        formDataObject[field.name] = field.value;
+        });
+        localStorage.setItem(`surveyFormData_${encryptEmail}`, JSON.stringify(formDataObject));
+    }
+
+    function loadFormData(encryptEmail) {
+        const savedData = localStorage.getItem(`surveyFormData_${encryptEmail}`);
+        if (savedData) {
+        const formDataObject = JSON.parse(savedData);
+        for (const [key, value] of Object.entries(formDataObject)) {
+            const $field = $(`[name="${key}"]`);
+            if ($field.attr('type') === 'checkbox' || $field.attr('type') === 'radio') {
+            $field.filter(`[value="${value}"]`).prop('checked', true);
+            } else {
+            $field.val(value);
+            }
+        }
+        }
+    }
+    });
 </script>

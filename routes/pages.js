@@ -3829,7 +3829,7 @@ router.get('/:slug/survey/:id/:email', checkCookieValue, async (req, res) => {
         // Add other variables as needed
     };
     const apiKey = process.env.GEO_LOCATION_API_KEY;
-    console.log("apiKey",apiKey);
+    console.log("apiKey", apiKey);
 
     const slug = req.params.slug;
     const comp_res = await comFunction2.getCompanyIdBySlug(slug);
@@ -3886,7 +3886,8 @@ router.get('/:slug/survey/:id/:email', checkCookieValue, async (req, res) => {
                 companySurveyQuestions,
                 AllRatingTags,
                 SurveyInvitedEmail: getSurveyInvitedEmail,
-                userEmail
+                userEmail,
+                encryptEmail: encryptEmail
                 //userData
             });
         } else {
@@ -3907,6 +3908,7 @@ router.get('/:slug/survey/:id/:email', checkCookieValue, async (req, res) => {
         });
     }
 });
+
 
 //Create Survey page
 router.get('/create-survey/:slug', checkClientClaimedCompany, async (req, res) => {
