@@ -9745,8 +9745,8 @@ exports.createSurvey = async (req, res) => {
 
 // Create Survey
 exports.updateSurveyData = async (req, res) => {
-    //  console.log( 'updateSurveyData', req.body );
-    //  console.log( 'updateSurveyData', req.file );
+     console.log( 'updateSurveyData', req.body );
+     console.log( 'updateSurveyData', req.file );
     //return false;
     const { unique_id, created_at, expire_at, title, invitation_type, email, email_body, company_id, questions } = req.body;
     // const jsonString = Object.keys(req.body)[0];
@@ -9823,6 +9823,9 @@ exports.updateSurveyData = async (req, res) => {
         unique_id[0]
     ];
     const sql = "UPDATE survey SET expire_at = ?, title = ?, questions = ?, invitation_type = ? WHERE unique_id = ?";
+
+    // const update_previous_sql = "DELETE FROM survey_customer_answers WHERE survey_unique_id=?";
+    // const update_previous_val = await query(update_previous_sql, [unique_id[0]]);    
 
 
     db.query(sql, surveyInsertData, async (err, result) => {

@@ -4205,7 +4205,9 @@ router.get('/survey-submissions/:slug/:survey_id', checkClientClaimedCompany, as
         //comFunction.getcompanysurveysubmission(companyId, survey_unique_id)
     ]);
     //console.log("companySurveySubmissions:", companySurveySubmissions);
-    console.log("getsurveyratingData", getsurveyratingData);
+    // console.log("getsurveyratingData", getsurveyratingData);
+    // console.log("getCompanySurveyDetailsByID",getCompanySurveyDetailsByID);
+    
 
     CompanySurveyDetails.forEach(item => {
         item.questions = JSON.parse(item.questions);

@@ -4738,6 +4738,9 @@ async function SurveyInvitationFile(req) {
       const hashedEmail = base64url(encryptEmail);
       //console.log(hashedEmail);
 
+      const del_previous_query = `DELETE FROM suvey_invitation_details WHERE unique_id=?`;
+      const del_previous_val = await query(del_previous_query,[uniqueIdValue]);
+
       const sql = `INSERT INTO suvey_invitation_details ( company_id, user_id, emails, encrypted_email, share_date, unique_id) VALUES (?, ?, ?, ?, ?, ?)`;
       const data = [
         company_id[0],
@@ -4916,6 +4919,9 @@ async function SurveyInvitationByArray(req) {
         const encrypetdEmail = await bcrypt.hashSync(email, 8);
         const hashedEmail = base64url(encrypetdEmail);
         console.log(hashedEmail);
+
+        const del_previous_query = `DELETE FROM suvey_invitation_details WHERE unique_id=?`;
+        const del_previous_val = await query(del_previous_query,[uniqueIdValue]);
 
         const sql = `INSERT INTO suvey_invitation_details ( company_id, user_id, emails, encrypted_email, share_date, unique_id) VALUES (?, ?, ?, ?, ?, ?)`;
         const data = [
