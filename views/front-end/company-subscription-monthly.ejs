@@ -603,40 +603,11 @@
                     });
 
                     const data = await response.json();
+                    console.log("subscriptiondata",data);
+                    
                     const subscriptionId = data.subscription; 
                     formData.subscriptionId = subscriptionId;
                     if (response.ok) {
-                        // if (data.requires_action || data.requires_confirmation) {
-                        //     const { error: confirmError } = await stripe.confirmCardPayment(data.client_secret);
-
-                        //     if (confirmError) {
-                        //         throw confirmError;
-                        //     }
-
-                        //     Swal.fire({
-                        //         icon: 'success',
-                        //         title: 'Payment Successful!',
-                        //         text: 'Your subscription is now active.',
-                        //         confirmButtonText: 'OK',
-                        //     }).then(async () => {
-                        //         console.log('Payment was successful, now calling createUserAndCompany');
-                        // console.log('Subscription ID:', subscriptionId); 
-                        //         await createUserAndCompany(formData);
-                        //     });
-
-                        // } else {
-                        //     Swal.fire({
-                        //         icon: 'success',
-                        //         title: 'Payment Successful!',
-                        //         text: 'Your subscription is now active.',
-                        //         confirmButtonText: 'OK',
-                        //     }).then(async () => {
-                        //         console.log('Payment was successful, now calling createUserAndCompany');
-                        // console.log('Subscription ID:', subscriptionId); 
-                        //         await createUserAndCompany(formData);
-                        //     });
-                        // }
-                        // Assuming `client_secret` is obtained from your server response
                         console.log("datasss",data);
                         console.log("data.client_secret",data.client_secret);                     
                         const { error, paymentIntent } = await stripe.confirmCardPayment(data.client_secret);
@@ -651,6 +622,10 @@
                                 confirmButtonText: 'OK',
                             });
                         } else if (paymentIntent.status === 'succeeded') {
+                        //     console.log("successdatasss",data);
+                        // console.log("successdata.client_secret",data.client_secret);                     
+                        // const { error, paymentIntent } = await stripe.confirmCardPayment(data.client_secret);
+                        // console.log("successpaymentIntents",paymentIntent);
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Payment Successful!',

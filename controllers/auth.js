@@ -14212,10 +14212,17 @@ exports.createSubscription = async (req, res) => {
         console.log("Subscription confirmation email sent successfully.");
         
         if (paymentStatus === 'succeeded') {
-            return res.send({ success: true, subscription: updatedSubscription });
+            return res.send({
+                 success: true,
+                  subscription: updatedSubscription
+                 });
         } 
         else if (paymentStatus === 'requires_action' || paymentStatus === 'requires_source_action') {
-            return res.send({ requiresAction: true, clientSecret: paymentIntent.client_secret });
+            return res.send({ 
+                requiresAction: true, 
+                clientSecret: paymentIntent.client_secret,
+                subscription: updatedSubscription
+            });
         } else {
             return res.status(400).send({ error: 'Payment required additional actions or failed' });
         }
@@ -14766,18 +14773,31 @@ exports.createexternalSubscription = async (req, res) => {
             subscription = await stripe.subscriptions.create({
                 customer: customer.id,
                 items: [{ price: priceId }],
-                payment_behavior: 'default_incomplete',  
+                payment_behavior: 'allow_incomplete',  
                 expand: ['latest_invoice.payment_intent'], 
             });
         } catch (error) {
             return res.status(500).send({ error: 'Failed to create subscription' });
         }
         const subscriptionId = subscription.id;
-        const paymentIntent = subscription.latest_invoice.payment_intent;
-        console.log("paymentIntent",paymentIntent);
+        // const paymentIntent = subscription.latest_invoice.payment_intent;
+        // console.log("paymentIntent",paymentIntent);
         
+        // if (!paymentIntent) {
+        //     return res.status(500).send({ error: 'Payment intent not found in invoice' });
+        // }
+        console.log("subscriptiondets",subscription);
+        
+        let paymentIntent = subscription.latest_invoice.payment_intent;
         if (!paymentIntent) {
-            return res.status(500).send({ error: 'Payment intent not found in invoice' });
+            try {
+                const latestInvoice = await stripe.invoices.retrieve(subscription.latest_invoice.id, {
+                    expand: ['payment_intent'],
+                });
+                paymentIntent = latestInvoice.payment_intent;
+            } catch (error) {
+                return res.status(500).send({ error: 'Failed to retrieve latest invoice payment intent' });
+            }
         }
 
         const paymentStatus = paymentIntent.status;
@@ -14816,7 +14836,8 @@ exports.createexternalSubscription = async (req, res) => {
             return res.send({
                 status: 'ok',
                 message: 'Payment was successful!',
-                subscriptionId: subscription.id,
+                client_secret: paymentIntent.client_secret,
+                subscription: subscription.id,
                 invoiceUrl: invoiceUrl,
             });
         } else if (paymentStatus === 'requires_action' || paymentStatus === 'requires_confirmation') {
