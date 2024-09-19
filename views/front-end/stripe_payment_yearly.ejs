@@ -383,82 +383,178 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    document.getElementById('paymentForm').addEventListener('submit', async function(event) {
-        event.preventDefault();
-        document.querySelector('button').disabled = true;
+    // document.getElementById('paymentForm').addEventListener('submit', async function(event) {
+    //     event.preventDefault();
+    //     document.querySelector('button').disabled = true;
 
-		const memberCountInput = document.getElementById('memberCount');
-		var addonUsersCount = memberCountInput.value;
-		console.log('Add-on Users Count on Load:', addonUsersCount);
+	// 	const memberCountInput = document.getElementById('memberCount');
+	// 	var addonUsersCount = memberCountInput.value;
+	// 	console.log('Add-on Users Count on Load:', addonUsersCount);
 
-        const { token, error } = await stripe.createToken(cardNumber);
-        console.log("Token:", token);
+    //     const { token, error } = await stripe.createToken(cardNumber);
+    //     console.log("Token:", token);
 
-        if (error) {
-            errorMessage.textContent = error.message;
-            document.querySelector('button').disabled = false;
-        } else {
-            await stripeTokenHandler(token,addonUsersCount);
-        }
-    });
-	// var addonUsersCount = document.getElementById('memberCount').value;
-	// console.log('Add-on Users Count:', addonUsersCount);
+    //     if (error) {
+    //         errorMessage.textContent = error.message;
+    //         document.querySelector('button').disabled = false;
+    //     } else {
+    //         await stripeTokenHandler(token,addonUsersCount);
+    //     }
+    // });
+	// // var addonUsersCount = document.getElementById('memberCount').value;
+	// // console.log('Add-on Users Count:', addonUsersCount);
 
-    async function stripeTokenHandler(token,addonUsersCount) {
-        const formData = {
-            token: token.id,
-            userId: '<%= currentUserData.user_id %>',
-            name: document.getElementById('name').value,
-            email: '<%= currentUserData.email %>',
-            address: document.getElementById('address').value,
-            city: document.getElementById('city').value,
-            state: document.getElementById('state').value,
-            zip: document.getElementById('zip').value,
-            planId: '<%= planID %>',          
-			billingCycle: 'yearly',
-            //memberCount: '<%= memberCount %>',
-			memberCount: addonUsersCount
-        };
+    // async function stripeTokenHandler(token,addonUsersCount) {
+    //     const formData = {
+    //         token: token.id,
+    //         userId: '<%= currentUserData.user_id %>',
+    //         name: document.getElementById('name').value,
+    //         email: '<%= currentUserData.email %>',
+    //         address: document.getElementById('address').value,
+    //         city: document.getElementById('city').value,
+    //         state: document.getElementById('state').value,
+    //         zip: document.getElementById('zip').value,
+    //         planId: '<%= planID %>',          
+	// 		billingCycle: 'yearly',
+    //         //memberCount: '<%= memberCount %>',
+	// 		memberCount: addonUsersCount
+    //     };
 
-        try {
-            const response = await fetch('/auth/create-subscription', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
-            });
+    //     try {
+    //         const response = await fetch('/auth/create-subscription', {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //             },
+    //             body: JSON.stringify(formData),
+    //         });
 
-            const data = await response.json();
-            if (response.ok) {
+    //         const data = await response.json();
+    //         if (response.ok) {
+    //             Swal.fire({
+    //                 icon: 'success',
+    //                 title: 'Payment Successful!',
+    //                 text: data.message,
+    //                 confirmButtonText: 'OK',
+    //             }).then(() => {
+    //                 window.location.href = '/plan-pricing';
+    //             });
+    //         } else {
+    //             Swal.fire({
+    //                 icon: 'error',
+    //                 title: 'Payment Error',
+    //                 text: data.error ? data.error.message : 'There was an error processing your payment. Please try again later.',
+    //                 confirmButtonText: 'OK',
+    //             });
+    //         }
+    //     } catch (error) {
+    //         console.error('Error:', error);
+    //         Swal.fire({
+    //             icon: 'error',
+    //             title: 'Payment Error',
+    //             text: 'There was an error processing your payment. Please try again later.',
+    //             confirmButtonText: 'OK',
+    //         });
+    //     } finally {
+    //         document.querySelector('button').disabled = false;
+    //     }
+    // }
+	document.getElementById('paymentForm').addEventListener('submit', async function(event) {
+    event.preventDefault();
+    document.querySelector('button').disabled = true;
+
+    const memberCountInput = document.getElementById('memberCount');
+    const addonUsersCount = memberCountInput.value;
+    console.log('Add-on Users Count on Load:', addonUsersCount);
+
+    const { token, error } = await stripe.createToken(cardNumber);
+    console.log("Token:", token);
+
+    if (error) {
+        errorMessage.textContent = error.message;
+        document.querySelector('button').disabled = false;
+    } else {
+        const { requiresAction, clientSecret } = await stripeTokenHandler(token, addonUsersCount);
+		
+        if (requiresAction) {
+            const { error: confirmError } = await stripe.confirmCardPayment(clientSecret);
+            
+            if (confirmError) {
+                errorMessage.textContent = confirmError.message;
+                document.querySelector('button').disabled = false;
+            } else {
+				if (additionalInfo) {
+                    await fetch('/auth/orderUpdate', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(additionalInfo),
+                    });
+                }
+
                 Swal.fire({
                     icon: 'success',
                     title: 'Payment Successful!',
-                    text: data.message,
+                    text: 'Your payment was successfully processed.',
                     confirmButtonText: 'OK',
                 }).then(() => {
                     window.location.href = '/plan-pricing';
                 });
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Payment Error',
-                    text: data.error ? data.error.message : 'There was an error processing your payment. Please try again later.',
-                    confirmButtonText: 'OK',
-                });
             }
-        } catch (error) {
-            console.error('Error:', error);
+        } else {
+            // Handle other responses
             Swal.fire({
-                icon: 'error',
-                title: 'Payment Error',
-                text: 'There was an error processing your payment. Please try again later.',
+                icon: 'success',
+                title: 'Payment Successful!',
+                text: 'Your payment was successfully processed.',
                 confirmButtonText: 'OK',
+            }).then(() => {
+                window.location.href = '/plan-pricing';
             });
-        } finally {
-            document.querySelector('button').disabled = false;
         }
     }
+});
+
+async function stripeTokenHandler(token, addonUsersCount) {
+    const formData = {
+        paymentMethodId: token.id,
+        userId: '<%= currentUserData.user_id %>',
+        name: document.getElementById('name').value,
+        email: '<%= currentUserData.email %>',
+        address: document.getElementById('address').value,
+        city: document.getElementById('city').value,
+        state: document.getElementById('state').value,
+        zip: document.getElementById('zip').value,
+        planId: '<%= planID %>',          
+        billingCycle: 'yearly',
+        memberCount: addonUsersCount
+    };
+
+    try {
+        const response = await fetch('/auth/create-subscription', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData),
+        });
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Payment Error',
+            text: 'There was an error processing your payment. Please try again later.',
+            confirmButtonText: 'OK',
+        });
+        return {};
+    } finally {
+        document.querySelector('button').disabled = false;
+    }
+}
+
 });
 
 	document.addEventListener('DOMContentLoaded', function() {

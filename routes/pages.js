@@ -1238,7 +1238,7 @@ router.get('/plan-pricing', checkCookieValue, async (req, res) => {
                 const UpcomingBusinessFeature = await comFunction2.getUpcomingBusinessFeature();
                 const BusinessFeature = await comFunction2.getBusinessFeature();
                 //console.log(meta_values_array);
-                res.render('front-end/staging-business', {
+                res.render('front-end/price-plan', {
                     menu_active_id: 'Plan Price',
                     page_title: common.title,
                     currentUserData,
@@ -1764,6 +1764,20 @@ router.get('/create-user-company-subscription', checkCookieValue, async (req, re
     }
 })
 
+router.post('/create-payment-intent', async (req, res) => {
+    const { amount, currency } = req.body; // amount should be in cents (5000 = $50)
+
+    try {
+        const paymentIntent = await stripe.paymentIntents.create({
+            amount: amount, // e.g., 5000 for $50
+            currency: currency, // e.g., 'usd'
+            payment_method_types: ['card'],
+        });
+        res.json({ clientSecret: paymentIntent.client_secret });
+    } catch (error) {
+        res.status(500).send({ error: error.message });
+    }
+});
 
 router.get('/checkEmailAvailability', async (req, res) => {
     const { email } = req.query;
@@ -3601,7 +3615,7 @@ router.get('/discussion', checkCookieValue, async (req, res) => {
         });
     } catch (err) {
         res.redirect('admin-login');
-        // console.error(err);
+        console.error(err);
         // res.status(500).send('An error occurred');
     }
 });

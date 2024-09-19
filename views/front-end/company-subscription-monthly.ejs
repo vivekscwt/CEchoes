@@ -474,164 +474,219 @@
                 }
             }
             document.addEventListener('DOMContentLoaded', function () {
-    // const stripe = Stripe('pk_test_51Pmx4bE9RgUxhHlihWvQ6tCKKz2AeuVE4X2fBtEFHHnKTu4mgcFHPF1rpYDjwgn0vxlCfPEbiQTLy6JBelzwiTJw00p4tIO4NZ');
-    // const stripe = Stripe('pk_live_51Pmx4bE9RgUxhHliz0axvDt0O52JXlgWxZHE78woIeTHTLGBtOYe0hLPW0NWM3lKbuxvx97uOeo6hdhT9bHSb1nj00dfk77oPs');
-
     const stripe = Stripe(stripePublicKey);
-
     const elements = stripe.elements();
 
-    // Create and mount Stripe Elements
-    const cardNumber = elements.create('cardNumber', {
-        style: {
-            base: {
-                fontSize: '16px',
-                color: '#32325d',
-                '::placeholder': {
-                    color: '#aab7c4',
+
+            const cardNumber = elements.create('cardNumber', {
+                style: {
+                    base: {
+                        fontSize: '16px',
+                        color: '#32325d',
+                        '::placeholder': {
+                            color: '#aab7c4',
+                        },
+                    },
+                    invalid: {
+                        color: '#fa755a',
+                        iconColor: '#fa755a',
+                    },
                 },
-            },
-            invalid: {
-                color: '#fa755a',
-                iconColor: '#fa755a',
-            },
-        },
-    });
-    const cardExpiry = elements.create('cardExpiry', {
-        style: {
-            base: {
-                fontSize: '16px',
-                color: '#32325d',
-                '::placeholder': {
-                    color: '#aab7c4',
-                },
-            },
-            invalid: {
-                color: '#fa755a',
-                iconColor: '#fa755a',
-            },
-        },
-    });
-    const cardCvc = elements.create('cardCvc', {
-        style: {
-            base: {
-                fontSize: '16px',
-                color: '#32325d',
-                '::placeholder': {
-                    color: '#aab7c4',
-                },
-            },
-            invalid: {
-                color: '#fa755a',
-                iconColor: '#fa755a',
-            },
-        },
-    });
-
-    cardNumber.mount('#card-number');
-    cardExpiry.mount('#card-expiry');
-    cardCvc.mount('#card-cvc');
-
-    console.log("cardNumber",cardNumber);
-    console.log("cardExpiry",cardExpiry);
-    console.log("cardCvc",cardCvc);
-    
-
-    function handleCardChange(event) {
-        const errorMessage = document.getElementById('error-message');
-        if (event.error) {
-            errorMessage.textContent = event.error.message;
-        } else {
-            errorMessage.textContent = '';
-        }
-    }
-
-    cardNumber.on('change', handleCardChange);
-    cardExpiry.on('change', handleCardChange);
-    cardCvc.on('change', handleCardChange);
-
-    document.getElementById('pay-now').addEventListener('click', async (event) => {
-    event.preventDefault();
-    document.querySelector('button').disabled = true;
-
-    try {
-        const {token, error} = await stripe.createToken(cardNumber);
-
-        if (error) {
-            document.getElementById('error-message').textContent = error.message;
-            document.querySelector('button').disabled = false;
-            return;
-        }
-
-        const memberCountt = document.getElementById('member-count').value;
-        const formData = {
-            name: document.getElementById('first_name').value + ' ' + document.getElementById('last_name').value,
-            first_name: document.getElementById('first_name').value,
-            last_name: document.getElementById('last_name').value,
-            email: document.getElementById('email').value,
-            phone: document.getElementById('phone').value,
-            address: document.getElementById('main_address').value,
-            main_address_country: document.getElementById('main_address_country').value,
-            company_name: document.getElementById('company_name').value,
-            parent_id: document.getElementById('parent_id').value,
-            comp_email: document.getElementById('comp_email').value,
-            comp_phone: document.getElementById('comp_phone').value,
-            city: 'Default City',
-            state: 'Default State',
-            main_address_pin_code: document.getElementById('main_address_pin_code').value,
-            planId: planID,
-            billingCycle: subscriptionType,
-            memberCount: memberCountt,
-            register_password: document.getElementById('register_password').value,
-            register_confirm_password: document.getElementById('register_confirm_password').value,
-            user_country: document.getElementById('user_country').value,
-            user_state: document.getElementById('user_state').value,
-            stripeToken: token.id 
-        };
-
-        const response = await fetch('/auth/createexternalSubscription', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData),
-        });
-
-        const data = await response.json();
-        if (response.ok) {
-            const subscriptionId = data.subscription; 
-            formData.subscriptionId = subscriptionId;
-            Swal.fire({
-                icon: 'success',
-                title: 'Payment Successful!',
-                text: data.message,
-                confirmButtonText: 'OK',
-            }).then(async () => {
-                console.log('Payment was successful, now calling createUserAndCompany');
-                console.log('Subscription ID:', subscriptionId); 
-                await createUserAndCompany(formData);
             });
-        } else {
-                Swal.fire({
-                icon: 'error',
-                title: 'Payment Error',
-                text: data.error ? data.error.message : 'There was an error processing your payment. Please try again later.',
-                confirmButtonText: 'OK',
+            const cardExpiry = elements.create('cardExpiry', {
+                style: {
+                    base: {
+                        fontSize: '16px',
+                        color: '#32325d',
+                        '::placeholder': {
+                            color: '#aab7c4',
+                        },
+                    },
+                    invalid: {
+                        color: '#fa755a',
+                        iconColor: '#fa755a',
+                    },
+                },
             });
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        Swal.fire({
-            icon: 'error',
-            title: 'Payment Error',
-            text: 'There was an error processing your payment. Please try again later.',
-            confirmButtonText: 'OK',
-        });
-    } finally {
-        document.querySelector('button').disabled = false;
-    }
-});
+            const cardCvc = elements.create('cardCvc', {
+                style: {
+                    base: {
+                        fontSize: '16px',
+                        color: '#32325d',
+                        '::placeholder': {
+                            color: '#aab7c4',
+                        },
+                    },
+                    invalid: {
+                        color: '#fa755a',
+                        iconColor: '#fa755a',
+                    },
+                },
+            });
 
+            cardNumber.mount('#card-number');
+            cardExpiry.mount('#card-expiry');
+            cardCvc.mount('#card-cvc');
+
+            function handleCardChange(event) {
+                const errorMessage = document.getElementById('error-message');
+                if (event.error) {
+                    errorMessage.textContent = event.error.message;
+                } else {
+                    errorMessage.textContent = '';
+                }
+            }
+
+            cardNumber.on('change', handleCardChange);
+            cardExpiry.on('change', handleCardChange);
+            cardCvc.on('change', handleCardChange);
+
+            document.getElementById('pay-now').addEventListener('click', async (event) => {
+                event.preventDefault();
+                document.querySelector('button').disabled = true;
+
+                try {
+                    const { paymentMethod, error } = await stripe.createPaymentMethod({
+                        type: 'card',
+                        card: cardNumber,
+                        billing_details: {
+                            name: document.getElementById('first_name').value + ' ' + document.getElementById('last_name').value,
+                            email: document.getElementById('email').value,
+                            phone: document.getElementById('phone').value,
+                            address: {
+                                line1: document.getElementById('main_address').value,
+                                country: document.getElementById('main_address_country').value,
+                                postal_code: document.getElementById('main_address_pin_code').value,
+                            },
+                        },
+                    });
+
+                    if (error) {
+                        document.getElementById('error-message').textContent = error.message;
+                        document.querySelector('button').disabled = false;
+                        return;
+                    }
+
+                    const memberCount = document.getElementById('member-count').value;
+
+                    const formData = {
+                        name: document.getElementById('first_name').value + ' ' + document.getElementById('last_name').value,
+                        first_name: document.getElementById('first_name').value,
+                        last_name: document.getElementById('last_name').value,
+                        email: document.getElementById('email').value,
+                        phone: document.getElementById('phone').value,
+                        address: document.getElementById('main_address').value,
+                        main_address_country: document.getElementById('main_address_country').value,
+                        company_name: document.getElementById('company_name').value,
+                        parent_id: document.getElementById('parent_id').value,
+                        comp_email: document.getElementById('comp_email').value,
+                        comp_phone: document.getElementById('comp_phone').value,
+                        city: 'Default City',
+                        state: 'Default State',
+                        main_address_pin_code: document.getElementById('main_address_pin_code').value,
+                        planId: planID,
+                        billingCycle: subscriptionType,
+                        memberCount: memberCount,
+                        register_password: document.getElementById('register_password').value,
+                        register_confirm_password: document.getElementById('register_confirm_password').value,
+                        user_country: document.getElementById('user_country').value,
+                        user_state: document.getElementById('user_state').value,
+                        paymentMethodId: paymentMethod.id 
+                    };
+
+                    const response = await fetch('/auth/createexternalSubscription', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(formData),
+                    });
+
+                    const data = await response.json();
+                    const subscriptionId = data.subscription; 
+                    formData.subscriptionId = subscriptionId;
+                    if (response.ok) {
+                        // if (data.requires_action || data.requires_confirmation) {
+                        //     const { error: confirmError } = await stripe.confirmCardPayment(data.client_secret);
+
+                        //     if (confirmError) {
+                        //         throw confirmError;
+                        //     }
+
+                        //     Swal.fire({
+                        //         icon: 'success',
+                        //         title: 'Payment Successful!',
+                        //         text: 'Your subscription is now active.',
+                        //         confirmButtonText: 'OK',
+                        //     }).then(async () => {
+                        //         console.log('Payment was successful, now calling createUserAndCompany');
+                        // console.log('Subscription ID:', subscriptionId); 
+                        //         await createUserAndCompany(formData);
+                        //     });
+
+                        // } else {
+                        //     Swal.fire({
+                        //         icon: 'success',
+                        //         title: 'Payment Successful!',
+                        //         text: 'Your subscription is now active.',
+                        //         confirmButtonText: 'OK',
+                        //     }).then(async () => {
+                        //         console.log('Payment was successful, now calling createUserAndCompany');
+                        // console.log('Subscription ID:', subscriptionId); 
+                        //         await createUserAndCompany(formData);
+                        //     });
+                        // }
+                        // Assuming `client_secret` is obtained from your server response
+                        console.log("datasss",data);
+                        console.log("data.client_secret",data.client_secret);                     
+                        const { error, paymentIntent } = await stripe.confirmCardPayment(data.client_secret);
+                        console.log("paymentIntents",paymentIntent);
+
+                        if (error) {
+                            console.error('Error confirming payment:', error);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Payment Error',
+                                text: error.message || 'There was an error processing your payment. Please try again later.',
+                                confirmButtonText: 'OK',
+                            });
+                        } else if (paymentIntent.status === 'succeeded') {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Payment Successful!',
+                                text: 'Your subscription is now active.',
+                                confirmButtonText: 'OK',
+                            }).then(async () => {
+                                await createUserAndCompany(formData);
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Payment Error',
+                                text: 'There was an unexpected issue with your payment. Please try again later.',
+                                confirmButtonText: 'OK',
+                            });
+                        }
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Payment Error',
+                            text: data.error ? data.error.message : 'There was an error processing your payment. Please try again later.',
+                            confirmButtonText: 'OK',
+                        });
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Payment Error',
+                        text: 'There was an error processing your payment. Please try again later.',
+                        confirmButtonText: 'OK',
+                    });
+                } finally {
+                    document.querySelector('button').disabled = false;
+                }
+            });
 });
 
             function closeModal() {

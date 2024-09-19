@@ -13302,13 +13302,14 @@ const createStripeProductAndPrice = async (plan, billingCycle, memberCount) => {
         }
     
         const totalPrice = parseFloat(basePrice) + parseFloat(AddonPrice);
-        //console.log("totalPrice", totalPrice);
+        console.log("totalPrice", totalPrice);
         if (isNaN(totalPrice) || totalPrice <= 0) {
             throw new Error('Invalid total price');
         }
     
         console.log(`Base Price: ${basePrice}, Member Count: ${memberCount}, Total Price: ${totalPrice}`);
-        const totalPriceInCents = totalPrice * 100;
+       // const totalPriceInCents = totalPrice * 100;
+        const totalPriceInCents = Math.round(totalPrice * 100);
         console.log("totalPriceInCents",totalPriceInCents);
 
 
@@ -13767,177 +13768,254 @@ exports.updateOrderHistory = async (req, res) => {
     }
 };
 
+// exports.createSubscription = async (req, res) => {
+//     try {
+//         const { token, userId, name, email, address, country, city, state, zip, planId, billingCycle, memberCount } = req.body;
+//         console.log("createSubscription req.body", req.body);
+    
+//         const plan = await getPlanFromDatabase(planId);
+//         if (!plan) {
+//             return res.status(404).send({ error: 'Plan not found' });
+//         }
+    
+//         let customer;
+//         try {
+//             customer = await stripe.customers.create({
+//                 email: email,
+//                 name: name,
+//                 address: {
+//                     line1: address,
+//                     country: country,
+//                     city: city,
+//                     state: state,
+//                     postal_code: zip,
+//                 },
+//                 source: token
+//             });
+//         } catch (error) {
+//             console.error("Error creating customer:", error);
+//             return res.status(500).send({ error: 'Failed to create customer' });
+//         }
+    
+//         const priceId = await createStripeProductAndPrice(plan, billingCycle, memberCount);
+//         if (!priceId) {
+//             return res.status(500).send({ error: 'Failed to create price for the plan' });
+//         }
+
+//         let subscription;
+//         try {
+//             subscription = await stripe.subscriptions.create({ 
+//                 customer: customer.id,
+//                 items: [{ price: priceId }],
+//                 expand: ['latest_invoice.payment_intent'],
+//             });
+//         } catch (error) {
+//             console.error("Error creating subscription:", error);
+//             return res.status(500).send({ error: 'Failed to create subscription' });
+//         }
+    
+//         // Retrieve invoice and payment intent
+//         const invoice = await stripe.invoices.retrieve(subscription.latest_invoice.id);
+//         const paymentIntent = invoice.payment_intent;
+//         if (!paymentIntent) {
+//             return res.status(500).send({ error: 'Payment intent not found in invoice' });
+//         }
+    
+//         const paymentIntentStatus = await stripe.paymentIntents.retrieve(paymentIntent);
+//         if (!paymentIntentStatus || !paymentIntentStatus.status) {
+//             return res.status(500).send({ error: 'Failed to retrieve payment intent status' });
+//         }
+    
+//         let paymentStatus = paymentIntentStatus.status;
+//         if (paymentStatus === 'succeeded') {
+//             // Handle successful payment
+//             const updatedSubscription = await stripe.subscriptions.retrieve(subscription.id);
+//             const invoiceUrl = invoice.invoice_pdf;
+    
+//             const planInterval = updatedSubscription.items.data[0].price.recurring.interval === 'year' ? 'year' : 'month';
+//             console.log("Plan Interval:", planInterval);
+    
+//             // Insert order history
+//             const order_history_data = {
+//                 user_id: userId,
+//                 stripe_subscription_id: subscription.id,
+//                 plan_id: planId,
+//                 payment_status: paymentIntentStatus.status,
+//                 subscription_details: JSON.stringify(subscription),
+//                 payment_details: JSON.stringify(paymentIntentStatus),
+//                 subscription_duration: planInterval,
+//                 subscription_start_date: new Date(subscription.current_period_start * 1000),
+//                 subscription_end_date: new Date(subscription.current_period_end * 1000),
+//                 added_user_number: memberCount
+//             };
+    
+//             const order_history_query = `INSERT INTO order_history SET ?`;
+//             await queryAsync(order_history_query, [order_history_data]);
+    
+//             // Update company membership type
+//             const getcompany_query = `SELECT * FROM company LEFT JOIN company_claim_request ON company.ID = company_claim_request.company_id WHERE company_claim_request.claimed_by = ?`;
+//             const getcompany_value = await queryAsync(getcompany_query, [userId]);
+//             if (getcompany_value.length === 0) {
+//                 return res.status(404).send({ error: 'Company not found' });
+//             }
+//             const companyID = getcompany_value[0].ID;
+//             console.log("companyID", companyID);
+    
+//             // const updatecompany_query = `UPDATE company SET membership_type_id = ? WHERE ID = ?`;
+//             // await queryAsync(updatecompany_query, [planId, companyID]);
+//             const updatecompany_query = `UPDATE company SET membership_type_id = ? WHERE ID = ?`;
+//             try {
+//                 const result = await queryAsync(updatecompany_query, [planId, companyID]);
+//                 console.log('Query executed successfully.');
+//                 if (result.affectedRows > 0) {
+//                     console.log(`Success: ${result.affectedRows} row(s) updated.`);
+//                 } else {
+//                     console.log('No rows were updated.');
+//                 }
+//             } catch (error) {
+//                 console.error('Error executing the query:', error);
+//             }
+    
+//             // Send email notification
+//             const mailOptions = {
+//                 from: process.env.MAIL_USER,
+//                 to: email,
+//                 subject: 'Your Subscription Invoice',
+//                 html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+//                 <style>
+//                 body, table, td, p, a, h1, h2, h3, h4, h5, h6, div {
+//                     font-family: Calibri, 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif !important;
+//                 }
+//                 </style>
+//                 <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
+//                  <tbody>
+//                   <tr>
+//                    <td align="center" valign="top">
+//                      <div id="template_header_image"><p style="margin-top: 0;"></p></div>
+//                      <table id="template_container" style="box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important; background-color: #fdfdfd; border: 1px solid #dcdcdc; border-radius: 3px !important;" border="0" cellpadding="0" cellspacing="0" width="600">
+//                       <tbody>
+//                         <tr>
+//                          <td align="center" valign="top">
+//                            <!-- Header -->
+//                            <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
+//                              <tbody>
+//                                <tr>
+//                                <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/email-template-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+//                                 <td id="header_wrapper" style="padding: 36px 48px; display: block;">
+//                                    <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Welcome</h1>
+//                                 </td>
+          
+//                                </tr>
+//                              </tbody>
+//                            </table>
+//                      <!-- End Header -->
+//                      </td>
+//                         </tr>
+//                         <tr>
+//                          <td align="center" valign="top">
+//                            <!-- Body -->
+//                            <table id="template_body" border="0" cellpadding="0" cellspacing="0" width="600">
+//                              <tbody>
+//                                <tr>
+//                                 <td id="body_content" style="background-color: #fdfdfd;" valign="top">
+//                                   <!-- Content -->
+//                                   <table border="0" cellpadding="20" cellspacing="0" width="100%">
+//                                    <tbody>
+//                                     <tr>
+//                                      <td style="padding: 48px;" valign="top">
+//                                        <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
+                                        
+//                                         <table border="0" cellpadding="4" cellspacing="0" width="90%">
+//                                           <tr>
+//                                             <td colspan="2">
+//                                                 <strong>Hello Sir/Madam,</strong>
+//                                                 <p style="font-size:15px; line-height:20px">Thank you for your subscription. You can view your invoice at the <a href="${invoiceUrl}">following link</a>.</p>
+//                                                 <p style="font-size:15px; line-height:20px"><br><p style="font-size:15px; line-height:20px">Kind Regards,</p><p style="font-size:15px; line-height:20px">CEchoes Technology Team</p><br>
+//                                             </td>
+//                                           </tr>
+//                                         </table>
+//                                        </div>
+//                                      </td>
+//                                     </tr>
+//                                    </tbody>
+//                                   </table>
+//                                 <!-- End Content -->
+//                                 </td>
+//                                </tr>
+//                              </tbody>
+//                            </table>
+//                          <!-- End Body -->
+//                          </td>
+//                         </tr>
+//                         <tr>
+//                          <td align="center" valign="top">
+//                            <!-- Footer -->
+//                            <table id="template_footer" border="0" cellpadding="10" cellspacing="0" width="600">
+//                             <tbody>
+//                              <tr>
+//                               <td style="padding: 0; -webkit-border-radius: 6px;" valign="top">
+//                                <table border="0" cellpadding="10" cellspacing="0" width="100%">
+//                                  <tbody>
+//                                    <tr>
+//                                     <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
+//                                          <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology</a></p>
+//                                     </td>
+//                                    </tr>
+//                                  </tbody>
+//                                </table>
+//                               </td>
+//                              </tr>
+//                             </tbody>
+//                            </table>
+//                          <!-- End Footer -->
+//                          </td>
+//                         </tr>
+//                       </tbody>
+//                      </table>
+//                    </td>
+//                   </tr>
+//                  </tbody>
+//                 </table>
+//                </div>`
+//             };
+    
+//             await mdlconfig.transporter.sendMail(mailOptions);
+    
+//             return res.send({
+//                 status: 'ok',
+//                 message: 'Your payment has been successfully processed.',
+//                 subscriptionId: updatedSubscription.id,
+//                 invoiceUrl: invoiceUrl
+//             });
+//         } else if (paymentStatus === 'requires_action') {
+//             return res.status(400).send({
+//                 status: 'requires_action',
+//                 client_secret: paymentIntent.client_secret,
+//                 message: 'Payment requires additional actions.'
+//             });
+//         } else {
+//             return res.status(400).send({
+//                 status: 'failed',
+//                 message: 'Payment failed or requires a new payment method.'
+//             });
+//         }
+//     } catch (error) {
+//         console.error('Error creating subscription:', error);
+//         return res.status(500).send({ error: 'An error occurred while creating the subscription.' });
+//     }
+    
+// };
+
 exports.createSubscription = async (req, res) => {
-    // try {
-    //     const { name, email, address, city, state, zip, token_id, planId, billingCycle, memberCount } = req.body;
-    //     console.log("createSubscription req.body", req.body);
-    
-    //     // Fetch user data
-    //     const userQuery = 'SELECT user_id, email FROM users WHERE email = ?';
-    //     const userResult = await queryAsync(userQuery, [email]);
-    
-    //     if (userResult.length === 0) {
-    //         return res.status(404).send({ error: 'User not found' });
-    //     }
-    //     const userId = userResult[0].user_id;
-    
-    //     // Fetch plan data
-    //     const plan = await getPlanFromDatabase(planId);
-    //     if (!plan) {
-    //         return res.status(404).send({ error: 'Plan not found' });
-    //     }
-    
-    //     // Create or retrieve the customer
-    //     const customer = await stripe.customers.create({
-    //         email: email,
-    //         name: name,
-    //         address: {
-    //             line1: address,
-    //             city: city,
-    //             state: state,
-    //             postal_code: zip,
-    //         },
-    //         source: token_id // Token from Stripe Elements
-    //     });
-    
-    //     // Create a payment method
-    //     const paymentMethod = await stripe.paymentMethods.create({
-    //         type: 'card',
-    //         card: {
-    //             number: token_id.card.number, // Use a token here for card details
-    //             exp_month: token_id.card.exp_month,
-    //             exp_year: token_id.card.exp_year,
-    //             cvc: token_id.card.cvc
-    //         },
-    //         billing_details: {
-    //             name: name,
-    //             address: {
-    //                 line1: address,
-    //                 city: city,
-    //                 state: state,
-    //                 postal_code: zip,
-    //             }
-    //         }
-    //     });
-    
-    //     // Attach the payment method to the customer
-    //     await stripe.paymentMethods.attach(paymentMethod.id, { customer: customer.id });
-    
-    //     // Set the payment method as default
-    //     await stripe.customers.update(customer.id, {
-    //         invoice_settings: {
-    //             default_payment_method: paymentMethod.id,
-    //         }
-    //     });
-    
-    //     // Create a subscription
-    //     const priceId = await createStripeProductAndPrice(plan, billingCycle, memberCount);
-    //     if (!priceId) {
-    //         return res.status(500).send({ error: 'Failed to create price for the plan' });
-    //     }
-    
-    //     const subscription = await stripe.subscriptions.create({
-    //         customer: customer.id,
-    //         items: [{ price: priceId }],
-    //         expand: ['latest_invoice.payment_intent'],
-    //     });
-    
-    //     console.log("createsubscription", subscription);
-    
-    //     const invoice = await stripe.invoices.retrieve(subscription.latest_invoice.id);
-    //     const paymentIntent = invoice.payment_intent;
-    //     if (!paymentIntent) {
-    //         return res.status(500).send({ error: 'Payment intent not found in invoice' });
-    //     }
-    
-    //     const paymentIntentStatus = await stripe.paymentIntents.retrieve(paymentIntent);
-    
-    //     if (!paymentIntentStatus || !paymentIntentStatus.status) {
-    //         return res.status(500).send({ error: 'Failed to retrieve payment intent status' });
-    //     }
-    
-    //     let paymentStatus = paymentIntentStatus.status;
-    //     if (paymentStatus === 'succeeded') {
-    //         // Handle successful payment
-    //         const updatedSubscription = await stripe.subscriptions.retrieve(subscription.id);
-    //         const invoiceUrl = invoice.invoice_pdf;
-    
-    //         const planInterval = updatedSubscription.items.data[0].price.recurring.interval === 'year' ? 'year' : 'month';
-    //         console.log("Plan Interval:", planInterval);
-    
-    //         const order_history_data = {
-    //             user_id: userId,
-    //             stripe_subscription_id: subscription.id,
-    //             plan_id: planId,
-    //             payment_status: paymentIntentStatus.status,
-    //             subscription_details: JSON.stringify(subscription),
-    //             payment_details: JSON.stringify(paymentIntentStatus),
-    //             subscription_duration: planInterval,
-    //             subscription_start_date: new Date(subscription.current_period_start * 1000),
-    //             subscription_end_date: new Date(subscription.current_period_end * 1000),
-    //             added_user_number: memberCount
-    //         };
-    
-    //         const order_history_query = `INSERT INTO order_history SET ?`;
-    //         await queryAsync(order_history_query, [order_history_data]);
-    
-    //         const getcompany_query = `SELECT * FROM company LEFT JOIN company_claim_request ON company.ID = company_claim_request.company_id WHERE company_claim_request.claimed_by = ?`;
-    //         const getcompany_value = await queryAsync(getcompany_query, [userId]);
-    //         if (getcompany_value.length === 0) {
-    //             return res.status(404).send({ error: 'Company not found' });
-    //         }
-    //         const companyID = getcompany_value[0].ID;
-    //         console.log("companyID", companyID);
-    
-    //         const updatecompany_query = `UPDATE company SET membership_type_id = ? WHERE ID = ?`;
-    //         await queryAsync(updatecompany_query, [planId, companyID]);
-    
-    //         const mailOptions = {
-    //             from: process.env.MAIL_USER,
-    //             to: 'dev2.scwt@gmail.com',
-    //             subject: 'Your Subscription Invoice',
-    //             html: `<p>Hello ${name},</p>
-    //                    <p>Thank you for your subscription. You can view your invoice at the <a href="${invoiceUrl}">following link</a>.</p>
-    //                    <p>Kind Regards,</p>
-    //                    <p>CEchoes Technology Team</p>`
-    //         };
-    
-    //         await mdlconfig.transporter.sendMail(mailOptions);
-    
-    //         return res.send({
-    //             status: 'ok',
-    //             message: 'Your payment has been successfully processed.',
-    //             subscriptionId: updatedSubscription.id,
-    //             invoiceUrl: invoiceUrl
-    //         });
-    //     } else if (paymentStatus === 'requires_action') {
-    //         return res.status(400).send({
-    //             status: 'requires_action',
-    //             client_secret: paymentIntent.client_secret,
-    //             message: 'Payment requires additional actions.'
-    //         });
-    //     } else {
-    //         return res.status(400).send({
-    //             status: 'failed',
-    //             message: 'Payment failed or requires a new payment method.'
-    //         });
-    //     }
-    // } catch (error) {
-    //     console.error('Error creating subscription:', error);
-    //     return res.status(500).send({ error: 'An error occurred while creating the subscription.' });
-    // }
-    
     try {
-        const { token, userId, name, email, address, country, city, state, zip, planId, billingCycle, memberCount } = req.body;
+        const { paymentMethodId, userId, name, email, address, country, city, state, zip, planId, billingCycle, memberCount } = req.body;
         console.log("createSubscription req.body", req.body);
     
-        // Fetch plan data from your database
         const plan = await getPlanFromDatabase(planId);
         if (!plan) {
             return res.status(404).send({ error: 'Plan not found' });
         }
     
-        // Create or retrieve the customer
         let customer;
         try {
             customer = await stripe.customers.create({
@@ -13950,20 +14028,18 @@ exports.createSubscription = async (req, res) => {
                     state: state,
                     postal_code: zip,
                 },
-                source: token // Use the Stripe token for payment
+                source: paymentMethodId
             });
         } catch (error) {
             console.error("Error creating customer:", error);
             return res.status(500).send({ error: 'Failed to create customer' });
         }
     
-        // Retrieve or create price ID
         const priceId = await createStripeProductAndPrice(plan, billingCycle, memberCount);
         if (!priceId) {
             return res.status(500).send({ error: 'Failed to create price for the plan' });
         }
-    
-        // Create the subscription
+
         let subscription;
         try {
             subscription = await stripe.subscriptions.create({ 
@@ -13989,32 +14065,182 @@ exports.createSubscription = async (req, res) => {
         }
     
         let paymentStatus = paymentIntentStatus.status;
+        console.log("paymentStatus",paymentStatus);
+        const updatedSubscription = await stripe.subscriptions.retrieve(subscription.id);
+        const invoiceUrl = invoice.invoice_pdf;
+
+        const planInterval = updatedSubscription.items.data[0].price.recurring.interval === 'year' ? 'year' : 'month';
+        console.log("Plan Interval:", planInterval);
+
+        const order_history_data = {
+            user_id: userId,
+            stripe_subscription_id: subscription.id,
+            plan_id: planId,
+            payment_status: paymentIntentStatus.status,
+            subscription_details: JSON.stringify(subscription),
+            payment_details: JSON.stringify(paymentIntentStatus),
+            subscription_duration: planInterval,
+            subscription_start_date: new Date(subscription.current_period_start * 1000),
+            subscription_end_date: new Date(subscription.current_period_end * 1000),
+            added_user_number: memberCount
+        };
+
+        const order_history_query = `INSERT INTO order_history SET ?`;
+        await queryAsync(order_history_query, [order_history_data]);
+
+        const getcompany_query = `SELECT * FROM company LEFT JOIN company_claim_request ON company.ID = company_claim_request.company_id WHERE company_claim_request.claimed_by = ?`;
+        const getcompany_value = await queryAsync(getcompany_query, [userId]);
+        if (getcompany_value.length === 0) {
+            return res.status(404).send({ error: 'Company not found' });
+        }
+        const companyID = getcompany_value[0].ID;
+        console.log("companyID", companyID);
+
+        const updatecompany_query = `UPDATE company SET membership_type_id = ? WHERE ID = ?`;
+        try {
+            const result = await queryAsync(updatecompany_query, [planId, companyID]);
+            console.log('Query executed successfully.');
+            if (result.affectedRows > 0) {
+                console.log(`Success: ${result.affectedRows} row(s) updated.`);
+            } else {
+                console.log('No rows were updated.');
+            }
+        } catch (error) {
+            console.error('Error executing the query:', error);
+        }
+
+        const mailOptions = {
+            from: process.env.MAIL_USER,
+            to: email,
+            subject: 'Your Subscription Invoice',
+            html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+            <style>
+            body, table, td, p, a, h1, h2, h3, h4, h5, h6, div {
+                font-family: Calibri, 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif !important;
+            }
+            </style>
+            <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
+             <tbody>
+              <tr>
+               <td align="center" valign="top">
+                 <div id="template_header_image"><p style="margin-top: 0;"></p></div>
+                 <table id="template_container" style="box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important; background-color: #fdfdfd; border: 1px solid #dcdcdc; border-radius: 3px !important;" border="0" cellpadding="0" cellspacing="0" width="600">
+                  <tbody>
+                    <tr>
+                     <td align="center" valign="top">
+                       <!-- Header -->
+                       <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
+                         <tbody>
+                           <tr>
+                           <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/email-template-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+                            <td id="header_wrapper" style="padding: 36px 48px; display: block;">
+                               <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Welcome</h1>
+                            </td>
+      
+                           </tr>
+                         </tbody>
+                       </table>
+                 <!-- End Header -->
+                 </td>
+                    </tr>
+                    <tr>
+                     <td align="center" valign="top">
+                       <!-- Body -->
+                       <table id="template_body" border="0" cellpadding="0" cellspacing="0" width="600">
+                         <tbody>
+                           <tr>
+                            <td id="body_content" style="background-color: #fdfdfd;" valign="top">
+                              <!-- Content -->
+                              <table border="0" cellpadding="20" cellspacing="0" width="100%">
+                               <tbody>
+                                <tr>
+                                 <td style="padding: 48px;" valign="top">
+                                   <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
+                                    
+                                    <table border="0" cellpadding="4" cellspacing="0" width="90%">
+                                      <tr>
+                                        <td colspan="2">
+                                            <strong>Hello Sir/Madam,</strong>
+                                            <p style="font-size:15px; line-height:20px">Thank you for your subscription. You can view your invoice at the <a href="${invoiceUrl}">following link</a>.</p>
+                                            <p style="font-size:15px; line-height:20px"><br><p style="font-size:15px; line-height:20px">Best Regards,</p>
+                                            <p style="font-size:15px; line-height:20px">Team BoloGrahak</p></p>
+                                            <br>
+                                            <p style="font-size:13px; line-height:16px">If you have any questions or need assistance, please feel free to contact us at <a href="mailto:support@bolagrahak.com">support@bolagrahak.com</a>.</p>
+                                        </td>
+                                      </tr>
+                                    </table>
+                                   </div>
+                                </td>
+                               </tr>
+                              </tbody>
+                             </table>
+                            <!-- End Content -->
+                           </td>
+                          </tr>
+                         </tbody>
+                       </table>
+                       <!-- End Body -->
+                     </td>
+                    </tr>
+                    <tr>
+                     <td align="center" valign="top">
+                       <!-- Footer -->
+                       <table id="template_footer" style="background-color: #000; border-radius: 0 0 3px 3px !important; color: #ffffff; border-top: 0; font-size: 12px; line-height: 150%; text-align: center; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
+                         <tbody>
+                           <tr>
+                             <td id="credit" style="padding: 20px; text-align: center; line-height: 18px;">
+                               <p style="margin: 0;">© BoloGrahak 2024. All rights reserved.</p>
+                             </td>
+                           </tr>
+                         </tbody>
+                       </table>
+                       <!-- End Footer -->
+                     </td>
+                    </tr>
+                  </tbody>
+                 </table>
+               </td>
+              </tr>
+             </tbody>
+            </table>
+            </div>
+            </body>
+            </html>`
+        };
+
+        await transporter.sendMail(mailOptions);
+        console.log("Subscription confirmation email sent successfully.");
+        
         if (paymentStatus === 'succeeded') {
-            // Handle successful payment
-            const updatedSubscription = await stripe.subscriptions.retrieve(subscription.id);
+            return res.send({ success: true, subscription: updatedSubscription });
+        } 
+        else if (paymentStatus === 'requires_action' || paymentStatus === 'requires_source_action') {
+            return res.send({ requiresAction: true, clientSecret: paymentIntent.client_secret });
+        } else {
+            return res.status(400).send({ error: 'Payment required additional actions or failed' });
+        }
+    } catch (error) {
+        console.error("Error creating subscription:", error);
+        res.status(500).send({ error: 'Internal server error' });
+    }
+};
+
+exports.orderUpdate = async (req, res) => {
+    try {
+        const { subscriptionId ,paymentStatus } = req.body;
+        console.log("orderUpdate req.body", req.body)
+        
+        if (paymentStatus === 'succeeded') {
+            const updatedSubscription = await stripe.subscriptions.retrieve(subscriptionId);
             const invoiceUrl = invoice.invoice_pdf;
     
             const planInterval = updatedSubscription.items.data[0].price.recurring.interval === 'year' ? 'year' : 'month';
             console.log("Plan Interval:", planInterval);
+
     
-            // Insert order history
-            const order_history_data = {
-                user_id: userId,
-                stripe_subscription_id: subscription.id,
-                plan_id: planId,
-                payment_status: paymentIntentStatus.status,
-                subscription_details: JSON.stringify(subscription),
-                payment_details: JSON.stringify(paymentIntentStatus),
-                subscription_duration: planInterval,
-                subscription_start_date: new Date(subscription.current_period_start * 1000),
-                subscription_end_date: new Date(subscription.current_period_end * 1000),
-                added_user_number: memberCount
-            };
+            const order_history_query = `UPDATE order_history SET payment_status=?`;
+            await queryAsync(order_history_query, [paymentStatus, subscriptionId]);
     
-            const order_history_query = `INSERT INTO order_history SET ?`;
-            await queryAsync(order_history_query, [order_history_data]);
-    
-            // Update company membership type
             const getcompany_query = `SELECT * FROM company LEFT JOIN company_claim_request ON company.ID = company_claim_request.company_id WHERE company_claim_request.claimed_by = ?`;
             const getcompany_value = await queryAsync(getcompany_query, [userId]);
             if (getcompany_value.length === 0) {
@@ -14023,8 +14249,6 @@ exports.createSubscription = async (req, res) => {
             const companyID = getcompany_value[0].ID;
             console.log("companyID", companyID);
     
-            // const updatecompany_query = `UPDATE company SET membership_type_id = ? WHERE ID = ?`;
-            // await queryAsync(updatecompany_query, [planId, companyID]);
             const updatecompany_query = `UPDATE company SET membership_type_id = ? WHERE ID = ?`;
             try {
                 const result = await queryAsync(updatecompany_query, [planId, companyID]);
@@ -14038,7 +14262,6 @@ exports.createSubscription = async (req, res) => {
                 console.error('Error executing the query:', error);
             }
     
-            // Send email notification
             const mailOptions = {
                 from: process.env.MAIL_USER,
                 to: email,
@@ -14092,44 +14315,39 @@ exports.createSubscription = async (req, res) => {
                                             <td colspan="2">
                                                 <strong>Hello Sir/Madam,</strong>
                                                 <p style="font-size:15px; line-height:20px">Thank you for your subscription. You can view your invoice at the <a href="${invoiceUrl}">following link</a>.</p>
-                                                <p style="font-size:15px; line-height:20px"><br><p style="font-size:15px; line-height:20px">Kind Regards,</p><p style="font-size:15px; line-height:20px">CEchoes Technology Team</p><br>
+                                                <p style="font-size:15px; line-height:20px"><br><p style="font-size:15px; line-height:20px">Best Regards,</p>
+                                                <p style="font-size:15px; line-height:20px">Team BoloGrahak</p></p>
+                                                <br>
+                                                <p style="font-size:13px; line-height:16px">If you have any questions or need assistance, please feel free to contact us at <a href="mailto:support@bolagrahak.com">support@bolagrahak.com</a>.</p>
                                             </td>
                                           </tr>
                                         </table>
                                        </div>
-                                     </td>
-                                    </tr>
-                                   </tbody>
-                                  </table>
+                                    </td>
+                                   </tr>
+                                  </tbody>
+                                 </table>
                                 <!-- End Content -->
-                                </td>
-                               </tr>
+                               </td>
+                              </tr>
                              </tbody>
                            </table>
-                         <!-- End Body -->
+                           <!-- End Body -->
                          </td>
                         </tr>
                         <tr>
                          <td align="center" valign="top">
                            <!-- Footer -->
-                           <table id="template_footer" border="0" cellpadding="10" cellspacing="0" width="600">
-                            <tbody>
-                             <tr>
-                              <td style="padding: 0; -webkit-border-radius: 6px;" valign="top">
-                               <table border="0" cellpadding="10" cellspacing="0" width="100%">
-                                 <tbody>
-                                   <tr>
-                                    <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
-                                         <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology</a></p>
-                                    </td>
-                                   </tr>
-                                 </tbody>
-                               </table>
-                              </td>
-                             </tr>
-                            </tbody>
+                           <table id="template_footer" style="background-color: #000; border-radius: 0 0 3px 3px !important; color: #ffffff; border-top: 0; font-size: 12px; line-height: 150%; text-align: center; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
+                             <tbody>
+                               <tr>
+                                 <td id="credit" style="padding: 20px; text-align: center; line-height: 18px;">
+                                   <p style="margin: 0;">© BoloGrahak 2024. All rights reserved.</p>
+                                 </td>
+                               </tr>
+                             </tbody>
                            </table>
-                         <!-- End Footer -->
+                           <!-- End Footer -->
                          </td>
                         </tr>
                       </tbody>
@@ -14138,35 +14356,24 @@ exports.createSubscription = async (req, res) => {
                   </tr>
                  </tbody>
                 </table>
-               </div>`
+                </div>
+                </body>
+                </html>`
             };
     
-            await mdlconfig.transporter.sendMail(mailOptions);
+            await transporter.sendMail(mailOptions);
+            console.log("Subscription confirmation email sent successfully.");
     
-            return res.send({
-                status: 'ok',
-                message: 'Your payment has been successfully processed.',
-                subscriptionId: updatedSubscription.id,
-                invoiceUrl: invoiceUrl
-            });
-        } else if (paymentStatus === 'requires_action') {
-            return res.status(400).send({
-                status: 'requires_action',
-                client_secret: paymentIntent.client_secret,
-                message: 'Payment requires additional actions.'
-            });
-        } else {
-            return res.status(400).send({
-                status: 'failed',
-                message: 'Payment failed or requires a new payment method.'
-            });
+            return res.send({ success: true, subscription: updatedSubscription });
         }
     } catch (error) {
-        console.error('Error creating subscription:', error);
-        return res.status(500).send({ error: 'An error occurred while creating the subscription.' });
+        console.error("Error creating subscription:", error);
+        res.status(500).send({ error: 'Internal server error' });
     }
-    
 };
+
+
+
 
 const getInvoicesForSubscription = async (subscriptionId) => {
     try {
@@ -14263,16 +14470,253 @@ const createStripeProductAndPrices = async (plan, billingCycle, memberCount) => 
 
 
 
+// exports.createexternalSubscription = async (req, res) => {
+//     try {
+//         const { stripeToken, email, name, address, city, state, zip, planId, billingCycle, memberCount } = req.body;
+
+//         console.log("createSubscription req.body",req.body);
+//         if (!stripeToken || !email || !name || !planId || !billingCycle || memberCount === undefined) {
+//             console.log("vvvvv");
+            
+//             return res.status(400).send({ error: 'Missing required parameters' });
+//         }
+//         const plan = await getPlanFromDatabase(planId);
+//         if (!plan) {
+//             return res.status(404).send({ error: 'Plan not found' });
+//         }
+
+//         let paymentMethod;
+//         try {
+//             paymentMethod = await stripe.paymentMethods.create({
+//                 type: 'card',
+//                 card: { token: stripeToken },
+//             });
+//         } catch (error) {
+//             console.error("Error creating PaymentMethod:", error);
+//             return res.status(500).send({ error: 'Failed to create PaymentMethod' });
+//         }
+
+//         let customer;
+//         try {
+//             customer = await stripe.customers.list({ email });
+//             if (customer.data.length === 0) {
+//                 customer = await stripe.customers.create({
+//                     email: email,
+//                     name: name,
+//                     address: {
+//                         line1: address,
+//                         city: city,
+//                         state: state,
+//                         postal_code: zip,
+//                     },
+//                 });
+//             } else {
+//                 customer = customer.data[0]; 
+//             }
+
+//             await stripe.paymentMethods.attach(paymentMethod.id, { customer: customer.id });
+
+//             await stripe.customers.update(customer.id, {
+//                 invoice_settings: {
+//                     default_payment_method: paymentMethod.id,
+//                 },
+//             });
+//         } catch (error) {
+//             console.error("Error creating/retrieving customer:", error);
+//             return res.status(500).send({ error: 'Failed to create/retrieve customer' });
+//         }
+
+//         const priceId = await createStripeProductAndPrices(plan, billingCycle, memberCount);
+//         if (!priceId) {
+//             return res.status(500).send({ error: 'Failed to create price for the plan' });
+//         }
+
+//         let subscription;
+//         try {
+//             subscription = await stripe.subscriptions.create({
+//                 customer: customer.id,
+//                 items: [{ price: priceId }],
+//                 expand: ['latest_invoice.payment_intent'],
+//             });
+//         } catch (error) {
+//             console.error("Error creating subscription:", error);
+//             return res.status(500).send({ error: 'Failed to create subscription' });
+//         }
+
+//         const invoice = await stripe.invoices.retrieve(subscription.latest_invoice.id);
+//         const paymentIntent = invoice.payment_intent;
+//         if (!paymentIntent) {
+//             return res.status(500).send({ error: 'Payment intent not found in invoice' });
+//         }
+
+//         const paymentIntentStatus = await stripe.paymentIntents.retrieve(paymentIntent);
+//         if (!paymentIntentStatus || !paymentIntentStatus.status) {
+//             return res.status(500).send({ error: 'Failed to retrieve payment intent status' });
+//         }
+
+//         let paymentStatus = paymentIntentStatus.status;
+//         if (paymentStatus === 'succeeded') {
+//             const updatedSubscription = await stripe.subscriptions.retrieve(subscription.id);
+//             const invoiceUrl = invoice.invoice_pdf;
+
+//             const planInterval = updatedSubscription.items.data[0].price.recurring.interval === 'year' ? 'year' : 'month';
+
+//             const order_history_data = {
+//                 stripe_subscription_id: subscription.id,
+//                 plan_id: planId,
+//                 payment_status: paymentIntentStatus.status,
+//                 subscription_details: JSON.stringify(subscription),
+//                 payment_details: JSON.stringify(paymentIntentStatus),
+//                 subscription_duration: planInterval,
+//                 subscription_start_date: new Date(subscription.current_period_start * 1000),
+//                 subscription_end_date: new Date(subscription.current_period_end * 1000),
+//                 added_user_number: memberCount
+//             };
+
+//             const order_history_query = `INSERT INTO order_history SET ?`;
+//             await queryAsync(order_history_query, [order_history_data]);
+
+//             const mailOptions = {
+//                 from: process.env.MAIL_USER,
+//                 to: email,
+//                 subject: 'Your Subscription Invoice',
+//                 html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+//                 <style>
+//                 body, table, td, p, a, h1, h2, h3, h4, h5, h6, div {
+//                     font-family: Calibri, 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif !important;
+//                 }
+//                 </style>
+//                 <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
+//                  <tbody>
+//                   <tr>
+//                    <td align="center" valign="top">
+//                      <div id="template_header_image"><p style="margin-top: 0;"></p></div>
+//                      <table id="template_container" style="box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important; background-color: #fdfdfd; border: 1px solid #dcdcdc; border-radius: 3px !important;" border="0" cellpadding="0" cellspacing="0" width="600">
+//                       <tbody>
+//                         <tr>
+//                          <td align="center" valign="top">
+//                            <!-- Header -->
+//                            <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
+//                              <tbody>
+//                                <tr>
+//                                <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/email-template-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+//                                 <td id="header_wrapper" style="padding: 36px 48px; display: block;">
+//                                    <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Welcome</h1>
+//                                 </td>
+          
+//                                </tr>
+//                              </tbody>
+//                            </table>
+//                      <!-- End Header -->
+//                      </td>
+//                         </tr>
+//                         <tr>
+//                          <td align="center" valign="top">
+//                            <!-- Body -->
+//                            <table id="template_body" border="0" cellpadding="0" cellspacing="0" width="600">
+//                              <tbody>
+//                                <tr>
+//                                 <td id="body_content" style="background-color: #fdfdfd;" valign="top">
+//                                   <!-- Content -->
+//                                   <table border="0" cellpadding="20" cellspacing="0" width="100%">
+//                                    <tbody>
+//                                     <tr>
+//                                      <td style="padding: 48px;" valign="top">
+//                                        <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
+                                        
+//                                         <table border="0" cellpadding="4" cellspacing="0" width="90%">
+//                                           <tr>
+//                                             <td colspan="2">
+//                                                 <strong>Hello Sir/Madam,</strong>
+//                                                 <p style="font-size:15px; line-height:20px">Thank you for your subscription. You can view your invoice at the <a href="${invoiceUrl}">following link</a>.</p>
+//                                                 <p style="font-size:15px; line-height:20px"><br><p style="font-size:15px; line-height:20px">Kind Regards,</p><p style="font-size:15px; line-height:20px">CEchoes Technology Team</p><br>
+//                                             </td>
+//                                           </tr>
+//                                         </table>
+//                                        </div>
+//                                      </td>
+//                                     </tr>
+//                                    </tbody>
+//                                   </table>
+//                                 <!-- End Content -->
+//                                 </td>
+//                                </tr>
+//                              </tbody>
+//                            </table>
+//                          <!-- End Body -->
+//                          </td>
+//                         </tr>
+//                         <tr>
+//                          <td align="center" valign="top">
+//                            <!-- Footer -->
+//                            <table id="template_footer" border="0" cellpadding="10" cellspacing="0" width="600">
+//                             <tbody>
+//                              <tr>
+//                               <td style="padding: 0; -webkit-border-radius: 6px;" valign="top">
+//                                <table border="0" cellpadding="10" cellspacing="0" width="100%">
+//                                  <tbody>
+//                                    <tr>
+//                                     <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
+//                                          <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology</a></p>
+//                                     </td>
+//                                    </tr>
+//                                  </tbody>
+//                                </table>
+//                               </td>
+//                              </tr>
+//                             </tbody>
+//                            </table>
+//                          <!-- End Footer -->
+//                          </td>
+//                         </tr>
+//                       </tbody>
+//                      </table>
+//                    </td>
+//                   </tr>
+//                  </tbody>
+//                 </table>
+//                </div>`
+//             };
+    
+//             await mdlconfig.transporter.sendMail(mailOptions);
+
+//             return res.send({
+//                 status: 'ok',
+//                 message: 'Your payment has been successfully processed.',
+//                 subscription: updatedSubscription.id,
+//                 invoiceUrl: invoiceUrl
+//             });
+//         } else if (paymentStatus === 'requires_action') {
+//             return res.status(400).send({
+//                 status: 'requires_action',
+//                 client_secret: paymentIntent.client_secret,
+//                 message: 'Payment requires additional actions.'
+//             });
+//         } else {
+//             return res.status(400).send({
+//                 status: 'failed',
+//                 message: 'Payment failed or requires a new payment method.'
+//             });
+//         }
+//     } catch (error) {
+//         console.error('Error creating subscription:', error);
+//         return res.status(500).send({ error: 'An error occurred while creating the subscription.' });
+//     }
+// };
+
+
+
+
+
 exports.createexternalSubscription = async (req, res) => {
     try {
-        const { stripeToken, email, name, address, city, state, zip, planId, billingCycle, memberCount } = req.body;
+        const { paymentMethodId, email, name, address, city, state, zip, planId, billingCycle, memberCount } = req.body;
+        console.log("createexternalSubscription", req.body);
 
-        console.log("createSubscription req.body",req.body);
-        if (!stripeToken || !email || !name || !planId || !billingCycle || memberCount === undefined) {
-            console.log("vvvvv");
-            
+        if (!paymentMethodId || !email || !planId) {
             return res.status(400).send({ error: 'Missing required parameters' });
         }
+
         const plan = await getPlanFromDatabase(planId);
         if (!plan) {
             return res.status(404).send({ error: 'Plan not found' });
@@ -14280,13 +14724,9 @@ exports.createexternalSubscription = async (req, res) => {
 
         let paymentMethod;
         try {
-            paymentMethod = await stripe.paymentMethods.create({
-                type: 'card',
-                card: { token: stripeToken },
-            });
+            paymentMethod = await stripe.paymentMethods.retrieve(paymentMethodId);
         } catch (error) {
-            console.error("Error creating PaymentMethod:", error);
-            return res.status(500).send({ error: 'Failed to create PaymentMethod' });
+            return res.status(500).send({ error: 'Failed to retrieve PaymentMethod' });
         }
 
         let customer;
@@ -14304,18 +14744,15 @@ exports.createexternalSubscription = async (req, res) => {
                     },
                 });
             } else {
-                customer = customer.data[0]; 
+                customer = customer.data[0];
             }
 
             await stripe.paymentMethods.attach(paymentMethod.id, { customer: customer.id });
 
             await stripe.customers.update(customer.id, {
-                invoice_settings: {
-                    default_payment_method: paymentMethod.id,
-                },
+                invoice_settings: { default_payment_method: paymentMethod.id },
             });
         } catch (error) {
-            console.error("Error creating/retrieving customer:", error);
             return res.status(500).send({ error: 'Failed to create/retrieve customer' });
         }
 
@@ -14329,166 +14766,70 @@ exports.createexternalSubscription = async (req, res) => {
             subscription = await stripe.subscriptions.create({
                 customer: customer.id,
                 items: [{ price: priceId }],
-                expand: ['latest_invoice.payment_intent'],
+                payment_behavior: 'default_incomplete',  
+                expand: ['latest_invoice.payment_intent'], 
             });
         } catch (error) {
-            console.error("Error creating subscription:", error);
             return res.status(500).send({ error: 'Failed to create subscription' });
         }
-
-        const invoice = await stripe.invoices.retrieve(subscription.latest_invoice.id);
-        const paymentIntent = invoice.payment_intent;
+        const subscriptionId = subscription.id;
+        const paymentIntent = subscription.latest_invoice.payment_intent;
+        console.log("paymentIntent",paymentIntent);
+        
         if (!paymentIntent) {
             return res.status(500).send({ error: 'Payment intent not found in invoice' });
         }
 
-        const paymentIntentStatus = await stripe.paymentIntents.retrieve(paymentIntent);
-        if (!paymentIntentStatus || !paymentIntentStatus.status) {
-            return res.status(500).send({ error: 'Failed to retrieve payment intent status' });
-        }
-
-        let paymentStatus = paymentIntentStatus.status;
-        if (paymentStatus === 'succeeded') {
-            const updatedSubscription = await stripe.subscriptions.retrieve(subscription.id);
-            const invoiceUrl = invoice.invoice_pdf;
-
-            const planInterval = updatedSubscription.items.data[0].price.recurring.interval === 'year' ? 'year' : 'month';
+        const paymentStatus = paymentIntent.status;
+        console.log("paymentStatus",paymentStatus);
+        console.log("paymentIntent.client_secret",paymentIntent.client_secret);
+        
+        const invoiceUrl = subscription.latest_invoice.invoice_pdf;
+            const planInterval = subscription.items.data[0].price.recurring.interval === 'year' ? 'year' : 'month';
 
             const order_history_data = {
                 stripe_subscription_id: subscription.id,
                 plan_id: planId,
-                payment_status: paymentIntentStatus.status,
+                payment_status: paymentStatus,
                 subscription_details: JSON.stringify(subscription),
-                payment_details: JSON.stringify(paymentIntentStatus),
+                payment_details: JSON.stringify(paymentIntent),
                 subscription_duration: planInterval,
                 subscription_start_date: new Date(subscription.current_period_start * 1000),
                 subscription_end_date: new Date(subscription.current_period_end * 1000),
                 added_user_number: memberCount
             };
 
-            const order_history_query = `INSERT INTO order_history SET ?`;
-            await queryAsync(order_history_query, [order_history_data]);
-
+            var ordervalue = await queryAsync('INSERT INTO order_history SET ?', [order_history_data]);
+            console.log("ordervalue",ordervalue);
+            
             const mailOptions = {
                 from: process.env.MAIL_USER,
                 to: email,
                 subject: 'Your Subscription Invoice',
-                html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
-                <style>
-                body, table, td, p, a, h1, h2, h3, h4, h5, h6, div {
-                    font-family: Calibri, 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif !important;
-                }
-                </style>
-                <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
-                 <tbody>
-                  <tr>
-                   <td align="center" valign="top">
-                     <div id="template_header_image"><p style="margin-top: 0;"></p></div>
-                     <table id="template_container" style="box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important; background-color: #fdfdfd; border: 1px solid #dcdcdc; border-radius: 3px !important;" border="0" cellpadding="0" cellspacing="0" width="600">
-                      <tbody>
-                        <tr>
-                         <td align="center" valign="top">
-                           <!-- Header -->
-                           <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
-                             <tbody>
-                               <tr>
-                               <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/email-template-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
-                                <td id="header_wrapper" style="padding: 36px 48px; display: block;">
-                                   <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Welcome</h1>
-                                </td>
-          
-                               </tr>
-                             </tbody>
-                           </table>
-                     <!-- End Header -->
-                     </td>
-                        </tr>
-                        <tr>
-                         <td align="center" valign="top">
-                           <!-- Body -->
-                           <table id="template_body" border="0" cellpadding="0" cellspacing="0" width="600">
-                             <tbody>
-                               <tr>
-                                <td id="body_content" style="background-color: #fdfdfd;" valign="top">
-                                  <!-- Content -->
-                                  <table border="0" cellpadding="20" cellspacing="0" width="100%">
-                                   <tbody>
-                                    <tr>
-                                     <td style="padding: 48px;" valign="top">
-                                       <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
-                                        
-                                        <table border="0" cellpadding="4" cellspacing="0" width="90%">
-                                          <tr>
-                                            <td colspan="2">
-                                                <strong>Hello Sir/Madam,</strong>
-                                                <p style="font-size:15px; line-height:20px">Thank you for your subscription. You can view your invoice at the <a href="${invoiceUrl}">following link</a>.</p>
-                                                <p style="font-size:15px; line-height:20px"><br><p style="font-size:15px; line-height:20px">Kind Regards,</p><p style="font-size:15px; line-height:20px">CEchoes Technology Team</p><br>
-                                            </td>
-                                          </tr>
-                                        </table>
-                                       </div>
-                                     </td>
-                                    </tr>
-                                   </tbody>
-                                  </table>
-                                <!-- End Content -->
-                                </td>
-                               </tr>
-                             </tbody>
-                           </table>
-                         <!-- End Body -->
-                         </td>
-                        </tr>
-                        <tr>
-                         <td align="center" valign="top">
-                           <!-- Footer -->
-                           <table id="template_footer" border="0" cellpadding="10" cellspacing="0" width="600">
-                            <tbody>
-                             <tr>
-                              <td style="padding: 0; -webkit-border-radius: 6px;" valign="top">
-                               <table border="0" cellpadding="10" cellspacing="0" width="100%">
-                                 <tbody>
-                                   <tr>
-                                    <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
-                                         <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology</a></p>
-                                    </td>
-                                   </tr>
-                                 </tbody>
-                               </table>
-                              </td>
-                             </tr>
-                            </tbody>
-                           </table>
-                         <!-- End Footer -->
-                         </td>
-                        </tr>
-                      </tbody>
-                     </table>
-                   </td>
-                  </tr>
-                 </tbody>
-                </table>
-               </div>`
+                html: `<p>Thank you for your subscription. You can view your invoice at the <a href="${invoiceUrl}">following link</a>.</p>`,
             };
-    
             await mdlconfig.transporter.sendMail(mailOptions);
 
+
+
+        if (paymentStatus === 'succeeded') {         
             return res.send({
                 status: 'ok',
-                message: 'Your payment has been successfully processed.',
-                subscription: updatedSubscription.id,
-                invoiceUrl: invoiceUrl
+                message: 'Payment was successful!',
+                subscriptionId: subscription.id,
+                invoiceUrl: invoiceUrl,
             });
-        } else if (paymentStatus === 'requires_action') {
-            return res.status(400).send({
+        } else if (paymentStatus === 'requires_action' || paymentStatus === 'requires_confirmation') {
+            return res.status(200).send({
                 status: 'requires_action',
                 client_secret: paymentIntent.client_secret,
-                message: 'Payment requires additional actions.'
+                message: 'Payment requires additional action, such as OTP or 3D Secure.',
+                subscription: subscriptionId,
             });
         } else {
             return res.status(400).send({
                 status: 'failed',
-                message: 'Payment failed or requires a new payment method.'
+                message: 'Payment failed. Please try again with a valid payment method.',
             });
         }
     } catch (error) {
@@ -14496,6 +14837,9 @@ exports.createexternalSubscription = async (req, res) => {
         return res.status(500).send({ error: 'An error occurred while creating the subscription.' });
     }
 };
+
+
+
 
 exports.externalRegistration = async (req, res) => {
     const { first_name, last_name, email, register_password, phone, address, city, state, zip, planId, billingCycle, memberCount, subscriptionId, user_state, user_country, register_confirm_password } = req.body;
@@ -14774,8 +15118,6 @@ exports.externalRegistration = async (req, res) => {
                 }
             });
 
-            // Create company logic
-            // Check if company exists
             if (req.body.parent_id == '0') {
                 console.log("vvvvv");
                 
@@ -14842,31 +15184,68 @@ exports.externalRegistration = async (req, res) => {
                             console.log("Subscription start date:", subscriptionStartDate);
                             console.log("Subscription end date:", subscriptionEndDate);
 
-
                             const order_history_data = {
                                 user_id: userID,
+                                payment_status: "succeeded"
                             };
-
+                            
                             const update_order_history_query = `
                                 UPDATE order_history
-                                SET user_id = ?
+                                SET user_id = ?, payment_status = ?
                                 WHERE stripe_subscription_id = ?
-                              `;
-
+                            `;
+                            
                             const update_values = [
                                 order_history_data.user_id,
-                                subscriptionId
+                                order_history_data.payment_status, 
+                                subscriptionId 
                             ];
+    
+                                try {
+                                    const update_result = await queryAsync(update_order_history_query, update_values);
+                                    console.log(`Order history updated for subscription ID ${subscriptionId}`);
+                                } catch (error) {
+                                    console.error('Failed to update order history:', error);
+                                }
 
-                            try {
-                                const update_result = await queryAsync(update_order_history_query, update_values);
-                                console.log(`Order history updated for subscription ID ${subscriptionId}`);
-                            } catch (error) {
-                                console.error('Failed to update order history:', error);
-                            }
+                            // if (paymentStatus === 'succeeded') {
+                            //     const invoiceUrl = subscription.latest_invoice.invoice_pdf;
+                            //     const planInterval = subscription.items.data[0].price.recurring.interval === 'year' ? 'year' : 'month';
+                    
+                            //     const order_history_data = {
+                            //         stripe_subscription_id: subscription.id,
+                            //         plan_id: planId,
+                            //         payment_status: paymentStatus,
+                            //         subscription_details: JSON.stringify(subscription),
+                            //         subscription_duration: planInterval,
+                            //         subscription_start_date: new Date(subscription.current_period_start * 1000),
+                            //         subscription_end_date: new Date(subscription.current_period_end * 1000),
+                            //         added_user_number: memberCount
+                            //     };
+                    
+                            //     var ordervalue = await queryAsync('INSERT INTO order_history SET ?', [order_history_data]);
+                            //     console.log("ordervalue",ordervalue);
+                                
+                            //     const mailOptions = {
+                            //         from: process.env.MAIL_USER,
+                            //         to: email,
+                            //         subject: 'Your Subscription Invoice',
+                            //         html: `<p>Thank you for your subscription. You can view your invoice at the <a href="${invoiceUrl}">following link</a>.</p>`,
+                            //     };
+                            //     await mdlconfig.transporter.sendMail(mailOptions);
+                    
+                            //     return res.send({
+                            //         status: 'ok',
+                            //         message: 'Payment was successful!',
+                            //         subscriptionId: subscription.id,
+                            //         invoiceUrl: invoiceUrl,
+                            //     });
+                    
+                            // }
 
 
                             // Insert user meta
+                            
                             const userMetaInsertQuery = 'INSERT INTO user_customer_meta (user_id, review_count, country, state) VALUES (?, ?, ?, ?)';
                             await queryAsync(userMetaInsertQuery, [userResults.insertId, 0, user_country, user_state]);
 
