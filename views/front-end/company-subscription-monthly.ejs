@@ -203,6 +203,7 @@
             <div id="card-cvc" class="formbold-form-input"></div>
 
             <button type="button" id="pay-now" class="formbold-btn">Pay Now</button>
+            <div id="wait-message-container"></div> 
         </div>
     </div>
 
@@ -259,6 +260,13 @@
                 .formbold-form-input {
                     width: 100%;
                     padding: 12px 10px;
+                }
+                #wait-message-container p {
+                    margin: 0;
+                    text-align: center;
+                    margin: 25px 0;
+                    font-size: 18px;
+                    font-weight: 600;
                 }
                 }
 
@@ -544,6 +552,14 @@
             document.getElementById('pay-now').addEventListener('click', async (event) => {
                 event.preventDefault();
                 document.querySelector('button').disabled = true;
+
+                const payNowButton = document.getElementById('pay-now');
+                payNowButton.disabled = true;
+
+                const waitMessageContainer = document.getElementById('wait-message-container');
+                console.log("waitMessageContainer",waitMessageContainer);
+                
+                waitMessageContainer.innerHTML = '<p style="color: black;">Please wait...</p>';  
 
                 try {
                     const { paymentMethod, error } = await stripe.createPaymentMethod({

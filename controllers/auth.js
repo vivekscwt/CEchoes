@@ -14208,7 +14208,7 @@ exports.createSubscription = async (req, res) => {
             </html>`
         };
 
-        await transporter.sendMail(mailOptions);
+        await mdlconfig.transporter.sendMail(mailOptions);
         console.log("Subscription confirmation email sent successfully.");
         
         if (paymentStatus === 'succeeded') {
@@ -14368,7 +14368,7 @@ exports.orderUpdate = async (req, res) => {
                 </html>`
             };
     
-            await transporter.sendMail(mailOptions);
+            await mdlconfig.transporter.sendMail(mailOptions);
             console.log("Subscription confirmation email sent successfully.");
     
             return res.send({ success: true, subscription: updatedSubscription });
