@@ -38,40 +38,74 @@
                   $ <%= getplans[plan + '_val'].monthly_price_local %> <span>/ Month</span>
                 <% } %>
               </div>
+          
+              <% if (currentUserData && currentUserData.claimed_comp_id != null) { %>
+                <div class="member-control">
+                  <label for="<%= plan %>-member-count"></label>
+                  <input type="hidden" min="0" name="memberCount" id="<%= plan %>-member-count" value="">
+                  <input type="hidden" id="<%= plan %>-per-user-price" value="<%= getplans[plan + '_val'].per_user_price_local %>">
+                  
+                  <% if (currentUserData) { %>
+                    <input type="hidden" name="userId" value="<%= currentUserData.user_id %>">
+                    <input type="hidden" name="email" value="<%= currentUserData.email %>">
+                  <% } %>
+                </div>
+          
 
-              <div class="member-control">
-                <label for="<%= plan %>-member-count"></label>
-                <input type="hidden" min="0" name="memberCount" id="<%= plan %>-member-count" value="">
-                <input type="hidden" id="<%= plan %>-per-user-price" value="<%= getplans[plan + '_val'].per_user_price_local %>">
-                
-                <% if (currentUserData) { %>
-                  <input type="hidden" name="userId" value="<%= currentUserData.user_id %>">
-                  <input type="hidden" name="email" value="<%= currentUserData.email %>">
-                <% } %>
-              </div>
+          
+                <%- getplans[plan + '_val' ].description %>
+          
+                <div class="get_started_btn">
+                  <% if (isSubscribed(plan, 'monthly')) { %>
+                    <button class="subscribed-btn" disabled>
+                      Subscribed
+                    </button>
+                  <% } else if (userHasSubscription) { %>
+                    <button style="display: none;" class="subscribed-btn">
+                      Subscribed
+                    </button>
+                  <% } else { %>
+                    <div class="proceed_btn">
+                      <a href="#" style="color: black;"  onclick="redirectToStripePayment('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].monthly_price %>', 'monthly')">Get Started</a>
+                    </div>
+                  <% } %>
+                </div>
+              <% } else { %>
+                <div class="member-control">
+                  <label for="<%= plan %>-member-count"></label>
+                  <input type="hidden" min="0" name="memberCount" id="<%= plan %>-member-count" value="">
+                  <input type="hidden" id="<%= plan %>-per-user-price" value="<%= getplans[plan + '_val'].per_user_price_local %>">
+                  
+                  <% if (currentUserData) { %>
+                    <input type="hidden" name="userId" value="<%= currentUserData.user_id %>">
+                    <input type="hidden" name="email" value="<%= currentUserData.email %>">
+                  <% } %>
+                </div>
 
-              <%- getplans[plan + '_val'].description %>
-
-              <div class="get_started_btn">
-                <% if (isSubscribed(plan, 'monthly')) { %>
-                  <button class="subscribed-btn" disabled>
-                    Subscribed
-                  </button>
-                <% } else if (userHasSubscription) { %>
-                  <button style="display: none;" class="subscribed-btn">
-                    Subscribed
-                  </button>
-                <% } else { %>
-                  <div class="proceed_btn">
-                    <a href="#" style="color: black;" onclick="redirectToSubscriptionPage('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].monthly_price %>', 'monthly')">Get Started</a>
-                  </div>
-                <% } %>
-              </div>
+          
+                <%- getplans[plan + '_val' ].description %>
+          
+                <div class="get_started_btn">
+                  <% if (isSubscribed(plan, 'monthly')) { %>
+                    <button class="subscribed-btn" disabled>
+                      Subscribed
+                    </button>
+                  <% } else if (userHasSubscription) { %>
+                    <button style="display: none;" class="subscribed-btn">
+                      Subscribed
+                    </button>
+                  <% } else { %>
+                    <div class="proceed_btn">
+                      <a href="#" style="color: black;" onclick="redirectToSubscriptionPage('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].monthly_price %>', 'monthly')">Get Started</a>
+                    </div>
+                  <% } %>
+                </div>
+              <% } %>
             </div>
           <% }) %>
+          
         </div>
 
-        
         <div id="yearly" class="tab-content">
           <% ['basic', 'standard', 'advanced', 'premium', 'enterprise'].forEach(plan => { %>
             <div class="pricing-card">
@@ -86,34 +120,48 @@
                 <% } %>
               </div>
               
-              <div class="member-control">
-                <label for="<%= plan %>-member-count"></label>
-                <input type="hidden" min="0" name="memberCount" id="<%= plan %>-member-count" value="">
-                <input type="hidden" id="<%= plan %>-per-user-price" value="<%= getplans[plan + '_val'].per_user_price_local %>">
-                
-                <% if (currentUserData) { %>
-                  <input type="hidden" name="userId" value="<%= currentUserData.user_id %>">
-                  <input type="hidden" name="email" value="<%= currentUserData.email %>">
-                <% } %>
-              </div>
-        
-              <%- getplans[plan + '_val'].description %>
-        
+              <% if (currentUserData && currentUserData.claimed_comp_id != null) { %>
+
+              <%- getplans[plan + '_val' ].description %>
+
               <div class="get_started_btn">
                 <% if (isSubscribed(plan, 'yearly')) { %>
+                  <!-- Show the subscribed button and disable it -->
                   <button class="subscribed-btn" disabled>
                     Subscribed
                   </button>
                 <% } else if (userHasSubscription) { %>
+                  <!-- Hide the button for other plans if the user already has a subscription -->
                   <button style="display: none;" class="subscribed-btn">
                     Subscribed
                   </button>
                 <% } else { %>
                   <div class="proceed_btn">
-                    <a href="#" style="color: black;" onclick="redirectToYearlySubscriptionPage('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].yearly_price %>', 'yearly')">Get Started</a>
+                    <a href="#" style="color: black;" onclick="redirectToYearlyStripePayment('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].yearly_price %>', 'yearly')">Get Started</a>
                   </div>
                 <% } %>
               </div>
+              <% } else { %>
+                <%- getplans[plan + '_val' ].description %>
+
+                <div class="get_started_btn">
+                  <% if (isSubscribed(plan, 'yearly')) { %>
+                    <label>
+                      <input type="radio" id="subscribe-<%= plan %>-yearly" name="subscriptionType" value="yearly" disabled checked>
+                      Subscribed
+                    </label>
+                  <% } else if (userHasSubscription) { %>
+                    <label>
+                      <input type="radio" id="subscribe-<%= plan %>-yearly" name="subscriptionType" value="yearly" disabled>
+                      Subscribe Yearly
+                    </label>
+                  <% } else { %>
+                    <div class="proceed_btn">
+                      <a href="#" style="color: black;" onclick="redirectToYearlySubscriptionPage('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].yearly_price %>', 'yearly')">Get Started</a>
+                    </div>
+                  <% } %>
+                </div>
+                <% } %>
             </div>
           <% }) %>
         </div>
@@ -430,7 +478,11 @@ a {
   border: none;
   cursor: not-allowed;
 }
-
+.proceed_btn.proceed-invisible-btn a {
+    display: block;
+    width: 100%;
+    text-align: center;
+}
 
 
 /* MEDIA QUERY RESPONSIVE STRAT */
