@@ -1217,7 +1217,8 @@ router.get('/plan-pricing', checkCookieValue, async (req, res) => {
         const [globalPageMeta, getplans, getSubscribedUsers] = await Promise.all([
             comFunction2.getPageMetaValues('global'),
             comFunction2.getplans(country_name),
-            comFunction2.getSubscribedUsers(user_id)
+            comFunction2.getSubscribedUsers(user_id),
+            
         ]);
         console.log("getplans", getplans);
         console.log("getSubscribedUserssss", getSubscribedUsers);
