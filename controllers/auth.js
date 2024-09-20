@@ -18674,11 +18674,11 @@ cron.schedule('0 5 * * *', async () => {
     await comFunction2.complaintLevelUpdate();
 })
 
-cron.schedule('0 0 * * *', async () => {
-    try {
-        await syncSubscriptions();
-        console.log('Subscription sync job completed successfully.');
-    } catch (error) {
-        console.error('Error syncing subscriptions:', error);
-    }
-});
+// cron.schedule('0 0 * * *', async () => {
+//     try {
+//         await syncSubscriptions();
+//         console.log('Subscription sync job completed successfully.');
+//     } catch (error) {
+//         console.error('Error syncing subscriptions:', error);
+//     }
+// });
