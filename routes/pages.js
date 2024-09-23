@@ -10806,11 +10806,17 @@ router.get('/view-featured-companies', checkLoggedIn, async (req, res) => {
     try {
         const encodedUserData = req.cookies.user;
         const currentUserData = JSON.parse(encodedUserData);
-        const featured_sql = `SELECT featured_companies.id,featured_companies.company_id,featured_companies.status,featured_companies.ordering,featured_companies.short_desc,featured_companies.link,company.logo, ,company.slug, company.company_name FROM featured_companies 
+        const featured_sql = `SELECT featured_companies.id,featured_companies.company_id,featured_companies.status,featured_companies.ordering,featured_companies.short_desc,featured_companies.link,company.logo ,company.slug, company.company_name FROM featured_companies 
                         JOIN company ON featured_companies.company_id = company.ID 
                         ORDER BY featured_companies.ordering ASC `;
 
         db.query(featured_sql, (err, companies, fields) => {
+            console.log("featuredcompanies",companies);
+            if (err) {
+                console.error("SQL error:", err);
+                return res.status(500).send("Database query failed");
+            }
+            
             res.render('pages/view-featured-companies', {
                 menu_active_id: 'company',
                 page_title: 'Featured Companies',
