@@ -1061,10 +1061,10 @@ app.use('/', require('./routes/pages'));
 app.use('/auth', require('./routes/auth'));
 app.use('/api', require('./routes/api'));
 
-app.use((err, req, res, next) => {
-    logger.error('Unhandled Error:', err.stack); // Log error stack
-    res.status(500).send('Something went wrong!');
-  });
+// app.use((err, req, res, next) => {
+//     logger.error('Unhandled Error:', err.stack); // Log error stack
+//     res.status(500).send('Something went wrong!');
+//   });
   
 //old
 app.listen(2000);
