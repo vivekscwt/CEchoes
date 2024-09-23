@@ -1067,9 +1067,9 @@ app.use((err, req, res, next) => {
   });
   
 //old
-// app.listen(5000);
+app.listen(2000);
 
 //new
-app.listen(2000, () => {
-    logger.info('Server running on port 5000');
-  });
+// app.listen(2000, () => {
+//     logger.info('Server running on port 5000');
+//   });
