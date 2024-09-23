@@ -1053,7 +1053,7 @@ app.get('/facebook-user-data', async(req, res) => {
 });
 
 //for error logging
-app.use(morgan('combined', { stream: { write: message => logger.info(message.trim()) } }));
+// app.use(morgan('combined', { stream: { write: message => logger.info(message.trim()) } }));
 
 // Define Routes
 app.use('/authentication', require('./routes/authentication'));
@@ -1069,7 +1069,7 @@ app.use((err, req, res, next) => {
 //old
 app.listen(2000);
 
-//new
+//app.use(morgan('combined', { stream: { write: message => logger.info(message.trim()) } }));
 // app.listen(2000, () => {
 //     logger.info('Server running on port 5000');
 //   });
