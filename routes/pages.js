@@ -1595,8 +1595,6 @@ router.get('/plan-pricing', checkCookieValue, async (req, res) => {
             console.log("encryptedEmail", encryptedEmail);
         }
 
-
-
         const getbusinessquery = `SELECT * FROM users WHERE user_id= "${user_id}"`;
         const getbusinessvalue = await queryAsync(getbusinessquery);
         console.log("getbusinessvalue", getbusinessvalue);
@@ -2299,7 +2297,7 @@ router.get('/get-exist-company', async (req, res) => {
             return res.json({
                 status: 'success',
                 data: '',
-                message: 'Parent ID is not 0, skipping company name check.'
+                message: 'Parent ID is not 0, skipping organization name check.'
             });
         }
     } catch (error) {
@@ -2324,7 +2322,7 @@ router.get('/checkcompanyEmailAvailability', async (req, res) => {
                 } else {
                     if (results.length > 0) {
                         const register_from = results[0].register_from;
-                        resolve({ available: false, message: 'Email already exists for another company.' });
+                        resolve({ available: false, message: 'Email already exists for another organization.' });
                     } else {
                         resolve({ available: true, message: 'Email available.' });
                     }
@@ -2350,7 +2348,7 @@ router.get('/checkcompanyPhoneAvailability', async (req, res) => {
                 } else {
                     if (results.length > 0) {
                         const register_from = results[0].register_from;
-                        resolve({ available: false, message: 'Phone number already exists for another company.' });
+                        resolve({ available: false, message: 'Phone number already exists for another organization.' });
                     } else {
                         resolve({ available: true, message: 'Phone number available.' });
                     }
@@ -11885,7 +11883,8 @@ router.get('/user_payment_history', checkCookieValue, async (req, res) => {
             globalPageMeta: globalPageMeta,
             AllCompaniesReviews: AllCompaniesReviews,
             getManagerData: getManagerData,
-            getData: getData
+            getData: getData,
+            userId: userId
         });
     } catch (err) {
         console.error(err);

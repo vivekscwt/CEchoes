@@ -524,6 +524,8 @@ router.post('/createexternalSubscription',authController.createexternalSubscript
 
 router.post('/externalRegistration',authController.externalRegistration);
 
+router.post('/cancelSubscription',authController.cancelSubscription);
+
 router.post('/update-order-history',authController.updateOrderHistory);
 
 //create-subscription-checkout-session

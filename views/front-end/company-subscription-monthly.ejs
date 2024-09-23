@@ -6,7 +6,7 @@
                 <div class="formbold-steps">
                     <ul>
                         <li class="formbold-step-menu1 active"><span>1</span>Sign Up</li>
-                        <li class="formbold-step-menu2"><span>2</span>Company Details</li>
+                        <li class="formbold-step-menu2"><span>2</span>Organization Details</li>
                         <li class="formbold-step-menu3"><span>3</span>Confirm</li>
                     </ul>
                 </div>
@@ -98,6 +98,7 @@
                     <input type="hidden" name="parent_id" id="parent_id" placeholder="parent company" value="0"
                         class="formbold-form-input" />
                     <div>
+                        <p>Price per user: $<span id="price-per-user"></span></p>
                         <label for="memberCounts" class="formbold-form-label">Add On Users</label>
                         <input type="number" min="1" name="memberCount" id="member-count"
                             placeholder="Enter the number of add-on users" class="formbold-form-input" required />
@@ -115,26 +116,26 @@
                         </select>
                     </div>
                     <div>
-                        <label for="company_name" class="formbold-form-label">Company Name</label>
-                        <input type="text" name="company_name" id="company_name" placeholder="Enter your company name"
+                        <label for="company_name" class="formbold-form-label">Organization Name</label>
+                        <input type="text" name="company_name" id="company_name" placeholder="Enter your organization name"
                             class="formbold-form-input" required />
                         <span id="companyCheckResult" class="result-message" style="color: red;"></span>
                     </div>
                     <div>
-                        <label for="main_address" class="formbold-form-label">Company Address</label>
+                        <label for="main_address" class="formbold-form-label">Organization Address</label>
                         <input type="text" name="main_address" id="main_address"
-                            placeholder="Enter your company address" class="formbold-form-input" required />
+                            placeholder="Enter your organization address" class="formbold-form-input" required />
                     </div>
                     <div>
-                        <label for="companyEmail" class="formbold-form-label">Company Email</label>
-                        <input type="email" name="comp_email" id="comp_email" placeholder="Enter your company email"
+                        <label for="companyEmail" class="formbold-form-label">Organization Email</label>
+                        <input type="email" name="comp_email" id="comp_email" placeholder="Enter your organization email"
                             class="formbold-form-input" required />
                         <span id="companyemailAvailabilityError" style="color: red; display: none;"></span>
                     </div>
 
                     <div>
-                        <label for="comp_phone" class="formbold-form-label">Company Phone</label>
-                        <input type="number" name="comp_phone" id="comp_phone" placeholder="Enter your company phone"
+                        <label for="comp_phone" class="formbold-form-label">Organization Phone</label>
+                        <input type="number" name="comp_phone" id="comp_phone" placeholder="Enter your organization phone"
                             class="formbold-form-input" required />
                         <span id="companyphoneAvailabilityError" style="color: red; display: none;"></span>
                     </div>
@@ -1341,7 +1342,8 @@
                 });
 
 
-
+                const perUserPrice = parseFloat('<%= per_user_price || 0 %>');
+                $('#price-per-user').text(perUserPrice.toFixed(2));
 
             });
 

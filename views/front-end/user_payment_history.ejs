@@ -35,13 +35,13 @@
                                 </tr>
                                 <% }); %>
                                 
-                                <% // Find the latest subscription end date for this plan
+                                <% 
                                 const latestSubscriptionEndDate = new Date(Math.max(...planPayments.map(payment => new Date(payment.subscription_end_date)))); %>
 
-                                <% // Find the latest subscription end date for this plan
+                                <% 
                                 const latestSubscriptionEndDates = new Date(Math.max(...planPayments.map(payment => new Date(payment.subscription_end_date)))); %>
                                 
-                                <% // Calculate next payment date as the day after latestSubscriptionEndDate
+                                <% 
                                 const nextPaymentDate = new Date(latestSubscriptionEndDate);
                                 nextPaymentDate.setDate(nextPaymentDate.getDate()); %>
                                 
@@ -52,7 +52,9 @@
                             <% } %>
                             <% }); %>
                         </table>
-                    
+                        <!-- <div>
+                          <button type="button" class="formbold-confirm-btn" onclick="confirmCancelSubscription()">Cancel Subscription</button>
+                      </div> -->
                     <% } %>
                     <% }); %>
               </div>
@@ -65,3 +67,33 @@
 <!-- ============== Section1 End =============== -->
 
 <%- include('common/footer') -%>
+<script src="https://js.stripe.com/v3/"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+  var userId = '<%= userId%>'
+  function confirmCancelSubscription() {
+    const userConfirmed = confirm("Are you sure you want to cancel the subscription?");
+    if (userConfirmed) {
+        cancelSubscription(); 
+    }
+}
+
+function cancelSubscription() {
+    $.ajax({
+        url: '/auth/cancelSubscription',
+        method: 'POST',
+        data: {
+          userId: userId
+        },
+        success: function(response) {
+            alert('Subscription cancelled successfully.');
+            // Optionally, refresh the page or update the UI
+        },
+        error: function(error) {
+            alert('Error cancelling subscription: ' + error.responseText);
+        }
+    });
+}
+
+</script>

@@ -58,11 +58,12 @@
                 <div class="get_started_btn">
                   <% if (isSubscribed(plan, 'monthly')) { %>
                     <button class="subscribed-btn" disabled>
-                      Subscribed
+                      Get Started
                     </button>
-                  <% } else if (userHasSubscription) { %>
-                    <button style="display: none;" class="subscribed-btn">
-                      Subscribed
+                  <% }
+                  else if (userHasSubscription) { %>
+                    <button class="subscribed-btn">
+                       Get Started
                     </button>
                   <% } else { %>
                     <div class="proceed_btn">
@@ -88,11 +89,11 @@
                 <div class="get_started_btn">
                   <% if (isSubscribed(plan, 'monthly')) { %>
                     <button class="subscribed-btn" disabled>
-                      Subscribed
+                      Get Started
                     </button>
                   <% } else if (userHasSubscription) { %>
-                    <button style="display: none;" class="subscribed-btn">
-                      Subscribed
+                    <button class="subscribed-btn">
+                      Get Started
                     </button>
                   <% } else { %>
                     <div class="proceed_btn">
@@ -128,12 +129,12 @@
                 <% if (isSubscribed(plan, 'yearly')) { %>
                   <!-- Show the subscribed button and disable it -->
                   <button class="subscribed-btn" disabled>
-                    Subscribed
+                    Get Started
                   </button>
                 <% } else if (userHasSubscription) { %>
                   <!-- Hide the button for other plans if the user already has a subscription -->
-                  <button style="display: none;" class="subscribed-btn">
-                    Subscribed
+                  <button class="subscribed-btn">
+                    Get Started
                   </button>
                 <% } else { %>
                   <div class="proceed_btn">
@@ -148,12 +149,12 @@
                   <% if (isSubscribed(plan, 'yearly')) { %>
                     <label>
                       <input type="radio" id="subscribe-<%= plan %>-yearly" name="subscriptionType" value="yearly" disabled checked>
-                      Subscribed
+                      Get Started
                     </label>
                   <% } else if (userHasSubscription) { %>
                     <label>
                       <input type="radio" id="subscribe-<%= plan %>-yearly" name="subscriptionType" value="yearly" disabled>
-                      Subscribe Yearly
+                      Get Started
                     </label>
                   <% } else { %>
                     <div class="proceed_btn">
@@ -169,6 +170,14 @@
       </div>
     </div>
     </div>
+
+    <% if (getSubscribedUsers.length > 0) { %>
+      <p class="medium-large">
+        You have already subscribed to the <%= getSubscribedUsers[0].plan_name %> membership plan. Click
+        <a href="/user_payment_history %>"> here </a>to view the details.
+      </p>
+    <% } %>
+
     
       <!-- BODY STYLE CSS LINK -->
       <link href="responsive.css" rel="stylesheet" type="text/css">
@@ -483,6 +492,11 @@ a {
     width: 100%;
     text-align: center;
 }
+.medium-large {
+    font-size: 1.25em; 
+    font-weight: bold; 
+    text-align: center;
+  }
 
 
 /* MEDIA QUERY RESPONSIVE STRAT */

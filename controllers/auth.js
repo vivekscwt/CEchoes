@@ -16349,9 +16349,6 @@ exports.createexternalSubscription = async (req, res) => {
     }
 };
 
-
-
-
 exports.externalRegistration = async (req, res) => {
     const { first_name, last_name, email, register_password, phone, address, city, state, zip, planId, billingCycle, memberCount, subscriptionId, user_state, user_country, register_confirm_password } = req.body;
     console.log("externalRegistration", req.body);
@@ -16834,6 +16831,48 @@ exports.externalRegistration = async (req, res) => {
         return res.status(500).json({ status: 'err', data: '', message: 'An error occurred while processing your request' });
     }
 };
+
+exports.cancelSubscription = async (req, res) => {
+    try{
+        console.log("cancelSubscription");
+    
+        var userId = req.body.userId;
+
+        console.log("userId", userId);
+
+        const email_query = `SELECT email FROM users WHERE user_id =?`;
+        const emailData = await query(email_query, [userId]);
+        console.log("emailData", emailData[0].email);
+
+        const [getAllPayments] = await Promise.all([
+            comFunction2.getuserAllPaymentHistory(userId),
+        ]);
+        console.log("getAllPayments", getAllPayments);
+
+        var getsubscripquery = `SELECT * FROM order_history WHERE user_id = "${userId}"`;
+        var getsubscripval = await queryAsync(getsubscripquery);
+        var usersubscriptionsval = getsubscripval[0];
+        console.log("usersubscriptionsval",usersubscriptionsval);
+
+        var usersubscription_id = getsubscripval[0].stripe_subscription_id;
+        console.log("usersubscription_id",usersubscription_id);
+
+        
+        if (usersubscription_id) {
+            // const subscription = await stripe.subscriptions.cancel(usersubscription_id);
+            // console.log("Subscription cancelled:", subscription);
+            // var orderquery = `DELETE FROM order_history WHERE stripe_subscription_id=? AND user_id=?`;
+            // var orderval = await queryAsync(orderquery,[usersubscription_id,userId])
+            return res.status(200).json({ status: 'ok', message: 'Subscription cancelled successfully.' });
+        } else {
+            console.log("No subscription found for this user.");
+            return res.status(200).json({ status: 'ok', message: 'Error when cancelling the subscription.' });
+        }
+
+    } catch(error){
+
+    }
+}
 
 
 
