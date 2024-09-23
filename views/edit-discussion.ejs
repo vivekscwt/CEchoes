@@ -113,20 +113,20 @@
                             <!--begin::Col-->
                             <div class="col-lg-8 fv-row">
                                 <% coments.forEach(coment => { %>
-                                    <div class="row">
+                                    <div class="row comment-container" id="comment_<%= coment.id %>">
                                         <div class="col-lg-12 fv-row">
                                             <input type="hidden" name="comment_id[]" value="<%= coment.id %>">
-                                            <textarea name="coment" class="form-control form-control-lg form-control-solid" placeholder="Discussion Content" readonly>
+                                            <textarea id="comment_text_<%= coment.id %>" name="coment" class="form-control form-control-lg form-control-solid" placeholder="Discussion Content"readonly>
                                                 <%= coment.comment %>
                                             </textarea>
                                             <div class="mt-3">
                                                 <div class="mt-3">
                                                     <label class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="radio" name="action_<%= coment.id %>" value="edit">
+                                                        <input class="form-check-input edit-comment" type="radio" name="action_<%= coment.id %>" value="edit" data-comment-id="<%= coment.id %>">
                                                         <span class="fw-bold fs-6 badge badge-light-primary fw-bolder px-4 py-3">Edit</span>
                                                     </label>
                                                     <label class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="radio" name="action_<%= coment.id %>" value="delete">
+                                                        <input class="form-check-input delete-comment" type="radio" name="comment_content_<%= coment.id %>" data-comment-id="<%= coment.id %>">
                                                         <span class="fw-bold fs-6 badge badge-light-danger fw-bolder px-4 py-3">Delete</span>
                                                     </label>
                                                 </div>
@@ -142,6 +142,7 @@
                                                     <input class="form-check-input" type="radio" name="comment_status_<%= coment.id %>" value="2" <% if (coment.comment_status === '2') { %>checked<% } %>>
                                                     <span class="fw-bold fs-6 badge badge-light-danger fw-bolder px-4 py-3">Rejected</span>
                                                 </label>
+                                                <button class="btn btn-primary mt-2 save-comment" data-comment-id="<%= coment.id %>" style="display: none;">Save</button>
                                             </div>
                                         </div>
                                         
@@ -152,6 +153,7 @@
                             <!--end::Col-->
                         </div>
                         <% } %>
+                        
                         
 
                     </div>
@@ -191,11 +193,18 @@
     margin-right: 5px;
     margin-top: 2.5px;
 }
-
+#kt_review_tag_update_form .mt-3 .mt-3 {
+    text-align: right;
+}
+textarea#comment_text_9 {
+    min-height: 202px;
+}
 
 </style>
 <script>
     var rating_tags = document.querySelector("#kt_rating_tags");
+    console.log("rating_tags",rating_tags);
+    
     new Tagify(rating_tags);
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
@@ -248,7 +257,7 @@
                     }
                 );
 
-                // Handle form submit
+
                 submitButton.addEventListener('click', function (e) {
                     e.preventDefault();
 
@@ -256,26 +265,38 @@
                         if (status == 'Valid') {
                             const rejectVal = $('#rejectId').val();
                             console.log(rejectVal);
-                            
-                            const formData = $('#kt_review_tag_update_form').serializeArray().filter(item => item.name !== 'comment_id[]');
 
                             const jsonData = {};
 
-                            $('input[name^="comment_id"]').each(function () {
-                            const commentId = $(this).val();
-                            const commentStatus = $('input[name="comment_status_' + commentId + '"]:checked').val();
-                            jsonData['comment_status_' + commentId] = commentStatus;
+                            $('input[name^="comment_status_"]').each(function () {
+                                const commentId = $(this).attr('name').split('_')[2]; 
+                                const commentStatus = $(this).val();
+                                
+
+                                const commentContent = $('#comment_text_' + commentId).val(); 
+                                console.log(`Comment content for ID ${commentId}:`, commentContent); 
+
+                                jsonData['comment_status_' + commentId] = commentStatus;
+                                jsonData['comment_content_' + commentId] = commentContent;
                             });
 
-                            $(formData).each(function (index, field) {
+                            $('#kt_review_tag_update_form').serializeArray().filter(item => item.name !== 'coment' && item.name !== 'comment_id[]').forEach(function (field) {
                                 jsonData[field.name] = field.value;
                             });
+
+                            $('input[name="comment_id[]"]').each(function () {
+                                const commentId = $(this).val(); 
+                                const comentValue = $('#comment_text_' + commentId).val(); 
+                                jsonData['comment_content_' + commentId] = comentValue;
+                            });
+
                             console.log(jsonData);
+
                             $.ajax({
-                                url: '/auth/edit-discussion',
+                                url: '/auth/editDiscussions',
                                 method: 'POST',
-                                data: jsonData,
-                                ContentType: 'application/json',
+                                data: JSON.stringify(jsonData), 
+                                contentType: 'application/json',
                                 success: function (data) {
                                     if (data.status == 'ok') {
                                         Swal.fire({
@@ -304,32 +325,26 @@
                                     }
                                 },
                                 error: function (xhr, status, error) {
-                                    // Handle any errors that occur during the request
                                     console.log(error);
                                 }
                             });
-                            
-                        } else {
-                            swal.fire({
-                                text: "Sorry, looks like there are some errors detected, please try again.",
-                                icon: "error",
-                                buttonsStyling: false,
-                                confirmButtonText: "Ok, got it!",
-                                customClass: {
-                                    confirmButton: "btn fw-bold btn-light-primary"
-                                }
-                            });
                         }
+
+                            else {
+                        swal.fire({
+                            text: "Sorry, looks like there are some errors detected, please try again.",
+                            icon: "error",
+                            buttonsStyling: false,
+                            confirmButtonText: "Ok, got it!",
+                            customClass: {
+                                confirmButton: "btn fw-bold btn-light-primary"
+                            }
+                        });
+                    }
+
                     });
                 });
-
-               
-
             }
-
-            
-
-            // Public methods
             return {
                 init: function () {
                     form = document.getElementById('kt_review_tag_update_form');
@@ -351,8 +366,18 @@
 $(document).ready(function() {
     //$('#reject_textarea').hide();
     $('.deleteComent').on('click', function(){
-        var commentid = $(this).attr("data-comentid");
+        //var commentid = $(this).attr("data-comentid");
         //alert(commentid);
+
+        const commentId = $(this).data('commentId');
+        const textarea = $(`#comment_text_${commentId}`);
+        //const saveButton = $(`.save-comment[data-comment-id="${commentId}"]`);
+        const updatedComment = textarea.val();
+
+        console.log("commentId",commentId);
+        console.log("textarea",textarea);
+        console.log("textarea",textarea);
+
         Swal.fire({
                     text: "Are you sure you want to delete permanently  ?",
                     icon: "warning",
@@ -370,7 +395,7 @@ $(document).ready(function() {
                         //url: '/auth/delete-company', 
                         url: '/auth/delete-comment', 
                         method: 'POST',
-                        data: {commentid:commentid},
+                        data: {commentid:commentId},
                         ContentType: 'application/json',
                         success: function (data) {
                             if (data.status == 'ok') {
@@ -422,3 +447,139 @@ $(document).ready(function() {
   });
 </script>
 
+<script>
+$(document).ready(function () {
+    // Handle Edit action
+    $('.edit-comment').change(function () {
+        const commentId = $(this).data('commentId');
+        const textarea = $(`#comment_text_${commentId}`);
+        //const saveButton = $(`.save-comment[data-comment-id="${commentId}"]`);
+        const updatedComment = textarea.val();
+
+        console.log("commentId",commentId);
+        console.log("textarea",textarea);
+        console.log("textarea",textarea);
+        const saveButton = $(`.save-comment[data-comment-id="${commentId}"]`);
+
+        console.log("commentId",commentId);
+        console.log("textarea",textarea);
+        console.log("saveButton",saveButton);
+        
+
+        if ($(this).is(':checked')) {
+            textarea.removeAttr('readonly');
+            saveButton.show();
+        }
+    });
+
+    $('.delete-comment').change(function () {
+        const commentId = $(this).data('commentId');
+        const textarea = $(`#comment_text_${commentId}`);
+        //const saveButton = $(`.save-comment[data-comment-id="${commentId}"]`);
+        const updatedComment = textarea.val();
+
+        console.log("commentId",commentId);
+        console.log("textarea",textarea);
+        console.log("textarea",textarea);
+        
+        Swal.fire({
+                    text: "Are you sure you want to delete permanently  ?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    buttonsStyling: false,
+                    confirmButtonText: "Yes, delete!",
+                    cancelButtonText: "No, cancel",
+                    customClass: {
+                        confirmButton: "btn fw-bold btn-danger",
+                        cancelButton: "btn fw-bold btn-active-light-primary"
+                    }
+                }).then(function (result) {
+                    if (result.value) {
+                        $.ajax({
+                        url: '/auth/delete-comment', 
+                        method: 'POST',
+                        data: {commentid:commentId},
+                        ContentType: 'application/json',
+                        success: function (data) {
+                            if (data.status == 'ok') {
+                                Swal.fire({
+                                    text: data.message,
+                                    icon: "success",
+                                    buttonsStyling: false,
+                                    confirmButtonText: "Ok, got it!",
+                                    customClass: {
+                                        confirmButton: "btn btn-primary"
+                                    }
+                                }).then(function (result) {
+                                    if (result.isConfirmed) {
+                                        location.reload();
+                                    }
+                                });
+                            } else {
+                                Swal.fire({
+                                    text: data.message,
+                                    icon: "error",
+                                    buttonsStyling: false,
+                                    confirmButtonText: "Ok, got it!",
+                                    customClass: {
+                                        confirmButton: "btn btn-primary"
+                                    }
+                                });
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            // Handle any errors that occur during the request
+                            console.log(error);
+                        }
+                    });
+                    } else if (result.dismiss === 'cancel') {
+                        Swal.fire({
+                            text:  "Comment is not deleted.",
+                            icon: "error",
+                            buttonsStyling: false,
+                            confirmButtonText: "Ok, got it!",
+                            customClass: {
+                                confirmButton: "btn fw-bold btn-primary",
+                            }
+                        });
+                    }
+                });
+    
+                });
+    
+    $('.save-comment').click(function () {
+        const commentId = $(this).data('commentId');
+        const textarea = $(`#comment_text_${commentId}`);
+        const updatedComment = textarea.val();
+
+        console.log("commentId",commentId);
+        console.log("updatedComment",updatedComment);
+        console.log("textarea",textarea);
+        
+
+        $.ajax({
+            url: '/auth/edit-comment',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                commentId: commentId,
+                updatedComment: updatedComment
+            }),
+            success: function (result) {
+                if (result.status === 'ok') {
+                    textarea.attr('readonly', 'readonly');
+                    $(`.save-comment[data-comment-id="${commentId}"]`).hide();
+                    alert('Comment updated successfully');
+                } else {
+                    alert('Failed to update comment');
+                }
+            },
+            error: function (error) {
+                console.error('Error saving comment:', error);
+                alert('Failed to update comment');
+            }
+        });
+    });
+});
+
+</script>

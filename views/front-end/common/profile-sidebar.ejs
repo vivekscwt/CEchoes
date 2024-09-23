@@ -67,9 +67,19 @@
                  <a href="/my-complaints"><i class="fa-solid fa-comment-exclamation"></i>My Complaints <span class=""></a>
                  
               </li>
+              <% if(getData && getData.length>0) { %>
+               <li>
+                <a href="/manage-complaint-listing/<%= getData[0].slug %>"><i class="fa-solid fa-comment-exclamation"></i>Complaint Listing<span class=""></a>               
+             </li>
+             <% } %>
                 <li><a href="/myprofile"><i class="fa-solid fa-user"></i>Profile</a></li>
                 <% if(userMeta && userMeta.claimed_comp_id) { %>
                      <li><a href="/company-dashboard/<%= userMeta.slug %>"><i class="fa-solid fa-briefcase"></i>Organization Dashboard </a></li>
+                     <li><a href="/child-company/<%= userMeta.slug %>"><i class="fa-solid fa-briefcase"></i>Child Organization</a></li>
+                  <% } %>
+
+                  <% if (getManagerData && getManagerData.length > 0 && userMeta.claimed_comp_id == null) { %>
+                     <li><a href="/company-complaint-listing/<%= getManagerData[0].slug %>"><i class="fa-solid fa-briefcase"></i>Complaints </a></li>
                   <% } %>
                 <!-- <li><a href="#"><i class="fa-solid fa-gear"></i>Settings</a></li> -->
                 <% if(user.register_from == "web"){ %>

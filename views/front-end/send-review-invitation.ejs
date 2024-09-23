@@ -23,7 +23,7 @@
          <% if( companyReviewInvitationNumbers && companyReviewInvitationNumbers.thismonth_invitation_count >= email_limite ){ %>
          <% }else{ %>
          <div style="margin: 10px; display: flex; justify-content: flex-end">
-            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@fat">Bulk Upload</button>
+            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#exampleModalss" data-bs-whatever="@fat">Bulk Upload</button>
          </div>
          <% } %>
             <h4>Send Review Invitation: 
@@ -59,7 +59,7 @@
                   <label><span>Message</span></label>
                   <textarea name="email_body" id="email_body" class="form-control mb-4">
                   Hello Dear,
-                  <%= company.company_name  %> cordially invite you to provide your valuable opinion regarding our company, through the platform of CEchoesTechnology. 
+                  <%= company.company_name  %> cordially invite you to provide your valuable opinion regarding our company, through the platform of Cechoes Technology. 
                   </textarea>
                </div>
                <!-- <div class="bulk-upload mb-4">
@@ -81,7 +81,7 @@
 
 <!-- Modal -->
 
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="exampleModalss" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -103,7 +103,7 @@
             <div class="custom-form">
                <label><span>Message</span></label>
                <textarea name="email_body" id="email_body" class="form-control mb-4">Hello Dear,
-               <%= company.company_name  %> cordially invite you to provide your valuable opinion regarding our company, through the platform of CEchoesTechnology. 
+               <%= company.company_name  %> cordially invite you to provide your valuable opinion regarding our company, through the platform of Cechoes Technology. 
                </textarea>
             </div>
          </div>

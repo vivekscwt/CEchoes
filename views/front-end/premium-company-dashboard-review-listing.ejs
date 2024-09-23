@@ -35,7 +35,12 @@
                                         <!-- ,<br>
                                         <small><%= date.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }) %></small> -->
                                     </td>
-                                    <td><%- review.review_content -%></td>
+                                    <td>
+                                        <div><%- review.review_content %></div>
+                                        <div>
+                                          <a class="rply_btn" href="/company-dashboard-review-replay/<%- company.slug %>/<%- review.id %>">Reply</a>
+                                        </div>
+                                    </td> 
                                     <td>
                                         <% review.Tags.forEach(tag => { %>
                                             <span class="badge badge-secondary"><%= tag.tag_name %></span>

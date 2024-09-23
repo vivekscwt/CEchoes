@@ -16,7 +16,9 @@ const bodyParser = require('body-parser');
 const comFunction = require('./common_function');
 const mdlconfig = require('./config-module');
 const bcrypt = require('bcryptjs');
-const helmet = require('helmet')
+const helmet = require('helmet');
+const morgan = require('morgan');
+const logger = require('./logger');
 
 dotenv.config({ path: './.env' });
 const query = util.promisify(db.query).bind(db);
@@ -1050,11 +1052,24 @@ app.get('/facebook-user-data', async(req, res) => {
         }
 });
 
+//for error logging
+app.use(morgan('combined', { stream: { write: message => logger.info(message.trim()) } }));
+
 // Define Routes
 app.use('/authentication', require('./routes/authentication'));
 app.use('/', require('./routes/pages'));
 app.use('/auth', require('./routes/auth'));
 app.use('/api', require('./routes/api'));
 
+app.use((err, req, res, next) => {
+    logger.error('Unhandled Error:', err.stack); // Log error stack
+    res.status(500).send('Something went wrong!');
+  });
+  
+//old
+// app.listen(5000);
 
-app.listen(2000);
+//new
+app.listen(5000, () => {
+    logger.info('Server running on port 5000');
+  });

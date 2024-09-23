@@ -136,13 +136,17 @@
         <a href="/company-dashboard/<%= company.slug  %>"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
         </li>
      <li <% if( menu_active_id == 'company-profile-management') { %>  class="active" <% } %>>
-        <a href="#"><i class="fas fa-user-tie"></i> Profile</a>
+        <a href="#"><i class="fas fa-user-tie"></i> Queries</a>
+
         <ul>
-           <li><a href="/myprofile">User Profile</a></li>
-           <li <% if( menu_active_id == 'company-profile-management') { %>  class="active" <% } %>><a href="/company-profile-management/<%= company.slug  %>">Organization Profile</a></li>
-           <li><a href="/change-password">Change Password</a></li>
-           <li><a href="/logout">Logout</a></li>
+         <% if(company ){ %>
+         <li><a href="/discussion-tag-management/<%= company.slug  %>">Query Management</a></li>
+         <% } %>
+         <% if(company && company.membership_type_id>=4){ %>
+         <li><a href="/matching-query">Matching Query</a></li>
+         <% } %>
         </ul>
+
      </li>
      <li <% if( menu_active_id == 'company-review-listing' || menu_active_id == 'send-review-invitation') { %> class="active" <% } %>>
         <a href="/company-review-listing/<%= company.slug  %>"><i class="fas fa-envelope"></i> Reviews</a>
@@ -159,7 +163,7 @@
         <ul>
            <!-- <li><a href="/complaint-level-management/<%= company.slug  %>">Level Management</a></li> -->
            <li><a href="/company-complaint-listing/<%= company.slug  %>">Complaint Listing</a></li>
-           <li><a href="/new_complain/<%= company.slug  %>">Complaint Level management</a></li>
+           <li><a href="/new_complain/<%= company.slug  %>">Settings</a></li>
         </ul>
     </li>
     <% } %>
@@ -175,11 +179,12 @@
 
      <li <% if( menu_active_id == 'settings') { %> class="active" <% } %> ><a href="#"><i class="fas fa-cog"></i> Settings</a>
       <ul>
-         <% if(company && company.membership_type_id>=4 ){ %>
-         <li><a href="/discussion-tag-management/<%= company.slug  %>">Discussion tag management</a></li>
-         <% } %>
-         <li><a href="/create-category/<%= company.slug  %>">Create Category</a></li>
-         <li><a href="/view-company-product/<%= company.slug  %>">Create Product</a></li>
+         <!-- <li><a href="/myprofile">User Profile</a></li> -->
+         <li <% if( menu_active_id == 'company-profile-management') { %>  class="active" <% } %>><a href="/company-profile-management/<%= company.slug  %>">Organization Profile</a></li>
+         <!-- <li><a href="/change-password">Change Password</a></li>
+         <li><a href="/logout">Logout</a></li> -->
+         <li><a href="/create-category/<%= company.slug  %>">Category</a></li>
+         <li><a href="/view-company-product/<%= company.slug  %>">Product</a></li>
       </ul>
       
       </li>

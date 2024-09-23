@@ -85,13 +85,16 @@ router.put('/edit-company-data',upload.fields([
     { name: 'cover_img', maxCount: 1 },
 ]), authController.editCompany);
 
+router.post('/create-child-company', upload.single('logo'), authController.createChildCompany);
 
 router.post('/company-bulk-upload', csvupload.single('company_file'), authController.companyBulkUpload);
 router.post('/delete-company', authController.deleteCompany);
 router.post('/deleteCompanies', authController.deleteCompanies);
 
 router.post('/get-company-details', authController.getcompanyDetails);
-router.post('/getcompany-details', authController.companyDetails)
+router.post('/getcompany-details', authController.companyDetails);
+
+router.post('/getcompany-details-by-id', authController.companyDetailsbyId);
 
 router.post("/currency-convert",authController.currencyConvert);
 
@@ -366,6 +369,10 @@ router.post('/add-comment', authController.addComment);
 
 router.post('/edit-discussion', authController.editDiscussion);
 
+router.post('/editDiscussions',authController.editDiscussions);
+
+router.post('/edit-comment',authController.editDiscussioncomment);
+
 //Create create-company-category
 router.post('/create-company-category',upload.fields([
 
@@ -548,4 +555,8 @@ router.post('/assign-users',authController.assignUsers);
 router.post('/escalate-assign-users',authController.escalateassignUsers);
 //updateCategory
 router.post('/updatecategory',authController.updateCategorys);
+
+//complaint section management//
+router.post('/delete-management-user',authController.deletemanagementuser)
+
 module.exports = router;

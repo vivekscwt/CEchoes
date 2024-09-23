@@ -56,7 +56,7 @@
                         <div class="col-md-12">
                            <div class="custom-form">
                                <select name="main_address_country" id="register_country" class="form-control" required>
-                                   <option value="" disabled selected>Select Country*</option>
+                                   <option value="" disabled selected>Country*</option>
                                    <% getCountries.forEach(function(country) { %>
                                        <option value="<%= country.shortname %>"><%= country.name %></option>
                                    <% }); %>
@@ -68,7 +68,7 @@
                          <div class="col-md-12">
                            <div class="custom-form">
                                <select class="form-control" id="state" name="main_address_state">
-                                 <option value="" selected disabled>Select State</option>
+                                 <option value="" selected disabled>State</option>
                                  <!-- Options will be dynamically populated via JavaScript -->
                              </select>
                              <div class="autofield-dropdown-review">
@@ -99,7 +99,7 @@
                            <div class="custom-form">
                               <div class="custom-form m-0 dynamic_state_field_wrapper" >
                                  <select id="select_category" name="category_id" id="select_category"  class="form-select" required>
-                                     <option value="0" disabled>Select Category</option>
+                                     <option value="" disabled selected>Category</option>
                                      <option value="0">General</option>
                                  </select>
                              </div> 
@@ -107,32 +107,68 @@
                         </div>
                         <div class="col-sm-6">
                            <div class="custom-form">
-                              <div class="custom-form m-0 dynamic_sub_category_field_wrapper" >
+                              <div class="custom-form m-0 dynamic_product_field_wrapper" >
                                  <select id="select_sub_category" name="sub_category_id"  class="form-select" required>
-                                     <option value="" disabled>Select Sub-Category</option>
+                                     <option value="" disabled selected>Sub-Category</option>
                                      <option value="0">General</option>
                                  </select>
                              </div>
                            </div>
                         </div>
-                        <div class="col-sm-12">
+                        <div class="col-sm-6">
+                            <div class="custom-form">
+                               <div class="custom-form m-0 dynamic_sub_category_field_wrapper" >
+                                  <select id="select_complaint_product" name="select_complaint_product"  class="form-select" required>
+                                    <option value="" disabled selected>Product</option>
+                                  </select>
+                              </div>
+                            </div>
+                         </div>
+                        <div class="col-sm-6">
                            <div class="custom-form">
-                              <input type="text" name="model_no" class="form-control" placeholder="Product Model / Serial No">
+                              <input type="text" name="model_no" id="model_no" class="form-control" placeholder="Product Model / Serial No">
                            </div>
                         </div>
-                        <div class="col-sm-12">
+                        <!-- <div class="col-sm-12">
                            <div class="tag-label">Tags</div>
                            <div id="sendreviewtags">
                            <input type="text" name="tags" placeholder="Add Tags" data-gtm-form-interact-field-id="0">
                         </div>
-                        </div>
+                        </div> -->
                         <div class="col-sm-12">
+                            <div class="tag-label">Tags</div>
+                            <!-- <div id="sendreviewtags"> -->
+                                <div class="custom-form">
+                               <select name="tags[]" id="tags-select" multiple="multiple" style="width: 100%;" data-gtm-form-interact-field-id="0">
+                                  <option value="Product Quality">Product Quality</option>
+                                  <option value="Customer Service">Customer Service</option>
+                                  <option value="Billing/Payment">Billing/Payment</option>
+                                  <option value="Return/Refund Requests">Return/Refund Requests</option>
+                                  <option value="Policy Issues">Policy Issues</option>
+                                  <option value="Miscommunication">Miscommunication</option>
+                                  <option value="Order Error">Order Error</option>
+                                  <option value="Technical Error">Technical Error</option>
+                                  <option value="Warranty Issue">Warranty Issue</option>
+                                  <option value="Others">Others</option>
+                               </select>
+                               </div>
+                            <!-- </div> -->
+                         </div>
+                        <div class="col-sm-6">
                            <div class="custom-form">
                               <input type="text" onfocus="(this.type='date')" onblur="(this.type='text')" name="transaction_date" class="form-control" placeholder="Date of Transaction" required >
                            </div>
                         </div>
+                        <div class="col-sm-6">
+                           <div class="custom-form">
+                              <input type="text" class="form-control" name="location" placeholder="Place of Order">
+                           </div>
+                        </div>
                         <div class="col-sm-12">
                            <div class="custom-form">
+                              <p style="color: red; font-weight: bold;">
+                                 Do not provide any sensitive data in the complaint/query box below, such as Login ID, Password, Card Number, PIN, CVV, etc.
+                              </p>
                               <textarea name="message" id="" class="form-control" placeholder="Describe the Issue faced" required></textarea>
                            </div>
                         </div>
@@ -178,59 +214,115 @@
 
 <%- include('common/footer') -%>  
 
+
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <script>
 $(document).ready(function () {
    $('#select_company').change(function() {
-      
-      //$("#select_state").prop('required',false);
-      $('#dynamic_state_field_wrapper').hide();
-      var company_id = $(this).val();
-      //alert(company_id);
-      //return false;
-      //$('#country_name').val(this.options[this.selectedIndex].text);
-      $.ajax({
-         url: '/api/complain_category',
-         method: 'POST',
-         data: {company_id:company_id},
-         ContentType: 'application/json',
-         success: function (data) {
+    // Hide the dynamic state field initially
+    $('#dynamic_state_field_wrapper').hide();
+    var company_id = $(this).val();
+
+    $.ajax({
+        url: '/api/complain_category',
+        method: 'POST',
+        data: {company_id: company_id},
+        ContentType: 'application/json',
+        success: function(data) {
             if (data.status == 'ok') {
-               $('#dynamic_state_field_wrapper').show();
-               //$("#select_state").prop('required',true);
-               //$('#select_category').empty().append($('<option value="">Select Category</option>'));
-               $.each(data.data, function (i, item) {
-                     $('#select_category').append($('<option>', { 
+                $('#dynamic_state_field_wrapper').show();
+
+                $('#select_category').empty();
+
+
+                $('#select_category').append($('<option>', { 
+                    value: 0,
+                    text: 'General'
+                }));
+
+                $.each(data.data, function(i, item) {
+                    $('#select_category').append($('<option>', { 
                         value: item.id,
-                        text : item.category_name 
-                     }));
-               });                
+                        text: item.category_name
+                    }));
+                });
             } else {
-               $('#dynamic_state_field_wrapper').hide();
-               $("#select_category").prop('required',false);
+                $('#dynamic_state_field_wrapper').hide();
+                $("#select_category").prop('required', false);
             }
-         },
-         error: function (error) {
+        },
+        error: function(error) {
             // Handle any errors
             Swal.fire({
-               text: error,
-               icon: "error",
-               buttonsStyling: false,
-               confirmButtonText: "Ok, got it!",
-               customClass: {
-                     confirmButton: "btn btn-primary"
-               }
+                text: error.responseText || "An error occurred",
+                icon: "error",
+                buttonsStyling: false,
+                confirmButtonText: "Ok, got it!",
+                customClass: {
+                    confirmButton: "btn btn-primary"
+                }
             });
             submitButton.disabled = false;
-         }
-      });    
-   });
+        }
+    });
+});
 
-   $('#select_category').change(function() {
-    $('#select_sub_category').empty().append($('<option value="" disabled selected>Select Sub Category</option>')); // Default option
+//    $('#select_category').change(function() {
+//     $('#select_sub_category').empty().append($('<option value="" disabled selected>Sub Category</option>')); // Default option
+//     $('#dynamic_sub_category_field_wrapper').hide();
+//     var category_id = $(this).val();
+
+//     $.ajax({
+//         url: '/api/complain_sub_category',
+//         method: 'POST',
+//         data: { category_id: category_id },
+//         ContentType: 'application/json',
+//         success: function(data) {
+//              $('#select_sub_category').append($('<option value="0">General</option>')); // General option
+
+//             if (data.status == 'ok' && data.data.length > 0) {
+//                 $('#dynamic_sub_category_field_wrapper').show();
+                
+//                 $.each(data.data, function(i, item) {
+//                     $('#select_sub_category').append($('<option>', { 
+//                         value: item.id,
+//                         text: item.category_name 
+//                     }));
+//                 });
+//             } else {
+//                 $('#dynamic_sub_category_field_wrapper').hide();
+//                 $("#select_sub_category").prop('required', false);
+//             }
+//         },
+//         error: function(error) {
+//             // Handle any errors
+//             Swal.fire({
+//                 text: error.responseText || "An error occurred",
+//                 icon: "error",
+//                 buttonsStyling: false,
+//                 confirmButtonText: "Ok, got it!",
+//                 customClass: {
+//                     confirmButton: "btn btn-primary"
+//                 }
+//             });
+//             submitButton.disabled = false;
+//         }
+//     });
+// });
+
+
+
+$('#select_category').change(function() {
+    $('#select_sub_category').empty().append($('<option value="" disabled selected>Sub Category</option>')); // Default option
+
+    $('#select_complaint_product').empty().append($('<option value="" disabled selected>Product</option>')); // Default option
+
     $('#dynamic_sub_category_field_wrapper').hide();
+    $('#dynamic_product_field_wrapper').hide();
+
+    
     var category_id = $(this).val();
 
     $.ajax({
@@ -269,63 +361,155 @@ $(document).ready(function () {
             submitButton.disabled = false;
         }
     });
+
+
+    $.ajax({
+        url: '/api/company_product',
+        method: 'POST',
+        data: { category_id: category_id },
+        ContentType: 'application/json',
+        success: function(data) {
+             $('#select_complaint_product').append($('<option value="0">General</option>')); // General option
+
+            if (data.status == 'ok' && data.data.length > 0) {
+                $('#dynamic_product_field_wrapper').show();
+                
+                $.each(data.data, function(i, item) {
+                    $('#select_complaint_product').append($('<option>', { 
+                        value: item.id,
+                        text : item.product_title 
+                    }));
+                });
+            } else {
+                $('#dynamic_product_field_wrapper').hide();
+                $("#select_complaint_product").prop('required', false);
+            }
+        },
+        error: function(error) {
+            // Handle any errors
+            Swal.fire({
+                text: error.responseText || "An error occurred",
+                icon: "error",
+                buttonsStyling: false,
+                confirmButtonText: "Ok, got it!",
+                customClass: {
+                    confirmButton: "btn btn-primary"
+                }
+            });
+            submitButton.disabled = false;
+        }
+    });
 });
 
 
    var allTags = [];
-   $('form#complain_register_form').submit(function (e) {
-      e.preventDefault();
-      $('.response-message').hide();
-      $('.response-message').text('');
-      $('#submit_btn').prop('disabled', true);
-      $('.frm-loading').show(); 
-      //alert('aaaaaa')
-      const transformedResponse = {};
-      $(this).find('#sendreviewtags').find('span').each(function(){
-         var enteredTag = $(this).text();
-         allTags.push(enteredTag);
-      });
-      const formData = $(this).serializeArray();
-      $(formData).each(function(index, field) {
-         transformedResponse[field.name] = field.value; 
-      });
-      transformedResponse['allTags'] = allTags;
-      console.log(transformedResponse);
-      //return false;
-      $.ajax({
-         url: '/auth/complaint-register', // URL for your API endpoint
-         method: 'POST',
-         data: JSON.stringify(transformedResponse),
-         //data: formData,
-         processData: false,
-         //contentType: false,
-         contentType: 'application/json',
-         success: function (data) {
-            if (data.status == 'ok') {
-               $('.response-message').text(data.message);
-               $('.response-message').show();
-               $('#submit_btn').prop('disabled', false);
-               $('.frm-loading').hide();
-               setTimeout(function() {
-                  window.location.href = "/my-complaints";
-               }, 2000);
-            } else {
-               $('.response-message').text(data.message);
-               $('.response-message').show();
-               $('#submit_btn').prop('disabled', false);
-               $('.frm-loading').hide();
-               console.log('Something went wrong');
-            }
-         },
-         error: function (xhr, status, error) {
-            // Handle any errors that occur during the request
-            console.log(error);
-         }
-      });
+//    $('form#complain_register_form').submit(function (e) {
+//       e.preventDefault();
+//       $('.response-message').hide();
+//       $('.response-message').text('');
+//       $('#submit_btn').prop('disabled', true);
+//       $('.frm-loading').show(); 
+//       //alert('aaaaaa')
+//       const transformedResponse = {};
+//       $(this).find('#sendreviewtags').find('span').each(function(){
+//          var enteredTag = $(this).text();
+//          allTags.push(enteredTag);
+//       });
+//       const formData = $(this).serializeArray();
+//       $(formData).each(function(index, field) {
+//          transformedResponse[field.name] = field.value; 
+//       });
+//       transformedResponse['allTags'] = allTags;
+//       console.log(transformedResponse);
+//       //return false;
+//       $.ajax({
+//          url: '/auth/complaint-register', // URL for your API endpoint
+//          method: 'POST',
+//          data: JSON.stringify(transformedResponse),
+//          //data: formData,
+//          processData: false,
+//          //contentType: false,
+//          contentType: 'application/json',
+//          success: function (data) {
+//             if (data.status == 'ok') {
+//                $('.response-message').text(data.message);
+//                $('.response-message').show();
+//                $('#submit_btn').prop('disabled', false);
+//                $('.frm-loading').hide();
+//                setTimeout(function() {
+//                   window.location.href = "/my-complaints";
+//                }, 2000);
+//             } else {
+//                $('.response-message').text(data.message);
+//                $('.response-message').show();
+//                $('#submit_btn').prop('disabled', false);
+//                $('.frm-loading').hide();
+//                console.log('Something went wrong');
+//             }
+//          },
+//          error: function (xhr, status, error) {
+//             // Handle any errors that occur during the request
+//             console.log(error);
+//          }
+//       });
+//    });
 
-      
-   });
+$('form#complain_register_form').submit(function (e) {
+                  e.preventDefault();
+                  $('.response-message').hide();
+                  $('.response-message').text('');
+                  $('#submit_btn').prop('disabled', true);
+                  $('.frm-loading').show();
+
+                  const allTags = $('#tags-select').val(); 
+
+                  const transformedResponse = {};
+                  const formData = $(this).serializeArray();
+
+                  $(formData).each(function (index, field) {
+                     transformedResponse[field.name] = field.value;
+                  });
+
+                  transformedResponse['allTags'] = allTags;
+                  
+                  console.log(transformedResponse);
+
+                  $.ajax({
+                     url: '/auth/complaint-register', 
+                     method: 'POST',
+                     data: JSON.stringify(transformedResponse),
+                     contentType: 'application/json',
+                     success: function (data) {
+                        if (data.status == 'ok') {
+                           $('.response-message').text(data.message);
+                           $('.response-message').show();
+                           $('#submit_btn').prop('disabled', false);
+                           $('.frm-loading').hide();
+                           setTimeout(function() {
+                              window.location.href = "/my-complaints";
+                           }, 2000);
+                        } else {
+                           $('.response-message').text(data.message);
+                           $('.response-message').show();
+                           $('#submit_btn').prop('disabled', false);
+                           $('.frm-loading').hide();
+                           console.log('Something went wrong');
+                        }
+                     },
+                     error: function (xhr, status, error) {
+                        console.log(error);
+                     }
+                  });
+               });
+
 })
+
+$(document).ready(function() {
+               $('#tags-select').select2({
+                  placeholder: "Add Tags",
+                  allowClear: true
+               });
+            });
 
 var countryId;
     var country;
@@ -501,8 +685,9 @@ $('#companyDropdown').on('change', function() {
     var companyId = $(this).val(); 
     console.log("Selected Company ID:", companyId);
     
-      $("#select_category").empty().append($('<option value="" disabled selected>Select a category</option>'));
-      $("#select_sub_category").empty().append($('<option value="" disabled selected>Select Sub Category</option>'));
+      $("#select_category").empty().append($('<option value="" disabled selected>Category</option>'));
+      $("#select_sub_category").empty().append($('<option value="" disabled selected>Sub Category</option>'));
+      $("#select_complaint_product").empty().append($('<option value="" disabled selected>Product</option>'));
       $('#dynamic_state_field_wrapper').hide();
       $('#dynamic_sub_category_field_wrapper').hide();
     $.ajax({
@@ -512,7 +697,7 @@ $('#companyDropdown').on('change', function() {
         ContentType: 'application/json',
         success: function(data) {
             $("#select_category").empty(); // Clear previous options
-            $("#select_category").append($('<option value="" disabled selected>Select a category</option>')); // Default disabled option
+            $("#select_category").append($('<option value="" disabled selected>Category</option>')); // Default disabled option
 
             if (data.status == 'ok' && data.data.length > 0) {
                 $('#dynamic_state_field_wrapper').show();
@@ -554,12 +739,12 @@ $('#companyDropdown').on('change', function() {
     width: '100%' 
   });
   $('#state').select2({
-    placeholder: " Select State",
+    placeholder: "State",
     allowClear: true, 
    //  width: '100%'
   });
   $('#register_country').select2({
-    placeholder: "Select Country*",
+    placeholder: "Country*",
     allowClear: true, 
    //  width: '100%'
   });
@@ -567,6 +752,47 @@ $('#companyDropdown').on('change', function() {
   
   
 });
+
+$(document).ready(function() {
+
+
+   $(document).ready(function() {
+    $('#companyDropdown').on('change', function() {
+        const companyId = $(this).val();
+        console.log("Selected Company ID:", companyId);
+
+        $.ajax({
+            url: '/getcompany-details-by-id', 
+            type: 'GET',
+            data: { company_id: companyId },
+            success: function(response) {
+                console.log("API Response:", response);
+
+                const companyName = response.companyName;
+                const modelInput = $('#model_no');
+
+                console.log("Company Name:", companyName);
+                console.log("modelInput:", modelInput);
+
+                if (companyName && companyName.toLowerCase().includes('bank')) {
+                  console.log(" bank include");
+                    modelInput.attr('placeholder', 'Reference / Serial Number'); 
+                } else {
+                  console.log("not bank include");
+                  
+                    modelInput.attr('placeholder', 'Product Model / Serial Number'); 
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("Error fetching company details:", error);
+            }
+        });
+    });
+});
+
+
+});
+
 
 
 </script>

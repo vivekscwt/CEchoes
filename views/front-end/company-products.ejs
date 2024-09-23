@@ -30,7 +30,9 @@
                         <tbody>
                             <% CompanyCategoryProducts.forEach(product => { %>
                                 <tr>
-                                    <td><img src="/<%= product.product_img %>" alt="img" width="50" height="50"></td>
+                                    <td>                                  
+                                    <img src="/<%= product.product_img %>" alt="img" width="50" height="50">                                   
+                                    </td>
                                     <td><%= product.product_title %></td>
                                     <td><%= product.category_name %></td>
                                     <td>
@@ -91,8 +93,8 @@
                                         </div>
                                     </div>
                                     <div class="custom-form mb-0 col-sm-10">
-                                        <label class="form-label">Image<sup style="color: red;">*</sup></label>
-                                        <input class="form-control upload_in_repeter product_image" id="upload-company-coverimage" type="file" name="product_image" required>
+                                        <label class="form-label">Image</label>
+                                        <input class="form-control upload_in_repeter product_image" id="upload-company-coverimage" type="file" name="product_image">
                                     </div>
                                     <div class="col-sm-2">
                                         <div class="display_image_box">
@@ -162,7 +164,7 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal"><i class="fa-solid fa-circle-xmark"></i></button>
         </div>
         <div class="modal-body text-center">
-            <h5 class="mb-4">Want to delete this product ?</h5>
+            <h5 class="mb-4">Are you sure, you want to delete?</h5>
             <div class="d_flex d-flex align-items-center">
                 <button class="btn-default btn-warning my-1" id="okButton">Yes Delete !</button>
                 <button class="btn-default btn-dark my-1" id="cancelButton">No Cancle !</button>
@@ -200,7 +202,7 @@
                             </div>
                         </div>
                         <div class="custom-form col-sm-9">
-                            <label class="form-label">Image<sup style="color: red;">*</sup></label>
+                            <label class="form-label">Image</sup></label>
                             
                             <input class="form-control  product_image" type="file" name="product_img" >
                         </div>
@@ -319,7 +321,7 @@
             })
     
         $('.add_more_product').click(function(e){
-            $(this).parents('.add_products').find('.all_repeter').append('<div class=each_repeter><div class="align-items-center row"><div class=col-12><div class=custom-form mb-3><label class=form-label>Title<sup style="color: red;">*</sup></label> <input class=form-control placeholder="" name="product_title" required></div></div><div class=col-12><div class=custom-form mb-3><label class=form-label>Description</label> <textarea class=form-control placeholder="" name="product_desc" rows=3></textarea></div></div><div class="custom-form mb-0 col-sm-10"><label class=form-label>Image<sup style="color: red;">*</sup></label> <input class="form-control upload_in_repeter product_image"type=file name="product_image" required ></div><div class=col-sm-2><div class=display_image_box><img alt=""class=promotion_image_review src=/front-end/images/no-image.png></div></div><div class=col-12><div class=text-right><button data-id="null" class="btn btn-danger delete_item"type=button>Remove</button></div></div></div></div>');
+            $(this).parents('.add_products').find('.all_repeter').append('<div class=each_repeter><div class="align-items-center row"><div class=col-12><div class=custom-form mb-3><label class=form-label>Title<sup style="color: red;">*</sup></label> <input class=form-control placeholder="" name="product_title" required></div></div><div class=col-12><div class=custom-form mb-3><label class=form-label>Description</label> <textarea class=form-control placeholder="" name="product_desc" rows=3></textarea></div></div><div class="custom-form mb-0 col-sm-10"><label class=form-label>Image</label> <input class="form-control upload_in_repeter product_image"type=file name="product_image"></div><div class=col-sm-2><div class=display_image_box><img alt=""class=promotion_image_review src=/front-end/images/no-image.png></div></div><div class=col-12><div class=text-right><button data-id="null" class="btn btn-danger delete_item"type=button>Remove</button></div></div></div></div>');
         });
     
         $('body').on('change','.upload_in_repeter',function (event) {

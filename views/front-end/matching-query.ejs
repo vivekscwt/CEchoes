@@ -1,0 +1,322 @@
+<%- include('common/header') -%>
+<link href="/front-end/css/discussion-style.css" rel="stylesheet" type="text/css">
+<%- include('common/header-banner') -%>
+
+<!-- ============== Section1 Start =============== -->
+<section class="main-content bottom-main-content">
+  <div class="discussion-page-content">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8">
+            <div class="discussions-left">
+                <div id="horizontalTab">
+
+                    <div class="tab-content-wrap">
+                        <% if(matchingDiscussions && matchingDiscussions.length > 0) { %>
+                        <% matchingDiscussions.forEach((LatestDiscussion)=>{  %>
+                        <% const ExpireDate = new Date(LatestDiscussion.expired_at); %>
+                        <% const date2 = new Date(); %>
+                        <% const daysDiff = Math.round((ExpireDate - date2)/(1000 * 60 * 60 * 24)) %>
+                        <% if(daysDiff > -1){ %>
+                        <div class="discussion-review-panel">
+                            <a href="/discussion-details/<%= LatestDiscussion.id %>" title="<%= LatestDiscussion.topic %>" >
+                                <div class="discussion-user-img" title="">
+                                <!-- <img src="../front-end/images/user-img.jpg" alt="img" width="60" height="60"> -->
+                                <h4><%= LatestDiscussion.first_name.charAt(0).toUpperCase()  %></h4>
+                                </div>
+                                <div class="discussion-user-info">
+                                <h4>
+                                    <% if (LatestDiscussion.topic.length > 75) { %>
+                                    <%= LatestDiscussion.topic.substring(0, 75) + ' . . . ' %>
+                                    <% } else { %>
+                                        <%= LatestDiscussion.topic %>
+                                    <% } %> 
+                                </h4>
+                                <% const date = new Date(LatestDiscussion.created_at); %>
+                                <p>Created <%= date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) %></p>
+                            
+                                </div>
+                                <div class="dis-comment-views">
+                                <span><%= LatestDiscussion.total_comments %> Comments</span>
+                                <span><%= LatestDiscussion.total_views %> Views</span>
+                                </div>
+                            </a>
+                        </div>
+                        <% } %>
+                        <% }) %>
+                        <% } else { %>
+                          <div class="text-center mt-md-5 mt-4">
+                              <p>No similar discussions found.</p>
+                          </div>
+                      <% } %>
+                        <!-- <div class="text-center mt-md-5 mt-4">
+                            <a href="#" class="btn-default btn-warning discussion-load-btn">Load More</a>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+        </div>
+    </div>
+  </section>
+
+
+<!-- ============== Section1 End =============== -->
+<style>
+    #sendreviewtags_discussion {
+       border: 2px solid #fccb06;
+       padding: 5px 9px;
+       border-radius: 6px;
+       margin-bottom: 32px;
+    }
+    #sendreviewtags_discussion > span {
+       cursor: pointer;
+       display: block;
+       float: left;
+       color: #fff;
+       background: #fccb06;
+       padding: 7px;
+       padding-right: 25px;
+       margin: 4px;
+       border-radius: 4px;
+   }
+   #sendreviewtags_discussion > span:after {
+    position: absolute;
+    content: "×";
+    border: 1px solid;
+    padding: 2px 5px;
+    margin-left: 3px;
+    font-size: 11px;
+ }
+ #sendreviewtags_discussion > input {
+    background: #f2f2f2;
+    border: 0;
+    margin: 4px;
+    padding: 7px;
+    width: auto;
+    border-radius: 4px;
+    outline: none;
+ }
+ </style>
+<%- include('common/footer') -%>   
+
+<script>
+    $(document).ready(function () {
+        $("#sendreviewtags_discussion input").on({
+            focusout : function() {
+               var txt = this.value.replace(/[^a-z0-9+\-.\@ ]/ig, ''); // allowed characters
+               if (txt) $("<span/>", { text: txt.toLowerCase().replace(/\s/g, ' '), insertBefore: this });
+               this.value = "";
+            },
+            keyup : function(ev) {
+              // if: comma|enter (delimit more keyCodes with | pipe)
+              if (/^(188|13)$/.test(ev.which)) $(this).focusout();
+            }
+          });
+          $('#sendreviewtags_discussion').on('click', 'span', function() {
+            if(confirm("Remove "+ $(this).text() +"?")) $(this).remove(); 
+          });
+        var timer;
+        $("#search-input").keyup(function () {
+          clearTimeout(timer);
+          var keyword = $(this).val();
+          if (keyword.length >= 3) {
+            timer = setTimeout(function () {
+              performSearch(keyword);
+            }, 500);
+          } else {
+            $('.autofield-dropdown').hide();
+            $('.autofield-dropdown').html(''); // Clear search results if less than three letters
+          }
+        })
+
+        $("#search-topic").keyup(function () {
+          clearTimeout(timer);
+          var keyword = $(this).val();
+          if (keyword.length >= 3) {
+            timer = setTimeout(function () {
+              performSearch(keyword);
+            }, 500);
+          } else {
+            $('.autofield-dropdown').hide();
+            $('.autofield-dropdown').html(''); // Clear search results if less than three letters
+          }
+        })
+
+        // Function to perform the AJAX search
+        function performSearch(keyword) {
+          $('.autofield-dropdown').css('height', "200px");
+          const data = {
+            keyword: keyword,
+          };
+          $.ajax({
+            url: 'api/search-discussion',
+            method: 'POST',
+            data: { keyword: keyword },
+            ContentType: 'application/json',
+            success: function (data) {
+              if (data.status == 'ok') {
+                if (data.data.length > 0) {
+                  let respData = data.data;
+                  let html = '<ul class="p-0 m-0">';
+                  respData.forEach(discussion => {
+                    html += '<li><a class="custom_link" href="/discussion-details/' + discussion.id + '" >' + discussion.topic + '</a></li>';
+                  });
+                  html += '</ul>';
+                  $('.autofield-dropdown').html(html);
+                  $('.autofield-dropdown').show();
+                  if(data.data.length < 4){
+                    var divlength = data.data.length*48;
+                    $('.autofield-dropdown').css('height', divlength + "px");
+                  }
+                } else {
+                  $('.autofield-dropdown').hide();
+                  $('.autofield-dropdown').html('');
+                }
+              } else {
+                $('.autofield-dropdown').hide();
+                $('.autofield-dropdown').html('');
+              }
+            },
+            error: function (error) {
+
+            }
+          });
+
+        }
+
+        
+      $("body").on('click', ".autofield-dropdown ul > li", function (e) {
+        e.preventDefault();
+        var resulttitle = $(this).find('a').attr('data-resulttitle');
+        var resultpermalink = $(this).find('a').attr('data-resultpermalink');
+        $('#dynamic-search-title').text(resulttitle);
+        $('#dynamic-search-content').text(resultexcerpt);
+        $('#dynamic-search-link').attr("href", resultpermalink);
+
+        $(".custom-modal").fadeIn();
+
+      });
+
+        var allTags = [];
+        var transformedResponse = {};
+        $('form#create_discussion_form').submit(function (e) {
+          e.preventDefault();
+          $('.response-message').hide();
+          $('.response-message').text('');
+          $('#invitation_email').prop('disabled', true);
+          $('.frm-loading').show(); 
+          //alert('aaaaaa')
+          $(this).find('#sendreviewtags_discussion').find('span').each(function(){
+             var enteredTag= $(this).text();
+             allTags.push(enteredTag);
+          });
+            const formData = $('#create_discussion_form').serializeArray();
+            $(formData).each(function (index, field) {
+                transformedResponse[field.name] = field.value;
+            });
+          transformedResponse['tags'] = allTags;
+          console.log(transformedResponse);
+            //return false;
+          
+            $.ajax({
+            url: '/auth/create-discussion', 
+            method: 'POST',
+            data: JSON.stringify(transformedResponse),
+            processData: false,
+            contentType: 'application/json',
+            success: function (data) {
+                if (data.status == 'ok') {
+                    $('.response-message').text(data.message);
+                    $('.response-message').show();
+                    $('#invitation_email').prop('disabled', false);
+                    $('.frm-loading').hide();
+                    setTimeout(function() {
+                        window.location.reload();
+                    }, 2000);
+                } else {
+                    $('.response-message').text(data.message);
+                    $('.response-message').show();
+                    $('#invitation_email').prop('disabled', false);
+                    $('.frm-loading').hide();
+                    console.log('Something went wrong');
+                }
+            },
+            error: function (xhr, status, error) {
+                // Handle any errors that occur during the request
+                console.log(error);
+            }
+        });
+    
+          
+       });
+    });
+    </script>
+
+
+<script>
+ document.addEventListener("DOMContentLoaded", async function () {
+        console.log("DOM content loaded");
+
+        try {
+          const { countryName, countryCode } = await fetchGeolocationAndSetCountryInfo();
+          console.log("Initial CountryName:", countryName);
+          console.log("Initial CountryCode:", countryCode);
+          const countryMap = {
+            'UK': 'United Kingdom',
+            'JP': 'Japan',
+            'US': 'United States',
+            'All': 'All'
+          };
+
+          // const countryDropdown = document.querySelector('.country-dropdown');
+          // if (countryCode == 'UK') {
+          //   countryDropdown.value = 'UK';
+          // } else if (countryCode == 'JP') {
+          //   countryDropdown.value = 'JP';
+          // } else {
+          //   countryDropdown.value = 'US';
+          // }
+          const countryDropdown = document.querySelector('.country-dropdown');
+          if (countryCode in countryMap) {
+            countryDropdown.value = countryCode;
+          } else {
+            countryDropdown.value = 'US';
+          }
+
+          function setCookie(name, value, days) {
+            const d = new Date();
+            d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+            const expires = "expires=" + d.toUTCString();
+            document.cookie = name + "=" + value + ";" + expires + ";path=/";
+          }
+
+          countryDropdown.addEventListener('change', function (event) {
+            //previous
+            // const selectedCountryCode = event.target.value;
+            // const selectedCountryName = event.target.options[event.target.selectedIndex].text;
+            // console.log("Selected country code:", selectedCountryCode);
+            // console.log("Selected country name:", selectedCountryName);
+            // setCookie('countryCode', selectedCountryCode, 365);
+
+            const selectedCountryCode = event.target.value;
+            const selectedCountryName = countryMap[selectedCountryCode] 
+            //|| 'India';
+            console.log("Selected country code:", selectedCountryCode);
+            console.log("Selected country names:", selectedCountryName);
+
+            // Update cookies with selected country code and name
+            setCookie('countryCode', selectedCountryCode, 365);
+            setCookie('countryName', selectedCountryName, 365);
+
+   
+                    //  const redirectUrl = `/${selectedCountryCode}/business`;
+                    const redirectUrl = `/discussion/${selectedCountryCode}`;
+                     window.location.href = redirectUrl;
+                  });
+               } catch (error) {
+                  console.error('Error initializing country info:', error);
+               }
+            });
+         </script>

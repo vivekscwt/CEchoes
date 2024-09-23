@@ -1,0 +1,1004 @@
+<%- include('common/header') -%>
+    <!--begin::Content-->
+    <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
+        <!--begin::Toolbar-->
+        <div class="toolbar" id="kt_toolbar">
+            <!--begin::Container-->
+            <div id="kt_toolbar_container" class="container-fluid d-flex flex-stack">
+                <!--begin::Page title-->
+                <div data-kt-swapper="true" data-kt-swapper-mode="prepend"
+                    data-kt-swapper-parent="{default: '#kt_content_container', 'lg' : '#kt_toolbar_container'}"
+                    class="page-title d-flex align-items-center flex-wrap me-3 mb-5 mb-lg-0">
+                    <!--begin::Title-->
+                    <h1 class="d-flex align-items-center text-dark fw-bolder fs-3 my-1">
+                        <%= page_title %>
+                            <!--end::Description-->
+                    </h1>
+                    <!--end::Title-->
+                </div>
+                <!--end::Page title-->
+            </div>
+            <!--end::Container-->
+        </div>
+        <!--end::Toolbar-->
+        <!--begin::Post-->
+        <div class="post d-flex flex-column-fluid" id="kt_post">
+            <!--begin::Container-->
+            <div id="kt_content_container" class="container-xxl">
+                <!--begin::Basic info-->
+                <div class="card mb-5 mb-xl-10">
+                    <!--begin::Card header-->
+                    <div class="card-header border-0 cursor-pointer" role="button"
+                        data-bs-target="#kt_account_profile_details" aria-expanded="true"
+                        aria-controls="kt_account_profile_details">
+                        <!--begin::Card title-->
+                        <div class="card-title m-0">
+                            <h3 class="fw-bolder m-0">Organization Details</h3>
+                        </div>
+                        <!--end::Card title-->
+                    </div>
+                    <!--begin::Card header-->
+                    <!--begin::Content-->
+                    <div id="kt_account_profile_details" class="collapse show">
+                        <!--begin::Form-->
+                        <form id="kt_account_profile_details_form" class="form" action="" method="POST" enctype="multipart/form-data">
+                            <!--begin::Card body-->
+                            <div class="card-body border-top p-9">
+                                <!--begin::Input group-->
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">Upload Logo</label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8">
+                                        <!--begin::Image input-->
+                                        <div class="image-input image-input-outline" data-kt-image-input="true"
+                                            style="background-image: url(/assets/media/icons/duotune/abstract/abs013.svg)">
+                                            <!--begin::Preview existing avatar-->
+                                            <div class="image-input-wrapper w-125px h-125px"
+                                                style="background-image: url(/assets/media/icons/duotune/abstract/abs013.svg)">
+                                            </div>
+                                            <!--end::Preview existing avatar-->
+                                            <!--begin::Label-->
+                                            <label
+                                                class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
+                                                data-kt-image-input-action="change" data-bs-toggle="tooltip"
+                                                title="Change avatar">
+                                                <i class="bi bi-pencil-fill fs-7"></i>
+                                                <!--begin::Inputs-->
+                                                <input type="file" name="logo" accept=".png, .jpg, .jpeg" />
+                                                <input type="hidden" name="avatar_remove" />
+                                                <!--end::Inputs-->
+                                            </label>
+                                            <!--end::Label-->
+                                            <!--begin::Cancel-->
+                                            <span
+                                                class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
+                                                data-kt-image-input-action="cancel" data-bs-toggle="tooltip"
+                                                title="Cancel avatar">
+                                                <i class="bi bi-x fs-2"></i>
+                                            </span>
+                                            <!--end::Cancel-->
+                                            <!--begin::Remove-->
+                                            <span
+                                                class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow"
+                                                data-kt-image-input-action="remove" data-bs-toggle="tooltip"
+                                                title="Remove avatar">
+                                                <i class="bi bi-x fs-2"></i>
+                                            </span>
+                                            <!--end::Remove-->
+                                        </div>
+                                        <!--end::Image input-->
+                                        <!--begin::Hint-->
+                                        <div class="form-text">Allowed file types: png, jpg, jpeg.</div>
+                                        <!--end::Hint-->
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <!--end::Input group-->
+                                <!--begin::Input group-->
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label required fw-bold fs-6">Organization
+                                        Name</label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8">
+                                        <!--begin::Row-->
+                                        <div class="row">
+                                            <!--begin::Col-->
+                                            <div class="col-lg-12 fv-row">
+                                                <input type="text" name="company_name"
+                                                    class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
+                                                    placeholder="Organization Name" value="" />
+                                            </div>
+                                            <!--end::Col-->
+                                        </div>
+                                        <!--end::Row-->
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">Tagline</label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8">
+                                        <!--begin::Row-->
+                                        <div class="row">
+                                            <!--begin::Col-->
+                                            <div class="col-lg-12 fv-row">
+                                                <input type="text" name="heading"
+                                                    class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
+                                                    placeholder="Tagline" value="" />
+                                            </div>
+                                            <!--end::Col-->
+                                        </div>
+                                        <!--end::Row-->
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">About Organization</label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8">
+                                        <!--begin::Row-->
+                                        <div class="row">
+                                            <!--begin::Col-->
+                                            <div class="col-lg-12 fv-row">
+                                                <textarea rows="8" name="about_company"
+                                                    class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
+                                                    placeholder="About Organization"></textarea>
+                                            </div>
+                                            <!--end::Col-->
+                                        </div>
+                                        <!--end::Row-->
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <!--end::Input group-->
+                                <!--begin::Input group-->
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Email</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <input type="email" name="comp_email"
+                                            class="form-control form-control-lg form-control-solid" placeholder="Email"
+                                            value="" />
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <!--end::Input group-->
+                                <!--begin::Input group-->
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Contact Phone</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <input type="tel" name="comp_phone"
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Phone number" value="" />
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Toll Free Number</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <input type="tel" name="tollfree_number"
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Toll Free Number" value="" />
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Main Address</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <input type="text" name="main_address"
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Main Address" value="" />
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!-- Label for the country dropdown -->
+                                    <label class="col-lg-4 col-form-label required fw-bold fs-6">
+                                        Country
+                                    </label>
+
+                                    <div class="col-lg-8 fv-row">
+                                        <select name="main_address_country" id="main_address_country"
+                                            class="form-control form-control-lg form-control-solid" required>
+                                            <option value="" disabled selected>Select a country</option>
+                                            <!-- Filtered countries -->
+                                            <% 
+                                            const filteredCountries = getCountries.filter(country => 
+                                                ['India', 'United States', 'United Kingdom', 'Japan'].includes(country.name)
+                                            ); 
+                                            filteredCountries.forEach(function(country) { 
+                                            %>
+                                                <option value="<%= country.shortname %>">
+                                                    <%= country.name %>
+                                                </option>
+                                            <% }); %>
+                                        </select>
+                                    </div>
+                                    
+                                </div>
+
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">State</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                            <select class="form-control form-control-lg form-control-solid" id="state" name="main_address_state">
+                                                <option value="" selected disabled>Select State</option>
+                                                <!-- Options will be dynamically populated via JavaScript -->
+                                            </select>
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">City</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <input type="text" name="main_address_city"
+                                            class="form-control form-control-lg form-control-solid" placeholder="City"
+                                            value="" />
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Address Pin Code</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <input type="text" name="main_address_pin_code"
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Address Pin Code" value="" />
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Address URL</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <input type="text" name="address_map_url"
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Address URL" value="" />
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <!--end::Input group-->
+
+                                <!--begin::Input group-->
+
+                                <!--end::Input group-->
+
+                                <!--begin::Input group-->
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="">Organization Registration Number</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <input type="text" name="comp_registration_id"
+                                            class="form-control form-control-lg form-control-solid"
+                                            placeholder="Registration Number" value="" />
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <!--end::Input group-->
+                                <!--begin::Input group-->
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                        <span class="required">Select Category</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    
+                                    <div class="col-lg-8 fv-row">
+                                        <p><strong>First select the country</strong></p>
+                                    <div id="categoryTree">
+                                    </div>
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <!--end::Input group-->
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label required fw-bold fs-6">Organization
+                                        Status</label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <!--begin::Options-->
+                                        <div class="d-flex align-items-center mt-3">
+                                            <!--begin::Option-->
+                                            <label class="form-check form-check-inline form-check-solid me-5">
+                                                <input class="form-check-input mt-1" name="status" type="radio"
+                                                    value="2" />
+                                                <span
+                                                    class="fw-bold fs-6 badge badge-light-warning fw-bolder px-4 py-3">Pending</span>
+                                            </label>
+                                            <!--end::Option-->
+                                            <!--begin::Option-->
+                                            <label class="form-check form-check-inline form-check-solid me-5">
+                                                <input class="form-check-input mt-1" name="status" type="radio"
+                                                    value="1" checked />
+                                                <span
+                                                    class="fw-bold fs-6 badge badge-light-success fw-bolder px-4 py-3">Approved</span>
+                                            </label>
+                                            <!--end::Option-->
+                                            <!--begin::Option-->
+                                            <label class="form-check form-check-inline form-check-solid">
+                                                <input class="form-check-input mt-1" name="status" type="radio"
+                                                    value="0" />
+                                                <span
+                                                    class="fw-bold fs-6 badge badge-light-danger fw-bolder px-4 py-3">Rejected</span>
+                                            </label>
+                                            <!--end::Option-->
+                                        </div>
+                                        <!--end::Options-->
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label required fw-bold fs-6">Trending</label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <!--begin::Options-->
+                                        <div class="d-flex align-items-center mt-3">
+                                            <!--begin::Option-->
+                                            <label class="form-check form-check-inline form-check-solid me-5">
+                                                <input class="form-check-input mt-1" name="trending" type="radio"
+                                                    value="0" checked />
+                                                <span
+                                                    class="fw-bold fs-6 badge badge-light-danger fw-bolder px-4 py-3">No</span>
+                                            </label>
+                                            <!--end::Option-->
+                                            <!--begin::Option-->
+                                            <label class="form-check form-check-inline form-check-solid me-5">
+                                                <input class="form-check-input mt-1" name="trending" type="radio"
+                                                    value="1" />
+                                                <span
+                                                    class="fw-bold fs-6 badge badge-light-success fw-bolder px-4 py-3">Yes</span>
+                                            </label>
+                                            <!--end::Option-->
+                                            <!--end::Option-->
+                                        </div>
+                                        <!--end::Options-->
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+
+                                <div class="row mb-6">
+                                    <!--begin::Label-->
+                                    <label class="col-lg-4 col-form-label required fw-bold fs-6">
+                                        <span>Parent Company</span>
+                                    </label>
+                                    <!--end::Label-->
+                                    <!--begin::Col-->
+                                    <div class="col-lg-8 fv-row">
+                                        <select name="parent_id" class="form-control form-control-lg form-control-solid" required>
+                                            <option value="<%= getParentCompany[0].ID %>"selected>
+                                                <%= getParentCompany[0].company_name + " - " + getParentCompany[0].main_address_country %>
+                                            </option>
+                                        </select>                                       
+                                    </div>
+                                    <!--end::Col-->
+                                </div>
+
+
+                            </div>
+                            <!--end::Card body-->
+                            <!--begin::Actions-->
+                            <div class="card-footer d-flex justify-content-end py-6 px-9">
+                                <button type="reset"
+                                    class="btn btn-light btn-active-light-primary me-2">Discard</button>
+                                <button type="submit" class="btn btn-primary"
+                                    id="kt_account_profile_details_submit">Save Changes</button>
+                            </div>
+                            <!--end::Actions-->
+                        </form>
+                        <!--end::Form-->
+                    </div>
+                    <!--end::Content-->
+                </div>
+                <!--end::Basic info-->
+
+                <!--end::Modals-->
+
+                <% if (company.parent_id==0) { %>
+                    <!--begin::Another group for editing additional organization details-->
+                    <div class="card mb-5 mb-xl-10">
+                        <!--begin::Card header-->
+                        <div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse" data-bs-target="#kt_additional_organization_details" aria-expanded="true" aria-controls="kt_additional_organization_details">
+                            <!--begin::Card title-->
+                            <div class="card-title m-0">
+                                <h3 class="fw-bolder m-0">Others Organizations</h3>
+                            </div>
+                            <!--end::Card title-->
+                        </div>
+                        <!--end::Card header-->
+                        <!--begin::Card body-->
+                        <div id="kt_additional_organization_details" class="collapse">
+                            <div class="card-body">
+                                <!--begin::Form-->
+                                <form id="child-company">
+                                    <div class="card-body border-top p-9">
+                                        <!-- Loop through each child company -->
+                                        <% getChildCompany.forEach(function(company, index) { %>
+                                        <div class="row mb-6">
+                                            <!-- Field 1 -->
+                                            <!--begin::Label-->
+                                            <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                                <span class="">Name</span>
+                                            </label>
+                                            <!--end::Label-->
+                                            <!--begin::Col-->
+                                            <div class="col-lg-8 fv-row">
+                                                <input type="text" name="company_name_<%= index %>" class="form-control form-control-lg form-control-solid" value="<%= company.company_name %>"/>
+                                            </div>
+                                            <!--end::Col-->
+                
+                                            <!-- Field 2 -->
+                                            <!--begin::Label-->
+                                            <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                                <span class="">Address</span>
+                                            </label>
+                                            <!--end::Label-->
+                                            <!--begin::Col-->
+                                            <div class="col-lg-8 fv-row">
+                                                <input type="text" name="company_address_<%= index %>" class="form-control form-control-lg form-control-solid" value="<%= company.main_address + ' ' + (company.country_name || '') %>"/>
+                                            </div>
+                                            
+                                            <!--end::Col-->
+                
+                                            <!-- Field 3 -->
+                                            <!--begin::Label-->
+                                            <label class="col-lg-4 col-form-label fw-bold fs-6">
+                                                <span class="">Claimed User</span>
+                                            </label>
+                                            <!--end::Label-->
+                                            <!--begin::Col-->
+                                            <div class="col-lg-8 fv-row">
+                                                <input type="text" name="claimed_user_<%= index %>" class="form-control form-control-lg form-control-solid" value="<%= company.claimed_by_user %>"/>
+                                            </div>
+                                            <!--end::Col-->
+                
+                                            <!-- Edit Button -->
+                                            <!--begin::Col-->
+                                            <div class="col-lg-12 d-flex justify-content-end mt-3">
+                                                <a href="/edit-company/<%= company.ID %>" class="btn btn-primary">Edit Company</a>
+                                            </div>
+                                            <!--end::Col-->
+                                        </div>
+                                        <% }); %>
+                                    </div>
+                                </form>
+                                <!--end::Form-->
+                            </div>
+                        </div>
+                        <!--end::Card body-->
+                    </div>
+                <% } %>
+            </div>
+            <!--end::Container-->
+        </div>
+        <!--end::Post-->
+    </div>
+    <!--end::Content-->
+    <style>
+        #categoryTree {
+            max-height: 400px;
+            overflow-y: auto;
+            background-color: #F5F8FA;
+            border-color: #F5F8FA;
+        }
+        .select2-container--bootstrap5 .select2-selection--single .select2-selection__placeholder {
+            color: #5E6278;
+        }
+
+        .select2-container--bootstrap5 .select2-selection--single .select2-selection__rendered{
+            color:#000000;
+        }
+
+    </style>
+    <%- include('common/footer') -%>
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script>
+            $('#select_country').change(function () {
+                $('#select_state').empty();
+                $("#select_state").prop('required', false);
+                $('#dynamic_state_field_wrapper').hide();
+                var country_id = $(this).val();
+                $('#country_name').val(this.options[this.selectedIndex].text);
+                $.ajax({
+                    url: '/api/states',
+                    method: 'POST',
+                    data: { country_id: country_id },
+                    ContentType: 'application/json',
+                    success: function (data) {
+                        if (data.status == 'ok') {
+                            $('#dynamic_state_field_wrapper').show();
+                            $("#select_state").prop('required', true);
+                            $.each(data.data, function (i, item) {
+                                $('#select_state').append($('<option>', {
+                                    value: item.id,
+                                    text: item.name
+                                }));
+                            });
+                        } else {
+                            $('#dynamic_state_field_wrapper').hide();
+                            $("#select_state").prop('required', false);
+                        }
+                    },
+                    error: function (error) {
+                        // Handle any errors
+                        Swal.fire({
+                            text: error,
+                            icon: "error",
+                            buttonsStyling: false,
+                            confirmButtonText: "Ok, got it!",
+                            customClass: {
+                                confirmButton: "btn btn-primary"
+                            }
+                        });
+                        submitButton.disabled = false;
+                    }
+                });
+            });
+            $('#select_state').change(function () {
+                $('#state_name').val(this.options[this.selectedIndex].text);
+            });
+/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+                var __webpack_exports__ = {};
+                /*!*********************************************************************************************!*\
+                  !*** ../../../themes/metronic/html/demo1/src/js/custom/account/settings/profile-details.js ***!
+                  \*********************************************************************************************/
+
+
+                // Class definition
+                var KTAccountSettingsProfileDetails = function () {
+                    // Private variables
+                    var form;
+                    var submitButton;
+                    var validation;
+                    var passwordMeter;
+
+                    var handleForm = function () {
+
+                        $("#kt_datepicker_1").flatpickr();
+                        validation = FormValidation.formValidation(
+                            form,
+                            {
+                                fields: {
+                                    company_name: {
+                                        validators: {
+                                            notEmpty: {
+                                                message: 'Organization name is required'
+                                            }
+                                        }
+                                    },
+                                    comp_email: {
+                                        validators: {
+                                            emailAddress: {
+                                                message: 'The value is not a valid email address'
+                                            }
+                                        }
+                                    },
+                                    // comp_phone: {
+                                    //     validators: {
+                                    //         regexp: {
+                                    //             regexp: /^\d{10}$/, // Regular expression pattern for a 10-digit phone number
+                                    //             message: 'The phone number is not valid'
+                                    //         }
+                                    //     }
+                                    // },
+                                    main_address_pin_code: {
+                                        //validators: {
+                                            // notEmpty: {
+                                            //     message: 'Pin is required'
+                                            // },
+                                            regexp: {
+                                                // regexp: /^\d{6}$/, // Regular expression pattern for a 6-digit number
+                                                regexp: /^[a-zA-Z0-9]+$/,
+                                                message: 'Pin is not valid'
+                                            }
+                                        //}
+                                    },
+                                    main_address_country: {
+                                        validators: {
+                                            notEmpty: {
+                                                message: 'Country is required'
+                                            }
+                                        }
+                                    },
+                                    address_map_url: {
+                                        validators: {
+                                            regexp: {
+                                                regexp: /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/, // Regular expression pattern for URL validation
+                                                message: 'The URL is not valid'
+                                            }
+                                        }
+                                    },
+                                },
+                                plugins: {
+                                    trigger: new FormValidation.plugins.Trigger(),
+                                    submitButton: new FormValidation.plugins.SubmitButton(),
+                                    //defaultSubmit: new FormValidation.plugins.DefaultSubmit(), // Uncomment this line to enable normal button submit after form validation
+                                    bootstrap: new FormValidation.plugins.Bootstrap5({
+                                        rowSelector: '.fv-row',
+                                        eleInvalidClass: '',
+                                        eleValidClass: ''
+                                    })
+                                }
+                            }
+                        );
+
+                        // Handle form submit
+                        // submitButton.addEventListener('click', function (e) {
+                        //     e.preventDefault();
+
+                        //     validation.validate().then(function (status) {
+                        //         if (status == 'Valid') {
+                        //             //$('#kt_account_profile_details_form').submit();
+                        //             var formElement = document.getElementById('kt_account_profile_details_form');
+                        //             var formData = new FormData(formElement);
+
+                        //             console.log("formData",formData);
+
+                        //             if (!formData.has('parent_id')) {
+                        //             formData.append('parent_id', '0'); // Default value
+                        //             }
+                        //             $.ajax({
+                        //                 url: '/auth/create-child-company', // URL for your API endpoint
+                        //                 type: 'POST',
+                        //                 data: formData,
+                        //                 processData: false, // Prevent jQuery from processing the data
+                        //                 contentType: false, // Let the browser set the content type
+                        //                 success: function (data) {
+                        //                     if (data.status == 'ok') {
+                        //                         // Swal.fire({
+                        //                         //     text: data.message,
+                        //                         //     icon: "success",
+                        //                         //     buttonsStyling: false,
+                        //                         //     confirmButtonText: "Ok, got it!",
+                        //                         //     customClass: {
+                        //                         //         confirmButton: "btn btn-primary"
+                        //                         //     }
+                        //                         // })
+                        //                         alert("company added successfully")
+                        //                         // .then(function (result) {
+                        //                         //     if (result.isConfirmed) {
+                        //                         //         window.location.href = "/edit-company/" + data.data;
+                        //                         //     }
+                        //                         // });
+                        //                     } else {
+                        //                         Swal.fire({
+                        //                             text: data.message,
+                        //                             icon: "error",
+                        //                             buttonsStyling: false,
+                        //                             confirmButtonText: "Ok, got it!",
+                        //                             customClass: {
+                        //                                 confirmButton: "btn btn-primary"
+                        //                             }
+                        //                         });
+                        //                     }
+                        //                 },
+                        //                 error: function (xhr, status, error) {
+                        //                     // Handle any errors that occur during the request
+                        //                     console.log(error);
+                        //                 }
+                        //             });
+                        //         } else {
+                        //             swal.fire({
+                        //                 text: "Sorry, looks like there are some errors detected, please try again.",
+                        //                 icon: "error",
+                        //                 buttonsStyling: false,
+                        //                 confirmButtonText: "Ok, got it!",
+                        //                 customClass: {
+                        //                     confirmButton: "btn fw-bold btn-light-primary"
+                        //                 }
+                        //             });
+                        //         }
+                        //     });
+                        // });
+
+                    }
+
+
+                    // Public methods
+                    return {
+                        init: function () {
+                            form = document.getElementById('kt_account_profile_details_form');
+                            submitButton = form.querySelector('#kt_account_profile_details_submit');
+
+                            handleForm();
+                        }
+                    }
+                }();
+
+                // On document ready
+                KTUtil.onDOMContentLoaded(function () {
+                    KTAccountSettingsProfileDetails.init();
+                });
+
+                /******/
+            })()
+                ;
+
+            $(document).ready(function () {
+                $("select[name='parent_id']").select2({
+                    placeholder: "Select Parent",
+                    allowClear: true
+                });
+            });
+
+
+            $("select[name='main_address_country']").select2({
+                placeholder: "Select a country",
+                allowClear: true,
+                width: '100%'
+            });
+            $("select[name='main_address_state']").select2({
+                placeholder: "Select a state",
+                allowClear: true,
+                width: '100%'
+            });
+
+            function validateForm() {
+                const parentSelect = document.querySelector("select[name='parent_id']");
+                if (parentSelect.value === "Select Parent") {
+                    parentSelect.value = 0;
+                }
+                return true;
+            }
+            document.querySelector("form").onsubmit = validateForm;
+
+           
+            function getOption() {
+    console.log("getOption function called"); // Check if the function is called
+
+    const selectElement = document.querySelector("#main_address_country");
+
+    if (!selectElement) {
+        console.log("Country dropdown not found");
+        return; // Return if the element is not found
+    }
+
+    if (selectElement.value === "" || selectElement.disabled) {
+        console.log("Invalid selection. Please select a valid country.");
+        return; // Return if the selection is invalid
+    }
+
+    const selectedValue = selectElement.value;
+    console.log("Selected Country Code:", selectedValue); // This should output the value
+}
+
+function ensureParentId() {
+    const selectElement = document.getElementById("parent_id");
+    if (selectElement.value === "0") {
+        selectElement.value = 0; // Resetting to default if no selection is made
+    }
+}
+var countryId;
+$(document).ready(function() {
+    $('#main_address_country').on('change', function() {
+        var country = $(this).val(); 
+        console.log("countryval",country);
+        
+
+        $.ajax({
+            url: '/getCountryIdByShortName',
+            method: 'GET',
+            data: { countryShortName: country },
+            success: function(response) {
+                console.log("main_address_countryresponse",response);
+                
+                var countryId = response.countryId; 
+                fetchStatesByCountry(countryId); // Fetch states when country is selected
+            },
+            error: function(err) {
+                console.error('Error fetching country ID:', err);
+            }
+        });
+    });
+
+    function fetchStatesByCountry(countryId) {
+        $.ajax({
+            url: '/getstatebyCountries', 
+            method: 'GET',
+            data: { country_ID: countryId }, 
+            success: function(response) {
+                populateStatesDropdown(response);
+            },
+            error: function(err) {
+                console.error('Error fetching states:', err);
+            }
+        });
+    }
+
+    function populateStatesDropdown(states) {
+    var $stateDropdown = $('#state');
+
+    // Clear existing options from the state dropdown
+    $stateDropdown.empty();
+
+    // Add a default option
+    $stateDropdown.append($('<option>', {
+        value: '',
+        text: 'Select State',
+        disabled: 'disabled',
+        selected: 'selected'
+    }));
+
+    // Populate the state dropdown with fetched states
+    states.forEach(function(state) {
+        $stateDropdown.append($('<option>', {
+            value: state.id,
+            text: state.name
+        }));
+    });
+}
+
+});
+
+
+            //# sourceMappingURL=profile-details.js.map    
+        </script>
+
+        <script>
+            $(document).ready(function() {
+  // Event handler for country dropdown change
+  $('#main_address_country').change(async function() {
+    const selectedCountry = $(this).val();
+
+    console.log("selectedCountry",selectedCountry);
+
+
+
+    try {
+      const response = await fetch(`/categories/${selectedCountry}`); // Assuming your backend API endpoint
+      const html = await response.text();
+
+      $('#categoryTree').html(html); // Replace content of categoryTree div with HTML received
+
+      
+    $.ajax({
+            url: '/getCountryIdByShortName',
+            method: 'GET',
+            data: { countryShortName: selectedCountry },
+            success: function(response) {
+                console.log("main_address_countryresponse",response);
+                
+                var countryId = response.countryId; 
+                fetchStatesByCountry(countryId); // Fetch states when country is selected
+            },
+            error: function(err) {
+                console.error('Error fetching country ID:', err);
+            }
+        });
+
+    function fetchStatesByCountry(countryId) {
+        $.ajax({
+            url: '/getstatebyCountries', 
+            method: 'GET',
+            data: { country_ID: countryId }, 
+            success: function(response) {
+                populateStatesDropdown(response);
+            },
+            error: function(err) {
+                console.error('Error fetching states:', err);
+            }
+        });
+    }
+
+    function populateStatesDropdown(states) {
+    var $stateDropdown = $('#state');
+
+    // Clear existing options from the state dropdown
+    $stateDropdown.empty();
+
+    // Add a default option
+    $stateDropdown.append($('<option>', {
+        value: '',
+        text: 'Select State',
+        disabled: 'disabled',
+        selected: 'selected'
+    }));
+
+    // Populate the state dropdown with fetched states
+    states.forEach(function(state) {
+        $stateDropdown.append($('<option>', {
+            value: state.id,
+            text: state.name
+        }));
+    });
+}
+
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+      // Handle error display
+    }
+  });
+
+  // Trigger change event on page load to fetch categories for default country (India)
+  $('#main_address_country').trigger('change');
+});
+
+        </script>
+
+
+<script>
+    $(document).ready(function () {
+        $('#kt_account_profile_details_form').on('submit', function (e) {
+            e.preventDefault(); // Prevent the default form submission
+
+            var formData = new FormData(this); // Create a FormData object from the form
+
+            $.ajax({
+                url: '/auth/create-child-company', // Your form action URL
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    // Assuming the response is JSON and contains a 'message' field
+                    if (response.status === 'ok') {
+                        alert(response.message); // Show an alert with the response message
+                    } else {
+                        alert('Something went wrong. Please try again.');
+                    }
+                },
+                error: function () {
+                    alert('An error occurred while submitting the form.');
+                }
+            });
+        });
+    });
+</script>

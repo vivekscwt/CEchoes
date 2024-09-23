@@ -9,6 +9,7 @@ const axios = require('axios');
 const { cache } = require('ejs');
 const comFunction2 = require('./common_function2');
 const mdlconfig = require('./config-module');
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 dotenv.config({ path: './.env' });
 const query = util.promisify(db.query).bind(db);
@@ -367,6 +368,20 @@ async function getParentCompany(country_shortname) {
   }
 }
 
+async function getownparentcomp(compid) {
+  try {
+    const parentcompanyquery = `SELECT * FROM company WHERE ID=?`;
+    constparentvalue = await query(parentcompanyquery, [compid]);
+    if (constparentvalue.length > 0) {
+      return constparentvalue
+    }
+    else {
+      return []
+    }
+  } catch (error) {
+    throw new Error('Error fetching company categories');
+  }
+}
 
 async function getCountriesList() {
   try {
@@ -2030,8 +2045,8 @@ async function createreview(reviewIfo, userId, comInfo) {
   //   var country_name = country_name_value[0].name;
   //   console.log("country_name",country_name);
   // }
-  const create_review_query = 'INSERT INTO reviews (company_id, customer_id, company_location, company_location_id, review_title, rating, review_content, user_privacy, review_status, created_at, updated_at, labels, user_contact, category_id, product_id,temp_review_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)';
-  const create_review_values = [CompanyID, userId, concatenatedAddress, CompanylocID, reviewIfo.review_title, reviewIfo.rating, reviewIfo.review_content, reviewIfo.user_privacy, '2', formattedDate, formattedDate, reviewIfo.review_lable, reviewIfo.user_contact, reviewIfo.category_id, reviewIfo.product_id,temp_review_status];
+  const create_review_query = 'INSERT INTO reviews (company_id, customer_id, company_location, company_location_id, review_title, rating, review_content, user_privacy, review_status, created_at, updated_at, labels, user_contact, category_id, sub_cat_id, product_id,temp_review_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?)';
+  const create_review_values = [CompanyID, userId, concatenatedAddress, CompanylocID, reviewIfo.review_title, reviewIfo.rating, reviewIfo.review_content, reviewIfo.user_privacy, '2', formattedDate, formattedDate, reviewIfo.review_lable, reviewIfo.user_contact, reviewIfo.category_id, reviewIfo.review_sub_id, reviewIfo.product_id,temp_review_status];
 
   try {
     const create_review_results = await query(create_review_query, create_review_values);
@@ -2608,6 +2623,75 @@ async function fetchChildCompanies(parentId) {
   }
 }
 
+const createStripeProductAndPrice = async (plan, billingCycle, memberCount) => {
+  try {
+      memberCount = parseInt(memberCount);
+      if (isNaN(memberCount) || memberCount < 0) {
+          throw new Error('Invalid memberCount');
+      }
+      console.log('Creating Stripe product with plan:', plan);
+
+      const product = await stripe.products.create({
+          name: plan.name,
+          description: plan.description,
+      });
+  
+      const basePrice = billingCycle === 'yearly' ? plan.yearly_price : plan.monthly_price;
+      if (isNaN(basePrice) || basePrice <= 0) {
+          throw new Error('Invalid base price');
+      }
+  
+      let AddonPrice = 0; 
+      if (memberCount > 0) {
+          const user_addon_price = plan.per_user_price;
+          console.log("user_addon_price", user_addon_price);
+  
+          AddonPrice = user_addon_price * memberCount;
+          console.log("AddonPrice", AddonPrice);
+      }
+  
+      const totalPrice = parseFloat(basePrice) + parseFloat(AddonPrice);
+      //console.log("totalPrice", totalPrice);
+      if (isNaN(totalPrice) || totalPrice <= 0) {
+          throw new Error('Invalid total price');
+      }
+  
+      console.log(`Base Price: ${basePrice}, Member Count: ${memberCount}, Total Price: ${totalPrice}`);
+      const totalPriceInCents = totalPrice * 100;
+
+
+
+      const priceParams = {
+          unit_amount: totalPriceInCents,
+          currency: 'usd',
+          product: product.id,
+          recurring: {
+              interval: billingCycle === 'yearly' ? 'month' : 'month',
+              interval_count: billingCycle === 'yearly' ? 1 : 1, // Default to 1 for monthly, 13 for yearly handled below
+          },
+      };
+      
+      if (billingCycle === 'yearly') {
+          priceParams.recurring.interval_count = 13; // Billing every 13 months for yearly subscription
+      }
+      const price = await stripe.prices.create(priceParams);
+      // const price = await stripe.prices.create(priceParams);
+  
+      // const price = await stripe.prices.create({
+      //     unit_amount: totalPriceInCents,
+      //     currency: 'usd',
+      //     //recurring: { interval: 'day' },
+      //     recurring: { interval: billingCycle === 'yearly' ? 'year' : 'month' },
+      //     product: product.id,
+      // });
+  
+      return price.id;
+  } catch (error) {
+      console.error('Error creating Stripe product:', error);
+      throw error;
+  }    
+};
+
 
 
 async function getCompanyReviewNumbers(companyID) {
@@ -2632,6 +2716,32 @@ async function getCompanyReviewNumbers(companyID) {
 
   } catch (error) {
     return 'Error during user get_company_rewiew_count_query:' + error;
+  }
+}
+
+async function getCompanyReviewNumberss(companyID){
+  const get_company_rewiew_count_query = `
+    SELECT COUNT(*) AS total_review_count, AVG(rating) AS total_review_average
+    FROM reviews
+    WHERE company_id = ? AND review_status = ?`;
+  const get_company_rewiew_count_value = [companyID, '1'];
+  try{
+    const get_company_rewiew_count_result = await query(get_company_rewiew_count_query, get_company_rewiew_count_value);
+    const get_company_rewiew_rating_count_query = `
+    SELECT rating,count(rating) AS cnt_rat, created_at, review_rating_tags.rating_image
+    FROM reviews
+    LEFT JOIN review_rating_tags ON reviews.rating = review_rating_tags.review_rating_value
+    WHERE company_id = ? AND review_status = '1'
+    group by rating ORDER by rating DESC`;
+    try{
+      const get_company_rewiew_rating_count_result = await query(get_company_rewiew_rating_count_query, get_company_rewiew_count_value);
+      return {rewiew_count:get_company_rewiew_count_result[0], rewiew_rating_count: get_company_rewiew_rating_count_result};
+    }catch(error){
+      return 'Error during user get_company_rewiew_rating_count_query:'+error;
+    }
+    
+  }catch(error){
+    return 'Error during user get_company_rewiew_count_query:'+error;
   }
 }
 function getDefaultFromDate() {
@@ -2801,7 +2911,7 @@ async function reviewTagsCountByCompanyID(companyId) {
 // }
 
 
-async function getPopularCategories() {
+ async function getPopularCategorieswithoutcoun() {
   const get_popular_company_query = `
   SELECT 
     ccr.category_id,
@@ -2830,7 +2940,7 @@ async function getPopularCategories() {
   `;
   try {
     const get_popular_company_query_result = await query(get_popular_company_query);
-    console.log("get_popular_company_query_result", get_popular_company_query_result);
+    //console.log("get_popular_company_query_result", get_popular_company_query_result);
     
     // Append the country shortname to the category name
     const popularCategories = get_popular_company_query_result.map(row => {
@@ -2851,40 +2961,69 @@ async function getPopularCategories() {
 
 
 
-// async function getPopularCategories(country) {
-//   const get_popular_company_query = `
-//   SELECT 
-//   ccr.category_id,
-//   cg.category_name,
-//   cg.category_img,
-//   cg.category_slug,
-//   company.main_address_country,
-//   company.company_name,
-//   COUNT(*) AS review_count
-//   FROM 
-//     reviews r
-//   INNER JOIN
-//     company_cactgory_relation ccr ON r.company_id = ccr.company_id
-//   INNER JOIN
-//     category cg ON ccr.category_id = cg.ID
-//   LEFT JOIN 
-//     company ON r.company_id = company.ID
-//   WHERE 
-//     r.review_status = '1' AND company.main_address_country = "${country}"
-//   GROUP BY 
-//     ccr.category_id
-//   ORDER BY 
-//     review_count DESC
-//   LIMIT 4;
-//   `;
-//   try {
-//     const get_popular_company_query_result = await query(get_popular_company_query);
-//     console.log("get_popular_company_query_result",get_popular_company_query_result);
-//     return get_popular_company_query_result;
-//   } catch (error) {
-//     return 'Error during user get_rewiew_tag_counts_query:' + error;
-//   }
-// }
+async function getPopularCategories(country) {
+  let queryParams = [];
+  let get_popular_company_query = `
+    SELECT 
+      ccr.category_id,
+      cg.category_name,
+      cg.category_img,
+      cg.category_slug,
+      GROUP_CONCAT(DISTINCT countries.shortname) AS country_shortnames,
+      COUNT(*) AS review_count
+    FROM 
+      reviews r
+    INNER JOIN
+      company_cactgory_relation ccr ON r.company_id = ccr.company_id
+    INNER JOIN
+      category cg ON ccr.category_id = cg.ID
+    INNER JOIN
+      category_country_relation ccr_rel ON cg.ID = ccr_rel.cat_id
+    INNER JOIN
+      countries ON ccr_rel.country_id = countries.id
+    INNER JOIN 
+      company ON r.company_id = company.ID
+    WHERE 
+      r.review_status = '1'
+  `;
+
+  // Append country condition if provided
+  if (country) {
+    get_popular_company_query += ' AND company.main_address_country = ?';
+    queryParams.push(country);
+  }
+
+  get_popular_company_query += `
+    GROUP BY 
+      ccr.category_id
+    ORDER BY 
+      review_count DESC
+    LIMIT 4;
+  `;
+
+  try {
+    const get_popular_company_query_result = await query(get_popular_company_query, queryParams);
+    //console.log("get_popular_company_query_result", get_popular_company_query_result);
+    
+    // Append the country shortname to the category name
+    const popularCategories = get_popular_company_query_result.map(row => {
+      // Ensure unique country shortnames
+      const uniqueCountryShortnames = [...new Set(row.country_shortnames.split(','))].join(', ');
+      return {
+        ...row,
+        country_shortnames: uniqueCountryShortnames,
+        category_name: `${row.category_name}-${uniqueCountryShortnames}`
+      };
+    });
+
+    return popularCategories;
+  } catch (error) {
+    console.error('Error during get_popular_company_query:', error);
+    return 'Error fetching popular categories.';
+  }
+}
+
+
 
 async function getReviewCount() {
   const get_review_count_query = `
@@ -2948,30 +3087,12 @@ async function getParentCategories(ID) {
   }
 }
 
-async function getPositiveReviewsCompany() {
-  const get_positive_reviews_company_query = `
-  SELECT company_id, COUNT(*) AS review_count, com.company_name, com.slug
-  FROM reviews
-  JOIN company com ON reviews.company_id = com.ID
-  WHERE rating >= 4 AND review_status = '1'
-  GROUP BY company_id
-  ORDER BY review_count DESC
-  LIMIT 5;
-  `;
-  try {
-    const get_positive_reviews_result = await query(get_positive_reviews_company_query);
-    return get_positive_reviews_result;
-  } catch (error) {
-    return 'Error during user get_positive_reviews_company_query:' + error;
-  }
-}
-
-// async function getPositiveReviewsCompany(country_code) {
+// async function getPositiveReviewsCompany() {
 //   const get_positive_reviews_company_query = `
 //   SELECT company_id, COUNT(*) AS review_count, com.company_name, com.slug
 //   FROM reviews
 //   JOIN company com ON reviews.company_id = com.ID
-//   WHERE rating >= 4 AND review_status = '1' AND company.main_address_country = "${country_code}"
+//   WHERE rating >= 4 AND review_status = '1'
 //   GROUP BY company_id
 //   ORDER BY review_count DESC
 //   LIMIT 5;
@@ -2983,6 +3104,38 @@ async function getPositiveReviewsCompany() {
 //     return 'Error during user get_positive_reviews_company_query:' + error;
 //   }
 // }
+
+async function getPositiveReviewsCompany(country_code) {
+  let queryParams = [];
+  let get_positive_reviews_company_query = `
+      SELECT company_id, COUNT(*) AS review_count, com.company_name, com.slug
+      FROM reviews
+      JOIN company com ON reviews.company_id = com.ID
+      WHERE rating >= 4 AND review_status = '1'
+  `;
+
+  if (country_code) {
+    console.log("dfgfdgf");
+    get_positive_reviews_company_query += ' AND com.main_address_country = ?';
+    queryParams.push(country_code);
+  }
+
+  get_positive_reviews_company_query += `
+      GROUP BY company_id
+      ORDER BY review_count DESC
+      LIMIT 5;
+  `;
+
+  try {
+      const get_positive_reviews_result = await query(get_positive_reviews_company_query, queryParams);
+      //console.log("get_positive_reviews_result",get_positive_reviews_result);
+      return get_positive_reviews_result;
+  } catch (error) {
+      console.error('Error during get_positive_reviews_company_query:', error);
+      return 'Error fetching positive reviews.';
+  }
+}
+
 
 // async function getNegativeReviewsCompany() {
 //   const get_negative_reviews_company_query = `
@@ -3002,43 +3155,7 @@ async function getPositiveReviewsCompany() {
 //   }
 // }
 
-async function getNegativeReviewsCompany() {
-  const get_negative_reviews_company_query = `
-  SELECT
-  neg.ID, COUNT(*) AS review_count, neg.company_name, neg.slug
-FROM
-  (
-      SELECT com.ID, com.company_name, com.slug
-      FROM reviews
-          JOIN company com ON reviews.company_id = com.ID
-      WHERE rating <= 2 AND review_status = '1'
-      GROUP BY com.ID, com.company_name, com.slug
-  ) AS neg
-WHERE
-  neg.ID NOT IN (
-      SELECT
-          com.ID
-      FROM reviews
-          JOIN company com ON reviews.company_id = com.ID
-      WHERE rating >= 4 AND review_status = '1'
-      GROUP BY
-          com.ID
-  )
-GROUP BY
-  neg.ID
-ORDER BY
-  review_count DESC
-LIMIT 5;
-
-  `;
-  try {
-    const get_negative_reviews_result = await query(get_negative_reviews_company_query);
-    return get_negative_reviews_result;
-  } catch (error) {
-    return 'Error during user get_negative_reviews_company_query:' + error;
-  }
-}
-// async function getNegativeReviewsCompany(country) {
+// async function getNegativeReviewsCompany() {
 //   const get_negative_reviews_company_query = `
 //   SELECT
 //   neg.ID, COUNT(*) AS review_count, neg.company_name, neg.slug
@@ -3048,7 +3165,6 @@ LIMIT 5;
 //       FROM reviews
 //           JOIN company com ON reviews.company_id = com.ID
 //       WHERE rating <= 2 AND review_status = '1'
-//        AND com.main_address_country = '${country}'
 //       GROUP BY com.ID, com.company_name, com.slug
 //   ) AS neg
 // WHERE
@@ -3058,7 +3174,6 @@ LIMIT 5;
 //       FROM reviews
 //           JOIN company com ON reviews.company_id = com.ID
 //       WHERE rating >= 4 AND review_status = '1'
-//        AND com.main_address_country = '${country}'
 //       GROUP BY
 //           com.ID
 //   )
@@ -3076,6 +3191,54 @@ LIMIT 5;
 //     return 'Error during user get_negative_reviews_company_query:' + error;
 //   }
 // }
+async function getNegativeReviewsCompany(country) {
+  let queryParams = [];
+  let get_negative_reviews_company_query = `
+      SELECT neg.ID, COUNT(*) AS review_count, neg.company_name, neg.slug
+      FROM (
+          SELECT com.ID, com.company_name, com.slug
+          FROM reviews
+          JOIN company com ON reviews.company_id = com.ID
+          WHERE rating <= 2 AND review_status = '1'
+  `;
+
+  if (country) {
+    get_negative_reviews_company_query += ' AND com.main_address_country = ?';
+    queryParams.push(country);
+  }
+
+  get_negative_reviews_company_query += `
+          GROUP BY com.ID, com.company_name, com.slug
+      ) AS neg
+      WHERE neg.ID NOT IN (
+          SELECT com.ID
+          FROM reviews
+          JOIN company com ON reviews.company_id = com.ID
+          WHERE rating >= 4 AND review_status = '1'
+  `;
+
+  if (country) {
+    get_negative_reviews_company_query += ' AND com.main_address_country = ?';
+    queryParams.push(country);
+  }
+
+  get_negative_reviews_company_query += `
+          GROUP BY com.ID
+      )
+      GROUP BY neg.ID
+      ORDER BY review_count DESC
+      LIMIT 5;
+  `;
+
+  try {
+    const get_negative_reviews_result = await query(get_negative_reviews_company_query, queryParams);
+    return get_negative_reviews_result;
+  } catch (error) {
+    console.error('Error during get_negative_reviews_company_query:', error);
+    return 'Error fetching negative reviews.';
+  }
+}
+
 
 async function getVisitorCheck(ClientIp) {
   const chk_visitor_clientIp_query = `
@@ -3279,6 +3442,7 @@ module.exports = {
   getCategorybyCompany,//
   getCompanyCategory,
   getParentCompany,
+  getownparentcomp,//
   getCountriesList,
   renderCategoryTreeHTML,
   getCompanyCategoryBuID,
@@ -3303,13 +3467,16 @@ module.exports = {
   searchCompany,
   newsearchCompany,//
   fetchChildCompanies,//
+  createStripeProductAndPrice,//
   getCompanyReviewNumbers,
+  getCompanyReviewNumberss,//
   getCompanyReviews,
   getUsersByRole,
   getAllReviewsByCompanyID,
   getReviewByID,
   getReviewReplyDataByID,
   reviewTagsCountByCompanyID,
+  getPopularCategorieswithoutcoun,//
   getPopularCategories,
   getReviewCount,
   getUserCount,
