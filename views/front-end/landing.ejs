@@ -455,7 +455,7 @@
                       <% featured_comps.forEach( company=> { %>
                         <div class="item">
                           <div class="feature-box">
-                            <a href="/company/<%= company.slug %>"><img src="/<%= company.logo %>" alt="img" width="118"
+                            <a href="company/<%= company.slug %>"><img src="/<%= company.logo %>" alt="img" width="118"
                                 height="45" class="mx-auto"></a>
                             <h5>
                               <%= company.company_name %>
@@ -542,38 +542,37 @@
                               <div class="autofield-dropdown-review"></div>
                             </div>
                           </div>
-                          <% var countrynames='US' %>
-                            <div class="col-md-12">
-                              <div class="custom-form">
-                                <select name="main_address_country" id="country_review" class="form-control" required>
-                                  <option value="" disabled <% if (!countrynames) { %>selected<% } %>>Select a country
+                          <div class="col-md-12">
+                            <div class="custom-form">
+                              <select name="main_address_country" id="country_review" class="form-control" required>
+                                <option value="" disabled <% if (!countryname) { %>selected<% } %>>Select a country
+                                </option>
+                                <% getCountries.forEach(function(country) { %>
+                                  <option value="<%= country.shortname %>" <%=country.shortname==countryname
+                                    ? 'selected' : '' %>><%= country.name %>
                                   </option>
-                                  <% getCountries.forEach(function(country) { %>
-                                    <option value="<%= country.shortname %>" <%=country.shortname==countrynames
-                                      ? 'selected' : '' %>><%= country.name %>
-                                    </option>
-                                    <% }); %>
-                                </select>
-                              </div>
+                                  <% }); %>
+                              </select>
                             </div>
+                          </div>
 
 
-                            <div class="col-md-12">
-                              <div class="custom-form">
-                                <select class="form-control" id="state" name="main_address_state">
-                                  <option value="Select State" selected disabled>Select State</option>
-                                </select>
-                              </div>
+                          <div class="col-md-12">
+                            <div class="custom-form">
+                              <select class="form-control" id="state" name="main_address_state">
+                                <option value="Select State" selected disabled>Select State</option>
+                              </select>
                             </div>
-                            <div class="col-md-12">
-                              <div class="custom-form">
-                                <input type="text" class="form-control" id="city" name="review-address"
-                                  placeholder="City Name" autocomplete="off">
-                              </div>
+                          </div>
+                          <div class="col-md-12">
+                            <div class="custom-form">
+                              <input type="text" class="form-control" id="city" name="review-address"
+                                placeholder="City Name" autocomplete="off">
                             </div>
+                          </div>
                         </div>
                         <div class="row">
-                          <div class="col-md-12">
+                          <div class="col-md-6">
                             <div class="custom-form dynamic_state_field_wrapper">
                               <select id="select_category" name="category_id" class="form-select">
                                 <option value="0" selected>Select Category</option>
@@ -585,15 +584,6 @@
                               <select id="select_sub_category" name="product_id" class="form-select">
                                 <option value="0">Select Product</option>
                               </select>
-                            </div>
-                          </div>
-                          <div class="col-md-6">
-                            <div class="custom-form" id="dynamic_sub_field_wrapper">
-                              <select id="review_sub_id" name="review_sub_id" class="form-select">
-                                <option value="0" selected disabled>Select Sub Category</option>
-                                <option value="0">General</option>
-                              </select>
-                              <!-- <input type="text" class="form-control" placeholder="Sub-category Name" name="review_sub_id"> -->
                             </div>
                           </div>
                         </div>
@@ -1798,9 +1788,8 @@
         //  }
 
 
-
-        var country_name = "US";
-        console.log("country_name from server:", country_name);
+        var country_name = "<%= countryname %>";
+        //console.log("country_name from server:", country_name);
 
         if (country_name) {
           $('#country').val(country_name).trigger('change');
@@ -1870,7 +1859,6 @@
           $('#city').val('').prop('readonly', false);
           $('#select_category').html('<option value="0" selected disabled>Select Category</option><option value="0">General</option>');
           $('#select_sub_category').html('<option value="0" selected disabled>Select Product</option><option value="0">General</option>');
-          $('#review_sub_id').html('<option value="0" selected disabled>Select Sub Category</option><option value="0">General</option>');
 
           const selectedCountries = $('#country_review').val();
           console.log("selectedCountries", selectedCountries);
@@ -2185,8 +2173,6 @@
 
         $('#select_category').change(function () {
           $('#select_sub_category').empty().append($('<option value="0">Select Product</option><option value="0">General</option>'));
-
-          $('#review_sub_id').empty().append($('<option value="0">Select Sub Category</option><option value="0">General</option>'));
           //$("#select_state").prop('required',false);
           //$('#dynamic_sub_category_field_wrapper').hide();
           var category_id = $(this).val();
@@ -2227,43 +2213,6 @@
               submitButton.disabled = false;
             }
           });
-
-          $.ajax({
-            url: '/api/complain_sub_category',
-            method: 'POST',
-            data: { category_id: category_id },
-            ContentType: 'application/json',
-            success: function (data) {
-              if (data.status == 'ok') {
-                $('#dynamic_sub_field_wrapper').show();
-                //$("#select_state").prop('required',true);
-                $.each(data.data, function (i, item) {
-                  $('#review_sub_id').append($('<option>', {
-                    value: item.id,
-                    text: item.category_name
-                  }));
-                });
-              } else {
-                //$('#dynamic_sub_category_field_wrapper').hide();
-                $("#review_sub_id").prop('required', false);
-              }
-            },
-            error: function (error) {
-              // Handle any errors
-              Swal.fire({
-                text: error,
-                icon: "error",
-                buttonsStyling: false,
-                confirmButtonText: "Ok, got it!",
-                customClass: {
-                  confirmButton: "btn btn-primary"
-                }
-              });
-              submitButton.disabled = false;
-            }
-          });
-
-
         });
 
         let apiKey = '<%= apiKey%>'
@@ -2468,39 +2417,21 @@
           console.log("Initial CountryName:", countryName);
           console.log("Initial CountryCode:", countryCode);
 
-          const countryMap = {
-            'UK': 'United Kingdom',
-            'JP': 'Japan',
-            'US': 'United States',
-            'All': 'All'
-          };
-
           const countryDropdown = document.querySelector('.country-dropdown');
-
-          if (countryCode in countryMap) {
-            countryDropdown.value = countryCode;
+          if (countryCode == 'UK') {
+            countryDropdown.value = 'UK';
+          } else if (countryCode == 'JP') {
+            countryDropdown.value = 'JP';
           } else {
             countryDropdown.value = 'US';
           }
-
-          function setCookie(name, value, days) {
-            const d = new Date();
-            d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
-            const expires = "expires=" + d.toUTCString();
-            document.cookie = name + "=" + value + ";" + expires + ";path=/";
-          }
-
+          // updateCountryInfo(countryName, countryCode);
+          // setDefaultLanguage(countryName);
           countryDropdown.addEventListener('change', function (event) {
             const selectedCountryCode = event.target.value;
-            const selectedCountryName = countryMap[selectedCountryCode];
-
+            const selectedCountryName = event.target.options[event.target.selectedIndex].text;
             console.log("Selected country code:", selectedCountryCode);
             console.log("Selected country name:", selectedCountryName);
-
-            // Update cookies with selected country code and name
-            setCookie('countryCode', selectedCountryCode, 365);
-            setCookie('countryName', selectedCountryName, 365);
-
 
             const redirectUrl = `/home/${selectedCountryCode}`;
             window.location.href = redirectUrl;
@@ -2638,7 +2569,7 @@
                   // if (data.data.length === 0) {
                   //   html += '<li><a href="#" id="create-new-company">Create New Company: ' + keyword + '</a></li>';
                   // }
-                }
+                } 
                 // else {
                 //   html += '<li><a href="#" id="create-new-company">Create New Company: ' + keyword + '</a></li>';
                 // }
