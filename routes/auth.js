@@ -525,6 +525,9 @@ router.post('/createexternalSubscription',authController.createexternalSubscript
 router.post('/externalRegistration',authController.externalRegistration);
 
 router.post('/cancelSubscription',authController.cancelSubscription);
+router.post('/cancelandRefundSubscriptionbyuser',authController.cancelandRefundSubscriptionbyuser);
+
+router.post('/refund-subscription', authController.refundSubscription);
 
 router.post('/update-order-history',authController.updateOrderHistory);
 

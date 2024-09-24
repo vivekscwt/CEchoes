@@ -1343,8 +1343,8 @@ async function createcompany(comInfo, userId) {
          </div>`;
           var mailOptions = {
               from: process.env.MAIL_USER,
-              to: 'dev2.scwt@gmail.com',
-              //to: process.env.MAIL_USER,
+              //to: 'dev2.scwt@gmail.com',
+              to: process.env.MAIL_USER,
               subject: 'New review added',
               html: template
           }

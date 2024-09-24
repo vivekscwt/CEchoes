@@ -52,9 +52,10 @@
                             <% } %>
                             <% }); %>
                         </table>
-                        <!-- <div>
-                          <button type="button" class="formbold-confirm-btn" onclick="confirmCancelSubscription()">Cancel Subscription</button>
-                      </div> -->
+                        <div>
+                          <button type="button" class="formbold-confirm-btn cancel-subscription-btn" onclick="confirmCancelSubscription()">Cancel Subscription</button>
+                          <button type="button" class="formbold-confirm-btn cancel-refund-subscription-btn" onclick="confirmCancelRefundSubscription()">Cancel & Refund Subscription</button>
+                      </div>
                     <% } %>
                     <% }); %>
               </div>
@@ -67,19 +68,59 @@
 <!-- ============== Section1 End =============== -->
 
 <%- include('common/footer') -%>
+
+<style>
+  .cancel-subscription-btn {
+    background-color: #FCCB06;
+    color: #000000;
+    height: 50px; 
+    width: 30%;
+    border-radius: 6px;
+    text-transform: capitalize;
+    transition: 0.3s ease-in-out;
+    border: none;
+    cursor: not-allowed;
+    padding: 14px 30px;
+  }
+  .cancel-refund-subscription-btn{
+    background-color: #FCCB06;
+    color: #000000;
+    height: 70px; 
+    width: 30%;
+    border-radius: 6px;
+    text-transform: capitalize;
+    transition: 0.3s ease-in-out;
+    border: none;
+    cursor: not-allowed;
+    padding: 14px 30px;
+  }
+
+
+</style>
+
 <script src="https://js.stripe.com/v3/"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
 <script>
-  var userId = '<%= userId%>'
+  var userId = '<%= userId %>';
+
   function confirmCancelSubscription() {
-    const userConfirmed = confirm("Are you sure you want to cancel the subscription?");
-    if (userConfirmed) {
-        cancelSubscription(); 
-    }
+    Swal.fire({
+        title: 'Are you sure?',
+        text: 'Once cancelled, you will not be able to recover your subscription!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, cancel it!',
+        cancelButtonText: 'No, keep it'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            cancelSubscription(); 
+        }
+    });
 }
 
-function cancelSubscription() {
+  function cancelSubscription() {
     $.ajax({
         url: '/auth/cancelSubscription',
         method: 'POST',
@@ -87,13 +128,64 @@ function cancelSubscription() {
           userId: userId
         },
         success: function(response) {
-            alert('Subscription cancelled successfully.');
-            // Optionally, refresh the page or update the UI
+            Swal.fire({
+              icon: 'success',
+              title: 'Cancelled Subscription!',
+              text: 'Subscription cancelled successfully.',
+              confirmButtonText: 'OK'
+            })
         },
         error: function(error) {
-            alert('Error cancelling subscription: ' + error.responseText);
+            Swal.fire({
+              icon: 'error',
+              title: 'Cancel Subscription Error',
+              text: response.error || 'Unknown error occurred.',
+              confirmButtonText: 'OK'
+              });
+        }
+    });
+  }
+
+  function confirmCancelRefundSubscription() {
+    Swal.fire({
+        title: 'Are you sure you want to cancel & refund?',
+        text: 'Once cancelled, you will not be able to recover your subscription!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, cancel it!',
+        cancelButtonText: 'No, keep it'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            cancelandRefundSubscription(); 
         }
     });
 }
+
+  function cancelandRefundSubscription() {
+    $.ajax({
+        url: '/auth/cancelandRefundSubscriptionbyuser',
+        method: 'POST',
+        data: {
+          userId: userId
+        },
+        success: function(response) {
+            Swal.fire({
+              icon: 'success',
+              title: 'Cancelled Subscription!',
+              text: 'Refund request send to the admin successfully.',
+              confirmButtonText: 'OK'
+            })
+        },
+        error: function(error) {
+            Swal.fire({
+              icon: 'error',
+              title: 'Subscription refund payment Error',
+              text: response.error || 'Unknown error occurred.',
+              confirmButtonText: 'OK'
+              });
+        }
+    });
+  }
+
 
 </script>
