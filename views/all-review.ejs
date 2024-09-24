@@ -184,7 +184,7 @@
                                 <th class="min-w-125px">Comment</th>
                                 <th class="min-w-125px">Review Status</th>
                                 <th class="min-w-125px">Reply Status</th>
-                                <!-- <th class="min-w-125px">Post Date</th> -->
+                                <th class="min-w-125px">Created Date</th>
                             </tr>
                             <!--end::Table row-->
                         </thead>
@@ -297,14 +297,14 @@
                                         <span class="badge badge-light-secondary fw-bolder px-4 py-3">No Reply</span>
                                     <% }%>
                                 </td>
-                                <!-- <% const dateString=review.created_at; %>
+                                 <% const dateString=review.created_at; %>
                                 <% const date=new Date(dateString); %>
                                 <td>
                                     <%= date.toLocaleDateString('en-US', { day: 'numeric' ,
                                         month: 'long' , year: 'numeric' }) %>,
                                         <%= date.toLocaleTimeString('en-US', { hour: 'numeric' ,
                                             minute: 'numeric' , hour12: true }) %>
-                                </td> -->
+                                </td> 
                                 <!--end::Two step=-->
                                 
                             </tr>
