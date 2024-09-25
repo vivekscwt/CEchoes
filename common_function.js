@@ -589,17 +589,28 @@ function getReviewRatingData(review_rating_Id) {
 }
 
 async function getAllReviews() {
+  // const all_review_query = `
+  //   SELECT r.*, c.company_name, c.logo, c.status as company_status, c.verified as verified_status, cl.address, cl.country, cl.state, cl.city, cl.zip, u.first_name, u.last_name, ucm.profile_pic, rr.status as reply_status
+  //     FROM reviews r
+  //     JOIN company c ON r.company_id = c.ID
+  //     JOIN company_location cl ON r.company_location_id = cl.ID
+  //     JOIN users u ON r.customer_id = u.user_id
+  //     LEFT JOIN user_customer_meta ucm ON u.user_id = ucm.user_id
+  //     LEFT JOIN review_reply rr ON rr.review_id = r.id AND rr.reply_by = r.customer_id
+  //     WHERE r.flag_status = '0' OR r.flag_status IS NULL
+  //     ORDER BY r.created_at DESC;
+  // `;
   const all_review_query = `
-    SELECT r.*, c.company_name, c.logo, c.status as company_status, c.verified as verified_status, cl.address, cl.country, cl.state, cl.city, cl.zip, u.first_name, u.last_name, ucm.profile_pic, rr.status as reply_status
-      FROM reviews r
-      JOIN company c ON r.company_id = c.ID
-      JOIN company_location cl ON r.company_location_id = cl.ID
-      JOIN users u ON r.customer_id = u.user_id
-      LEFT JOIN user_customer_meta ucm ON u.user_id = ucm.user_id
-      LEFT JOIN review_reply rr ON rr.review_id = r.id AND rr.reply_by = r.customer_id
-      WHERE r.flag_status = '0' OR r.flag_status IS NULL
-      ORDER BY r.created_at DESC;
-  `;
+  SELECT r.*, c.company_name, c.logo, c.status as company_status, c.verified as verified_status, cl.address, cl.country, cl.state, cl.city, cl.zip, u.first_name, u.last_name, ucm.profile_pic, rr.status as reply_status
+    FROM reviews r
+    JOIN company c ON r.company_id = c.ID
+    LEFT JOIN company_location cl ON r.company_location_id = cl.ID
+    JOIN users u ON r.customer_id = u.user_id
+    LEFT JOIN user_customer_meta ucm ON u.user_id = ucm.user_id
+    LEFT JOIN review_reply rr ON rr.review_id = r.id AND rr.reply_by = r.customer_id
+    WHERE r.flag_status = '0' OR r.flag_status IS NULL
+    ORDER BY r.created_at DESC;
+`;
   try {
     const all_review_results = await query(all_review_query);
     return all_review_results;
