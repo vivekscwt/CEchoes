@@ -529,6 +529,8 @@ router.post('/cancelandRefundSubscriptionbyuser',authController.cancelandRefundS
 
 router.post('/refund-subscription', authController.refundSubscription);
 
+router.post('/updateSubscription',authController.updateSubscription)
+
 router.post('/update-order-history',authController.updateOrderHistory);
 
 //create-subscription-checkout-session

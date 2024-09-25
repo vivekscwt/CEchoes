@@ -1666,6 +1666,78 @@ router.get('/plan-pricing', checkCookieValue, async (req, res) => {
     }
 });
 
+
+router.get('/update-plan', checkCookieValue, async (req, res) => {
+    try {
+        let currentUserData = JSON.parse(req.userData);
+        const apiKey = process.env.GEO_LOCATION_API_KEY;
+        if (currentUserData) {
+            var user_id = currentUserData.user_id;
+            var encryptedEmail = await comFunction2.encryptEmail(currentUserData.email);
+        }
+
+        const getbusinessquery = `SELECT * FROM users WHERE user_id= "${user_id}"`;
+        const getbusinessvalue = await queryAsync(getbusinessquery);
+        if (getbusinessvalue.length > 0) {
+            var user_status = getbusinessvalue[0].user_status;
+            if (getbusinessvalue[0].user_status == "3") {
+                res.redirect('/logout');
+            }
+        }
+        const api_key = process.env.GEO_LOCATION_API_KEY;
+        let country_name = req.cookies.countryName || 'India';
+        let country_code = req.cookies.countryCode || 'IN';
+
+        if (country_code != 'UK' && country_code != 'JP') {
+            country_code = 'US';
+        }
+
+        const [globalPageMeta, getplans, getSubscribedUsers] = await Promise.all([
+            comFunction2.getPageMetaValues('global'),
+            comFunction2.getplans(country_name),
+            comFunction2.getSubscribedUsers(user_id),
+            
+        ]);
+
+        const sql = `SELECT * FROM page_info where secret_Key = 'business' AND country = "${country_code}"`;
+        db.query(sql, (err, results, fields) => {
+            if (err) throw err;
+            const common = results[0];
+            const meta_sql = `SELECT * FROM page_meta where page_id = ${common.id}`;
+            db.query(meta_sql, async (meta_err, _meta_result) => {
+                if (meta_err) throw meta_err;
+
+                const meta_values = _meta_result;
+                let meta_values_array = {};
+                await meta_values.forEach((item) => {
+                    meta_values_array[item.page_meta_key] = item.page_meta_value;
+                })
+                const UpcomingBusinessFeature = await comFunction2.getUpcomingBusinessFeature();
+                const BusinessFeature = await comFunction2.getBusinessFeature();
+                //console.log(meta_values_array);
+                res.render('front-end/update-plan', {
+                    menu_active_id: 'Update Plan',
+                    page_title: common.title,
+                    currentUserData,
+                    common,
+                    meta_values_array,
+                    UpcomingBusinessFeature,
+                    BusinessFeature,
+                    globalPageMeta: globalPageMeta,
+                    getplans: getplans,
+                    country_name: country_name,
+                    getSubscribedUsers: getSubscribedUsers,
+                    encryptedEmail: encryptedEmail
+                });
+            })
+        })
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('An error occurred');
+    }
+});
+
+
 // router.get('/staging-business', checkCookieValue, async (req, res) => {
 //     try {
 //         let currentUserData = JSON.parse(req.userData);
@@ -2072,7 +2144,7 @@ router.get('/stripe-year-payment', checkCookieValue, async (req, res) => {
         const getcountrcodequery = `SELECT * FROM countries WHERE shortname= "${country_code}"`;
         const getcountrycodeval = await queryAsync(getcountrcodequery);
         if(getcountrycodeval.length>0){
-            const country_no = getcountrycodeval[0].id;
+            var country_no = getcountrycodeval[0].id;
             console.log("country_no",country_no);
         }
 
@@ -2120,7 +2192,139 @@ router.get('/stripe-year-payment', checkCookieValue, async (req, res) => {
     }
 });
 
+router.get('/stripe-update-payment', checkCookieValue, async (req, res) => {
+    try {
+        const { planId, planPrice, monthly, memberCount, total_price, encryptedEmail } = req.query;
+        console.log("req.query-monthly", req.query);
+        // const apiKey = process.env.GEO_LOCATION_API_KEY;
+        //console.log("apiKey",apiKey);
+        const stripe_publish_key = process.env.STRIPE_PUBLISH_KEY;
 
+        let currentUserData = JSON.parse(req.userData);
+        console.log("currentUserData", currentUserData);
+        var user_id = currentUserData.user_id;
+        console.log("user_idsssss",user_id);
+
+        const decryptedEmail = await comFunction2.decryptEmail(encryptedEmail);
+        if (decryptedEmail !== currentUserData.email) {
+            return res.status(500).send('You are not authorized to access the payment page.');
+        }
+
+        let country_name = req.cookies.countryName || 'India';
+        let country_code = req.cookies.countryCode || 'IN';
+
+        const planids = `SELECT * FROM plan_management WHERE name = "${planId}"`;
+        const planidvalue = await queryAsync(planids);
+        const planID = planidvalue[0].id;
+        const exchangeRates = await comFunction2.getCurrency();
+
+        const [latestReviews, getCountries] = await Promise.all([
+            comFunction2.getlatestReviews(20),
+            comFunction.getCountries(),
+        ]);
+        console.log("getCountries", getCountries);
+
+        var getmemberquery = `SELECT * FROM order_history WHERE user_id=?`;
+        var getmemberval = await queryAsync(getmemberquery,[user_id]);
+        if(getmemberval.length>0){
+            console.log("getmemberval",getmemberval);
+            var membercount = getmemberval[0].added_user_number;
+        }
+
+        res.render('front-end/stripe-update-payment', {
+            menu_active_id: 'Stripe Payment',
+            page_title: 'Stripe Payment',
+            planId,
+            planPrice,
+            monthly,
+            planID,
+            currentUserData,
+            memberCount,
+            total_price,
+            country_code: country_code,
+            exchangeRates: exchangeRates,
+            encryptedEmail,
+            user_id,
+            getCountries: getCountries,
+            stripe_publish_key: stripe_publish_key,
+            membercount
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('An error occurred');
+    }
+});
+router.get('/stripe-update-year-payment', checkCookieValue, async (req, res) => {
+    try {
+        const { planId, planPrice, yearly, memberCount, total_price, encryptedEmail } = req.query;
+        console.log("req.query-yearly", req.query);
+        // const apiKey = process.env.GEO_LOCATION_API_KEY;
+        // console.log("apiKey",apiKey);
+        const stripe_publish_key = process.env.stripe_publish_key;
+
+        let country_name = req.cookies.countryName || 'India';
+        let country_code = req.cookies.countryCode || 'IN';
+
+        console.log("country_names", country_name);
+        console.log("country_codes", country_code);
+
+        const getcountrcodequery = `SELECT * FROM countries WHERE shortname= "${country_code}"`;
+        const getcountrycodeval = await queryAsync(getcountrcodequery);
+        if(getcountrycodeval.length>0){
+            var country_no = getcountrycodeval[0].id;
+            console.log("country_no",country_no);
+        }
+
+
+        let currentUserData = JSON.parse(req.userData);
+        const planids = `SELECT * FROM plan_management WHERE name = "${planId}"`;
+        const planidvalue = await queryAsync(planids);
+        const planID = planidvalue[0].id;
+
+        const decryptedEmail = await comFunction2.decryptEmail(encryptedEmail);
+        if (decryptedEmail !== currentUserData.email) {
+            return res.status(500).send('You are not authorized to access the payment page.');
+        }
+
+        const exchangeRates = await comFunction2.getCurrency();
+        const getstatesquery = `SELECT * FROM states WHERE country_id = ?`;
+        const getstatevalue = await queryAsync(getstatesquery,[country_no]);
+        //console.log("getstatevalue",getstatevalue);
+
+        const [latestReviews, getCountries] = await Promise.all([
+            comFunction2.getlatestReviews(20),
+            comFunction.getCountries(),
+        ]);
+        console.log("getCountries", getCountries);
+        var getmemberquery = `SELECT * FROM order_history WHERE user_id=?`;
+        var getmemberval = await queryAsync(getmemberquery,[user_id]);
+        if(getmemberval.length>0){
+            console.log("getmemberval",getmemberval);
+            var membercount = getmemberval[0].added_user_number;
+        }
+
+        res.render('front-end/stripe-update-year-payment', {
+            menu_active_id: 'Stripe yearly Payment',
+            page_title: 'Stripe yearly Payment',
+            planId,
+            planPrice,
+            yearly,
+            planID,
+            memberCount,
+            currentUserData,
+            total_price,
+            country_code: country_code,
+            exchangeRates: exchangeRates,
+            getstatevalue: getstatevalue,
+            getCountries,
+            stripe_publish_key,
+            membercount: membercount
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('An error occurred');
+    }
+});
 
 
 router.get('/create-user-company-subscription', checkCookieValue, async (req, res) => {
