@@ -525,11 +525,16 @@ router.post('/createexternalSubscription',authController.createexternalSubscript
 router.post('/externalRegistration',authController.externalRegistration);
 
 router.post('/cancelSubscription',authController.cancelSubscription);
+
+router.post('/cancelSubscriptionbyAdmin',authController.cancelSubscriptionbyAdmin);
+
 router.post('/cancelandRefundSubscriptionbyuser',authController.cancelandRefundSubscriptionbyuser);
 
 router.post('/refund-subscription', authController.refundSubscription);
 
-router.post('/updateSubscription',authController.updateSubscription)
+router.post('/updateSubscription',authController.updateSubscription);
+
+router.post('/updateSubscriptionbyAdmin',authController.updateSubscriptionbyAdmin);
 
 router.post('/update-order-history',authController.updateOrderHistory);
 

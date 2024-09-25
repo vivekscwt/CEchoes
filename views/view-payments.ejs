@@ -1,13 +1,11 @@
 <%- include('common/header') -%>
-<link href="/front-end/css/myprofile-style.css" rel="stylesheet" type="text/css">
-<%- include('common/header-banner') -%>
+
 
 <!-- ============== Section1 Start =============== -->
 <section class="main-content my-profile-content">
   <div class="container">
      <div class="my-profile-wrapper">
         <div class="row">
-          <%- include('common/profile-sidebar') -%>
           <div class="col-md-8">
             <div class="profile-right-content">
               <div class="profile-info-table">
@@ -54,7 +52,8 @@
                         </table>
                         <div>
                           <button type="button" class="formbold-confirm-btn cancel-subscription-btn" onclick="confirmCancelSubscription()">Cancel Subscription</button>
-                          <a href="/update-plan">
+                          <button type="button" class="formbold-confirm-btn cancel-refund-subscription-btn" onclick="confirmCancelRefundSubscription()">Cancel & Refund Subscription</button>
+                          <a href="/update-plans/">
                             <button type="button" class="formbold-confirm-btn update-subscription-btn" >Update Subscription</button>
                           </a>
                       </div>
@@ -117,8 +116,7 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
 <script>
-  var userId = '<%= userId %>';
-
+    var userId = '<%= userId%>'
   function confirmCancelSubscription() {
     Swal.fire({
         title: 'Are you sure?',
@@ -136,7 +134,7 @@
 
   function cancelSubscription() {
     $.ajax({
-        url: '/auth/cancelSubscription',
+        url: '/auth/cancelSubscriptionbyAdmin',
         method: 'POST',
         data: {
           userId: userId

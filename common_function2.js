@@ -6972,7 +6972,9 @@ async function getuserAllPaymentHistory(user_id) {
        LEFT JOIN company c ON c.ID = ccr.company_id AND c.status != '3'
        LEFT JOIN plan_management ON p.plan_id = plan_management.id
        LEFT JOIN users ON ccr.claimed_by = users.user_id
-       WHERE p.user_id="${user_id}"AND p.payment_status='succeeded'`,
+       WHERE p.user_id = "${user_id}"
+       AND p.payment_status = 'succeeded'
+       AND (p.cancel_status IS NULL OR p.cancel_status != 'cancelled')`,
       async (err, result) => {
         if (err) {
           reject(err);

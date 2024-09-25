@@ -1737,6 +1737,75 @@ router.get('/update-plan', checkCookieValue, async (req, res) => {
     }
 });
 
+router.get('/update-plans/company-id/user_id', checkCookieValue, async (req, res) => {
+    try {
+        let currentUserData = JSON.parse(req.userData);
+        const apiKey = process.env.GEO_LOCATION_API_KEY;
+        if (currentUserData) {
+            var user_id = currentUserData.user_id;
+            var encryptedEmail = await comFunction2.encryptEmail(currentUserData.email);
+        }
+
+        const getbusinessquery = `SELECT * FROM users WHERE user_id= "${user_id}"`;
+        const getbusinessvalue = await queryAsync(getbusinessquery);
+        if (getbusinessvalue.length > 0) {
+            var user_status = getbusinessvalue[0].user_status;
+            if (getbusinessvalue[0].user_status == "3") {
+                res.redirect('/logout');
+            }
+        }
+        const api_key = process.env.GEO_LOCATION_API_KEY;
+        let country_name = req.cookies.countryName || 'India';
+        let country_code = req.cookies.countryCode || 'IN';
+
+        if (country_code != 'UK' && country_code != 'JP') {
+            country_code = 'US';
+        }
+
+        const [globalPageMeta, getplans, getSubscribedUsers] = await Promise.all([
+            comFunction2.getPageMetaValues('global'),
+            comFunction2.getplans(country_name),
+            comFunction2.getSubscribedUsers(user_id),
+            
+        ]);
+
+        const sql = `SELECT * FROM page_info where secret_Key = 'business' AND country = "${country_code}"`;
+        db.query(sql, (err, results, fields) => {
+            if (err) throw err;
+            const common = results[0];
+            const meta_sql = `SELECT * FROM page_meta where page_id = ${common.id}`;
+            db.query(meta_sql, async (meta_err, _meta_result) => {
+                if (meta_err) throw meta_err;
+
+                const meta_values = _meta_result;
+                let meta_values_array = {};
+                await meta_values.forEach((item) => {
+                    meta_values_array[item.page_meta_key] = item.page_meta_value;
+                })
+                const UpcomingBusinessFeature = await comFunction2.getUpcomingBusinessFeature();
+                const BusinessFeature = await comFunction2.getBusinessFeature();
+                //console.log(meta_values_array);
+                res.render('front-end/update-plan', {
+                    menu_active_id: 'Update Plan',
+                    page_title: common.title,
+                    currentUserData,
+                    common,
+                    meta_values_array,
+                    UpcomingBusinessFeature,
+                    BusinessFeature,
+                    globalPageMeta: globalPageMeta,
+                    getplans: getplans,
+                    country_name: country_name,
+                    getSubscribedUsers: getSubscribedUsers,
+                    encryptedEmail: encryptedEmail
+                });
+            })
+        })
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('An error occurred');
+    }
+});
 
 // router.get('/staging-business', checkCookieValue, async (req, res) => {
 //     try {
@@ -12009,7 +12078,7 @@ router.get('/payments', checkLoggedIn, async (req, res) => {
         const [getAllPayments] = await Promise.all([
             comFunction2.getAllPayments(),
         ]);
-        console.log(getAllPayments);
+        console.log("getAllPayments",getAllPayments);
         // Render the 'edit-user' EJS view and pass the data
         // res.json({
         //     allcompany: allcompany
@@ -12025,6 +12094,56 @@ router.get('/payments', checkLoggedIn, async (req, res) => {
         res.status(500).send('An error occurred');
     }
 });
+
+router.get('/view-payments/:user_id', checkLoggedIn, async (req, res) => {
+    try {
+        var userId = req.params.user_id;
+
+        const encodedUserData = req.cookies.user;
+        const currentUserData = JSON.parse(encodedUserData);
+
+        const email_query = `SELECT email FROM users WHERE user_id =?`;
+        const emailData = await query(email_query, [userId]);
+        console.log("emailData", emailData[0].email);
+
+        const getManagerQuery = `SELECT company_level_manage_users.*,company.slug FROM company_level_manage_users LEFT JOIN company ON company_level_manage_users.company_id = company.ID WHERE company_level_manage_users.emails=?`;
+        const getManagerData = await query(getManagerQuery, [emailData[0].email]);
+        //console.log("getManagerData", getManagerData[0]);
+
+        const getQuery = `SELECT complaint_assigned_users.*,company.slug FROM complaint_assigned_users LEFT JOIN company ON complaint_assigned_users.company_id = company.ID WHERE complaint_assigned_users.user_email=?`;
+        const getData = await query(getQuery, [emailData[0].email]);
+        // console.log("getData", getData[0]);
+
+        var getcompanyquery = `SELECT * FROM company`
+
+        const [getAllPayments, getUser, getUserMeta, globalPageMeta, AllCompaniesReviews] = await Promise.all([
+            comFunction2.getuserAllPaymentHistory(userId),
+            comFunction.getUser(userId),
+            comFunction.getUserMeta(userId),
+            comFunction2.getPageMetaValues('global'),
+            comFunction2.getAllCompaniesReviews(userId),
+        ]);
+        console.log("getAllPayments", getAllPayments);
+
+        res.render('view-payments', {
+            menu_active_id: 'miscellaneous',
+            page_title: 'Payment History ',
+            allPayments: getAllPayments,
+            user: getUser,
+            userMeta: getUserMeta,
+            globalPageMeta: globalPageMeta,
+            AllCompaniesReviews: AllCompaniesReviews,
+            getManagerData: getManagerData,
+            getData: getData,
+            userId: userId,
+            currentUserData: currentUserData
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('An error occurred');
+    }
+});
+
 
 router.get('/payment_history', checkLoggedIn, async (req, res) => {
     try {
