@@ -53,9 +53,10 @@
                         <div>
                           <button type="button" class="formbold-confirm-btn cancel-subscription-btn" onclick="confirmCancelSubscription()">Cancel Subscription</button>
                           <button type="button" class="formbold-confirm-btn cancel-refund-subscription-btn" onclick="confirmCancelRefundSubscription()">Cancel & Refund Subscription</button>
-                          <a href="/update-plans/">
-                            <button type="button" class="formbold-confirm-btn update-subscription-btn" >Update Subscription</button>
-                          </a>
+                          <a href="/update-plans/<%= userId %>/<%= user_company_id %>">
+                            <button type="button" class="formbold-confirm-btn update-subscription-btn">Update Subscription</button>
+                        </a>
+                        
                       </div>
                     <% } %>
                     <% }); %>
@@ -145,7 +146,11 @@
               title: 'Cancelled Subscription!',
               text: 'Subscription cancelled successfully.',
               confirmButtonText: 'OK'
-            })
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '/payments';
+                }
+            });
         },
         error: function(error) {
             Swal.fire({

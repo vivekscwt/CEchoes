@@ -1737,14 +1737,23 @@ router.get('/update-plan', checkCookieValue, async (req, res) => {
     }
 });
 
-router.get('/update-plans/company-id/user_id', checkCookieValue, async (req, res) => {
+router.get('/update-plans/:userId/:user_company_id', checkCookieValue, async (req, res) => {
     try {
         let currentUserData = JSON.parse(req.userData);
         const apiKey = process.env.GEO_LOCATION_API_KEY;
+
+        console.log("req.params:", req.params);
+        let user_id = req.params.userId;
+        console.log("userids",user_id);
+        
+        let company_id = req.params.user_company_id;
+        console.log("user_company_id",company_id);
+        
+
         if (currentUserData) {
-            var user_id = currentUserData.user_id;
             var encryptedEmail = await comFunction2.encryptEmail(currentUserData.email);
         }
+
 
         const getbusinessquery = `SELECT * FROM users WHERE user_id= "${user_id}"`;
         const getbusinessvalue = await queryAsync(getbusinessquery);
@@ -1768,6 +1777,8 @@ router.get('/update-plans/company-id/user_id', checkCookieValue, async (req, res
             comFunction2.getSubscribedUsers(user_id),
             
         ]);
+        console.log("getSubscribedUsers",getSubscribedUsers);
+        console.log("getplans",getplans);
 
         const sql = `SELECT * FROM page_info where secret_Key = 'business' AND country = "${country_code}"`;
         db.query(sql, (err, results, fields) => {
@@ -1785,7 +1796,7 @@ router.get('/update-plans/company-id/user_id', checkCookieValue, async (req, res
                 const UpcomingBusinessFeature = await comFunction2.getUpcomingBusinessFeature();
                 const BusinessFeature = await comFunction2.getBusinessFeature();
                 //console.log(meta_values_array);
-                res.render('front-end/update-plan', {
+                res.render('front-end/admin-update-plans', {
                     menu_active_id: 'Update Plan',
                     page_title: common.title,
                     currentUserData,
@@ -1797,7 +1808,9 @@ router.get('/update-plans/company-id/user_id', checkCookieValue, async (req, res
                     getplans: getplans,
                     country_name: country_name,
                     getSubscribedUsers: getSubscribedUsers,
-                    encryptedEmail: encryptedEmail
+                    encryptedEmail,
+                    userId: user_id,
+                    company_id
                 });
             })
         })
@@ -1806,6 +1819,141 @@ router.get('/update-plans/company-id/user_id', checkCookieValue, async (req, res
         res.status(500).send('An error occurred');
     }
 });
+
+router.post('/updateSubscriptionbyAdmin', async (req, res) => {
+    try {
+        const { paymentMethodId, userId, name, email, address, country, city, state, zip, planId, billingCycle } = req.body;
+        console.log("updateSubscriptionbyAdmin req.body", req.body);
+
+
+        const getcompany_query = `SELECT company.* FROM company LEFT JOIN company_claim_request ON company.ID = company_claim_request.company_id WHERE company_claim_request.claimed_by = ?`;
+        const getcompany_value = await queryAsync(getcompany_query, [userId]);
+        if (getcompany_value.length === 0) {
+            return res.status(404).send({ error: 'Company not found' });
+        }
+        console.log("getcompany_value",getcompany_value);
+        
+        const companyID = getcompany_value[0].ID;
+        console.log("companyID", companyID);
+
+        const updatecompany_query = `UPDATE company SET membership_type_id = ? WHERE ID = ?`;
+        try {
+            const result = await queryAsync(updatecompany_query, [planId, companyID]);
+            console.log('Query executed successfully.');
+            if (result.affectedRows > 0) {
+                console.log(`Success: ${result.affectedRows} row(s) updated.`);
+            } else {
+                console.log('No rows were updated.');
+            }
+        } catch (error) {
+            console.error('Error executing the query:', error);
+        }
+
+        const mailOptions = {
+            from: process.env.MAIL_USER,
+            to: email,
+            subject: 'Subscription Updation by Admin and need to payment',
+            html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+            <style>
+            body, table, td, p, a, h1, h2, h3, h4, h5, h6, div {
+                font-family: Calibri, 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif !important;
+            }
+            </style>
+            <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
+             <tbody>
+              <tr>
+               <td align="center" valign="top">
+                 <div id="template_header_image"><p style="margin-top: 0;"></p></div>
+                 <table id="template_container" style="box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important; background-color: #fdfdfd; border: 1px solid #dcdcdc; border-radius: 3px !important;" border="0" cellpadding="0" cellspacing="0" width="600">
+                  <tbody>
+                    <tr>
+                     <td align="center" valign="top">
+                       <!-- Header -->
+                       <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
+                         <tbody>
+                           <tr>
+                           <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/email-template-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+                            <td id="header_wrapper" style="padding: 36px 48px; display: block;">
+                               <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Welcome</h1>
+                            </td>
+      
+                           </tr>
+                         </tbody>
+                       </table>
+                 <!-- End Header -->
+                 </td>
+                    </tr>
+                    <tr>
+                     <td align="center" valign="top">
+                       <!-- Body -->
+                       <table id="template_body" border="0" cellpadding="0" cellspacing="0" width="600">
+                         <tbody>
+                           <tr>
+                            <td id="body_content" style="background-color: #fdfdfd;" valign="top">
+                              <!-- Content -->
+                              <table border="0" cellpadding="20" cellspacing="0" width="100%">
+                               <tbody>
+                                <tr>
+                                 <td style="padding: 48px;" valign="top">
+                                   <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
+                                    
+                                    <table border="0" cellpadding="4" cellspacing="0" width="90%">
+                                      <tr>
+                                        <td colspan="2">
+                                            <strong>Hello Sir/Madam,</strong>
+                                            <p style="font-size:15px; line-height:20px">Subscription has updated by the Admin.Now you have to pay for the updated membership plan using the <a href="${invoiceUrl}">following link</a>.</p>
+                                            <p style="font-size:15px; line-height:20px"><br><p style="font-size:15px; line-height:20px">Kind Regards,</p><p style="font-size:15px; line-height:20px">CEchoes Technology Team</p><br>
+                                        </td>
+                                      </tr>
+                                    </table>
+                                   </div>
+                                </td>
+                               </tr>
+                              </tbody>
+                             </table>
+                            <!-- End Content -->
+                           </td>
+                          </tr>
+                         </tbody>
+                       </table>
+                       <!-- End Body -->
+                     </td>
+                    </tr>
+                    <tr>
+                     <td align="center" valign="top">
+                       <!-- Footer -->
+                       <table id="template_footer" style="background-color: #000; border-radius: 0 0 3px 3px !important; color: #ffffff; border-top: 0; font-size: 12px; line-height: 150%; text-align: center; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
+                         <tbody>
+                            <tr>
+                                    <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
+                                         <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology</a></p>
+                                    </td>
+                                   </tr>
+                         </tbody>
+                       </table>
+                       <!-- End Footer -->
+                     </td>
+                    </tr>
+                  </tbody>
+                 </table>
+               </td>
+              </tr>
+             </tbody>
+            </table>
+            </div>
+            </body>
+            </html>`
+        };
+
+        await mdlconfig.transporter.sendMail(mailOptions);
+        console.log("Subscription confirmation email sent successfully.");
+
+        return res.status(200).send({ error: 'Subscription updated and payment link Not Found to the user.' });
+    }  catch(error){
+        console.error('Error:', error);
+        return res.status(500).json({ status: 'err', data: '', message: 'An error occurred while processing your request' });``
+    }
+})
 
 // router.get('/staging-business', checkCookieValue, async (req, res) => {
 //     try {
@@ -12114,8 +12262,11 @@ router.get('/view-payments/:user_id', checkLoggedIn, async (req, res) => {
         const getData = await query(getQuery, [emailData[0].email]);
         // console.log("getData", getData[0]);
 
-        var getcompanyquery = `SELECT * FROM company`
-
+        var getcompanyquery = `SELECT company_id FROM company_claim_request WHERE claimed_by=?`;
+        var getcompanyval = await queryAsync(getcompanyquery,[userId]);
+        var user_company_id = getcompanyval[0].company_id;
+        console.log("user_company_id",user_company_id);
+        
         const [getAllPayments, getUser, getUserMeta, globalPageMeta, AllCompaniesReviews] = await Promise.all([
             comFunction2.getuserAllPaymentHistory(userId),
             comFunction.getUser(userId),
@@ -12136,7 +12287,8 @@ router.get('/view-payments/:user_id', checkLoggedIn, async (req, res) => {
             getManagerData: getManagerData,
             getData: getData,
             userId: userId,
-            currentUserData: currentUserData
+            currentUserData: currentUserData,
+            user_company_id: user_company_id
         });
     } catch (err) {
         console.error(err);

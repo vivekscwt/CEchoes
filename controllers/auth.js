@@ -16857,6 +16857,11 @@ exports.cancelSubscription = async (req, res) => {
         var usersubscription_id = getsubscripval[0].stripe_subscription_id;
         console.log("usersubscription_id",usersubscription_id);
 
+        var getcompanyquery = `SELECT company_id FROM company_claim_request WHERE claimed_by=?`
+        var getcompanyval = await queryAsync(getcompanyquery,[userId])
+
+        var company_id =getcompanyval[0].company_id;
+        console.log("cancelsubscription comopany id",company_id);
         
         if (usersubscription_id) {
             const subscription = await stripe.subscriptions.cancel(usersubscription_id);
@@ -16866,6 +16871,9 @@ exports.cancelSubscription = async (req, res) => {
 
             var orderquery = `UPDATE order_history SET payment_status=? WHERE stripe_subscription_id=? AND user_id=?`;
             var orderval = await queryAsync(orderquery,['cancelled',usersubscription_id,userId]);
+
+            var companyquery = `UPDATE company SET membership_type_id=? WHERE ID=?`;
+            var companyval = await queryAsync(companyquery,['0',company_id]);
 
             return res.status(200).json({ status: 'ok', message: 'Subscription cancelled successfully.' });
         } else {
@@ -16903,14 +16911,23 @@ exports.cancelSubscriptionbyAdmin = async (req, res) => {
         var usersubscription_id = getsubscripval[0].stripe_subscription_id;
         console.log("usersubscription_id",usersubscription_id);
 
+        var getcompanyquery = `SELECT company_id FROM company_claim_request WHERE claimed_by=?`
+        var getcompanyval = await queryAsync(getcompanyquery,[userId])
+
+        var company_id =getcompanyval[0].company_id;
+        console.log("cancelsubscription comopany id",company_id);
+
         
         if (usersubscription_id) {
             const subscription = await stripe.subscriptions.cancel(usersubscription_id);
             console.log("Subscription cancelled:", subscription);
             // var orderquery = `DELETE FROM order_history WHERE stripe_subscription_id=? AND user_id=?`;
             // var orderval = await queryAsync(orderquery,[usersubscription_id,userId]);
-            var orderquery = `UPDATE order_history SET payment_status=? WHERE stripe_subscription_id=? AND user_id=?`;
+            var orderquery = `UPDATE order_history SET cancel_status=? WHERE stripe_subscription_id=? AND user_id=?`;
             var orderval = await queryAsync(orderquery,['cancelled',usersubscription_id,userId]);
+
+            var companyquery = `UPDATE company SET membership_type_id=? WHERE ID=?`;
+            var companyval = await queryAsync(companyquery,['0',company_id]);
 
             var mailOptions1 = {
                 from: process.env.MAIL_USER,
@@ -17459,10 +17476,7 @@ exports.updateSubscription = async (req, res) => {
                                         <td colspan="2">
                                             <strong>Hello Sir/Madam,</strong>
                                             <p style="font-size:15px; line-height:20px">Thank you for your subscription. You can view your invoice at the <a href="${invoiceUrl}">following link</a>.</p>
-                                            <p style="font-size:15px; line-height:20px"><br><p style="font-size:15px; line-height:20px">Best Regards,</p>
-                                            <p style="font-size:15px; line-height:20px">Team BoloGrahak</p></p>
-                                            <br>
-                                            <p style="font-size:13px; line-height:16px">If you have any questions or need assistance, please feel free to contact us at <a href="mailto:support@bolagrahak.com">support@bolagrahak.com</a>.</p>
+                                            <p style="font-size:15px; line-height:20px"><br><p style="font-size:15px; line-height:20px">Kind Regards,</p><p style="font-size:15px; line-height:20px">CEchoes Technology Team</p><br>
                                         </td>
                                       </tr>
                                     </table>
@@ -17484,10 +17498,11 @@ exports.updateSubscription = async (req, res) => {
                        <!-- Footer -->
                        <table id="template_footer" style="background-color: #000; border-radius: 0 0 3px 3px !important; color: #ffffff; border-top: 0; font-size: 12px; line-height: 150%; text-align: center; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
                          <tbody>
-                           <tr>
-                             <td id="credit" style="padding: 20px; text-align: center; line-height: 18px;">
-                               <p style="margin: 0;">© BoloGrahak 2024. All rights reserved.</p>
-                             </td>
+                            <tr>
+                                    <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
+                                         <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology</a></p>
+                                    </td>
+                                   </tr>
                            </tr>
                          </tbody>
                        </table>
@@ -17531,114 +17546,16 @@ exports.updateSubscription = async (req, res) => {
 
 exports.updateSubscriptionbyAdmin = async (req, res) => {
     try {
-        const { paymentMethodId, userId, name, email, address, country, city, state, zip, planId, billingCycle } = req.body;
-        console.log("updateSubscription req.body", req.body);
+        const { paymentMethodId, userId, name, address, country, city, state, zip, planId, billingCycle } = req.body;
+        console.log("updateSubscriptionbyAdmin req.body", req.body);
 
-        const previousplanquery = `SELECT * FROM order_history WHERE user_id = ?`;
-        const previousplanval = await queryAsync(previousplanquery,[userId]);
-
-        var usersubscriptionsval = previousplanval[0];
-        console.log("usersubscriptionsval",usersubscriptionsval);
-
-        var usersubscription_id = previousplanval[0].stripe_subscription_id;
-        console.log("usersubscription_id",usersubscription_id);
-
-        var memberCount = previousplanval[0].added_user_number;
-        console.log("membervalue",memberCount);
-
-        if (memberCount === '' || memberCount === undefined || memberCount === null) {
-            memberCount = '0'; 
+        var getusermailquery = `SELECT email FROM users WHERE user_id=?`;
+        var getusermailval = await queryAsync(getusermailquery,[userId]);
+        if(getusermailval.length>0){
+            var email = getusermailval[0].email;
+            console.log("useremail",email);
+            var encryptedEmail = await comFunction2.encryptEmail(email);
         }
-        console.log("Updated membervalue:", memberCount);
-        const cancelsubscription = await stripe.subscriptions.cancel(usersubscription_id);
-        console.log("Subscription cancelled:", cancelsubscription);
-        //var orderquery = `DELETE FROM order_history WHERE stripe_subscription_id=? AND user_id=?`;
-        var orderquery = `DELETE FROM order_history WHERE user_id=?`;
-        var orderval = await queryAsync(orderquery,[userId]);
-
-        const plan = await getPlanFromDatabase(planId);
-        if (!plan) {
-            return res.status(404).send({ error: 'Plan not found' });
-        }
-        let paymentMethod;
-        try {
-            paymentMethod = await stripe.paymentMethods.retrieve(paymentMethodId);
-        } catch (error) {
-            console.error('Stripe Error:', error);
-            return res.status(500).send({ error: 'Failed to retrieve PaymentMethod' });
-        }
-    
-        let customer;
-        try {
-            const customers = await stripe.customers.list({
-                email: email, 
-                limit: 1 
-            });
-            console.log("customersaa",customers);
-            
-            if (customers.data.length > 0) {
-                customer = customers.data[0]; 
-                console.log("customerlists",customer);
-                var customer_email = customer.email;
-                console.log("customer_email",customer_email);              
-            } else {
-                return res.status(404).send({ error: 'Customer not found' });
-            }
-        } catch (error) {
-            console.error("Error retrieving customer by email:", error);
-            return res.status(500).send({ error: 'Failed to retrieve customer' });
-        }
-        const priceId = await createStripeProductAndPrice(plan, billingCycle, memberCount);
-        if (!priceId) {
-            return res.status(500).send({ error: 'Failed to create price for the plan' });
-        }
-
-        let subscription;
-        try {
-            subscription = await stripe.subscriptions.create({ 
-                customer: customer.id,
-                items: [{ price: priceId }],
-                expand: ['latest_invoice.payment_intent'],
-            });
-        } catch (error) {
-            console.error("Error creating subscription:", error);
-            return res.status(500).send({ error: 'Failed to create subscription' });
-        }
-    
-        const invoice = await stripe.invoices.retrieve(subscription.latest_invoice.id);
-        const paymentIntent = invoice.payment_intent;
-        if (!paymentIntent) {
-            return res.status(500).send({ error: 'Payment intent not found in invoice' });
-        }
-    
-        const paymentIntentStatus = await stripe.paymentIntents.retrieve(paymentIntent);
-        if (!paymentIntentStatus || !paymentIntentStatus.status) {
-            return res.status(500).send({ error: 'Failed to retrieve payment intent status' });
-        }
-    
-        let paymentStatus = paymentIntentStatus.status;
-        console.log("paymentStatus",paymentStatus);
-        const updatedSubscription = await stripe.subscriptions.retrieve(subscription.id);
-        const invoiceUrl = invoice.invoice_pdf;
-
-        const planInterval = updatedSubscription.items.data[0].price.recurring.interval === 'year' ? 'year' : 'month';
-        console.log("Plan Interval:", planInterval);
-
-        const order_history_data = {
-            user_id: userId,
-            stripe_subscription_id: subscription.id,
-            plan_id: planId,
-            payment_status: paymentIntentStatus.status,
-            subscription_details: JSON.stringify(subscription),
-            payment_details: JSON.stringify(paymentIntentStatus),
-            subscription_duration: planInterval,
-            subscription_start_date: new Date(subscription.current_period_start * 1000),
-            subscription_end_date: new Date(subscription.current_period_end * 1000),
-            added_user_number: memberCount
-        };
-
-        const order_history_query = `INSERT INTO order_history SET ?`;
-        await queryAsync(order_history_query, [order_history_data]);
 
         const getcompany_query = `SELECT company.* FROM company LEFT JOIN company_claim_request ON company.ID = company_claim_request.company_id WHERE company_claim_request.claimed_by = ?`;
         const getcompany_value = await queryAsync(getcompany_query, [userId]);
@@ -17662,12 +17579,22 @@ exports.updateSubscriptionbyAdmin = async (req, res) => {
         } catch (error) {
             console.error('Error executing the query:', error);
         }
+        const updateorderquery ='UPDATE order_history SET plan_id = ? WHERE user_id = ?';
+        const updateorderval = await queryAsync(updateorderquery,[req.body.planid,userId])
+        var baseUrl = process.env.MAIN_URL;
+        let paymentUrl;
+        if(billingCycle=="monthyly"){
+            paymentUrl = `${baseUrl}stripe-update-payment?planId=${req.body.planName}&planPrice=${req.body.monthlyPrice}&billingCycle=${req.body.billingCycle}&memberCount=0&total_price=${req.body.monthlyPrice}&encryptedEmail=${encryptedEmail}`;
+        }else{
+            paymentUrl = `${baseUrl}stripe-update-payment?planId=${req.body.planName}&planPrice=${req.body.monthlyPrice}&billingCycle=${req.body.billingCycle}&memberCount=0&total_price=${req.body.monthlyPrice}&encryptedEmail=${encryptedEmail}`;
+        }
 
         const mailOptions = {
             from: process.env.MAIL_USER,
             to: email,
-            subject: 'Your Subscription Invoice',
-            html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+            subject: 'Subscription Updation by Admin and need to payment',
+            html:
+             `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
             <style>
             body, table, td, p, a, h1, h2, h3, h4, h5, h6, div {
                 font-family: Calibri, 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif !important;
@@ -17715,11 +17642,8 @@ exports.updateSubscriptionbyAdmin = async (req, res) => {
                                       <tr>
                                         <td colspan="2">
                                             <strong>Hello Sir/Madam,</strong>
-                                            <p style="font-size:15px; line-height:20px">Thank you for your subscription. You can view your invoice at the <a href="${invoiceUrl}">following link</a>.</p>
-                                            <p style="font-size:15px; line-height:20px"><br><p style="font-size:15px; line-height:20px">Best Regards,</p>
-                                            <p style="font-size:15px; line-height:20px">Team BoloGrahak</p></p>
-                                            <br>
-                                            <p style="font-size:13px; line-height:16px">If you have any questions or need assistance, please feel free to contact us at <a href="mailto:support@bolagrahak.com">support@bolagrahak.com</a>.</p>
+                                            <p style="font-size:15px; line-height:20px">Subscription has updated by the Admin.Now you have to pay for the updated membership plan using the <a href="${paymentUrl}">following link</a>.</p>
+                                            <p style="font-size:15px; line-height:20px"><br><p style="font-size:15px; line-height:20px">Kind Regards,</p><p style="font-size:15px; line-height:20px">CEchoes Technology Team</p><br>
                                         </td>
                                       </tr>
                                     </table>
@@ -17741,11 +17665,11 @@ exports.updateSubscriptionbyAdmin = async (req, res) => {
                        <!-- Footer -->
                        <table id="template_footer" style="background-color: #000; border-radius: 0 0 3px 3px !important; color: #ffffff; border-top: 0; font-size: 12px; line-height: 150%; text-align: center; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
                          <tbody>
-                           <tr>
-                             <td id="credit" style="padding: 20px; text-align: center; line-height: 18px;">
-                               <p style="margin: 0;">© BoloGrahak 2024. All rights reserved.</p>
-                             </td>
-                           </tr>
+                            <tr>
+                                    <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
+                                         <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology</a></p>
+                                    </td>
+                                   </tr>
                          </tbody>
                        </table>
                        <!-- End Footer -->
@@ -17764,22 +17688,8 @@ exports.updateSubscriptionbyAdmin = async (req, res) => {
 
         await mdlconfig.transporter.sendMail(mailOptions);
         console.log("Subscription confirmation email sent successfully.");
-        
-        if (paymentStatus === 'succeeded') {
-            return res.send({
-                 success: true,
-                  subscription: updatedSubscription
-                 });
-        } 
-        else if (paymentStatus === 'requires_action' || paymentStatus === 'requires_source_action') {
-            return res.send({ 
-                requiresAction: true, 
-                clientSecret: paymentIntent.client_secret,
-                subscription: updatedSubscription
-            });
-        } else {
-            return res.status(400).send({ error: 'Payment required additional actions or failed' });
-        }
+
+        return res.status(200).send({ status:'ok', message:'Subscription updated and payment link send to the user.' });
     }  catch(error){
         console.error('Error:', error);
         return res.status(500).json({ status: 'err', data: '', message: 'An error occurred while processing your request' });``
@@ -22561,10 +22471,7 @@ exports.createSubscription = async (req, res) => {
                                         <td colspan="2">
                                             <strong>Hello Sir/Madam,</strong>
                                             <p style="font-size:15px; line-height:20px">Thank you for your subscription. You can view your invoice at the <a href="${invoiceUrl}">following link</a>.</p>
-                                            <p style="font-size:15px; line-height:20px"><br><p style="font-size:15px; line-height:20px">Best Regards,</p>
-                                            <p style="font-size:15px; line-height:20px">Team BoloGrahak</p></p>
-                                            <br>
-                                            <p style="font-size:13px; line-height:16px">If you have any questions or need assistance, please feel free to contact us at <a href="mailto:support@bolagrahak.com">support@bolagrahak.com</a>.</p>
+                                            <p style="font-size:15px; line-height:20px"><br><p style="font-size:15px; line-height:20px">Kind Regards,</p><p style="font-size:15px; line-height:20px">CEchoes Technology Team</p><br>
                                         </td>
                                       </tr>
                                     </table>
@@ -22586,11 +22493,11 @@ exports.createSubscription = async (req, res) => {
                        <!-- Footer -->
                        <table id="template_footer" style="background-color: #000; border-radius: 0 0 3px 3px !important; color: #ffffff; border-top: 0; font-size: 12px; line-height: 150%; text-align: center; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
                          <tbody>
-                           <tr>
-                             <td id="credit" style="padding: 20px; text-align: center; line-height: 18px;">
-                               <p style="margin: 0;">© BoloGrahak 2024. All rights reserved.</p>
-                             </td>
-                           </tr>
+                            <tr>
+                                    <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
+                                         <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology</a></p>
+                                    </td>
+                                   </tr>
                          </tbody>
                        </table>
                        <!-- End Footer -->
