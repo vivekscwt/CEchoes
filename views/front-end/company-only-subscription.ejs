@@ -15,23 +15,23 @@
                         <div>
                             <label for="first_name" class="formbold-form-label">First name</label>
                             <input type="text" name="first_name" placeholder="Andrio" id="first_name"
-                                class="formbold-form-input" required />
+                                class="formbold-form-input" value="<%= user.first_name %>" required />
                         </div>
                         <div>
                             <label for="last_name" class="formbold-form-label">Last name</label>
                             <input type="text" name="last_name" placeholder="Dolee" id="last_name"
-                                class="formbold-form-input" required />
+                                class="formbold-form-input" value="<%= user.last_name %>" required />
                         </div>
                     </div>
                     <div class="formbold-input-flex">
                         <div>
                             <label for="dob" class="formbold-form-label">Date of Birth</label>
-                            <input type="date" name="dob" id="dob" class="formbold-form-input" />
+                            <input type="date" name="dob" id="dob" class="formbold-form-input" value="<% if(userMeta && userMeta.address){ %><%= userMeta.date_of_birth %><% } %>" required/>
                         </div>
                         <div>
                             <label for="email" class="formbold-form-label">Email Address</label>
                             <input type="email" name="email" placeholder="example@mail.com" id="email"
-                                class="formbold-form-input" required />
+                                class="formbold-form-input" value="<%= user.email %>" required disabled />
                             <span id="emailError" style="color: red; display: none;">Invalid email address.</span>
                             <span id="emailAvailabilityError" style="display: none; color: red;">This email is already
                                 registered. Please use a different email address.</span>
@@ -41,7 +41,7 @@
                         <div>
                             <label for="phone" class="formbold-form-label">Phone</label>
                             <input type="number" name="phone" placeholder="9654354544" id="phone"
-                                class="formbold-form-input" required />
+                                class="formbold-form-input" value="<%= user.phone %>" required />
                             <span id="phoneavailabilityerror" style="display: none; color: red;">This Phone is already
                                 registered. Please use a different Phone number.</span>
                         </div>
@@ -52,9 +52,15 @@
                             <select name="user_country" id="user_country" class="formbold-form-input" required>
                                 <option value="">Select a country</option>
                                 <% getCountries.forEach(country=> { %>
-                                    <option value="<%= country.id %>">
+                                    <% if(userMeta && userMeta.country){ %>
+                                    <option value="<%= country.id %>" <% if(country.id==userMeta.country){ %>selected <% } %>>
                                         <%= country.name %>
                                     </option>
+                                    <% }else{ %>
+                                        <option value="<%= country.id %>">
+                                            <%= country.name %>
+                                        </option>
+                                    <% }%>
                                     <% }); %>
                             </select>
                         </div>
@@ -62,11 +68,17 @@
                             <label for="state" class="formbold-form-label">Select a State</label>
                             <select name="user_state" id="user_state" class="formbold-form-input" required>
                                 <option value="">Select a state</option>
+                                <% if (userMeta.state) { %>
+                                    <!-- Pre-select the user's state if it's available -->
+                                    <option value="<%= userMeta.state %>" selected><%= userMeta.state_name %></option>
+                                <% } %>
+                                <!-- Other states will be loaded dynamically based on the selected country -->
                             </select>
                         </div>
+                        
                     </div>
 
-                    <div class="formbold-input-flex">
+                    <!-- <div class="formbold-input-flex">
                         <div>
                             <label for="register_password" class="formbold-form-label">Password</label>
                             <div class="input-with-icon">
@@ -91,7 +103,7 @@
                             <span id="passwordMismatchError" style="color: red; display: none;">Passwords do not
                                 match.</span>
                         </div>
-                    </div>
+                    </div> -->
 
                 </div>
                 <div class="formbold-form-step-2 form-step">
@@ -335,14 +347,6 @@
                     const email = document.getElementById('email').value.trim();
                     if (!email) return false;
 
-                    const password = document.getElementById('register_password').value;
-                    const confirmPassword = document.getElementById('register_confirm_password').value;
-                    if (password.length < 8 || password.length > 30 || password !== confirmPassword) {
-                        document.getElementById('passwordMismatchError').style.display = 'block';
-                        return false;
-                    } else {
-                        document.getElementById('passwordMismatchError').style.display = 'none';
-                    }
                     return true;
                 } else if (step === 2) {
                     return document.getElementById('company_name').value.trim() &&
@@ -355,127 +359,6 @@
                 return true;
             }
 
-            // document.getElementById('email').addEventListener('blur', async function () {
-            //     const email = this.value.trim();
-            //     if (email) {
-            //         try {
-            //             const response = await axios.get(`/checkEmailAvailability?email=${email}`);
-            //             if (!response.data.available) {
-            //                 document.getElementById('emailExistsError').style.display = 'block';
-            //             } else {
-            //                 document.getElementById('emailExistsError').style.display = 'none';
-            //             }
-            //         } catch (error) {
-            //             console.error('Error checking email:', error);
-            //         }
-            //     }
-            // });
-
-            // async function handleConfirmation(confirmed) {
-            //     if (confirmed) {
-            //         try {
-            //             const memberCountt = document.getElementById('member-count').value;
-            //             console.log('Member Count:', memberCountt);
-            //             const formData = {
-            //                 name: document.getElementById('first_name').value + ' ' + document.getElementById('last_name').value,
-            //                 first_name: document.getElementById('first_name').value,
-            //                 last_name: document.getElementById('last_name').value,
-            //                 email: document.getElementById('email').value,
-            //                 phone: document.getElementById('phone').value,
-            //                 address: document.getElementById('main_address').value,
-            //                 main_address_country: document.getElementById('main_address_country').value,
-            //                 company_name: document.getElementById('company_name').value,
-            //                 parent_id: document.getElementById('parent_id').value,
-            //                 comp_email: document.getElementById('comp_email').value,
-            //                 comp_phone: document.getElementById('comp_phone').value,
-            //                 city: 'Default City',
-            //                 state: 'Default State',
-            //                 //zip: document.getElementById('main_address_pin_code').value,
-            //                 main_address_pin_code: document.getElementById('main_address_pin_code').value,
-            //                 planId: planID,
-            //                 //billingCycle: 'daily',
-            //                 billingCycle: subscriptionType,
-            //                 memberCount: memberCountt,
-            //                 register_password: document.getElementById('register_password').value,
-            //                 register_confirm_password: document.getElementById('register_confirm_password').value,
-            //                 user_country: document.getElementById('user_country').value,
-            //                 user_state: document.getElementById('user_state').value,
-            //                 //main_address_pin_code: 
-            //             };
-
-            //             const response = await axios.post('/auth/createexternalSubscription', formData);
-            //             const { subscription, amount } = response.data;
-
-            //             formData.subscriptionId = subscription.id;
-
-            //             const options = {
-            //                 //key: 'rzp_test_ivrp5LlA1gQXAT',
-            //                 key: stripe_key,
-            //                 subscription_id: subscription.id,
-            //                 name: 'Subscription Payment',
-            //                 description: `Subscription Payment: ₹${(amount / 100).toFixed(2)}`, // Display amount in rupees
-            //                 amount: amount, // Amount in paise
-            //                 handler: function (response) {
-            //                     // Swal.fire({
-            //                     //     icon: 'success',
-            //                     //     title: 'Payment Successful!',
-            //                     //     text: 'Your payment was successful.',
-            //                     //     confirmButtonText: 'OK'
-            //                     // }).then(() => {
-            //                     //     // Post payment success, create user and company
-            //                     //     createUserAndCompany(formData);
-            //                     // //     Swal.fire({
-            //                     // //     icon: 'success',
-            //                     // //     title: 'Success',
-            //                     // //     text: 'User and company created successfully.Please wait for admin approval',
-            //                     // //     confirmButtonText: 'OK'
-            //                     // // })
-            //                     // });
-            //                     formData.razorpay_payment_id = response.razorpay_payment_id;
-            //                     createUserAndCompany(formData);
-            //                 },
-            //                 prefill: {
-            //                     name: formData.name,
-            //                     email: formData.email
-            //                 },
-            //                 theme: {
-            //                     color: '#F37254'
-            //                 }
-            //             };
-
-            //             const rzp = new Razorpay(options);
-            //             rzp.open();
-
-            //             rzp.on('payment.failed', function (response) {
-            //                 Swal.fire({
-            //                     icon: 'error',
-            //                     title: 'Payment Error',
-            //                     text: response.error.description || 'Unknown error occurred.',
-            //                     confirmButtonText: 'OK'
-            //                 });
-            //             });
-            //         } catch (error) {
-            //             console.error('Error initiating payment:', error);
-            //             let errorMessage = 'Failed to initiate payment. Please try again later.';
-
-            //             if (error.response) {
-            //                 // If error.response exists, use its data
-            //                 errorMessage = error.response.data.message || errorMessage;
-            //             } else if (error.message) {
-            //                 // If error.message exists, use it
-            //                 errorMessage = error.message;
-            //             }
-
-            //             Swal.fire({
-            //                 icon: 'error',
-            //                 title: 'Payment Initiation Failed',
-            //                 text: errorMessage,
-            //                 confirmButtonText: 'OK'
-            //             });
-            //         }
-            //     }
-            // }
-
             async function handleConfirmation(confirmed) {
                 if (confirmed) {
                 
@@ -483,8 +366,8 @@
                 }
             }
             document.addEventListener('DOMContentLoaded', function () {
-    const stripe = Stripe(stripePublicKey);
-    const elements = stripe.elements();
+            const stripe = Stripe(stripePublicKey);
+            const elements = stripe.elements();
 
 
             const cardNumber = elements.create('cardNumber', {
@@ -604,8 +487,6 @@
                         planId: planID,
                         billingCycle: subscriptionType,
                         memberCount: memberCount,
-                        register_password: document.getElementById('register_password').value,
-                        register_confirm_password: document.getElementById('register_confirm_password').value,
                         user_country: document.getElementById('user_country').value,
                         user_state: document.getElementById('user_state').value,
                         paymentMethodId: paymentMethod.id 
@@ -690,103 +571,47 @@
 
 
 
-            // async function handleConfirmation(confirmed) {
-            //     if (confirmed) {
-            //         try {
-            //             const memberCount = $('#member-count').val();
-            //             console.log('Member Count:', memberCount);
-            //             const formData = {
-            //                 name: $('#first_name').val() + ' ' + $('#last_name').val(),
-            //                 email: $('#email').val(),
-            //                 planId: planID,
-            //                 billingCycle: subscriptionType,
-            //                 memberCount: memberCount,
-            //                 successUrl: window.location.origin + '/success', 
-            //                 cancelUrl: window.location.origin + '/cancel'   
-            //             };
-
-            //             // Create a Checkout Session
-            //             const response = await $.ajax({
-            //                 url: '/create-subscription-checkout-session',
-            //                 method: 'POST',
-            //                 contentType: 'application/json',
-            //                 data: JSON.stringify(formData)
-            //             });
-
-            //             const stripe = Stripe('pk_test_51Pmx4bE9RgUxhHlihWvQ6tCKKz2AeuVE4X2fBtEFHHnKTu4mgcFHPF1rpYDjwgn0vxlCfPEbiQTLy6JBelzwiTJw00p4tIO4NZ');
-            //             const { id: sessionId } = response;
-
-            //             const result = await stripe.redirectToCheckout({ sessionId });
-
-            //             if (result.error) {
-            //                 console.error('Error redirecting to Checkout:', result.error);
-            //                 Swal.fire({
-            //                     icon: 'error',
-            //                     title: 'Checkout Error',
-            //                     text: result.error.message,
-            //                     confirmButtonText: 'OK'
-            //                 });
-            //             }
-            //         } catch (error) {
-            //             console.error('Error initiating Checkout:', error);
-            //             let errorMessage = 'Failed to initiate checkout. Please try again later.';
-
-            //             if (error.response) {
-            //                 errorMessage = error.response.data.message || errorMessage;
-            //             } else if (error.message) {
-            //                 errorMessage = error.message;
-            //             }
-
-            //             Swal.fire({
-            //                 icon: 'error',
-            //                 title: 'Checkout Initiation Failed',
-            //                 text: errorMessage,
-            //                 confirmButtonText: 'OK'
-            //             });
-            //         }
-            //     }
-            // }
 
             async function createUserAndCompany(formData) {
-    try {
-        console.log("externalRegistrationformData", formData);
-        const response = await axios.post('/auth/externalRegistration', formData);
-        if (response.data.status === 'ok') {
-            Swal.fire({
-                icon: 'success',
-                title: 'Success',
-                text: 'User and company created successfully. Please wait for admin approval.',
-                confirmButtonText: 'OK'
-            }).then(() => {
-                window.location.href = '/plan-pricing';
-            });
-        } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: response.data.message || 'Failed to create user and company. Please try again later.',
-                confirmButtonText: 'OK'
-            });
-        }
-    } catch (error) {
-        console.error('Error creating user and company:', error);
+            try {
+                console.log("externalRegistrationformData", formData);
+                const response = await axios.post('/auth/externalcompanyRegistration', formData);
+                if (response.data.status === 'ok') {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Company created successfully. Please wait for admin approval.',
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        window.location.href = '/plan-pricing';
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: response.data.message || 'Failed to create user and company. Please try again later.',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            } catch (error) {
+                console.error('Error creating user and company:', error);
 
-        // Handling network errors or other undefined response scenarios
-        let errorMessage = 'Failed to create user and company. Please try again later.';
-        if (error.response) {
-            errorMessage = error.response.data.message || errorMessage;
-        } else if (error.message) {
-            errorMessage = error.message;
-        }
+                // Handling network errors or other undefined response scenarios
+                let errorMessage = 'Failed to create user and company. Please try again later.';
+                if (error.response) {
+                    errorMessage = error.response.data.message || errorMessage;
+                } else if (error.message) {
+                    errorMessage = error.message;
+                }
 
-        Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: errorMessage,
-            confirmButtonText: 'OK'
-        });
-    }
-}
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: errorMessage,
+                    confirmButtonText: 'OK'
+                });
+            }
+        }
 
 
             document.getElementById('user_country').addEventListener('change', async function () {
@@ -828,56 +653,8 @@
             });
 
 
-            // document.getElementById('main_address_pin_code').addEventListener('blur', function (e) {
-            //     const value = e.target.value;
-            //     if (value.length !== 6) {
-            //         // alert('Pincode Code must be exactly 6 digits.');
-            //         Swal.fire({
-            //             icon: 'error',
-            //             // title: 'Failed to load states',
-            //             text: 'Pincode Code must be exactly 6 digits.'
-            //         });
-            //         //e.target.focus();
-            //     }
-            // });
 
-            document.getElementById('register_password').addEventListener('input', function (e) {
-                const password = e.target.value;
-                const confirmPassword = document.getElementById('register_confirm_password').value;
-                const passwordLengthError = document.getElementById('passwordLengthError');
-                const passwordMismatchError = document.getElementById('passwordMismatchError');
 
-                if (password.length < 8 || password.length > 30) {
-                    passwordLengthError.style.display = 'block';
-                } else {
-                    passwordLengthError.style.display = 'none';
-                }
-
-                if (confirmPassword && password !== confirmPassword) {
-                    passwordMismatchError.style.display = 'block';
-                } else {
-                    passwordMismatchError.style.display = 'none';
-                }
-            });
-
-            document.getElementById('register_confirm_password').addEventListener('input', function (e) {
-                const confirmPassword = e.target.value;
-                const password = document.getElementById('register_password').value;
-                const passwordLengthError = document.getElementById('passwordLengthError');
-                const passwordMismatchError = document.getElementById('passwordMismatchError');
-
-                if (confirmPassword.length < 8 || confirmPassword.length > 30) {
-                    passwordLengthError.style.display = 'none';
-                } else {
-                    passwordLengthError.style.display = 'none';
-                }
-
-                if (password && password !== confirmPassword) {
-                    passwordMismatchError.style.display = 'block';
-                } else {
-                    passwordMismatchError.style.display = 'none';
-                }
-            });
 
 
             document.getElementById('comp_email').addEventListener('blur', function () {
@@ -892,51 +669,7 @@
             });
 
 
-            // document.getElementById('email').addEventListener('blur', async function () {
-            //     const email = this.value.trim();
-            //     const emailError = document.getElementById('emailError');
-            //     const emailAvailabilityError = document.getElementById('emailAvailabilityError');
-            //     const nextStepBtn = document.getElementById('nextStepBtn');
-
-            //     // Reset error messages and validation flags
-            //     emailError.style.display = 'none';
-            //     emailAvailabilityError.style.display = 'none';
-            //     this.classList.remove('invalid');
-            //     isEmailValid = false;
-            //     isEmailAvailable = false;
-
-            //     // Disable the next button initially
-            //     nextStepBtn.disabled = true;
-
-            //     // Basic email validation
-            //     if (email && !isValidEmail(email)) {
-            //         emailError.style.display = 'block';
-            //         this.classList.add('invalid');
-            //     } else {
-            //         isEmailValid = true;
-            //         try {
-            //             const response = await axios.get(`/checkEmailAvailability?email=${email}`);
-            //             if (!response.data.available) {
-            //                 emailAvailabilityError.style.display = 'block';
-            //                 this.classList.add('invalid');
-            //             } else {
-            //                 isEmailAvailable = true;
-            //             }
-            //         } catch (error) {
-            //             console.error('Error checking email availability:', error);
-            //         }
-            //     }
-
-            //     console.log("isEmailValid", isEmailValid);
-            //     console.log("isEmailAvailable", isEmailAvailable);
-
-            //     // Enable the Next Step button if email is valid and available
-            //     // if (isEmailValid && isEmailAvailable) {
-            //         if(isEmailValid== true && isEmailAvailable==false){
-            //         nextStepBtn.disabled = false;
-            //     }
-            // });
-            document.getElementById('email').addEventListener('blur', async function () {
+         document.getElementById('email').addEventListener('blur', async function () {
                 const email = this.value.trim();
                 const emailError = document.getElementById('emailError');
                 const emailAvailabilityError = document.getElementById('emailAvailabilityError');
@@ -1031,8 +764,6 @@
                     const email = $('#email').val().trim();
                     const country = $('#user_country').val();
                     const state = $('#user_state').val();
-                    const password = $('#register_password').val().trim();
-                    const confirmPassword = $('#register_confirm_password').val().trim();
 
                     // Validate individual fields if required
                     const isFirstNameValid = firstName.length > 0;
@@ -1040,8 +771,10 @@
                     const isEmailValid = isValidEmail(email); // You can implement isValidEmail function
                     const isCountryValid = country.length > 0;
                     const isStateValid = state.length > 0;
-                    const isPasswordValid = password.length >= 8 && password.length <= 30;
-                    const doPasswordsMatch = password === confirmPassword;
+                    const isdobValid = dob.length > 0;
+                    const isphoneValid = phone.length > 0;
+
+
 
                     // Display errors if any field is invalid
                     $('#first_name').toggleClass('invalid', !isFirstNameValid);
@@ -1049,15 +782,16 @@
                     $('#email').toggleClass('invalid', !isEmailValid);
                     $('#user_country').toggleClass('invalid', !isCountryValid);
                     $('#user_state').toggleClass('invalid', !isStateValid);
-                    $('#register_password').toggleClass('invalid', !isPasswordValid);
-                    $('#register_confirm_password').toggleClass('invalid', !doPasswordsMatch);
+                    $('#dob').toggleClass('invalid', !isdobValid);
+                    $('#phone').toggleClass('invalid', !isphoneValid);
+
 
                     const isFormValid = isFirstNameValid && isLastNameValid && isEmailValid &&
-                        isCountryValid && isStateValid && isPasswordValid && doPasswordsMatch;
+                        isCountryValid && isStateValid && isdobValid && isphoneValid;
                     $('#nextStepBtn').prop('disabled', !isFormValid);
                 }
 
-                $('#first_name, #last_name, #dob,#phone, #email, #user_country, #user_state, #register_password, #register_confirm_password').on('input change', function () {
+                $('#first_name, #last_name, #dob,#phone, #email, #user_country, #user_state').on('input change', function () {
                     validateForm();
                 });
 
@@ -1160,25 +894,23 @@
                                 main_address_country: mainAddressCountry
                             }
                         });
-                        console.log("responsesss", response);
-                        console.log("responsesssstatus", response.status);
+                        // console.log("responsesss", response);
+                        // console.log("responsesssstatus", response.status);
 
                         if (response.status == 'err') {
                             console.log("errr");
                             $('#companyCheckResult').text(response.message).show();
-                            $('#nextStepBtn').prop('disabled', true); // Disable next button if company exists
+                            $('#nextStepBtn').prop('disabled', true); 
                         } else {
-                            console.log("rightttt");
+                            // console.log("rightttt");
                             $('#companyCheckResult').hide();
-                            validateForm1(); // Re-validate form after company check
+                            validateForm1(); 
                         }
                     } catch (error) {
                         console.error('Error checking company existence:', error);
-                        // Handle error scenario if needed
                     }
                 }
 
-                // Basic email validation function
                 function isValidEmail(email) {
                     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                     return emailRegex.test(email);
@@ -1202,7 +934,7 @@
                                         $('#nextStepBtn').prop('disabled', true);
                                     } else {
                                         $('#companyemailAvailabilityError').hide();
-                                        validateForm1(); // Re-validate form after email check
+                                        validateForm1(); 
                                     }
                                 },
                                 error: function (error) {
@@ -1230,7 +962,7 @@
                                     $('#nextStepBtn').prop('disabled', true);
                                 } else {
                                     $('#companyphoneAvailabilityError').hide();
-                                    validateForm1(); // Re-validate form after email check
+                                    validateForm1(); 
                                 }
                             },
                             error: function (error) {
@@ -1252,11 +984,11 @@
 
                     if (phone.length === 10 && /^\d+$/.test(phone)) {
                         $.ajax({
-                            url: '/checkuserPhoneAvailability',
+                            url: '/checkregistereduserPhoneAvailability',
                             method: 'GET',
                             data: { phone: phone },
                             success: function (response) {
-                                console.log('Response from server:', response);
+                                // console.log('Response from server:', response);
                                 if (!response.available) {
                                     $('#phoneavailabilityerror').text(response.message).show();
                                     $('#nextStepBtn').prop('disabled', true);
@@ -1313,32 +1045,6 @@
                 });
                 $('.formbold-form-step-1').each(function () {
                     $('.formbold-back-btn').css('display', 'none');
-                });
-
-                $('#togglePassword').click(function () {
-                    var passwordField = $('#register_password');
-                    var type = passwordField.attr('type');
-
-                    if (type === 'password') {
-                        passwordField.attr('type', 'text');
-                        $(this).removeClass('fa-eye-slash').addClass('fa-eye');
-                    } else {
-                        passwordField.attr('type', 'password');
-                        $(this).removeClass('fa-eye').addClass('fa-eye-slash');
-                    }
-                });
-
-                $('#toggleConfirmPassword').click(function () {
-                    var confirmPasswordField = $('#register_confirm_password');
-                    var type = confirmPasswordField.attr('type');
-
-                    if (type === 'password') {
-                        confirmPasswordField.attr('type', 'text');
-                        $(this).removeClass('fa-eye-slash').addClass('fa-eye');
-                    } else {
-                        confirmPasswordField.attr('type', 'password');
-                        $(this).removeClass('fa-eye').addClass('fa-eye-slash');
-                    }
                 });
 
 

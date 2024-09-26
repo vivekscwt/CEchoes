@@ -13,6 +13,12 @@
 
 			<div class="col">
 				<form id="paymentForm">
+					<div class="inputBox">
+						<label for="memberCount">Add-on Users:</label>
+						<input type="number" min=1 name="memberCount" id="memberCount"
+							placeholder="Enter number of add-on users">
+					</div>
+
 					<!-- Stripe Card Number Element Container -->
 					<div class="card-element-container">
 						<label for="card-number">Card Number:</label>
@@ -44,7 +50,6 @@
 							<label for="name">Full Name:</label>
 							<input type="text" id="name" placeholder="Enter your full name" required>
 						</div>
-								
 						<div class="inputBox">
 							<label for="country">Country:</label>
 							<select id="stripe_country" required>
@@ -54,12 +59,14 @@
 								<% }); %>
 							</select>
 						</div>
+				
 						<div class="inputBox">
 							<label for="state">State:</label>
 							<select id="state" required>
 								<option value="">Select State</option>
 							</select>
 						</div>
+				
 						<div class="inputBox">
 							<label for="address">Address:</label>
 							<input type="text" id="address" placeholder="Enter address" required>
@@ -70,15 +77,16 @@
 							<input type="text" id="city" placeholder="Enter city" required>
 						</div>
 
-				
 						<div class="inputBox">
 							<label for="zip">Zip Code:</label>
 							<input type="text" id="zip" placeholder="Enter ZIP code" required>
 						</div>
 					</div> -->
 					
-					<button type="submit" value="Proceed to Checkout" class="submit_btn">Proceed to Checkout</button>
+					<button type="submit" value="Proceed to Checkout" class="submit_btn">Proceed</button>
 					<div id="error-message"></div>
+					<div id="wait-message-container"></div> 
+					
 				</form>
 				
 				
@@ -311,250 +319,218 @@
 
 <script>
 	var stripePublicKey='<%=stripe_publish_key %>';
-document.addEventListener('DOMContentLoaded', function() {
-    // const stripe = Stripe('pk_test_51Pmx4bE9RgUxhHlihWvQ6tCKKz2AeuVE4X2fBtEFHHnKTu4mgcFHPF1rpYDjwgn0vxlCfPEbiQTLy6JBelzwiTJw00p4tIO4NZ');
-	const stripe = Stripe(stripePublicKey);
+	document.addEventListener('DOMContentLoaded', function() {
+		// const stripe = Stripe('pk_test_51Pmx4bE9RgUxhHlihWvQ6tCKKz2AeuVE4X2fBtEFHHnKTu4mgcFHPF1rpYDjwgn0vxlCfPEbiQTLy6JBelzwiTJw00p4tIO4NZ');
 
-    const elements = stripe.elements();
+		const stripe = Stripe(stripePublicKey);
 
-    // Create and mount the card number Element
-    const cardNumber = elements.create('cardNumber', {
-        style: {
-            base: {
-                fontSize: '16px',
-                color: '#32325d',
-                '::placeholder': {
-                    color: '#aab7c4',
-                },
-            },
-            invalid: {
-                color: '#fa755a',
-                iconColor: '#fa755a',
-            },
-        },
-    });
+		const elements = stripe.elements();
 
-    const cardExpiry = elements.create('cardExpiry', {
-        style: {
-            base: {
-                fontSize: '16px',
-                color: '#32325d',
-                '::placeholder': {
-                    color: '#aab7c4',
-                },
-            },
-            invalid: {
-                color: '#fa755a',
-                iconColor: '#fa755a',
-            },
-        },
-    });
+		// var addonUsersCount = document.getElementById('memberCount').value;
+		// console.log('Add-on Users Count:', addonUsersCount);
 
-    const cardCvc = elements.create('cardCvc', {
-        style: {
-            base: {
-                fontSize: '16px',
-                color: '#32325d',
-                '::placeholder': {
-                    color: '#aab7c4',
-                },
-            },
-            invalid: {
-                color: '#fa755a',
-                iconColor: '#fa755a',
-            },
-        },
-    });
+		// Create and mount the card number Element
+		const cardNumber = elements.create('cardNumber', {
+			style: {
+				base: {
+					fontSize: '16px',
+					color: '#32325d',
+					'::placeholder': {
+						color: '#aab7c4',
+					},
+				},
+				invalid: {
+					color: '#fa755a',
+					iconColor: '#fa755a',
+				},
+			},
+		});
 
-    cardNumber.mount('#card-number');
-    cardExpiry.mount('#card-expiry');
-    cardCvc.mount('#card-cvc');
+		const cardExpiry = elements.create('cardExpiry', {
+			style: {
+				base: {
+					fontSize: '16px',
+					color: '#32325d',
+					'::placeholder': {
+						color: '#aab7c4',
+					},
+				},
+				invalid: {
+					color: '#fa755a',
+					iconColor: '#fa755a',
+				},
+			},
+		});
 
-    const errorMessage = document.getElementById('error-message');
-    cardNumber.on('change', handleCardChange);
-    cardExpiry.on('change', handleCardChange);
-    cardCvc.on('change', handleCardChange);
+		const cardCvc = elements.create('cardCvc', {
+			style: {
+				base: {
+					fontSize: '16px',
+					color: '#32325d',
+					'::placeholder': {
+						color: '#aab7c4',
+					},
+				},
+				invalid: {
+					color: '#fa755a',
+					iconColor: '#fa755a',
+				},
+			},
+		});
 
-    function handleCardChange(event) {
-        if (event.error) {
-            errorMessage.textContent = event.error.message;
-        } else {
-            errorMessage.textContent = '';
-        }
-    }
+		cardNumber.mount('#card-number');
+		cardExpiry.mount('#card-expiry');
+		cardCvc.mount('#card-cvc');
 
-    // document.getElementById('paymentForm').addEventListener('submit', async function(event) {
-    //     event.preventDefault();
-    //     document.querySelector('button').disabled = true;
+		const errorMessage = document.getElementById('error-message');
+		cardNumber.on('change', handleCardChange);
+		cardExpiry.on('change', handleCardChange);
+		cardCvc.on('change', handleCardChange);
 
-	// 	const memberCountInput = document.getElementById('memberCount');
-	// 	var addonUsersCount = memberCountInput.value;
-	// 	console.log('Add-on Users Count on Load:', addonUsersCount);
+		function handleCardChange(event) {
+			if (event.error) {
+				errorMessage.textContent = event.error.message;
+			} else {
+				errorMessage.textContent = '';
+			}
+		}
 
-    //     const { token, error } = await stripe.createToken(cardNumber);
-    //     console.log("Token:", token);
+		document.getElementById('paymentForm').addEventListener('submit', async function(event) {
+		event.preventDefault();
+		document.querySelector('button').disabled = true;
 
-    //     if (error) {
-    //         errorMessage.textContent = error.message;
-    //         document.querySelector('button').disabled = false;
-    //     } else {
-    //         await stripeTokenHandler(token,addonUsersCount);
-    //     }
-    // });
-	// // var addonUsersCount = document.getElementById('memberCount').value;
-	// // console.log('Add-on Users Count:', addonUsersCount);
+		// const addonUsersCount = '<%= membercount %>';
+		// console.log('Add-on Users Count on Load:', addonUsersCount);
 
-    // async function stripeTokenHandler(token,addonUsersCount) {
-    //     const formData = {
-    //         token: token.id,
-    //         userId: '<%= currentUserData.user_id %>',
-    //         name: document.getElementById('name').value,
-    //         email: '<%= currentUserData.email %>',
-    //         address: document.getElementById('address').value,
-    //         city: document.getElementById('city').value,
-    //         state: document.getElementById('state').value,
-    //         zip: document.getElementById('zip').value,
-    //         planId: '<%= planID %>',          
-	// 		billingCycle: 'yearly',
-    //         //memberCount: '<%= memberCount %>',
-	// 		memberCount: addonUsersCount
-    //     };
+		const memberCountInput = document.getElementById('memberCount');
+		const addonUsersCount = memberCountInput.value;
+		console.log('Add-on Users Count on Load:', addonUsersCount);
 
-    //     try {
-    //         const response = await fetch('/auth/create-subscription', {
-    //             method: 'POST',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //             },
-    //             body: JSON.stringify(formData),
-    //         });
+		const { paymentMethod, error } = await stripe.createPaymentMethod({
+			type: 'card',
+			card: cardNumber,
+			billing_details: {
+				name: '<%= currentUserData.first_name %>',
+				email: '<%= currentUserData.email %>',
+				phone: '<%= currentUserData.phone %>',
+				// address: {
+				//     line1: '<%= currentUserData.address %>',
+				//     country: '<%= currentUserData.country %>',
+				//     postal_code: '<%= currentUserData.zip %>',
+				// },
+			},
+		});
 
-    //         const data = await response.json();
-    //         if (response.ok) {
-    //             Swal.fire({
-    //                 icon: 'success',
-    //                 title: 'Payment Successful!',
-    //                 text: data.message,
-    //                 confirmButtonText: 'OK',
-    //             }).then(() => {
-    //                 window.location.href = '/plan-pricing';
-    //             });
-    //         } else {
-    //             Swal.fire({
-    //                 icon: 'error',
-    //                 title: 'Payment Error',
-    //                 text: data.error ? data.error.message : 'There was an error processing your payment. Please try again later.',
-    //                 confirmButtonText: 'OK',
-    //             });
-    //         }
-    //     } catch (error) {
-    //         console.error('Error:', error);
-    //         Swal.fire({
-    //             icon: 'error',
-    //             title: 'Payment Error',
-    //             text: 'There was an error processing your payment. Please try again later.',
-    //             confirmButtonText: 'OK',
-    //         });
-    //     } finally {
-    //         document.querySelector('button').disabled = false;
-    //     }
-    // }
-	document.getElementById('paymentForm').addEventListener('submit', async function(event) {
-    event.preventDefault();
-    document.querySelector('button').disabled = true;
+		if (error) {
+			errorMessage.textContent = error.message;
+			document.querySelector('button').disabled = false;
+		} else {
+			const { requiresAction, clientSecret } = await stripeTokenHandler(paymentMethod, addonUsersCount);
+			
+			if (requiresAction) {
+				const { error: confirmError } = await stripe.confirmCardPayment(clientSecret);
+				
+				if (confirmError) {
+					errorMessage.textContent = confirmError.message;
+					document.querySelector('button').disabled = false;
+				} else {
+					Swal.fire({
+						icon: 'success',
+						title: 'Payment Successful!',
+						text: 'Your payment is successfully processed.',
+						confirmButtonText: 'OK',
+					}).then(() => {
+						window.location.href = '/plan-pricing';
+					});
+				}
+			} else {
+				Swal.fire({
+					icon: 'success',
+					title: 'Payment Successful!',
+					text: 'Your payment is successfully processed.',
+					confirmButtonText: 'OK',
+				}).then(() => {
+					window.location.href = '/plan-pricing';
+				});
+			}
+		}
+	});
 
-    const addonUsersCount = '<%= membercount%>'
-    console.log('Add-on Users Count on Load:', addonUsersCount);
+		async function stripeTokenHandler(paymentMethod, addonUsersCount) {
+			const formData = {
+				paymentMethodId: paymentMethod.id,
+				userId: '<%= currentUserData.user_id %>',
+				email: '<%= currentUserData.email %>',
+				planId: '<%= planID %>',          
+				billingCycle: 'yearly',
+				memberCount: addonUsersCount
+			};
 
-    const { token, error } = await stripe.createToken(cardNumber);
-    console.log("Token:", token);
+			try {
+				const response = await fetch('/auth/updateSubscription', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify(formData),
+				});
 
-    if (error) {
-        errorMessage.textContent = error.message;
-        document.querySelector('button').disabled = false;
-    } else {
-        const { requiresAction, clientSecret } = await stripeTokenHandler(token, addonUsersCount);
-		
-        if (requiresAction) {
-            const { error: confirmError } = await stripe.confirmCardPayment(clientSecret);
-            
-            if (confirmError) {
-                errorMessage.textContent = confirmError.message;
-                document.querySelector('button').disabled = false;
-            } else {
-				if (additionalInfo) {
-                    await fetch('/auth/orderUpdate', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(additionalInfo),
-                    });
-                }
+				return await response.json();
+			} catch (error) {
+				console.error('Error:', error);
+				Swal.fire({
+					icon: 'error',
+					title: 'Payment Error',
+					text: 'There was an error processing your payment. Please try again later.',
+					confirmButtonText: 'OK',
+				});
+				return {};
+			} finally {
+				document.querySelector('button').disabled = false;
+			}
+		}
 
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Payment Successful!',
-                    text: 'Your payment has been done successfully.',
-                    confirmButtonText: 'OK',
-                }).then(() => {
-                    window.location.href = '/plan-pricing';
-                });
-            }
-        } else {
-            // Handle other responses
-            Swal.fire({
-                icon: 'success',
-                title: 'Payment Successful!',
-                text: 'Your payment has been done successfully.',
-                confirmButtonText: 'OK',
-            }).then(() => {
-                window.location.href = '/plan-pricing';
-            });
-        }
-    }
-});
+		// async function stripeTokenHandler(token, addonUsersCount) {
+		// 	const formData = {
+		// 		paymentMethodId: paymentMethod.id,
+		// 		userId: '<%= currentUserData.user_id %>',
+		// 		// name: document.getElementById('name').value,
+		// 		email: '<%= currentUserData.email %>',
+		// 		// address: document.getElementById('address').value,
+		// 		// city: document.getElementById('city').value,
+		// 		// state: document.getElementById('state').value,
+		// 		// zip: document.getElementById('zip').value,
+		// 		planId: '<%= planID %>',          
+		// 		billingCycle: 'monthly',
+		// 		memberCount: addonUsersCount
+		// 	};
 
-async function stripeTokenHandler(token, addonUsersCount) {
-    const formData = {
-        paymentMethodId: token.id,
-        userId: '<%= currentUserData.user_id %>',
-        // name: document.getElementById('name').value,
-        email: '<%= currentUserData.email %>',
-        // address: document.getElementById('address').value,
-        // city: document.getElementById('city').value,
-        // state: document.getElementById('state').value,
-        // zip: document.getElementById('zip').value,
-        planId: '<%= planID %>',          
-        billingCycle: 'yearly',
-        memberCount: addonUsersCount
-    };
+		// 	try {
+		// 		const response = await fetch('/auth/updateSubscription', {
+		// 			method: 'POST',
+		// 			headers: {
+		// 				'Content-Type': 'application/json',
+		// 			},
+		// 			body: JSON.stringify(formData),
+		// 		});
 
-    try {
-        const response = await fetch('/auth/updateSubscription', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData),
-        });
+		// 		return await response.json();
+		// 	} catch (error) {
+		// 		console.error('Error:', error);
+		// 		Swal.fire({
+		// 			icon: 'error',
+		// 			title: 'Payment Error',
+		// 			text: 'There was an error processing your payment. Please try again later.',
+		// 			confirmButtonText: 'OK',
+		// 		});
+		// 		return {};
+		// 	} finally {
+		// 		document.querySelector('button').disabled = false;
+		// 	}
+		// }
 
-        return await response.json();
-    } catch (error) {
-        console.error('Error:', error);
-        Swal.fire({
-            icon: 'error',
-            title: 'Payment Error',
-            text: 'There was an error processing your payment. Please try again later.',
-            confirmButtonText: 'OK',
-        });
-        return {};
-    } finally {
-        document.querySelector('button').disabled = false;
-    }
-}
 
-});
+	});
 
 	document.addEventListener('DOMContentLoaded', function() {
 
@@ -572,7 +548,7 @@ async function stripeTokenHandler(token, addonUsersCount) {
 		const cvvInput = document.getElementById('cvv');
 		if (cvvInput) {
 			cvvInput.addEventListener('input', function() {
-				const maxLength = 3;
+				const maxLength = 5;
 				if (cvvInput.value.length > maxLength) {
 					cvvInput.value = cvvInput.value.slice(0, maxLength);
 				}
@@ -735,8 +711,9 @@ async function stripeTokenHandler(token, addonUsersCount) {
             this.setCustomValidity('');
         }
     });
-</script>
 
+
+</script>
 
 
 
@@ -1029,7 +1006,4 @@ document.addEventListener('DOMContentLoaded', function () {
 	});
 
 </script> -->
-
-
-
 

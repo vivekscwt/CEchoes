@@ -77,7 +77,7 @@
 						</div>
 					</div>
 					
-					<button type="submit" value="Proceed to Checkout" class="submit_btn">Proceed to Checkout</button>
+					<button type="submit" value="Proceed to Checkout" class="submit_btn">Proceed</button>
 					<div id="error-message"></div>
 				</form>
 				
@@ -386,23 +386,85 @@ document.addEventListener('DOMContentLoaded', function() {
             errorMessage.textContent = '';
         }
     }
+	//previous
+	// document.getElementById('paymentForm').addEventListener('submit', async function(event) {
+	// 	event.preventDefault();
+	// 	document.querySelector('button').disabled = true;
+
+	// 	const memberCountInput = document.getElementById('memberCount');
+	// 	const addonUsersCount = memberCountInput.value;
+	// 	console.log('Add-on Users Count on Load:', addonUsersCount);
+
+	// 	const { token, error } = await stripe.createToken(cardNumber);
+	// 	console.log("Token:", token);
+
+	// 	if (error) {
+	// 		errorMessage.textContent = error.message;
+	// 		document.querySelector('button').disabled = false;
+	// 	} else {
+	// 		const { requiresAction, clientSecret } = await stripeTokenHandler(token, addonUsersCount);
+			
+	// 		if (requiresAction) {
+	// 			const { error: confirmError } = await stripe.confirmCardPayment(clientSecret);
+				
+	// 			if (confirmError) {
+	// 				errorMessage.textContent = confirmError.message;
+	// 				document.querySelector('button').disabled = false;
+	// 			} else {
+	// 				Swal.fire({
+	// 					icon: 'success',
+	// 					title: 'Payment Successful!',
+	// 					text: 'Your payment was successfully processed.',
+	// 					confirmButtonText: 'OK',
+	// 				}).then(() => {
+	// 					window.location.href = '/plan-pricing';
+	// 				});
+	// 			}
+	// 		} else {
+	// 			// Handle other responses
+	// 			Swal.fire({
+	// 				icon: 'success',
+	// 				title: 'Payment Successful!',
+	// 				text: 'Your payment was successfully processed.',
+	// 				confirmButtonText: 'OK',
+	// 			}).then(() => {
+	// 				window.location.href = '/plan-pricing';
+	// 			});
+	// 		}
+	// 	}
+	// });
+
 
 	document.getElementById('paymentForm').addEventListener('submit', async function(event) {
 		event.preventDefault();
 		document.querySelector('button').disabled = true;
 
+
 		const memberCountInput = document.getElementById('memberCount');
 		const addonUsersCount = memberCountInput.value;
 		console.log('Add-on Users Count on Load:', addonUsersCount);
 
-		const { token, error } = await stripe.createToken(cardNumber);
-		console.log("Token:", token);
+
+		const { paymentMethod, error } = await stripe.createPaymentMethod({
+			type: 'card',
+			card: cardNumber,
+			billing_details: {
+				name: '<%= currentUserData.first_name %>',
+				email: '<%= currentUserData.email %>',
+				phone: '<%= currentUserData.phone %>',
+				// address: {
+				//     line1: '<%= currentUserData.address %>',
+				//     country: '<%= currentUserData.country %>',
+				//     postal_code: '<%= currentUserData.zip %>',
+				// },
+			},
+		});
 
 		if (error) {
 			errorMessage.textContent = error.message;
 			document.querySelector('button').disabled = false;
 		} else {
-			const { requiresAction, clientSecret } = await stripeTokenHandler(token, addonUsersCount);
+			const { requiresAction, clientSecret } = await stripeTokenHandler(paymentMethod, addonUsersCount);
 			
 			if (requiresAction) {
 				const { error: confirmError } = await stripe.confirmCardPayment(clientSecret);
@@ -414,18 +476,17 @@ document.addEventListener('DOMContentLoaded', function() {
 					Swal.fire({
 						icon: 'success',
 						title: 'Payment Successful!',
-						text: 'Your payment was successfully processed.',
+						text: 'Your payment is successfully processed.',
 						confirmButtonText: 'OK',
 					}).then(() => {
 						window.location.href = '/plan-pricing';
 					});
 				}
 			} else {
-				// Handle other responses
 				Swal.fire({
 					icon: 'success',
 					title: 'Payment Successful!',
-					text: 'Your payment was successfully processed.',
+					text: 'Your payment is successfully processed.',
 					confirmButtonText: 'OK',
 				}).then(() => {
 					window.location.href = '/plan-pricing';
@@ -492,7 +553,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		const cvvInput = document.getElementById('cvv');
 		if (cvvInput) {
 			cvvInput.addEventListener('input', function() {
-				const maxLength = 3;
+				const maxLength = 5;
 				if (cvvInput.value.length > maxLength) {
 					cvvInput.value = cvvInput.value.slice(0, maxLength);
 				}

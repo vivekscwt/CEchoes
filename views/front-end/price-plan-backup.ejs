@@ -27,95 +27,156 @@
           %>
 
         <div id="monthly" class="tab-content active">
-            <% ['basic', 'standard', 'advanced', 'premium', 'enterprise'].forEach(plan => { %>
+          <% ['basic', 'standard', 'advanced', 'premium', 'enterprise'].forEach(plan => { %>
             <div class="pricing-card">
-                <div class="price_tag">
+              <div class="price_tag">
                 <% if (country_name === "India") { %>
-                    $ <%= getplans[plan + '_val'].monthly_price_local %> <span>/ Month</span>
+                  $ <%= getplans[plan + '_val'].monthly_price_local %> <span>/ Month</span>
                 <% } else if (country_name === "Japan") { %>
-                    $ <%= getplans[plan + '_val'].monthly_price_local %> <span>/ Month</span>
+                  $ <%= getplans[plan + '_val'].monthly_price_local %> <span>/ Month</span>
                 <% } else { %>
-                    $ <%= getplans[plan + '_val'].monthly_price_local %> <span>/ Month</span>
+                  $ <%= getplans[plan + '_val'].monthly_price_local %> <span>/ Month</span>
                 <% } %>
-                </div>
-        
+              </div>
+          
+              <% if (currentUserData && currentUserData.claimed_comp_id != null) { %>
                 <div class="member-control">
-                <label for="<%= plan %>-member-count"></label>
-                <input type="hidden" name="memberCount" id="<%= plan %>-member-count" value="">
-                <input type="hidden" id="<%= plan %>-per-user-price" value="<%= getplans[plan + '_val'].per_user_price_local %>">
-                </div>
-        
-                <%- getplans[plan + '_val'].description %>
-        
-                <div class="get_started_btn">
-                <% if (isSubscribed(plan, 'monthly')) { %>
-                    <button class="subscribed-btn" style="display: none;" disabled>Get Started</button>
-                <% } else { %>
-                    <div class="proceed_btn">
-                    <a href="#" style="color: black;" onclick="redirectToStripePayment('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].monthly_price %>', 'monthly')">Update</a>
-                    </div>
-                <% } %>
-                </div>
-            </div>
-            <% }) %>
-        </div>
-  
-
-        <div id="yearly" class="tab-content">
-            <% ['basic', 'standard', 'advanced', 'premium', 'enterprise'].forEach(plan => { %>
-              <div class="pricing-card">
-                <div class="price_tag">
-                  <% if (country_name === "India") { %>
-                    $ <%= getplans[plan + '_val'].yearly_price_local %> <span>/ Year</span>
-                  <% } else if (country_name === "Japan") { %>
-                    $ <%= getplans[plan + '_val'].yearly_price_local %> <span>/ Year</span>
-                  <% } else { %>
-                    $ <%= getplans[plan + '_val'].yearly_price_local %> <span>/ Year</span>
+                  <label for="<%= plan %>-member-count"></label>
+                  <input type="hidden" min="0" name="memberCount" id="<%= plan %>-member-count" value="">
+                  <input type="hidden" id="<%= plan %>-per-user-price" value="<%= getplans[plan + '_val'].per_user_price_local %>">
+                  
+                  <% if (currentUserData) { %>
+                    <input type="hidden" name="userId" value="<%= currentUserData.user_id %>">
+                    <input type="hidden" name="email" value="<%= currentUserData.email %>">
                   <% } %>
                 </div>
-                
-                <% if (currentUserData && currentUserData.claimed_comp_id != null) { %>
-                  <%- getplans[plan + '_val' ].description %>
           
-                  <div class="get_started_btn">
-                    <% if (isSubscribed(plan, 'yearly')) { %>
-                      <!-- Show the subscribed button and disable it -->
-                      <button class="subscribed-btn" style="display: none;" disabled>
-                        Get Started
-                      </button>
-                    <% } else { %>
-                      <!-- Show the button for unsubscribed plans -->
-                      <div class="proceed_btn">
-                        <a href="#" style="color: black;" onclick="redirectToYearlyStripePayment('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].yearly_price %>', 'yearly')">Update</a>
-                      </div>
-                    <% } %>
-                  </div>
+
           
+                <%- getplans[plan + '_val' ].description %>
+          
+                <div class="get_started_btn">
+                  <% if (isSubscribed(plan, 'monthly')) { %>
+                    <button class="subscribed-btn" disabled>
+                      Get Started
+                    </button>
+                  <% }
+                  else if (userHasSubscription) { %>
+                    <button class="subscribed-btn">
+                       Get Started
+                    </button>
+                  <% } else { %>
+                    <div class="proceed_btn">
+                      <a href="#" style="color: black;"  onclick="redirectToStripePayment('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].monthly_price %>', 'monthly')">Get Started</a>
+                    </div>
+                  <% } %>
+                </div>
+              <% } else { %>
+                <div class="member-control">
+                  <label for="<%= plan %>-member-count"></label>
+                  <input type="hidden" min="0" name="memberCount" id="<%= plan %>-member-count" value="">
+                  <input type="hidden" id="<%= plan %>-per-user-price" value="<%= getplans[plan + '_val'].per_user_price_local %>">
+                  
+                  <% if (currentUserData) { %>
+                    <input type="hidden" name="userId" value="<%= currentUserData.user_id %>">
+                    <input type="hidden" name="email" value="<%= currentUserData.email %>">
+                  <% } %>
+                </div>
+
+          
+                <%- getplans[plan + '_val' ].description %>
+          
+                <div class="get_started_btn">
+                  <% if (isSubscribed(plan, 'monthly')) { %>
+                    <button class="subscribed-btn" disabled>
+                      Get Started
+                    </button>
+                  <% } else if (userHasSubscription) { %>
+                    <button class="subscribed-btn">
+                      Get Started
+                    </button>
+                  <% } else { %>
+                    <div class="proceed_btn">
+                      <a href="#" style="color: black;" onclick="redirectToSubscriptionPage('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].monthly_price %>', 'monthly')">Get Started</a>
+                    </div>
+                  <% } %>
+                </div>
+              <% } %>
+            </div>
+          <% }) %>
+          
+        </div>
+
+        <div id="yearly" class="tab-content">
+          <% ['basic', 'standard', 'advanced', 'premium', 'enterprise'].forEach(plan => { %>
+            <div class="pricing-card">
+              
+              <div class="price_tag">
+                <% if (country_name === "India") { %>
+                  $ <%= getplans[plan + '_val'].yearly_price_local %> <span>/ Year</span>
+                <% } else if (country_name === "Japan") { %>
+                  $ <%= getplans[plan + '_val'].yearly_price_local %> <span>/ Year</span>
                 <% } else { %>
-                  <!-- If no claimed company, show options -->
-                  <%- getplans[plan + '_val' ].description %>
-          
-                  <div class="get_started_btn">
-                    <% if (isSubscribed(plan, 'yearly')) { %>
-                      <label>
-                        <input type="radio" id="subscribe-<%= plan %>-yearly" name="subscriptionType" value="yearly" style="display: none;" disabled checked>
-                        Get Started
-                      </label>
-                    <% } else { %>
-                      <div class="proceed_btn">
-                        <a href="#" style="color: black;" onclick="redirectToYearlySubscriptionPage('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].yearly_price %>', 'yearly')">Update</a>
-                      </div>
-                    <% } %>
+                  $ <%= getplans[plan + '_val'].yearly_price_local %> <span>/ Year</span>
+                <% } %>
+              </div>
+              
+              <% if (currentUserData && currentUserData.claimed_comp_id != null) { %>
+
+              <%- getplans[plan + '_val' ].description %>
+
+              <div class="get_started_btn">
+                <% if (isSubscribed(plan, 'yearly')) { %>
+                  <!-- Show the subscribed button and disable it -->
+                  <button class="subscribed-btn" disabled>
+                    Get Started
+                  </button>
+                <% } else if (userHasSubscription) { %>
+                  <!-- Hide the button for other plans if the user already has a subscription -->
+                  <button class="subscribed-btn">
+                    Get Started
+                  </button>
+                <% } else { %>
+                  <div class="proceed_btn">
+                    <a href="#" style="color: black;" onclick="redirectToYearlyStripePayment('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].yearly_price %>', 'yearly')">Get Started</a>
                   </div>
                 <% } %>
               </div>
-            <% }) %>
-          </div>
-          
+              <% } else { %>
+                <%- getplans[plan + '_val' ].description %>
+
+                <div class="get_started_btn">
+                  <% if (isSubscribed(plan, 'yearly')) { %>
+                    <label>
+                      <input type="radio" id="subscribe-<%= plan %>-yearly" name="subscriptionType" value="yearly" disabled checked>
+                      Get Started
+                    </label>
+                  <% } else if (userHasSubscription) { %>
+                    <label>
+                      <input type="radio" id="subscribe-<%= plan %>-yearly" name="subscriptionType" value="yearly" disabled>
+                      Get Started
+                    </label>
+                  <% } else { %>
+                    <div class="proceed_btn">
+                      <a href="#" style="color: black;" onclick="redirectToYearlySubscriptionPage('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].yearly_price %>', 'yearly')">Get Started</a>
+                    </div>
+                  <% } %>
+                </div>
+                <% } %>
+            </div>
+          <% }) %>
+        </div>
+        
       </div>
     </div>
     </div>
 
+    <% if (getSubscribedUsers.length > 0) { %>
+      <p class="medium-large">
+        You have already subscribed to the <%= getSubscribedUsers[0].plan_name %> membership plan. Click
+        <a href="/user_payment_history %>"> here </a>to view the details.
+      </p>
+    <% } %>
 
     
       <!-- BODY STYLE CSS LINK -->
@@ -133,362 +194,362 @@
 
     <%- include('common/footer') -%>
 
-    <style>
-    * {
-        -webkit-box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        box-sizing: border-box;
-    }
+<style>
+   * {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
 
-    html {
-        scroll-behavior: smooth;
-        overflow-x: hidden;
-    }
+html {
+	scroll-behavior: smooth;
+	overflow-x: hidden;
+}
 
-    *:before,
-    *:after {
-        -webkit-box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        box-sizing: border-box;
-    }
+*:before,
+*:after {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
 
-    ::-moz-selection {
-        background-color: #007d9d;
-        color: #fff;
-        text-shadow: none;
-    }
+::-moz-selection {
+	background-color: #007d9d;
+	color: #fff;
+	text-shadow: none;
+}
 
-    ::selection {
-        background-color: #000000;
-        color: #fff;
-        text-shadow: none;
-    }
+::selection {
+	background-color: #000000;
+	color: #fff;
+	text-shadow: none;
+}
 
-    :root {
-        --theme-color: #000;
-        --theme-color-second: #000;
-    }
+:root {
+	--theme-color: #000;
+	--theme-color-second: #000;
+}
 
-    body {
-        margin: 0;
-        padding: 0;
-        font-size: 16px;
-        outline: none;
-        overflow: hidden;
-        box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        -webkit-box-sizing: border-box;
-        scroll-behavior: smooth;
-    }
+body {
+	margin: 0;
+	padding: 0;
+	font-size: 16px;
+	outline: none;
+	overflow: hidden;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	scroll-behavior: smooth;
+}
 
-    @font-face {
-        font-family: myFirstFont;
-        src: url();
-    }
+@font-face {
+	font-family: myFirstFont;
+	src: url();
+}
 
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6,
-    ul,
-    li,
-    figure {
-        margin: 0;
-        padding: 0;
-    }
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+ul,
+li,
+figure {
+	margin: 0;
+	padding: 0;
+}
 
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-        margin-bottom: 20px;
-    }
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	margin-bottom: 20px;
+}
 
-    p {
-        margin: 0;
-        font-size: 16px;
-        line-height: 27px;
-        margin-bottom: 20px;
-        font-weight: 400;
-    }
+p {
+	margin: 0;
+	font-size: 16px;
+	line-height: 27px;
+	margin-bottom: 20px;
+	font-weight: 400;
+}
 
-    ul {
-        list-style: none;
-        padding: 0;
-    }
+ul {
+	list-style: none;
+	padding: 0;
+}
 
-    img {
-        margin: 0;
-        padding: 0;
-        border: none;
-        max-width: 100%;
-        height: auto !important;
-        display: block;
-    }
-
-
-    a,
-    button,
-    input {
-        -webkit-transition: all 0.3s ease-in-out;
-        -o-transition: all 0.3s ease-in-out;
-        -moz-transition: all 0.3s ease-in-out;
-        transition: all 0.3s ease-in-out;
-    }
-
-    a {
-        text-decoration: none;
-    }
+img {
+	margin: 0;
+	padding: 0;
+	border: none;
+	max-width: 100%;
+	height: auto !important;
+	display: block;
+}
 
 
-    /* DEFAULT CSS SETTING END */
+a,
+button,
+input {
+	-webkit-transition: all 0.3s ease-in-out;
+	-o-transition: all 0.3s ease-in-out;
+	-moz-transition: all 0.3s ease-in-out;
+	transition: all 0.3s ease-in-out;
+}
 
-    /* Pricing Tabs Container */
-    /* Toggle Switch */
-    .tab_pricelist .toggle-container {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border: 2px solid #FCCB06;
-        border-radius: 10px;
-        padding: 20px 10px;
-        max-width: 450px;
-        margin: 20px auto;
-        background-color: #fff;
-    }
-
-    .tab_pricelist .toggle-label {
-        font-size: 24px;
-        color: #000000;
-        margin-right: 10px;
-    }
-
-    .toggle-container .toggle-label.active{
-        color: #FCCB06 !important;
-    }
+a {
+	text-decoration: none;
+}
 
 
-    .tab_pricelist #yearly-label {
-        color: #000;
-        margin-left: 10px;
-    }
+/* DEFAULT CSS SETTING END */
 
-    .tab_pricelist .discount {
-        background-color: #FCCB06;
-        color: #000000;
-        padding: 8px 10px;
-        border-radius: 5px;
-        font-size: 14px;
-        margin-left: 5px;
-        font-weight: 500;
-    }
+/* Pricing Tabs Container */
+/* Toggle Switch */
+.tab_pricelist .toggle-container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border: 2px solid #FCCB06;
+	border-radius: 10px;
+	padding: 20px 10px;
+	max-width: 450px;
+	margin: 20px auto;
+	background-color: #fff;
+}
 
-    .tab_pricelist .switch {
-        position: relative;
-        display: inline-block;
-        width: 65px;
-        height: 35px;
-    }
+.tab_pricelist .toggle-label {
+	font-size: 24px;
+	color: #000000;
+	margin-right: 10px;
+}
 
-    .tab_pricelist .switch input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-    }
+.toggle-container .toggle-label.active{
+	color: #FCCB06 !important;
+}
 
-    .tab_pricelist .slider {
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: #FCCB06;
-        transition: .4s;
-        border-radius: 34px;
-    }
 
-    .tab_pricelist .slider:before {
-        position: absolute;
-        content: "";
-        height: 30px;
-        width: 30px;
-        left: 4px;
-        bottom: 2px;
-        background-color: white;
-        transition: .4s;
-        border-radius: 50%;
-    }
+.tab_pricelist #yearly-label {
+	color: #000;
+	margin-left: 10px;
+}
 
-    .tab_pricelist input:checked+.slider {
-        background-color: #FCCB06;
-    }
+.tab_pricelist .discount {
+    background-color: #FCCB06;
+    color: #000000;
+    padding: 8px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    margin-left: 5px;
+    font-weight: 500;
+}
 
-    .tab_pricelist input:checked+.slider:before {
-        transform: translateX(26px);
-    }
+.tab_pricelist .switch {
+	position: relative;
+	display: inline-block;
+	width: 65px;
+	height: 35px;
+}
 
-    .tab_pricelist input:checked~#monthly-label {
-        color: #000;
-    }
+.tab_pricelist .switch input {
+	opacity: 0;
+	width: 0;
+	height: 0;
+}
 
-    .tab_pricelist input:checked~#yearly-label {
-        color: #007bff;
-    }
+.tab_pricelist .slider {
+	position: absolute;
+	cursor: pointer;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: #FCCB06;
+	transition: .4s;
+	border-radius: 34px;
+}
 
-    /* Pricing Cards */
-    .tab_pricelist .tab-content {
-        display: none;
-    }
+.tab_pricelist .slider:before {
+	position: absolute;
+	content: "";
+	height: 30px;
+	width: 30px;
+	left: 4px;
+	bottom: 2px;
+	background-color: white;
+	transition: .4s;
+	border-radius: 50%;
+}
 
+.tab_pricelist input:checked+.slider {
+	background-color: #FCCB06;
+}
+
+.tab_pricelist input:checked+.slider:before {
+	transform: translateX(26px);
+}
+
+.tab_pricelist input:checked~#monthly-label {
+	color: #000;
+}
+
+.tab_pricelist input:checked~#yearly-label {
+	color: #007bff;
+}
+
+/* Pricing Cards */
+.tab_pricelist .tab-content {
+	display: none;
+}
+
+.tab_pricelist .tab-content.active {
+	display: grid;
+	grid-template-columns: repeat(5, 1fr);
+	grid-gap: 15px;
+	margin-top: 20px;
+}
+
+.tab_pricelist .pricing-card {
+    background: #252525;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 30px 20px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.tab_pricelist .price_tag {
+    font-size: 26px;
+    color: #fff;
+}
+.tab_pricelist .price_tag  span{
+	font-size: 14px;
+}
+
+
+.tab_pricelist .pricing-card h4{
+	color: #FCCB06;
+	font-size: 22px;
+	font-weight: 700;
+	line-height: 110.4%;
+	transition: all ease-in-out 0.5s;
+}
+
+
+.tab_pricelist .pricing-card ul {
+	list-style-type: none;
+	padding: 0;
+	margin: 20px ;
+}
+
+.tab_pricelist .pricing-card ul li {
+	margin-bottom: 10px;
+	font-size: 16px;
+	color: #ffffff;
+	list-style: disc;
+}
+
+.tab_pricelist .get_started_btn{
+	margin-top: 30px;
+}
+
+.tab_pricelist .proceed_btn{
+	background-color: #FCCB06;
+	color: #000000;
+	padding: 14px 30px;
+	width: 100%;
+	border-radius: 6px;
+	text-transform: capitalize;
+	transition: 0.3s ease-in-out;
+}
+
+.tab_pricelist .proceed_btn:hover{
+	color: #000;
+	background-color: #fff;
+}
+.proceed_btn.proceed-invisible-btn a {
+    display: block;
+    width: 100%;
+    text-align: center;
+}
+.subscribed-btn {
+  background-color: #FCCB06;
+  color: #000000;
+  height: 50px; 
+  width: 100%;
+  border-radius: 6px;
+  text-transform: capitalize;
+  transition: 0.3s ease-in-out;
+  border: none;
+  cursor: not-allowed;
+}
+.proceed_btn.proceed-invisible-btn a {
+    display: block;
+    width: 100%;
+    text-align: center;
+}
+.medium-large {
+    font-size: 1.25em; 
+    font-weight: bold; 
+    text-align: center;
+  }
+
+
+/* MEDIA QUERY RESPONSIVE STRAT */
+
+@media only screen and (max-width:1299px) {
     .tab_pricelist .tab-content.active {
         display: grid;
-        grid-template-columns: repeat(5, 1fr);
+        grid-template-columns: repeat(4, 1fr);
         grid-gap: 15px;
         margin-top: 20px;
     }
+}
 
-    .tab_pricelist .pricing-card {
-        background: #252525;
-        border-radius: 20px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        padding: 30px 20px;
-        width: 100%;
-        margin-bottom: 20px;
+@media only screen and (max-width:1199px) {
+    .tab_pricelist .tab-content.active {
+        grid-template-columns: repeat(3, 1fr);
     }
+}
 
-    .tab_pricelist .price_tag {
-        font-size: 26px;
-        color: #fff;
+@media only screen and (max-width:991px) {
+    .tab_pricelist .tab-content.active {
+        grid-template-columns: repeat(2, 1fr);
     }
-    .tab_pricelist .price_tag  span{
-        font-size: 14px;
+}
+
+@media only screen and (max-width:575px) {
+    .tab_pricelist .tab-content.active {
+        grid-template-columns: repeat(1, 1fr);
     }
-
-
-    .tab_pricelist .pricing-card h4{
-        color: #FCCB06;
-        font-size: 22px;
-        font-weight: 700;
-        line-height: 110.4%;
-        transition: all ease-in-out 0.5s;
-    }
-
-
-    .tab_pricelist .pricing-card ul {
-        list-style-type: none;
-        padding: 0;
-        margin: 20px ;
-    }
-
-    .tab_pricelist .pricing-card ul li {
-        margin-bottom: 10px;
-        font-size: 16px;
-        color: #ffffff;
-        list-style: disc;
-    }
-
-    .tab_pricelist .get_started_btn{
-        margin-top: 30px;
-    }
-
-    .tab_pricelist .proceed_btn{
-        background-color: #FCCB06;
+    .tab_pricelist .toggle-label {
+        font-size: 18px;
         color: #000000;
-        padding: 14px 30px;
-        width: 100%;
-        border-radius: 6px;
-        text-transform: capitalize;
-        transition: 0.3s ease-in-out;
+        margin-right: 10px;
     }
+    .tab_pricelist .switch {
+        width: 45px;
+        height: 22px;
+    }
+    .tab_pricelist .slider:before {
+        height: 16px;
+        width: 16px;
+        left: 2px;
+        bottom: 3px;
+    }
+    .tab_pricelist .discount {
+        padding: 5px 6px;
+        font-size: 12px;
+    }
+    
+}
 
-    .tab_pricelist .proceed_btn:hover{
-        color: #000;
-        background-color: #fff;
-    }
-    .proceed_btn.proceed-invisible-btn a {
-        display: block;
-        width: 100%;
-        text-align: center;
-    }
-    .subscribed-btn {
-    background-color: #FCCB06;
-    color: #000000;
-    height: 50px; 
-    width: 100%;
-    border-radius: 6px;
-    text-transform: capitalize;
-    transition: 0.3s ease-in-out;
-    border: none;
-    cursor: not-allowed;
-    }
-    .proceed_btn.proceed-invisible-btn a {
-        display: block;
-        width: 100%;
-        text-align: center;
-    }
-    .medium-large {
-        font-size: 1.25em; 
-        font-weight: bold; 
-        text-align: center;
-    }
-
-
-    /* MEDIA QUERY RESPONSIVE STRAT */
-
-    @media only screen and (max-width:1299px) {
-        .tab_pricelist .tab-content.active {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            grid-gap: 15px;
-            margin-top: 20px;
-        }
-    }
-
-    @media only screen and (max-width:1199px) {
-        .tab_pricelist .tab-content.active {
-            grid-template-columns: repeat(3, 1fr);
-        }
-    }
-
-    @media only screen and (max-width:991px) {
-        .tab_pricelist .tab-content.active {
-            grid-template-columns: repeat(2, 1fr);
-        }
-    }
-
-    @media only screen and (max-width:575px) {
-        .tab_pricelist .tab-content.active {
-            grid-template-columns: repeat(1, 1fr);
-        }
-        .tab_pricelist .toggle-label {
-            font-size: 18px;
-            color: #000000;
-            margin-right: 10px;
-        }
-        .tab_pricelist .switch {
-            width: 45px;
-            height: 22px;
-        }
-        .tab_pricelist .slider:before {
-            height: 16px;
-            width: 16px;
-            left: 2px;
-            bottom: 3px;
-        }
-        .tab_pricelist .discount {
-            padding: 5px 6px;
-            font-size: 12px;
-        }
-        
-    }
-
-    /* MEDIA QUERY RESPONSIVE END */
-    </style>
+/* MEDIA QUERY RESPONSIVE END */
+</style>
 
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -503,21 +564,23 @@
     
     // Initialize by making the Monthly tab and label active
     window.onload = function() {
-      monthlyTab.classList.add('active'); 
-      yearlyTab.classList.remove('active'); 
-      monthlyLabel.classList.add('active'); 
-      yearlyLabel.classList.remove('active'); 
-      toggleSwitch.checked = false; 
+      monthlyTab.classList.add('active'); // Show monthly tab content
+      yearlyTab.classList.remove('active'); // Hide yearly tab content
+      monthlyLabel.classList.add('active'); // Highlight the monthly label
+      yearlyLabel.classList.remove('active'); // Remove highlight from yearly label
+      toggleSwitch.checked = false; // Ensure toggle is off (Monthly view)
     };
     
     // Event listener for toggle switch
     toggleSwitch.addEventListener('change', function() {
       if (this.checked) {
+        // Show yearly pricing and apply active class to Yearly label
         monthlyTab.classList.remove('active');
         yearlyTab.classList.add('active');
         monthlyLabel.classList.remove('active');
         yearlyLabel.classList.add('active');
       } else {
+        // Show monthly pricing and apply active class to Monthly label
         yearlyTab.classList.remove('active');
         monthlyTab.classList.add('active');
         yearlyLabel.classList.remove('active');
@@ -594,7 +657,7 @@
 
 
      // const redirectURL = `/stripe-payment?planId=${encodeURIComponent(planId)}&planPrice=${encodeURIComponent(planPrice)}&billingCycle=${encodeURIComponent(billingCycle)}&memberCount=${encodeURIComponent(memberCount)}&total_price=${encodeURIComponent(total_price.toFixed(2))}`;
-     const redirectURL = `/stripe-update-payment?planId=${encodeURIComponent(planId)}&planPrice=${encodeURIComponent(planPrice)}&billingCycle=${encodeURIComponent(billingCycle)}&memberCount=${encodeURIComponent(memberCount)}&total_price=${encodeURIComponent(total_price.toFixed(2))}&encryptedEmail=${encodeURIComponent(encryptedemail)}`;
+     const redirectURL = `/stripe-payment?planId=${encodeURIComponent(planId)}&planPrice=${encodeURIComponent(planPrice)}&billingCycle=${encodeURIComponent(billingCycle)}&memberCount=${encodeURIComponent(memberCount)}&total_price=${encodeURIComponent(total_price.toFixed(2))}&encryptedEmail=${encodeURIComponent(encryptedemail)}`;
 
      window.location.href = redirectURL;
   }
@@ -628,7 +691,7 @@
      console.log("memberCount", memberCount);
      console.log("total_price", total_price);
 
-     const redirectURL = `/stripe-update-year-payment?planId=${encodeURIComponent(planId)}&planPrice=${encodeURIComponent(planPrice)}&billingCycle=${encodeURIComponent(billingCycle)}&memberCount=${encodeURIComponent(memberCount)}&total_price=${encodeURIComponent(total_price.toFixed(2))}&encryptedEmail=${encodeURIComponent(encryptedemail)}`;
+     const redirectURL = `/stripe-year-payment?planId=${encodeURIComponent(planId)}&planPrice=${encodeURIComponent(planPrice)}&billingCycle=${encodeURIComponent(billingCycle)}&memberCount=${encodeURIComponent(memberCount)}&total_price=${encodeURIComponent(total_price.toFixed(2))}&encryptedEmail=${encodeURIComponent(encryptedemail)}`;
 
      window.location.href = redirectURL;
   }
@@ -765,32 +828,37 @@
 <script>
 $(document).ready(function() {
 function toggleProceedButton(plan, type) {
+// Determine IDs for the proceed button and total price display based on plan and type
 const proceedBtnId = `proceed-btn-${plan}-${type}`;
 const totalPriceDisplayId = `total-${type}-price-${plan}`;
 
+// Select the proceed button and total price display for the given plan and type
 const $proceedBtn = $(`#${proceedBtnId}`);
 const $totalPriceDisplay = $(`#${totalPriceDisplayId}`);
 
+// Show the proceed button and total price display for the selected plan and type
 $proceedBtn.removeClass('proceed-invisible-btn').addClass('proceed-visible-btn');
-$totalPriceDisplay.show(); 
+$totalPriceDisplay.show(); // Show total price display
 
+// Hide the proceed button and total price display for other plans and types
 $('.proceed_btn').not(`#${proceedBtnId}`).each(function() {
   $(this).removeClass('proceed-visible-btn').addClass('proceed-invisible-btn');
 });
 
 $('.total-price-display').not(`#${totalPriceDisplayId}`).each(function() {
-  $(this).hide(); 
+  $(this).hide(); // Hide total price display for other plans
 });
 }
 
+// Attach click event handlers to radio buttons
 $('input[name="subscriptionType"]').on('click', function() {
-const idParts = $(this).attr('id').split('-'); 
+const idParts = $(this).attr('id').split('-'); // Split ID to get plan and type
 const plan = idParts[1];
-const type = idParts[2]; 
+const type = idParts[2]; // 'monthly' or 'yearly'
 toggleProceedButton(plan, type);
 });
 
-
+// Initial setup to hide proceed buttons and prices on page load
 $('.proceed_btn').addClass('proceed-invisible-btn');
 $('.total-price-display').hide();
 });

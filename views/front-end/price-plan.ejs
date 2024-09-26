@@ -39,7 +39,7 @@
                 <% } %>
               </div>
           
-              <% if (currentUserData && currentUserData.claimed_comp_id != null) { %>
+              <% if (currentUserData) { %>
                 <div class="member-control">
                   <label for="<%= plan %>-member-count"></label>
                   <input type="hidden" min="0" name="memberCount" id="<%= plan %>-member-count" value="">
@@ -65,9 +65,14 @@
                     <button class="subscribed-btn">
                        Get Started
                     </button>
-                  <% } else { %>
+                    <% }
+                  else if (currentUserData.claimed_comp_id!=null || currentUserData.claimed_comp_id!=undefined ) { %>
                     <div class="proceed_btn">
                       <a href="#" style="color: black;"  onclick="redirectToStripePayment('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].monthly_price %>', 'monthly')">Get Started</a>
+                    </div>
+                  <% } else { %>
+                    <div class="proceed_btn">
+                      <a href="#" style="color: black;"  onclick="redirectTocompanymonthlySubscriptionPage('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].monthly_price %>', 'monthly')">Get Started</a>
                     </div>
                   <% } %>
                 </div>
@@ -121,7 +126,7 @@
                 <% } %>
               </div>
               
-              <% if (currentUserData && currentUserData.claimed_comp_id != null) { %>
+              <% if (currentUserData) { %>
 
               <%- getplans[plan + '_val' ].description %>
 
@@ -136,9 +141,13 @@
                   <button class="subscribed-btn">
                     Get Started
                   </button>
+                  <% }  else if (currentUserData.claimed_comp_id!=null || currentUserData.claimed_comp_id!=undefined ) { %>
+                    <div class="proceed_btn">
+                    <a href="#" style="color: black;" onclick="redirectToYearlyStripePayment('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].yearly_price %>', 'yearly')">Get Started</a>
+                  </div>
                 <% } else { %>
                   <div class="proceed_btn">
-                    <a href="#" style="color: black;" onclick="redirectToYearlyStripePayment('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].yearly_price %>', 'yearly')">Get Started</a>
+                    <a href="#" style="color: black;" onclick="redirectTocompanyyearlySubscriptionPage('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].yearly_price %>', 'yearly')">Get Started</a>
                   </div>
                 <% } %>
               </div>
@@ -784,6 +793,61 @@ a {
      console.log("memberCount", memberCountValue);
      console.log("total_price", total_price);
      const redirectURL = `/create-user-company-subscription?planName=${encodeURIComponent(planId)}&monthlyPrice=${encodeURIComponent(planPrice)}&subscriptionType=${encodeURIComponent(billingCycle)}&memberCount=${encodeURIComponent(memberCountValue)}&total_price=${encodeURIComponent(total_price.toFixed(2))}`;
+
+     window.location.href = redirectURL;
+  }
+
+
+  function redirectTocompanymonthlySubscriptionPage(planId, planPrice, billingCycle, memberCount, totalPrice) {
+     const memberCountValue = document.getElementById(`${planId}-member-count`).value || 0;
+     const perUserPriceElement = document.getElementById(`${planId}-per-user-price`);
+     const perUserPrice = perUserPriceElement ? parseFloat(perUserPriceElement.value) : null;
+
+     const monthlyTotalPriceSpan = document.getElementById(`${planId}-total-monthly-price`);
+     const yearlyTotalPriceSpan = document.getElementById(`${planId}-total-yearly-price`);
+
+     const updatedMonthlyTotalPrice = monthlyTotalPriceSpan ? parseFloat(monthlyTotalPriceSpan.textContent) : parseFloat(planPrice);
+     const updatedYearlyTotalPrice = yearlyTotalPriceSpan ? parseFloat(yearlyTotalPriceSpan.textContent) : parseFloat(planPrice);
+
+     let total_price;
+     if (perUserPrice) {
+        total_price = updatedMonthlyTotalPrice;
+     } else {
+        total_price = updatedMonthlyTotalPrice;
+     }
+
+     const redirectURL = `/create-company-subscription?planName=${encodeURIComponent(planId)}&monthlyPrice=${encodeURIComponent(planPrice)}&subscriptionType=${encodeURIComponent(billingCycle)}&memberCount=${encodeURIComponent(memberCountValue)}&total_price=${encodeURIComponent(total_price.toFixed(2))}`;
+
+     window.location.href = redirectURL;
+  }
+
+  function redirectTocompanyyearlySubscriptionPage(planId, planPrice, billingCycle) {
+     const memberCountValue = document.getElementById(`${planId}-member-count`).value || 0;
+     const perUserPriceElement = document.getElementById(`${planId}-per-user-price`);
+     const perUserPrice = perUserPriceElement ? parseFloat(perUserPriceElement.value) : null;
+
+     const monthlyTotalPriceSpan = document.getElementById(`${planId}-total-monthly-price`);
+     const yearlyTotalPriceSpan = document.getElementById(`${planId}-total-yearly-price`);
+
+     console.log("monthlyTotalPriceSpan", monthlyTotalPriceSpan);
+     console.log("yearlyTotalPriceSpan", yearlyTotalPriceSpan);
+
+     const updatedMonthlyTotalPrice = monthlyTotalPriceSpan ? parseFloat(monthlyTotalPriceSpan.textContent) : parseFloat(planPrice);
+     const updatedYearlyTotalPrice = yearlyTotalPriceSpan ? parseFloat(yearlyTotalPriceSpan.textContent) : parseFloat(planPrice);
+
+     console.log("updatedMonthlyTotalPrice", updatedMonthlyTotalPrice);
+     console.log("updatedYearlyTotalPrice", updatedYearlyTotalPrice);
+
+     let total_price;
+     if (perUserPrice) {
+        total_price = updatedYearlyTotalPrice;
+     } else {
+        total_price = updatedYearlyTotalPrice;
+     }
+
+     console.log("memberCount", memberCountValue);
+     console.log("total_price", total_price);
+     const redirectURL = `/create-company-subscription?planName=${encodeURIComponent(planId)}&monthlyPrice=${encodeURIComponent(planPrice)}&subscriptionType=${encodeURIComponent(billingCycle)}&memberCount=${encodeURIComponent(memberCountValue)}&total_price=${encodeURIComponent(total_price.toFixed(2))}`;
 
      window.location.href = redirectURL;
   }

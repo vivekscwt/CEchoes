@@ -773,10 +773,31 @@ exports.frontendUserLogin = (req, res) => {
                             LEFT JOIN countries c ON user_meta.country = c.id
                             LEFT JOIN states s ON user_meta.state = s.id
                             LEFT JOIN company_claim_request ccr ON user_meta.user_id = ccr.claimed_by
-                            LEFT JOIN company ON company.ID = ccr.company_id
+                            LEFT JOIN company ON company.ID = ccr.company_id AND company.status = '1'
                             LEFT JOIN company_level_manage_users ON user_meta.user_id = company_level_manage_users.user_id
                             WHERE user_meta.user_id = ?
                         `;
+                    //     const query = `
+                    //     SELECT user_meta.*, 
+                    //            c.name as country_name, 
+                    //            s.name as state_name, 
+                    //            ccr.company_id as claimed_comp_id, 
+                    //            company.slug,
+                    //            company.status AS company_status,
+                    //            plan_management.name AS plan_name,
+                    //            company_level_manage_users.emails,
+                    //            company_level_manage_users.level_user_type,
+                    //            company_level_manage_users.company_id
+                    //     FROM user_customer_meta user_meta
+                    //     LEFT JOIN countries c ON user_meta.country = c.id
+                    //     LEFT JOIN states s ON user_meta.state = s.id
+                    //     LEFT JOIN company_claim_request ccr ON user_meta.user_id = ccr.claimed_by
+                    //     LEFT JOIN company ON company.ID = ccr.company_id AND company.status = '1'  
+                    //     LEFT JOIN company_level_manage_users ON user_meta.user_id = company_level_manage_users.user_id
+                    //     LEFT JOIN plan_management ON company.membership_type_id = plan_management.id
+                    //     WHERE user_meta.user_id = ?
+                    // `;
+                    
                             db.query(query, [user.user_id], async (err, results) => {
                                 console.log("frontendlogin",results);
                                 
@@ -816,6 +837,8 @@ exports.frontendUserLogin = (req, res) => {
                                         emails: user_meta.emails,
                                         level_user_type: user_meta.level_user_type,
                                         company_id: user_meta.company_id,
+                                        // company_status: user_meta.company_status,
+                                        // plan_name: user_meta.plan_name
                                     };
                                     const encodedUserData = JSON.stringify(userData);
                                     res.cookie('user', encodedUserData);
@@ -15569,6 +15592,8 @@ exports.confirmReview = async (req, res) => {
 const createStripeProductAndPrice = async (plan, billingCycle, memberCount) => {
     try {
         memberCount = parseInt(memberCount);
+        console.log("memberCountupdatesubs",memberCount);
+        
         if (isNaN(memberCount) || memberCount < 0) {
             // throw new Error('Invalid memberCount');
             memberCount= 0;
@@ -16000,8 +16025,8 @@ exports.updateOrderHistory = async (req, res) => {
         var companyID = getcompanyvalue[0].ID;
         console.log("companyID", companyID);
 
-        const updatecompany_query = `UPDATE company SET membership_type_id = ? WHERE ID = "${companyID}"`;
-        const updatecompany_value = await queryAsync(updatecompany_query, [planId]);
+        const updatecompany_query = `UPDATE company SET membership_type_id = ?,paid_status=? WHERE ID = "${companyID}"`;
+        const updatecompany_value = await queryAsync(updatecompany_query,'paid',[planId]);
         console.log("updatecompany_value", updatecompany_value);
 
         const subscriptionDetails = await razorpay.subscriptions.fetch(subscriptionId);
@@ -16295,7 +16320,13 @@ exports.createexternalSubscription = async (req, res) => {
         console.log("paymentIntent.client_secret",paymentIntent.client_secret);
         
         const invoiceUrl = subscription.latest_invoice.invoice_pdf;
-            const planInterval = subscription.items.data[0].price.recurring.interval === 'year' ? 'year' : 'month';
+        const planInterval = subscription.items.data[0].price.recurring.interval === 'year' ? 'year' : 'month';
+
+        if(billingCycle=="monthly"){
+            var durations = "month"
+        }else{
+            var durations = "year"
+        }
 
             const order_history_data = {
                 stripe_subscription_id: subscription.id,
@@ -16303,7 +16334,8 @@ exports.createexternalSubscription = async (req, res) => {
                 payment_status: paymentStatus,
                 subscription_details: JSON.stringify(subscription),
                 payment_details: JSON.stringify(paymentIntent),
-                subscription_duration: planInterval,
+                // subscription_duration: planInterval,
+                subscription_duration: durations,
                 subscription_start_date: new Date(subscription.current_period_start * 1000),
                 subscription_end_date: new Date(subscription.current_period_end * 1000),
                 added_user_number: memberCount
@@ -16566,9 +16598,9 @@ exports.externalRegistration = async (req, res) => {
                                         <table border="0" cellpadding="4" cellspacing="0" width="90%">
                                           <tr>
                                             <td colspan="2">
-                                                <strong>Hello ${first_name},</strong>
-                                                <p style="font-size:15px; line-height:20px">User1 has been register at CEchoes.com</p>
-                                                <p style="font-size:15px; line-height:20px">Please verify the <a href="http://localhost:2000">user</a>.</p>
+                                                <strong>Hello Sir/Madam,</strong>
+                                                <p style="font-size:15px; line-height:20px">A new user named ${first_name} ${last_name} has been register at CEchoes.com</p>
+                                                <p style="font-size:15px; line-height:20px">Please verify the <a href="${process.env.MAIN_URL}pending-users">user</a>.</p>
                                                 <p style="font-size:15px; line-height:20px"><br><p style="font-size:15px; line-height:20px">Kind Regards,</p><p style="font-size:15px; line-height:20px">CEchoes Technology Team</p><br>
                                             </td>
                                           </tr>
@@ -16626,6 +16658,117 @@ exports.externalRegistration = async (req, res) => {
                 }
             });
 
+            var mailOptions2 = {
+                from: process.env.MAIL_USER,
+                to: process.env.MAIL_USER,
+                subject: 'New Registration of an Organization at CEchoes',
+                html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+                <style>
+                body, table, td, p, a, h1, h2, h3, h4, h5, h6, div {
+                    font-family: Calibri, 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif !important;
+                }
+                </style>
+                <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
+                 <tbody>
+                  <tr>
+                   <td align="center" valign="top">
+                     <div id="template_header_image"><p style="margin-top: 0;"></p></div>
+                     <table id="template_container" style="box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important; background-color: #fdfdfd; border: 1px solid #dcdcdc; border-radius: 3px !important;" border="0" cellpadding="0" cellspacing="0" width="600">
+                      <tbody>
+                        <tr>
+                         <td align="center" valign="top">
+                           <!-- Header -->
+                           <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
+                             <tbody>
+                               <tr>
+                               <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/email-template-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+                                <td id="header_wrapper" style="padding: 36px 48px; display: block;">
+                                   <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Welcome</h1>
+                                </td>
+          
+                               </tr>
+                             </tbody>
+                           </table>
+                     <!-- End Header -->
+                     </td>
+                        </tr>
+                        <tr>
+                         <td align="center" valign="top">
+                           <!-- Body -->
+                           <table id="template_body" border="0" cellpadding="0" cellspacing="0" width="600">
+                             <tbody>
+                               <tr>
+                                <td id="body_content" style="background-color: #fdfdfd;" valign="top">
+                                  <!-- Content -->
+                                  <table border="0" cellpadding="20" cellspacing="0" width="100%">
+                                   <tbody>
+                                    <tr>
+                                     <td style="padding: 48px;" valign="top">
+                                       <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
+                                        
+                                        <table border="0" cellpadding="4" cellspacing="0" width="90%">
+                                          <tr>
+                                            <td colspan="2">
+                                                <strong>Hello Sir/Madam,</strong>
+                                                <p style="font-size:15px; line-height:20px">A new organization has been subscribed at CEchoes.com</p>
+                                                <p style="font-size:15px; line-height:20px">Please verify the <a href="${process.env.MAIN_URL}pending-users">organization</a>.</p>
+                                                <p style="font-size:15px; line-height:20px"><br><p style="font-size:15px; line-height:20px">Kind Regards,</p><p style="font-size:15px; line-height:20px">CEchoes Technology Team</p><br>
+                                            </td>
+                                          </tr>
+                                        </table>
+                                       </div>
+                                     </td>
+                                    </tr>
+                                   </tbody>
+                                  </table>
+                                <!-- End Content -->
+                                </td>
+                               </tr>
+                             </tbody>
+                           </table>
+                         <!-- End Body -->
+                         </td>
+                        </tr>
+                        <tr>
+                         <td align="center" valign="top">
+                           <!-- Footer -->
+                           <table id="template_footer" border="0" cellpadding="10" cellspacing="0" width="600">
+                            <tbody>
+                             <tr>
+                              <td style="padding: 0; -webkit-border-radius: 6px;" valign="top">
+                               <table border="0" cellpadding="10" cellspacing="0" width="100%">
+                                 <tbody>
+                                   <tr>
+                                    <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
+                                         <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology</a></p>
+                                    </td>
+                                   </tr>
+                                 </tbody>
+                               </table>
+                              </td>
+                             </tr>
+                            </tbody>
+                           </table>
+                         <!-- End Footer -->
+                         </td>
+                        </tr>
+                      </tbody>
+                     </table>
+                   </td>
+                  </tr>
+                 </tbody>
+                </table>
+               </div>`
+            };
+            await mdlconfig.transporter.sendMail(mailOptions2, function (err, info) {
+                if (err) {
+                    console.log(err);
+                    return res.status(500).json({ status: 'err', message: 'Something went wrong while sending email' });
+                } else {
+                    console.log('Mail sent to admin of pending company: ', info.response);
+                }
+            });
+
             if (req.body.parent_id == '0') {
                 console.log("vvvvv");
                 
@@ -16663,8 +16806,8 @@ exports.externalRegistration = async (req, res) => {
                             console.log("company results", results);
                             var companyId = results.insertId;
 
-                            const updatecompany_query = `UPDATE company SET membership_type_id = ? WHERE ID = "${companyId}"`;
-                            const updatecompany_value = await queryAsync(updatecompany_query, [planId]);
+                            const updatecompany_query = `UPDATE company SET membership_type_id = ?, paid_status = ? WHERE ID = "${companyId}"`;
+                            const updatecompany_value = await queryAsync(updatecompany_query, 'paid', [planId]);
                             console.log("updatecompany_value", updatecompany_value);
 
                             const updatecompanyclaim_query = `INSERT INTO company_claim_request SET company_id = ?, claimed_by = ?, status = ?, claimed_date = ?`;
@@ -16716,44 +16859,6 @@ exports.externalRegistration = async (req, res) => {
                                     console.error('Failed to update order history:', error);
                                 }
 
-                            // if (paymentStatus === 'succeeded') {
-                            //     const invoiceUrl = subscription.latest_invoice.invoice_pdf;
-                            //     const planInterval = subscription.items.data[0].price.recurring.interval === 'year' ? 'year' : 'month';
-                    
-                            //     const order_history_data = {
-                            //         stripe_subscription_id: subscription.id,
-                            //         plan_id: planId,
-                            //         payment_status: paymentStatus,
-                            //         subscription_details: JSON.stringify(subscription),
-                            //         subscription_duration: planInterval,
-                            //         subscription_start_date: new Date(subscription.current_period_start * 1000),
-                            //         subscription_end_date: new Date(subscription.current_period_end * 1000),
-                            //         added_user_number: memberCount
-                            //     };
-                    
-                            //     var ordervalue = await queryAsync('INSERT INTO order_history SET ?', [order_history_data]);
-                            //     console.log("ordervalue",ordervalue);
-                                
-                            //     const mailOptions = {
-                            //         from: process.env.MAIL_USER,
-                            //         to: email,
-                            //         subject: 'Your Subscription Invoice',
-                            //         html: `<p>Thank you for your subscription. You can view your invoice at the <a href="${invoiceUrl}">following link</a>.</p>`,
-                            //     };
-                            //     await mdlconfig.transporter.sendMail(mailOptions);
-                    
-                            //     return res.send({
-                            //         status: 'ok',
-                            //         message: 'Payment was successful!',
-                            //         subscriptionId: subscription.id,
-                            //         invoiceUrl: invoiceUrl,
-                            //     });
-                    
-                            // }
-
-
-                            // Insert user meta
-                            
                             const userMetaInsertQuery = 'INSERT INTO user_customer_meta (user_id, review_count, country, state) VALUES (?, ?, ?, ?)';
                             await queryAsync(userMetaInsertQuery, [userResults.insertId, 0, user_country, user_state]);
 
@@ -16832,6 +16937,198 @@ exports.externalRegistration = async (req, res) => {
     }
 };
 
+
+exports.externalcompanyRegistration = async (req, res) => {
+    const { first_name, last_name, email, phone, address, city, state, zip, planId, billingCycle, memberCount, subscriptionId, user_state, user_country } = req.body;
+    console.log("externalcompanyRegistration", req.body);
+
+    const currentDate = new Date();
+    const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ');
+
+    var getuseridquery = `SELECT * FROM users WHERE email =?`
+    var getuserval = await queryAsync(getuseridquery,[email]);
+    if(getuserval.length>0){
+        var userId = getuserval[0].user_id;
+    }
+
+    try {
+        const updateQuery = 'UPDATE users SET first_name = ?, last_name = ?, phone = ?, alise_name = ?  WHERE user_id = ?';
+        db.query(updateQuery, [req.body.first_name, req.body.last_name, req.body.phone, req.body.alise_name, userId], async (updateError, updateResults) => {
+    
+            if (updateError) {
+                return res.send(
+                    {
+                        status: 'err',
+                        data: '',
+                        message: 'An error occurred while processing your request' + updateError
+                    }
+                )
+            } else {
+                    const updateQueryMeta = 'UPDATE user_customer_meta SET address = ?, country = ?, state = ?, zip = ?, date_of_birth = ?, gender = ?, alternate_phone = ?, marital_status = ?, about = ? WHERE user_id = ?';
+                    const updateQueryData = [req.body.address, req.body.user_country, req.body.user_state, req.body.zip, req.body.date_of_birth, req.body.gender, req.body.alternate_phone, req.body.marital_status, req.body.about, userId]
+                    db.query(updateQueryMeta, updateQueryData, (updateError, updateResults) => {
+                        if (updateError) {
+                            return res.send(
+                                {
+                                    status: 'err',
+                                    data: '',
+                                    message: 'An error occurred while processing your request' + updateError
+                                }
+                            )
+                        } else {
+                            const query = `
+                                    SELECT user_meta.*, c.name as country_name, s.name as state_name, u.first_name
+                                    , u.last_name, u.email, u.phone, u.user_type_id, ccr.company_id as claimed_comp_id
+                                    FROM user_customer_meta user_meta
+                                    JOIN users u ON u.user_id = user_meta.user_id
+                                    JOIN countries c ON user_meta.country = c.id
+                                    JOIN states s ON user_meta.state = s.id
+                                    LEFT JOIN company_claim_request ccr ON user_meta.user_id = ccr.claimed_by
+                                    WHERE user_meta.user_id = ?
+                                    `;
+                            db.query(query, [userId], async (err, results) => {
+                                let userData = {};
+                                if (results.length > 0) {
+                                    const user_meta = results[0];
+                                    //console.log(user_meta,'aaaaaaaa');
+                                    // Set a cookie
+                                    const dateString = user_meta.date_of_birth;
+                                    const date_of_birth_date = new Date(dateString);
+                                    const formattedDate = date_of_birth_date.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
+    
+                                    let userData = {
+                                        user_id: user_meta.user_id,
+                                        first_name: user_meta.first_name,
+                                        last_name: user_meta.last_name,
+                                        email: user_meta.email,
+                                        phone: user_meta.phone,
+                                        user_type_id: user_meta.user_type_id,
+                                        address: user_meta.address,
+                                        country: user_meta.country,
+                                        country_name: user_meta.country_name,
+                                        state: user_meta.state,
+                                        state_name: user_meta.state_name,
+                                        city: user_meta.city,
+                                        zip: user_meta.zip,
+                                        review_count: user_meta.review_count,
+                                        date_of_birth: formattedDate,
+                                        occupation: user_meta.occupation,
+                                        gender: user_meta.gender,
+                                        profile_pic: user_meta.profile_pic,
+                                        claimed_comp_id: user_meta.claimed_comp_id
+                                    };
+                                    const encodedUserData = JSON.stringify(userData);
+                                    res.cookie('user', encodedUserData);
+    
+                                }
+                            });
+    
+                        }
+                    });
+            }
+            if (req.body.parent_id == '0') {
+                console.log("vvvvv");
+                
+                const companyQuery = `SELECT * FROM company WHERE company_name = ? AND main_address_country = ? `;
+                const companyValue = await query(companyQuery, [req.body.company_name, req.body.main_address_country]);
+                if (companyValue.length > 0) {
+                    return res.status(500).json({ status: 'err', data: '', message: 'Organization name already exists.' });
+                }
+            }
+
+            comFunction2.generateUniqueSlug(req.body.company_name, async (error, companySlug) => {
+                if (error) {
+                    console.log("error slug");
+                    
+                    console.log('Err: ', error.message);
+                    return res.status(500).json({ status: 'err', data: '', message: 'Error generating company slug' });
+                } else {
+                    console.log('companySlug', companySlug);
+                    var insertValues = [];
+                    if (req.file) {
+                        insertValues = [userId, req.body.company_name, req.body.heading, req.file.filename, req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, '2', req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug, req.body.parent_id,'1'];
+                    } else {
+                        insertValues = [userId, req.body.company_name, req.body.heading, '', req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, '2', req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.main_address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug, req.body.parent_id,'1'];
+                    }
+
+                    const insertQuery = 'INSERT INTO company (user_created_by, company_name, heading, logo, about_company, comp_phone, comp_email, comp_registration_id, status, trending, created_date, updated_date, tollfree_number, main_address, main_address_pin_code, address_map_url, main_address_country, main_address_state, main_address_city, verified, paid_status, slug, parent_id,temp_comp_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+                    db.query(insertQuery, insertValues, async (err, results, fields) => {
+                        if (err) {
+                            console.error("Company error:", err);
+                            return res.status(500).json({ status: 'err', data: '', message: 'An error occurred while processing your request' });
+                        } else {
+                            console.log("company results", results);
+                            var companyId = results.insertId;
+
+                            const updatecompany_query = `UPDATE company SET membership_type_id = ?, paid_status = ? WHERE ID = "${companyId}"`;
+                            const updatecompany_value = await queryAsync(updatecompany_query,'paid', [planId]);
+                            console.log("updatecompany_value", updatecompany_value);
+
+                            const updatecompanyclaim_query = `INSERT INTO company_claim_request SET company_id = ?, claimed_by = ?, status = ?, claimed_date = ?`;
+                            const updatecompanyclaim_values = [companyId, userId, '1', formattedDate];
+                            const updatecompanyclaim_result = await queryAsync(updatecompanyclaim_query, updatecompanyclaim_values);
+                            console.log("Company claim request inserted successfully:", updatecompanyclaim_result);
+
+                            const subscriptionDetails = await stripe.subscriptions.retrieve(subscriptionId);
+                            console.log('Subscription details:', subscriptionDetails);
+
+                            const invoice = await stripe.invoices.retrieve(subscriptionDetails.latest_invoice);
+                            console.log('Invoices for subscriptions:', invoice);
+
+  
+
+                            // const getpayments= fetchPaymentsByInvoiceId(invoiceId);
+                            // console.log("getpayments",getpayments);
+
+                            console.log("Subscription current start timestamp:", subscriptionDetails.current_start);
+                            console.log("Subscription charge at timestamp:", subscriptionDetails.charge_at);
+
+                            const subscriptionStartDate = new Date(subscriptionDetails.current_start * 1000);
+                            const subscriptionEndDate = new Date(subscriptionDetails.charge_at * 1000);
+
+                            console.log("Subscription start date:", subscriptionStartDate);
+                            console.log("Subscription end date:", subscriptionEndDate);
+
+                            const order_history_data = {
+                                user_id: userId,
+                                payment_status: "succeeded"
+                            };
+                            
+                            const update_order_history_query = `
+                                UPDATE order_history
+                                SET user_id = ?, payment_status = ?
+                                WHERE stripe_subscription_id = ?
+                            `;
+                            
+                            const update_values = [
+                                order_history_data.user_id,
+                                order_history_data.payment_status, 
+                                subscriptionId 
+                            ];
+
+                                try {
+                                    const update_result = await queryAsync(update_order_history_query, update_values);
+                                    console.log(`Order history updated for subscription ID ${subscriptionId}`);
+                                } catch (error) {
+                                    console.error('Failed to update order history:', error);
+                                }
+                            return res.status(200).json({ status: 'ok', message: 'Company created successfully' });
+                        }
+                    });
+                }
+            });
+    
+        });
+
+
+        
+    } catch (error) {
+        console.error('Error:', error);
+        return res.status(500).json({ status: 'err', data: '', message: 'An error occurred while processing your request' });
+    }
+};
+
+
 exports.cancelSubscription = async (req, res) => {
     try{
         console.log("cancelSubscription");
@@ -16869,11 +17166,11 @@ exports.cancelSubscription = async (req, res) => {
             // var orderquery = `DELETE FROM order_history WHERE stripe_subscription_id=? AND user_id=?`;
             // var orderval = await queryAsync(orderquery,[usersubscription_id,userId])
 
-            var orderquery = `UPDATE order_history SET payment_status=? WHERE stripe_subscription_id=? AND user_id=?`;
+            var orderquery = `UPDATE order_history SET cancel_status=? WHERE stripe_subscription_id=? AND user_id=?`;
             var orderval = await queryAsync(orderquery,['cancelled',usersubscription_id,userId]);
 
-            var companyquery = `UPDATE company SET membership_type_id=? WHERE ID=?`;
-            var companyval = await queryAsync(companyquery,['0',company_id]);
+            var companyquery = `UPDATE company SET membership_type_id=?, paid_status = ? WHERE ID=?`;
+            var companyval = await queryAsync(companyquery,['0','free',company_id]);
 
             return res.status(200).json({ status: 'ok', message: 'Subscription cancelled successfully.' });
         } else {
@@ -16888,7 +17185,7 @@ exports.cancelSubscription = async (req, res) => {
 }
 exports.cancelSubscriptionbyAdmin = async (req, res) => {
     try{
-        console.log("cancelSubscription");
+        console.log("cancelSubscriptionbyAdmin");
     
         var userId = req.body.userId;
 
@@ -16926,8 +17223,8 @@ exports.cancelSubscriptionbyAdmin = async (req, res) => {
             var orderquery = `UPDATE order_history SET cancel_status=? WHERE stripe_subscription_id=? AND user_id=?`;
             var orderval = await queryAsync(orderquery,['cancelled',usersubscription_id,userId]);
 
-            var companyquery = `UPDATE company SET membership_type_id=? WHERE ID=?`;
-            var companyval = await queryAsync(companyquery,['0',company_id]);
+            var companyquery = `UPDATE company SET membership_type_id=?, , paid_status = ? WHERE ID=?`;
+            var companyval = await queryAsync(companyquery,['0', 'free',company_id]);
 
             var mailOptions1 = {
                 from: process.env.MAIL_USER,
@@ -17254,7 +17551,7 @@ exports.refundSubscription = async (req, res) => {
 
 exports.updateSubscription = async (req, res) => {
     try {
-        const { paymentMethodId, userId, name, email, address, country, city, state, zip, planId, billingCycle } = req.body;
+        const { paymentMethodId, userId, name, email, address, country, city, state, zip, planId, billingCycle,memberCount } = req.body;
         console.log("updateSubscription req.body", req.body);
 
         const previousplanquery = `SELECT * FROM order_history WHERE user_id = ?`;
@@ -17266,12 +17563,12 @@ exports.updateSubscription = async (req, res) => {
         var usersubscription_id = previousplanval[0].stripe_subscription_id;
         console.log("usersubscription_id",usersubscription_id);
 
-        var memberCount = previousplanval[0].added_user_number;
-        console.log("membervalue",memberCount);
+        // var memberCount = previousplanval[0].added_user_number;
+        // console.log("membervalue",memberCount);
 
-        if (memberCount === '' || memberCount === undefined || memberCount === null) {
-            memberCount = '0'; 
-        }
+        // if (memberCount === '' || memberCount === undefined || memberCount === null) {
+        //     memberCount = '0'; 
+        // }
         
         console.log("Updated membervalue:", memberCount);
         
@@ -17352,6 +17649,8 @@ exports.updateSubscription = async (req, res) => {
         if (!priceId) {
             return res.status(500).send({ error: 'Failed to create price for the plan' });
         }
+        console.log("priceIdupdatesubscription",priceId);
+        
 
         let subscription;
         try {
@@ -17381,8 +17680,16 @@ exports.updateSubscription = async (req, res) => {
         const updatedSubscription = await stripe.subscriptions.retrieve(subscription.id);
         const invoiceUrl = invoice.invoice_pdf;
 
+        console.log("updatedSubscription",updatedSubscription);
+        
         const planInterval = updatedSubscription.items.data[0].price.recurring.interval === 'year' ? 'year' : 'month';
         console.log("Plan Interval:", planInterval);
+        if(billingCycle=="monthly"){
+            var durations = "month"
+        }else{
+            var durations = "year"
+        }
+
 
         const order_history_data = {
             user_id: userId,
@@ -17391,7 +17698,8 @@ exports.updateSubscription = async (req, res) => {
             payment_status: paymentIntentStatus.status,
             subscription_details: JSON.stringify(subscription),
             payment_details: JSON.stringify(paymentIntentStatus),
-            subscription_duration: planInterval,
+            // subscription_duration: planInterval,
+            subscription_duration: durations,
             subscription_start_date: new Date(subscription.current_period_start * 1000),
             subscription_end_date: new Date(subscription.current_period_end * 1000),
             added_user_number: memberCount
@@ -17410,9 +17718,9 @@ exports.updateSubscription = async (req, res) => {
         const companyID = getcompany_value[0].ID;
         console.log("companyID", companyID);
 
-        const updatecompany_query = `UPDATE company SET membership_type_id = ? WHERE ID = ?`;
+        const updatecompany_query = `UPDATE company SET membership_type_id = ?, paid_status = ? WHERE ID = ?`;
         try {
-            const result = await queryAsync(updatecompany_query, [planId, companyID]);
+            const result = await queryAsync(updatecompany_query, [planId, 'paid', companyID]);
             console.log('Query executed successfully.');
             if (result.affectedRows > 0) {
                 console.log(`Success: ${result.affectedRows} row(s) updated.`);
@@ -17567,9 +17875,9 @@ exports.updateSubscriptionbyAdmin = async (req, res) => {
         const companyID = getcompany_value[0].ID;
         console.log("companyID", companyID);
 
-        const updatecompany_query = `UPDATE company SET membership_type_id = ? WHERE ID = ?`;
+        const updatecompany_query = `UPDATE company SET membership_type_id = ?, paid_status = ? WHERE ID = ?`;
         try {
-            const result = await queryAsync(updatecompany_query, [planId, companyID]);
+            const result = await queryAsync(updatecompany_query, [planId, 'paid', companyID]);
             console.log('Query executed successfully.');
             if (result.affectedRows > 0) {
                 console.log(`Success: ${result.affectedRows} row(s) updated.`);
@@ -17579,8 +17887,13 @@ exports.updateSubscriptionbyAdmin = async (req, res) => {
         } catch (error) {
             console.error('Error executing the query:', error);
         }
-        const updateorderquery ='UPDATE order_history SET plan_id = ? WHERE user_id = ?';
-        const updateorderval = await queryAsync(updateorderquery,[req.body.planid,userId])
+        if(billingCycle=="monthly"){
+            var durations = "month"
+        }else{
+            var durations = "year"
+        }
+        const updateorderquery ='UPDATE order_history SET plan_id = ?,subscription_duration=? WHERE user_id = ?';
+        const updateorderval = await queryAsync(updateorderquery,[req.body.planid,durations,userId])
         var baseUrl = process.env.MAIN_URL;
         let paymentUrl;
         if(billingCycle=="monthyly"){
@@ -22327,6 +22640,19 @@ exports.createSubscription = async (req, res) => {
     
         let customer;
         try {
+            // customer = await stripe.customers.create({
+            //     email: email,
+            //     name: name,
+            //     address: {
+            //         line1: address,
+            //         country: country,
+            //         city: city,
+            //         state: state,
+            //         postal_code: zip,
+            //     },
+            //     source: paymentMethodId
+            // });
+
             customer = await stripe.customers.create({
                 email: email,
                 name: name,
@@ -22337,7 +22663,10 @@ exports.createSubscription = async (req, res) => {
                     state: state,
                     postal_code: zip,
                 },
-                source: paymentMethodId
+                payment_method: paymentMethodId,  
+                invoice_settings: {
+                    default_payment_method: paymentMethodId  
+                }
             });
         } catch (error) {
             console.error("Error creating customer:", error);
@@ -22380,6 +22709,12 @@ exports.createSubscription = async (req, res) => {
 
         const planInterval = updatedSubscription.items.data[0].price.recurring.interval === 'year' ? 'year' : 'month';
         console.log("Plan Interval:", planInterval);
+        if(billingCycle=="monthly"){
+            var durations = "month"
+        }else{
+            var durations = "year"
+        }
+
 
         const order_history_data = {
             user_id: userId,
@@ -22388,7 +22723,8 @@ exports.createSubscription = async (req, res) => {
             payment_status: paymentIntentStatus.status,
             subscription_details: JSON.stringify(subscription),
             payment_details: JSON.stringify(paymentIntentStatus),
-            subscription_duration: planInterval,
+            //subscription_duration: planInterval,
+            subscription_duration: durations,
             subscription_start_date: new Date(subscription.current_period_start * 1000),
             subscription_end_date: new Date(subscription.current_period_end * 1000),
             added_user_number: memberCount
@@ -22608,6 +22944,12 @@ exports.createextSubscription = async (req, res) => {
     
             const planInterval = updatedSubscription.items.data[0].price.recurring.interval === 'year' ? 'year' : 'month';
             console.log("Plan Interval:", planInterval);
+            if(billingCycle=="monthly"){
+                var durations = "month"
+            }else{
+                var durations = "year"
+            }
+    
     
             // Insert order history
             const order_history_data = {
@@ -22617,7 +22959,8 @@ exports.createextSubscription = async (req, res) => {
                 payment_status: paymentIntentStatus.status,
                 subscription_details: JSON.stringify(subscription),
                 payment_details: JSON.stringify(paymentIntentStatus),
-                subscription_duration: planInterval,
+                // subscription_duration: planInterval,
+                subscription_duration: durations,
                 subscription_start_date: new Date(subscription.current_period_start * 1000),
                 subscription_end_date: new Date(subscription.current_period_end * 1000),
                 added_user_number: memberCount

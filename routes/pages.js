@@ -2494,6 +2494,8 @@ router.get('/stripe-update-year-payment', checkCookieValue, async (req, res) => 
 
 
         let currentUserData = JSON.parse(req.userData);
+        var user_id = currentUserData.user_id;
+        console.log("user_idsssss",user_id);
         const planids = `SELECT * FROM plan_management WHERE name = "${planId}"`;
         const planidvalue = await queryAsync(planids);
         const planID = planidvalue[0].id;
@@ -2649,6 +2651,107 @@ router.get('/create-user-company-subscription', checkCookieValue, async (req, re
     }
 })
 
+router.get('/create-company-subscription', checkCookieValue, async (req, res) => {
+    try {
+        const { planName, planPrice, monthly, memberCount, total_price, encryptedEmail, subscriptionType } = req.query;
+        console.log("create-company-subscription", req.query);
+        const apiKey = process.env.GEO_LOCATION_API_KEY;
+
+        const stripe_key = process.env.STRIPE_SECRET_KEY;
+
+        const stripe_publish_key = process.env.STRIPE_PUBLISH_KEY
+        console.log("stripe_publish_key",stripe_publish_key);
+        
+
+        let currentUserData = JSON.parse(req.userData);
+        console.log("currentUserData", currentUserData);
+        if (currentUserData != null) {
+            var user_id = currentUserData.user_id;
+            console.log("user_idsssss", user_id);
+        }
+
+        let country_name = req.cookies.countryName || 'India';
+        let country_code = req.cookies.countryCode || 'IN';
+
+        console.log("country_names", country_name);
+        console.log("country_codes", country_code);
+
+        const planids = `SELECT * FROM plan_management WHERE name = "${planName}"`;
+        const planidvalue = await queryAsync(planids);
+        //console.log("planidvalue", planidvalue[0].id);
+        if (planidvalue.length > 0) {
+            var planID = planidvalue[0].id;
+            console.log("planID", planID);
+            var monthly_plan_price = planidvalue[0].monthly_price;
+            console.log("monthly_plan_price", monthly_plan_price);
+            var yearly_price = planidvalue[0].yearly_price;
+            console.log("yearly_price", yearly_price);
+            var per_user_prices = planidvalue[0].per_user_price;
+            console.log("per_user_prices", per_user_prices);
+        }
+        const getcurencyquery = `SELECT * FROM currency_conversion`;
+        const getcurrencyval = await queryAsync(getcurencyquery);
+        console.log("getcurrencyval", getcurrencyval);
+
+        var indian_currency = getcurrencyval[0].inr_currency;
+        console.log("indian_currency", indian_currency);
+        var jp_currency = getcurrencyval[0].jpy_currency;
+        console.log("jp_currency", jp_currency);
+
+        if (country_code == 'IN') {
+            var per_user_price = per_user_prices * indian_currency;
+        } else if (country_code == 'JP') {
+            var per_user_price = per_user_prices * jp_currency;
+        } else {
+            var per_user_price = per_user_prices
+        }
+
+        const exchangeRates = await comFunction2.getCurrency();
+
+        const [globalPageMeta, getplans, getCountries, getCountriesList, getUser, getUserMeta] = await Promise.all([
+            comFunction2.getPageMetaValues('global'),
+            comFunction2.getplans(country_name),
+            comFunction.getCountries(),
+            comFunction.getCountriesList(),
+            comFunction.getUser(user_id),
+            comFunction.getUserMeta(user_id),
+        ]);
+        console.log("getUser",getUser);
+        console.log("getUserMeta",getUserMeta);
+
+        res.render('front-end/company-only-subscription', {
+            menu_active_id: 'Subscription',
+            page_title: 'Company creation',
+            planName,
+            //planId,
+            planPrice,
+            monthly,
+            planID,
+            currentUserData,
+            memberCount,
+            total_price,
+            country_code: country_code,
+            exchangeRates: exchangeRates,
+            encryptedEmail,
+            user_id,
+            globalPageMeta,
+            getCountries,
+            getCountriesList,
+            stripe_key: stripe_key,
+            subscriptionType: subscriptionType,
+            monthly_plan_price: monthly_plan_price,
+            yearly_price: yearly_price,
+            per_user_price,
+            stripe_publish_key: stripe_publish_key,
+            user: getUser,
+            userMeta: getUserMeta,
+        });
+    }  catch (err) {
+        console.error(err);
+        res.status(500).send('An error occurred');
+    }
+})
+
 router.post('/create-payment-intent', async (req, res) => {
     const { amount, currency } = req.body; // amount should be in cents (5000 = $50)
 
@@ -2789,6 +2892,33 @@ router.get('/checkuserPhoneAvailability', async (req, res) => {
     try {
         const emailExists = await new Promise((resolve, reject) => {
             db.query('SELECT * FROM users WHERE phone = ?', [phone], (err, results) => {
+                if (err) {
+                    console.error('Database query error:', err);
+                    reject({ status: 'error', message: 'Database query error' });
+                } else {
+                    if (results.length > 0) {
+                        const register_from = results[0].register_from;
+                        resolve({ available: false, message: 'Phone number already exists for another user.' });
+                    } else {
+                        resolve({ available: true, message: 'Phone number available.' });
+                    }
+                }
+            });
+        });
+
+        res.json(emailExists);
+    } catch (error) {
+        console.error('Error checking Phone availability:', error);
+        res.status(500).json({ message: 'Failed to check Phone availability' });
+    }
+});
+
+router.get('/checkregistereduserPhoneAvailability', async (req, res) => {
+    const { phone, user_id } = req.query;
+
+    try {
+        const emailExists = await new Promise((resolve, reject) => {
+            db.query('SELECT * FROM users WHERE phone = ? AND user_id != ?', [phone, user_id], (err, results) => {
                 if (err) {
                     console.error('Database query error:', err);
                     reject({ status: 'error', message: 'Database query error' });
@@ -12756,7 +12886,7 @@ router.get('/profile-dashboard', checkFrontEndLoggedIn, async (req, res) => {
         // Fetch all the required data asynchronously
         const [user, userMeta, ReviewedCompanies, AllCompaniesReviews, AllReviewTags, allRatingTags, globalPageMeta, AllReviewVoting] = await Promise.all([
             comFunction.getUser(userId),
-            comFunction.getUserMeta(userId),
+            comFunction.getUserMetas(userId),
             comFunction2.getReviewedCompanies(userId),
             comFunction2.getAllCompaniesReviews(userId),
             comFunction2.getAllReviewTags(),

@@ -77,7 +77,7 @@
 						</div>
 					</div>
 					
-					<button type="submit" value="Proceed to Checkout" class="submit_btn">Proceed to Checkout</button>
+					<button type="submit" value="Proceed to Checkout" class="submit_btn">Proceed</button>
 					<div id="error-message"></div>
 				</form>
 				
@@ -459,101 +459,164 @@ document.addEventListener('DOMContentLoaded', function() {
     //         document.querySelector('button').disabled = false;
     //     }
     // }
-	document.getElementById('paymentForm').addEventListener('submit', async function(event) {
-    event.preventDefault();
-    document.querySelector('button').disabled = true;
+	//previous 
+// 	document.getElementById('paymentForm').addEventListener('submit', async function(event) {
+//     event.preventDefault();
+//     document.querySelector('button').disabled = true;
 
-    const memberCountInput = document.getElementById('memberCount');
-    const addonUsersCount = memberCountInput.value;
-    console.log('Add-on Users Count on Load:', addonUsersCount);
+//     const memberCountInput = document.getElementById('memberCount');
+//     const addonUsersCount = memberCountInput.value;
+//     console.log('Add-on Users Count on Load:', addonUsersCount);
 
-    const { token, error } = await stripe.createToken(cardNumber);
-    console.log("Token:", token);
+//     const { token, error } = await stripe.createToken(cardNumber);
+//     console.log("Token:", token);
 
-    if (error) {
-        errorMessage.textContent = error.message;
-        document.querySelector('button').disabled = false;
-    } else {
-        const { requiresAction, clientSecret } = await stripeTokenHandler(token, addonUsersCount);
+//     if (error) {
+//         errorMessage.textContent = error.message;
+//         document.querySelector('button').disabled = false;
+//     } else {
+//         const { requiresAction, clientSecret } = await stripeTokenHandler(token, addonUsersCount);
 		
-        if (requiresAction) {
-            const { error: confirmError } = await stripe.confirmCardPayment(clientSecret);
+//         if (requiresAction) {
+//             const { error: confirmError } = await stripe.confirmCardPayment(clientSecret);
             
-            if (confirmError) {
-                errorMessage.textContent = confirmError.message;
-                document.querySelector('button').disabled = false;
-            } else {
-				if (additionalInfo) {
-                    await fetch('/auth/orderUpdate', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(additionalInfo),
-                    });
-                }
+//             if (confirmError) {
+//                 errorMessage.textContent = confirmError.message;
+//                 document.querySelector('button').disabled = false;
+//             } else {
+// 				if (additionalInfo) {
+//                     await fetch('/auth/orderUpdate', {
+//                         method: 'POST',
+//                         headers: {
+//                             'Content-Type': 'application/json',
+//                         },
+//                         body: JSON.stringify(additionalInfo),
+//                     });
+//                 }
 
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Payment Successful!',
-                    text: 'Your payment was successfully processed.',
-                    confirmButtonText: 'OK',
-                }).then(() => {
-                    window.location.href = '/plan-pricing';
-                });
-            }
-        } else {
-            // Handle other responses
-            Swal.fire({
-                icon: 'success',
-                title: 'Payment Successful!',
-                text: 'Your payment was successfully processed.',
-                confirmButtonText: 'OK',
-            }).then(() => {
-                window.location.href = '/plan-pricing';
-            });
-        }
-    }
-});
+//                 Swal.fire({
+//                     icon: 'success',
+//                     title: 'Payment Successful!',
+//                     text: 'Your payment was successfully processed.',
+//                     confirmButtonText: 'OK',
+//                 }).then(() => {
+//                     window.location.href = '/plan-pricing';
+//                 });
+//             }
+//         } else {
+//             // Handle other responses
+//             Swal.fire({
+//                 icon: 'success',
+//                 title: 'Payment Successful!',
+//                 text: 'Your payment was successfully processed.',
+//                 confirmButtonText: 'OK',
+//             }).then(() => {
+//                 window.location.href = '/plan-pricing';
+//             });
+//         }
+//     }
+// });
 
-async function stripeTokenHandler(token, addonUsersCount) {
-    const formData = {
-        paymentMethodId: token.id,
-        userId: '<%= currentUserData.user_id %>',
-        name: document.getElementById('name').value,
-        email: '<%= currentUserData.email %>',
-        address: document.getElementById('address').value,
-        city: document.getElementById('city').value,
-        state: document.getElementById('state').value,
-        zip: document.getElementById('zip').value,
-        planId: '<%= planID %>',          
-        billingCycle: 'yearly',
-        memberCount: addonUsersCount
-    };
 
-    try {
-        const response = await fetch('/auth/create-subscription', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData),
-        });
 
-        return await response.json();
-    } catch (error) {
-        console.error('Error:', error);
-        Swal.fire({
-            icon: 'error',
-            title: 'Payment Error',
-            text: 'There was an error processing your payment. Please try again later.',
-            confirmButtonText: 'OK',
-        });
-        return {};
-    } finally {
-        document.querySelector('button').disabled = false;
-    }
-}
+document.getElementById('paymentForm').addEventListener('submit', async function(event) {
+		event.preventDefault();
+		document.querySelector('button').disabled = true;
+
+
+		const memberCountInput = document.getElementById('memberCount');
+		const addonUsersCount = memberCountInput.value;
+		console.log('Add-on Users Count on Load:', addonUsersCount);
+
+
+		const { paymentMethod, error } = await stripe.createPaymentMethod({
+			type: 'card',
+			card: cardNumber,
+			billing_details: {
+				name: '<%= currentUserData.first_name %>',
+				email: '<%= currentUserData.email %>',
+				phone: '<%= currentUserData.phone %>',
+				// address: {
+				//     line1: '<%= currentUserData.address %>',
+				//     country: '<%= currentUserData.country %>',
+				//     postal_code: '<%= currentUserData.zip %>',
+				// },
+			},
+		});
+
+		if (error) {
+			errorMessage.textContent = error.message;
+			document.querySelector('button').disabled = false;
+		} else {
+			const { requiresAction, clientSecret } = await stripeTokenHandler(paymentMethod, addonUsersCount);
+			
+			if (requiresAction) {
+				const { error: confirmError } = await stripe.confirmCardPayment(clientSecret);
+				
+				if (confirmError) {
+					errorMessage.textContent = confirmError.message;
+					document.querySelector('button').disabled = false;
+				} else {
+					Swal.fire({
+						icon: 'success',
+						title: 'Payment Successful!',
+						text: 'Your payment is successfully processed.',
+						confirmButtonText: 'OK',
+					}).then(() => {
+						window.location.href = '/plan-pricing';
+					});
+				}
+			} else {
+				Swal.fire({
+					icon: 'success',
+					title: 'Payment Successful!',
+					text: 'Your payment is successfully processed.',
+					confirmButtonText: 'OK',
+				}).then(() => {
+					window.location.href = '/plan-pricing';
+				});
+			}
+		}
+	});
+
+	async function stripeTokenHandler(token, addonUsersCount) {
+		const formData = {
+			paymentMethodId: token.id,
+			userId: '<%= currentUserData.user_id %>',
+			name: document.getElementById('name').value,
+			email: '<%= currentUserData.email %>',
+			address: document.getElementById('address').value,
+			city: document.getElementById('city').value,
+			state: document.getElementById('state').value,
+			zip: document.getElementById('zip').value,
+			planId: '<%= planID %>',          
+			billingCycle: 'yearly',
+			memberCount: addonUsersCount
+		};
+
+		try {
+			const response = await fetch('/auth/create-subscription', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(formData),
+			});
+
+			return await response.json();
+		} catch (error) {
+			console.error('Error:', error);
+			Swal.fire({
+				icon: 'error',
+				title: 'Payment Error',
+				text: 'There was an error processing your payment. Please try again later.',
+				confirmButtonText: 'OK',
+			});
+			return {};
+		} finally {
+			document.querySelector('button').disabled = false;
+		}
+	}
 
 });
 
@@ -573,7 +636,7 @@ async function stripeTokenHandler(token, addonUsersCount) {
 		const cvvInput = document.getElementById('cvv');
 		if (cvvInput) {
 			cvvInput.addEventListener('input', function() {
-				const maxLength = 3;
+				const maxLength = 5;
 				if (cvvInput.value.length > maxLength) {
 					cvvInput.value = cvvInput.value.slice(0, maxLength);
 				}

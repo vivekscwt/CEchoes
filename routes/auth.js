@@ -524,6 +524,8 @@ router.post('/createexternalSubscription',authController.createexternalSubscript
 
 router.post('/externalRegistration',authController.externalRegistration);
 
+router.post('/externalcompanyRegistration',authController.externalcompanyRegistration);
+
 router.post('/cancelSubscription',authController.cancelSubscription);
 
 router.post('/cancelSubscriptionbyAdmin',authController.cancelSubscriptionbyAdmin);

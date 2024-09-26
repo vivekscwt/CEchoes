@@ -17,13 +17,11 @@
         <% 
         function hasAnySubscription() {
             const hasSubscription = getSubscribedUsers.some(sub => sub.user_id == userId);
-            console.log(`User ID ${userId} has any subscription: ${hasSubscription}`);
             return hasSubscription;
         }
         
         function isSubscribed(planName, duration) {
             const isUserSubscribed = getSubscribedUsers.some(sub => sub.user_id == userId && sub.plan_name == planName && sub.subscription_duration == duration);
-            console.log(`User ID ${userId} is subscribed to ${planName} (${duration}): ${isUserSubscribed}`);
             return isUserSubscribed;
         }
     

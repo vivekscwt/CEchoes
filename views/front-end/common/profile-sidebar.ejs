@@ -46,7 +46,7 @@
          </div>
          <% } else { %>
             <div class="text-center mt-4">
-               <p>Organization Plan: <b>Basic</b></p>
+               <!-- <p>Organization Plan: <b><%= userMeta.plan_name %></b></p> -->
             </div>
             <% } %>
       <% } %>
@@ -73,7 +73,7 @@
              </li>
              <% } %>
                 <li><a href="/myprofile"><i class="fa-solid fa-user"></i>Profile</a></li>
-                <% if(userMeta && userMeta.claimed_comp_id) { %>
+                <% if(userMeta && userMeta.claimed_comp_id && userMeta.company_status=='1') { %>
                      <li><a href="/company-dashboard/<%= userMeta.slug %>"><i class="fa-solid fa-briefcase"></i>Organization Dashboard </a></li>
                      <!-- <li><a href="/child-company/<%= userMeta.slug %>"><i class="fa-solid fa-briefcase"></i>Child Organization</a></li> -->
                   <% } %>

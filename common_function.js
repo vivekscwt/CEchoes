@@ -71,6 +71,31 @@ function getUserMeta(userId) {
   });
 }
 
+
+function getUserMetas(userId) {
+  return new Promise((resolve, reject) => {
+    const user_meta_query = `
+            SELECT user_meta.*, c.name as country_name, s.name as state_name, ccr.company_id as claimed_comp_id, company.paid_status as payment_status, company.slug, mp.name AS plan_name,company.status AS company_status
+            FROM user_customer_meta user_meta
+            LEFT JOIN countries c ON user_meta.country = c.id
+            LEFT JOIN states s ON user_meta.state = s.id
+            LEFT JOIN company_claim_request ccr ON user_meta.user_id = ccr.claimed_by
+            LEFT JOIN company ON company.ID = ccr.company_id
+            LEFT JOIN plan_management mp ON company.membership_type_id = mp.id
+            WHERE user_meta.user_id = ?
+        `;
+    db.query(user_meta_query, [userId], (err, result) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(result[0]);
+      }
+    });
+  });
+}
+
+
+
 async function getUsersByRole(roleID) {
   const get_users_query = `
     SELECT ur.*, ccr.company_id, ccr.status
@@ -3442,6 +3467,7 @@ async function getCompanyReviewInvitationNumbers(companyId) {
 module.exports = {
   getUser,
   getUserMeta,
+  getUserMetas,
   getCountries,
   getUserRoles,
   getStatesByUserID,
