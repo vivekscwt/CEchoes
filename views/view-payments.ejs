@@ -23,13 +23,13 @@
                                 const firstPaymentDate = new Date(planPayments[0].subscription_start_date); %>
                                 
                                 <tr>
-                                <td colspan="4">Payment: <%= firstPaymentDate.toLocaleDateString() %></td>
+                                <td colspan="4" style="padding-right: 20px;">Payment: <%= firstPaymentDate.toLocaleDateString() %></td>
                                 </tr>
                                 
                                 <% planPayments.forEach(payment => { %>
                                 <tr>
-                                    <td><%= new Date(payment.subscription_start_date).toLocaleDateString() %></td>
-                                    <td><%= payment.payment_status %></td>
+                                    <td style="padding-right: 20px;"><%= new Date(payment.subscription_start_date).toLocaleDateString() %></td>
+                                    <td style="padding-right: 20px;"><%= payment.payment_status %></td>
                                 </tr>
                                 <% }); %>
                                 
@@ -44,18 +44,16 @@
                                 nextPaymentDate.setDate(nextPaymentDate.getDate()); %>
                                 
                                 <tr>
-                                <td colspan="3">Next Payment Date</td>
+                                <td colspan="3" style="padding-right: 20px;">Next Payment Date</td>
                                 <td><%= nextPaymentDate.toLocaleDateString() %></td>
                                 </tr>
                             <% } %>
                             <% }); %>
                         </table>
-                        <div>
+                        <div class="all_btn_new">
                           <button type="button" class="formbold-confirm-btn cancel-subscription-btn" onclick="confirmCancelSubscription()">Cancel Subscription</button>
                           <button type="button" class="formbold-confirm-btn cancel-refund-subscription-btn" onclick="confirmCancelRefundSubscription()">Cancel & Refund Subscription</button>
-                          <a href="/update-plans/<%= userId %>/<%= user_company_id %>">
-                            <button type="button" class="formbold-confirm-btn update-subscription-btn">Update Subscription</button>
-                        </a>
+                          <button type="button" class="formbold-confirm-btn update-subscription-btn" class="proceed_btn" onclick="showUpdateSubscriptionSection()">Update Subscription</button>
                       </div>
                     <% } %>
                     <% }); %>
@@ -65,7 +63,101 @@
         </div>
      </div>
   </div>
-</section>
+</section><section class="main-content business-choose-your-plan-content" data-aos="fade-up" style="display:none;">
+  <body>
+     <div class="tab_pricelist">
+     <div class="container">
+     <div class="pricing-tabs">
+       <div class="toggle-container">
+         <span class="toggle-label" id="monthly-label">Monthly</span>
+         <label class="switch">
+           <input type="checkbox" id="toggle-switch">
+           <span class="slider"></span>
+         </label>
+         <span class="toggle-label" id="yearly-label">Yearly</span>
+       </div>
+       <% 
+       function hasAnySubscription() {
+           const hasSubscription = getSubscribedUsers.some(sub => sub.user_id == userId);
+           return hasSubscription;
+       }
+       
+       function isSubscribed(planName, duration) {
+           const isUserSubscribed = getSubscribedUsers.some(sub => sub.user_id == userId && sub.plan_name == planName && sub.subscription_duration == duration);
+           return isUserSubscribed;
+       }
+   
+       const userHasSubscription = hasAnySubscription(); 
+   %>
+       <div id="monthly" class="tab-content active">
+           <% ['basic', 'standard', 'advanced', 'premium', 'enterprise'].forEach(plan => { %>
+           <div class="pricing-card">
+               <div class="price_tag">
+                   $ <%= getplans[plan + '_val'].monthly_price_local %> <span>/ Month</span>
+               </div>
+
+               <div class="member-control">
+                   <label for="<%= plan %>-member-count"></label>
+                   <input type="hidden" name="memberCount" id="<%= plan %>-member-count" value="">
+                   <input type="hidden" id="<%= plan %>-per-user-price" value="<%= getplans[plan + '_val'].per_user_price_local %>">
+               </div>
+
+               <%- getplans[plan + '_val'].description %>
+
+               <div class="get_started_btn">
+                   <% if (isSubscribed(plan, 'monthly')) { %>
+                       <button class="subscribed-btn" style="display: none;" disabled>Get Started</button>
+                   <% } else { %>
+                       <div class="proceed_btn">
+                           <a href="#" style="color: black;" onclick="updateSubscription('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].monthly_price %>', 'monthly', '<%= getplans[plan + '_val'].id %>',)">Update</a>
+                       </div>
+                       
+                   <% } %>
+               </div>
+           </div>
+           <% }) %>
+       </div>
+
+       <div id="yearly" class="tab-content">
+           <% ['basic', 'standard', 'advanced', 'premium', 'enterprise'].forEach(plan => { %>
+           <div class="pricing-card">
+               <div class="price_tag">
+                   $ <%= getplans[plan + '_val'].yearly_price_local %> <span>/ Year</span>
+               </div>
+
+               <%- getplans[plan + '_val'].description %>
+
+               <div class="get_started_btn">
+                   <% if (isSubscribed(plan, 'yearly')) { %>
+                       <button class="subscribed-btn" style="display: none;" disabled>Get Started</button>
+                   <% } else { %>
+                       <div class="proceed_btn">
+                           <a href="#" style="color: black;" onclick="updateSubscription('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].monthly_price %>', 'yearly', '<%= getplans[plan + '_val'].id %>',)">Update</a>
+                       </div>
+                   <% } %>
+               </div>
+           </div>
+           <% }) %>
+       </div>
+         
+     </div>
+   </div>
+   </div>
+
+
+   
+     <!-- BODY STYLE CSS LINK -->
+     <link href="responsive.css" rel="stylesheet" type="text/css">
+     <!-- BOOTSTRAP CSS LINS -->
+     <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
+     <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.5.1/css/all.css">
+     <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.5.1/css/sharp-thin.css">
+     <!-- JQUERY LINK -->
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+     <!-- BOOTSTRAP JS LINKS -->
+     <script src="js/bootstrap.min.js"></script>
+  </body>
+  </section>
 <!-- ============== Section1 End =============== -->
 
 <%- include('common/footer') -%>
@@ -107,7 +199,412 @@
     cursor: not-allowed;
     padding: 14px 30px;
   }
+  .profile-info-table h2{
+    color: #000000;
+    font-size: 34px;
+    font-weight: 800;
+    line-height: 38px;
+    margin-bottom: 20px;
+  }
 
+  .profile-info-table table tbody tr td {
+    color: #141414;
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 160%;
+    margin-bottom: 10px !important;
+    display: inline-block;
+}
+
+
+.profile-info-table table {
+  margin-bottom: 10px !important;
+  display: inline-block;
+}
+
+.profile-info-table .all_btn_new button {
+    border-radius: 8px;
+    background: #FCCB06;
+    color: #000000;
+    border: 1px solid #FCCB06;
+    position: relative;
+    font-size: 16px;
+    font-weight: 400;
+    padding: 14px 25px;
+    min-width: 140px;
+    display: inline-block;
+    text-align: center;
+    width: unset;
+    height: auto;
+}
+
+.profile-info-table .all_btn_new button:hover{
+  background: transparent;
+}
+
+.profile-info-table .all_btn_new{
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+    /* new */
+    * {
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+
+    html {
+        scroll-behavior: smooth;
+        overflow-x: hidden;
+    }
+
+    *:before,
+    *:after {
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+
+    ::-moz-selection {
+        background-color: #007d9d;
+        color: #fff;
+        text-shadow: none;
+    }
+
+    ::selection {
+        background-color: #000000;
+        color: #fff;
+        text-shadow: none;
+    }
+
+    :root {
+        --theme-color: #000;
+        --theme-color-second: #000;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        font-size: 16px;
+        outline: none;
+        overflow: hidden;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        scroll-behavior: smooth;
+    }
+
+    @font-face {
+        font-family: myFirstFont;
+        src: url();
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    ul,
+    li,
+    figure {
+        margin: 0;
+        padding: 0;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        margin-bottom: 20px;
+    }
+
+    p {
+        margin: 0;
+        font-size: 16px;
+        line-height: 27px;
+        margin-bottom: 20px;
+        font-weight: 400;
+    }
+
+    ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    img {
+        margin: 0;
+        padding: 0;
+        border: none;
+        max-width: 100%;
+        height: auto !important;
+        display: block;
+    }
+
+
+    a,
+    button,
+    input {
+        -webkit-transition: all 0.3s ease-in-out;
+        -o-transition: all 0.3s ease-in-out;
+        -moz-transition: all 0.3s ease-in-out;
+        transition: all 0.3s ease-in-out;
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+
+    /* DEFAULT CSS SETTING END */
+
+    /* Pricing Tabs Container */
+    /* Toggle Switch */
+    .tab_pricelist .toggle-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid #FCCB06;
+        border-radius: 10px;
+        padding: 20px 10px;
+        max-width: 450px;
+        margin: 20px auto;
+        background-color: #fff;
+    }
+
+    .tab_pricelist .toggle-label {
+        font-size: 24px;
+        color: #000000;
+        margin-right: 10px;
+    }
+
+    .toggle-container .toggle-label.active{
+        color: #FCCB06 !important;
+    }
+
+
+    .tab_pricelist #yearly-label {
+        color: #000;
+        margin-left: 10px;
+    }
+
+    .tab_pricelist .discount {
+        background-color: #FCCB06;
+        color: #000000;
+        padding: 8px 10px;
+        border-radius: 5px;
+        font-size: 14px;
+        margin-left: 5px;
+        font-weight: 500;
+    }
+
+    .tab_pricelist .switch {
+        position: relative;
+        display: inline-block;
+        width: 65px;
+        height: 35px;
+    }
+
+    .tab_pricelist .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .tab_pricelist .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #FCCB06;
+        transition: .4s;
+        border-radius: 34px;
+    }
+
+    .tab_pricelist .slider:before {
+        position: absolute;
+        content: "";
+        height: 30px;
+        width: 30px;
+        left: 4px;
+        bottom: 2px;
+        background-color: white;
+        transition: .4s;
+        border-radius: 50%;
+    }
+
+    .tab_pricelist input:checked+.slider {
+        background-color: #FCCB06;
+    }
+
+    .tab_pricelist input:checked+.slider:before {
+        transform: translateX(26px);
+    }
+
+    .tab_pricelist input:checked~#monthly-label {
+        color: #000;
+    }
+
+    .tab_pricelist input:checked~#yearly-label {
+        color: #007bff;
+    }
+
+    /* Pricing Cards */
+    .tab_pricelist .tab-content {
+        display: none;
+    }
+
+    .tab_pricelist .tab-content.active {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        grid-gap: 15px;
+        margin-top: 20px;
+    }
+
+    .tab_pricelist .pricing-card {
+        background: #252525;
+        border-radius: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 30px 20px;
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .tab_pricelist .price_tag {
+        font-size: 26px;
+        color: #fff;
+    }
+    .tab_pricelist .price_tag  span{
+        font-size: 14px;
+    }
+
+
+    .tab_pricelist .pricing-card h4{
+        color: #FCCB06;
+        font-size: 22px;
+        font-weight: 700;
+        line-height: 110.4%;
+        transition: all ease-in-out 0.5s;
+    }
+
+
+    .tab_pricelist .pricing-card ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 20px ;
+    }
+
+    .tab_pricelist .pricing-card ul li {
+        margin-bottom: 10px;
+        font-size: 16px;
+        color: #ffffff;
+        list-style: disc;
+    }
+
+    .tab_pricelist .get_started_btn{
+        margin-top: 30px;
+    }
+
+    .tab_pricelist .proceed_btn{
+        background-color: #FCCB06;
+        color: #000000;
+        padding: 14px 30px;
+        width: 100%;
+        border-radius: 6px;
+        text-transform: capitalize;
+        transition: 0.3s ease-in-out;
+    }
+
+    .tab_pricelist .proceed_btn:hover{
+        color: #000;
+        background-color: #fff;
+    }
+    .proceed_btn.proceed-invisible-btn a {
+        display: block;
+        width: 100%;
+        text-align: center;
+    }
+    .subscribed-btn {
+    background-color: #FCCB06;
+    color: #000000;
+    height: 50px; 
+    width: 100%;
+    border-radius: 6px;
+    text-transform: capitalize;
+    transition: 0.3s ease-in-out;
+    border: none;
+    cursor: not-allowed;
+    }
+    .proceed_btn.proceed-invisible-btn a {
+        display: block;
+        width: 100%;
+        text-align: center;
+    }
+    .medium-large {
+        font-size: 1.25em; 
+        font-weight: bold; 
+        text-align: center;
+    }
+
+    #kt_body{
+      overflow: scroll !important;
+    }
+
+
+    /* MEDIA QUERY RESPONSIVE STRAT */
+
+    @media only screen and (max-width:1299px) {
+        .tab_pricelist .tab-content.active {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-gap: 15px;
+            margin-top: 20px;
+        }
+    }
+
+    @media only screen and (max-width:1199px) {
+        .tab_pricelist .tab-content.active {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    @media only screen and (max-width:991px) {
+        .tab_pricelist .tab-content.active {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media only screen and (max-width:575px) {
+        .tab_pricelist .tab-content.active {
+            grid-template-columns: repeat(1, 1fr);
+        }
+        .tab_pricelist .toggle-label {
+            font-size: 18px;
+            color: #000000;
+            margin-right: 10px;
+        }
+        .tab_pricelist .switch {
+            width: 45px;
+            height: 22px;
+        }
+        .tab_pricelist .slider:before {
+            height: 16px;
+            width: 16px;
+            left: 2px;
+            bottom: 3px;
+        }
+        .tab_pricelist .discount {
+            padding: 5px 6px;
+            font-size: 12px;
+        }
+        
+    }
 
 </style>
 
@@ -163,9 +660,11 @@
   }
 
   function confirmCancelRefundSubscription() {
+    const payment_id = '<%= payment_id %>'; 
+    const emailData = '<%= emailData %>';
     Swal.fire({
         title: 'Are you sure you want to cancel & refund?',
-        text: 'Once cancelled, you will not be able to recover your subscription!',
+        text: `Before cancelling please copy this payment id  ${payment_id}, so you can refund the user`,
         icon: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Yes, cancel it!',
@@ -185,12 +684,15 @@
           userId: userId
         },
         success: function(response) {
-            Swal.fire({
-              icon: 'success',
-              //title: 'Cancelled Subscription!',
-              title: 'Refund request send to the admin successfully.',
-              confirmButtonText: 'OK'
-            })
+          const payment_id = '<%= payment_id %>'; 
+          const emailData = '<%= emailData %>';
+          console.log("emailData",emailData);
+          
+          Swal.fire({
+            icon: 'success',
+            title: `Subscription cancelled successfully. Please refund the amount from Stripe using this payment id = ${payment_id} for the email = ${emailData}`,
+            confirmButtonText: 'OK'
+        });
         },
         error: function(error) {
             Swal.fire({
@@ -205,3 +707,88 @@
 
 
 </script>
+
+<script>
+  const toggleSwitch = document.getElementById('toggle-switch');
+  const monthlyTab = document.getElementById('monthly');
+  const yearlyTab = document.getElementById('yearly');
+  const monthlyLabel = document.getElementById('monthly-label');
+  const yearlyLabel = document.getElementById('yearly-label');
+  
+  // Initialize by making the Monthly tab and label active
+  window.onload = function() {
+    monthlyTab.classList.add('active'); 
+    yearlyTab.classList.remove('active'); 
+    monthlyLabel.classList.add('active'); 
+    yearlyLabel.classList.remove('active'); 
+    toggleSwitch.checked = false; 
+  };
+  
+  // Event listener for toggle switch
+  toggleSwitch.addEventListener('change', function() {
+    if (this.checked) {
+      monthlyTab.classList.remove('active');
+      yearlyTab.classList.add('active');
+      monthlyLabel.classList.remove('active');
+      yearlyLabel.classList.add('active');
+    } else {
+      yearlyTab.classList.remove('active');
+      monthlyTab.classList.add('active');
+      yearlyLabel.classList.remove('active');
+      monthlyLabel.classList.add('active');
+    }
+  });
+  </script>
+
+
+
+
+
+<script>
+  var userId ='<%= userId%>'
+  function updateSubscription(planName, monthlyPrice, billingCycle, planid) {
+      const data = {
+          planName: planName,
+          monthlyPrice: monthlyPrice,
+          billingCycle: billingCycle,
+          userId: userId,
+          planid: planid
+      };
+  
+
+      $.ajax({
+          url: '/auth/updateSubscriptionbyAdmin', 
+          method: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify(data),
+          success: function(response) {           
+              console.log('Subscription updated:', response);
+
+              Swal.fire({
+                  title: 'Success!',
+                  text: 'Subscription updated successfully.',
+                  icon: 'success',
+                  confirmButtonText: 'OK'
+              }).then((result) => {
+              if (result.isConfirmed) {
+                  window.location.href = '/view-payments/<%= userId%>';
+                  }
+              });
+          },
+          error: function(xhr, status, error) {
+              console.error('Error updating subscription:', error);
+              
+              Swal.fire({
+                  title: 'Error!',
+                  text: 'There was an error updating the subscription. Please try again.',
+                  icon: 'error',
+                  confirmButtonText: 'OK'
+              });
+          }
+      });
+  }
+ 
+  function showUpdateSubscriptionSection() {
+    $('.business-choose-your-plan-content').fadeIn(); 
+}
+ </script>

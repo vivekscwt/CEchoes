@@ -11,56 +11,52 @@
           <div class="col-md-8">
             <div class="profile-right-content">
               <div class="profile-info-table">
+                <% let hasPayments = false; %> <!-- Track if any payments exist -->
                 <% Object.keys(allPayments).forEach(planName => { %>
                     <% if (allPayments[planName].length > 0) { %>
                         <h2>Plan: <%= planName %> </h2>
                         <table>
-                            <% Object.keys(allPayments).forEach(planName => { %>
                             <% const planPayments = allPayments[planName]; %>
-                            <% if (planPayments.length > 0) { %>
-                                <% 
-                                planPayments.sort((a, b) => new Date(a.subscription_start_date) - new Date(b.subscription_start_date)); %>
-                                
-                                <%
-                                const firstPaymentDate = new Date(planPayments[0].subscription_start_date); %>
-                                
-                                <tr>
+                            <% 
+                            planPayments.sort((a, b) => new Date(a.subscription_start_date) - new Date(b.subscription_start_date)); 
+                            const firstPaymentDate = new Date(planPayments[0].subscription_start_date); 
+                            %>
+                            <tr>
                                 <td colspan="4">Payment: <%= firstPaymentDate.toLocaleDateString() %></td>
-                                </tr>
-                                
-                                <% planPayments.forEach(payment => { %>
-                                <tr>
-                                    <td><%= new Date(payment.subscription_start_date).toLocaleDateString() %></td>
-                                    <td><%= payment.payment_status %></td>
-                                </tr>
-                                <% }); %>
-                                
-                                <% 
-                                const latestSubscriptionEndDate = new Date(Math.max(...planPayments.map(payment => new Date(payment.subscription_end_date)))); %>
-
-                                <% 
-                                const latestSubscriptionEndDates = new Date(Math.max(...planPayments.map(payment => new Date(payment.subscription_end_date)))); %>
-                                
-                                <% 
-                                const nextPaymentDate = new Date(latestSubscriptionEndDate);
-                                nextPaymentDate.setDate(nextPaymentDate.getDate()); %>
-                                
-                                <tr>
+                            </tr>
+                            
+                            <% planPayments.forEach(payment => { %>
+                            <tr>
+                                <td><%= new Date(payment.subscription_start_date).toLocaleDateString() %></td>
+                                <td><%= payment.payment_status %></td>
+                            </tr>
+                            <% }); %>
+            
+                            <% 
+                            const latestSubscriptionEndDate = new Date(Math.max(...planPayments.map(payment => new Date(payment.subscription_end_date)))); 
+                            const nextPaymentDate = new Date(latestSubscriptionEndDate);
+                            nextPaymentDate.setDate(nextPaymentDate.getDate()); 
+                            %>
+                            <tr>
                                 <td colspan="3">Next Payment Date</td>
                                 <td><%= nextPaymentDate.toLocaleDateString() %></td>
-                                </tr>
-                            <% } %>
-                            <% }); %>
+                            </tr>
                         </table>
                         <div>
-                          <button type="button" class="formbold-confirm-btn cancel-subscription-btn" onclick="confirmCancelSubscription()">Cancel Subscription</button>
-                          <a href="/update-plan">
-                            <button type="button" class="formbold-confirm-btn update-subscription-btn" >Update Subscription</button>
-                          </a>
-                      </div>
+                            <button type="button" class="formbold-confirm-btn cancel-subscription-btn" onclick="confirmCancelSubscription()">Cancel Subscription</button>
+                            <a href="/update-plan">
+                                <button type="button" class="formbold-confirm-btn update-subscription-btn">Update Subscription</button>
+                            </a>
+                        </div>
+                        <% hasPayments = true; %> 
                     <% } %>
-                    <% }); %>
-              </div>
+                <% }); %>
+            
+                <% if (!hasPayments) { %> 
+                    <p><strong> You have no payment history yet.</strong></p>
+                <% } %>
+            </div>
+            
             </div>
            </div>
         </div>

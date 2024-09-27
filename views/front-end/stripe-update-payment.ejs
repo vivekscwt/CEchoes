@@ -14,6 +14,7 @@
 			<div class="col">
 				<form id="paymentForm">
 					<div class="inputBox">
+						<p>Price per user: $<span id="price-per-user"></span></p>
 						<label for="memberCount">Add-on Users:</label>
 						<input type="number" min=1 name="memberCount" id="memberCount"
 							placeholder="Enter number of add-on users">
@@ -690,6 +691,9 @@
                 }));
             });
         }
+
+		const perUserPrice = parseFloat('<%= per_user_price || 0 %>');
+		$('#price-per-user').text(perUserPrice.toFixed(2));
     });
 
     document.getElementById('zip').addEventListener('input', function() {

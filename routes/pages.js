@@ -2433,8 +2433,18 @@ router.get('/stripe-update-payment', checkCookieValue, async (req, res) => {
         const planids = `SELECT * FROM plan_management WHERE name = "${planId}"`;
         const planidvalue = await queryAsync(planids);
         const planID = planidvalue[0].id;
-        const exchangeRates = await comFunction2.getCurrency();
 
+        if (planidvalue.length > 0) {
+            console.log("planID", planID);
+            var monthly_plan_price = planidvalue[0].monthly_price;
+            console.log("monthly_plan_price", monthly_plan_price);
+            var yearly_price = planidvalue[0].yearly_price;
+            console.log("yearly_price", yearly_price);
+            var per_user_prices = planidvalue[0].per_user_price;
+            console.log("per_user_prices", per_user_prices);
+        }
+
+        const exchangeRates = await comFunction2.getCurrency();
         const [latestReviews, getCountries] = await Promise.all([
             comFunction2.getlatestReviews(20),
             comFunction.getCountries(),
@@ -2464,7 +2474,8 @@ router.get('/stripe-update-payment', checkCookieValue, async (req, res) => {
             user_id,
             getCountries: getCountries,
             stripe_publish_key: stripe_publish_key,
-            membercount
+            membercount,
+            per_user_price: per_user_prices
         });
     } catch (err) {
         console.error(err);
@@ -2499,6 +2510,16 @@ router.get('/stripe-update-year-payment', checkCookieValue, async (req, res) => 
         const planids = `SELECT * FROM plan_management WHERE name = "${planId}"`;
         const planidvalue = await queryAsync(planids);
         const planID = planidvalue[0].id;
+
+        if (planidvalue.length > 0) {
+            console.log("planID", planID);
+            var monthly_plan_price = planidvalue[0].monthly_price;
+            console.log("monthly_plan_price", monthly_plan_price);
+            var yearly_price = planidvalue[0].yearly_price;
+            console.log("yearly_price", yearly_price);
+            var per_user_prices = planidvalue[0].per_user_price;
+            console.log("per_user_prices", per_user_prices);
+        }
 
         const decryptedEmail = await comFunction2.decryptEmail(encryptedEmail);
         if (decryptedEmail !== currentUserData.email) {
@@ -2537,7 +2558,8 @@ router.get('/stripe-update-year-payment', checkCookieValue, async (req, res) => 
             getstatevalue: getstatevalue,
             getCountries,
             stripe_publish_key,
-            membercount: membercount
+            membercount: membercount,
+            per_user_price: per_user_prices
         });
     } catch (err) {
         console.error(err);
@@ -12382,7 +12404,11 @@ router.get('/view-payments/:user_id', checkLoggedIn, async (req, res) => {
 
         const email_query = `SELECT email FROM users WHERE user_id =?`;
         const emailData = await query(email_query, [userId]);
-        console.log("emailData", emailData[0].email);
+        if(emailData.length>0){
+            var emails = emailData[0].email;
+            console.log("emailData", emailData[0].email);
+    
+        }
 
         const getManagerQuery = `SELECT company_level_manage_users.*,company.slug FROM company_level_manage_users LEFT JOIN company ON company_level_manage_users.company_id = company.ID WHERE company_level_manage_users.emails=?`;
         const getManagerData = await query(getManagerQuery, [emailData[0].email]);
@@ -12397,16 +12423,87 @@ router.get('/view-payments/:user_id', checkLoggedIn, async (req, res) => {
         var user_company_id = getcompanyval[0].company_id;
         console.log("user_company_id",user_company_id);
         
-        const [getAllPayments, getUser, getUserMeta, globalPageMeta, AllCompaniesReviews] = await Promise.all([
+        const [getAllPayments, getUser, getUserMeta, globalPageMeta, AllCompaniesReviews,getSubscribedUsers, getplans] = await Promise.all([
             comFunction2.getuserAllPaymentHistory(userId),
             comFunction.getUser(userId),
             comFunction.getUserMeta(userId),
             comFunction2.getPageMetaValues('global'),
             comFunction2.getAllCompaniesReviews(userId),
+            comFunction2.getSubscribedUsers(userId),
+            comFunction2.getplans('US'),
         ]);
         console.log("getAllPayments", getAllPayments);
 
-        res.render('view-payments', {
+        let plans = getAllPayments; 
+        let subscriptionDetails;
+        let subscriptionendTime;
+        let planss;
+        let amounts;
+        let subscriptionstartTime;
+
+        const availablePlans = ['Advanced', 'Premium', 'Enterprise', 'Basic', 'Standard'];
+
+        for (let plan of availablePlans) {
+        if (plans[plan] && plans[plan].length > 0) {
+            subscriptionDetails = JSON.parse(plans[plan][0].subscription_details);
+            subscriptionendTime = subscriptionDetails.current_period_end;
+            subscriptionstartTime = subscriptionDetails.current_period_start
+            planss = plans[plan][0].subscription_duration;
+            amounts = subscriptionDetails.plan.amount;
+            var subscription_id = plans[plan][0].stripe_subscription_id;
+            break;
+        }
+        }
+        // console.log("subscriptionDetails",subscriptionDetails);
+        // console.log("subscriptionendTime",subscriptionendTime);
+        // console.log("planss",planss);
+        // console.log("amounts",amounts);
+        const currentDate = new Date();
+        const currentTimestamp = Math.floor(currentDate.getTime() / 1000);
+        //console.log("currentTimestamp",currentTimestamp); 
+        var remainingTime = currentTimestamp - subscriptionstartTime;
+        //console.log("Remaining Time (in seconds)", remainingTime);
+        var remainingDays = Math.floor(remainingTime / (60 * 60 * 24));
+        //console.log("Remaining Time (in days)", remainingDays);
+        var averageDaysInMonth = 30.44; 
+        var remainingMonths = Math.floor(remainingDays / averageDaysInMonth);
+        //console.log("Remaining Time (in months)", remainingMonths);
+        if(planss="month"){
+            var per_amount= Math.round(amounts/30);
+            //console.log("per_amount_month",per_amount);
+            var user_refund_amount = per_amount*remainingDays;
+            //console.log("user_refund_amount_month",user_refund_amount);
+        } else if(planss="year"){
+            var per_amount= Math.round(amounts/12);
+            //console.log("per_amount_year",per_amount);
+            var user_refund_amount = per_amount*remainingMonths;
+            // console.log("user_refund_amount_year",user_refund_amount);
+        }else{
+            console.log("not valid interval");
+        }
+        const invoices = await stripe.invoices.list({
+            subscription: subscription_id,
+            limit: 1, 
+            expand: ['data.payment_intent'] 
+        });
+        if (invoices.data.length > 0) {
+            const latestInvoice = invoices.data[0]; 
+            console.log("Latest Invoice:", latestInvoice);
+
+            if (latestInvoice.payment_intent) {
+                const paymentIntent = await stripe.paymentIntents.retrieve(latestInvoice.payment_intent.id);
+                console.log("Payment Intent Details:", paymentIntent);
+                var payment_id = paymentIntent.id;
+                console.log("payment_id",payment_id);
+                
+            } else {
+                console.log("No payment intent found for the latest invoice.");
+            }
+        } else {
+            console.log("No invoices found for this subscription.");
+        }
+       
+            res.render('view-payments', {
             menu_active_id: 'miscellaneous',
             page_title: 'Payment History ',
             allPayments: getAllPayments,
@@ -12418,7 +12515,13 @@ router.get('/view-payments/:user_id', checkLoggedIn, async (req, res) => {
             getData: getData,
             userId: userId,
             currentUserData: currentUserData,
-            user_company_id: user_company_id
+            user_company_id: user_company_id,
+            user_refund_amount: user_refund_amount,
+            subscription_id: subscription_id,
+            payment_id: payment_id,
+            emailData: emails,
+            getSubscribedUsers: getSubscribedUsers,
+            getplans: getplans
         });
     } catch (err) {
         console.error(err);

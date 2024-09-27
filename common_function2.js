@@ -12,6 +12,7 @@ const { emit } = require('process');
 const base64url = require('base64url');
 const dns = require('dns');
 const crypto = require('crypto');
+const { log } = require('winston');
 const algorithm = 'aes-256-ctr';
 const secretKey = process.env.ENCRYPT_DECRYPT_SECRET; 
 
@@ -6551,6 +6552,9 @@ function getAllPayments() {
        LEFT JOIN company c ON c.ID = ccr.company_id AND c.status != '3'
        LEFT JOIN plan_management ON p.plan_id = plan_management.id
        LEFT JOIN users ON ccr.claimed_by = users.user_id
+       WHERE p.payment_status='succeeded'
+       AND (p.cancel_status IS NULL OR p.cancel_status != 'cancelled')
+       AND p.user_id IS NOT NULL
        ORDER BY p.id DESC`,
       async (err, result) => {
         if (err) {
@@ -6975,6 +6979,7 @@ async function getuserAllPaymentHistory(user_id) {
        WHERE p.user_id = "${user_id}"
        AND p.payment_status = 'succeeded'
        AND (p.cancel_status IS NULL OR p.cancel_status != 'cancelled')`,
+     
       async (err, result) => {
         if (err) {
           reject(err);
@@ -7082,7 +7087,6 @@ async function getuserAllPaymentHistory(user_id) {
     );
   });
 }
-
 
 
 
