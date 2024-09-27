@@ -678,9 +678,10 @@
   function confirmCancelRefundSubscription() {
     const payment_id = '<%= payment_id %>'; 
     const emailData = '<%= emailData %>';
+      const user_refund_amount = '<%= user_refund_amount%>'
     Swal.fire({
         title: 'Are you sure you want to cancel & refund?',
-        text: `Before cancelling please copy this payment id  ${payment_id}, so you can refund the user`,
+        text: `Before cancelling please copy this payment id  ${payment_id}, so you can refund the user the amount of $${user_refund_amount}`,
         icon: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Yes, cancel it!',
@@ -702,11 +703,12 @@
         success: function(response) {
           const payment_id = '<%= payment_id %>'; 
           const emailData = '<%= emailData %>';
+          const user_refund_amount = '<%= user_refund_amount%>'
           console.log("emailData",emailData);
           
           Swal.fire({
             icon: 'success',
-            title: `Subscription cancelled successfully. Please refund the amount from Stripe using this payment id = ${payment_id} for the email = ${emailData}`,
+            title: `Subscription cancelled successfully. Please refund $${user_refund_amount} from Stripe using this payment id = ${payment_id} for the email = ${emailData}`,
             confirmButtonText: 'OK'
         });
         },
