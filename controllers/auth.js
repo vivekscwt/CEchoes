@@ -16229,6 +16229,713 @@ const getInvoicesForSubscription = async (subscriptionId) => {
 };
 
 
+//previous
+// exports.createexternalSubscription = async (req, res) => {
+//     try {
+//         const { paymentMethodId, email, name, address, city, state, zip, planId, billingCycle, memberCount } = req.body;
+//         console.log("createexternalSubscription", req.body);
+
+//         if (!paymentMethodId || !email || !planId) {
+//             return res.status(400).send({ error: 'Missing required parameters' });
+//         }
+
+//         const plan = await getPlanFromDatabase(planId);
+//         if (!plan) {
+//             return res.status(404).send({ error: 'Plan not found' });
+//         }
+
+//         let paymentMethod;
+//         try {
+//             paymentMethod = await stripe.paymentMethods.retrieve(paymentMethodId);
+//         } catch (error) {
+//             return res.status(500).send({ error: 'Failed to retrieve PaymentMethod' });
+//         }
+
+//         let customer;
+//         try {
+//             customer = await stripe.customers.list({ email });
+//             if (customer.data.length === 0) {
+//                 customer = await stripe.customers.create({
+//                     email: email,
+//                     name: name,
+//                     address: {
+//                         line1: address,
+//                         city: city,
+//                         state: state,
+//                         postal_code: zip,
+//                     },
+//                 });
+//             } else {
+//                 customer = customer.data[0];
+//             }
+
+//             await stripe.paymentMethods.attach(paymentMethod.id, { customer: customer.id });
+
+//             await stripe.customers.update(customer.id, {
+//                 invoice_settings: { default_payment_method: paymentMethod.id },
+//             });
+//         } catch (error) {
+//             return res.status(500).send({ error: 'Failed to create/retrieve customer' });
+//         }
+
+//         const priceId = await createStripeProductAndPrices(plan, billingCycle, memberCount);
+//         if (!priceId) {
+//             return res.status(500).send({ error: 'Failed to create price for the plan' });
+//         }
+
+//         let subscription;
+//         try {
+//             subscription = await stripe.subscriptions.create({
+//                 customer: customer.id,
+//                 items: [{ price: priceId }],
+//                 payment_behavior: 'allow_incomplete',  
+//                 expand: ['latest_invoice.payment_intent'], 
+//             });
+//         } catch (error) {
+//             return res.status(500).send({ error: 'Failed to create subscription' });
+//         }
+//         const subscriptionId = subscription.id;
+//         // const paymentIntent = subscription.latest_invoice.payment_intent;
+//         // console.log("paymentIntent",paymentIntent);
+        
+//         // if (!paymentIntent) {
+//         //     return res.status(500).send({ error: 'Payment intent not found in invoice' });
+//         // }
+//         console.log("subscriptiondets",subscription);
+        
+//         let paymentIntent = subscription.latest_invoice.payment_intent;
+//         if (!paymentIntent) {
+//             try {
+//                 const latestInvoice = await stripe.invoices.retrieve(subscription.latest_invoice.id, {
+//                     expand: ['payment_intent'],
+//                 });
+//                 paymentIntent = latestInvoice.payment_intent;
+//             } catch (error) {
+//                 return res.status(500).send({ error: 'Failed to retrieve latest invoice payment intent' });
+//             }
+//         }
+
+//         const paymentStatus = paymentIntent.status;
+//         console.log("paymentStatus",paymentStatus);
+//         console.log("paymentIntent.client_secret",paymentIntent.client_secret);
+        
+//         const invoiceUrl = subscription.latest_invoice.invoice_pdf;
+//         const planInterval = subscription.items.data[0].price.recurring.interval === 'year' ? 'year' : 'month';
+
+//         if(billingCycle=="monthly"){
+//             var durations = "month"
+//         }else{
+//             var durations = "year"
+//         }
+
+//             const order_history_data = {
+//                 stripe_subscription_id: subscription.id,
+//                 plan_id: planId,
+//                 payment_status: paymentStatus,
+//                 subscription_details: JSON.stringify(subscription),
+//                 payment_details: JSON.stringify(paymentIntent),
+//                 // subscription_duration: planInterval,
+//                 subscription_duration: durations,
+//                 subscription_start_date: new Date(subscription.current_period_start * 1000),
+//                 subscription_end_date: new Date(subscription.current_period_end * 1000),
+//                 added_user_number: memberCount
+//             };
+
+//             var ordervalue = await queryAsync('INSERT INTO order_history SET ?', [order_history_data]);
+//             console.log("ordervalue",ordervalue);
+            
+//             const mailOptions = {
+//                 from: process.env.MAIL_USER,
+//                 to: email,
+//                 subject: 'Your Subscription Invoice',
+//                 html: `<p>Thank you for your subscription. You can view your invoice at the <a href="${invoiceUrl}">following link</a>.</p>`,
+//             };
+//             await mdlconfig.transporter.sendMail(mailOptions);
+
+
+
+//         if (paymentStatus === 'succeeded') {         
+//             return res.send({
+//                 status: 'ok',
+//                 message: 'Payment was successful!',
+//                 client_secret: paymentIntent.client_secret,
+//                 subscription: subscription.id,
+//                 invoiceUrl: invoiceUrl,
+//             });
+//         } else if (paymentStatus === 'requires_action' || paymentStatus === 'requires_confirmation') {
+//             return res.status(200).send({
+//                 status: 'requires_action',
+//                 client_secret: paymentIntent.client_secret,
+//                 message: 'Payment requires additional action, such as OTP or 3D Secure.',
+//                 subscription: subscriptionId,
+//             });
+//         } else {
+//             return res.status(400).send({
+//                 status: 'failed',
+//                 message: 'Payment failed. Please try again with a valid payment method.',
+//             });
+//         }
+//     } catch (error) {
+//         console.error('Error creating subscription:', error);
+//         return res.status(500).send({ error: 'An error occurred while creating the subscription.' });
+//     }
+// };
+
+// exports.externalRegistration = async (req, res) => {
+//     const { first_name, last_name, email, register_password, phone, address, city, state, zip, planId, billingCycle, memberCount, subscriptionId, user_state, user_country, register_confirm_password } = req.body;
+//     console.log("externalRegistration", req.body);
+
+//     try {
+//         if (register_password !== register_confirm_password) {
+//             return res.status(400).json({ status: 'err', message: 'Passwords does not match.' });
+//         }
+//         const emailExists = await new Promise((resolve, reject) => {
+//             db.query('SELECT email, register_from FROM users WHERE email = ?', [email], (err, results) => {
+//                 if (err) return reject(err);
+//                 if (results.length > 0) {
+//                     var register_from = results[0].register_from;
+//                     var message = '';
+//                     // Handle existing email scenarios
+//                     if (register_from == 'web') {
+//                         message = 'Email ID already exists, Please login with your email-ID and password';
+//                     } else if (register_from == 'facebook') {
+//                         message = 'Email ID already exists, login with ' + register_from;
+//                     } else if (register_from == 'gmail') {
+//                         register_from = 'google';
+//                         message = 'Email ID already exists, login with ' + register_from;
+//                     } else {
+//                         message = 'Email ID already exists, login with ' + register_from;
+//                     }
+//                     return res.status(500).json({ status: 'err', data: '', message: message });
+//                 } else {
+//                     resolve(false);
+//                 }
+//             });
+//         });
+
+//         if (emailExists) {
+//             console.log("Email already exists.");
+//             return;
+//         }
+
+//         console.log("Email does not exist, proceeding to create user.");
+
+//         const hashedPassword = await bcrypt.hash(register_password, 8);
+//         const currentDate = new Date();
+//         const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ');
+
+//         // Insert user into users table
+//         const userInsertQuery = 'INSERT INTO users (first_name, last_name, email,phone, password, register_from, user_registered, user_status, user_type_id, alise_name) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+//         db.query(userInsertQuery, [first_name, last_name, email, phone, hashedPassword, 'web', formattedDate, 3, 2, first_name + last_name], async (err, userResults) => {
+//             if (err) {
+//                 console.error('Error inserting user into "users" table:', err);
+//                 return res.status(500).json({ status: 'err', data: '', message: 'An error occurred while processing your request' });
+//             }
+
+//             var userID = userResults.insertId;
+//             console.log("userID", userID);
+
+//             // Send welcome email
+//             var mailOptions = {
+//                 from: process.env.MAIL_USER,
+//                 to: email,
+//                 subject: 'Welcome e-mail',
+//                 html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+//                 <style>
+//                 body, table, td, p, a, h1, h2, h3, h4, h5, h6, div {
+//                     font-family: Calibri, 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif !important;
+//                 }
+//                 </style>
+//                 <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
+//                  <tbody>
+//                   <tr>
+//                    <td align="center" valign="top">
+//                      <div id="template_header_image"><p style="margin-top: 0;"></p></div>
+//                      <table id="template_container" style="box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important; background-color: #fdfdfd; border: 1px solid #dcdcdc; border-radius: 3px !important;" border="0" cellpadding="0" cellspacing="0" width="600">
+//                       <tbody>
+//                         <tr>
+//                          <td align="center" valign="top">
+//                            <!-- Header -->
+//                            <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
+//                              <tbody>
+//                                <tr>
+//                                <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/email-template-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+//                                 <td id="header_wrapper" style="padding: 36px 48px; display: block;">
+//                                    <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Welcome</h1>
+//                                 </td>
+          
+//                                </tr>
+//                              </tbody>
+//                            </table>
+//                      <!-- End Header -->
+//                      </td>
+//                         </tr>
+//                         <tr>
+//                          <td align="center" valign="top">
+//                            <!-- Body -->
+//                            <table id="template_body" border="0" cellpadding="0" cellspacing="0" width="600">
+//                              <tbody>
+//                                <tr>
+//                                 <td id="body_content" style="background-color: #fdfdfd;" valign="top">
+//                                   <!-- Content -->
+//                                   <table border="0" cellpadding="20" cellspacing="0" width="100%">
+//                                    <tbody>
+//                                     <tr>
+//                                      <td style="padding: 48px;" valign="top">
+//                                        <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
+                                        
+//                                         <table border="0" cellpadding="4" cellspacing="0" width="90%">
+//                                           <tr>
+//                                             <td colspan="2">
+//                                                 <strong>Hello ${first_name},</strong>
+//                                                 <p style="font-size:15px; line-height:20px">Your account and company has created successfully.</p>
+//                                                 <p style="font-size:15px; line-height:20px">Please wait for Admin approval.</p>
+//                                                 <p style="font-size:15px; line-height:20px"><br><p style="font-size:15px; line-height:20px">Kind Regards,</p><p style="font-size:15px; line-height:20px">CEchoes Technology Team</p><br>
+//                                             </td>
+//                                           </tr>
+//                                         </table>
+//                                        </div>
+//                                      </td>
+//                                     </tr>
+//                                    </tbody>
+//                                   </table>
+//                                 <!-- End Content -->
+//                                 </td>
+//                                </tr>
+//                              </tbody>
+//                            </table>
+//                          <!-- End Body -->
+//                          </td>
+//                         </tr>
+//                         <tr>
+//                          <td align="center" valign="top">
+//                            <!-- Footer -->
+//                            <table id="template_footer" border="0" cellpadding="10" cellspacing="0" width="600">
+//                             <tbody>
+//                              <tr>
+//                               <td style="padding: 0; -webkit-border-radius: 6px;" valign="top">
+//                                <table border="0" cellpadding="10" cellspacing="0" width="100%">
+//                                  <tbody>
+//                                    <tr>
+//                                     <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
+//                                          <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology</a></p>
+//                                     </td>
+//                                    </tr>
+//                                  </tbody>
+//                                </table>
+//                               </td>
+//                              </tr>
+//                             </tbody>
+//                            </table>
+//                          <!-- End Footer -->
+//                          </td>
+//                         </tr>
+//                       </tbody>
+//                      </table>
+//                    </td>
+//                   </tr>
+//                  </tbody>
+//                 </table>
+//                </div>`
+//             };
+//             await mdlconfig.transporter.sendMail(mailOptions, function (err, info) {
+//                 if (err) {
+//                     console.log(err);
+//                     return res.status(500).json({ status: 'err', message: 'Something went wrong while sending email' });
+//                 } else {
+//                     console.log('Mail sent: ', info.response);
+//                 }
+//             });
+
+//             var mailOptions1 = {
+//                 from: process.env.MAIL_USER,
+//                 to: process.env.MAIL_USER,
+//                 subject: 'New Registration at CEchoes',
+//                 html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+//                 <style>
+//                 body, table, td, p, a, h1, h2, h3, h4, h5, h6, div {
+//                     font-family: Calibri, 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif !important;
+//                 }
+//                 </style>
+//                 <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
+//                  <tbody>
+//                   <tr>
+//                    <td align="center" valign="top">
+//                      <div id="template_header_image"><p style="margin-top: 0;"></p></div>
+//                      <table id="template_container" style="box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important; background-color: #fdfdfd; border: 1px solid #dcdcdc; border-radius: 3px !important;" border="0" cellpadding="0" cellspacing="0" width="600">
+//                       <tbody>
+//                         <tr>
+//                          <td align="center" valign="top">
+//                            <!-- Header -->
+//                            <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
+//                              <tbody>
+//                                <tr>
+//                                <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/email-template-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+//                                 <td id="header_wrapper" style="padding: 36px 48px; display: block;">
+//                                    <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Welcome</h1>
+//                                 </td>
+          
+//                                </tr>
+//                              </tbody>
+//                            </table>
+//                      <!-- End Header -->
+//                      </td>
+//                         </tr>
+//                         <tr>
+//                          <td align="center" valign="top">
+//                            <!-- Body -->
+//                            <table id="template_body" border="0" cellpadding="0" cellspacing="0" width="600">
+//                              <tbody>
+//                                <tr>
+//                                 <td id="body_content" style="background-color: #fdfdfd;" valign="top">
+//                                   <!-- Content -->
+//                                   <table border="0" cellpadding="20" cellspacing="0" width="100%">
+//                                    <tbody>
+//                                     <tr>
+//                                      <td style="padding: 48px;" valign="top">
+//                                        <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
+                                        
+//                                         <table border="0" cellpadding="4" cellspacing="0" width="90%">
+//                                           <tr>
+//                                             <td colspan="2">
+//                                                 <strong>Hello Sir/Madam,</strong>
+//                                                 <p style="font-size:15px; line-height:20px">A new user named ${first_name} ${last_name} has been register at CEchoes.com</p>
+//                                                 <p style="font-size:15px; line-height:20px">Please verify the <a href="${process.env.MAIN_URL}pending-users">user</a>.</p>
+//                                                 <p style="font-size:15px; line-height:20px"><br><p style="font-size:15px; line-height:20px">Kind Regards,</p><p style="font-size:15px; line-height:20px">CEchoes Technology Team</p><br>
+//                                             </td>
+//                                           </tr>
+//                                         </table>
+//                                        </div>
+//                                      </td>
+//                                     </tr>
+//                                    </tbody>
+//                                   </table>
+//                                 <!-- End Content -->
+//                                 </td>
+//                                </tr>
+//                              </tbody>
+//                            </table>
+//                          <!-- End Body -->
+//                          </td>
+//                         </tr>
+//                         <tr>
+//                          <td align="center" valign="top">
+//                            <!-- Footer -->
+//                            <table id="template_footer" border="0" cellpadding="10" cellspacing="0" width="600">
+//                             <tbody>
+//                              <tr>
+//                               <td style="padding: 0; -webkit-border-radius: 6px;" valign="top">
+//                                <table border="0" cellpadding="10" cellspacing="0" width="100%">
+//                                  <tbody>
+//                                    <tr>
+//                                     <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
+//                                          <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology</a></p>
+//                                     </td>
+//                                    </tr>
+//                                  </tbody>
+//                                </table>
+//                               </td>
+//                              </tr>
+//                             </tbody>
+//                            </table>
+//                          <!-- End Footer -->
+//                          </td>
+//                         </tr>
+//                       </tbody>
+//                      </table>
+//                    </td>
+//                   </tr>
+//                  </tbody>
+//                 </table>
+//                </div>`
+//             };
+//             await mdlconfig.transporter.sendMail(mailOptions1, function (err, info) {
+//                 if (err) {
+//                     console.log(err);
+//                     return res.status(500).json({ status: 'err', message: 'Something went wrong while sending email' });
+//                 } else {
+//                     console.log('Mail sent to admin: ', info.response);
+//                 }
+//             });
+
+//             var mailOptions2 = {
+//                 from: process.env.MAIL_USER,
+//                 to: process.env.MAIL_USER,
+//                 subject: 'New Registration of an Organization at CEchoes',
+//                 html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
+//                 <style>
+//                 body, table, td, p, a, h1, h2, h3, h4, h5, h6, div {
+//                     font-family: Calibri, 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif !important;
+//                 }
+//                 </style>
+//                 <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
+//                  <tbody>
+//                   <tr>
+//                    <td align="center" valign="top">
+//                      <div id="template_header_image"><p style="margin-top: 0;"></p></div>
+//                      <table id="template_container" style="box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important; background-color: #fdfdfd; border: 1px solid #dcdcdc; border-radius: 3px !important;" border="0" cellpadding="0" cellspacing="0" width="600">
+//                       <tbody>
+//                         <tr>
+//                          <td align="center" valign="top">
+//                            <!-- Header -->
+//                            <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
+//                              <tbody>
+//                                <tr>
+//                                <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/email-template-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
+//                                 <td id="header_wrapper" style="padding: 36px 48px; display: block;">
+//                                    <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Welcome</h1>
+//                                 </td>
+          
+//                                </tr>
+//                              </tbody>
+//                            </table>
+//                      <!-- End Header -->
+//                      </td>
+//                         </tr>
+//                         <tr>
+//                          <td align="center" valign="top">
+//                            <!-- Body -->
+//                            <table id="template_body" border="0" cellpadding="0" cellspacing="0" width="600">
+//                              <tbody>
+//                                <tr>
+//                                 <td id="body_content" style="background-color: #fdfdfd;" valign="top">
+//                                   <!-- Content -->
+//                                   <table border="0" cellpadding="20" cellspacing="0" width="100%">
+//                                    <tbody>
+//                                     <tr>
+//                                      <td style="padding: 48px;" valign="top">
+//                                        <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
+                                        
+//                                         <table border="0" cellpadding="4" cellspacing="0" width="90%">
+//                                           <tr>
+//                                             <td colspan="2">
+//                                                 <strong>Hello Sir/Madam,</strong>
+//                                                 <p style="font-size:15px; line-height:20px">A new organization has been subscribed at CEchoes.com</p>
+//                                                 <p style="font-size:15px; line-height:20px">Please verify the <a href="${process.env.MAIN_URL}pending-users">organization</a>.</p>
+//                                                 <p style="font-size:15px; line-height:20px"><br><p style="font-size:15px; line-height:20px">Kind Regards,</p><p style="font-size:15px; line-height:20px">CEchoes Technology Team</p><br>
+//                                             </td>
+//                                           </tr>
+//                                         </table>
+//                                        </div>
+//                                      </td>
+//                                     </tr>
+//                                    </tbody>
+//                                   </table>
+//                                 <!-- End Content -->
+//                                 </td>
+//                                </tr>
+//                              </tbody>
+//                            </table>
+//                          <!-- End Body -->
+//                          </td>
+//                         </tr>
+//                         <tr>
+//                          <td align="center" valign="top">
+//                            <!-- Footer -->
+//                            <table id="template_footer" border="0" cellpadding="10" cellspacing="0" width="600">
+//                             <tbody>
+//                              <tr>
+//                               <td style="padding: 0; -webkit-border-radius: 6px;" valign="top">
+//                                <table border="0" cellpadding="10" cellspacing="0" width="100%">
+//                                  <tbody>
+//                                    <tr>
+//                                     <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
+//                                          <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology</a></p>
+//                                     </td>
+//                                    </tr>
+//                                  </tbody>
+//                                </table>
+//                               </td>
+//                              </tr>
+//                             </tbody>
+//                            </table>
+//                          <!-- End Footer -->
+//                          </td>
+//                         </tr>
+//                       </tbody>
+//                      </table>
+//                    </td>
+//                   </tr>
+//                  </tbody>
+//                 </table>
+//                </div>`
+//             };
+//             await mdlconfig.transporter.sendMail(mailOptions2, function (err, info) {
+//                 if (err) {
+//                     console.log(err);
+//                     return res.status(500).json({ status: 'err', message: 'Something went wrong while sending email' });
+//                 } else {
+//                     console.log('Mail sent to admin of pending company: ', info.response);
+//                 }
+//             });
+
+//             if (req.body.parent_id == '0') {
+//                 console.log("vvvvv");
+                
+//                 const companyQuery = `SELECT * FROM company WHERE company_name = ? AND main_address_country = ? `;
+//                 const companyValue = await query(companyQuery, [req.body.company_name, req.body.main_address_country]);
+//                 if (companyValue.length > 0) {
+//                     return res.status(500).json({ status: 'err', data: '', message: 'Organization name already exists.' });
+//                 }
+//             }
+//             // if (!req.body.parent_id || req.body.parent_id === "Select Parent") {
+//             //     req.body.parent_id = 0;
+//             // }
+
+//             comFunction2.generateUniqueSlug(req.body.company_name, async (error, companySlug) => {
+//                 if (error) {
+//                     console.log("error slug");
+                    
+//                     console.log('Err: ', error.message);
+//                     return res.status(500).json({ status: 'err', data: '', message: 'Error generating company slug' });
+//                 } else {
+//                     console.log('companySlug', companySlug);
+//                     var insertValues = [];
+//                     if (req.file) {
+//                         insertValues = [userResults.insertId, req.body.company_name, req.body.heading, req.file.filename, req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, '2', req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug, req.body.parent_id,'1'];
+//                     } else {
+//                         insertValues = [userResults.insertId, req.body.company_name, req.body.heading, '', req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, '2', req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.main_address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug, req.body.parent_id,'1'];
+//                     }
+
+//                     const insertQuery = 'INSERT INTO company (user_created_by, company_name, heading, logo, about_company, comp_phone, comp_email, comp_registration_id, status, trending, created_date, updated_date, tollfree_number, main_address, main_address_pin_code, address_map_url, main_address_country, main_address_state, main_address_city, verified, paid_status, slug, parent_id,temp_comp_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+//                     db.query(insertQuery, insertValues, async (err, results, fields) => {
+//                         if (err) {
+//                             console.error("Company error:", err);
+//                             return res.status(500).json({ status: 'err', data: '', message: 'An error occurred while processing your request' });
+//                         } else {
+//                             console.log("company results", results);
+//                             var companyId = results.insertId;
+
+//                             const updatecompany_query = `UPDATE company SET membership_type_id = ?, paid_status = ? WHERE ID = "${companyId}"`;
+//                             const updatecompany_value = await queryAsync(updatecompany_query, 'paid', [planId]);
+//                             console.log("updatecompany_value", updatecompany_value);
+
+//                             const updatecompanyclaim_query = `INSERT INTO company_claim_request SET company_id = ?, claimed_by = ?, status = ?, claimed_date = ?`;
+//                             const updatecompanyclaim_values = [companyId, userID, '1', formattedDate];
+//                             const updatecompanyclaim_result = await queryAsync(updatecompanyclaim_query, updatecompanyclaim_values);
+//                             console.log("Company claim request inserted successfully:", updatecompanyclaim_result);
+
+//                             const subscriptionDetails = await stripe.subscriptions.retrieve(subscriptionId);
+//                             console.log('Subscription details:', subscriptionDetails);
+
+//                             const invoice = await stripe.invoices.retrieve(subscriptionDetails.latest_invoice);
+//                             console.log('Invoices for subscriptions:', invoice);
+
+  
+
+//                             // const getpayments= fetchPaymentsByInvoiceId(invoiceId);
+//                             // console.log("getpayments",getpayments);
+
+//                             console.log("Subscription current start timestamp:", subscriptionDetails.current_start);
+//                             console.log("Subscription charge at timestamp:", subscriptionDetails.charge_at);
+
+//                             const subscriptionStartDate = new Date(subscriptionDetails.current_start * 1000);
+//                             const subscriptionEndDate = new Date(subscriptionDetails.charge_at * 1000);
+
+//                             console.log("Subscription start date:", subscriptionStartDate);
+//                             console.log("Subscription end date:", subscriptionEndDate);
+
+//                             const order_history_data = {
+//                                 user_id: userID,
+//                                 payment_status: "succeeded"
+//                             };
+                            
+//                             const update_order_history_query = `
+//                                 UPDATE order_history
+//                                 SET user_id = ?, payment_status = ?
+//                                 WHERE stripe_subscription_id = ?
+//                             `;
+                            
+//                             const update_values = [
+//                                 order_history_data.user_id,
+//                                 order_history_data.payment_status, 
+//                                 subscriptionId 
+//                             ];
+    
+//                                 try {
+//                                     const update_result = await queryAsync(update_order_history_query, update_values);
+//                                     console.log(`Order history updated for subscription ID ${subscriptionId}`);
+//                                 } catch (error) {
+//                                     console.error('Failed to update order history:', error);
+//                                 }
+
+//                             const userMetaInsertQuery = 'INSERT INTO user_customer_meta (user_id, review_count, country, state) VALUES (?, ?, ?, ?)';
+//                             await queryAsync(userMetaInsertQuery, [userResults.insertId, 0, user_country, user_state]);
+
+//                             // Register user in blog API
+//                             const userRegistrationData = {
+//                                 username: email,
+//                                 email: email,
+//                                 password: register_password,
+//                                 first_name: first_name,
+//                                 last_name: last_name,
+//                             };
+//                             await axios.post(`${process.env.BLOG_API_ENDPOINT}/register`, userRegistrationData);
+
+//                             // Log user in blog API
+//                             const userData = {
+//                                 user_id: userResults.insertId,
+//                                 first_name: first_name,
+//                                 last_name: last_name,
+//                                 email: email,
+//                                 user_type_id: 2
+//                             };
+//                             const encodedUserData = JSON.stringify(userData);
+//                             res.cookie('user', encodedUserData);
+
+//                             const userLoginData = {
+//                                 email: email,
+//                                 password: register_password,
+//                             };
+//                             const loginResponse = await axios.post(`${process.env.BLOG_API_ENDPOINT}/login`, userLoginData);
+//                             const wpUserData = loginResponse.data.data;
+
+//                             // Fetch device info
+//                             const userAgent = req.headers['user-agent'];
+//                             const agent = useragent.parse(userAgent);
+//                             const deviceQuery = 'SELECT * FROM user_device_info WHERE user_id = ?';
+//                             const deviceQueryResults = await new Promise((resolve, reject) => {
+//                                 db.query(deviceQuery, [userResults.insertId], (err, results) => {
+//                                     if (err) return reject(err);
+//                                     resolve(results);
+//                                 });
+//                             });
+
+//                             // Insert or update device info
+//                             const ipAddress = requestIp.getClientIp(req);
+//                             const deviceInfo = `${agent.toAgent()} ${agent.os.toString()}`;
+//                             if (deviceQueryResults.length > 0) {
+//                                 const deviceUpdateQuery = 'UPDATE user_device_info SET device_id = ?, IP_address = ?, last_logged_in = ? WHERE user_id = ?';
+//                                 const values = [deviceInfo, ipAddress, formattedDate, userResults.insertId];
+//                                 await new Promise((resolve, reject) => {
+//                                     db.query(deviceUpdateQuery, values, (err, results) => {
+//                                         if (err) return reject(err);
+//                                         resolve(results);
+//                                     });
+//                                 });
+//                             } else {
+//                                 const deviceInsertQuery = 'INSERT INTO user_device_info (user_id, device_id, device_token, imei_no, model_name, make_name, IP_address, last_logged_in, created_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
+//                                 const values = [userResults.insertId, deviceInfo, '', '', '', '', ipAddress, formattedDate, formattedDate];
+//                                 await new Promise((resolve, reject) => {
+//                                     db.query(deviceInsertQuery, values, (err, results) => {
+//                                         if (err) return reject(err);
+//                                         resolve(results);
+//                                     });
+//                                 });
+//                             }
+
+//                             // Respond with success message
+//                             return res.status(200).json({ status: 'ok', data: userResults.insertId, message: 'New user created' });
+//                         }
+//                     });
+//                 }
+//             });
+//         });
+//     } catch (error) {
+//         console.error('Error:', error);
+//         return res.status(500).json({ status: 'err', data: '', message: 'An error occurred while processing your request' });
+//     }
+// };
 
 exports.createexternalSubscription = async (req, res) => {
     try {
@@ -16320,13 +17027,7 @@ exports.createexternalSubscription = async (req, res) => {
         console.log("paymentIntent.client_secret",paymentIntent.client_secret);
         
         const invoiceUrl = subscription.latest_invoice.invoice_pdf;
-        const planInterval = subscription.items.data[0].price.recurring.interval === 'year' ? 'year' : 'month';
-
-        if(billingCycle=="monthly"){
-            var durations = "month"
-        }else{
-            var durations = "year"
-        }
+            const planInterval = subscription.items.data[0].price.recurring.interval === 'year' ? 'year' : 'month';
 
             const order_history_data = {
                 stripe_subscription_id: subscription.id,
@@ -16334,8 +17035,7 @@ exports.createexternalSubscription = async (req, res) => {
                 payment_status: paymentStatus,
                 subscription_details: JSON.stringify(subscription),
                 payment_details: JSON.stringify(paymentIntent),
-                // subscription_duration: planInterval,
-                subscription_duration: durations,
+                subscription_duration: planInterval,
                 subscription_start_date: new Date(subscription.current_period_start * 1000),
                 subscription_end_date: new Date(subscription.current_period_end * 1000),
                 added_user_number: memberCount
@@ -16598,9 +17298,9 @@ exports.externalRegistration = async (req, res) => {
                                         <table border="0" cellpadding="4" cellspacing="0" width="90%">
                                           <tr>
                                             <td colspan="2">
-                                                <strong>Hello Sir/Madam,</strong>
-                                                <p style="font-size:15px; line-height:20px">A new user named ${first_name} ${last_name} has been register at CEchoes.com</p>
-                                                <p style="font-size:15px; line-height:20px">Please verify the <a href="${process.env.MAIN_URL}pending-users">user</a>.</p>
+                                                <strong>Hello ${first_name},</strong>
+                                                <p style="font-size:15px; line-height:20px">User1 has been register at CEchoes.com</p>
+                                                <p style="font-size:15px; line-height:20px">Please verify the <a href="http://localhost:2000">user</a>.</p>
                                                 <p style="font-size:15px; line-height:20px"><br><p style="font-size:15px; line-height:20px">Kind Regards,</p><p style="font-size:15px; line-height:20px">CEchoes Technology Team</p><br>
                                             </td>
                                           </tr>
@@ -16658,117 +17358,6 @@ exports.externalRegistration = async (req, res) => {
                 }
             });
 
-            var mailOptions2 = {
-                from: process.env.MAIL_USER,
-                to: process.env.MAIL_USER,
-                subject: 'New Registration of an Organization at CEchoes',
-                html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
-                <style>
-                body, table, td, p, a, h1, h2, h3, h4, h5, h6, div {
-                    font-family: Calibri, 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif !important;
-                }
-                </style>
-                <table height="100%" border="0" cellpadding="0" cellspacing="0" width="100%">
-                 <tbody>
-                  <tr>
-                   <td align="center" valign="top">
-                     <div id="template_header_image"><p style="margin-top: 0;"></p></div>
-                     <table id="template_container" style="box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important; background-color: #fdfdfd; border: 1px solid #dcdcdc; border-radius: 3px !important;" border="0" cellpadding="0" cellspacing="0" width="600">
-                      <tbody>
-                        <tr>
-                         <td align="center" valign="top">
-                           <!-- Header -->
-                           <table id="template_header" style="background-color: #000; border-radius: 3px 3px 0 0 !important; color: #ffffff; border-bottom: 0; font-weight: bold; line-height: 100%; vertical-align: middle; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif;" border="0" cellpadding="0" cellspacing="0" width="600">
-                             <tbody>
-                               <tr>
-                               <td><img alt="Logo" src="${process.env.MAIN_URL}assets/media/logos/email-template-logo.png"  style="padding: 30px 40px; display: block;  width: 70px;" /></td>
-                                <td id="header_wrapper" style="padding: 36px 48px; display: block;">
-                                   <h1 style="color: #FCCB06; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 30px; font-weight: bold; line-height: 150%; margin: 0; text-align: left;">Welcome</h1>
-                                </td>
-          
-                               </tr>
-                             </tbody>
-                           </table>
-                     <!-- End Header -->
-                     </td>
-                        </tr>
-                        <tr>
-                         <td align="center" valign="top">
-                           <!-- Body -->
-                           <table id="template_body" border="0" cellpadding="0" cellspacing="0" width="600">
-                             <tbody>
-                               <tr>
-                                <td id="body_content" style="background-color: #fdfdfd;" valign="top">
-                                  <!-- Content -->
-                                  <table border="0" cellpadding="20" cellspacing="0" width="100%">
-                                   <tbody>
-                                    <tr>
-                                     <td style="padding: 48px;" valign="top">
-                                       <div id="body_content_inner" style="color: #737373; font-family: &quot;Helvetica Neue&quot;, Helvetica, Roboto, Arial, sans-serif; font-size: 14px; line-height: 150%; text-align: left;">
-                                        
-                                        <table border="0" cellpadding="4" cellspacing="0" width="90%">
-                                          <tr>
-                                            <td colspan="2">
-                                                <strong>Hello Sir/Madam,</strong>
-                                                <p style="font-size:15px; line-height:20px">A new organization has been subscribed at CEchoes.com</p>
-                                                <p style="font-size:15px; line-height:20px">Please verify the <a href="${process.env.MAIN_URL}pending-users">organization</a>.</p>
-                                                <p style="font-size:15px; line-height:20px"><br><p style="font-size:15px; line-height:20px">Kind Regards,</p><p style="font-size:15px; line-height:20px">CEchoes Technology Team</p><br>
-                                            </td>
-                                          </tr>
-                                        </table>
-                                       </div>
-                                     </td>
-                                    </tr>
-                                   </tbody>
-                                  </table>
-                                <!-- End Content -->
-                                </td>
-                               </tr>
-                             </tbody>
-                           </table>
-                         <!-- End Body -->
-                         </td>
-                        </tr>
-                        <tr>
-                         <td align="center" valign="top">
-                           <!-- Footer -->
-                           <table id="template_footer" border="0" cellpadding="10" cellspacing="0" width="600">
-                            <tbody>
-                             <tr>
-                              <td style="padding: 0; -webkit-border-radius: 6px;" valign="top">
-                               <table border="0" cellpadding="10" cellspacing="0" width="100%">
-                                 <tbody>
-                                   <tr>
-                                    <td colspan="2" id="credit" style="padding: 20px 10px 20px 10px; -webkit-border-radius: 0px; border: 0; color: #fff; font-family: Arial; font-size: 12px; line-height: 125%; text-align: center; background:#000" valign="middle">
-                                         <p>This email was sent from <a style="color:#FCCB06" href="${process.env.MAIN_URL}">CEchoesTechnology</a></p>
-                                    </td>
-                                   </tr>
-                                 </tbody>
-                               </table>
-                              </td>
-                             </tr>
-                            </tbody>
-                           </table>
-                         <!-- End Footer -->
-                         </td>
-                        </tr>
-                      </tbody>
-                     </table>
-                   </td>
-                  </tr>
-                 </tbody>
-                </table>
-               </div>`
-            };
-            await mdlconfig.transporter.sendMail(mailOptions2, function (err, info) {
-                if (err) {
-                    console.log(err);
-                    return res.status(500).json({ status: 'err', message: 'Something went wrong while sending email' });
-                } else {
-                    console.log('Mail sent to admin of pending company: ', info.response);
-                }
-            });
-
             if (req.body.parent_id == '0') {
                 console.log("vvvvv");
                 
@@ -16806,8 +17395,8 @@ exports.externalRegistration = async (req, res) => {
                             console.log("company results", results);
                             var companyId = results.insertId;
 
-                            const updatecompany_query = `UPDATE company SET membership_type_id = ?, paid_status = ? WHERE ID = "${companyId}"`;
-                            const updatecompany_value = await queryAsync(updatecompany_query, 'paid', [planId]);
+                            const updatecompany_query = `UPDATE company SET membership_type_id = ? WHERE ID = "${companyId}"`;
+                            const updatecompany_value = await queryAsync(updatecompany_query, [planId]);
                             console.log("updatecompany_value", updatecompany_value);
 
                             const updatecompanyclaim_query = `INSERT INTO company_claim_request SET company_id = ?, claimed_by = ?, status = ?, claimed_date = ?`;
@@ -16859,6 +17448,44 @@ exports.externalRegistration = async (req, res) => {
                                     console.error('Failed to update order history:', error);
                                 }
 
+                            // if (paymentStatus === 'succeeded') {
+                            //     const invoiceUrl = subscription.latest_invoice.invoice_pdf;
+                            //     const planInterval = subscription.items.data[0].price.recurring.interval === 'year' ? 'year' : 'month';
+                    
+                            //     const order_history_data = {
+                            //         stripe_subscription_id: subscription.id,
+                            //         plan_id: planId,
+                            //         payment_status: paymentStatus,
+                            //         subscription_details: JSON.stringify(subscription),
+                            //         subscription_duration: planInterval,
+                            //         subscription_start_date: new Date(subscription.current_period_start * 1000),
+                            //         subscription_end_date: new Date(subscription.current_period_end * 1000),
+                            //         added_user_number: memberCount
+                            //     };
+                    
+                            //     var ordervalue = await queryAsync('INSERT INTO order_history SET ?', [order_history_data]);
+                            //     console.log("ordervalue",ordervalue);
+                                
+                            //     const mailOptions = {
+                            //         from: process.env.MAIL_USER,
+                            //         to: email,
+                            //         subject: 'Your Subscription Invoice',
+                            //         html: `<p>Thank you for your subscription. You can view your invoice at the <a href="${invoiceUrl}">following link</a>.</p>`,
+                            //     };
+                            //     await mdlconfig.transporter.sendMail(mailOptions);
+                    
+                            //     return res.send({
+                            //         status: 'ok',
+                            //         message: 'Payment was successful!',
+                            //         subscriptionId: subscription.id,
+                            //         invoiceUrl: invoiceUrl,
+                            //     });
+                    
+                            // }
+
+
+                            // Insert user meta
+                            
                             const userMetaInsertQuery = 'INSERT INTO user_customer_meta (user_id, review_count, country, state) VALUES (?, ?, ?, ?)';
                             await queryAsync(userMetaInsertQuery, [userResults.insertId, 0, user_country, user_state]);
 
@@ -16936,6 +17563,8 @@ exports.externalRegistration = async (req, res) => {
         return res.status(500).json({ status: 'err', data: '', message: 'An error occurred while processing your request' });
     }
 };
+
+
 
 
 exports.externalcompanyRegistration = async (req, res) => {
