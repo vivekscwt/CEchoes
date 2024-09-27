@@ -101,6 +101,7 @@
                         class="formbold-form-input" />
                     <div>
                         <p>Price per user: $<span id="price-per-user"></span></p>
+                        <p>No of users for the plan : $<span id="user_number"></span></p>
                         <label for="memberCounts" class="formbold-form-label">Add On Users</label>
                         <input type="number" min="1" name="memberCount" id="member-count"
                             placeholder="Enter the number of add-on users" class="formbold-form-input" required />
@@ -155,6 +156,10 @@
                 <div class="formbold-form-step-3 form-step">
                     <div class="formbold-form-confirm" id="confirmed">
                         <p>Number of added users: <span id="member-count-display">0</span></p>
+                        <p>Added user price: <span id="user-amount-count-display"></span>
+                        <p>Plan price: <span id="plan-price"></span>
+                            
+                        </span></p>
                         <p>Total Amount: <span id="amount-count-display">
                             $<%= total_price / 1 %>
                         </span></p>
@@ -1311,11 +1316,21 @@
                     //     $('#amount-count-display').text('<%= total_price%>');
                     // }
                     if (memberCount_val > 0) {
+                        $('#user-amount-count-display').text(`$${parseFloat(totalAmount).toFixed(1).replace(/\.0$/, '')}`);
+
+                        $('#plan-price').text(`$${parseFloat(total_prices).toFixed(1).replace(/\.0$/, '')}`);
+
                         $('#amount-count-display').text(`$${parseFloat(allamount).toFixed(1).replace(/\.0$/, '')}`);
                     } else {
+                        $('#user-amount-count-display').text(`$${parseFloat(totalAmount).toFixed(1).replace(/\.0$/, '')}`);
                         const total_price = '<%= total_price %>'; 
+
+                        $('#plan-price').text(`$${parseFloat(total_prices).toFixed(1).replace(/\.0$/, '')}`);
+
                         $('#amount-count-display').text(`$${parseFloat(total_price).toFixed(1).replace(/\.0$/, '')}`);
                     }
+
+                    
                 }
 
                 $('#member-count').on('input', function () {
@@ -1353,7 +1368,11 @@
 
 
                 const perUserPrice = parseFloat('<%= per_user_price || 0 %>');
+                const perUserNo = parseFloat('<%= user_no || 0 %>');
+                
                 $('#price-per-user').text(perUserPrice.toFixed(2));
+                $('#user_number').text(perUserNo.toFixed(2));
+                
 
             });
 

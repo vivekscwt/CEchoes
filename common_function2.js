@@ -8100,20 +8100,59 @@ async function convertPrices(plan, userCountry) {
 
   
   
+//previopus
+  // if (userCurrency !== 'USD') {
+  //     if (!exchangeRates[userCurrency]) {
+  //         console.error(`Conversion rate for ${userCurrency} not available`);
+  //         return plan;
+  //     }
 
-  if (userCurrency !== 'USD') {
-      if (!exchangeRates[userCurrency]) {
-          console.error(`Conversion rate for ${userCurrency} not available`);
-          return plan;
-      }
+  //     // monthlyPriceConverted = (parseFloat(plan.monthly_price) * exchangeRates[userCurrency]).toFixed(2);
+  //     // yearlyPriceConverted = (parseFloat(plan.yearly_price) * exchangeRates[userCurrency]).toFixed(2);
+  //     // perUserPriceConverted = (parseFloat(plan.per_user_price) * exchangeRates[userCurrency]).toFixed(2);
+  //     monthlyPriceConverted = (parseFloat(plan.monthly_price));
+  //     yearlyPriceConverted = (parseFloat(plan.yearly_price));
+  //     perUserPriceConverted = (parseFloat(plan.per_user_price));
+  // }
 
-      // monthlyPriceConverted = (parseFloat(plan.monthly_price) * exchangeRates[userCurrency]).toFixed(2);
-      // yearlyPriceConverted = (parseFloat(plan.yearly_price) * exchangeRates[userCurrency]).toFixed(2);
-      // perUserPriceConverted = (parseFloat(plan.per_user_price) * exchangeRates[userCurrency]).toFixed(2);
-      monthlyPriceConverted = (parseFloat(plan.monthly_price));
-      yearlyPriceConverted = (parseFloat(plan.yearly_price));
-      perUserPriceConverted = (parseFloat(plan.per_user_price));
-  }
+
+
+if (userCurrency !== 'USD') {
+    if (!exchangeRates[userCurrency]) {
+        console.error(`Conversion rate for ${userCurrency} not available`);
+        return plan;
+    }
+
+    monthlyPriceConverted = isNaN(parseFloat(plan.monthly_price)) 
+        ? 'Custom' 
+        : (parseFloat(plan.monthly_price) * exchangeRates[userCurrency]).toFixed(2);
+        
+    yearlyPriceConverted = isNaN(parseFloat(plan.yearly_price)) 
+        ? 'Custom' 
+        : (parseFloat(plan.yearly_price) * exchangeRates[userCurrency]).toFixed(2);
+        
+    perUserPriceConverted = isNaN(parseFloat(plan.per_user_price)) 
+        ? 'Custom' 
+        : (parseFloat(plan.per_user_price) * exchangeRates[userCurrency]).toFixed(2);
+} else {
+    monthlyPriceConverted = isNaN(parseFloat(plan.monthly_price)) 
+        ? 'Custom' 
+        : (parseFloat(plan.monthly_price)).toFixed(2);
+        
+    yearlyPriceConverted = isNaN(parseFloat(plan.yearly_price)) 
+        ? 'Custom' 
+        : (parseFloat(plan.yearly_price)).toFixed(2);
+        
+    perUserPriceConverted = isNaN(parseFloat(plan.per_user_price)) 
+        ? 'Custom' 
+        : (parseFloat(plan.per_user_price)).toFixed(2);
+}
+
+
+console.log(`Monthly Price: ${monthlyPriceConverted}`);
+console.log(`Yearly Price: ${yearlyPriceConverted}`);
+console.log(`Per User Price: ${perUserPriceConverted}`);
+
   console.log("monthlyPriceConverted",monthlyPriceConverted);
   
 

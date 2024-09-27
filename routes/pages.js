@@ -2312,6 +2312,7 @@ router.get('/stripe-payment', checkCookieValue, async (req, res) => {
         const planidvalue = await queryAsync(planids);
         //console.log("planidvalue", planidvalue[0].id);
         const planID = planidvalue[0].id;
+        var user_no = planidvalue[0].user_no;
 
         const exchangeRates = await comFunction2.getCurrency();
         //console.log("exchangeRates",exchangeRates);
@@ -2337,7 +2338,8 @@ router.get('/stripe-payment', checkCookieValue, async (req, res) => {
             encryptedEmail,
             user_id,
             getCountries: getCountries,
-            stripe_publish_key: stripe_publish_key
+            stripe_publish_key: stripe_publish_key,
+            user_no
         });
     } catch (err) {
         console.error(err);
@@ -2370,6 +2372,7 @@ router.get('/stripe-year-payment', checkCookieValue, async (req, res) => {
         const planids = `SELECT * FROM plan_management WHERE name = "${planId}"`;
         const planidvalue = await queryAsync(planids);
         const planID = planidvalue[0].id;
+        var user_no = planidvalue[0].user_no;
 
         const decryptedEmail = await comFunction2.decryptEmail(encryptedEmail);
         if (decryptedEmail !== currentUserData.email) {
@@ -2401,7 +2404,8 @@ router.get('/stripe-year-payment', checkCookieValue, async (req, res) => {
             exchangeRates: exchangeRates,
             getstatevalue: getstatevalue,
             getCountries,
-            stripe_publish_key
+            stripe_publish_key,
+            user_no
         });
     } catch (err) {
         console.error(err);
@@ -2433,6 +2437,7 @@ router.get('/stripe-update-payment', checkCookieValue, async (req, res) => {
         const planids = `SELECT * FROM plan_management WHERE name = "${planId}"`;
         const planidvalue = await queryAsync(planids);
         const planID = planidvalue[0].id;
+        var user_no = planidvalue[0].user_no;
 
         if (planidvalue.length > 0) {
             console.log("planID", planID);
@@ -2475,7 +2480,8 @@ router.get('/stripe-update-payment', checkCookieValue, async (req, res) => {
             getCountries: getCountries,
             stripe_publish_key: stripe_publish_key,
             membercount,
-            per_user_price: per_user_prices
+            per_user_price: per_user_prices,
+            user_no: user_no
         });
     } catch (err) {
         console.error(err);
@@ -2510,6 +2516,7 @@ router.get('/stripe-update-year-payment', checkCookieValue, async (req, res) => 
         const planids = `SELECT * FROM plan_management WHERE name = "${planId}"`;
         const planidvalue = await queryAsync(planids);
         const planID = planidvalue[0].id;
+        var user_no = planidvalue[0].user_no;
 
         if (planidvalue.length > 0) {
             console.log("planID", planID);
@@ -2559,7 +2566,8 @@ router.get('/stripe-update-year-payment', checkCookieValue, async (req, res) => 
             getCountries,
             stripe_publish_key,
             membercount: membercount,
-            per_user_price: per_user_prices
+            per_user_price: per_user_prices,
+            user_no
         });
     } catch (err) {
         console.error(err);
@@ -2611,6 +2619,7 @@ router.get('/create-user-company-subscription', checkCookieValue, async (req, re
             console.log("yearly_price", yearly_price);
             var per_user_prices = planidvalue[0].per_user_price;
             console.log("per_user_prices", per_user_prices);
+            var user_no = planidvalue[0].user_no;
         }
         const getcurencyquery = `SELECT * FROM currency_conversion`;
         const getcurrencyval = await queryAsync(getcurencyquery);
@@ -2665,7 +2674,8 @@ router.get('/create-user-company-subscription', checkCookieValue, async (req, re
             monthly_plan_price: monthly_plan_price,
             yearly_price: yearly_price,
             per_user_price,
-            stripe_publish_key: stripe_publish_key
+            stripe_publish_key: stripe_publish_key,
+            user_no
         });
     } catch (err) {
         console.error(err);
@@ -12404,6 +12414,9 @@ router.get('/view-payments/:user_id', checkLoggedIn, async (req, res) => {
 
         const email_query = `SELECT email FROM users WHERE user_id =?`;
         const emailData = await query(email_query, [userId]);
+        console.log("emailData",emailData);
+        console.log("userId",userId);
+        
         if(emailData.length>0){
             var emails = emailData[0].email;
             console.log("emailData", emailData[0].email);

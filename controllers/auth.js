@@ -10053,10 +10053,10 @@ exports.addMembershipPlan = async (req, res) => {
 
 exports.updateBasic = async (req, res) => {
     try {
-        const { descriptions, monthly_prices, yearly_prices, user_price } = req.body;
+        const { descriptions, monthly_prices, yearly_prices, user_price,user_no } = req.body;
         console.log("updateBasic", req.body);
 
-        const updatebasicquery = `UPDATE plan_management SET description = '${descriptions}', monthly_price = '${monthly_prices}', yearly_price = '${yearly_prices}',per_user_price= '${user_price}' WHERE name="basic"`;
+        const updatebasicquery = `UPDATE plan_management SET description = '${descriptions}', monthly_price = '${monthly_prices}', yearly_price = '${yearly_prices}',per_user_price= '${user_price}', user_no='${user_no}' WHERE name="basic"`;
 
         await query(updatebasicquery);
 
@@ -10072,7 +10072,7 @@ exports.updateAdvanced = async (req, res) => {
         const { descriptions, monthly_prices, yearly_prices, user_price } = req.body;
         console.log("updateAdvanced", req.body);
 
-        const updatebasicquery = `UPDATE plan_management SET description = '${descriptions}', monthly_price = '${monthly_prices}', yearly_price = '${yearly_prices}',per_user_price= '${user_price}' WHERE name="advanced"`;
+        const updatebasicquery = `UPDATE plan_management SET description = '${descriptions}', monthly_price = '${monthly_prices}', yearly_price = '${yearly_prices}',per_user_price= '${user_price}', user_no='${req.body.user_no}' WHERE name="advanced"`;
 
         await query(updatebasicquery);
 
@@ -10088,7 +10088,7 @@ exports.updateStandard = async (req, res) => {
         const { descriptions, standard_monthly_prices, standard_yearly_prices, monthly_price_id, yearly_price_id, user_price } = req.body;
         console.log("updateStandard", req.body);
 
-        const updatebasicquery = `UPDATE plan_management SET description = '${descriptions}', monthly_price = '${standard_monthly_prices}', yearly_price = '${standard_yearly_prices}',per_user_price= '${user_price}' WHERE name="standard"`;
+        const updatebasicquery = `UPDATE plan_management SET description = '${descriptions}', monthly_price = '${standard_monthly_prices}', yearly_price = '${standard_yearly_prices}',per_user_price= '${user_price}', user_no='${req.body.user_no}' WHERE name="standard"`;
 
         await query(updatebasicquery);
 
@@ -10104,7 +10104,7 @@ exports.updatePremium = async (req, res) => {
         const { descriptions, monthly_prices, yearly_prices, monthly_price_id, yearly_price_id, user_price } = req.body;
         console.log("updatePremium", req.body);
 
-        const updatebasicquery = `UPDATE plan_management SET description = '${descriptions}', monthly_price = '${monthly_prices}', yearly_price = '${yearly_prices}',per_user_price= '${user_price}' WHERE name="premium"`;
+        const updatebasicquery = `UPDATE plan_management SET description = '${descriptions}', monthly_price = '${monthly_prices}', yearly_price = '${yearly_prices}',per_user_price= '${user_price}', user_no='${req.body.user_no}' WHERE name="premium"`;
 
         await query(updatebasicquery);
 
@@ -10120,7 +10120,7 @@ exports.updateEnterprise = async (req, res) => {
         const { enterprise_descriptions, enterprise_monthly_prices, enterprise_yearly_prices, yearly_price_id, monthly_price_id, user_price } = req.body;
         //console.log("updateEnterprise", req.body);
 
-        const updatebasicquery = `UPDATE plan_management SET description = '${enterprise_descriptions}', monthly_price = '${enterprise_monthly_prices}', yearly_price = '${enterprise_yearly_prices}', per_user_price= '${user_price}' WHERE name="enterprise"`;
+        const updatebasicquery = `UPDATE plan_management SET description = '${enterprise_descriptions}', monthly_price = '${enterprise_monthly_prices}', yearly_price = '${enterprise_yearly_prices}', per_user_price= '${user_price}', user_no='${req.body.user_no}' WHERE name="enterprise"`;
 
         await query(updatebasicquery);
 
@@ -17961,7 +17961,7 @@ exports.cancelSubscriptionbyAdmin = async (req, res) => {
                     console.log(err);
                     return res.status(500).json({ status: 'err', message: 'Something went wrong while sending email' });
                 } else {
-                    console.log('Mail sent to admin about payment cancel request from user: ', info.response);
+                    console.log('Mail sent to user about payment cancel from admin: ', info.response);
                 }
             });
 
@@ -18127,7 +18127,7 @@ exports.cancelandRefundSubscriptionbyuser = async (req, res) => {
                     console.log(err);
                     return res.status(500).json({ status: 'err', message: 'Something went wrong while sending email' });
                 } else {
-                    console.log('Mail sent to admin about payment cancel request from user: ', info.response);
+                    console.log('Mail sent to user about payment cancel and refund request from admin: ', info.response);
                 }
             });
 
@@ -18429,7 +18429,7 @@ exports.updateSubscription = async (req, res) => {
                                       <tr>
                                         <td colspan="2">
                                             <strong>Hello Sir/Madam,</strong>
-                                            <p style="font-size:15px; line-height:20px">Thank you for your subscription. You can view your invoice at the <a href="${invoiceUrl}">following link</a>.</p>
+                                            <p style="font-size:15px; line-height:20px">Thank you for updating your subscription. You can view your invoice at the <a href="${invoiceUrl}">following link</a>.</p>
                                             <p style="font-size:15px; line-height:20px"><br><p style="font-size:15px; line-height:20px">Kind Regards,</p><p style="font-size:15px; line-height:20px">CEchoes Technology Team</p><br>
                                         </td>
                                       </tr>
@@ -18510,6 +18510,8 @@ exports.updateSubscriptionbyAdmin = async (req, res) => {
             console.log("useremail",email);
             var encryptedEmail = await comFunction2.encryptEmail(email);
         }
+        const currentDate = new Date();
+        const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ');
 
         const getcompany_query = `SELECT company.* FROM company LEFT JOIN company_claim_request ON company.ID = company_claim_request.company_id WHERE company_claim_request.claimed_by = ?`;
         const getcompany_value = await queryAsync(getcompany_query, [userId]);
@@ -18521,27 +18523,51 @@ exports.updateSubscriptionbyAdmin = async (req, res) => {
         const companyID = getcompany_value[0].ID;
         console.log("companyID", companyID);
 
-        const updatecompany_query = `UPDATE company SET membership_type_id = ?, paid_status = ? WHERE ID = ?`;
-        try {
-            const result = await queryAsync(updatecompany_query, [planId, 'paid', companyID]);
-            console.log('Query executed successfully.');
-            if (result.affectedRows > 0) {
-                console.log(`Success: ${result.affectedRows} row(s) updated.`);
-            } else {
-                console.log('No rows were updated.');
+        var getcompanypaiquery = `SELECT * FROM company_update_admin WHERE company_id ="${companyID}"`;
+        var getcompanypaidval = await queryAsync(getcompanypaiquery);
+        if(getcompanypaidval.length>0){
+            console.log("getcompanypaidvalupdatesubsbyad");
+            
+            var previousdelquery = `DELETE FROM company_update_admin WHERE company_id="${companyID}"`;
+            var previousdelval = await queryAsync(previousdelquery)
+
+            const updatecompany_query = `INSERT INTO company_update_admin (company_id, status, plan, created_at, updated_at) VALUES (?, ?, ?, ?, ?)`;
+            try {
+                const result = await queryAsync(updatecompany_query, [companyID,'unpaid',req.body.planid,formattedDate, formattedDate]);
+                console.log('Query executed successfully.');
+                if (result.affectedRows > 0) {
+                    console.log(`Success: ${result.affectedRows} row(s) updated.`);
+                } else {
+                    console.log('No rows were updated.');
+                }
+            } catch (error) {
+                console.error('Error executing the query:', error);
             }
-        } catch (error) {
-            console.error('Error executing the query:', error);
+        }else{
+            const updatecompany_query = `INSERT INTO company_update_admin (company_id, status, plan, created_at, updated_at) VALUES (?, ?, ?, ?, ?)`;
+            try {
+                const result = await queryAsync(updatecompany_query, [companyID,'unpaid',req.body.planid,formattedDate, formattedDate]);
+                console.log('Query executed successfully.');
+                if (result.affectedRows > 0) {
+                    console.log(`Success: ${result.affectedRows} row(s) updated.`);
+                } else {
+                    console.log('No rows were updated.');
+                }
+            } catch (error) {
+                console.error('Error executing the query:', error);
+            }
         }
+
         if(billingCycle=="monthly"){
             var durations = "month"
         }else{
             var durations = "year"
         }
-        const updateorderquery ='UPDATE order_history SET plan_id = ?,subscription_duration=? WHERE user_id = ?';
-        const updateorderval = await queryAsync(updateorderquery,[req.body.planid,durations,userId])
+        // const updateorderquery ='UPDATE order_history SET plan_id = ?,subscription_duration=? WHERE user_id = ?';
+        // const updateorderval = await queryAsync(updateorderquery,[req.body.planid,durations,userId])
         var baseUrl = process.env.MAIN_URL;
         let paymentUrl;
+        
         if(billingCycle=="monthyly"){
             paymentUrl = `${baseUrl}stripe-update-payment?planId=${req.body.planName}&planPrice=${req.body.monthlyPrice}&billingCycle=${req.body.billingCycle}&memberCount=0&total_price=${req.body.monthlyPrice}&encryptedEmail=${encryptedEmail}`;
         }else{
@@ -18550,7 +18576,8 @@ exports.updateSubscriptionbyAdmin = async (req, res) => {
 
         const mailOptions = {
             from: process.env.MAIL_USER,
-            to: email,
+            //to: email,
+            to: 'dev2.scwt@gmail.com',
             subject: 'Subscription Updation by Admin and need to payment',
             html:
              `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
@@ -18646,7 +18673,7 @@ exports.updateSubscriptionbyAdmin = async (req, res) => {
         };
 
         await mdlconfig.transporter.sendMail(mailOptions);
-        console.log("Subscription confirmation email sent successfully.");
+        console.log("Subscription updation by admin email sent successfully.");
 
         return res.status(200).send({ status:'ok', message:'Subscription updated and payment link send to the user.' });
     }  catch(error){

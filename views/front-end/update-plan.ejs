@@ -30,13 +30,18 @@
             <% ['basic', 'standard', 'advanced', 'premium', 'enterprise'].forEach(plan => { %>
             <div class="pricing-card">
                 <div class="price_tag">
-                <% if (country_name === "India") { %>
-                    $ <%= getplans[plan + '_val'].monthly_price_local %> <span>/ Month</span>
-                <% } else if (country_name === "Japan") { %>
-                    $ <%= getplans[plan + '_val'].monthly_price_local %> <span>/ Month</span>
-                <% } else { %>
-                    $ <%= getplans[plan + '_val'].monthly_price_local %> <span>/ Month</span>
-                <% } %>
+
+                <% if (plan !== 'enterprise') { %>
+                    <% if (country_name === "India") { %>
+                      $ <%= getplans[plan + '_val'].monthly_price_local %> <span>/ Month</span>
+                    <% } else if (country_name === "Japan") { %>
+                      $ <%= getplans[plan + '_val'].monthly_price_local %> <span>/ Month</span>
+                    <% } else { %>
+                      $ <%= getplans[plan + '_val'].monthly_price_local %> <span>/ Month</span>
+                    <% } %>
+                    <% } else { %>
+                        <%= getplans[plan + '_val'].monthly_price_local %> <span>/ Month</span>
+                    <% } %>
                 </div>
         
                 <div class="member-control">
@@ -50,6 +55,10 @@
                 <div class="get_started_btn">
                 <% if (isSubscribed(plan, 'monthly')) { %>
                     <button class="subscribed-btn" style="display: none;" disabled>Get Started</button>
+                    <% }else if (plan === 'enterprise') { %>
+                        <div class="proceed_btn">
+                            <a href="/contact-us" style="color: black;">Update</a>
+                        </div>
                 <% } else { %>
                     <div class="proceed_btn">
                     <a href="#" style="color: black;" onclick="redirectToStripePayment('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].monthly_price %>', 'monthly')">Update</a>
@@ -65,13 +74,18 @@
             <% ['basic', 'standard', 'advanced', 'premium', 'enterprise'].forEach(plan => { %>
               <div class="pricing-card">
                 <div class="price_tag">
-                  <% if (country_name === "India") { %>
-                    $ <%= getplans[plan + '_val'].yearly_price_local %> <span>/ Year</span>
-                  <% } else if (country_name === "Japan") { %>
-                    $ <%= getplans[plan + '_val'].yearly_price_local %> <span>/ Year</span>
-                  <% } else { %>
-                    $ <%= getplans[plan + '_val'].yearly_price_local %> <span>/ Year</span>
-                  <% } %>
+
+                  <% if (plan !== 'enterprise') { %>
+                    <% if (country_name === "India") { %>
+                      $ <%= getplans[plan + '_val'].yearly_price_local %> <span>/ Year</span>
+                    <% } else if (country_name === "Japan") { %>
+                      $ <%= getplans[plan + '_val'].yearly_price_local %> <span>/ Year</span>
+                    <% } else { %>
+                      $ <%= getplans[plan + '_val'].yearly_price_local %> <span>/ Year</span>
+                    <% } %>
+                    <% } else { %>
+                        <%= getplans[plan + '_val'].yearly_price_local %> <span>/ Year</span>
+                    <% } %>
                 </div>
                 
                 <% if (currentUserData && currentUserData.claimed_comp_id != null) { %>
@@ -81,8 +95,12 @@
                     <% if (isSubscribed(plan, 'yearly')) { %>
                       <!-- Show the subscribed button and disable it -->
                       <button class="subscribed-btn" style="display: none;" disabled>
-                        Get Started
+                       Update
                       </button>
+                      <% }else if (plan === 'enterprise') { %>
+                        <div class="proceed_btn">
+                            <a href="/contact-us" style="color: black;">Get Started</a>
+                        </div>
                     <% } else { %>
                       <!-- Show the button for unsubscribed plans -->
                       <div class="proceed_btn">

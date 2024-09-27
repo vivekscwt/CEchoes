@@ -62,6 +62,12 @@
                                             <input type="number" name="user_price" id="user_pricebasics" class="form-control form-control-lg form-control-solid mb-3 mb-lg-0" placeholder="Add On User Price" value="<%= basic_val.per_user_price %>" />
                                         </div>
                                     </div>
+                                    <div class="row mb-6">
+                                        <label class="col-lg-4 col-form-label required fw-bold fs-6">No of user</label>
+                                        <div class="col-lg-8">
+                                            <input type="number" name="user_no" id="user_no_basics" class="form-control form-control-lg form-control-solid mb-3 mb-lg-0" placeholder="Add On User Price" value="<%= basic_val.user_no %>" />
+                                        </div>
+                                    </div>
                                 </div>
                                 <!-- Update button -->
                                 <div class="card-footer d-flex justify-content-end py-6 px-9">
@@ -146,6 +152,12 @@
                                         <label class="col-lg-4 col-form-label required fw-bold fs-6">Add On User Price</label>
                                         <div class="col-lg-8">
                                             <input type="number" name="user_price" id="user_price_standard" class="form-control form-control-lg form-control-solid mb-3 mb-lg-0" placeholder="Add On User Price" value="<%= standard_val.per_user_price %>" />
+                                        </div>
+                                    </div>
+                                    <div class="row mb-6">
+                                        <label class="col-lg-4 col-form-label required fw-bold fs-6">No of user</label>
+                                        <div class="col-lg-8">
+                                            <input type="number" name="user_no" id="user_no_standard" class="form-control form-control-lg form-control-solid mb-3 mb-lg-0" placeholder="Add On User Price" value="<%= standard_val.user_no %>" />
                                         </div>
                                     </div>
                                 </div>
@@ -235,6 +247,12 @@
                                         <input type="number" name="user_price" id="user_price_advanced" class="form-control form-control-lg form-control-solid mb-3 mb-lg-0" placeholder="Add On User Price" value="<%= advanced_val.per_user_price %>" />
                                     </div>
                                 </div>
+                                <div class="row mb-6">
+                                    <label class="col-lg-4 col-form-label required fw-bold fs-6">No of user</label>
+                                    <div class="col-lg-8">
+                                        <input type="number" name="user_no" id="user_no_advanced" class="form-control form-control-lg form-control-solid mb-3 mb-lg-0" placeholder="User number" value="<%= advanced_val.user_no %>" />
+                                    </div>
+                                </div>
                             </div>
                             <!-- Update button -->
                             <div class="card-footer d-flex justify-content-end py-6 px-9">
@@ -321,6 +339,12 @@
                                         <input type="number" name="user_price" id="user_price_premium" class="form-control form-control-lg form-control-solid mb-3 mb-lg-0" placeholder="Add On User Price" value="<%= premium_val.per_user_price %>" />
                                     </div>
                                 </div>
+                                <div class="row mb-6">
+                                    <label class="col-lg-4 col-form-label required fw-bold fs-6">No of user</label>
+                                    <div class="col-lg-8">
+                                        <input type="number" name="user_no" id="user_no_premium" class="form-control form-control-lg form-control-solid mb-3 mb-lg-0" placeholder="User number" value="<%= premium_val.user_no %>" />
+                                    </div>
+                                </div>
                             </div>
                             <!-- Update button -->
                             <div class="card-footer d-flex justify-content-end py-6 px-9">
@@ -387,19 +411,25 @@
                                     <div class="row mb-6">
                                         <label class="col-lg-4 col-form-label required fw-bold fs-6">Monthly Price</label>
                                         <div class="col-lg-8">
-                                            <input type="number" name="enterprise_monthly_prices" id="monthly_price_basics" class="form-control form-control-lg form-control-solid mb-3 mb-lg-0" placeholder="Monthly Price" value="<%= enterprise_val.monthly_price %>" />
+                                            <input type="text" name="enterprise_monthly_prices" id="monthly_price_basics" class="form-control form-control-lg form-control-solid mb-3 mb-lg-0" placeholder="Monthly Price" value="<%= enterprise_val.monthly_price %>" />
                                         </div>
                                     </div>
                                     <div class="row mb-6">
                                         <label class="col-lg-4 col-form-label required fw-bold fs-6">Yearly Price</label>
                                         <div class="col-lg-8">
-                                            <input type="number" name="enterprise_yearly_prices" id="yearly_price_basics" class="form-control form-control-lg form-control-solid mb-3 mb-lg-0" placeholder="Yearly Price" value="<%= enterprise_val.yearly_price %>" />
+                                            <input type="text" name="enterprise_yearly_prices" id="yearly_price_basics" class="form-control form-control-lg form-control-solid mb-3 mb-lg-0" placeholder="Yearly Price" value="<%= enterprise_val.yearly_price %>" />
                                         </div>
                                     </div>
                                     <div class="row mb-6">
                                         <label class="col-lg-4 col-form-label required fw-bold fs-6">Add On User Price</label>
                                         <div class="col-lg-8">
-                                            <input type="number" name="user_price" id="user_price_enterprise" class="form-control form-control-lg form-control-solid mb-3 mb-lg-0" placeholder="Add On User Price" value="<%= enterprise_val.per_user_price %>" />
+                                            <input type="text" name="user_price" id="user_price_enterprise" class="form-control form-control-lg form-control-solid mb-3 mb-lg-0" placeholder="Add On User Price" value="<%= enterprise_val.per_user_price %>" />
+                                        </div>
+                                    </div>
+                                    <div class="row mb-6">
+                                        <label class="col-lg-4 col-form-label required fw-bold fs-6">No of user</label>
+                                        <div class="col-lg-8">
+                                            <input type="number" name="user_no" id="user_no_enterprise" class="form-control form-control-lg form-control-solid mb-3 mb-lg-0" placeholder="User number" value="<%= enterprise_val.user_no %>" />
                                         </div>
                                     </div>
                                 </div>

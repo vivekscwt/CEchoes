@@ -15,12 +15,13 @@
           <span class="toggle-label" id="yearly-label">Yearly</span>
         </div>
         <% function hasAnySubscription() { return getSubscribedUsers.some(sub=> sub.user_id ===
-          currentUserData.user_id);
+          currentUserData.user_id && sub.cancel_status !== 'cancelled');
           }
 
           function isSubscribed(planName, duration) {
           return getSubscribedUsers.some(sub => sub.user_id === currentUserData.user_id && sub.plan_name ===
-          planName && sub.subscription_duration === duration);
+          planName && sub.subscription_duration === duration && 
+          sub.cancel_status !== 'cancelled');
           }
 
           const userHasSubscription = hasAnySubscription();
@@ -30,6 +31,7 @@
           <% ['basic', 'standard', 'advanced', 'premium', 'enterprise'].forEach(plan => { %>
             <div class="pricing-card">
               <div class="price_tag">
+                <% if (plan !== 'enterprise') { %>
                 <% if (country_name === "India") { %>
                   $ <%= getplans[plan + '_val'].monthly_price_local %> <span>/ Month</span>
                 <% } else if (country_name === "Japan") { %>
@@ -37,6 +39,9 @@
                 <% } else { %>
                   $ <%= getplans[plan + '_val'].monthly_price_local %> <span>/ Month</span>
                 <% } %>
+                <% } else { %>
+                  <%= getplans[plan + '_val'].monthly_price_local %> <span>/ Month</span>
+              <% } %>
               </div>
           
               <% if (currentUserData) { %>
@@ -65,8 +70,11 @@
                     <button class="subscribed-btn">
                        Get Started
                     </button>
-                    <% }
-                  else if (currentUserData.claimed_comp_id!=null || currentUserData.claimed_comp_id!=undefined ) { %>
+                    <% }else if (plan === 'enterprise') { %>
+                        <div class="proceed_btn">
+                            <a href="/contact-us" style="color: black;">Get Started</a>
+                        </div>
+                    <% }else if (currentUserData.claimed_comp_id!=null || currentUserData.claimed_comp_id!=undefined ) { %>
                     <div class="proceed_btn">
                       <a href="#" style="color: black;"  onclick="redirectToStripePayment('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].monthly_price %>', 'monthly')">Get Started</a>
                     </div>
@@ -96,6 +104,10 @@
                     <button class="subscribed-btn" disabled>
                       Get Started
                     </button>
+                    <% }else if (plan === 'enterprise') { %>
+                        <div class="proceed_btn">
+                            <a href="/contact-us" style="color: black;">Get Started</a>
+                        </div>
                   <% } else if (userHasSubscription) { %>
                     <button class="subscribed-btn">
                       Get Started
@@ -117,6 +129,7 @@
             <div class="pricing-card">
               
               <div class="price_tag">
+                <% if (plan !== 'enterprise') { %>
                 <% if (country_name === "India") { %>
                   $ <%= getplans[plan + '_val'].yearly_price_local %> <span>/ Year</span>
                 <% } else if (country_name === "Japan") { %>
@@ -124,6 +137,9 @@
                 <% } else { %>
                   $ <%= getplans[plan + '_val'].yearly_price_local %> <span>/ Year</span>
                 <% } %>
+                <% } else { %>
+                        <%= getplans[plan + '_val'].monthly_price_local %> <span>/ Month</span>
+                    <% } %>
               </div>
               
               <% if (currentUserData) { %>
@@ -141,6 +157,10 @@
                   <button class="subscribed-btn">
                     Get Started
                   </button>
+                  <% }else if (plan === 'enterprise') { %>
+                        <div class="proceed_btn">
+                            <a href="/contact-us" style="color: black;">Get Started</a>
+                        </div>
                   <% }  else if (currentUserData.claimed_comp_id!=null || currentUserData.claimed_comp_id!=undefined ) { %>
                     <div class="proceed_btn">
                     <a href="#" style="color: black;" onclick="redirectToYearlyStripePayment('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].yearly_price %>', 'yearly')">Get Started</a>
@@ -165,6 +185,10 @@
                       <input type="radio" id="subscribe-<%= plan %>-yearly" name="subscriptionType" value="yearly" disabled>
                       Get Started
                     </label>
+                    <% }else if (plan === 'enterprise') { %>
+                        <div class="proceed_btn">
+                            <a href="/contact-us" style="color: black;">Get Started</a>
+                        </div>
                   <% } else { %>
                     <div class="proceed_btn">
                       <a href="#" style="color: black;" onclick="redirectToYearlySubscriptionPage('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].yearly_price %>', 'yearly')">Get Started</a>
@@ -180,7 +204,7 @@
     </div>
     </div>
 
-    <% if (getSubscribedUsers.length > 0) { %>
+    <% if (getSubscribedUsers.length > 0 && getSubscribedUsers[0].cancel_status !== 'cancelled') { %>
       <p class="medium-large">
         You have already subscribed to the <%= getSubscribedUsers[0].plan_name %> membership plan. Click
         <a href="/user_payment_history %>"> here </a>to view the details.
