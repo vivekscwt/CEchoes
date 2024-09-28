@@ -17475,9 +17475,9 @@ exports.externalRegistration = async (req, res) => {
                     console.log('companySlug', companySlug);
                     var insertValues = [];
                     if (req.file) {
-                        insertValues = [userResults.insertId, req.body.company_name, req.body.heading, req.file.filename, req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, '2', req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug, req.body.parent_id,'1'];
+                        insertValues = [userResults.insertId, req.body.company_name, req.body.heading, req.file.filename, req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, '2', req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'paid', companySlug, req.body.parent_id,'1'];
                     } else {
-                        insertValues = [userResults.insertId, req.body.company_name, req.body.heading, '', req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, '2', req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.main_address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug, req.body.parent_id,'1'];
+                        insertValues = [userResults.insertId, req.body.company_name, req.body.heading, '', req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, '2', req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.main_address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'paid', companySlug, req.body.parent_id,'1'];
                     }
 
                     const insertQuery = 'INSERT INTO company (user_created_by, company_name, heading, logo, about_company, comp_phone, comp_email, comp_registration_id, status, trending, created_date, updated_date, tollfree_number, main_address, main_address_pin_code, address_map_url, main_address_country, main_address_state, main_address_city, verified, paid_status, slug, parent_id,temp_comp_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
@@ -17769,12 +17769,12 @@ exports.externalcompanyRegistration = async (req, res) => {
                     console.log('companySlug', companySlug);
                     var insertValues = [];
                     if (req.file) {
-                        insertValues = [userId, req.body.company_name, req.body.heading, req.file.filename, req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, '2', req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug, req.body.parent_id,'1'];
+                        insertValues = [userId, req.body.company_name, req.body.heading, req.file.filename, req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, '2', req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'paid', companySlug, req.body.parent_id,'1',req.body.planId];
                     } else {
-                        insertValues = [userId, req.body.company_name, req.body.heading, '', req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, '2', req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.main_address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug, req.body.parent_id,'1'];
+                        insertValues = [userId, req.body.company_name, req.body.heading, '', req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id, '2', req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.main_address, req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country, req.body.main_address_state, req.body.main_address_city, '0', 'paid', companySlug, req.body.parent_id,'1',req.body.planId];
                     }
 
-                    const insertQuery = 'INSERT INTO company (user_created_by, company_name, heading, logo, about_company, comp_phone, comp_email, comp_registration_id, status, trending, created_date, updated_date, tollfree_number, main_address, main_address_pin_code, address_map_url, main_address_country, main_address_state, main_address_city, verified, paid_status, slug, parent_id,temp_comp_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+                    const insertQuery = 'INSERT INTO company (user_created_by, company_name, heading, logo, about_company, comp_phone, comp_email, comp_registration_id, status, trending, created_date, updated_date, tollfree_number, main_address, main_address_pin_code, address_map_url, main_address_country, main_address_state, main_address_city, verified, paid_status, slug, parent_id,temp_comp_status,membership_type_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)';
                     db.query(insertQuery, insertValues, async (err, results, fields) => {
                         if (err) {
                             console.error("Company error:", err);
@@ -17782,10 +17782,12 @@ exports.externalcompanyRegistration = async (req, res) => {
                         } else {
                             console.log("company results", results);
                             var companyId = results.insertId;
+                            console.log("companyId",companyId);
+                            
 
-                            const updatecompany_query = `UPDATE company SET membership_type_id = ?, paid_status = ? WHERE ID = "${companyId}"`;
-                            const updatecompany_value = await queryAsync(updatecompany_query,'paid', [planId]);
-                            console.log("updatecompany_value", updatecompany_value);
+                            // const updatecompany_query = `UPDATE company SET membership_type_id = ?, paid_status = ? WHERE ID = "${companyId}"`;
+                            // const updatecompany_value = await queryAsync(updatecompany_query,'paid', [planId]);
+                            // console.log("updatecompany_value", updatecompany_value);
 
                             const updatecompanyclaim_query = `INSERT INTO company_claim_request SET company_id = ?, claimed_by = ?, status = ?, claimed_date = ?`;
                             const updatecompanyclaim_values = [companyId, userId, '1', formattedDate];
@@ -17850,6 +17852,102 @@ exports.externalcompanyRegistration = async (req, res) => {
         return res.status(500).json({ status: 'err', data: '', message: 'An error occurred while processing your request' });
     }
 };
+
+// exports.externalcompanyRegistration = async (req, res) => {
+//     const { first_name, last_name, email, phone, address, city, state, zip, planId, subscriptionId, user_state, user_country } = req.body;
+//     console.log("externalcompanyRegistration", req.body);
+
+//     const currentDate = new Date();
+//     const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ');
+
+//     try {
+//         // Check if user exists
+//         const getuseridquery = `SELECT * FROM users WHERE email = ?`;
+//         const getuserval = await queryAsync(getuseridquery, [email]);
+//         if (!getuserval.length) {
+//             return res.status(400).json({ status: 'err', message: 'User not found' });
+//         }
+//         const userId = getuserval[0].user_id;
+
+//         // Update user details
+//         const updateUserQuery = 'UPDATE users SET first_name = ?, last_name = ?, phone = ?, alise_name = ? WHERE user_id = ?';
+//         await queryAsync(updateUserQuery, [first_name, last_name, phone, req.body.alise_name, userId]);
+
+//         // Update user metadata
+//         const updateUserMetaQuery = `
+//             UPDATE user_customer_meta 
+//             SET address = ?, country = ?, state = ?, zip = ?, date_of_birth = ?, gender = ?, alternate_phone = ?, marital_status = ?, about = ? 
+//             WHERE user_id = ?
+//         `;
+//         await queryAsync(updateUserMetaQuery, [
+//             address, user_country, user_state, zip, req.body.date_of_birth, req.body.gender,
+//             req.body.alternate_phone, req.body.marital_status, req.body.about, userId
+//         ]);
+
+//         // Check for existing company
+//         if (req.body.parent_id == '0') {
+//             const companyQuery = `SELECT * FROM company WHERE company_name = ? AND main_address_country = ?`;
+//             const companyValue = await queryAsync(companyQuery, [req.body.company_name, req.body.main_address_country]);
+//             if (companyValue.length > 0) {
+//                 return res.status(500).json({ status: 'err', message: 'Organization name already exists.' });
+//             }
+//         }
+
+//         // Generate company slug
+//         const companySlug = await comFunction2.generateUniqueSlug(req.body.company_name);
+//         const insertValues = [
+//             userId, req.body.company_name, req.body.heading, req.file ? req.file.filename : '',
+//             req.body.about_company, req.body.comp_phone, req.body.comp_email, req.body.comp_registration_id,
+//             '2', req.body.trending, formattedDate, formattedDate, req.body.tollfree_number, req.body.main_address,
+//             req.body.main_address_pin_code, req.body.address_map_url, req.body.main_address_country,
+//             req.body.main_address_state, req.body.main_address_city, '0', 'free', companySlug, req.body.parent_id, '1'
+//         ];
+
+//         const insertCompanyQuery = `
+//             INSERT INTO company (
+//                 user_created_by, company_name, heading, logo, about_company, comp_phone, comp_email, 
+//                 comp_registration_id, status, trending, created_date, updated_date, tollfree_number, main_address, 
+//                 main_address_pin_code, address_map_url, main_address_country, main_address_state, main_address_city, 
+//                 verified, paid_status, slug, parent_id, temp_comp_status
+//             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+//         `;
+//         const companyResult = await queryAsync(insertCompanyQuery, insertValues);
+//         const companyId = companyResult.insertId;
+
+//         // Update company membership
+//         const updateCompanyQuery = `UPDATE company SET membership_type_id = ?, paid_status = ? WHERE ID = ?`;
+//         await queryAsync(updateCompanyQuery, [planId, 'paid', companyId]);
+
+//         // Insert claim request
+//         const claimRequestQuery = `INSERT INTO company_claim_request SET company_id = ?, claimed_by = ?, status = ?, claimed_date = ?`;
+//         await queryAsync(claimRequestQuery, [companyId, userId, '1', formattedDate]);
+
+//         // Retrieve and handle subscription details
+//         const subscriptionDetails = await stripe.subscriptions.retrieve(subscriptionId);
+//         const invoice = await stripe.invoices.retrieve(subscriptionDetails.latest_invoice);
+
+//         const subscriptionStartDate = new Date(subscriptionDetails.current_start * 1000);
+//         const subscriptionEndDate = new Date(subscriptionDetails.charge_at * 1000);
+
+//         console.log("Subscription start date:", subscriptionStartDate);
+//         console.log("Subscription end date:", subscriptionEndDate);
+
+//         // Update order history
+//         const updateOrderHistoryQuery = `
+//             UPDATE order_history
+//             SET user_id = ?, payment_status = ?
+//             WHERE stripe_subscription_id = ?
+//         `;
+//         await queryAsync(updateOrderHistoryQuery, [userId, "succeeded", subscriptionId]);
+
+//         res.status(200).json({ status: 'ok', message: 'Company created successfully' });
+
+//     } catch (error) {
+//         console.error('Error:', error);
+//         return res.status(500).json({ status: 'err', message: 'An error occurred while processing your request' });
+//     }
+// };
+
 
 
 exports.cancelSubscription = async (req, res) => {
