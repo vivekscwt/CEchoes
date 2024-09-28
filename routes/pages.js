@@ -9321,7 +9321,7 @@ router.get('/categories/:countryId', async (req, res) => {
 
     try {
         const nestedCategoriesHTML = await comFunction2.getCompanyCategoriess(countryid);
-        console.log("nestedCategoriesHTML", nestedCategoriesHTML);
+        //console.log("nestedCategoriesHTML", nestedCategoriesHTML);
         res.status(200).send(nestedCategoriesHTML);
     } catch (error) {
         console.error('Error fetching categories:', error);
@@ -9345,7 +9345,7 @@ router.get('/edit-categories/:countryId/:compid', async (req, res) => {
 
     try {
         const nestedCategoriesHTML = await comFunction2.getCompanyCategoryBuID(countryid, compid);
-        console.log("nestedCategoriesHTML", nestedCategoriesHTML);
+       // console.log("nestedCategoriesHTML", nestedCategoriesHTML);
         res.status(200).send(nestedCategoriesHTML);
     } catch (error) {
         console.error('Error fetching categories:', error);
