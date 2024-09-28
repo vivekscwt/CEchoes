@@ -101,7 +101,7 @@
                         class="formbold-form-input" />
                     <div>
                         <p>Price per user: $<span id="price-per-user"></span></p>
-                        <p>No of users for the plan : $<span id="user_number"></span></p>
+                        <p>No of users for the plan : <span id="user_number"></span></p>
                         <label for="memberCounts" class="formbold-form-label">Add On Users</label>
                         <input type="number" min="1" name="memberCount" id="member-count"
                             placeholder="Enter the number of add-on users" class="formbold-form-input" required />
@@ -1374,10 +1374,10 @@
 
 
                 const perUserPrice = parseFloat('<%= per_user_price || 0 %>');
-                const perUserNo = parseFloat('<%= user_no || 0 %>');
+                const perUserNo = Math.round('<%= user_no || 0 %>');
                 
                 $('#price-per-user').text(perUserPrice.toFixed(2));
-                $('#user_number').text(perUserNo.toFixed(2));
+                $('#user_number').text(perUserNo);
                 
 
             });

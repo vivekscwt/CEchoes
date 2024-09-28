@@ -700,25 +700,41 @@
           userId: userId
         },
         success: function(response) {
-          const payment_id = '<%= payment_id %>'; 
-          const emailData = '<%= emailData %>';
-          const user_refund_amount = '<%= user_refund_amount%>'
-          console.log("emailData",emailData);
-          
-          Swal.fire({
+    const payment_id = '<%= payment_id %>'; 
+    const emailData = '<%= emailData %>';
+    const user_refund_amount = parseFloat('<%= user_refund_amount %>'); // Ensure it's a number
+    const subscriptiondateval = parseFloat('<%= subscriptiondateval %>'); // Ensure it's a number
+    const subscriptionamount = parseFloat('<%= subscriptionamount %>'); // Ensure it's a number
+
+    console.log("emailData", emailData);
+    console.log("subscriptionamount", subscriptionamount);
+    console.log("subscriptiondateval", subscriptiondateval);
+    console.log("User Refund Amount:", user_refund_amount);
+
+    if (subscriptiondateval > 0) {
+        Swal.fire({
+            icon: 'success',
+            title: `Subscription cancelled successfully. Please refund $${subscriptionamount} from Stripe using this payment id = ${payment_id} for the email = ${emailData}`,
+            confirmButtonText: 'OK'
+        });
+    } else {
+        Swal.fire({
             icon: 'success',
             title: `Subscription cancelled successfully. Please refund $${user_refund_amount} from Stripe using this payment id = ${payment_id} for the email = ${emailData}`,
             confirmButtonText: 'OK'
         });
-        },
-        error: function(error) {
-            Swal.fire({
-              icon: 'error',
-              title: 'Subscription refund payment Error',
-              text: response.error || 'Unknown error occurred.',
-              confirmButtonText: 'OK'
-            });
-        }
+    }
+},
+error: function(error) {
+    console.error("Error occurred:", error);
+    Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Something went wrong!',
+        confirmButtonText: 'OK'
+    });
+}
+
     });
   }
 

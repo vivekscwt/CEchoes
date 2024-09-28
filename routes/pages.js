@@ -2723,6 +2723,9 @@ router.get('/create-company-subscription', checkCookieValue, async (req, res) =>
             console.log("yearly_price", yearly_price);
             var per_user_prices = planidvalue[0].per_user_price;
             console.log("per_user_prices", per_user_prices);
+            var user_no = planidvalue[0].user_no;
+            console.log("user_no",user_no);
+            
         }
         const getcurencyquery = `SELECT * FROM currency_conversion`;
         const getcurrencyval = await queryAsync(getcurencyquery);
@@ -2780,6 +2783,7 @@ router.get('/create-company-subscription', checkCookieValue, async (req, res) =>
             stripe_publish_key: stripe_publish_key,
             user: getUser,
             userMeta: getUserMeta,
+            user_no
         });
     }  catch (err) {
         console.error(err);
@@ -12451,6 +12455,7 @@ router.get('/view-payments/:user_id', checkLoggedIn, async (req, res) => {
         let planss;
         let amounts;
         let subscriptionstartTime;
+        let subscriptiondate ;
 
         const availablePlans = ['Advanced', 'Premium', 'Enterprise', 'Basic', 'Standard'];
 
@@ -12462,13 +12467,17 @@ router.get('/view-payments/:user_id', checkLoggedIn, async (req, res) => {
             planss = plans[plan][0].subscription_duration;
             amounts = subscriptionDetails.plan.amount;
             var subscription_id = plans[plan][0].stripe_subscription_id;
+            subscriptiondate= subscriptionDetails.created;
             break;
         }
         }
-        console.log("amountss",amounts);
-        
-
+        const subscriptionDateMilliseconds = subscriptiondate * 1000;
+        const subscriptionDate = new Date(subscriptionDateMilliseconds);
         const currentDate = new Date();
+
+          console.log("amountsss",amounts);
+          
+
         const currentTimestamp = Math.floor(currentDate.getTime() / 1000);
         console.log("currentTimestamp",currentTimestamp); 
         var remainingTime = currentTimestamp - subscriptionstartTime;
@@ -12478,20 +12487,56 @@ router.get('/view-payments/:user_id', checkLoggedIn, async (req, res) => {
         var averageDaysInMonth = 30.44; 
         var remainingMonths = Math.floor(remainingDays / averageDaysInMonth);
         console.log("Remaining Time (in months)", remainingMonths);
-        if(planss="month"){
+
+        if(planss=="month"){
+            console.log("monthss enter");
+            
             var per_amount= Math.round(amounts/30);
             console.log("per_amount_month",per_amount);
             var user_refund_amounts = per_amount*remainingDays;
             console.log("user_refund_amount_month",user_refund_amounts);
             var user_refund_amount = (user_refund_amounts/100);
             console.log("user_refund_amountmon",user_refund_amount);
-        } else if(planss="year"){
+
+            var diffdate = currentDate - subscriptionDate;
+            console.log("diffdate",diffdate);
+
+            var diffDateDays = diffdate / (1000 * 60 * 60 * 24);
+            console.log("Difference in days:", diffDateDays);
+            
+            if (diffDateDays>0) {
+                var subscriptiondateval =  user_refund_amount;
+                console.log('The subscription date is greater than the current date.');
+            } else {
+                console.log('The subscription date is not greater than the current date.');
+                var subscriptiondateval =  amounts/100;
+            }
+            console.log("subscriptiondateval",subscriptiondateval);
+            
+
+        } else if(planss=="year"){
+            console.log("year enter");
+
             var per_amount= Math.round(amounts/12);
             console.log("per_amount_year",per_amount);
             var user_refund_amounts = per_amount*remainingMonths;
             console.log("user_refund_amount_year",user_refund_amounts);
             var user_refund_amount = (user_refund_amounts/100);
             console.log("user_refund_amountyes",user_refund_amount);
+
+            var diffdate = currentDate - subscriptionDate;
+            console.log("diffdate",diffdate);
+            var diffDateDays = diffdate / (1000 * 60 * 60 * 24);
+            console.log("Difference in days:", diffDateDays);
+            
+            if (diffDateDays>0) {
+                var subscriptiondateval =  user_refund_amount;
+                console.log('The subscription date is greater than the current date.');
+            } else {
+                console.log('The subscription date is not greater than the current date.');
+                var subscriptiondateval =  amounts/100;
+            }
+            console.log("subscriptiondateval",subscriptiondateval);
         }else{
             console.log("not valid interval");
         }
@@ -12516,6 +12561,7 @@ router.get('/view-payments/:user_id', checkLoggedIn, async (req, res) => {
         } else {
             console.log("No invoices found for this subscription.");
         }
+
        
             res.render('view-payments', {
             menu_active_id: 'miscellaneous',
@@ -12535,7 +12581,9 @@ router.get('/view-payments/:user_id', checkLoggedIn, async (req, res) => {
             payment_id: payment_id,
             emailData: emails,
             getSubscribedUsers: getSubscribedUsers,
-            getplans: getplans
+            getplans: getplans,
+            subscriptiondateval:subscriptiondateval,
+            subscriptionamount : amounts
         });
     } catch (err) {
         console.error(err);
