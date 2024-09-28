@@ -96,7 +96,7 @@
                    <% if (plan !== 'enterprise') { %>
                     $ <%= getplans[plan + '_val'].monthly_price_local %> <span>/ Month</span>
                     <% } else { %>
-                        <%= getplans[plan + '_val'].monthly_price_local %> <span>/ Month</span>
+                        <%= getplans[plan + '_val'].monthly_price_local %> <span></span>
                     <% } %>
                </div>
 
@@ -133,7 +133,7 @@
                    <% if (plan !== 'enterprise') { %>
                     $ <%= getplans[plan + '_val'].yearly_price_local %> <span>/ Year</span>
                     <% } else { %>
-                        <%= getplans[plan + '_val'].yearly_price_local %> <span>/ Year</span>
+                        <%= getplans[plan + '_val'].yearly_price_local %> <span></span>
                     <% } %>
                </div>
 

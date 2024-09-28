@@ -40,7 +40,7 @@
                   $ <%= getplans[plan + '_val'].monthly_price_local %> <span>/ Month</span>
                 <% } %>
                 <% } else { %>
-                  <%= getplans[plan + '_val'].monthly_price_local %> <span>/ Month</span>
+                  <%= getplans[plan + '_val'].monthly_price_local %> <span></span>
               <% } %>
               </div>
           
@@ -77,6 +77,7 @@
                     <% }else if (currentUserData.claimed_comp_id!=null || currentUserData.claimed_comp_id!=undefined ) { %>
                     <div class="proceed_btn">
                       <a href="#" style="color: black;"  onclick="redirectToStripePayment('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].monthly_price %>', 'monthly')">Get Started</a>
+                      
                     </div>
                   <% } else { %>
                     <div class="proceed_btn">
@@ -138,7 +139,7 @@
                   $ <%= getplans[plan + '_val'].yearly_price_local %> <span>/ Year</span>
                 <% } %>
                 <% } else { %>
-                        <%= getplans[plan + '_val'].monthly_price_local %> <span>/ Month</span>
+                        <%= getplans[plan + '_val'].monthly_price_local %> <span></span>
                     <% } %>
               </div>
               
