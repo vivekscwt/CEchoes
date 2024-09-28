@@ -15359,21 +15359,6 @@ exports.confirmCompany = async (req, res) => {
             const adminMail = process.env.MAIL_USER;
 
 
-            // const companyDetails = {
-            //     user_created_by: result[0].user_created_by,
-            //     company_name: result[0].company_name,
-            //     status: result[0].status,
-            //     created_date: result[0].created_date,
-            //     updated_date: result[0].updated_date,
-            //     main_address_country: result[0].main_address_country,
-            //     main_address_state: result[0].main_address_state,
-            //     main_address_city: result[0].main_address_city,
-            //     verified: result[0].verified,
-            //     paid_status: result[0].paid_status,
-            //     slug: companySlug,
-            //     parent_id: result[0].parent_id,
-            // }
-
             if (result && result.length > 0) {
                 const updateQuery = `UPDATE company SET temp_comp_status = ?,status=? WHERE ID = ?`;
                 const updateResult = await query(updateQuery, [activationId, '1', id]);
@@ -15415,6 +15400,115 @@ exports.confirmCompany = async (req, res) => {
         return res.status(500).json({ message: 'Internal Server Error' });
     }
 };
+
+exports.confirmcompanyUsers = async (req, res) => {
+    console.log("confirmcompanyUsers",req.body);
+    
+    try {
+        const id = req.body.id;
+        const activationId = 1;
+        const isUserQuery = `SELECT * FROM users WHERE user_id = ?`;
+        const result = await query(isUserQuery, [id]);
+
+        //for company
+        const companyid = req.body.companyid;
+        const companyactivationId = 0;
+        const isCompanyQuery = `SELECT * FROM company WHERE ID = ?`;
+        const compresult = await query(isCompanyQuery, [companyid]);
+
+        console.log("compresult",compresult);
+        
+
+        const userDetails = {
+            fullName: result[0].first_name + ' ' + result[0].last_name,
+            email: result[0].email,
+            phone: result[0].phone
+        }
+        const adminMail = process.env.MAIL_USER;
+
+        if (result && result.length > 0) {
+            const updateQuery = `UPDATE users SET user_status = ? WHERE user_id = ?`;
+            const updateResult = await query(updateQuery, [activationId, id]);
+
+            
+            if (updateResult && updateResult.affectedRows > 0) {
+
+                var temp_button = compresult[0].temp_comp_status;
+                console.log("temp_button", temp_button);
+                if (temp_button == 1) {
+        
+                    const currentDate = new Date();
+                    const year = currentDate.getFullYear();
+                    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+                    const day = String(currentDate.getDate()).padStart(2, '0');
+                    const hours = String(currentDate.getHours()).padStart(2, '0');
+                    const minutes = String(currentDate.getMinutes()).padStart(2, '0');
+                    const seconds = String(currentDate.getSeconds()).padStart(2, '0');
+                    const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        
+                    //console.log("tempresulcom", result);
+                    var company_names = compresult[0].company_name;
+        
+                    const companyDetails = {
+                        fullName: compresult[0].company_name,
+                    }
+                    const adminMail = process.env.MAIL_USER;
+        
+        
+                    if (compresult && compresult.length > 0) {
+                        console.log("companyupdatoing");
+                        
+                        const updateQuerys = `UPDATE company SET temp_comp_status = ?,status=? WHERE ID = ?`;
+                        const updateResults = await query(updateQuerys, [companyactivationId, '1', companyid]);
+                        
+        console.log("updateResults",updateResults);
+        
+                        // Check if the update was successful
+                        if (updateResults && updateResults.affectedRows > 0) {
+        
+                            const userCompanyActivation = comFunction2.userCompanyActivation(userDetails.fullName, userDetails.email, userDetails.phone);
+
+                            if (userCompanyActivation) {
+                            // if (companyActivationHtmlForAdmin) {
+                                return res.status(200).json({
+                                    status: "ok",
+                                    message: 'User and Company activation has been successful, and activation emails have been forwarded to the user.',
+                                });
+                            } else {
+                                return res.status(500).json({
+                                    status: "error",
+                                    message: "Failed to send activation email",
+                                });
+                            }
+        
+                        } else {
+        
+                            return res.status(400).json({ message: 'Activation failed' });
+                        }
+                    } else {
+                        // User not found
+                        return res.status(404).json({ message: 'Company not found' });
+                    }
+
+            } else {
+
+                return res.status(400).json({ message: 'Activation failed' });
+            }
+            
+        } else {
+            // User not found
+            return res.status(404).json({ message: 'User not found' });
+        }
+    }
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: 'Internal Server Error' });
+    }
+};
+
+
+
+
 
 exports.confirmReview = async (req, res) => {
     try {

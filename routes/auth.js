@@ -513,6 +513,8 @@ router.put('/active-users',authController.confirmUser);
 // /confirmCompany
 router.put('/confirmCompany',authController.confirmCompany);
 
+router.post('/active-company-users',authController.confirmcompanyUsers);
+
 // /confirmCompany
 router.put('/confirmReview',authController.confirmReview);
 

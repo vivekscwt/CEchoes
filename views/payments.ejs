@@ -300,9 +300,16 @@
                                 <td>
                                     <%= payment.subscription_amount %>
                                 </td>
+
+                                <% const dateString= payment.subscription_start_date; %>
+                                <% const date=new Date(dateString); %>
                                 <td>
-                                    <%= payment.subscription_start_date %>
+                                    <%= date.toLocaleDateString('en-US', { day: 'numeric' ,
+                                        month: 'long' , year: 'numeric' }) %>,
+                                        <%= date.toLocaleTimeString('en-US', { hour: 'numeric' ,
+                                            minute: 'numeric' , hour12: true }) %>
                                 </td>
+                                
                                 <!--begin::Joined-->
                                 
                             </tr>

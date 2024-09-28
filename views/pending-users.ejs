@@ -393,9 +393,13 @@
                                                 <button  class="btn btn-primary" id="<%= `activeRequestButtone${user.user_id}` %>" onclick="activeRequest(<%= user.user_id %>)" ><span class="indicator-label"> Activate </span>
                                                     <span class="indicator-progress"> Activating... <span
                                                 class="spinner-border spinner-border-sm align-middle ms-2"></span></span></button>
-                                                <!-- <button  class="btn btn-primary" id="<%= `activeusercompanyRequestButtone${user.user_id}` %>" onclick="activeusercompRequest(<%= user.user_id %>)" ><span class="indicator-label"> User & company Activate </span>
-                                                    <span class="indicator-progress"> Activating... <span
-                                                class="spinner-border spinner-border-sm align-middle ms-2"></span></span></button> -->
+
+                                                <button class="btn btn-primary" 
+                                                id="<%= `activeusercompanyRequestButtone${user.user_id}` %>" 
+                                                onclick="confirmUserActivation(<%= user.user_id %>, <%= user.companyid %>)">
+                                                    <span class="indicator-label">User & Company Activate</span>
+                                                    <span class="indicator-progress">Activating... <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                                                </button>
                                             </td>
                                     </tr>
                                     <!--end::Table row-->
@@ -917,4 +921,165 @@ function activeRequest(id) {
 
 
         </script>
+
+
+<!-- <script>
+    function confirmUserActivation(id,companyid) {
+        // SweetAlert confirmation popup
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You want to approve the user and company activation.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, activate it!',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            const activeButtons = document.getElementById(`activeRequestButtone${id}`)
+            activeButtons.disabled = true;
+            activeButtons.setAttribute("data-kt-indicator", "on");
+            if (result.isConfirmed) {
+                activeusercompRequest(id,companyid);
+            }
+
+        });
+    }
+
+    function activeusercompRequest(id,companyid) {
+        console.log('User & Company Activated for userId:', id,companyid);
+        $.ajax({
+                url: "/auth/active-company-users",
+                type: "POST",
+                data: JSON.stringify({ id: id, companyid: companyid }),
+                processData: false,
+                contentType: "application/json",
+                success: function (data) {
+                    activeButtons.removeAttribute("data-kt-indicator"); 
+                    activeButtons.disabled = false;
+                    if (data.status === "ok") {
+                        Swal.fire({
+                            text: data.message,
+                            icon: "success",
+                            buttonsStyling: false,
+                            confirmButtonText: "Ok, got it!",
+                            customClass: {
+                                confirmButton: "btn btn-primary",
+                            },
+                        }).then(function (result) {
+                            if (result.isConfirmed) {
+                                window.location.reload();
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            text: data.message,
+                            icon: "error",
+                            buttonsStyling: false,
+                            confirmButtonText: "Ok, got it!",
+                            customClass: {
+                                confirmButton: "btn btn-primary",
+                            },
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    activeButtons.removeAttribute("data-kt-indicator"); 
+                    activeButtons.disabled = false;
+                    console.log(error);
+                },
+            });
+        }
+    
+</script> -->
+
+<script>
+    function confirmUserActivation(id, companyid) {
+        // SweetAlert confirmation popup
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You want to approve the user and company activation.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, activate it!',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            const activeButton = document.getElementById(`activeusercompanyRequestButtone${id}`);
+            if (activeButton) { // Check if the button exists
+                activeButton.disabled = true;
+                activeButton.setAttribute("data-kt-indicator", "on");
+                
+                if (result.isConfirmed) {
+                    activeusercompRequest(id, companyid, activeButton); // Pass the button reference
+                } else {
+                    // If canceled, re-enable the button
+                    activeButton.disabled = false;
+                    activeButton.removeAttribute("data-kt-indicator");
+                }
+            }
+        });
+    }
+
+    function activeusercompRequest(id, companyid, activeButton) {
+    console.log('User & Company Activated for userId:', id, companyid);
+    $.ajax({
+        url: "/auth/active-company-users",
+        type: "POST",
+        data: JSON.stringify({ id: id, companyid: companyid }),
+        processData: false,
+        contentType: "application/json",
+        success: function (data) {
+            console.log(data); // Log the API response
+
+            activeButton.removeAttribute("data-kt-indicator");
+            activeButton.disabled = false; // Re-enable button
+            
+            if (data.status === "ok") {
+                Swal.fire({
+                    text: data.message,
+                    icon: "success",
+                    buttonsStyling: false,
+                    confirmButtonText: "Ok, got it!",
+                    customClass: {
+                        confirmButton: "btn btn-primary",
+                    },
+                }).then(function (result) {
+                    if (result.isConfirmed) {
+                        window.location.reload();
+                    }
+                });
+            } else {
+                Swal.fire({
+                    text: data.message,
+                    icon: "error",
+                    buttonsStyling: false,
+                    confirmButtonText: "Ok, got it!",
+                    customClass: {
+                        confirmButton: "btn btn-primary",
+                    },
+                });
+            }
+        },
+        error: function (xhr, status, error) {
+            activeButton.removeAttribute("data-kt-indicator");
+            activeButton.disabled = false; // Re-enable button
+            console.log(error);
+            Swal.fire({
+                text: 'An error occurred: ' + error,
+                icon: "error",
+                buttonsStyling: false,
+                confirmButtonText: "Ok, got it!",
+                customClass: {
+                    confirmButton: "btn btn-primary",
+                },
+            });
+        },
+    });
+}
+
+
+</script>
+
 <script src="assets/js/custom/apps/user-management/users/list/export-users.js"></script>

@@ -156,8 +156,8 @@
                 <div class="formbold-form-step-3 form-step">
                     <div class="formbold-form-confirm" id="confirmed">
                         <p>Number of added users: <span id="member-count-display">0</span></p>
-                        <p>Added user price: <span id="user-amount-count-display"></span>
-                        <p>Plan price: <span id="plan-price"></span>
+                        <p>Added user Amount: <span id="user-amount-count-display"></span>
+                        <p>Plan Amount: <span id="plan-price"></span>
                             
                         </span></p>
                         <p>Total Amount: <span id="amount-count-display">
@@ -291,14 +291,14 @@
 
         <script>
             var stripe_key = '<%= stripe_key%>';
-            console.log("stripe_key", stripe_key);
+            //console.log("stripe_key", stripe_key);
             var stripePublicKey='<%= stripe_publish_key %>';
-            console.log("publish",stripePublicKey);
+            //console.log("publish",stripePublicKey);
             
             var planID = '<%= planID %>';
             // var memberCount = '<%= memberCount %>';
             var subscriptionType = '<%= subscriptionType%>';
-            console.log("subscriptionType", subscriptionType);
+           // console.log("subscriptionType", subscriptionType);
             let currentStep = 1;
 
 
@@ -565,7 +565,7 @@
                 payNowButton.disabled = true;
 
                 const waitMessageContainer = document.getElementById('wait-message-container');
-                console.log("waitMessageContainer",waitMessageContainer);
+                //console.log("waitMessageContainer",waitMessageContainer);
                 
                 waitMessageContainer.innerHTML = '<p style="color: black;">Please wait...</p>';  
 
@@ -627,13 +627,13 @@
                     });
 
                     const data = await response.json();
-                    console.log("subscriptiondata",data);
+                    //console.log("subscriptiondata",data);
                     
                     const subscriptionId = data.subscription;
                     formData.subscriptionId = subscriptionId;
 
                     if (response.ok && data.status === 'ok' && data.message === 'Payment was successful!') {
-                        console.log("Payment already confirmed:", data);
+                       // console.log("Payment already confirmed:", data);
 
                         Swal.fire({
                             icon: 'success',
@@ -646,7 +646,7 @@
 
                     } else if (response.ok && data.client_secret) {
                         const { error, paymentIntent } = await stripe.confirmCardPayment(data.client_secret);
-                        console.log("paymentIntents", paymentIntent);
+                        //console.log("paymentIntents", paymentIntent);
 
                         if (error) {
                             console.error('Error confirming payment:', error);
@@ -977,7 +977,7 @@
                     isEmailValid = true;
                     try {
                         const response = await axios.get(`/checkEmailAvailability?email=${email}`);
-                        console.log('Response from server:', response);
+                        //console.log('Response from server:', response);
 
                         if (!response.data.available) {
                             emailAvailabilityError.textContent = response.data.message; // Set the error message
@@ -1211,7 +1211,7 @@
                                 method: 'GET',
                                 data: { email: email },
                                 success: function (response) {
-                                    console.log('Response from server:', response);
+                                   //console.log('Response from server:', response);
                                     if (!response.available) {
                                         $('#companyemailAvailabilityError').text(response.message).show();
                                         $('#nextStepBtn').prop('disabled', true);
@@ -1239,7 +1239,7 @@
                             method: 'GET',
                             data: { comp_phone: comp_phone },
                             success: function (response) {
-                                console.log('Response from server:', response);
+                                //console.log('Response from server:', response);
                                 if (!response.available) {
                                     $('#companyphoneAvailabilityError').text(response.message).show();
                                     $('#nextStepBtn').prop('disabled', true);
@@ -1271,7 +1271,7 @@
                             method: 'GET',
                             data: { phone: phone },
                             success: function (response) {
-                                console.log('Response from server:', response);
+                               // console.log('Response from server:', response);
                                 if (!response.available) {
                                     $('#phoneavailabilityerror').text(response.message).show();
                                     $('#nextStepBtn').prop('disabled', true);
@@ -1292,22 +1292,24 @@
 
 
 
-
+                var totalprice = '<%= total_price%>'
 
                 function updateMemberCountDisplay() {
                     var memberCount_val = $('#member-count').val();
+                    //console.log("memberCount_vals",memberCount_val);
+                    
                     if (memberCount_val === "") {
                         memberCount_val = 0;
                     }
                     $('#member-count-display').text(memberCount_val);
 
                     const totalAmount = memberCount_val * pricePerUser;
-                    console.log("Total Amount Calculated:", totalAmount.toFixed(2));
+                    //console.log("Total Amount Calculated:", totalAmount.toFixed(2));
                     const total_prices = parseFloat(urlParams.get('total_price'));
-                    console.log("total_prices", total_prices);
+                    //console.log("total_prices", total_prices);
 
                     const alltotal_amount = totalAmount + total_prices;
-                    console.log("alltotal_amount", alltotal_amount.toFixed(2));
+                    //console.log("alltotal_amount", alltotal_amount.toFixed(2));
                     var allamount = alltotal_amount/1;
 
                     // if (memberCount_val > 0) {
@@ -1322,9 +1324,10 @@
 
                         $('#amount-count-display').text(`$${parseFloat(allamount).toFixed(1).replace(/\.0$/, '')}`);
                     } else {
-                        $('#user-amount-count-display').text(`$${parseFloat(totalAmount).toFixed(1).replace(/\.0$/, '')}`);
+                        console.log("without members");
+                        
                         const total_price = '<%= total_price %>'; 
-
+                        $('#user-amount-count-display').text(`$${parseFloat(totalAmount).toFixed(1).replace(/\.0$/, '')}`);
                         $('#plan-price').text(`$${parseFloat(total_prices).toFixed(1).replace(/\.0$/, '')}`);
 
                         $('#amount-count-display').text(`$${parseFloat(total_price).toFixed(1).replace(/\.0$/, '')}`);
@@ -1336,6 +1339,9 @@
                 $('#member-count').on('input', function () {
                     updateMemberCountDisplay();
                 });
+
+                updateMemberCountDisplay();
+
                 $('.formbold-form-step-1').each(function () {
                     $('.formbold-back-btn').css('display', 'none');
                 });

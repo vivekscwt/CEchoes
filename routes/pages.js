@@ -2587,6 +2587,8 @@ router.get('/create-user-company-subscription', checkCookieValue, async (req, re
 
         const stripe_publish_key = process.env.STRIPE_PUBLISH_KEY
         console.log("stripe_publish_key",stripe_publish_key);
+
+        var monthlyprice = req.query.monthlyPrice;
         
 
         let currentUserData = JSON.parse(req.userData);
@@ -2675,7 +2677,8 @@ router.get('/create-user-company-subscription', checkCookieValue, async (req, re
             yearly_price: yearly_price,
             per_user_price,
             stripe_publish_key: stripe_publish_key,
-            user_no
+            user_no,
+            monthlyprice: monthlyprice
         });
     } catch (err) {
         console.error(err);
@@ -8807,11 +8810,12 @@ router.get('/pending-users', checkLoggedInAdministrator, (req, res) => {
     //res.render('users', { menu_active_id: 'user', page_title: 'Users', currentUserData });
 
     const user_query = `
-                    SELECT users.*, user_customer_meta.*, user_account_type.role_name, user_device_info.last_logged_in
+                    SELECT users.*, user_customer_meta.*, user_account_type.role_name, user_device_info.last_logged_in, company.ID as companyid
                     FROM users
                     JOIN user_customer_meta ON users.user_id = user_customer_meta.user_id
                     JOIN user_account_type ON users.user_type_id = user_account_type.ID
                     LEFT JOIN user_device_info ON users.user_id = user_device_info.user_id
+                    LEFT JOIN company ON users.user_id = company.user_created_by
                     WHERE users.user_status = '3'
                     `;
     db.query(user_query, (err, results) => {
@@ -8825,10 +8829,13 @@ router.get('/pending-users', checkLoggedInAdministrator, (req, res) => {
             )
         } else {
             if (results.length > 0) {
+                console.log("allusersresults",results);
                 const users = results.map((user) => ({
                     ...user,
                     registered_date: moment(user.last_logged_in).format('Do MMMM YYYY, h:mm:ss a'),
                 }));
+                console.log("allusers",users);
+                
                 //res.json({ currentUserData, 'allusers': users });
                 console.log("usersss", users);
                 res.render('pending-users', { menu_active_id: 'user', page_title: 'Pending Users', currentUserData, 'allusers': users });
@@ -12408,7 +12415,6 @@ router.get('/payments', checkLoggedIn, async (req, res) => {
 router.get('/view-payments/:user_id', checkLoggedIn, async (req, res) => {
     try {
         var userId = req.params.user_id;
-
         const encodedUserData = req.cookies.user;
         const currentUserData = JSON.parse(encodedUserData);
 
@@ -12422,14 +12428,6 @@ router.get('/view-payments/:user_id', checkLoggedIn, async (req, res) => {
             console.log("emailData", emailData[0].email);
     
         }
-
-        const getManagerQuery = `SELECT company_level_manage_users.*,company.slug FROM company_level_manage_users LEFT JOIN company ON company_level_manage_users.company_id = company.ID WHERE company_level_manage_users.emails=?`;
-        const getManagerData = await query(getManagerQuery, [emailData[0].email]);
-        //console.log("getManagerData", getManagerData[0]);
-
-        const getQuery = `SELECT complaint_assigned_users.*,company.slug FROM complaint_assigned_users LEFT JOIN company ON complaint_assigned_users.company_id = company.ID WHERE complaint_assigned_users.user_email=?`;
-        const getData = await query(getQuery, [emailData[0].email]);
-        // console.log("getData", getData[0]);
 
         var getcompanyquery = `SELECT company_id FROM company_claim_request WHERE claimed_by=?`;
         var getcompanyval = await queryAsync(getcompanyquery,[userId]);
@@ -12467,30 +12465,33 @@ router.get('/view-payments/:user_id', checkLoggedIn, async (req, res) => {
             break;
         }
         }
-        // console.log("subscriptionDetails",subscriptionDetails);
-        // console.log("subscriptionendTime",subscriptionendTime);
-        // console.log("planss",planss);
-        // console.log("amounts",amounts);
+        console.log("amountss",amounts);
+        
+
         const currentDate = new Date();
         const currentTimestamp = Math.floor(currentDate.getTime() / 1000);
-        //console.log("currentTimestamp",currentTimestamp); 
+        console.log("currentTimestamp",currentTimestamp); 
         var remainingTime = currentTimestamp - subscriptionstartTime;
-        //console.log("Remaining Time (in seconds)", remainingTime);
+        console.log("Remaining Time (in seconds)", remainingTime);
         var remainingDays = Math.floor(remainingTime / (60 * 60 * 24));
-        //console.log("Remaining Time (in days)", remainingDays);
+        console.log("Remaining Time (in days)", remainingDays);
         var averageDaysInMonth = 30.44; 
         var remainingMonths = Math.floor(remainingDays / averageDaysInMonth);
-        //console.log("Remaining Time (in months)", remainingMonths);
+        console.log("Remaining Time (in months)", remainingMonths);
         if(planss="month"){
             var per_amount= Math.round(amounts/30);
-            //console.log("per_amount_month",per_amount);
-            var user_refund_amount = per_amount*remainingDays;
-            //console.log("user_refund_amount_month",user_refund_amount);
+            console.log("per_amount_month",per_amount);
+            var user_refund_amounts = per_amount*remainingDays;
+            console.log("user_refund_amount_month",user_refund_amounts);
+            var user_refund_amount = (user_refund_amounts/100);
+            console.log("user_refund_amountmon",user_refund_amount);
         } else if(planss="year"){
             var per_amount= Math.round(amounts/12);
-            //console.log("per_amount_year",per_amount);
-            var user_refund_amount = per_amount*remainingMonths;
-            // console.log("user_refund_amount_year",user_refund_amount);
+            console.log("per_amount_year",per_amount);
+            var user_refund_amounts = per_amount*remainingMonths;
+            console.log("user_refund_amount_year",user_refund_amounts);
+            var user_refund_amount = (user_refund_amounts/100);
+            console.log("user_refund_amountyes",user_refund_amount);
         }else{
             console.log("not valid interval");
         }
@@ -12524,8 +12525,8 @@ router.get('/view-payments/:user_id', checkLoggedIn, async (req, res) => {
             userMeta: getUserMeta,
             globalPageMeta: globalPageMeta,
             AllCompaniesReviews: AllCompaniesReviews,
-            getManagerData: getManagerData,
-            getData: getData,
+            // getManagerData: getManagerData,
+            // getData: getData,
             userId: userId,
             currentUserData: currentUserData,
             user_company_id: user_company_id,

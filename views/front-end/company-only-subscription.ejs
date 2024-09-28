@@ -164,7 +164,11 @@
                 </div>
                 <div class="formbold-form-step-3 form-step">
                     <div class="formbold-form-confirm" id="confirmed">
-                        <p>Number of added users: <span id="member-count-display">0</span></p>
+                        <p>Number of added Amount: <span id="member-count-display">0</span></p>
+                        <p>Added user Amount: <span id="user-amount-count-display"></span>
+                        <p>Plan Amount: <span id="plan-price"></span>
+                            
+                        </span></p>
                         <p>Total Amount: <span id="amount-count-display">
                             $<%= total_price / 1 %>
                         </span></p>
@@ -695,7 +699,7 @@
                     isEmailValid = true;
                     try {
                         const response = await axios.get(`/checkEmailAvailability?email=${email}`);
-                        console.log('Response from server:', response);
+                       // console.log('Response from server:', response);
 
                         if (!response.data.available) {
                             emailAvailabilityError.textContent = response.data.message; // Set the error message
@@ -928,7 +932,7 @@
                                 method: 'GET',
                                 data: { email: email },
                                 success: function (response) {
-                                    console.log('Response from server:', response);
+                                    //console.log('Response from server:', response);
                                     if (!response.available) {
                                         $('#companyemailAvailabilityError').text(response.message).show();
                                         $('#nextStepBtn').prop('disabled', true);
@@ -956,7 +960,7 @@
                             method: 'GET',
                             data: { comp_phone: comp_phone },
                             success: function (response) {
-                                console.log('Response from server:', response);
+                               // console.log('Response from server:', response);
                                 if (!response.available) {
                                     $('#companyphoneAvailabilityError').text(response.message).show();
                                     $('#nextStepBtn').prop('disabled', true);
@@ -1033,9 +1037,18 @@
                     //     $('#amount-count-display').text('<%= total_price%>');
                     // }
                     if (memberCount_val > 0) {
+                        $('#user-amount-count-display').text(`$${parseFloat(totalAmount).toFixed(1).replace(/\.0$/, '')}`);
+
+                        $('#plan-price').text(`$${parseFloat(total_prices).toFixed(1).replace(/\.0$/, '')}`);
+
                         $('#amount-count-display').text(`$${parseFloat(allamount).toFixed(1).replace(/\.0$/, '')}`);
                     } else {
+                        console.log("without members");
+                        
                         const total_price = '<%= total_price %>'; 
+                        $('#user-amount-count-display').text(`$${parseFloat(totalAmount).toFixed(1).replace(/\.0$/, '')}`);
+                        $('#plan-price').text(`$${parseFloat(total_prices).toFixed(1).replace(/\.0$/, '')}`);
+
                         $('#amount-count-display').text(`$${parseFloat(total_price).toFixed(1).replace(/\.0$/, '')}`);
                     }
                 }
@@ -1043,6 +1056,8 @@
                 $('#member-count').on('input', function () {
                     updateMemberCountDisplay();
                 });
+                updateMemberCountDisplay();
+
                 $('.formbold-form-step-1').each(function () {
                     $('.formbold-back-btn').css('display', 'none');
                 });
