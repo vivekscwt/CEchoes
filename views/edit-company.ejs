@@ -424,8 +424,8 @@
                         </div>
                         <div class="row mb-6">
                             <!--begin::Label-->
-                            <label class="col-lg-4 col-form-label  fw-bold fs-6">MemberShip Type</label>
-                            <input type="hidden"  value="<% if(company.paid_status){ %><%- company.paid_status -%> <% } %>" name="payment_status" id="payment_status">
+                            <label class="col-lg-4 col-form-label fw-bold fs-6">Membership Type</label>
+                            <input type="hidden" value="<% if(company.paid_status){ %><%- company.paid_status -%> <% } %>" name="payment_status" id="payment_status" disabled>
                             <!--end::Label-->
                             <!--begin::Col-->
                             <div class="col-lg-8 fv-row">
@@ -433,35 +433,35 @@
                                 <div class="d-flex align-items-center mt-3">
                                     <!--begin::Option-->
                                     <label class="form-check form-check-inline form-check-solid me-5">
-                                        <input class="form-check-input mt-1" name="membership_type_id" type="radio" value="1" <% if(company.membership_type_id == 1){ %>checked <% } else { %>checked <% } %> />
+                                        <input class="form-check-input mt-1" name="membership_type_id" type="radio" value="1" <% if(company.membership_type_id == 1){ %>checked <% } %> disabled />
                                         <span class="fw-bold fs-6 badge badge-light fw-bolder px-4 py-3">Basic</span>
                                     </label>
-
+                        
                                     <label class="form-check form-check-inline form-check-solid me-5">
-                                        <input class="form-check-input mt-1" name="membership_type_id" type="radio" value="2" <% if(company.membership_type_id == 2){ %>checked <% } %> />
+                                        <input class="form-check-input mt-1" name="membership_type_id" type="radio" value="2" <% if(company.membership_type_id == 2){ %>checked <% } %> disabled />
                                         <span class="fw-bold fs-6 badge badge-light fw-bolder px-4 py-3">Standard</span>
                                     </label>
-
+                        
                                     <label class="form-check form-check-inline form-check-solid me-5">
-                                        <input class="form-check-input mt-1" name="membership_type_id" type="radio" value="3" <% if(company.membership_type_id == 3){ %>checked <% } %> />
+                                        <input class="form-check-input mt-1" name="membership_type_id" type="radio" value="3" <% if(company.membership_type_id == 3){ %>checked <% } %> disabled />
                                         <span class="fw-bold fs-6 badge badge-light fw-bolder px-4 py-3">Advanced</span>
                                     </label>
-
+                        
                                     <label class="form-check form-check-inline form-check-solid me-5">
-                                        <input class="form-check-input mt-1" name="membership_type_id" type="radio" value="4" <% if(company.membership_type_id == 4){ %>checked <% } %> />
+                                        <input class="form-check-input mt-1" name="membership_type_id" type="radio" value="4" <% if(company.membership_type_id == 4){ %>checked <% } %> disabled />
                                         <span class="fw-bold fs-6 badge badge-light fw-bolder px-4 py-3">Premium</span>
                                     </label>
-
+                        
                                     <label class="form-check form-check-inline form-check-solid me-5">
-                                        <input class="form-check-input mt-1" name="membership_type_id" type="radio" value="0" <% if(company.membership_type_id == 0){ %>checked <% } %> />
+                                        <input class="form-check-input mt-1" name="membership_type_id" type="radio" value="0" <% if(company.membership_type_id == 0){ %>checked <% } %> disabled />
                                         <span class="fw-bold fs-6 badge badge-light fw-bolder px-4 py-3">Free</span>
                                     </label>
-                                    
                                 </div>
                                 <!--end::Options-->
                             </div>
                             <!--end::Col-->
                         </div>
+                        
                         
                         <div class="row mb-6">
                             <!--begin::Label-->
