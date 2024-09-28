@@ -510,11 +510,64 @@
                     
                     const subscriptionId = data.subscription; 
                     formData.subscriptionId = subscriptionId;
-                    if (response.ok) {
-                        console.log("datasss",data);
-                        console.log("data.client_secret",data.client_secret);                     
+                    // if (response.ok) {
+                    //     console.log("datasss",data);
+                    //     console.log("data.client_secret",data.client_secret);                     
+                    //     const { error, paymentIntent } = await stripe.confirmCardPayment(data.client_secret);
+                    //     console.log("paymentIntents",paymentIntent);
+
+                    //     if (error) {
+                    //         console.error('Error confirming payment:', error);
+                    //         Swal.fire({
+                    //             icon: 'error',
+                    //             title: 'Payment Error',
+                    //             text: error.message || 'There was an error processing your payment. Please try again later.',
+                    //             confirmButtonText: 'OK',
+                    //         });
+                    //     } else if (paymentIntent.status === 'succeeded') {
+                    //     //     console.log("successdatasss",data);
+                    //     // console.log("successdata.client_secret",data.client_secret);                     
+                    //     // const { error, paymentIntent } = await stripe.confirmCardPayment(data.client_secret);
+                    //     // console.log("successpaymentIntents",paymentIntent);
+                    //         Swal.fire({
+                    //             icon: 'success',
+                    //             title: 'Payment Successful!',
+                    //             text: 'Your subscription is now active.',
+                    //             confirmButtonText: 'OK',
+                    //         }).then(async () => {
+                    //             await createUserAndCompany(formData);
+                    //         });
+                    //     } else {
+                    //         Swal.fire({
+                    //             icon: 'error',
+                    //             title: 'Payment Error',
+                    //             text: 'There was an unexpected issue with your payment. Please try again later.',
+                    //             confirmButtonText: 'OK',
+                    //         });
+                    //     }
+                    // } else {
+                    //     Swal.fire({
+                    //         icon: 'error',
+                    //         title: 'Payment Error',
+                    //         text: data.error ? data.error.message : 'There was an error processing your payment. Please try again later.',
+                    //         confirmButtonText: 'OK',
+                    //     });
+                    // }
+                    if (response.ok && data.status === 'ok' && data.message === 'Payment was successful!') {
+                       // console.log("Payment already confirmed:", data);
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Payment Successful!',
+                            text: 'Your subscription is now active.',
+                            confirmButtonText: 'OK',
+                        }).then(async () => {
+                            await createUserAndCompany(formData);
+                        });
+
+                    } else if (response.ok && data.client_secret) {
                         const { error, paymentIntent } = await stripe.confirmCardPayment(data.client_secret);
-                        console.log("paymentIntents",paymentIntent);
+                        //console.log("paymentIntents", paymentIntent);
 
                         if (error) {
                             console.error('Error confirming payment:', error);
@@ -525,10 +578,6 @@
                                 confirmButtonText: 'OK',
                             });
                         } else if (paymentIntent.status === 'succeeded') {
-                        //     console.log("successdatasss",data);
-                        // console.log("successdata.client_secret",data.client_secret);                     
-                        // const { error, paymentIntent } = await stripe.confirmCardPayment(data.client_secret);
-                        // console.log("successpaymentIntents",paymentIntent);
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Payment Successful!',
@@ -553,6 +602,7 @@
                             confirmButtonText: 'OK',
                         });
                     }
+               
                 } catch (error) {
                     console.error('Error:', error);
                     Swal.fire({
