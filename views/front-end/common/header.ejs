@@ -279,6 +279,7 @@
                                           <li class="active"><a href="<%= globalData.BLOG_URL %>">Did You Know?</a></li>
                                           <li><a href="/about-us">About Us</a></li>
                                           <li><a href="/contact-us">Contact</a></li>
+                                          <li><a href="/plan-pricing">Plans</a></li>
                                           <li><a href="/business">Business</a></li>
                                           <% if(currentUserData && currentUserData.user_id){ %>
                                             <li><a href="/register-complaint">Lodge A Complaint</a></li>
@@ -286,10 +287,14 @@
                                               <li><a href="#" class="login">Lodge A Complaint</a></li>
 
                                               <% } %>
-                                                <li class="tab-show-link"><a href="/review"
-                                                    class="btn-default btn-outline-warning">All Reviews</a></li>
-                                                <li class="tab-show-link"><a href="/business"
-                                                    class="btn-default btn-outline-warning">For business</a></li>
+                                                <!-- <li class="tab-show-link"><a href="/review"
+                                                    class="btn-default btn-outline-warning">All Reviews</a></li> -->
+                                                  
+                                                <li class="tab-show-link"><a href="/discussion"
+                                                    class="btn-default btn-outline-warning">All
+                                                    Queries</a></li>
+                                                <!-- <li class="tab-show-link"><a href="/business"
+                                                    class="btn-default btn-outline-warning">For business</a></li> -->
                                                 <% if(currentUserData){ %>
                                                   <li class="mbl-show-link"><a href="/logout"
                                                       class="btn-default btn-outline-warning">Log out</a></li>
