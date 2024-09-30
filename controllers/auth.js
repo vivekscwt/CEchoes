@@ -18017,6 +18017,7 @@ exports.cancelSubscription = async (req, res) => {
             var mailOptions1 = {
                 from: process.env.MAIL_USER,
                 to: process.env.MAIL_USER,
+                //to: 'dev2.scwt@gmail.com',
                 subject: 'Subscription Cancellation',
                 html: `<div id="wrapper" dir="ltr" style="background-color: #f5f5f5; margin: 0; padding: 70px 0 70px 0; -webkit-text-size-adjust: none !important; width: 100%;">
                 <style>
