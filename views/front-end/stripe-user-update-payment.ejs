@@ -1,0 +1,684 @@
+<%- include('common/header') -%>
+   <link href="/front-end/css/business-style.css" rel="stylesheet" type="text/css">
+   <%- include('common/header-banner') -%>
+	<div class="container">
+		<div class="row">
+			<div class="col">
+				<h3 class="title">Amount</h3>
+				<div id="amountDisplay">
+					<p>Total Amount: <span id="amount">$0.00</span></p>
+				</div>
+			</div>
+
+			<div class="col">
+				<form id="paymentForm">
+					<div class="inputBox">
+						<p>Price per user: $<span id="price-per-user"></span></p>
+						<p>No of users for the plan :<span id="user_number"></span></p>
+						<label for="memberCount">Add-on Users:</label>
+						<input type="number" min=1 name="memberCount" id="memberCount"
+							placeholder="Enter number of add-on users">
+					</div>
+					<!-- Stripe Card Number Element Container -->
+					<div class="card-element-container">
+						<label for="card-number">Card Number:</label>
+						<div id="card-number"></div>
+					</div>
+				
+					<!-- Stripe Expiration Date Element Container -->
+					<div class="card-element-container">
+						<label for="card-expiry">Expiration Date:</label>
+						<div id="card-expiry"></div>
+					</div>
+				
+					<!-- Stripe CVV Element Container -->
+					<div class="card-element-container">
+						<label for="card-cvc">CVV:</label>
+						<div id="card-cvc"></div>
+					</div>
+				
+					<button type="submit" value="Proceed to Checkout" class="submit_btn">Proceed</button>
+					<div id="error-message"></div>
+					<div id="wait-message-container"></div> 
+				</form>
+				
+				
+				
+			</div>
+		</div>
+	</div>
+	
+	<script type="text/javascript" src="index.js"></script>
+
+
+
+<style>
+	@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;600&display=swap');
+
+	* {
+		margin: 0;
+		padding: 0;
+		box-sizing: border-box;
+		border: none;
+		outline: none;
+		font-family: 'Poppins', sans-serif;
+		text-transform: capitalize;
+		transition: all 0.2s linear;
+	}
+	.container .row>*:nth-child(1) {
+		border: 3px solid black !important;
+		padding: 12px;
+		max-width: 700px;
+    	margin: 0 auto 25px;
+		background-color: #ffc107 !important;
+	}
+	#paymentForm .row .col{
+		background-color: white !important;
+		border: none !important;
+		border-radius: 5px;
+	}
+	#paymentForm .row .col .title{
+		margin-bottom: 20px;
+	}
+	.login-modal,.modal{
+		display: none;
+	}
+	.container {
+		display: block;
+		padding: 25px;
+		background: #fff;
+	}
+	.inner-page-heading {
+		padding: 47px 0 0px;
+		border-bottom: 1px #ACACAC solid;
+	}
+	.container form {
+		max-width: 700px;
+		margin: 0 auto;
+		padding: 20px;
+		background: #fff;
+		box-shadow: 5px 5px 30px rgba(0, 0, 0, 0.2);
+		border-radius: 5px;
+	}
+	.col .title,.col #amountDisplays{
+		max-width: 700px;
+		margin: 0 auto;
+	}
+	.container .row>* {
+		margin-bottom: 25px;
+		border: none !important;
+		background-color: white !important;
+		border-radius: 5px;
+	}
+
+	.container form .row {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 15px;
+	}
+
+	.container form .row .col {
+		flex: 1 1 250px;
+	}
+
+	.col .title {
+		font-size: 20px;
+		color: #ffc107;
+		padding-bottom: 5px;
+		font-weight: 600;
+	}
+	
+	.container .row>*:nth-child(1) .title{
+		color: black !important;
+	}
+	.col .inputBox {
+		margin-bottom: 25px;
+	}
+
+	.col .inputBox label {
+		margin-bottom: 10px;
+		display: block;
+	}
+
+	.col .inputBox input,
+	.col .inputBox select {
+		width: 100%;
+		padding: 13px 22px;
+		border-radius: 5px;
+		border: 1px solid #ffc107;
+	}
+
+	.col .inputBox input:focus,
+	.col .inputBox select:focus {
+		border: 1px solid #000;
+	}
+
+	.col .flex {
+		display: flex;
+		gap: 15px;
+	}
+
+	.col .flex .inputBox {
+		flex: 1 1;
+		margin-top: 5px;
+	}
+
+	.col .inputBox img {
+		height: 34px;
+		margin-top: 5px;
+		filter: drop-shadow(0 0 1px #000);
+	}
+
+	.container form .submit_btn {
+		width: 100%;
+		padding: 12px;
+		font-size: 17px;
+		background:black;
+		color: #ffc107;
+		cursor: pointer;
+		letter-spacing: 1px;
+		max-width: 250px;
+		font-weight: 600;
+		margin: 0 auto;
+		display: block;
+		border-radius: 5px;
+		border: 2px solid #ffc107;
+	}
+
+	.container form .submit_btn:hover {
+		background: #ffc107;
+		color: rgb(3, 3, 3);
+		border: 2px solid black;
+	}
+
+	input::-webkit-inner-spin-button,
+	input::-webkit-outer-spin-button {
+		display: none;
+	}
+	header.main_header .container {
+		display: block;
+    	min-height: auto;
+		background-color: black;
+}
+
+	input::-webkit-inner-spin-button,
+	input::-webkit-outer-spin-button {
+		display: none;
+	}
+
+	#card-element {
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+    gap: 15px; /* Space between fields */
+}
+
+.card-element-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.card-element-container label {
+    margin-bottom: 5px;
+}
+
+.card-element-container div {
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    padding: 12px;
+    background-color: #ffffff;
+}
+
+.billing-address {
+    margin-bottom: 20px;
+}
+
+.inputBox {
+    margin-bottom: 15px;
+}
+
+.inputBox label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.inputBox input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+}
+
+.submit_btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: #ffffff;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#error-message {
+    color: #fa755a;
+    margin-top: 10px;
+}
+#wait-message-container p {
+     margin: 0;
+     text-align: center;
+     margin: 25px 0;
+     font-size: 18px;
+     font-weight: 600;
+}
+
+
+
+</style>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://js.stripe.com/v3/"></script>
+
+
+
+
+<script>
+	var stripePublicKey='<%=stripe_publish_key %>';
+	document.addEventListener('DOMContentLoaded', function() {
+		// const stripe = Stripe('pk_test_51Pmx4bE9RgUxhHlihWvQ6tCKKz2AeuVE4X2fBtEFHHnKTu4mgcFHPF1rpYDjwgn0vxlCfPEbiQTLy6JBelzwiTJw00p4tIO4NZ');
+
+		const stripe = Stripe(stripePublicKey);
+
+		const elements = stripe.elements();
+
+		// var addonUsersCount = document.getElementById('memberCount').value;
+		// console.log('Add-on Users Count:', addonUsersCount);
+
+		// Create and mount the card number Element
+		const cardNumber = elements.create('cardNumber', {
+			style: {
+				base: {
+					fontSize: '16px',
+					color: '#32325d',
+					'::placeholder': {
+						color: '#aab7c4',
+					},
+				},
+				invalid: {
+					color: '#fa755a',
+					iconColor: '#fa755a',
+				},
+			},
+		});
+
+		const cardExpiry = elements.create('cardExpiry', {
+			style: {
+				base: {
+					fontSize: '16px',
+					color: '#32325d',
+					'::placeholder': {
+						color: '#aab7c4',
+					},
+				},
+				invalid: {
+					color: '#fa755a',
+					iconColor: '#fa755a',
+				},
+			},
+		});
+
+		const cardCvc = elements.create('cardCvc', {
+			style: {
+				base: {
+					fontSize: '16px',
+					color: '#32325d',
+					'::placeholder': {
+						color: '#aab7c4',
+					},
+				},
+				invalid: {
+					color: '#fa755a',
+					iconColor: '#fa755a',
+				},
+			},
+		});
+
+		cardNumber.mount('#card-number');
+		cardExpiry.mount('#card-expiry');
+		cardCvc.mount('#card-cvc');
+
+		const errorMessage = document.getElementById('error-message');
+		cardNumber.on('change', handleCardChange);
+		cardExpiry.on('change', handleCardChange);
+		cardCvc.on('change', handleCardChange);
+
+		function handleCardChange(event) {
+			if (event.error) {
+				errorMessage.textContent = event.error.message;
+			} else {
+				errorMessage.textContent = '';
+			}
+		}
+
+		document.getElementById('paymentForm').addEventListener('submit', async function(event) {
+		event.preventDefault();
+		document.querySelector('button').disabled = true;
+		document.querySelector('.submit_btn').disabled = true;
+
+		// const addonUsersCount = '<%= membercount %>';
+		// console.log('Add-on Users Count on Load:', addonUsersCount);
+
+		const memberCountInput = document.getElementById('memberCount');
+		const addonUsersCount = memberCountInput.value;
+		console.log('Add-on Users Count on Load:', addonUsersCount);
+
+		const waitMessageContainer = document.getElementById('wait-message-container');
+        //console.log("waitMessageContainer",waitMessageContainer);      
+        waitMessageContainer.innerHTML = '<p style="color: black;">Please wait...</p>';  
+
+		const { paymentMethod, error } = await stripe.createPaymentMethod({
+			type: 'card',
+			card: cardNumber,
+			billing_details: {
+				name: '<%= currentUserData.first_name %>',
+				email: '<%= currentUserData.email %>',
+				phone: '<%= currentUserData.phone %>',
+				// address: {
+				//     line1: '<%= currentUserData.address %>',
+				//     country: '<%= currentUserData.country %>',
+				//     postal_code: '<%= currentUserData.zip %>',
+				// },
+			},
+		});
+
+		if (error) {
+			errorMessage.textContent = error.message;
+			document.querySelector('button').disabled = false;
+		} else {
+			const { requiresAction, clientSecret } = await stripeTokenHandler(paymentMethod, addonUsersCount);
+			
+			if (requiresAction) {
+				const { error: confirmError } = await stripe.confirmCardPayment(clientSecret);
+				
+				if (confirmError) {
+					errorMessage.textContent = confirmError.message;
+					document.querySelector('button').disabled = false;
+				} else {
+					Swal.fire({
+						icon: 'success',
+						title: 'Payment Successful!',
+						text: 'Your payment is successfully processed And subscription updated.',
+						confirmButtonText: 'OK',
+					}).then(() => {
+						window.location.href = '/plan-pricing';
+					});
+				}
+			} else {
+				Swal.fire({
+					icon: 'success',
+					title: 'Payment Successful!',
+					text: 'Your payment is successfully processed And subscription updated.',
+					confirmButtonText: 'OK',
+				}).then(() => {
+					window.location.href = '/plan-pricing';
+				});
+			}
+		}
+	});
+
+		async function stripeTokenHandler(paymentMethod, addonUsersCount) {
+			const formData = {
+				paymentMethodId: paymentMethod.id,
+				userId: '<%= currentUserData.user_id %>',
+				email: '<%= currentUserData.email %>',
+				planId: '<%= planID %>',          
+				billingCycle: 'monthly',
+				memberCount: addonUsersCount,
+				encryptedEmail: '<%= encryptedEmail%>'
+			};
+
+			try {
+				const response = await fetch('/auth/updateSubscription', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify(formData),
+				});
+
+				return await response.json();
+			} catch (error) {
+				console.error('Error:', error);
+				Swal.fire({
+					icon: 'error',
+					title: 'Payment Error',
+					text: 'There was an error processing your payment. Please try again later.',
+					confirmButtonText: 'OK',
+				});
+				return {};
+			} finally {
+				document.querySelector('button').disabled = false;
+			}
+		}
+
+		// async function stripeTokenHandler(token, addonUsersCount) {
+		// 	const formData = {
+		// 		paymentMethodId: paymentMethod.id,
+		// 		userId: '<%= currentUserData.user_id %>',
+		// 		// name: document.getElementById('name').value,
+		// 		email: '<%= currentUserData.email %>',
+		// 		// address: document.getElementById('address').value,
+		// 		// city: document.getElementById('city').value,
+		// 		// state: document.getElementById('state').value,
+		// 		// zip: document.getElementById('zip').value,
+		// 		planId: '<%= planID %>',          
+		// 		billingCycle: 'monthly',
+		// 		memberCount: addonUsersCount
+		// 	};
+
+		// 	try {
+		// 		const response = await fetch('/auth/updateSubscription', {
+		// 			method: 'POST',
+		// 			headers: {
+		// 				'Content-Type': 'application/json',
+		// 			},
+		// 			body: JSON.stringify(formData),
+		// 		});
+
+		// 		return await response.json();
+		// 	} catch (error) {
+		// 		console.error('Error:', error);
+		// 		Swal.fire({
+		// 			icon: 'error',
+		// 			title: 'Payment Error',
+		// 			text: 'There was an error processing your payment. Please try again later.',
+		// 			confirmButtonText: 'OK',
+		// 		});
+		// 		return {};
+		// 	} finally {
+		// 		document.querySelector('button').disabled = false;
+		// 	}
+		// }
+
+
+	});
+
+	document.addEventListener('DOMContentLoaded', function() {
+
+		// const zipInput = document.getElementById('zip');
+		// if (zipInput) {
+		// 	zipInput.addEventListener('input', function() {
+		// 		const maxLength = 6;
+		// 		if (zipInput.value.length > maxLength) {
+		// 			zipInput.value = zipInput.value.slice(0, maxLength);
+		// 		}
+		// 	});
+		// }
+
+
+		const cvvInput = document.getElementById('cvv');
+		if (cvvInput) {
+			cvvInput.addEventListener('input', function() {
+				const maxLength = 5;
+				if (cvvInput.value.length > maxLength) {
+					cvvInput.value = cvvInput.value.slice(0, maxLength);
+				}
+			});
+		}
+
+		const selectYear = document.getElementById('expYear');
+		if (selectYear) {
+			const currentYear = new Date().getFullYear();
+			const futureYearsCount = 20;
+			for (let i = 0; i <= futureYearsCount; i++) {
+				const year = currentYear + i;
+				const option = document.createElement('option');
+				option.textContent = year;
+				option.value = year;
+				selectYear.appendChild(option);
+			}
+		}
+	});
+	let countryCode = '<%= country_code %>';
+	//console.log("country_code", countryCode);
+	const exchangeRates = '<%- JSON.stringify(exchangeRates) %>';
+	console.log("Exchange Rates:", exchangeRates);
+
+	document.addEventListener('DOMContentLoaded', function () {
+		function getQueryParams() {
+			const params = {};
+			const queryString = window.location.search.substring(1);
+			const queries = queryString.split('&');
+			queries.forEach(function (query) {
+				const [key, value] = query.split('=');
+				params[decodeURIComponent(key)] = decodeURIComponent(value);
+			});
+			return params;
+		}
+
+		async function convertToUSD(totalPrice, countryCode) {
+			try {
+				let convertedPrice;
+
+				if (countryCode === 'IN' && exchangeRates['INR']) {
+					convertedPrice = totalPrice / exchangeRates['INR'];
+				} else if (countryCode === 'JP' && exchangeRates['JPY']) {
+					convertedPrice = totalPrice / exchangeRates['JPY'];
+				} else {
+					console.log('Unsupported country code or missing exchange rate:', countryCode);
+					return totalPrice;
+				}
+
+				return convertedPrice.toFixed(2);
+			} catch (error) {
+				console.error('Error converting price:', error.message);
+				return totalPrice;
+			}
+		}
+
+		const queryParams = getQueryParams();
+		const totalPrice = parseFloat(queryParams['total_price']);
+		const countryCode = '<%= country_code %>'; 
+
+		const amountElement = document.getElementById('amount');
+
+		if (isNaN(totalPrice)) {
+			console.log('Invalid total price:', queryParams['total_price']);
+			amountElement.textContent = '0.00';
+			return;
+		}
+
+		convertToUSD(totalPrice, countryCode)
+			.then(convertedPrice => {
+				if (!isNaN(convertedPrice)) {
+					amountElement.textContent = '$' + convertedPrice;
+					console.log('Converted Total Price to USD:', convertedPrice);
+				} else {
+					amountElement.textContent = '0.00';
+					console.log('Failed to convert total price to USD.');
+				}
+			})
+			.catch(error => {
+				console.error('Error converting total price to USD:', error.message);
+				amountElement.textContent = '0.00';
+			});
+
+		console.log('Query Params:', queryParams);
+		console.log('Total Price:', totalPrice);
+	});
+
+
+</script>
+
+
+<script>
+    $(document).ready(function() {
+        $('#stripe_country').on('change', function() {
+            var country = $(this).val(); 
+            console.log("Selected Country:", country);
+
+            $.ajax({
+                url: '/getCountryIdByShortName',
+                method: 'GET',
+                data: { countryShortName: country },
+                success: function(response) {
+                    var countryId = response.countryId; 
+                    fetchStatesByCountry(countryId); 
+                },
+                error: function(err) {
+                    console.error('Error fetching country ID:', err);
+                }
+            });
+        });
+
+        function fetchStatesByCountry(countryId) {
+            $.ajax({
+                url: '/getstatebyCountries', 
+                method: 'GET',
+                data: { country_ID: countryId }, 
+                success: function(response) {
+                    populateStatesDropdown(response);
+                },
+                error: function(err) {
+                    console.error('Error fetching states:', err);
+                }
+            });
+        }
+        function populateStatesDropdown(states) {
+            var $stateDropdown = $('#state');
+            $stateDropdown.empty();
+            $stateDropdown.append($('<option>', {
+                value: '',
+                text: 'Select State',
+                disabled: true,
+                selected: true
+            }));
+
+            states.forEach(function(state) {
+                $stateDropdown.append($('<option>', {
+                    value: state.id,
+                    text: state.name
+                }));
+            });
+        }
+
+		const perUserPrice = parseFloat('<%= per_user_price || 0 %>');
+                const perUserNo = parseInt('<%= user_no || 0 %>');
+                
+                $('#price-per-user').text(perUserPrice.toFixed(2));
+                $('#user_number').text(perUserNo);
+    });
+
+    document.getElementById('zip').addEventListener('input', function() {
+        const zipCode = this.value;
+        const zipPattern = /^[a-zA-Z0-9\s]+$/; 
+        if (!zipPattern.test(zipCode)) {
+            this.setCustomValidity('Invalid ZIP code format');
+        } else {
+            this.setCustomValidity('');
+        }
+    });
+
+
+</script>
+
+
+

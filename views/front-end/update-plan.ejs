@@ -612,7 +612,7 @@
 
 
      // const redirectURL = `/stripe-payment?planId=${encodeURIComponent(planId)}&planPrice=${encodeURIComponent(planPrice)}&billingCycle=${encodeURIComponent(billingCycle)}&memberCount=${encodeURIComponent(memberCount)}&total_price=${encodeURIComponent(total_price.toFixed(2))}`;
-     const redirectURL = `/stripe-update-payment?planId=${encodeURIComponent(planId)}&planPrice=${encodeURIComponent(planPrice)}&billingCycle=${encodeURIComponent(billingCycle)}&memberCount=${encodeURIComponent(memberCount)}&total_price=${encodeURIComponent(total_price.toFixed(2))}&encryptedEmail=${encodeURIComponent(encryptedemail)}`;
+     const redirectURL = `/stripe-user-update-payment?planId=${encodeURIComponent(planId)}&planPrice=${encodeURIComponent(planPrice)}&billingCycle=${encodeURIComponent(billingCycle)}&memberCount=${encodeURIComponent(memberCount)}&total_price=${encodeURIComponent(total_price.toFixed(2))}&encryptedEmail=${encodeURIComponent(encryptedemail)}`;
 
      window.location.href = redirectURL;
   }
@@ -646,7 +646,7 @@
      console.log("memberCount", memberCount);
      console.log("total_price", total_price);
 
-     const redirectURL = `/stripe-update-year-payment?planId=${encodeURIComponent(planId)}&planPrice=${encodeURIComponent(planPrice)}&billingCycle=${encodeURIComponent(billingCycle)}&memberCount=${encodeURIComponent(memberCount)}&total_price=${encodeURIComponent(total_price.toFixed(2))}&encryptedEmail=${encodeURIComponent(encryptedemail)}`;
+     const redirectURL = `/stripe-user-update-year-payment?planId=${encodeURIComponent(planId)}&planPrice=${encodeURIComponent(planPrice)}&billingCycle=${encodeURIComponent(billingCycle)}&memberCount=${encodeURIComponent(memberCount)}&total_price=${encodeURIComponent(total_price.toFixed(2))}&encryptedEmail=${encodeURIComponent(encryptedemail)}`;
 
      window.location.href = redirectURL;
   }

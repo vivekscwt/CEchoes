@@ -2642,6 +2642,210 @@ router.get('/stripe-update-year-payment', checkCookieValue, async (req, res) => 
 });
 
 
+router.get('/stripe-user-update-payment', checkCookieValue, async (req, res) => {
+    try {
+        const { planId, planPrice, monthly, memberCount, total_price, encryptedEmail } = req.query;
+        console.log("stripe-update-payment", req.query);
+        // const apiKey = process.env.GEO_LOCATION_API_KEY;
+        //console.log("apiKey",apiKey);
+        const stripe_publish_key = process.env.STRIPE_PUBLISH_KEY;
+
+        let currentUserData = JSON.parse(req.userData);
+        console.log("currentUserData", currentUserData);
+
+        var globalPageMeta= await comFunction2.getPageMetaValues('global');
+        if(currentUserData== null){
+            return res.render('front-end/404', {
+                menu_active_id: '404',
+                page_title: '404',
+                currentUserData,
+                globalPageMeta: globalPageMeta
+            });
+        }
+        var user_id = currentUserData.user_id;
+        console.log("user_idsssss",user_id);
+
+        const decryptedEmail = await comFunction2.decryptEmail(encryptedEmail);
+        if (decryptedEmail !== currentUserData.email) {
+            return res.status(500).send('You are not authorized to access the payment page.');
+        }
+
+        let country_name = req.cookies.countryName || 'India';
+        let country_code = req.cookies.countryCode || 'IN';
+
+        const planids = `SELECT * FROM plan_management WHERE name = "${planId}"`;
+        const planidvalue = await queryAsync(planids);
+        const planID = planidvalue[0].id;
+        var user_no = planidvalue[0].user_no;
+
+        if (planidvalue.length > 0) {
+            console.log("planID", planID);
+            var monthly_plan_price = planidvalue[0].monthly_price;
+            console.log("monthly_plan_price", monthly_plan_price);
+            var yearly_price = planidvalue[0].yearly_price;
+            console.log("yearly_price", yearly_price);
+            var per_user_prices = planidvalue[0].per_user_price;
+            console.log("per_user_prices", per_user_prices);
+        }
+
+        const exchangeRates = await comFunction2.getCurrency();
+        const [latestReviews, getCountries] = await Promise.all([
+            comFunction2.getlatestReviews(20),
+            comFunction.getCountries(),
+        ]);
+        console.log("getCountries", getCountries);
+
+        var getmemberquery = `SELECT * FROM order_history WHERE user_id=?`;
+        var getmemberval = await queryAsync(getmemberquery,[user_id]);
+        if(getmemberval.length>0){
+            var membercount = getmemberval[0].added_user_number;
+        }
+        var companyquery = `SELECT * FROM company_claim_request WHERE claimed_by=?`;
+        var companyval = await queryAsync(companyquery,[user_id]);
+        if(companyval.length>0){
+            var user_company_id = companyval[0].company_id;
+        }
+        var userupdatequery = `SELECT * FROM company_update_admin WHERE company_id =? AND encrypted_mail=?`;
+        var userupdateval = await queryAsync(userupdatequery,[user_company_id,encryptedEmail]);
+        if(userupdateval.length>0){
+            var user_payment_status = userupdateval[0].status;
+        }
+
+        res.render('front-end/stripe-user-update-payment', {
+            menu_active_id: 'Stripe Payment',
+            page_title: 'Stripe Payment',
+            planId,
+            planPrice,
+            monthly,
+            planID,
+            currentUserData,
+            memberCount,
+            total_price,
+            country_code: country_code,
+            exchangeRates: exchangeRates,
+            encryptedEmail,
+            user_id,
+            getCountries: getCountries,
+            stripe_publish_key: stripe_publish_key,
+            membercount,
+            per_user_price: per_user_prices,
+            user_no: user_no,
+            user_payment_status: user_payment_status
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('An error occurred');
+    }
+});
+router.get('/stripe-user-update-year-payment', checkCookieValue, async (req, res) => {
+    try {
+        const { planId, planPrice, yearly, memberCount, total_price, encryptedEmail } = req.query;
+        console.log("stripe-update-year-payment", req.query);
+        // const apiKey = process.env.GEO_LOCATION_API_KEY;
+        // console.log("apiKey",apiKey);
+        const stripe_publish_key = process.env.stripe_publish_key;
+
+        let country_name = req.cookies.countryName || 'India';
+        let country_code = req.cookies.countryCode || 'IN';
+
+        console.log("country_names", country_name);
+        console.log("country_codes", country_code);
+
+        const getcountrcodequery = `SELECT * FROM countries WHERE shortname= "${country_code}"`;
+        const getcountrycodeval = await queryAsync(getcountrcodequery);
+        if(getcountrycodeval.length>0){
+            var country_no = getcountrycodeval[0].id;
+            console.log("country_no",country_no);
+        }
+
+        var globalPageMeta= await comFunction2.getPageMetaValues('global');
+        let currentUserData = JSON.parse(req.userData);
+        if(currentUserData == null){
+            return res.render('front-end/404', {
+                menu_active_id: '404',
+                page_title: '404',
+                currentUserData,
+                 globalPageMeta: globalPageMeta
+            });
+        }
+        var user_id = currentUserData.user_id;
+        console.log("user_idsssss",user_id);
+        const planids = `SELECT * FROM plan_management WHERE name = "${planId}"`;
+        const planidvalue = await queryAsync(planids);
+        const planID = planidvalue[0].id;
+        var user_no = planidvalue[0].user_no;
+
+        if (planidvalue.length > 0) {
+            console.log("planID", planID);
+            var monthly_plan_price = planidvalue[0].monthly_price;
+            console.log("monthly_plan_price", monthly_plan_price);
+            var yearly_price = planidvalue[0].yearly_price;
+            console.log("yearly_price", yearly_price);
+            var per_user_prices = planidvalue[0].per_user_price;
+            console.log("per_user_prices", per_user_prices);
+        }
+
+        const decryptedEmail = await comFunction2.decryptEmail(encryptedEmail);
+        if (decryptedEmail !== currentUserData.email) {
+            return res.status(500).send('You are not authorized to access the payment page.');
+        }
+
+        const exchangeRates = await comFunction2.getCurrency();
+        const getstatesquery = `SELECT * FROM states WHERE country_id = ?`;
+        const getstatevalue = await queryAsync(getstatesquery,[country_no]);
+        //console.log("getstatevalue",getstatevalue);
+
+        const [latestReviews, getCountries] = await Promise.all([
+            comFunction2.getlatestReviews(20),
+            comFunction.getCountries(),
+        ]);
+        console.log("getCountries", getCountries);
+        var getmemberquery = `SELECT * FROM order_history WHERE user_id=?`;
+        var getmemberval = await queryAsync(getmemberquery,[user_id]);
+        if(getmemberval.length>0){
+            console.log("getmemberval",getmemberval);
+            var membercount = getmemberval[0].added_user_number;
+        }
+        var companyquery = `SELECT * FROM company_claim_request WHERE claimed_by=?`;
+        var companyval = await queryAsync(companyquery,[user_id]);
+        if(companyval.length>0){
+            var user_company_id = companyval[0].company_id;
+        }
+        var userupdatequery = `SELECT * FROM company_update_admin WHERE company_id =? AND encrypted_mail=?`;
+        var userupdateval = await queryAsync(userupdatequery,[user_company_id,encryptedEmail]);
+        if(userupdateval.length>0){
+            var user_payment_status = userupdateval[0].status;
+        }
+        console.log("user_payment_status",user_payment_status);
+        
+
+        res.render('front-end/stripe-user-update-year-payment', {
+            menu_active_id: 'Stripe yearly Payment',
+            page_title: 'Stripe yearly Payment',
+            planId,
+            planPrice,
+            yearly,
+            planID,
+            memberCount,
+            currentUserData,
+            total_price,
+            country_code: country_code,
+            exchangeRates: exchangeRates,
+            getstatevalue: getstatevalue,
+            getCountries,
+            stripe_publish_key,
+            membercount: membercount,
+            per_user_price: per_user_prices,
+            user_no,
+            user_payment_status: user_payment_status,
+            encryptedEmail
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('An error occurred');
+    }
+});
+
 router.get('/create-user-company-subscription', checkCookieValue, async (req, res) => {
     try {
         const { planName, planPrice, monthly, memberCount, total_price, encryptedEmail, subscriptionType } = req.query;

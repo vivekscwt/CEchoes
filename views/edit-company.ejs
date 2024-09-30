@@ -543,15 +543,19 @@
                                 <span>Parent Company</span>
                             </label>
                             <!--end::Label-->
-                            
+                        
                             <!--begin::Col-->
                             <div class="col-lg-8 fv-row">
                                 <select name="parent_id" aria-label="Select as parent company" data-control="select2" 
                                     data-placeholder="Select a User..." class="form-select" disabled>
+                                    
                                     <% 
-                                    const selectedParentId = company.parent_id; 
+                                    // Defaulting to 0 if no parent_id is provided
+                                    const selectedParentId = company.parent_id || 0; 
                                     %>
-                                    <option value="0">Select as parent company</option>
+                                    
+                                    <option value="0" <%= selectedParentId == 0 ? 'selected' : '' %> >Select as parent company</option>
+                                    
                                     <% getParentCompany.forEach(function(company) { %>
                                         <option value="<%= company.ID %>"
                                                 <%= company.ID == selectedParentId ? 'selected' : '' %>>
@@ -563,6 +567,7 @@
                             <!--end::Col-->
                         </div>
                         
+                        <input type="hidden" name="parent_id" value="<%= company.parent_id %>">
                         <% if(company.parent_id=="0"){ %>
                         <div class="row mb-6">
                             <!--begin::Label-->
