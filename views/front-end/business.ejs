@@ -556,53 +556,53 @@
          </div>
      
          <div class="table_bottom_wrap">
-           <div class="table_bottom_item">
-             <div class="table_bottom_heading">
-               <h4>PRICE (Monthly) USD</h4>
-             </div>
-           </div>
-           <div class="table_bottom_item">
-             <div class="table_bottom_heading">
-               <h4>$15</h4>
-             </div>
-           </div>
-           <div class="table_bottom_item">
-             <div class="table_bottom_heading">
-               <h4>$30</h4>
-             </div>
-           </div>
-           <div class="table_bottom_item">
-             <div class="table_bottom_heading">
-               <h4>$100</h4>
-             </div>
-           </div>
-           <div class="table_bottom_item">
-             <div class="table_bottom_heading">
-               <h4>$200</h4>
-             </div>
-     
-           </div>
-           <div class="table_bottom_item">
-             <div class="table_bottom_heading">
-               <h4>Custom</h4>
-             </div>
-           </div>
-         </div>
+            <div class="table_bottom_item">
+              <div class="table_bottom_heading">
+                <h4>PRICE (Monthly) USD</h4>
+              </div>
+            </div>
+            <div class="table_bottom_item">
+              <div class="table_bottom_heading">
+                <h4>$<%= getplans.basic_val.monthly_price%></h4>
+              </div>
+            </div>
+            <div class="table_bottom_item">
+              <div class="table_bottom_heading">
+                <h4>$<%= getplans.standard_val.monthly_price%></h4>
+              </div>
+            </div>
+            <div class="table_bottom_item">
+              <div class="table_bottom_heading">
+                <h4>$<%= getplans.advanced_val.monthly_price%></h4>
+              </div>
+            </div>
+            <div class="table_bottom_item">
+              <div class="table_bottom_heading">
+                <h4>$<%= getplans.premium_val.monthly_price%></h4>
+              </div>
+      
+            </div>
+            <div class="table_bottom_item">
+              <div class="table_bottom_heading">
+                <h4><%= getplans.enterprise_val.monthly_price%></h4>
+              </div>
+            </div>
+          </div>
          <div class="table_last_bottom_wrap">
            <div class="table_last_wrp">
              <div>User License included</div>
            </div>
            <div class="table_last_wrp">
-             <div>1</div>
+             <div><%= getplans.basic_val.user_no%></div>
            </div>
            <div class="table_last_wrp">
-             <div>1</div>
+             <div><%= getplans.standard_val.user_no%></div>
            </div>
            <div class="table_last_wrp">
-             <div>2</div>
+             <div><%= getplans.advanced_val.user_no%></div>
            </div>
            <div class="table_last_wrp">
-             <div>2</div>
+             <div><%= getplans.premium_val.user_no%></div>
            </div>
            <div class="table_last_wrp">
              <div>-</div>

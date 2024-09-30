@@ -2,6 +2,10 @@
    <link href="/front-end/css/business-style.css" rel="stylesheet" type="text/css">
    <%- include('common/header-banner') -%>
 	<div class="container">
+		
+		<% if (currentUserData ==null) { %>
+			<div class="survey-head " style="text-align: center;" ><strong>You have to log in for updating the subscription</strong> </div>
+		<% } else { %>
 		<% if (user_payment_status == "paid") { %>
 			<div class="survey-head " style="text-align: center;" ><strong>You have already paid for the Subscription.</strong> </div>
 		<% } else { %>
@@ -49,6 +53,7 @@
 				
 			</div>
 		</div>
+		<% } %>
 		<% } %>
 	</div>
 	

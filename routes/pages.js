@@ -2447,6 +2447,16 @@ router.get('/stripe-update-payment', checkCookieValue, async (req, res) => {
 
         let currentUserData = JSON.parse(req.userData);
         console.log("currentUserData", currentUserData);
+
+        var globalPageMeta= await comFunction2.getPageMetaValues('global');
+        if(currentUserData== null){
+            return res.render('front-end/404', {
+                menu_active_id: '404',
+                page_title: '404',
+                currentUserData,
+                globalPageMeta: globalPageMeta
+            });
+        }
         var user_id = currentUserData.user_id;
         console.log("user_idsssss",user_id);
 
@@ -2543,8 +2553,16 @@ router.get('/stripe-update-year-payment', checkCookieValue, async (req, res) => 
             console.log("country_no",country_no);
         }
 
-
+        var globalPageMeta= await comFunction2.getPageMetaValues('global');
         let currentUserData = JSON.parse(req.userData);
+        if(currentUserData == null){
+            return res.render('front-end/404', {
+                menu_active_id: '404',
+                page_title: '404',
+                currentUserData,
+                 globalPageMeta: globalPageMeta
+            });
+        }
         var user_id = currentUserData.user_id;
         console.log("user_idsssss",user_id);
         const planids = `SELECT * FROM plan_management WHERE name = "${planId}"`;
