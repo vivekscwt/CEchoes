@@ -2,7 +2,9 @@
    <link href="/front-end/css/business-style.css" rel="stylesheet" type="text/css">
    <%- include('common/header-banner') -%>
 	<div class="container">
-
+		<% if (user_payment_status == "paid") { %>
+			<div class="survey-head " style="text-align: center;" ><strong>You have already paid for the Subscription.</strong> </div>
+		<% } else { %>
 		<div class="row">
 			<div class="col">
 				<h3 class="title">Amount</h3>
@@ -15,7 +17,7 @@
 				<form id="paymentForm">
 					<div class="inputBox">
 						<p>Price per user: $<span id="price-per-user"></span></p>
-						<p>No of users for the plan : $<span id="user_number"></span></p>
+						<p>No of users for the plan : <span id="user_number"></span></p>
 						<label for="memberCount">Add-on Users:</label>
 						<input type="number" min=1 name="memberCount" id="memberCount"
 							placeholder="Enter number of add-on users">
@@ -88,13 +90,10 @@
 					<button type="submit" value="Proceed to Checkout" class="submit_btn">Proceed</button>
 					<div id="error-message"></div>
 					<div id="wait-message-container"></div> 
-					
 				</form>
-				
-				
-				
 			</div>
 		</div>
+		<% } %>
 	</div>
 	
 	<script type="text/javascript" src="index.js"></script>
@@ -311,6 +310,14 @@
     color: #fa755a;
     margin-top: 10px;
 }
+#wait-message-container p {
+     margin: 0;
+     text-align: center;
+     margin: 25px 0;
+     font-size: 18px;
+     font-weight: 600;
+}
+
 
 
 </style>
@@ -400,13 +407,15 @@
 		document.getElementById('paymentForm').addEventListener('submit', async function(event) {
 		event.preventDefault();
 		document.querySelector('button').disabled = true;
-
-		// const addonUsersCount = '<%= membercount %>';
-		// console.log('Add-on Users Count on Load:', addonUsersCount);
+		document.querySelector('.submit_btn').disabled = true;
 
 		const memberCountInput = document.getElementById('memberCount');
 		const addonUsersCount = memberCountInput.value;
 		console.log('Add-on Users Count on Load:', addonUsersCount);
+
+		const waitMessageContainer = document.getElementById('wait-message-container');
+        //console.log("waitMessageContainer",waitMessageContainer);      
+        waitMessageContainer.innerHTML = '<p style="color: black;">Please wait...</p>';  
 
 		const { paymentMethod, error } = await stripe.createPaymentMethod({
 			type: 'card',
@@ -439,7 +448,7 @@
 					Swal.fire({
 						icon: 'success',
 						title: 'Payment Successful!',
-						text: 'Your payment is successfully processed.',
+						text: 'Your payment is successfully processed And subscription updated.',
 						confirmButtonText: 'OK',
 					}).then(() => {
 						window.location.href = '/plan-pricing';
@@ -449,7 +458,7 @@
 				Swal.fire({
 					icon: 'success',
 					title: 'Payment Successful!',
-					text: 'Your payment is successfully processed.',
+					text: 'Your payment is successfully processed And subscription updated.',
 					confirmButtonText: 'OK',
 				}).then(() => {
 					window.location.href = '/plan-pricing';
@@ -465,11 +474,12 @@
 				email: '<%= currentUserData.email %>',
 				planId: '<%= planID %>',          
 				billingCycle: 'yearly',
-				memberCount: addonUsersCount
+				memberCount: addonUsersCount,
+				encryptedEmail: '<%= encryptedEmail%>'
 			};
 
 			try {
-				const response = await fetch('/auth/updateSubscription', {
+				const response = await fetch('/auth/updateSubscriptionbyuser', {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',
@@ -703,15 +713,15 @@
             });
         }
 		const perUserPrice = parseFloat('<%= per_user_price || 0 %>');
-                const perUserNo = parseFloat('<%= user_no || 0 %>');
+                const perUserNo = parseInt('<%= user_no || 0 %>');
                 
                 $('#price-per-user').text(perUserPrice.toFixed(2));
-                $('#user_number').text(perUserNo.toFixed(2));
+				$('#user_number').text(perUserNo);
     });
 
     document.getElementById('zip').addEventListener('input', function() {
         const zipCode = this.value;
-        const zipPattern = /^[a-zA-Z0-9\s]+$/; // Adjust pattern based on expected formats
+        const zipPattern = /^[a-zA-Z0-9\s]+$/; 
         if (!zipPattern.test(zipCode)) {
             this.setCustomValidity('Invalid ZIP code format');
         } else {

@@ -35,6 +35,8 @@
 					<div class="billing-address">
 						<h3 class="title">Billing Address</h3>
 						<div class="inputBox">
+							<p>Price per user: $<span id="price-per-user"></span></p>
+						<p>No of users for the plan :<span id="user_number"></span></p>
 							<label for="memberCount">Add-on Users:</label>
 							<input type="number" min=1 name="memberCount" id="memberCount"
 								placeholder="Enter number of add-on users">
@@ -79,10 +81,8 @@
 					
 					<button type="submit" value="Proceed to Checkout" class="submit_btn">Proceed</button>
 					<div id="error-message"></div>
+					<div id="wait-message-container"></div> 
 				</form>
-				
-				
-				
 			</div>
 		</div>
 	</div>
@@ -300,6 +300,13 @@
 #error-message {
     color: #fa755a;
     margin-top: 10px;
+}
+#wait-message-container p {
+     margin: 0;
+     text-align: center;
+     margin: 25px 0;
+     font-size: 18px;
+     font-weight: 600;
 }
 
 
@@ -522,11 +529,15 @@ document.addEventListener('DOMContentLoaded', function() {
 document.getElementById('paymentForm').addEventListener('submit', async function(event) {
 		event.preventDefault();
 		document.querySelector('button').disabled = true;
-
+		document.querySelector('.submit_btn').disabled = true;
 
 		const memberCountInput = document.getElementById('memberCount');
 		const addonUsersCount = memberCountInput.value;
 		console.log('Add-on Users Count on Load:', addonUsersCount);
+
+		const waitMessageContainer = document.getElementById('wait-message-container');
+        //console.log("waitMessageContainer",waitMessageContainer);      
+        waitMessageContainer.innerHTML = '<p style="color: black;">Please wait...</p>';  
 
 
 		const { paymentMethod, error } = await stripe.createPaymentMethod({
@@ -788,6 +799,11 @@ document.getElementById('paymentForm').addEventListener('submit', async function
                 }));
             });
         }
+		const perUserPrice = parseFloat('<%= per_user_price || 0 %>');
+                const perUserNo = parseInt('<%= user_no || 0 %>');
+                
+                $('#price-per-user').text(perUserPrice.toFixed(2));
+				$('#user_number').text(perUserNo);
     });
 
     document.getElementById('zip').addEventListener('input', function() {

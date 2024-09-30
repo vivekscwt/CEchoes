@@ -540,6 +540,8 @@ router.post('/updateSubscription',authController.updateSubscription);
 
 router.post('/updateSubscriptionbyAdmin',authController.updateSubscriptionbyAdmin);
 
+router.post('/updateSubscriptionbyuser',authController.updateSubscriptionbyuser);
+
 router.post('/update-order-history',authController.updateOrderHistory);
 
 //create-subscription-checkout-session

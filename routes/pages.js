@@ -2312,6 +2312,18 @@ router.get('/stripe-payment', checkCookieValue, async (req, res) => {
         const planidvalue = await queryAsync(planids);
         //console.log("planidvalue", planidvalue[0].id);
         const planID = planidvalue[0].id;
+        if (planidvalue.length > 0) {
+            
+            console.log("planID", planID);
+            var monthly_plan_price = planidvalue[0].monthly_price;
+            console.log("monthly_plan_price", monthly_plan_price);
+            var yearly_price = planidvalue[0].yearly_price;
+            console.log("yearly_price", yearly_price);
+            var per_user_prices = planidvalue[0].per_user_price;
+            console.log("per_user_prices", per_user_prices);
+        }
+
+        
         var user_no = planidvalue[0].user_no;
 
         const exchangeRates = await comFunction2.getCurrency();
@@ -2339,6 +2351,7 @@ router.get('/stripe-payment', checkCookieValue, async (req, res) => {
             user_id,
             getCountries: getCountries,
             stripe_publish_key: stripe_publish_key,
+            per_user_price: per_user_prices,
             user_no
         });
     } catch (err) {
@@ -2371,8 +2384,18 @@ router.get('/stripe-year-payment', checkCookieValue, async (req, res) => {
         let currentUserData = JSON.parse(req.userData);
         const planids = `SELECT * FROM plan_management WHERE name = "${planId}"`;
         const planidvalue = await queryAsync(planids);
-        const planID = planidvalue[0].id;
         var user_no = planidvalue[0].user_no;
+        if (planidvalue.length > 0) {
+            var planID = planidvalue[0].id;
+            console.log("planID", planID);
+            var monthly_plan_price = planidvalue[0].monthly_price;
+            console.log("monthly_plan_price", monthly_plan_price);
+            var yearly_price = planidvalue[0].yearly_price;
+            console.log("yearly_price", yearly_price);
+            var per_user_prices = planidvalue[0].per_user_price;
+            console.log("per_user_prices", per_user_prices);
+        }
+
 
         const decryptedEmail = await comFunction2.decryptEmail(encryptedEmail);
         if (decryptedEmail !== currentUserData.email) {
@@ -2405,6 +2428,7 @@ router.get('/stripe-year-payment', checkCookieValue, async (req, res) => {
             getstatevalue: getstatevalue,
             getCountries,
             stripe_publish_key,
+            per_user_price: per_user_prices,
             user_no
         });
     } catch (err) {
@@ -2416,7 +2440,7 @@ router.get('/stripe-year-payment', checkCookieValue, async (req, res) => {
 router.get('/stripe-update-payment', checkCookieValue, async (req, res) => {
     try {
         const { planId, planPrice, monthly, memberCount, total_price, encryptedEmail } = req.query;
-        console.log("req.query-monthly", req.query);
+        console.log("stripe-update-payment", req.query);
         // const apiKey = process.env.GEO_LOCATION_API_KEY;
         //console.log("apiKey",apiKey);
         const stripe_publish_key = process.env.STRIPE_PUBLISH_KEY;
@@ -2459,8 +2483,17 @@ router.get('/stripe-update-payment', checkCookieValue, async (req, res) => {
         var getmemberquery = `SELECT * FROM order_history WHERE user_id=?`;
         var getmemberval = await queryAsync(getmemberquery,[user_id]);
         if(getmemberval.length>0){
-            console.log("getmemberval",getmemberval);
             var membercount = getmemberval[0].added_user_number;
+        }
+        var companyquery = `SELECT * FROM company_claim_request WHERE claimed_by=?`;
+        var companyval = await queryAsync(companyquery,[user_id]);
+        if(companyval.length>0){
+            var user_company_id = companyval[0].company_id;
+        }
+        var userupdatequery = `SELECT * FROM company_update_admin WHERE company_id =? AND encrypted_mail=?`;
+        var userupdateval = await queryAsync(userupdatequery,[user_company_id,encryptedEmail]);
+        if(userupdateval.length>0){
+            var user_payment_status = userupdateval[0].status;
         }
 
         res.render('front-end/stripe-update-payment', {
@@ -2481,7 +2514,8 @@ router.get('/stripe-update-payment', checkCookieValue, async (req, res) => {
             stripe_publish_key: stripe_publish_key,
             membercount,
             per_user_price: per_user_prices,
-            user_no: user_no
+            user_no: user_no,
+            user_payment_status: user_payment_status
         });
     } catch (err) {
         console.error(err);
@@ -2491,7 +2525,7 @@ router.get('/stripe-update-payment', checkCookieValue, async (req, res) => {
 router.get('/stripe-update-year-payment', checkCookieValue, async (req, res) => {
     try {
         const { planId, planPrice, yearly, memberCount, total_price, encryptedEmail } = req.query;
-        console.log("req.query-yearly", req.query);
+        console.log("stripe-update-year-payment", req.query);
         // const apiKey = process.env.GEO_LOCATION_API_KEY;
         // console.log("apiKey",apiKey);
         const stripe_publish_key = process.env.stripe_publish_key;
@@ -2549,6 +2583,18 @@ router.get('/stripe-update-year-payment', checkCookieValue, async (req, res) => 
             console.log("getmemberval",getmemberval);
             var membercount = getmemberval[0].added_user_number;
         }
+        var companyquery = `SELECT * FROM company_claim_request WHERE claimed_by=?`;
+        var companyval = await queryAsync(companyquery,[user_id]);
+        if(companyval.length>0){
+            var user_company_id = companyval[0].company_id;
+        }
+        var userupdatequery = `SELECT * FROM company_update_admin WHERE company_id =? AND encrypted_mail=?`;
+        var userupdateval = await queryAsync(userupdatequery,[user_company_id,encryptedEmail]);
+        if(userupdateval.length>0){
+            var user_payment_status = userupdateval[0].status;
+        }
+        console.log("user_payment_status",user_payment_status);
+        
 
         res.render('front-end/stripe-update-year-payment', {
             menu_active_id: 'Stripe yearly Payment',
@@ -2567,7 +2613,9 @@ router.get('/stripe-update-year-payment', checkCookieValue, async (req, res) => 
             stripe_publish_key,
             membercount: membercount,
             per_user_price: per_user_prices,
-            user_no
+            user_no,
+            user_payment_status: user_payment_status,
+            encryptedEmail
         });
     } catch (err) {
         console.error(err);
