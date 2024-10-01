@@ -3057,6 +3057,8 @@ async function getAllDiscussions() {
 }
 //get all discussions when discussion_status =1 
 async function getAllDiscussion(country) {
+  console.log("discussioncountry",country);
+  
 
 let sql = `
 SELECT

@@ -77,7 +77,8 @@ router.get('/admin-login', (req, res) => {
     if (encodedUserData) {
         res.redirect('dashboard');
     } else {
-        res.render('sign-in', { message: '' })
+        //res.render('sign-in', { message: '' })
+        res.redirect('dashboard');
     }
 });
 
@@ -374,7 +375,7 @@ router.get('', checkCookieValue, async (req, res) => {
     console.log("apiKey", apiKey);
     console.log("currentUserData", currentUserData);
 
-    const country_name = req.cookies.countryName
+    let country_name = req.cookies.countryName
         || 'India';
 
     let country_code = req.cookies.countryCode
@@ -385,9 +386,18 @@ router.get('', checkCookieValue, async (req, res) => {
     if (country_code != 'UK' && country_code != 'JP') {
         country_code = 'US';
     }
+
+    if (country_code != 'UK' && country_code != 'JP') {
+        country_name = 'United States';
+    }
+    
     let new_country_code;
+    console.log("new_country_code",new_country_code);
+    
 
     if(req.cookies.countryCode != 'All'){
+        console.log("notall");
+        
         const new_country_code_query = `SELECT shortname FROM countries WHERE name="${country_name}"`;
         const new_country_code_val = await queryAsync(new_country_code_query);
         console.log("new_country_code_val", new_country_code_val);
@@ -565,7 +575,7 @@ router.get('/home/:getcountryhome', checkCookieValue, async (req, res) => {
     console.log("apiKey", apiKey);
     console.log("currentUserData", currentUserData);
 
-    const country_name = req.cookies.countryName
+    let country_name = req.cookies.countryName
         || 'India';
 
     let country_code = req.cookies.countryCode
@@ -576,6 +586,10 @@ router.get('/home/:getcountryhome', checkCookieValue, async (req, res) => {
     if (country_code != 'UK' && country_code != 'JP') {
         country_code = 'US';
     }
+    if (country_code != 'UK' && country_code != 'JP') {
+        country_name = 'United States';
+    }
+    
 
     if (req.cookies.countryCode != 'All') {
         console.log("notall");
@@ -1119,9 +1133,12 @@ router.get('/about-us', checkCookieValue, async (req, res) => {
             || 'IN';
         console.log("country_namesland", country_name);
         console.log("country_codesland", country_code);
-
+    
         if (country_code != 'UK' && country_code != 'JP') {
             country_code = 'US';
+        }
+        if (country_code != 'UK' && country_code != 'JP') {
+            country_name = 'United States';
         }
 
         let [PageInfo, PageMetaValues, globalPageMeta] = await Promise.all([
@@ -1209,12 +1226,15 @@ router.get('/review', checkCookieValue, async (req, res) => {
         const apiKey = process.env.GEO_LOCATION_API_KEY;
         //console.log("apiKey", apiKey);
 
-        const country_name = req.cookies.countryName || 'India';
-        const country_code = req.cookies.countryCode || 'IN';
+        let country_name = req.cookies.countryName || 'India';
+        let country_code = req.cookies.countryCode || 'IN';
 
-
-        console.log("country_namesreview", country_name);
-        console.log("country_codesreview", country_code);
+        if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+            country_code = 'US';
+        }
+        if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+            country_name = 'United States';
+        }
 
         let new_country_code;
 
@@ -1308,12 +1328,15 @@ router.get('/review/:getcountryname', checkCookieValue, async (req, res) => {
         // const ipAddress = '45.64.221.211';
         // console.log('Client IP Address:', ipAddress);
 
-        const country_name = req.cookies.countryName || 'India';
-        const country_code = req.cookies.countryCode || 'IN';
+        let country_name = req.cookies.countryName || 'India';
+        let country_code = req.cookies.countryCode || 'IN';
 
-
-        console.log("country_namesreview", country_name);
-        console.log("country_codesreview", country_code);
+        if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+            country_code = 'US';
+        }
+        if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+            country_name = 'United States';
+        }
 
 
         if (req.cookies.countryCode !== 'All') {
@@ -1478,6 +1501,13 @@ router.get('/faq', checkCookieValue, async (req, res) => {
         if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
             country_code = 'US';
         }
+            
+        if (country_code != 'UK' && country_code != 'JP') {
+            country_code = 'US';
+        }
+        if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+            country_name = 'United States';
+        }
 
         if (country_code != 'All') {
             var [faqPageData, faqCategoriesData, faqItemsData, globalPageMeta] = await Promise.all([
@@ -1547,6 +1577,9 @@ router.get('/faq/:getcountryname', checkCookieValue, async (req, res) => {
         if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
             country_code = 'US';
         }
+        if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+            country_name = 'United States';
+        }
 
         if (country_code != 'All') {
             var [faqPageData, faqCategoriesData, faqItemsData, globalPageMeta] = await Promise.all([
@@ -1613,10 +1646,12 @@ router.get('/plan-pricing', checkCookieValue, async (req, res) => {
         console.log("country_names", country_name);
         console.log("country_codes", country_code);
 
-        if (country_code != 'UK' && country_code != 'JP') {
+        if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
             country_code = 'US';
         }
-
+        if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+            country_name = 'United States';
+        }
         const [globalPageMeta, getplans, getSubscribedUsers] = await Promise.all([
             comFunction2.getPageMetaValues('global'),
             comFunction2.getplans(country_name),
@@ -1688,8 +1723,11 @@ router.get('/update-plan', checkCookieValue, async (req, res) => {
         let country_name = req.cookies.countryName || 'India';
         let country_code = req.cookies.countryCode || 'IN';
 
-        if (country_code != 'UK' && country_code != 'JP') {
+        if (country_code != 'UK' && country_code != 'JP'&& country_code != 'All') {
             country_code = 'US';
+        }
+        if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+            country_name = 'United States';
         }
 
         const [globalPageMeta, getplans, getSubscribedUsers] = await Promise.all([
@@ -1767,8 +1805,11 @@ router.get('/update-plans/:userId/:user_company_id', checkCookieValue, async (re
         let country_name = req.cookies.countryName || 'India';
         let country_code = req.cookies.countryCode || 'IN';
 
-        if (country_code != 'UK' && country_code != 'JP') {
+        if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
             country_code = 'US';
+        }
+        if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+            country_name = 'United States';
         }
 
         const [globalPageMeta, getplans, getSubscribedUsers] = await Promise.all([
@@ -2100,12 +2141,16 @@ router.get('/business', checkCookieValue, async (req, res) => {
         console.log("country_names", country_name);
         console.log("country_codes", country_code);
 
-        if (country_code != 'UK' && country_code != 'JP') {
+        if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
             country_code = 'US';
         }
         if (country_name == 'All') {
             country_name = 'India'
         }
+        if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+            country_name = 'United States';
+        }
+
 
         console.log("country_code", country_code);
 
@@ -2189,6 +2234,7 @@ router.get('/business/:getcountryname', checkCookieValue, async (req, res) => {
         if (getcountryname != 'UK' && getcountryname != 'JP' && getcountryname != 'All') {
             getcountryname = 'US';
         }
+
         if (getcountryname == 'All') {
             console.log("fggfgfh");
             var [globalPageMeta, getplans, getSubscribedUsers] = await Promise.all([
@@ -3318,6 +3364,9 @@ router.get('/privacy-policy', checkCookieValue, async (req, res) => {
     if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
         country_code = 'US';
     }
+    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+        country_name = 'United States';
+    }
     if (country_code == 'All') {
         country_name = 'India'
     }
@@ -3412,6 +3461,9 @@ router.get('/privacy-policy/:getcountryname', checkCookieValue, async (req, res)
     if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
         country_code = 'US';
     }
+    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+        country_name = 'United States';
+    }
     if (country_code == 'All') {
         country_name = 'India'
     }
@@ -3489,16 +3541,18 @@ router.get('/disclaimer', checkCookieValue, async (req, res) => {
     const apiKey = process.env.GEO_LOCATION_API_KEY;
     console.log("apiKey", apiKey);
 
-    const country_name = req.cookies.countryName
+    let country_name = req.cookies.countryName
         || 'India';
     let country_code = req.cookies.countryCode
         || 'IN';
-    console.log("country_namesprivacy", country_name);
-    console.log("country_codesprivacy", country_code);
 
     if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
         country_code = 'US';
     }
+    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+        country_name = 'United States';
+    }
+    
     const [globalPageMeta] = await Promise.all([
         comFunction2.getPageMetaValues('global'),
     ]);
@@ -3571,16 +3625,20 @@ router.get('/disclaimer/:getcountryname', checkCookieValue, async (req, res) => 
     let getcountryname = req.params.getcountryname;
     console.log("privacygetcountryname", getcountryname);
 
-    const country_name = req.cookies.countryName
+    let country_name = req.cookies.countryName
         || 'India';
     let country_code = req.cookies.countryCode
         || 'IN';
     console.log("country_namesprivacy", country_name);
     console.log("country_codesprivacy", country_code);
 
-    if (country_code != 'UK' && country_code != 'JP') {
+    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
         country_code = 'US';
     }
+    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+        country_name = 'United States';
+    }
+    
     const [globalPageMeta] = await Promise.all([
         comFunction2.getPageMetaValues('global'),
     ]);
@@ -3650,16 +3708,16 @@ router.get('/disclaimer/:getcountryname', checkCookieValue, async (req, res) => 
 router.get('/terms-of-service', checkCookieValue, async (req, res) => {
     let currentUserData = JSON.parse(req.userData);
     const apiKey = process.env.GEO_LOCATION_API_KEY;
-    const country_name = req.cookies.countryName
+    let country_name = req.cookies.countryName
         || 'India';
     let country_code = req.cookies.countryCode
         || 'IN';
-    console.log("country_namesprivacy", country_name);
-    console.log("country_codesprivacy", country_code);
-
-    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
-        country_code = 'US';
-    }
+        if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+            country_code = 'US';
+        }
+        if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+            country_name = 'United States';
+        }
 
     console.log("apiKey", apiKey);
     const [globalPageMeta] = await Promise.all([
@@ -3731,16 +3789,16 @@ router.get('/terms-of-service/:getcountryname', checkCookieValue, async (req, re
     let currentUserData = JSON.parse(req.userData);
     const apiKey = process.env.GEO_LOCATION_API_KEY;
     const getcountryname = req.params.getcountryname;
-    const country_name = req.cookies.countryName
+    let country_name = req.cookies.countryName
         || 'India';
     let country_code = req.cookies.countryCode
         || 'IN';
-    console.log("country_namesprivacy", country_name);
-    console.log("country_codesprivacy", country_code);
-
-    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
-        country_code = 'US';
-    }
+        if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+            country_code = 'US';
+        }
+        if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+            country_name = 'United States';
+        }
 
     console.log("apiKey", apiKey);
     const [globalPageMeta] = await Promise.all([
@@ -4600,6 +4658,13 @@ router.get('/categories', checkCookieValue, async (req, res) => {
     console.log("country_names", country_name);
     console.log("country_codes", country_code);
 
+    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+        country_code = 'US';
+    }
+    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+        country_name = 'United States';
+    }
+
     const getcountry_code = `SELECT id FROM countries WHERE shortname = "${country_code}"`;
     const getcountryval = await query(getcountry_code);
     if (getcountryval.length > 0) {
@@ -4829,6 +4894,13 @@ router.get('/category/:category_slug/:country', checkCookieValue, async (req, re
     console.log("country_names", country_name);
     console.log("country_codes", country_code);
 
+    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+        country_code = 'US';
+    }
+    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+        country_name = 'United States';
+    }
+
     const [globalPageMeta, getSubCategories, companyDetails, AllRatingTags, CategoryDetails] = await Promise.all([
         comFunction2.getPageMetaValues('global'),
         comFunction2.getsubCategories(category_slug),
@@ -4904,6 +4976,13 @@ router.get('/home/category/:category_slug/:country', checkCookieValue, async (re
 
     let country_name = req.cookies.countryName || 'India';
     let country_code = req.cookies.countryCode || 'IN';
+
+    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+        country_code = 'US';
+    }
+    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+        country_name = 'United States';
+    }
 
     console.log("country_names", country_name);
     console.log("country_codes", country_code);
@@ -5211,6 +5290,13 @@ router.get('/category/:category_slug/:country/:filter', checkCookieValue, async 
     let country_name = req.cookies.countryName || 'India';
     let country_code = req.cookies.countryCode || 'IN';
 
+    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+        country_code = 'US';
+    }
+    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+        country_name = 'United States';
+    }
+
     console.log("country_names", country_name);
     console.log("country_codes", country_code);
 
@@ -5299,6 +5385,13 @@ router.get('/discussion', checkCookieValue, async (req, res) => {
     console.log("country_names", country_name);
     console.log("country_codes", country_code);
 
+    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+        country_code = 'US';
+    }
+    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+        country_name = 'United States';
+    }
+
     if (req.cookies.countryCode !== 'All') {
         const new_country_code_query = `SELECT shortname FROM countries WHERE name="${country_name}"`;
         const new_country_code_val = await queryAsync(new_country_code_query);
@@ -5381,6 +5474,13 @@ router.get('/discussion/:getcountryname', checkCookieValue, async (req, res) => 
 
     console.log("country_names", country_name);
     console.log("country_codes", country_code);
+
+    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+        country_code = 'US';
+    }
+    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+        country_name = 'United States';
+    }
 
     if (req.cookies.countryCode !== 'All') {
         const new_country_code_query = `SELECT shortname FROM countries WHERE name="${country_name}"`;
@@ -5559,6 +5659,13 @@ router.get('/matching-query', checkCookieValue, async (req, res) => {
 
     console.log("country_names", country_name);
     console.log("country_codes", country_code);
+
+    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+        country_code = 'US';
+    }
+    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+        country_name = 'United States';
+    }
 
     var [globalPageMeta, getAllLatestDiscussion, getAllPopularDiscussion, getAllDiscussions, getAllViewedDiscussion, getPopularTags, getCountries] = await Promise.all([
         comFunction2.getPageMetaValues('global'),
@@ -10884,8 +10991,11 @@ router.get('/edit-faq', checkLoggedIn, async (req, res) => {
         console.log("country_namesfaq", country_name);
         console.log("country_codesfaq", country_code);
 
-        if (country_code != 'UK' && country_code != 'JP') {
+        if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
             country_code = 'US';
+        }
+        if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+            country_name = 'United States';
         }
 
         const faqPageDatas = await comFunction2.getFaqPage();
@@ -10924,8 +11034,11 @@ router.get('/uk-edit-faq', checkLoggedIn, async (req, res) => {
         console.log("country_namesfaq", country_name);
         console.log("country_codesfaq", country_code);
 
-        if (country_code != 'UK' && country_code != 'JP') {
+        if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
             country_code = 'US';
+        }
+        if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+            country_name = 'United States';
         }
 
         const faqPageDatas = await comFunction2.getFaqPage();
@@ -10963,8 +11076,11 @@ router.get('/jp-edit-faq', checkLoggedIn, async (req, res) => {
         console.log("country_namesfaq", country_name);
         console.log("country_codesfaq", country_code);
 
-        if (country_code != 'UK' && country_code != 'JP') {
+        if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
             country_code = 'US';
+        }
+        if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+            country_name = 'United States';
         }
 
         const faqPageDatas = await comFunction2.getFaqPage();
@@ -11003,8 +11119,11 @@ router.get('/edit-contacts', checkLoggedIn, (req, res) => {
         console.log("country_namesfaq", country_name);
         console.log("country_codesfaq", country_code);
 
-        if (country_code != 'UK' && country_code != 'JP') {
+        if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
             country_code = 'US';
+        }
+        if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+            country_name = 'United States';
         }
         const sql = `SELECT * FROM contacts WHERE country = "${country_code}"`;
         db.query(sql, (err, results, fields) => {
@@ -13693,10 +13812,12 @@ router.get('/register-complaint/:getcountryname', checkFrontEndLoggedIn, async (
     console.log("country_names", country_name);
     console.log("country_codes", country_code);
 
-    if (country_code != 'UK' && country_code != 'JP') {
+    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
         country_code = 'US';
     }
-
+    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+        country_name = 'United States';
+    }
     const [globalPageMeta, PageMetaValues, getAllPremiumCompany, getCountries] = await Promise.all([
         comFunction2.getPageMetaValues('global'),
         comFunction2.getPageMetaValues('complaint'),
@@ -13726,16 +13847,20 @@ router.get('/register-complaint/:getcountryname', checkFrontEndLoggedIn, async (
 router.get('/register-cechoes-complaint', checkFrontEndLoggedIn, async (req, res) => {
     const encodedUserData = req.cookies.user;
     const currentUserData = JSON.parse(encodedUserData);
-    const country_name = req.cookies.countryName
+    let country_name = req.cookies.countryName
         || 'India';
     let country_code = req.cookies.countryCode
         || 'IN';
     console.log("country_namesprivacy", country_name);
     console.log("country_codesprivacy", country_code);
 
-    if (country_code != 'UK' && country_code != 'JP') {
+    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
         country_code = 'US';
     }
+    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+        country_name = 'United States';
+    }
+    
     const [globalPageMeta, PageMetaValues, getAllPremiumCompany, getCountries] = await Promise.all([
         comFunction2.getPageMetaValues('global'),
         //comFunction2.getPageMetaValues('complaint'),
