@@ -477,7 +477,7 @@ router.get('', checkCookieValue, async (req, res) => {
             comFunction.getNegativeReviewsCompany(),
 
             //comFunction2.getPageMetaValues('home'),
-            comFunction2.getPageMetaValues('home'),
+            comFunction2.getPageMetaValue('home','US'),
             comFunction.getVisitorCheck(requestIp.getClientIp(req)),
             comFunction2.getAllLatestDiscussion(20),
             //comFunction2.getAllLatestDiscussion(20),
