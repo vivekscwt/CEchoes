@@ -77,8 +77,8 @@ router.get('/admin-login', (req, res) => {
     if (encodedUserData) {
         res.redirect('dashboard');
     } else {
-        //res.render('sign-in', { message: '' })
-        res.redirect('dashboard');
+        res.render('sign-in', { message: '' })
+        //res.redirect('dashboard');
     }
 });
 
