@@ -542,6 +542,8 @@ async function getPageMetaValues(pageName) {
 
 //Function to fetch Page Meta Values from the  page_meta table
 async function getPageMetaValue(pageName,country) {
+  console.log("getPageMetaValuecountry",country);
+  
   const sql = `SELECT * FROM page_info where secret_Key = '${pageName}' AND country= "${country}"`;
   const get_page_info_result = await query(sql);
 
