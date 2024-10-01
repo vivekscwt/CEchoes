@@ -383,11 +383,11 @@ router.get('', checkCookieValue, async (req, res) => {
     console.log("country_namesland", country_name);
     console.log("country_codesland", country_code);
 
-    if (country_code != 'UK' && country_code != 'JP' && country_code !='All') {
+    if (country_code != 'UK' && country_code != 'JP') {
         country_code = 'US';
     }
 
-    if (country_code != 'UK' && country_code != 'JP' && country_code !='All') {
+    if (country_code != 'UK' && country_code != 'JP') {
         country_name = 'United States';
     }
     
