@@ -583,11 +583,11 @@ router.get('/home/:getcountryhome', checkCookieValue, async (req, res) => {
     console.log("country_namesland", country_name);
     console.log("country_codesland", country_code);
 
-    if (country_code != 'UK' && country_code != 'JP' && country_code !='All') {
+    if (country_code != 'UK' && country_code != 'JP') {
         country_code = 'US';
     }
 
-    if (country_code != 'UK' && country_code != 'JP' && country_code !='All') {
+    if (country_code != 'UK' && country_code != 'JP') {
         country_name = 'United States';
     }
     
@@ -1230,10 +1230,10 @@ router.get('/review', checkCookieValue, async (req, res) => {
         let country_name = req.cookies.countryName || 'India';
         let country_code = req.cookies.countryCode || 'IN';
 
-        if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+        if (country_code != 'UK' && country_code != 'JP' ) {
             country_code = 'US';
         }
-        if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+        if (country_code != 'UK' && country_code != 'JP') {
             country_name = 'United States';
         }
 
@@ -1332,10 +1332,10 @@ router.get('/review/:getcountryname', checkCookieValue, async (req, res) => {
         let country_name = req.cookies.countryName || 'India';
         let country_code = req.cookies.countryCode || 'IN';
 
-        if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+        if (country_code != 'UK' && country_code != 'JP' ) {
             country_code = 'US';
         }
-        if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+        if (country_code != 'UK' && country_code != 'JP') {
             country_name = 'United States';
         }
 
@@ -1499,14 +1499,14 @@ router.get('/faq', checkCookieValue, async (req, res) => {
         console.log("country_namesfaq", country_name);
         console.log("country_codesfaq", country_code);
 
-        if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+        if (country_code != 'UK' && country_code != 'JP') {
             country_code = 'US';
         }
             
         if (country_code != 'UK' && country_code != 'JP') {
             country_code = 'US';
         }
-        if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+        if (country_code != 'UK' && country_code != 'JP') {
             country_name = 'United States';
         }
 
@@ -1575,10 +1575,10 @@ router.get('/faq/:getcountryname', checkCookieValue, async (req, res) => {
         console.log("country_namesfaq", country_name);
         console.log("country_codesfaq", country_code);
 
-        if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+        if (country_code != 'UK' && country_code != 'JP' ) {
             country_code = 'US';
         }
-        if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+        if (country_code != 'UK' && country_code != 'JP') {
             country_name = 'United States';
         }
 
@@ -1647,10 +1647,10 @@ router.get('/plan-pricing', checkCookieValue, async (req, res) => {
         console.log("country_names", country_name);
         console.log("country_codes", country_code);
 
-        if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+        if (country_code != 'UK' && country_code != 'JP') {
             country_code = 'US';
         }
-        if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+        if (country_code != 'UK' && country_code != 'JP') {
             country_name = 'United States';
         }
         const [globalPageMeta, getplans, getSubscribedUsers] = await Promise.all([
@@ -1724,10 +1724,10 @@ router.get('/update-plan', checkCookieValue, async (req, res) => {
         let country_name = req.cookies.countryName || 'India';
         let country_code = req.cookies.countryCode || 'IN';
 
-        if (country_code != 'UK' && country_code != 'JP'&& country_code != 'All') {
+        if (country_code != 'UK' && country_code != 'JP') {
             country_code = 'US';
         }
-        if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+        if (country_code != 'UK' && country_code != 'JP' ) {
             country_name = 'United States';
         }
 
@@ -1806,10 +1806,10 @@ router.get('/update-plans/:userId/:user_company_id', checkCookieValue, async (re
         let country_name = req.cookies.countryName || 'India';
         let country_code = req.cookies.countryCode || 'IN';
 
-        if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+        if (country_code != 'UK' && country_code != 'JP') {
             country_code = 'US';
         }
-        if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+        if (country_code != 'UK' && country_code != 'JP') {
             country_name = 'United States';
         }
 
@@ -2142,13 +2142,13 @@ router.get('/business', checkCookieValue, async (req, res) => {
         console.log("country_names", country_name);
         console.log("country_codes", country_code);
 
-        if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+        if (country_code != 'UK' && country_code != 'JP') {
             country_code = 'US';
         }
         if (country_name == 'All') {
             country_name = 'India'
         }
-        if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+        if (country_code != 'UK' && country_code != 'JP') {
             country_name = 'United States';
         }
 
@@ -3362,10 +3362,10 @@ router.get('/privacy-policy', checkCookieValue, async (req, res) => {
     //     country_code = 'US';
     // }
 
-    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+    if (country_code != 'UK' && country_code != 'JP' ) {
         country_code = 'US';
     }
-    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+    if (country_code != 'UK' && country_code != 'JP') {
         country_name = 'United States';
     }
     if (country_code == 'All') {
@@ -3459,10 +3459,10 @@ router.get('/privacy-policy/:getcountryname', checkCookieValue, async (req, res)
     console.log("country_namesprivacy", country_name);
     console.log("country_codesprivacy", country_code);
 
-    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+    if (country_code != 'UK' && country_code != 'JP' ) {
         country_code = 'US';
     }
-    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+    if (country_code != 'UK' && country_code != 'JP') {
         country_name = 'United States';
     }
     if (country_code == 'All') {
@@ -3547,10 +3547,10 @@ router.get('/disclaimer', checkCookieValue, async (req, res) => {
     let country_code = req.cookies.countryCode
         || 'IN';
 
-    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+    if (country_code != 'UK' && country_code != 'JP') {
         country_code = 'US';
     }
-    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+    if (country_code != 'UK' && country_code != 'JP' ) {
         country_name = 'United States';
     }
     
@@ -3633,10 +3633,10 @@ router.get('/disclaimer/:getcountryname', checkCookieValue, async (req, res) => 
     console.log("country_namesprivacy", country_name);
     console.log("country_codesprivacy", country_code);
 
-    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+    if (country_code != 'UK' && country_code != 'JP' ) {
         country_code = 'US';
     }
-    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+    if (country_code != 'UK' && country_code != 'JP' ) {
         country_name = 'United States';
     }
     
@@ -3713,10 +3713,10 @@ router.get('/terms-of-service', checkCookieValue, async (req, res) => {
         || 'India';
     let country_code = req.cookies.countryCode
         || 'IN';
-        if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+        if (country_code != 'UK' && country_code != 'JP') {
             country_code = 'US';
         }
-        if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+        if (country_code != 'UK' && country_code != 'JP') {
             country_name = 'United States';
         }
 
@@ -3794,10 +3794,10 @@ router.get('/terms-of-service/:getcountryname', checkCookieValue, async (req, re
         || 'India';
     let country_code = req.cookies.countryCode
         || 'IN';
-        if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+        if (country_code != 'UK' && country_code != 'JP' ) {
             country_code = 'US';
         }
-        if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+        if (country_code != 'UK' && country_code != 'JP') {
             country_name = 'United States';
         }
 
@@ -4659,10 +4659,10 @@ router.get('/categories', checkCookieValue, async (req, res) => {
     console.log("country_names", country_name);
     console.log("country_codes", country_code);
 
-    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+    if (country_code != 'UK' && country_code != 'JP') {
         country_code = 'US';
     }
-    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+    if (country_code != 'UK' && country_code != 'JP' ) {
         country_name = 'United States';
     }
 
@@ -4895,10 +4895,10 @@ router.get('/category/:category_slug/:country', checkCookieValue, async (req, re
     console.log("country_names", country_name);
     console.log("country_codes", country_code);
 
-    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+    if (country_code != 'UK' && country_code != 'JP') {
         country_code = 'US';
     }
-    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+    if (country_code != 'UK' && country_code != 'JP') {
         country_name = 'United States';
     }
 
@@ -4978,10 +4978,10 @@ router.get('/home/category/:category_slug/:country', checkCookieValue, async (re
     let country_name = req.cookies.countryName || 'India';
     let country_code = req.cookies.countryCode || 'IN';
 
-    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+    if (country_code != 'UK' && country_code != 'JP') {
         country_code = 'US';
     }
-    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+    if (country_code != 'UK' && country_code != 'JP') {
         country_name = 'United States';
     }
 
@@ -5291,10 +5291,10 @@ router.get('/category/:category_slug/:country/:filter', checkCookieValue, async 
     let country_name = req.cookies.countryName || 'India';
     let country_code = req.cookies.countryCode || 'IN';
 
-    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+    if (country_code != 'UK' && country_code != 'JP') {
         country_code = 'US';
     }
-    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+    if (country_code != 'UK' && country_code != 'JP') {
         country_name = 'United States';
     }
 
@@ -5386,10 +5386,10 @@ router.get('/discussion', checkCookieValue, async (req, res) => {
     console.log("country_names", country_name);
     console.log("country_codes", country_code);
 
-    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+    if (country_code != 'UK' && country_code != 'JP' ) {
         country_code = 'US';
     }
-    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+    if (country_code != 'UK' && country_code != 'JP') {
         country_name = 'United States';
     }
 
@@ -5476,10 +5476,10 @@ router.get('/discussion/:getcountryname', checkCookieValue, async (req, res) => 
     console.log("country_names", country_name);
     console.log("country_codes", country_code);
 
-    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+    if (country_code != 'UK' && country_code != 'JP' ) {
         country_code = 'US';
     }
-    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+    if (country_code != 'UK' && country_code != 'JP') {
         country_name = 'United States';
     }
 
@@ -5661,10 +5661,10 @@ router.get('/matching-query', checkCookieValue, async (req, res) => {
     console.log("country_names", country_name);
     console.log("country_codes", country_code);
 
-    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+    if (country_code != 'UK' && country_code != 'JP') {
         country_code = 'US';
     }
-    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+    if (country_code != 'UK' && country_code != 'JP' ) {
         country_name = 'United States';
     }
 
@@ -10992,10 +10992,10 @@ router.get('/edit-faq', checkLoggedIn, async (req, res) => {
         console.log("country_namesfaq", country_name);
         console.log("country_codesfaq", country_code);
 
-        if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+        if (country_code != 'UK' && country_code != 'JP') {
             country_code = 'US';
         }
-        if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+        if (country_code != 'UK' && country_code != 'JP') {
             country_name = 'United States';
         }
 
@@ -11035,10 +11035,10 @@ router.get('/uk-edit-faq', checkLoggedIn, async (req, res) => {
         console.log("country_namesfaq", country_name);
         console.log("country_codesfaq", country_code);
 
-        if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+        if (country_code != 'UK' && country_code != 'JP' ) {
             country_code = 'US';
         }
-        if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+        if (country_code != 'UK' && country_code != 'JP') {
             country_name = 'United States';
         }
 
@@ -11077,10 +11077,10 @@ router.get('/jp-edit-faq', checkLoggedIn, async (req, res) => {
         console.log("country_namesfaq", country_name);
         console.log("country_codesfaq", country_code);
 
-        if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+        if (country_code != 'UK' && country_code != 'JP') {
             country_code = 'US';
         }
-        if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+        if (country_code != 'UK' && country_code != 'JP') {
             country_name = 'United States';
         }
 
@@ -11120,10 +11120,10 @@ router.get('/edit-contacts', checkLoggedIn, (req, res) => {
         console.log("country_namesfaq", country_name);
         console.log("country_codesfaq", country_code);
 
-        if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+        if (country_code != 'UK' && country_code != 'JP') {
             country_code = 'US';
         }
-        if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+        if (country_code != 'UK' && country_code != 'JP') {
             country_name = 'United States';
         }
         const sql = `SELECT * FROM contacts WHERE country = "${country_code}"`;
@@ -13813,10 +13813,10 @@ router.get('/register-complaint/:getcountryname', checkFrontEndLoggedIn, async (
     console.log("country_names", country_name);
     console.log("country_codes", country_code);
 
-    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+    if (country_code != 'UK' && country_code != 'JP') {
         country_code = 'US';
     }
-    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+    if (country_code != 'UK' && country_code != 'JP') {
         country_name = 'United States';
     }
     const [globalPageMeta, PageMetaValues, getAllPremiumCompany, getCountries] = await Promise.all([
@@ -13855,10 +13855,10 @@ router.get('/register-cechoes-complaint', checkFrontEndLoggedIn, async (req, res
     console.log("country_namesprivacy", country_name);
     console.log("country_codesprivacy", country_code);
 
-    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+    if (country_code != 'UK' && country_code != 'JP') {
         country_code = 'US';
     }
-    if (country_code != 'UK' && country_code != 'JP' && country_code != 'All') {
+    if (country_code != 'UK' && country_code != 'JP') {
         country_name = 'United States';
     }
     
