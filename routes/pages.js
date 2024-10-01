@@ -590,6 +590,8 @@ router.get('/home/:getcountryhome', checkCookieValue, async (req, res) => {
     if (country_code != 'UK' && country_code != 'JP') {
         country_name = 'United States';
     }
+    console.log("actualcountrycode",country_code);
+    
     
 
     if (req.cookies.countryCode != 'All') {
