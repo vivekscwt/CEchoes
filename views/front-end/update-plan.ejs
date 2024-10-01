@@ -88,7 +88,7 @@
                     <% } %>
                 </div>
                 
-                <% if (currentUserData && currentUserData.claimed_comp_id != null) { %>
+               
                   <%- getplans[plan + '_val' ].description %>
           
                   <div class="get_started_btn">
@@ -109,23 +109,7 @@
                     <% } %>
                   </div>
           
-                <% } else { %>
-                  <!-- If no claimed company, show options -->
-                  <%- getplans[plan + '_val' ].description %>
-          
-                  <div class="get_started_btn">
-                    <% if (isSubscribed(plan, 'yearly')) { %>
-                      <label>
-                        <input type="radio" id="subscribe-<%= plan %>-yearly" name="subscriptionType" value="yearly" style="display: none;" disabled checked>
-                        Get Started
-                      </label>
-                    <% } else { %>
-                      <div class="proceed_btn">
-                        <a href="#" style="color: black;" onclick="redirectToYearlyStripePayment('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].yearly_price %>', 'yearly')">Update</a>
-                      </div>
-                    <% } %>
-                  </div>
-                <% } %>
+              
               </div>
             <% }) %>
           </div>
