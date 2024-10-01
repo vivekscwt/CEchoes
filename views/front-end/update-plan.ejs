@@ -121,7 +121,7 @@
                       </label>
                     <% } else { %>
                       <div class="proceed_btn">
-                        <a href="#" style="color: black;" onclick="redirectToYearlySubscriptionPage('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].yearly_price %>', 'yearly')">Update</a>
+                        <a href="#" style="color: black;" onclick="redirectToYearlyStripePayment('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].yearly_price %>', 'yearly')">Update</a>
                       </div>
                     <% } %>
                   </div>
