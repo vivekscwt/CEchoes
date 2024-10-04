@@ -450,9 +450,9 @@
               <div class="container">
                 <div class="featured-object-wrap position-relative">
                   <h2 class="main-head">Featured <span>Companies</span></h2>
+                  <% if(featured_comps && featured_comps.length>0) { %>
+                    <% featured_comps.forEach( company=> { %>
                   <div class="featured-slider">
-                    <% if(featured_comps && featured_comps.length>0) { %>
-                      <% featured_comps.forEach( company=> { %>
                         <div class="item">
                           <div class="feature-box">
                             <a href="company/<%= company.slug %>"><img src="/<%= company.logo %>" alt="img" width="118"
@@ -467,15 +467,14 @@
                                   } %>
 
                                   <%= txt %>
-
                             </p>
                           </div>
                         </div>
-                        <% }) %>
+                  </div>
+                  <% }) %>
                           <% } else { %>
                             <h1>There is no such Company</h1>
                             <% } %>
-                  </div>
                   <div class="feature-man1" data-aos="fade-down"><img src="/front-end/images/feature-man1.png" alt="img"
                       width="198" height="169"></div>
                   <div class="feature-man2" data-aos="fade-down" data-aos-delay="500"><img
@@ -2413,9 +2412,19 @@
         console.log("DOM content loaded");
 
         try {
-          const { countryName, countryCode } = await fetchGeolocationAndSetCountryInfo();
-          console.log("Initial CountryName:", countryName);
-          console.log("Initial CountryCode:", countryCode);
+          let countryCode = 'US'; 
+          let countryName = 'United States'; 
+          try {
+            const result = await fetchGeolocationAndSetCountryInfo();
+            if (result) {
+              countryName = result.countryName;
+              countryCode = result.countryCode;
+            }
+            console.log("Initial CountryName:", countryName);
+            console.log("Initial CountryCode:", countryCode);
+          } catch (geoError) {
+            console.warn("Geolocation failed or denied. Defaulting to:", countryName);
+          }
 
           const countryDropdown = document.querySelector('.country-dropdown');
           if (countryCode == 'UK') {

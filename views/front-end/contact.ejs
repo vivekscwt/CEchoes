@@ -205,9 +205,17 @@
         console.log("DOM content loaded");
 
         try {
-          const { countryName, countryCode } = await fetchGeolocationAndSetCountryInfo();
-          console.log("Initial CountryName:", countryName);
-          console.log("Initial CountryCode:", countryCode);
+          try {
+            const result = await fetchGeolocationAndSetCountryInfo();
+            if (result) {
+              countryName = result.countryName;
+              countryCode = result.countryCode;
+            }
+            console.log("Initial CountryName:", countryName);
+            console.log("Initial CountryCode:", countryCode);
+         } catch (geoError) {
+            console.warn("Geolocation failed or denied. Defaulting to:", countryName);
+         }
           const countryMap = {
             'UK': 'United Kingdom',
             'JP': 'Japan',
