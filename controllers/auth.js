@@ -17086,6 +17086,7 @@ exports.createexternalSubscription = async (req, res) => {
         if (!priceId) {
             return res.status(500).send({ error: 'Failed to create price for the plan' });
         }
+console.log("customer.id",customer.id);
 
         let subscription;
         try {
@@ -17096,7 +17097,8 @@ exports.createexternalSubscription = async (req, res) => {
                 expand: ['latest_invoice.payment_intent'], 
             });
         } catch (error) {
-            return res.status(500).send({ error: 'Failed to create subscription' });
+            console.error('Error during subscription creation:', error);
+            return res.status(500).send({ error: 'Failed to create subscription', details: error.message });
         }
         const subscriptionId = subscription.id;
         // const paymentIntent = subscription.latest_invoice.payment_intent;
