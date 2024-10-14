@@ -914,58 +914,12 @@
                 }
             });
 
-
-            // document.getElementById('email').addEventListener('blur', async function () {
-            //     const email = this.value.trim();
-            //     const emailError = document.getElementById('emailError');
-            //     const emailAvailabilityError = document.getElementById('emailAvailabilityError');
-            //     const nextStepBtn = document.getElementById('nextStepBtn');
-
-            //     // Reset error messages and validation flags
-            //     emailError.style.display = 'none';
-            //     emailAvailabilityError.style.display = 'none';
-            //     this.classList.remove('invalid');
-            //     isEmailValid = false;
-            //     isEmailAvailable = false;
-
-            //     // Disable the next button initially
-            //     nextStepBtn.disabled = true;
-
-            //     // Basic email validation
-            //     if (email && !isValidEmail(email)) {
-            //         emailError.style.display = 'block';
-            //         this.classList.add('invalid');
-            //     } else {
-            //         isEmailValid = true;
-            //         try {
-            //             const response = await axios.get(`/checkEmailAvailability?email=${email}`);
-            //             if (!response.data.available) {
-            //                 emailAvailabilityError.style.display = 'block';
-            //                 this.classList.add('invalid');
-            //             } else {
-            //                 isEmailAvailable = true;
-            //             }
-            //         } catch (error) {
-            //             console.error('Error checking email availability:', error);
-            //         }
-            //     }
-
-            //     console.log("isEmailValid", isEmailValid);
-            //     console.log("isEmailAvailable", isEmailAvailable);
-
-            //     // Enable the Next Step button if email is valid and available
-            //     // if (isEmailValid && isEmailAvailable) {
-            //         if(isEmailValid== true && isEmailAvailable==false){
-            //         nextStepBtn.disabled = false;
-            //     }
-            // });
+            //old
             document.getElementById('email').addEventListener('blur', async function () {
                 const email = this.value.trim();
                 const emailError = document.getElementById('emailError');
                 const emailAvailabilityError = document.getElementById('emailAvailabilityError');
                 const nextStepBtn = document.getElementById('nextStepBtn');
-
-                console.log('Email input value:', email);
 
                 // Reset error messages and validation flags
                 emailError.style.display = 'none';
@@ -985,10 +939,7 @@
                     isEmailValid = true;
                     try {
                         const response = await axios.get(`/checkEmailAvailability?email=${email}`);
-                        //console.log('Response from server:', response);
-
                         if (!response.data.available) {
-                            emailAvailabilityError.textContent = response.data.message; // Set the error message
                             emailAvailabilityError.style.display = 'block';
                             this.classList.add('invalid');
                         } else {
@@ -1003,10 +954,60 @@
                 console.log("isEmailAvailable", isEmailAvailable);
 
                 // Enable the Next Step button if email is valid and available
-                if (isEmailValid && isEmailAvailable) {
+                // if (isEmailValid && isEmailAvailable) {
+                    if(isEmailValid== true && isEmailAvailable==false){
                     nextStepBtn.disabled = false;
                 }
             });
+            //new
+            // document.getElementById('email').addEventListener('blur', async function () {
+            //     const email = this.value.trim();
+            //     const emailError = document.getElementById('emailError');
+            //     const emailAvailabilityError = document.getElementById('emailAvailabilityError');
+            //     const nextStepBtn = document.getElementById('nextStepBtn');
+
+            //     console.log('Email input value:', email);
+
+            //     // Reset error messages and validation flags
+            //     emailError.style.display = 'none';
+            //     emailAvailabilityError.style.display = 'none';
+            //     this.classList.remove('invalid');
+            //     isEmailValid = false;
+            //     isEmailAvailable = false;
+
+            //     // Disable the next button initially
+            //     nextStepBtn.disabled = true;
+
+            //     // Basic email validation
+            //     if (email && !isValidEmail(email)) {
+            //         emailError.style.display = 'block';
+            //         this.classList.add('invalid');
+            //     } else {
+            //         isEmailValid = true;
+            //         try {
+            //             const response = await axios.get(`/checkEmailAvailability?email=${email}`);
+            //             //console.log('Response from server:', response);
+
+            //             if (!response.data.available) {
+            //                 emailAvailabilityError.textContent = response.data.message; // Set the error message
+            //                 emailAvailabilityError.style.display = 'block';
+            //                 this.classList.add('invalid');
+            //             } else {
+            //                 isEmailAvailable = true;
+            //             }
+            //         } catch (error) {
+            //             console.error('Error checking email availability:', error);
+            //         }
+            //     }
+
+            //     console.log("isEmailValid", isEmailValid);
+            //     console.log("isEmailAvailable", isEmailAvailable);
+
+            //     // Enable the Next Step button if email is valid and available
+            //     if (isEmailValid && isEmailAvailable) {
+            //         nextStepBtn.disabled = false;
+            //     }
+            // });
 
 
             function isValidEmail($email) {
