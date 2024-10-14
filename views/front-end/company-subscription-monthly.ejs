@@ -300,7 +300,8 @@
             var subscriptionType = '<%= subscriptionType%>';
            // console.log("subscriptionType", subscriptionType);
             let currentStep = 1;
-
+            let isEmailValid = false;
+            let isEmailAvailable = false;
 
 
 
@@ -337,10 +338,27 @@
                 showStep(currentStep);
             }
 
-            function validateStep(step) {
+            async function validateStep(step) {
                 if (step === 1) {
                     const email = document.getElementById('email').value.trim();
-                    if (!email) return false;
+                    //if (!email) return false;
+
+
+                    if (!email || !isValidEmail(email)) {
+                        emailError.style.display = 'block';
+                        nextStepBtn.disabled = true;  
+                        return false;
+                    } else {
+                        emailError.style.display = 'none';
+                    }
+
+                    if (!isEmailValid || !isEmailAvailable) {
+                        emailError.style.display = 'block';  
+                        nextStepBtn.disabled = true;
+                        return false;
+                    } else {
+                        emailError.style.display = 'none';  
+                    }
 
                     const password = document.getElementById('register_password').value;
                     const confirmPassword = document.getElementById('register_confirm_password').value;
@@ -352,16 +370,28 @@
                     }
                     return true;
                 } else if (step === 2) {
-                    return document.getElementById('company_name').value.trim() &&
-                        document.getElementById('main_address').value.trim() &&
+                    const parentId = $('#parent_id').val().trim();
+                    const companyName = document.getElementById('company_name').value.trim();
+                    const mainAddressCountry = document.getElementById('main_address_country').value;
+
+                    if (!companyName || !mainAddressCountry) {
+                        nextStepBtn.disabled = true; 
+                        return false;
+                    }
+
+                    const companyExists = await checkCompanyExistence(parentId, companyName, mainAddressCountry);
+                    if (!companyExists) {
+                        return false; 
+                    }
+                    return document.getElementById('main_address').value.trim() &&
                         document.getElementById('comp_email').value.trim() &&
                         document.getElementById('comp_phone').value.trim() &&
-                        document.getElementById('main_address_country').value &&
                         document.getElementById('main_address_pin_code').value.trim();
                 }
-                return true;
-            }
 
+                return true; 
+            }
+                        
             // document.getElementById('email').addEventListener('blur', async function () {
             //     const email = this.value.trim();
             //     if (email) {
@@ -914,24 +944,23 @@
                 }
             });
 
-            //old
             document.getElementById('email').addEventListener('blur', async function () {
                 const email = this.value.trim();
                 const emailError = document.getElementById('emailError');
                 const emailAvailabilityError = document.getElementById('emailAvailabilityError');
                 const nextStepBtn = document.getElementById('nextStepBtn');
+                console.log("nextStepBtn",nextStepBtn);
+                
 
-                // Reset error messages and validation flags
                 emailError.style.display = 'none';
                 emailAvailabilityError.style.display = 'none';
                 this.classList.remove('invalid');
                 isEmailValid = false;
                 isEmailAvailable = false;
 
-                // Disable the next button initially
                 nextStepBtn.disabled = true;
 
-                // Basic email validation
+
                 if (email && !isValidEmail(email)) {
                     emailError.style.display = 'block';
                     this.classList.add('invalid');
@@ -954,66 +983,30 @@
                 console.log("isEmailAvailable", isEmailAvailable);
 
                 // Enable the Next Step button if email is valid and available
-                // if (isEmailValid && isEmailAvailable) {
-                    if(isEmailValid== true && isEmailAvailable==false){
+                
+                console.log("Disabling button, isEmailValid:", isEmailValid, "isEmailAvailable:", isEmailAvailable);
+                // if(isEmailValid == true && isEmailAvailable == false){
+                //     nextStepBtn.disabled = true;
+                //     console.log("Button is disabled");
+                // }
+                 
+                console.log("isEmailValid:", isEmailValid);
+                console.log("isEmailAvailable:", isEmailAvailable);
+                if (isEmailValid == true && isEmailAvailable == false) {
+                    nextStepBtn.disabled = true;
+                    console.log("Button is disabled");
+                } else {
                     nextStepBtn.disabled = false;
+                    console.log("Button is enabled");
                 }
-            });
-            //new
-            // document.getElementById('email').addEventListener('blur', async function () {
-            //     const email = this.value.trim();
-            //     const emailError = document.getElementById('emailError');
-            //     const emailAvailabilityError = document.getElementById('emailAvailabilityError');
-            //     const nextStepBtn = document.getElementById('nextStepBtn');
-
-            //     console.log('Email input value:', email);
-
-            //     // Reset error messages and validation flags
-            //     emailError.style.display = 'none';
-            //     emailAvailabilityError.style.display = 'none';
-            //     this.classList.remove('invalid');
-            //     isEmailValid = false;
-            //     isEmailAvailable = false;
-
-            //     // Disable the next button initially
-            //     nextStepBtn.disabled = true;
-
-            //     // Basic email validation
-            //     if (email && !isValidEmail(email)) {
-            //         emailError.style.display = 'block';
-            //         this.classList.add('invalid');
-            //     } else {
-            //         isEmailValid = true;
-            //         try {
-            //             const response = await axios.get(`/checkEmailAvailability?email=${email}`);
-            //             //console.log('Response from server:', response);
-
-            //             if (!response.data.available) {
-            //                 emailAvailabilityError.textContent = response.data.message; // Set the error message
-            //                 emailAvailabilityError.style.display = 'block';
-            //                 this.classList.add('invalid');
-            //             } else {
-            //                 isEmailAvailable = true;
-            //             }
-            //         } catch (error) {
-            //             console.error('Error checking email availability:', error);
-            //         }
-            //     }
-
-            //     console.log("isEmailValid", isEmailValid);
-            //     console.log("isEmailAvailable", isEmailAvailable);
-
-            //     // Enable the Next Step button if email is valid and available
-            //     if (isEmailValid && isEmailAvailable) {
-            //         nextStepBtn.disabled = false;
-            //     }
-            // });
-
+    });
 
             function isValidEmail($email) {
                 var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
                 return emailReg.test($email);
             }
+
+
 
 
             document.getElementById('comp_phone').addEventListener('input', function (e) {
