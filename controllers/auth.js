@@ -17066,15 +17066,18 @@ exports.createexternalSubscription = async (req, res) => {
                         postal_code: zip,
                     },
                 });
-            } else {
-                customer = customer.data[0];
-            }
-
+                
             await stripe.paymentMethods.attach(paymentMethod.id, { customer: customer.id });
 
             await stripe.customers.update(customer.id, {
                 invoice_settings: { default_payment_method: paymentMethod.id },
             });
+            } else {
+                customer = customer.data[0];
+                console.log("customeremail",customer);
+                
+            }
+
         } catch (error) {
             return res.status(500).send({ error: 'Failed to create/retrieve customer' });
         }
@@ -17195,6 +17198,8 @@ exports.createexternalSubscription = async (req, res) => {
         return res.status(500).send({ error: 'An error occurred while creating the subscription.' });
     }
 };
+
+
 
 exports.externalRegistration = async (req, res) => {
     const { first_name, last_name, email, register_password, phone, address, city, state, zip, planId, billingCycle, memberCount, subscriptionId, user_state, user_country, register_confirm_password } = req.body;
