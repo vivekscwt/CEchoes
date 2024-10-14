@@ -351,13 +351,11 @@
                     } else {
                         emailError.style.display = 'none';
                     }
-
-                    if (!isEmailValid || !isEmailAvailable) {
-                        emailError.style.display = 'block';  
-                        nextStepBtn.disabled = true;
-                        return false;
+                    if (isEmailAvailable == false) {
+                        nextStepBtn.disabled = true; 
+                        console.log("Button is disabled due to unavailable email");
                     } else {
-                        emailError.style.display = 'none';  
+                        nextStepBtn.disabled = false; // Button should be enabled
                     }
 
                     const password = document.getElementById('register_password').value;

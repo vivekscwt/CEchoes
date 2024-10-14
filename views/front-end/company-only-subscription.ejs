@@ -352,6 +352,9 @@
                     const email = document.getElementById('email').value.trim();
                     if (!email) return false;
 
+                    return document.getElementById('user_country').value.trim() &&
+                        document.getElementById('user_state').value.trim();
+
                     return true;
                 } else if (step === 2) {
                     return document.getElementById('company_name').value.trim() &&
