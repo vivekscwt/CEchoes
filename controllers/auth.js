@@ -17056,6 +17056,7 @@ exports.createexternalSubscription = async (req, res) => {
         try {
             customer = await stripe.customers.list({ email });
             if (customer.data.length === 0) {
+                console.log("no customer");
                 customer = await stripe.customers.create({
                     email: email,
                     name: name,
@@ -17067,16 +17068,17 @@ exports.createexternalSubscription = async (req, res) => {
                     },
                 });
                 
+            } else {
+                console.log("have customer");
+                customer = customer.data[0];
+                console.log("customeremail",customer);
+                
+            }
             await stripe.paymentMethods.attach(paymentMethod.id, { customer: customer.id });
 
             await stripe.customers.update(customer.id, {
                 invoice_settings: { default_payment_method: paymentMethod.id },
             });
-            } else {
-                customer = customer.data[0];
-                console.log("customeremail",customer);
-                
-            }
 
         } catch (error) {
             return res.status(500).send({ error: 'Failed to create/retrieve customer' });
@@ -17086,7 +17088,7 @@ exports.createexternalSubscription = async (req, res) => {
         if (!priceId) {
             return res.status(500).send({ error: 'Failed to create price for the plan' });
         }
-console.log("customer.id",customer.id);
+        console.log("customer.id",customer.id);
 
         let subscription;
         try {
