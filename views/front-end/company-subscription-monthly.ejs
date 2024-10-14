@@ -655,6 +655,8 @@
                                 title: 'Payment Error',
                                 text: error.message || 'There was an error processing your payment. Please try again later.',
                                 confirmButtonText: 'OK',
+                                timer: 3000, // Dismiss after 3 seconds
+                                timerProgressBar: true,
                             });
                         } else if (paymentIntent.status === 'succeeded') {
                             Swal.fire({
@@ -671,6 +673,8 @@
                                 title: 'Payment Error',
                                 text: 'There was an unexpected issue with your payment. Please try again later.',
                                 confirmButtonText: 'OK',
+                                timer: 3000, // Dismiss after 3 seconds
+                                timerProgressBar: true,
                             });
                         }
                     } else {
@@ -679,6 +683,8 @@
                             title: 'Payment Error',
                             text: data.error ? data.error.message : 'There was an error processing your payment. Please try again later.',
                             confirmButtonText: 'OK',
+                            timer: 3000, // Dismiss after 3 seconds
+                            timerProgressBar: true,
                         });
                     }
 
@@ -689,6 +695,8 @@
                         title: 'Payment Error',
                         text: 'There was an error processing your payment. Please try again later.',
                         confirmButtonText: 'OK',
+                        timer: 3000, // Dismiss after 3 seconds
+                        timerProgressBar: true,
                     });
                 } finally {
                     document.querySelector('button').disabled = false;
