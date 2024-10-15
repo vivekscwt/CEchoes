@@ -23645,16 +23645,35 @@ exports.deletemanagementuser = async (req, res) => {
 
 /////////newly subscriptionss////
 
+// const getPlanFromDatabase = async (planId) => {
+//     const sql = 'SELECT name, description, monthly_price, yearly_price, currency,per_user_price FROM plan_management WHERE id = ?';
+//     const result = await queryAsync(sql, [planId]);
+//     console.log(`Database query result for planId ${planId}:`, result);
+
+//     if (result.length === 0) {
+//         throw new Error(`Plan with ID ${planId} not found`);
+//     }
+
+//     return result[0];
+// };
+
 const getPlanFromDatabase = async (planId) => {
-    const sql = 'SELECT name, description, monthly_price, yearly_price, currency,per_user_price FROM plan_management WHERE id = ?';
+    const sql = 'SELECT name, description, monthly_price, yearly_price, currency, per_user_price FROM plan_management WHERE id = ?';
     const result = await queryAsync(sql, [planId]);
-    console.log(`Database query result for planId ${planId}:`, result);
 
     if (result.length === 0) {
         throw new Error(`Plan with ID ${planId} not found`);
     }
 
-    return result[0];
+    let plan = result[0];
+
+    const nameMatch = plan.description.match(/<h4>(.*?)<\/h4>/);
+    if (nameMatch) {
+        plan.name = nameMatch[1]; 
+    }
+console.log("planvaluess",plan);
+
+    return plan;
 };
 
 // const createStripeProductAndPrice = async (plan, billingCycle, memberCount) => {
