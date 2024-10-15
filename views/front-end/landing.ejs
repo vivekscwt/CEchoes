@@ -451,8 +451,8 @@
                 <div class="featured-object-wrap position-relative">
                   <h2 class="main-head">Featured <span>Companies</span></h2>
                   <% if(featured_comps && featured_comps.length>0) { %>
-                    <% featured_comps.forEach( company=> { %>
                   <div class="featured-slider">
+                    <% featured_comps.forEach( company=> { %>
                         <div class="item">
                           <div class="feature-box">
                             <a href="company/<%= company.slug %>"><img src="/<%= company.logo %>" alt="img" width="118"
@@ -470,8 +470,8 @@
                             </p>
                           </div>
                         </div>
+                        <% }) %>
                   </div>
-                  <% }) %>
                           <% } else { %>
                             <h1>There is no such Company</h1>
                             <% } %>
