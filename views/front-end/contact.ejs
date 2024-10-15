@@ -222,20 +222,22 @@
             'US': 'United States',
           };
 
+          const countryDropdown = document.querySelector('.country-dropdown');
+          if (countryCode == 'UK') {
+            countryDropdown.value = 'UK';
+        } else if (countryCode == 'JP') {
+            countryDropdown.value = 'JP';
+        } else if (countryCode == 'All') {
+            countryDropdown.value = 'US'; // Set default to 'US' when 'All' is the selected code
+        } else {
+            countryDropdown.value = 'US';
+        }
           // const countryDropdown = document.querySelector('.country-dropdown');
-          // if (countryCode == 'UK') {
-          //   countryDropdown.value = 'UK';
-          // } else if (countryCode == 'JP') {
-          //   countryDropdown.value = 'JP';
+          // if (countryCode in countryMap) {
+          //   countryDropdown.value = countryCode;
           // } else {
           //   countryDropdown.value = 'US';
           // }
-          const countryDropdown = document.querySelector('.country-dropdown');
-          if (countryCode in countryMap) {
-            countryDropdown.value = countryCode;
-          } else {
-            countryDropdown.value = 'US';
-          }
 
           function setCookie(name, value, days) {
             const d = new Date();
@@ -252,7 +254,10 @@
             // console.log("Selected country name:", selectedCountryName);
             // setCookie('countryCode', selectedCountryCode, 365);
 
-            const selectedCountryCode = event.target.value;
+            let selectedCountryCode = event.target.value;
+            if (selectedCountryCode === 'All') {
+                selectedCountryCode = 'US';
+            }
             const selectedCountryName = countryMap[selectedCountryCode] || 'India';
             console.log("Selected country code:", selectedCountryCode);
             console.log("Selected country names:", selectedCountryName);
