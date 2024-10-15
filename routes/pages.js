@@ -11323,6 +11323,16 @@ router.get('/uk-edit-contacts', checkLoggedIn, (req, res) => {
                 // console.log("socials1",socials1);
                 // console.log("socials2",socials2);
 
+                const contact_address_sql = `SELECT * FROM contact_address`;
+                db.query(contact_address_sql, (errors, address_results, fieldss) => {
+                    var address = address_results[0];
+                    var address1 = address_results[1];
+                    var address2 = address_results[2];
+
+                    console.log("address", address);
+                    console.log("address11", address1);
+              
+
                 //Render the 'update-contact' EJS view and pass the data
                 res.render('pages/uk-update-contact', {
                     menu_active_id: 'pages',
@@ -11333,8 +11343,12 @@ router.get('/uk-edit-contacts', checkLoggedIn, (req, res) => {
                     contacts2,
                     socials,
                     socials1,
-                    socials2
+                    socials2,
+                    address,
+                    address1,
+                    address2
                 });
+            })
             })
         })
 
@@ -11370,6 +11384,15 @@ router.get('/jp-edit-contacts', checkLoggedIn, (req, res) => {
                 // console.log("socials1",socials1);
                 // console.log("socials2",socials2);
 
+                const contact_address_sql = `SELECT * FROM contact_address`;
+                db.query(contact_address_sql, (errors, address_results, fieldss) => {
+                    var address = address_results[0];
+                    var address1 = address_results[1];
+                    var address2 = address_results[2];
+
+                    console.log("address", address);
+           
+
                 //Render the 'update-contact' EJS view and pass the data
                 res.render('pages/jp-update-contact', {
                     menu_active_id: 'pages',
@@ -11380,8 +11403,12 @@ router.get('/jp-edit-contacts', checkLoggedIn, (req, res) => {
                     contacts2,
                     socials,
                     socials1,
-                    socials2
+                    socials2,
+                    address,
+                    address1,
+                    address2
                 });
+            })
             })
         })
         //})
@@ -11391,6 +11418,8 @@ router.get('/jp-edit-contacts', checkLoggedIn, (req, res) => {
         res.status(500).send('An error occurred');
     }
 });
+
+
 
 //Edit Home Page
 // router.get('/edit-home', checkLoggedIn, async (req, res) => {

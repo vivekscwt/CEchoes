@@ -4133,8 +4133,8 @@ exports.editCustomerReviewReply = async (req, res) => {
 
 exports.updateContacts = async (req, res) => {
     //const formdata = JSON.parse(req.body.formData);
-    console.log('Request Form DATA:', req.body.whatsapp_no);
-    const { contacts_id, social_id, whatsapp_no, phone_no, email, title, meta_title, meta_desc, meta_keyword, fb_link, twitter_link, linkedin_link, instagram_link, youtube_link } = req.body
+    console.log('Request Form DATA:', req.body);
+    const { contacts_id, social_id, whatsapp_no, phone_no, email, title, meta_title, meta_desc, meta_keyword, fb_link, twitter_link, linkedin_link, instagram_link, youtube_link,address1,address2 } = req.body
     const contact_sql = `UPDATE contacts SET whatsapp_no=?,phone_no=?,email=?,title=?,meta_title=?,meta_desc=?,meta_keyword=? WHERE id = ?`;
     const contact_data = [whatsapp_no, phone_no, email, title, meta_title, meta_desc, meta_keyword, contacts_id];
     db.query(contact_sql, contact_data, (err, result) => {
@@ -4147,6 +4147,8 @@ exports.updateContacts = async (req, res) => {
                     message: 'Error updating social links: ' + socials_err
                 });
             }
+            const address_sql = `UPDATE contact_address SET address1=?,address2=? WHERE country=?`;
+            const address_data = [address1, address2, req.body.country_name];
             db.query(address_sql, address_data, (address_err, address_result) => {
                 if (address_err) {
                     return res.send({
