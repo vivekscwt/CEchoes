@@ -2295,7 +2295,8 @@ router.get('/business', checkCookieValue, async (req, res) => {
 
         const [globalPageMeta, getplans, getSubscribedUsers] = await Promise.all([
             comFunction2.getPageMetaValues('global'),
-            comFunction2.getplans(country_name),
+            // comFunction2.getplans(country_name),
+            comFunction2.getBusinessplans(country_name),
             comFunction2.getSubscribedUsers(user_id)
         ]);
         console.log("getplans", getplans);
@@ -10111,9 +10112,17 @@ router.get('/edit-company/:id', checkLoggedIn, async (req, res) => {
         }));
 
 
-
-
-
+        var planmanagement_query = `SELECT * FROM plan_management`;
+        var planmanagement_val = await queryAsync(planmanagement_query);
+        planmanagement_val.forEach((plan) => {
+            const nameMatch = plan.description.match(/<h4>(.*?)<\/h4>/);
+            if (nameMatch) {
+                plan.name = nameMatch[1]; 
+            }
+        });
+        
+        console.log("Updated planmanagement_val", planmanagement_val);
+        
         // Render the 'edit-user' EJS view and pass the data
         // res.json({
         //     menu_active_id: 'company',
@@ -10137,7 +10146,8 @@ router.get('/edit-company/:id', checkLoggedIn, async (req, res) => {
             statevalue: statevalue,
             getStatesByCountryID: getStatesByCountryID,
             getChildCompany: getChildCompany,
-            countries: countries
+            countries: countries,
+            planmanagement_val: planmanagement_val
             //countries: countries,
             //states: states            
         });

@@ -3085,7 +3085,7 @@ WHERE discussions.discussion_status = 1
 `;
 
 if (country) {
-  sql += ` AND (discussions.location = "${country}" OR discussions.location = "Worldwide")`;
+  sql += ` AND (discussions.location = "${country}")`;
 }
 
 sql += ' ORDER BY discussions.id DESC;';
@@ -8072,6 +8072,119 @@ async function getplans(userCountry) {
   }
 }
 
+// async function getBusinessplans(userCountry) {
+//   try {
+//     const basic_query = `SELECT * FROM plan_management WHERE name = 'Basic'`;
+//     const standard_query = `SELECT * FROM plan_management WHERE name = 'standard'`;
+//     const advanced_query = `SELECT * FROM plan_management WHERE name = 'advanced'`;
+//     const premium_query = `SELECT * FROM plan_management WHERE name = 'premium'`;
+//     const enterprise_query = `SELECT * FROM plan_management WHERE name = 'enterprise'`;
+
+//     const [
+//       basic_value,
+//       standard_value,
+//       advanced_value,
+//       premium_value,
+//       enterprise_value
+//     ] = await Promise.all([
+//       query(basic_query),
+//       query(standard_query),
+//       query(advanced_query),
+//       query(premium_query),
+//       query(enterprise_query)
+//     ]);
+
+//     const basic_val = basic_value.length > 0 ? basic_value[0] : null;
+//     const standard_val = standard_value.length > 0 ? standard_value[0] : null;
+//     const advanced_val = advanced_value.length > 0 ? advanced_value[0] : null;
+//     const premium_val = premium_value.length > 0 ? premium_value[0] : null;
+//     const enterprise_val = enterprise_value.length > 0 ? enterprise_value[0] : null;
+
+//     const convertedPlans = await Promise.all([
+//       convertPrices(basic_val, userCountry),
+//       convertPrices(standard_val, userCountry),
+//       convertPrices(advanced_val, userCountry),
+//       convertPrices(premium_val, userCountry),
+//       convertPrices(enterprise_val, userCountry)
+//     ]);
+
+//     return {
+//       basic_val: convertedPlans[0],
+//       standard_val: convertedPlans[1],
+//       advanced_val: convertedPlans[2],
+//       premium_val: convertedPlans[3],
+//       enterprise_val: convertedPlans[4]
+//     };
+//   } catch (error) {
+//     console.error('Error fetching plans:', error);
+//     throw new Error('An error occurred while fetching plans');
+//   }
+// }
+
+async function getBusinessplans(userCountry) {
+  try {
+    const basic_query = `SELECT * FROM plan_management WHERE name = 'Basic'`;
+    const standard_query = `SELECT * FROM plan_management WHERE name = 'standard'`;
+    const advanced_query = `SELECT * FROM plan_management WHERE name = 'advanced'`;
+    const premium_query = `SELECT * FROM plan_management WHERE name = 'premium'`;
+    const enterprise_query = `SELECT * FROM plan_management WHERE name = 'enterprise'`;
+
+    const [
+      basic_value,
+      standard_value,
+      advanced_value,
+      premium_value,
+      enterprise_value
+    ] = await Promise.all([
+      query(basic_query),
+      query(standard_query),
+      query(advanced_query),
+      query(premium_query),
+      query(enterprise_query)
+    ]);
+
+    const plans = [
+      basic_value.length > 0 ? basic_value[0] : null,
+      standard_value.length > 0 ? standard_value[0] : null,
+      advanced_value.length > 0 ? advanced_value[0] : null,
+      premium_value.length > 0 ? premium_value[0] : null,
+      enterprise_value.length > 0 ? enterprise_value[0] : null
+    ];
+
+    // Extract plan names from the description using regex
+    plans.forEach(plan => {
+      if (plan && plan.description) {
+        const nameMatch = plan.description.match(/<h4>(.*?)<\/h4>/);
+        if (nameMatch) {
+          plan.name = nameMatch[1]; 
+        }
+      }
+    });
+
+    const convertedPlans = await Promise.all([
+      convertPrices(plans[0], userCountry),
+      convertPrices(plans[1], userCountry),
+      convertPrices(plans[2], userCountry),
+      convertPrices(plans[3], userCountry),
+      convertPrices(plans[4], userCountry)
+    ]);
+    console.log("convertedPlans",convertedPlans);
+    
+
+    return {
+      basic_val: convertedPlans[0],
+      standard_val: convertedPlans[1],
+      advanced_val: convertedPlans[2],
+      premium_val: convertedPlans[3],
+      enterprise_val: convertedPlans[4]
+    };
+  } catch (error) {
+    console.error('Error fetching plans:', error);
+    throw new Error('An error occurred while fetching plans');
+  }
+}
+
+
 async function getCurrency() {
   const getcurrencyquery = `SELECT * FROM currency_conversion`;
   const getcurrencyvalue = await query(getcurrencyquery);
@@ -9356,6 +9469,7 @@ module.exports = {
   getcountrybyIp,
   getcountrynamebyIp,
   getplans,
+  getBusinessplans,
   getSubscribedUsers,
   getCompanyCategoriess,
   getCompanyCategoryBuID,

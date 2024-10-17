@@ -5719,7 +5719,7 @@ exports.updatePrivacy = (req, res) => {
 
 // Update Disclaimer
 exports.updateDisclaimer = (req, res) => {
-    //console.log('Privacy', req.body);
+    console.log('updateDisclaimer', req.body);
 
     const { common_id, title, meta_title, meta_desc, keyword, content, country_name } = req.body;
 
