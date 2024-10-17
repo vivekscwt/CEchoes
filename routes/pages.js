@@ -12378,7 +12378,7 @@ router.get('/edit-disclaimer', checkLoggedIn, (req, res) => {
                     });
                 });
                 const [meta_values_array, meta_values_array1, meta_values_array2] = await Promise.all(metaPromises);
-                console.log(meta_values_array);
+                console.log("meta_values_array",meta_values_array);
                 res.render('pages/update-disclaimer', {
                     menu_active_id: 'pages',
                     page_title: 'Update Disclaimer',
@@ -12432,7 +12432,7 @@ router.get('/uk-edit-disclaimer', checkLoggedIn, (req, res) => {
                     });
                 });
                 const [meta_values_array, meta_values_array1, meta_values_array2] = await Promise.all(metaPromises);
-                console.log("meta_values_array", meta_values_array);
+                console.log("meta_values_array1",meta_values_array1);
                 res.render('pages/uk-edit-disclaimer', {
                     menu_active_id: 'pages',
                     page_title: 'Update Disclaimer',
@@ -12486,7 +12486,7 @@ router.get('/jp-edit-disclaimer', checkLoggedIn, (req, res) => {
                     });
                 });
                 const [meta_values_array, meta_values_array1, meta_values_array2] = await Promise.all(metaPromises);
-                console.log(meta_values_array);
+                console.log("meta_values_array2",meta_values_array2);
                 res.render('pages/jp-edit-disclaimer', {
                     menu_active_id: 'pages',
                     page_title: 'Update Disclaimer',
