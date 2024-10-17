@@ -12398,54 +12398,96 @@ router.get('/edit-disclaimer', checkLoggedIn, (req, res) => {
     }
 });
 
+// router.get('/uk-edit-disclaimer', checkLoggedIn, (req, res) => {
+//     try {
+//         const encodedUserData = req.cookies.user;
+//         const currentUserData = JSON.parse(encodedUserData);
+//         const sql = `SELECT * FROM page_info where secret_Key = 'disclaimer' `;
+//         db.query(sql, (err, results, fields) => {
+//             if (err) throw err;
+//             //const common = results[0];
+//             const common1 = results[1];
+//             // const common2 = results[2];
+
+//             const meta_sql = `SELECT * FROM page_meta where page_id = ${common1.id}`;
+//             db.query(meta_sql, async (meta_err, _meta_result) => {
+//                 if (meta_err) throw meta_err;
+//                 const metaPromises = [common1].map((homeEntry) => {
+//                     return new Promise((resolve, reject) => {
+//                         if (!homeEntry) {
+//                             resolve(null);
+//                             return;
+//                         }
+//                         const meta_sql = `SELECT * FROM page_meta WHERE page_id = ${homeEntry.id}`;
+//                         db.query(meta_sql, (meta_err, _meta_result) => {
+//                             if (meta_err) return reject(meta_err);
+
+//                             const meta_values = _meta_result;
+//                             let meta_values_array1 = {};
+//                             meta_values.forEach((item) => {
+//                                 meta_values_array1[item.page_meta_key] = item.page_meta_value;
+//                             });
+//                             resolve(meta_values_array1);
+//                         });
+//                     });
+//                 });
+//                 const [meta_values_array, meta_values_array1, meta_values_array2] = await Promise.all(metaPromises);
+//                 console.log("meta_values_array1",meta_values_array1);
+//                 res.render('pages/uk-edit-disclaimer', {
+//                     menu_active_id: 'pages',
+//                     page_title: 'Update Disclaimer',
+//                     currentUserData,
+//                     // common,
+//                     common1,
+//                     //common2,
+//                     //meta_values_array,
+//                     meta_values_array1,
+//                     // meta_values_array2
+//                 });
+//             })
+//         })
+//     } catch (err) {
+//         console.error(err);
+//         res.status(500).send('An error occurred');
+//     }
+// });
+
 router.get('/uk-edit-disclaimer', checkLoggedIn, (req, res) => {
     try {
         const encodedUserData = req.cookies.user;
         const currentUserData = JSON.parse(encodedUserData);
-        const sql = `SELECT * FROM page_info where secret_Key = 'disclaimer' `;
+
+        const sql = `SELECT * FROM page_info WHERE secret_Key = 'disclaimer'`;
         db.query(sql, (err, results, fields) => {
             if (err) throw err;
-            //const common = results[0];
-            const common1 = results[1];
-            // const common2 = results[2];
 
-            const meta_sql = `SELECT * FROM page_meta where page_id = ${common1.id}`;
-            db.query(meta_sql, async (meta_err, _meta_result) => {
+            const common1 = results[1]; // Assuming this is the record you want to use
+
+            if (!common1) {
+                return res.status(404).send('Disclaimer page not found');
+            }
+
+            // Query to get meta data for the selected page (common1)
+            const meta_sql = `SELECT * FROM page_meta WHERE page_id = ${common1.id}`;
+            db.query(meta_sql, async (meta_err, meta_result) => {
                 if (meta_err) throw meta_err;
-                const metaPromises = [common1].map((homeEntry) => {
-                    return new Promise((resolve, reject) => {
-                        if (!homeEntry) {
-                            resolve(null);
-                            return;
-                        }
-                        const meta_sql = `SELECT * FROM page_meta WHERE page_id = ${homeEntry.id}`;
-                        db.query(meta_sql, (meta_err, _meta_result) => {
-                            if (meta_err) return reject(meta_err);
 
-                            const meta_values = _meta_result;
-                            let meta_values_array1 = {};
-                            meta_values.forEach((item) => {
-                                meta_values_array1[item.page_meta_key] = item.page_meta_value;
-                            });
-                            resolve(meta_values_array1);
-                        });
-                    });
+                // Extract meta values for common1
+                let meta_values_array1 = {};
+                meta_result.forEach((item) => {
+                    meta_values_array1[item.page_meta_key] = item.page_meta_value;
                 });
-                const [meta_values_array, meta_values_array1, meta_values_array2] = await Promise.all(metaPromises);
-                console.log("meta_values_array1",meta_values_array1);
+
+                // Render the page with the retrieved data
                 res.render('pages/uk-edit-disclaimer', {
                     menu_active_id: 'pages',
                     page_title: 'Update Disclaimer',
                     currentUserData,
-                    // common,
                     common1,
-                    //common2,
-                    //meta_values_array,
-                    meta_values_array1,
-                    // meta_values_array2
+                    meta_values_array1
                 });
-            })
-        })
+            });
+        });
     } catch (err) {
         console.error(err);
         res.status(500).send('An error occurred');
