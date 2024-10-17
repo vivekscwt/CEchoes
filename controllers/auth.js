@@ -5735,27 +5735,64 @@ exports.updateDisclaimer = (req, res) => {
                 }
             )
         } else {
-            if (check_result.length > 0) {
-                console.log("have value");
+            // if (check_result.length > 0) {
+            //     console.log("have value");
                 
+            //     const update_sql = `UPDATE page_meta SET page_meta_value = ? WHERE page_id = ? AND page_meta_key = ?`;
+            //     const update_data = [content, common_id, 'content'];
+            //     db.query(update_sql, update_data, (update_err, update_result) => {
+            //         if (update_err) throw update_err;
+            //         const title_sql = `UPDATE page_info SET title = ?, meta_title = ?, meta_desc = ?, meta_keyword = ?,country = ? WHERE id  = ?`;
+            //         const title_data = [title, meta_title, meta_desc, keyword, country_name, common_id];
+            //         //console.log(title_data);
+            //         db.query(title_sql, title_data, (title_err, title_result) => {
+            //             return res.send(
+            //                 {
+            //                     status: 'ok',
+            //                     data: '',
+            //                     message: 'Disclaimer updated successfully'
+            //                 }
+            //             )
+            //         })
+            //     })
+            // } 
+            if (check_result.length > 0) {
+                console.log("Have value");
+            
+                // Update `page_meta` table for `content`
                 const update_sql = `UPDATE page_meta SET page_meta_value = ? WHERE page_id = ? AND page_meta_key = ?`;
                 const update_data = [content, common_id, 'content'];
                 db.query(update_sql, update_data, (update_err, update_result) => {
                     if (update_err) throw update_err;
-                    const title_sql = `UPDATE page_info SET title = ?, meta_title = ?, meta_desc = ?, meta_keyword = ?,country = ? WHERE id  = ?`;
+            
+                    // Log the updated values for page_meta
+                    console.log("Updated `page_meta`: page_meta_value =", content, "for page_id =", common_id, "and page_meta_key = 'content'");
+            
+                    // Update `page_info` table for title, meta_title, meta_desc, meta_keyword, and country
+                    const title_sql = `UPDATE page_info SET title = ?, meta_title = ?, meta_desc = ?, meta_keyword = ?, country = ? WHERE id = ?`;
                     const title_data = [title, meta_title, meta_desc, keyword, country_name, common_id];
-                    //console.log(title_data);
+                    
                     db.query(title_sql, title_data, (title_err, title_result) => {
-                        return res.send(
-                            {
-                                status: 'ok',
-                                data: '',
-                                message: 'Disclaimer updated successfully'
-                            }
-                        )
-                    })
-                })
-            } else {
+                        if (title_err) throw title_err;
+            
+                        // Log the updated values for page_info
+                        console.log("Updated `page_info`: title =", title);
+                        console.log("Updated `page_info`: meta_title =", meta_title);
+                        console.log("Updated `page_info`: meta_desc =", meta_desc);
+                        console.log("Updated `page_info`: meta_keyword =", keyword);
+                        console.log("Updated `page_info`: country =", country_name);
+                        console.log("For page_info.id =", common_id);
+            
+                        return res.send({
+                            status: 'ok',
+                            data: '',
+                            message: 'Disclaimer updated successfully'
+                        });
+                    });
+                });
+            }
+            
+            else {
                 console.log("dont have value");
                 const insert_sql = `INSERT INTO page_meta (page_id , page_meta_key, page_meta_value) VALUES (?,?,?)`;
                 const insert_data = [common_id, 'content', content];
