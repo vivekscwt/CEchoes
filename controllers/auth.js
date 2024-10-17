@@ -5736,6 +5736,8 @@ exports.updateDisclaimer = (req, res) => {
             )
         } else {
             if (check_result.length > 0) {
+                console.log("have value");
+                
                 const update_sql = `UPDATE page_meta SET page_meta_value = ? WHERE page_id = ? AND page_meta_key = ?`;
                 const update_data = [content, common_id, 'content'];
                 db.query(update_sql, update_data, (update_err, update_result) => {
@@ -5754,6 +5756,7 @@ exports.updateDisclaimer = (req, res) => {
                     })
                 })
             } else {
+                console.log("dont have value");
                 const insert_sql = `INSERT INTO page_meta (page_id , page_meta_key, page_meta_value) VALUES (?,?,?)`;
                 const insert_data = [common_id, 'content', content];
                 db.query(insert_sql, insert_data, (insert_err, insert_result) => {
