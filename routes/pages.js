@@ -12477,6 +12477,8 @@ router.get('/uk-edit-disclaimer', checkLoggedIn, (req, res) => {
                 meta_result.forEach((item) => {
                     meta_values_array1[item.page_meta_key] = item.page_meta_value;
                 });
+                console.log("common1s",common1);
+                console.log("meta_values_array1a",meta_values_array1);
 
                 // Render the page with the retrieved data
                 res.render('pages/uk-edit-disclaimer', {
