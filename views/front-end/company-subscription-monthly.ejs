@@ -389,7 +389,68 @@
 
                 return true; 
             }
-                        
+                    
+            async function checkCompanyExistence(parentId, companyName, mainAddressCountry) {
+                    try {
+                        const response = await $.ajax({
+                            url: '/get-exist-company',
+                            method: 'GET',
+                            data: {
+                                parent_id: parentId,
+                                company_name: companyName,
+                                main_address_country: mainAddressCountry
+                            }
+                        });
+                        console.log("responsesss", response);
+                        console.log("responsesssstatus", response.status);
+
+                        if (response.status == 'err') {
+                            console.log("errr");
+                            $('#companyCheckResult').text(response.message).show();
+                            $('#nextStepBtn').prop('disabled', true); // Disable next button if company exists
+                        } else {
+                            console.log("rightttt");
+                            $('#companyCheckResult').hide();
+                            validateForm1(); // Re-validate form after company check
+                        }
+                    } catch (error) {
+                        console.error('Error checking company existence:', error);
+                        // Handle error scenario if needed
+                    }
+                }
+                function validateForm1() {
+                    const parentId = $('#parent_id').val().trim();
+                    const companyName = $('#company_name').val().trim();
+                    const mainAddress = $('#main_address').val().trim();
+                    const companyEmail = $('#comp_email').val().trim();
+                    const companyPhone = $('#comp_phone').val().trim();
+                    const mainAddressCountry = $('#main_address_country').val().trim();
+                    const mainAddressPinCode = $('#main_address_pin_code').val().trim();
+
+                    // Validate individual fields if required
+                    const isParentIdValid = parentId.length > 0;
+                    const isCompanyNameValid = companyName.length > 0;
+                    const isMainAddressValid = mainAddress.length > 0;
+                    const isCompanyEmailValid = isValidEmail(companyEmail); // Implement isValidEmail function
+                    const isCompanyPhoneValid = companyPhone.length > 0;
+                    const isMainAddressCountryValid = mainAddressCountry.length > 0;
+                    const isMainAddressPinCodeValid = mainAddressPinCode.length > 0;
+
+                    // Display errors if any field is invalid
+                    $('#parent_id').toggleClass('invalid', !isParentIdValid);
+                    $('#company_name').toggleClass('invalid', !isCompanyNameValid);
+                    $('#main_address').toggleClass('invalid', !isMainAddressValid);
+                    $('#comp_email').toggleClass('invalid', !isCompanyEmailValid);
+                    $('#comp_phone').toggleClass('invalid', !isCompanyPhoneValid);
+                    $('#main_address_country').toggleClass('invalid', !isMainAddressCountryValid);
+                    $('#main_address_pin_code').toggleClass('invalid', !isMainAddressPinCodeValid);
+
+                    // Enable Next button if all fields are valid
+                    const isFormValid = isParentIdValid && isCompanyNameValid && isMainAddressValid &&
+                        isCompanyEmailValid && isCompanyPhoneValid && isMainAddressCountryValid && isMainAddressPinCodeValid;
+                    $('#nextStepBtn').prop('disabled', !isFormValid);
+                }
+
             // document.getElementById('email').addEventListener('blur', async function () {
             //     const email = this.value.trim();
             //     if (email) {
@@ -683,8 +744,10 @@
                                 title: 'Payment Error',
                                 text: error.message || 'There was an error processing your payment. Please try again later.',
                                 confirmButtonText: 'OK',
-                                timer: 3000, // Dismiss after 3 seconds
+                                timer: 3000, 
                                 timerProgressBar: true,
+                            }).then(() => {
+                                enableFormFields();
                             });
                         } else if (paymentIntent.status === 'succeeded') {
                             Swal.fire({
@@ -703,6 +766,8 @@
                                 confirmButtonText: 'OK',
                                 timer: 3000, // Dismiss after 3 seconds
                                 timerProgressBar: true,
+                            }).then(() => {
+                                enableFormFields();
                             });
                         }
                     } else {
@@ -713,6 +778,8 @@
                             confirmButtonText: 'OK',
                             timer: 3000, // Dismiss after 3 seconds
                             timerProgressBar: true,
+                        }).then(() => {
+                            enableFormFields();
                         });
                     }
 
@@ -725,6 +792,8 @@
                         confirmButtonText: 'OK',
                         timer: 3000, // Dismiss after 3 seconds
                         timerProgressBar: true,
+                    }).then(() => {
+                        enableFormFields();
                     });
                 } finally {
                     document.querySelector('button').disabled = false;
@@ -738,7 +807,11 @@
 
 
 
-
+            function enableFormFields() {
+                document.getElementById('pay-now').disabled = false;
+                document.getElementById('wait-message-container').disabled = true;
+                document.getElementById('error-message').disabled = true;
+            }
 
 
             // async function handleConfirmation(confirmed) {
