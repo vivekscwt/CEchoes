@@ -12409,7 +12409,7 @@ router.get('/uk-edit-disclaimer', checkLoggedIn, (req, res) => {
             const common1 = results[1];
             const common2 = results[2];
 
-            const meta_sql = `SELECT * FROM page_meta where page_id = ${common.id}`;
+            const meta_sql = `SELECT * FROM page_meta where page_id = ${common1.id}`;
             db.query(meta_sql, async (meta_err, _meta_result) => {
                 if (meta_err) throw meta_err;
                 const metaPromises = [common, common1, common2].map((homeEntry) => {
@@ -12423,11 +12423,11 @@ router.get('/uk-edit-disclaimer', checkLoggedIn, (req, res) => {
                             if (meta_err) return reject(meta_err);
 
                             const meta_values = _meta_result;
-                            let meta_values_array = {};
+                            let meta_values_array1 = {};
                             meta_values.forEach((item) => {
-                                meta_values_array[item.page_meta_key] = item.page_meta_value;
+                                meta_values_array1[item.page_meta_key] = item.page_meta_value;
                             });
-                            resolve(meta_values_array);
+                            resolve(meta_values_array1);
                         });
                     });
                 });
@@ -12463,7 +12463,7 @@ router.get('/jp-edit-disclaimer', checkLoggedIn, (req, res) => {
             const common1 = results[1];
             const common2 = results[2];
 
-            const meta_sql = `SELECT * FROM page_meta where page_id = ${common.id}`;
+            const meta_sql = `SELECT * FROM page_meta where page_id = ${common2.id}`;
             db.query(meta_sql, async (meta_err, _meta_result) => {
                 if (meta_err) throw meta_err;
                 const metaPromises = [common, common1, common2].map((homeEntry) => {
@@ -12477,11 +12477,11 @@ router.get('/jp-edit-disclaimer', checkLoggedIn, (req, res) => {
                             if (meta_err) return reject(meta_err);
 
                             const meta_values = _meta_result;
-                            let meta_values_array = {};
+                            let meta_values_array2 = {};
                             meta_values.forEach((item) => {
-                                meta_values_array[item.page_meta_key] = item.page_meta_value;
+                                meta_values_array2[item.page_meta_key] = item.page_meta_value;
                             });
-                            resolve(meta_values_array);
+                            resolve(meta_values_array2);
                         });
                     });
                 });
