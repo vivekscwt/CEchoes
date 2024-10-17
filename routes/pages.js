@@ -12461,6 +12461,8 @@ router.get('/uk-edit-disclaimer', checkLoggedIn, (req, res) => {
         db.query(sql, (err, results, fields) => {
             if (err) throw err;
 
+            console.log("commonresults",results);
+            
             const common1 = results[1]; // Assuming this is the record you want to use
 
             if (!common1) {
