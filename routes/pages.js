@@ -12405,14 +12405,14 @@ router.get('/uk-edit-disclaimer', checkLoggedIn, (req, res) => {
         const sql = `SELECT * FROM page_info where secret_Key = 'disclaimer' `;
         db.query(sql, (err, results, fields) => {
             if (err) throw err;
-            const common = results[0];
+            //const common = results[0];
             const common1 = results[1];
-            const common2 = results[2];
+            // const common2 = results[2];
 
             const meta_sql = `SELECT * FROM page_meta where page_id = ${common1.id}`;
             db.query(meta_sql, async (meta_err, _meta_result) => {
                 if (meta_err) throw meta_err;
-                const metaPromises = [common, common1, common2].map((homeEntry) => {
+                const metaPromises = [common1].map((homeEntry) => {
                     return new Promise((resolve, reject) => {
                         if (!homeEntry) {
                             resolve(null);
