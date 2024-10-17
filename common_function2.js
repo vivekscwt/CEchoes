@@ -6974,7 +6974,7 @@ async function getAllPaymentHistory() {
 async function getuserAllPaymentHistory(user_id) {
   return new Promise((resolve, reject) => {
     db.query(
-      `SELECT p.*, c.company_name, c.logo, c.comp_email, plan_management.name AS plan_name, plan_management.monthly_price, plan_management.yearly_price, users.email as company_user_email
+      `SELECT p.*, c.company_name, c.logo, c.comp_email, plan_management.name AS plan_name, plan_management.monthly_price, plan_management.yearly_price, users.email as company_user_email, plan_management.description
        FROM order_history p
        LEFT JOIN company_claim_request ccr ON ccr.claimed_by = p.user_id 
        LEFT JOIN company c ON c.ID = ccr.company_id AND c.status != '3'
@@ -7062,6 +7062,19 @@ async function getuserAllPaymentHistory(user_id) {
             } catch (error) {
               console.error('Error parsing subscription details:', error);
             }
+             let planName = row.plan_name; 
+             console.log("firstplanName", planName);
+             
+             try {
+               const nameMatch = row.description.match(/<h4>(.*?)<\/h4>/);
+               if (nameMatch) {
+                console.log("namematched");
+                
+                 planName = nameMatch[1]; 
+               }
+             } catch (error) {
+               console.error('Error extracting plan name from description:', error);
+             }
 
             const modifiedRow = {
               ...row,
@@ -7069,18 +7082,19 @@ async function getuserAllPaymentHistory(user_id) {
               subscription_amount: subscriptionAmount,
               subscription_interval: subscriptionInterval,
               formattedPaymentDate: formattedPaymentDate,
-              next_payment_date: nextPaymentDate
+              next_payment_date: nextPaymentDate,
+              plan_namess: planName
             };
             payments.push(modifiedRow);
           });
 
          // console.log('All Payments:', payments); 
           const groupedPayments = {
-            Basic: payments.filter(payment => payment.plan_name === 'basic'),
-            Standard: payments.filter(payment => payment.plan_name === 'standard'),
-            Advanced: payments.filter(payment => payment.plan_name === 'advanced'),
-            Premium: payments.filter(payment => payment.plan_name === 'premium'),
-            Enterprise: payments.filter(payment => payment.plan_name === 'enterprise'),
+            PLUS: payments.filter(payment => payment.plan_name === 'basic'),
+            PRO: payments.filter(payment => payment.plan_name === 'standard'),
+            STAR: payments.filter(payment => payment.plan_name === 'advanced'),
+            STAR: payments.filter(payment => payment.plan_name === 'premium'),
+            ENTERPRISE: payments.filter(payment => payment.plan_name === 'enterprise'),
           };
 
           console.log('Grouped Payments:', groupedPayments); 

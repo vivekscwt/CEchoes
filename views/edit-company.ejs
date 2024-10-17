@@ -536,8 +536,9 @@
                                     value="" />
                             </div>
                             <div class="col-lg-1 fv-row">
-                                <img src="/<%= company.cover_img %>" alt="img" width="50"
-                                    height="50" loading="">
+                                <% if (company.cover_img) { %>
+                                    <img src="/<%= company.cover_img %>" alt="img" width="50" height="50" loading="">
+                                <% } %>
                             </div>
                             <!--end::Col-->
                         </div>
