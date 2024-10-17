@@ -12440,8 +12440,8 @@ router.get('/uk-edit-disclaimer', checkLoggedIn, (req, res) => {
                     // common,
                     common1,
                     //common2,
-                    meta_values_array,
-                    // meta_values_array1,
+                    //meta_values_array,
+                    meta_values_array1,
                     // meta_values_array2
                 });
             })
