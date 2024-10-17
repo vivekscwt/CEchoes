@@ -12437,12 +12437,12 @@ router.get('/uk-edit-disclaimer', checkLoggedIn, (req, res) => {
                     menu_active_id: 'pages',
                     page_title: 'Update Disclaimer',
                     currentUserData,
-                    common,
+                    // common,
                     common1,
-                    common2,
+                    //common2,
                     meta_values_array,
-                    meta_values_array1,
-                    meta_values_array2
+                    // meta_values_array1,
+                    // meta_values_array2
                 });
             })
         })
