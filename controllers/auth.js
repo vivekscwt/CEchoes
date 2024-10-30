@@ -23711,7 +23711,7 @@ const getPlanFromDatabase = async (planId) => {
     if (nameMatch) {
         plan.name = nameMatch[1]; 
     }
-console.log("planvaluess",plan);
+    console.log("planvaluess",plan);
 
     return plan;
 };
