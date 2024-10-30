@@ -8202,7 +8202,7 @@ async function getBusinessplans(userCountry) {
 async function getCurrency() {
   const getcurrencyquery = `SELECT * FROM currency_conversion`;
   const getcurrencyvalue = await query(getcurrencyquery);
-  console.log("getcurrencyvalue", getcurrencyvalue);
+  // console.log("getcurrencyvalue", getcurrencyvalue);
 
   const exchangeRates = {};
   for (const row of getcurrencyvalue) {
@@ -8222,7 +8222,7 @@ async function convertPrices(plan, userCountry) {
   if (!plan || !userCountry) return null;
 
   const exchangeRates = await getCurrency();
-  console.log("exchangeRates",exchangeRates);
+  // console.log("exchangeRates",exchangeRates);
   
   const userCurrency = getUserCurrency(userCountry);
 
@@ -8230,7 +8230,6 @@ async function convertPrices(plan, userCountry) {
   let yearlyPriceConverted = plan.yearly_price;
   let perUserPriceConverted = plan.per_user_price;
 
-  console.log("yearlyPriceConverted",yearlyPriceConverted);
   
   
 //previopus
@@ -8282,11 +8281,11 @@ if (userCurrency !== 'USD') {
 }
 
 
-console.log(`Monthly Price: ${monthlyPriceConverted}`);
-console.log(`Yearly Price: ${yearlyPriceConverted}`);
-console.log(`Per User Price: ${perUserPriceConverted}`);
+// console.log(`Monthly Price: ${monthlyPriceConverted}`);
+// console.log(`Yearly Price: ${yearlyPriceConverted}`);
+// console.log(`Per User Price: ${perUserPriceConverted}`);
 
-  console.log("monthlyPriceConverted",monthlyPriceConverted);
+//   console.log("monthlyPriceConverted",monthlyPriceConverted);
   
 
   const convertedPlan = {
@@ -8296,7 +8295,7 @@ console.log(`Per User Price: ${perUserPriceConverted}`);
       per_user_price_local: perUserPriceConverted,
       local_currency: userCurrency
   };
-  console.log("convertedPlan",convertedPlan);
+  // console.log("convertedPlan",convertedPlan);
   
 
   return convertedPlan;
