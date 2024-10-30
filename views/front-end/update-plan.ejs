@@ -31,18 +31,24 @@
             <div class="pricing-card">
                 <div class="price_tag">
 
-                <% if (plan !== 'enterprise') { %>
-                    <% if (country_name === "India") { %>
-                      $ <%= getplans[plan + '_val'].monthly_price_local %> <span>/ Month</span>
-                    <% } else if (country_name === "Japan") { %>
-                      $ <%= getplans[plan + '_val'].monthly_price_local %> <span>/ Month</span>
+                    <% if (plan !== 'enterprise') { %>
+                      <% if (country_name === "United Kingdom") { %>
+                        £ <%= getplans[plan + '_val'].monthly_price_local %> <span>/ Year</span>
+                      <% } else if (country_name === "Japan") { %>
+                        ¥ <%= getplans[plan + '_val'].monthly_price_local %> <span>/ Year</span>
+                      <% } else { %>
+                        $ <%= getplans[plan + '_val'].monthly_price_local %> <span>/ Year</span>
+                      <% } %>
                     <% } else { %>
-                      $ <%= getplans[plan + '_val'].monthly_price_local %> <span>/ Month</span>
+                      <% if (country_name === "United Kingdom") { %>
+                        £ <%= getplans[plan + '_val'].yearly_price_local %> <span>/ Month</span>
+                      <% } else if (country_name === "Japan") { %>
+                        ¥ <%= getplans[plan + '_val'].yearly_price_local %> <span>/ Month</span>
+                      <% } else { %>
+                        $ <%= getplans[plan + '_val'].yearly_price_local %> <span>/ Month</span>
+                      <% } %>
                     <% } %>
-                    <% } else { %>
-                        <%= getplans[plan + '_val'].monthly_price_local %> <span></span>
-                    <% } %>
-                </div>
+                  </div>
         
                 <div class="member-control">
                 <label for="<%= plan %>-member-count"></label>
@@ -74,19 +80,24 @@
             <% ['basic', 'standard', 'advanced', 'premium', 'enterprise'].forEach(plan => { %>
               <div class="pricing-card">
                 <div class="price_tag">
-
-                  <% if (plan !== 'enterprise') { %>
-                    <% if (country_name === "India") { %>
-                      $ <%= getplans[plan + '_val'].yearly_price_local %> <span>/ Year</span>
-                    <% } else if (country_name === "Japan") { %>
-                      $ <%= getplans[plan + '_val'].yearly_price_local %> <span>/ Year</span>
+                    <% if (plan !== 'enterprise') { %>
+                      <% if (country_name === "United Kingdom") { %>
+                        £ <%= getplans[plan + '_val'].yearly_price_local %> <span>/ Year</span>
+                      <% } else if (country_name === "Japan") { %>
+                        ¥ <%= getplans[plan + '_val'].yearly_price_local %> <span>/ Year</span>
+                      <% } else { %>
+                        $ <%= getplans[plan + '_val'].yearly_price_local %> <span>/ Year</span>
+                      <% } %>
                     <% } else { %>
-                      $ <%= getplans[plan + '_val'].yearly_price_local %> <span>/ Year</span>
+                      <% if (country_name === "United Kingdom") { %>
+                        £ <%= getplans[plan + '_val'].monthly_price_local %> <span>/ Month</span>
+                      <% } else if (country_name === "Japan") { %>
+                        ¥ <%= getplans[plan + '_val'].monthly_price_local %> <span>/ Month</span>
+                      <% } else { %>
+                        $ <%= getplans[plan + '_val'].monthly_price_local %> <span>/ Month</span>
+                      <% } %>
                     <% } %>
-                    <% } else { %>
-                        <%= getplans[plan + '_val'].yearly_price_local %> <span></span>
-                    <% } %>
-                </div>
+                  </div>
                 
                
                   <%- getplans[plan + '_val' ].description %>

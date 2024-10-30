@@ -3226,7 +3226,8 @@ router.get('/create-user-company-subscription', checkCookieValue, async (req, re
             per_user_price,
             stripe_publish_key: stripe_publish_key,
             user_no,
-            monthlyprice: monthlyprice
+            monthlyprice: monthlyprice,
+            country_name: country_name
         });
     } catch (err) {
         console.error(err);
@@ -3332,7 +3333,8 @@ router.get('/create-company-subscription', checkCookieValue, async (req, res) =>
             stripe_publish_key: stripe_publish_key,
             user: getUser,
             userMeta: getUserMeta,
-            user_no
+            user_no,
+            country_name: country_name
         });
     }  catch (err) {
         console.error(err);
@@ -13126,6 +13128,12 @@ router.get('/view-payments/:user_id', checkLoggedIn, async (req, res) => {
         var userId = req.params.user_id;
         const encodedUserData = req.cookies.user;
         const currentUserData = JSON.parse(encodedUserData);
+        let country_name = req.cookies.countryName
+        || 'India';
+    let country_code = req.cookies.countryCode
+        || 'IN';
+    console.log("country_namesprivacy", country_name);
+    console.log("country_codesprivacy", country_code);
 
         const email_query = `SELECT email FROM users WHERE user_id =?`;
         const emailData = await query(email_query, [userId]);
@@ -13288,7 +13296,8 @@ router.get('/view-payments/:user_id', checkLoggedIn, async (req, res) => {
             getSubscribedUsers: getSubscribedUsers,
             getplans: getplans,
             subscriptiondateval:subscriptiondateval,
-            subscriptionamount : amounts
+            subscriptionamount : amounts,
+            country_name:country_name
         });
     } catch (err) {
         console.error(err);

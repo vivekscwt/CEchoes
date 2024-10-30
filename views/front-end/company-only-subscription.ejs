@@ -110,7 +110,7 @@
                     <input type="hidden" name="parent_id" id="parent_id" placeholder="parent company" value="0"
                         class="formbold-form-input" />
                     <div>
-                        <p>Price per user: $<span id="price-per-user"></span></p>
+                        <p>Price per user: <span id="price-per-user"></span></p>
                         <p>No of users for the plan : <span id="user_number"></span></p>
                         <label for="memberCounts" class="formbold-form-label">Add On Users</label>
                         <input type="number" min="1" name="memberCount" id="member-count"
@@ -1118,20 +1118,28 @@
                     // } else {
                     //     $('#amount-count-display').text('<%= total_price%>');
                     // }
+                    const countryNames = '<%= country_name %>';
+                    let currencySigns;
+
+                    if (countryNames === "United Kingdom") {
+                        currencySigns = '£';
+                    } else if (countryNames === "Japan") {
+                        currencySigns = '¥';
+                    } else {
+                        currencySigns = '$';
+                    }
+
                     if (memberCount_val > 0) {
-                        $('#user-amount-count-display').text(`$${parseFloat(totalAmount).toFixed(1).replace(/\.0$/, '')}`);
-
-                        $('#plan-price').text(`$${parseFloat(total_prices).toFixed(1).replace(/\.0$/, '')}`);
-
-                        $('#amount-count-display').text(`$${parseFloat(allamount).toFixed(1).replace(/\.0$/, '')}`);
+                        $('#user-amount-count-display').text(`${currencySigns}${parseFloat(totalAmount).toFixed(1).replace(/\.0$/, '')}`);
+                        $('#plan-price').text(`${currencySigns}${parseFloat(total_prices).toFixed(1).replace(/\.0$/, '')}`);
+                        $('#amount-count-display').text(`${currencySigns}${parseFloat(allamount).toFixed(1).replace(/\.0$/, '')}`);
                     } else {
                         console.log("without members");
-                        
-                        const total_price = '<%= total_price %>'; 
-                        $('#user-amount-count-display').text(`$${parseFloat(totalAmount).toFixed(1).replace(/\.0$/, '')}`);
-                        $('#plan-price').text(`$${parseFloat(total_prices).toFixed(1).replace(/\.0$/, '')}`);
 
-                        $('#amount-count-display').text(`$${parseFloat(total_price).toFixed(1).replace(/\.0$/, '')}`);
+                        const total_price = '<%= total_price %>';
+                        $('#user-amount-count-display').text(`${currencySigns}${parseFloat(totalAmount).toFixed(1).replace(/\.0$/, '')}`);
+                        $('#plan-price').text(`${currencySigns}${parseFloat(total_prices).toFixed(1).replace(/\.0$/, '')}`);
+                        $('#amount-count-display').text(`${currencySigns}${parseFloat(total_price).toFixed(1).replace(/\.0$/, '')}`);
                     }
                 }
 
@@ -1147,9 +1155,17 @@
 
                 const perUserPrice = parseFloat('<%= per_user_price || 0 %>');
                 const perUserNo = Math.round('<%= user_no || 0 %>');
-        
+                const countryName = '<%= country_name %>';
+                let currencySign;
+                if (countryName === "United Kingdom") {
+                    currencySign = '£';
+                } else if (countryName === "Japan") {
+                    currencySign = '¥';
+                } else {
+                    currencySign = '$';
+                }
 
-                $('#price-per-user').text(perUserPrice.toFixed(2));
+                $('#price-per-user').text(currencySign + perUserPrice.toFixed(2));
                 $('#user_number').text(perUserNo);
 
             });
