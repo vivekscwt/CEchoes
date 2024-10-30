@@ -377,7 +377,21 @@
             const stripe = Stripe(stripePublicKey);
             const elements = stripe.elements();
 
+            function clearCardFields() {
+                    cardNumber.clear();
+                    cardExpiry.clear();
+                    cardCvc.clear();
+                    const waitMessageContainer = document.getElementById('wait-message-container');
+                    if (waitMessageContainer) {
+                        console.log("waitMessageContainer");
 
+                        waitMessageContainer.style.display = 'none';
+                    }
+                    const payNowButton = document.getElementById('pay-now');
+                    if (payNowButton) {
+                        payNowButton.disabled = false;
+                    }
+            }
             const cardNumber = elements.create('cardNumber', {
                 style: {
                     base: {
@@ -472,6 +486,7 @@
                     if (error) {
                         document.getElementById('error-message').textContent = error.message;
                         document.querySelector('button').disabled = false;
+                        clearCardFields();
                         return;
                     }
 
@@ -566,6 +581,7 @@
                             confirmButtonText: 'OK',
                         }).then(async () => {
                             await createUserAndCompany(formData);
+                            clearCardFields();
                         });
 
                     } else if (response.ok && data.client_secret) {
@@ -579,6 +595,9 @@
                                 title: 'Payment Error',
                                 text: error.message || 'There was an error processing your payment. Please try again later.',
                                 confirmButtonText: 'OK',
+                            }).then(() => {
+                                    clearCardFields();
+                                    enableFormFields();
                             });
                         } else if (paymentIntent.status === 'succeeded') {
                             Swal.fire({
@@ -595,6 +614,9 @@
                                 title: 'Payment Error',
                                 text: 'There was an unexpected issue with your payment. Please try again later.',
                                 confirmButtonText: 'OK',
+                            }).then(() => {
+                                    clearCardFields();
+                                    enableFormFields();
                             });
                         }
                     } else {
@@ -603,7 +625,10 @@
                             title: 'Payment Error',
                             text: data.error ? data.error.message : 'There was an error processing your payment. Please try again later.',
                             confirmButtonText: 'OK',
-                        });
+                        }).then(() => {
+                                    clearCardFields();
+                                    enableFormFields();
+                         });
                     }
                
                 } catch (error) {
@@ -613,6 +638,9 @@
                         title: 'Payment Error',
                         text: 'There was an error processing your payment. Please try again later.',
                         confirmButtonText: 'OK',
+                    }).then(() => {
+                        clearCardFields();
+                        enableFormFields();
                     });
                 } finally {
                     document.querySelector('button').disabled = false;
@@ -641,7 +669,7 @@
                         text: 'Company created successfully. Please wait for admin approval.',
                         confirmButtonText: 'OK'
                     }).then(() => {
-                        window.location.href = '/plan-pricing';
+                        window.location.href = '/plans';
                     });
                 } else {
                     Swal.fire({

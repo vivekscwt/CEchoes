@@ -1617,7 +1617,7 @@ router.get('/faq/:getcountryname', checkCookieValue, async (req, res) => {
     }
 });
 //plan-pricing staging-business
-router.get('/plan-pricing', checkCookieValue, async (req, res) => {
+router.get('/plans', checkCookieValue, async (req, res) => {
     try {
         let currentUserData = JSON.parse(req.userData);
         console.log("currentUserData", currentUserData);
@@ -1705,7 +1705,7 @@ router.get('/plan-pricing', checkCookieValue, async (req, res) => {
 });
 
 
-router.get('/plan-pricing/:getcountryname', checkCookieValue, async (req, res) => {
+router.get('/plans/:getcountryname', checkCookieValue, async (req, res) => {
     try {
         let currentUserData = JSON.parse(req.userData);
         console.log("currentUserData", currentUserData);
@@ -10452,7 +10452,7 @@ router.get('/complain-sub-category', (req, res) => {
 
 
 
-router.get('/plans', checkLoggedIn, async (req, res) => {
+router.get('/plans-managemnet', checkLoggedIn, async (req, res) => {
     try {
         const encodedUserData = req.cookies.user;
         const currentUserData = JSON.parse(encodedUserData);

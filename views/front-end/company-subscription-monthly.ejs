@@ -1,5 +1,3 @@
-
-
 <%- include('common/header') -%>
     <link href="/front-end/css/company-profile-dashboard.css" rel="stylesheet" type="text/css">
     <div class="container">
@@ -120,8 +118,8 @@
                     </div>
                     <div>
                         <label for="company_name" class="formbold-form-label">Organization Name</label>
-                        <input type="text" name="company_name" id="company_name" placeholder="Enter your organization name"
-                            class="formbold-form-input" required />
+                        <input type="text" name="company_name" id="company_name"
+                            placeholder="Enter your organization name" class="formbold-form-input" required />
                         <span id="companyCheckResult" class="result-message" style="color: red;"></span>
                     </div>
                     <div>
@@ -131,15 +129,15 @@
                     </div>
                     <div>
                         <label for="companyEmail" class="formbold-form-label">Organization Email</label>
-                        <input type="email" name="comp_email" id="comp_email" placeholder="Enter your organization email"
-                            class="formbold-form-input" required />
+                        <input type="email" name="comp_email" id="comp_email"
+                            placeholder="Enter your organization email" class="formbold-form-input" required />
                         <span id="companyemailAvailabilityError" style="color: red; display: none;"></span>
                     </div>
 
                     <div>
                         <label for="comp_phone" class="formbold-form-label">Organization Phone</label>
-                        <input type="number" name="comp_phone" id="comp_phone" placeholder="Enter your organization phone"
-                            class="formbold-form-input" required />
+                        <input type="number" name="comp_phone" id="comp_phone"
+                            placeholder="Enter your organization phone" class="formbold-form-input" required />
                         <span id="companyphoneAvailabilityError" style="color: red; display: none;"></span>
                     </div>
                     <!-- <div>
@@ -158,13 +156,13 @@
                         <p>Number of added users: <span id="member-count-display">0</span></p>
                         <p>Added user Amount: <span id="user-amount-count-display"></span>
                         <p>Plan Amount: <span id="plan-price"></span>
-                            
-                        </span></p>
+
+                            </span></p>
                         <p>Total Amount: <span id="amount-count-display">
-                            $<%= total_price / 1 %>
-                        </span></p>
+                                $<%= total_price / 1 %>
+                            </span></p>
                         <p>Are you sure you want to submit the form?</p>
-                        
+
                         <div>
                             <button type="button" class="formbold-confirm-btn active"
                                 onclick="handleConfirmation(true)">Proceed</button>
@@ -211,7 +209,7 @@
             <div id="card-cvc" class="formbold-form-input"></div>
 
             <button type="button" id="pay-now" class="formbold-btn">Pay Now</button>
-            <div id="wait-message-container"></div> 
+            <div id="wait-message-container"></div>
         </div>
     </div>
 
@@ -220,64 +218,73 @@
     <%- include('common/footer') -%>
 
         <style>
-               #paymentModal .modal-content {
-                    position: absolute;
-                    width: 30%;
-                    transform: translate(-50%, -50%);
-                    left: 50%;
-                    top: 50%;
-                    padding: 0 40px 70px;
-                }
-                #paymentModal .modal-content .close-button{
-                    text-align: right;
-                    font-size: 50px;
-                    padding-right: 0px;
-                }
-                #paymentModal .modal-content h2{
-                    margin-bottom: 25px;
-                }
-                #paymentModal .modal-content .formbold-form-label {
-                    color: black;
-                    font-size: 18px;
-                    line-height: 25px;
-                    margin-bottom: 13px;
-                }
-                #paymentModal .modal-content .formbold-form-input {
-                    margin-bottom: 23px;
-                }
-                #paymentModal .modal-content #pay-now{
-                    text-align: center;
-                    justify-content: center;
-                    font-weight: 700;
-                }
-                #wait-message-container p {
-                    margin: 0;
-                    text-align: center;
-                    margin: 25px 0;
-                    font-size: 18px;
-                    font-weight: 600;
-                }
-                @media (max-width:1199px){
-                    #paymentModal .modal-content {
+            #paymentModal .modal-content {
+                position: absolute;
+                width: 30%;
+                transform: translate(-50%, -50%);
+                left: 50%;
+                top: 50%;
+                padding: 0 40px 70px;
+            }
+
+            #paymentModal .modal-content .close-button {
+                text-align: right;
+                font-size: 50px;
+                padding-right: 0px;
+            }
+
+            #paymentModal .modal-content h2 {
+                margin-bottom: 25px;
+            }
+
+            #paymentModal .modal-content .formbold-form-label {
+                color: black;
+                font-size: 18px;
+                line-height: 25px;
+                margin-bottom: 13px;
+            }
+
+            #paymentModal .modal-content .formbold-form-input {
+                margin-bottom: 23px;
+            }
+
+            #paymentModal .modal-content #pay-now {
+                text-align: center;
+                justify-content: center;
+                font-weight: 700;
+            }
+
+            #wait-message-container p {
+                margin: 0;
+                text-align: center;
+                margin: 25px 0;
+                font-size: 18px;
+                font-weight: 600;
+            }
+
+            @media (max-width:1199px) {
+                #paymentModal .modal-content {
                     width: 60%;
                 }
-                }
-                @media (max-width:765px){
-                    #paymentModal .modal-content {
+            }
+
+            @media (max-width:765px) {
+                #paymentModal .modal-content {
                     width: 80%;
                 }
-                }
-                @media (max-width:575px){
-                    #paymentModal .modal-content {
+            }
+
+            @media (max-width:575px) {
+                #paymentModal .modal-content {
                     width: 85%;
                     padding: 0 20px 70px;
                 }
+
                 .formbold-form-input {
                     width: 100%;
                     padding: 12px 10px;
                 }
-                }
-
+            }
         </style>
 
 
@@ -292,13 +299,13 @@
         <script>
             var stripe_key = '<%= stripe_key%>';
             //console.log("stripe_key", stripe_key);
-            var stripePublicKey='<%= stripe_publish_key %>';
+            var stripePublicKey = '<%= stripe_publish_key %>';
             //console.log("publish",stripePublicKey);
-            
+
             var planID = '<%= planID %>';
             // var memberCount = '<%= memberCount %>';
             var subscriptionType = '<%= subscriptionType%>';
-           // console.log("subscriptionType", subscriptionType);
+            // console.log("subscriptionType", subscriptionType);
             let currentStep = 1;
             let isEmailValid = false;
             let isEmailAvailable = false;
@@ -346,13 +353,13 @@
 
                     if (!email || !isValidEmail(email)) {
                         emailError.style.display = 'block';
-                        nextStepBtn.disabled = true;  
+                        nextStepBtn.disabled = true;
                         return false;
                     } else {
                         emailError.style.display = 'none';
                     }
                     if (isEmailAvailable == false) {
-                        nextStepBtn.disabled = true; 
+                        nextStepBtn.disabled = true;
                         console.log("Button is disabled due to unavailable email");
                     } else {
                         nextStepBtn.disabled = false; // Button should be enabled
@@ -373,13 +380,13 @@
                     const mainAddressCountry = document.getElementById('main_address_country').value;
 
                     if (!companyName || !mainAddressCountry) {
-                        nextStepBtn.disabled = true; 
+                        nextStepBtn.disabled = true;
                         return false;
                     }
 
                     const companyExists = await checkCompanyExistence(parentId, companyName, mainAddressCountry);
                     if (!companyExists) {
-                        return false; 
+                        return false;
                     }
                     return document.getElementById('main_address').value.trim() &&
                         document.getElementById('comp_email').value.trim() &&
@@ -387,69 +394,69 @@
                         document.getElementById('main_address_pin_code').value.trim();
                 }
 
-                return true; 
+                return true;
             }
-                    
+
             async function checkCompanyExistence(parentId, companyName, mainAddressCountry) {
-                    try {
-                        const response = await $.ajax({
-                            url: '/get-exist-company',
-                            method: 'GET',
-                            data: {
-                                parent_id: parentId,
-                                company_name: companyName,
-                                main_address_country: mainAddressCountry
-                            }
-                        });
-                        console.log("responsesss", response);
-                        console.log("responsesssstatus", response.status);
-
-                        if (response.status == 'err') {
-                            console.log("errr");
-                            $('#companyCheckResult').text(response.message).show();
-                            $('#nextStepBtn').prop('disabled', true); // Disable next button if company exists
-                        } else {
-                            console.log("rightttt");
-                            $('#companyCheckResult').hide();
-                            validateForm1(); // Re-validate form after company check
+                try {
+                    const response = await $.ajax({
+                        url: '/get-exist-company',
+                        method: 'GET',
+                        data: {
+                            parent_id: parentId,
+                            company_name: companyName,
+                            main_address_country: mainAddressCountry
                         }
-                    } catch (error) {
-                        console.error('Error checking company existence:', error);
-                        // Handle error scenario if needed
+                    });
+                    console.log("responsesss", response);
+                    console.log("responsesssstatus", response.status);
+
+                    if (response.status == 'err') {
+                        console.log("errr");
+                        $('#companyCheckResult').text(response.message).show();
+                        $('#nextStepBtn').prop('disabled', true); // Disable next button if company exists
+                    } else {
+                        console.log("rightttt");
+                        $('#companyCheckResult').hide();
+                        validateForm1(); // Re-validate form after company check
                     }
+                } catch (error) {
+                    console.error('Error checking company existence:', error);
+                    // Handle error scenario if needed
                 }
-                function validateForm1() {
-                    const parentId = $('#parent_id').val().trim();
-                    const companyName = $('#company_name').val().trim();
-                    const mainAddress = $('#main_address').val().trim();
-                    const companyEmail = $('#comp_email').val().trim();
-                    const companyPhone = $('#comp_phone').val().trim();
-                    const mainAddressCountry = $('#main_address_country').val().trim();
-                    const mainAddressPinCode = $('#main_address_pin_code').val().trim();
+            }
+            function validateForm1() {
+                const parentId = $('#parent_id').val().trim();
+                const companyName = $('#company_name').val().trim();
+                const mainAddress = $('#main_address').val().trim();
+                const companyEmail = $('#comp_email').val().trim();
+                const companyPhone = $('#comp_phone').val().trim();
+                const mainAddressCountry = $('#main_address_country').val().trim();
+                const mainAddressPinCode = $('#main_address_pin_code').val().trim();
 
-                    // Validate individual fields if required
-                    const isParentIdValid = parentId.length > 0;
-                    const isCompanyNameValid = companyName.length > 0;
-                    const isMainAddressValid = mainAddress.length > 0;
-                    const isCompanyEmailValid = isValidEmail(companyEmail); // Implement isValidEmail function
-                    const isCompanyPhoneValid = companyPhone.length > 0;
-                    const isMainAddressCountryValid = mainAddressCountry.length > 0;
-                    const isMainAddressPinCodeValid = mainAddressPinCode.length > 0;
+                // Validate individual fields if required
+                const isParentIdValid = parentId.length > 0;
+                const isCompanyNameValid = companyName.length > 0;
+                const isMainAddressValid = mainAddress.length > 0;
+                const isCompanyEmailValid = isValidEmail(companyEmail); // Implement isValidEmail function
+                const isCompanyPhoneValid = companyPhone.length > 0;
+                const isMainAddressCountryValid = mainAddressCountry.length > 0;
+                const isMainAddressPinCodeValid = mainAddressPinCode.length > 0;
 
-                    // Display errors if any field is invalid
-                    $('#parent_id').toggleClass('invalid', !isParentIdValid);
-                    $('#company_name').toggleClass('invalid', !isCompanyNameValid);
-                    $('#main_address').toggleClass('invalid', !isMainAddressValid);
-                    $('#comp_email').toggleClass('invalid', !isCompanyEmailValid);
-                    $('#comp_phone').toggleClass('invalid', !isCompanyPhoneValid);
-                    $('#main_address_country').toggleClass('invalid', !isMainAddressCountryValid);
-                    $('#main_address_pin_code').toggleClass('invalid', !isMainAddressPinCodeValid);
+                // Display errors if any field is invalid
+                $('#parent_id').toggleClass('invalid', !isParentIdValid);
+                $('#company_name').toggleClass('invalid', !isCompanyNameValid);
+                $('#main_address').toggleClass('invalid', !isMainAddressValid);
+                $('#comp_email').toggleClass('invalid', !isCompanyEmailValid);
+                $('#comp_phone').toggleClass('invalid', !isCompanyPhoneValid);
+                $('#main_address_country').toggleClass('invalid', !isMainAddressCountryValid);
+                $('#main_address_pin_code').toggleClass('invalid', !isMainAddressPinCodeValid);
 
-                    // Enable Next button if all fields are valid
-                    const isFormValid = isParentIdValid && isCompanyNameValid && isMainAddressValid &&
-                        isCompanyEmailValid && isCompanyPhoneValid && isMainAddressCountryValid && isMainAddressPinCodeValid;
-                    $('#nextStepBtn').prop('disabled', !isFormValid);
-                }
+                // Enable Next button if all fields are valid
+                const isFormValid = isParentIdValid && isCompanyNameValid && isMainAddressValid &&
+                    isCompanyEmailValid && isCompanyPhoneValid && isMainAddressCountryValid && isMainAddressPinCodeValid;
+                $('#nextStepBtn').prop('disabled', !isFormValid);
+            }
 
             // document.getElementById('email').addEventListener('blur', async function () {
             //     const email = this.value.trim();
@@ -574,182 +581,172 @@
 
             async function handleConfirmation(confirmed) {
                 if (confirmed) {
-                
-                        document.getElementById('paymentModal').style.display = 'block';
+
+                    document.getElementById('paymentModal').style.display = 'block';
                 }
             }
             document.addEventListener('DOMContentLoaded', function () {
-    const stripe = Stripe(stripePublicKey);
-    const elements = stripe.elements();
+                const stripe = Stripe(stripePublicKey);
+                const elements = stripe.elements();
 
 
-            const cardNumber = elements.create('cardNumber', {
-                style: {
-                    base: {
-                        fontSize: '16px',
-                        color: '#32325d',
-                        '::placeholder': {
-                            color: '#aab7c4',
-                        },
-                    },
-                    invalid: {
-                        color: '#fa755a',
-                        iconColor: '#fa755a',
-                    },
-                },
-            });
-            const cardExpiry = elements.create('cardExpiry', {
-                style: {
-                    base: {
-                        fontSize: '16px',
-                        color: '#32325d',
-                        '::placeholder': {
-                            color: '#aab7c4',
-                        },
-                    },
-                    invalid: {
-                        color: '#fa755a',
-                        iconColor: '#fa755a',
-                    },
-                },
-            });
-            const cardCvc = elements.create('cardCvc', {
-                style: {
-                    base: {
-                        fontSize: '16px',
-                        color: '#32325d',
-                        '::placeholder': {
-                            color: '#aab7c4',
-                        },
-                    },
-                    invalid: {
-                        color: '#fa755a',
-                        iconColor: '#fa755a',
-                    },
-                },
-            });
-
-            cardNumber.mount('#card-number');
-            cardExpiry.mount('#card-expiry');
-            cardCvc.mount('#card-cvc');
-
-            function handleCardChange(event) {
-                const errorMessage = document.getElementById('error-message');
-                if (event.error) {
-                    errorMessage.textContent = event.error.message;
-                } else {
-                    errorMessage.textContent = '';
-                }
-            }
-
-            cardNumber.on('change', handleCardChange);
-            cardExpiry.on('change', handleCardChange);
-            cardCvc.on('change', handleCardChange);
-
-            document.getElementById('pay-now').addEventListener('click', async (event) => {
-                event.preventDefault();
-                document.querySelector('button').disabled = true;
-
-                const payNowButton = document.getElementById('pay-now');
-                payNowButton.disabled = true;
-
-                const waitMessageContainer = document.getElementById('wait-message-container');
-                //console.log("waitMessageContainer",waitMessageContainer);
-                
-                waitMessageContainer.innerHTML = '<p style="color: black;">Please wait...</p>';  
-
-                try {
-                    const { paymentMethod, error } = await stripe.createPaymentMethod({
-                        type: 'card',
-                        card: cardNumber,
-                        billing_details: {
-                            name: document.getElementById('first_name').value + ' ' + document.getElementById('last_name').value,
-                            email: document.getElementById('email').value,
-                            phone: document.getElementById('phone').value,
-                            address: {
-                                line1: document.getElementById('main_address').value,
-                                country: document.getElementById('main_address_country').value,
-                                postal_code: document.getElementById('main_address_pin_code').value,
+                const cardNumber = elements.create('cardNumber', {
+                    style: {
+                        base: {
+                            fontSize: '16px',
+                            color: '#32325d',
+                            '::placeholder': {
+                                color: '#aab7c4',
                             },
                         },
-                    });
-
-                    if (error) {
-                        document.getElementById('error-message').textContent = error.message;
-                        document.querySelector('button').disabled = false;
-                        return;
-                    }
-
-                    const memberCount = document.getElementById('member-count').value;
-
-                    const formData = {
-                        name: document.getElementById('first_name').value + ' ' + document.getElementById('last_name').value,
-                        first_name: document.getElementById('first_name').value,
-                        last_name: document.getElementById('last_name').value,
-                        email: document.getElementById('email').value,
-                        phone: document.getElementById('phone').value,
-                        address: document.getElementById('main_address').value,
-                        main_address_country: document.getElementById('main_address_country').value,
-                        company_name: document.getElementById('company_name').value,
-                        parent_id: document.getElementById('parent_id').value,
-                        comp_email: document.getElementById('comp_email').value,
-                        comp_phone: document.getElementById('comp_phone').value,
-                        city: 'Default City',
-                        state: 'Default State',
-                        main_address_pin_code: document.getElementById('main_address_pin_code').value,
-                        planId: planID,
-                        billingCycle: subscriptionType,
-                        memberCount: memberCount,
-                        register_password: document.getElementById('register_password').value,
-                        register_confirm_password: document.getElementById('register_confirm_password').value,
-                        user_country: document.getElementById('user_country').value,
-                        user_state: document.getElementById('user_state').value,
-                        paymentMethodId: paymentMethod.id 
-                    };
-
-                    const response = await fetch('/auth/createexternalSubscription', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
+                        invalid: {
+                            color: '#fa755a',
+                            iconColor: '#fa755a',
                         },
-                        body: JSON.stringify(formData),
-                    });
+                    },
+                });
+                const cardExpiry = elements.create('cardExpiry', {
+                    style: {
+                        base: {
+                            fontSize: '16px',
+                            color: '#32325d',
+                            '::placeholder': {
+                                color: '#aab7c4',
+                            },
+                        },
+                        invalid: {
+                            color: '#fa755a',
+                            iconColor: '#fa755a',
+                        },
+                    },
+                });
+                const cardCvc = elements.create('cardCvc', {
+                    style: {
+                        base: {
+                            fontSize: '16px',
+                            color: '#32325d',
+                            '::placeholder': {
+                                color: '#aab7c4',
+                            },
+                        },
+                        invalid: {
+                            color: '#fa755a',
+                            iconColor: '#fa755a',
+                        },
+                    },
+                });
 
-                    const data = await response.json();
-                    //console.log("subscriptiondata",data);
-                    
-                    const subscriptionId = data.subscription;
-                    formData.subscriptionId = subscriptionId;
+                cardNumber.mount('#card-number');
+                cardExpiry.mount('#card-expiry');
+                cardCvc.mount('#card-cvc');
 
-                    if (response.ok && data.status === 'ok' && data.message === 'Payment was successful!') {
-                       // console.log("Payment already confirmed:", data);
+                function handleCardChange(event) {
+                    const errorMessage = document.getElementById('error-message');
+                    if (event.error) {
+                        errorMessage.textContent = event.error.message;
+                    } else {
+                        errorMessage.textContent = '';
+                    }
+                }
 
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Payment Successful!',
-                            text: 'Your subscription is now active.',
-                            confirmButtonText: 'OK',
-                        }).then(async () => {
-                            await createUserAndCompany(formData);
+                cardNumber.on('change', handleCardChange);
+                cardExpiry.on('change', handleCardChange);
+                cardCvc.on('change', handleCardChange);
+                function clearCardFields() {
+                    cardNumber.clear();
+                    cardExpiry.clear();
+                    cardCvc.clear();
+                    const waitMessageContainer = document.getElementById('wait-message-container');
+                    if (waitMessageContainer) {
+                        console.log("waitMessageContainer");
+
+                        waitMessageContainer.style.display = 'none';
+                    }
+                    const payNowButton = document.getElementById('pay-now');
+                    if (payNowButton) {
+                        payNowButton.disabled = false;
+                    }
+                }
+
+                document.getElementById('pay-now').addEventListener('click', async (event) => {
+                    event.preventDefault();
+                    document.querySelector('button').disabled = true;
+
+                    const payNowButton = document.getElementById('pay-now');
+                    payNowButton.disabled = true;
+
+                    const waitMessageContainer = document.getElementById('wait-message-container');
+                    //console.log("waitMessageContainer",waitMessageContainer);
+
+                    waitMessageContainer.innerHTML = '<p style="color: black;">Please wait...</p>';
+
+                    try {
+                        const { paymentMethod, error } = await stripe.createPaymentMethod({
+                            type: 'card',
+                            card: cardNumber,
+                            billing_details: {
+                                name: document.getElementById('first_name').value + ' ' + document.getElementById('last_name').value,
+                                email: document.getElementById('email').value,
+                                phone: document.getElementById('phone').value,
+                                address: {
+                                    line1: document.getElementById('main_address').value,
+                                    country: document.getElementById('main_address_country').value,
+                                    postal_code: document.getElementById('main_address_pin_code').value,
+                                },
+                            },
                         });
 
-                    } else if (response.ok && data.client_secret) {
-                        const { error, paymentIntent } = await stripe.confirmCardPayment(data.client_secret);
-                        //console.log("paymentIntents", paymentIntent);
-
                         if (error) {
-                            console.error('Error confirming payment:', error);
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Payment Error',
-                                text: error.message || 'There was an error processing your payment. Please try again later.',
-                                confirmButtonText: 'OK',
-                                timer: 3000, 
-                                timerProgressBar: true,
-                            }).then(() => {
-                                enableFormFields();
-                            });
-                        } else if (paymentIntent.status === 'succeeded') {
+                            document.getElementById('error-message').textContent = error.message;
+                            document.querySelector('button').disabled = false;
+                            clearCardFields();
+                            return;
+                        }
+
+                        const memberCount = document.getElementById('member-count').value;
+
+                        const formData = {
+                            name: document.getElementById('first_name').value + ' ' + document.getElementById('last_name').value,
+                            first_name: document.getElementById('first_name').value,
+                            last_name: document.getElementById('last_name').value,
+                            email: document.getElementById('email').value,
+                            phone: document.getElementById('phone').value,
+                            address: document.getElementById('main_address').value,
+                            main_address_country: document.getElementById('main_address_country').value,
+                            company_name: document.getElementById('company_name').value,
+                            parent_id: document.getElementById('parent_id').value,
+                            comp_email: document.getElementById('comp_email').value,
+                            comp_phone: document.getElementById('comp_phone').value,
+                            city: 'Default City',
+                            state: 'Default State',
+                            main_address_pin_code: document.getElementById('main_address_pin_code').value,
+                            planId: planID,
+                            billingCycle: subscriptionType,
+                            memberCount: memberCount,
+                            register_password: document.getElementById('register_password').value,
+                            register_confirm_password: document.getElementById('register_confirm_password').value,
+                            user_country: document.getElementById('user_country').value,
+                            user_state: document.getElementById('user_state').value,
+                            paymentMethodId: paymentMethod.id
+                        };
+
+                        const response = await fetch('/auth/createexternalSubscription', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(formData),
+                        });
+
+                        const data = await response.json();
+                        //console.log("subscriptiondata",data);
+
+                        const subscriptionId = data.subscription;
+                        formData.subscriptionId = subscriptionId;
+
+                        if (response.ok && data.status === 'ok' && data.message === 'Payment was successful!') {
+                            // console.log("Payment already confirmed:", data);
+
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Payment Successful!',
@@ -757,49 +754,80 @@
                                 confirmButtonText: 'OK',
                             }).then(async () => {
                                 await createUserAndCompany(formData);
+                                clearCardFields();
                             });
+
+                        } else if (response.ok && data.client_secret) {
+                            const { error, paymentIntent } = await stripe.confirmCardPayment(data.client_secret);
+                            //console.log("paymentIntents", paymentIntent);
+
+                            if (error) {
+                                console.error('Error confirming payment:', error);
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Payment Error',
+                                    text: error.message || 'There was an error processing your payment. Please try again later.',
+                                    confirmButtonText: 'OK',
+                                    timer: 3000,
+                                    timerProgressBar: true,
+                                }).then(() => {
+                                    clearCardFields();
+                                    enableFormFields();
+                                });
+                            } else if (paymentIntent.status === 'succeeded') {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Payment Successful!',
+                                    text: 'Your subscription is now active.',
+                                    confirmButtonText: 'OK',
+                                }).then(async () => {
+                                    await createUserAndCompany(formData);
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Payment Error',
+                                    text: 'There was an unexpected issue with your payment. Please try again later.',
+                                    confirmButtonText: 'OK',
+                                    timer: 3000, // Dismiss after 3 seconds
+                                    timerProgressBar: true,
+                                }).then(() => {
+                                    clearCardFields();
+                                    enableFormFields();
+                                });
+                            }
                         } else {
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Payment Error',
-                                text: 'There was an unexpected issue with your payment. Please try again later.',
+                                text: data.error ? data.error.message : 'There was an error processing your payment. Please try again later.',
                                 confirmButtonText: 'OK',
                                 timer: 3000, // Dismiss after 3 seconds
                                 timerProgressBar: true,
                             }).then(() => {
+                                clearCardFields();
                                 enableFormFields();
                             });
                         }
-                    } else {
+
+                    } catch (error) {
+                        console.error('Error:', error);
                         Swal.fire({
                             icon: 'error',
                             title: 'Payment Error',
-                            text: data.error ? data.error.message : 'There was an error processing your payment. Please try again later.',
+                            text: 'There was an error processing your payment. Please try again later.',
                             confirmButtonText: 'OK',
                             timer: 3000, // Dismiss after 3 seconds
                             timerProgressBar: true,
                         }).then(() => {
+                            clearCardFields();
                             enableFormFields();
                         });
+                    } finally {
+                        document.querySelector('button').disabled = false;
                     }
-
-                } catch (error) {
-                    console.error('Error:', error);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Payment Error',
-                        text: 'There was an error processing your payment. Please try again later.',
-                        confirmButtonText: 'OK',
-                        timer: 3000, // Dismiss after 3 seconds
-                        timerProgressBar: true,
-                    }).then(() => {
-                        enableFormFields();
-                    });
-                } finally {
-                    document.querySelector('button').disabled = false;
-                }
+                });
             });
-});
 
             function closeModal() {
                 document.getElementById('paymentModal').style.display = 'none';
@@ -872,45 +900,45 @@
             // }
 
             async function createUserAndCompany(formData) {
-    try {
-        console.log("externalRegistrationformData", formData);
-        const response = await axios.post('/auth/externalRegistration', formData);
-        if (response.data.status === 'ok') {
-            Swal.fire({
-                icon: 'success',
-                title: 'Success',
-                text: 'User and company completed successfully. Please wait for admin approval.',
-                confirmButtonText: 'OK'
-            }).then(() => {
-                window.location.href = '/plan-pricing';
-            });
-        } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: response.data.message || 'Failed to create user and company. Please try again later.',
-                confirmButtonText: 'OK'
-            });
-        }
-    } catch (error) {
-        console.error('Error creating user and company:', error);
+                try {
+                    console.log("externalRegistrationformData", formData);
+                    const response = await axios.post('/auth/externalRegistration', formData);
+                    if (response.data.status === 'ok') {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'User and company completed successfully. Please wait for admin approval.',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            window.location.href = '/plans';
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: response.data.message || 'Failed to create user and company. Please try again later.',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                } catch (error) {
+                    console.error('Error creating user and company:', error);
 
-        // Handling network errors or other undefined response scenarios
-        let errorMessage = 'Failed to create user and company. Please try again later.';
-        if (error.response) {
-            errorMessage = error.response.data.message || errorMessage;
-        } else if (error.message) {
-            errorMessage = error.message;
-        }
+                    // Handling network errors or other undefined response scenarios
+                    let errorMessage = 'Failed to create user and company. Please try again later.';
+                    if (error.response) {
+                        errorMessage = error.response.data.message || errorMessage;
+                    } else if (error.message) {
+                        errorMessage = error.message;
+                    }
 
-        Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: errorMessage,
-            confirmButtonText: 'OK'
-        });
-    }
-}
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: errorMessage,
+                        confirmButtonText: 'OK'
+                    });
+                }
+            }
 
 
             document.getElementById('user_country').addEventListener('change', async function () {
@@ -1020,8 +1048,8 @@
                 const emailError = document.getElementById('emailError');
                 const emailAvailabilityError = document.getElementById('emailAvailabilityError');
                 const nextStepBtn = document.getElementById('nextStepBtn');
-                console.log("nextStepBtn",nextStepBtn);
-                
+                console.log("nextStepBtn", nextStepBtn);
+
 
                 emailError.style.display = 'none';
                 emailAvailabilityError.style.display = 'none';
@@ -1054,13 +1082,13 @@
                 console.log("isEmailAvailable", isEmailAvailable);
 
                 // Enable the Next Step button if email is valid and available
-                
+
                 console.log("Disabling button, isEmailValid:", isEmailValid, "isEmailAvailable:", isEmailAvailable);
                 // if(isEmailValid == true && isEmailAvailable == false){
                 //     nextStepBtn.disabled = true;
                 //     console.log("Button is disabled");
                 // }
-                 
+
                 console.log("isEmailValid:", isEmailValid);
                 console.log("isEmailAvailable:", isEmailAvailable);
                 if (isEmailValid == true && isEmailAvailable == false) {
@@ -1070,7 +1098,7 @@
                     nextStepBtn.disabled = false;
                     console.log("Button is enabled");
                 }
-    });
+            });
 
             function isValidEmail($email) {
                 var emailReg = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
@@ -1284,7 +1312,7 @@
                                 method: 'GET',
                                 data: { email: email },
                                 success: function (response) {
-                                   //console.log('Response from server:', response);
+                                    //console.log('Response from server:', response);
                                     if (!response.available) {
                                         $('#companyemailAvailabilityError').text(response.message).show();
                                         $('#nextStepBtn').prop('disabled', true);
@@ -1344,7 +1372,7 @@
                             method: 'GET',
                             data: { phone: phone },
                             success: function (response) {
-                               // console.log('Response from server:', response);
+                                // console.log('Response from server:', response);
                                 if (!response.available) {
                                     $('#phoneavailabilityerror').text(response.message).show();
                                     $('#nextStepBtn').prop('disabled', true);
@@ -1370,7 +1398,7 @@
                 function updateMemberCountDisplay() {
                     var memberCount_val = $('#member-count').val();
                     //console.log("memberCount_vals",memberCount_val);
-                    
+
                     if (memberCount_val === "") {
                         memberCount_val = 0;
                     }
@@ -1383,7 +1411,7 @@
 
                     const alltotal_amount = totalAmount + total_prices;
                     //console.log("alltotal_amount", alltotal_amount.toFixed(2));
-                    var allamount = alltotal_amount/1;
+                    var allamount = alltotal_amount / 1;
 
                     // if (memberCount_val > 0) {
                     //     $('#amount-count-display').text(alltotal_amount.toFixed(2));
@@ -1398,15 +1426,15 @@
                         $('#amount-count-display').text(`$${parseFloat(allamount).toFixed(1).replace(/\.0$/, '')}`);
                     } else {
                         console.log("without members");
-                        
-                        const total_price = '<%= total_price %>'; 
+
+                        const total_price = '<%= total_price %>';
                         $('#user-amount-count-display').text(`$${parseFloat(totalAmount).toFixed(1).replace(/\.0$/, '')}`);
                         $('#plan-price').text(`$${parseFloat(total_prices).toFixed(1).replace(/\.0$/, '')}`);
 
                         $('#amount-count-display').text(`$${parseFloat(total_price).toFixed(1).replace(/\.0$/, '')}`);
                     }
 
-                    
+
                 }
 
                 $('#member-count').on('input', function () {
@@ -1448,10 +1476,10 @@
 
                 const perUserPrice = parseFloat('<%= per_user_price || 0 %>');
                 const perUserNo = Math.round('<%= user_no || 0 %>');
-                
+
                 $('#price-per-user').text(perUserPrice.toFixed(2));
                 $('#user_number').text(perUserNo);
-                
+
 
             });
 
