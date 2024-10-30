@@ -3182,7 +3182,7 @@ router.get('/create-user-company-subscription', checkCookieValue, async (req, re
         const exchangeRates = await comFunction2.getCurrency();
         //console.log("exchangeRates",exchangeRates);
         console.log("per_user_price",per_user_price);
-        console.log("accountry_code",country_code);
+        
 
         const [globalPageMeta, getplans, getCountries, getCountriesList] = await Promise.all([
             comFunction2.getPageMetaValues('global'),
@@ -3192,6 +3192,7 @@ router.get('/create-user-company-subscription', checkCookieValue, async (req, re
         ]);
         //console.log("getCountriesList",getCountriesList);
         console.log("actualper_user_price",per_user_price);
+        console.log("accountry_code",country_code);
 
         res.render('front-end/company-subscription-monthly', {
             menu_active_id: 'Subscription',
