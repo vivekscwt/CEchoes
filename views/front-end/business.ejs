@@ -557,37 +557,36 @@
      
          <div class="table_bottom_wrap">
             <div class="table_bottom_item">
-              <div class="table_bottom_heading">
-                <h4>PRICE (Monthly) USD</h4>
-              </div>
+                <div class="table_bottom_heading">
+                    <h4>PRICE (Monthly) <%= currencySign %></h4>
+                </div>
             </div>
             <div class="table_bottom_item">
-              <div class="table_bottom_heading">
-                <h4>$<%= getplans.basic_val.monthly_price_local%></h4>
-              </div>
+                <div class="table_bottom_heading">
+                    <h4><%= currencySign %><%= getplans.basic_val.monthly_price_local %></h4>
+                </div>
             </div>
             <div class="table_bottom_item">
-              <div class="table_bottom_heading">
-                <h4>$<%= getplans.standard_val.monthly_price_local%></h4>
-              </div>
+                <div class="table_bottom_heading">
+                    <h4><%= currencySign %><%= getplans.standard_val.monthly_price_local %></h4>
+                </div>
             </div>
             <div class="table_bottom_item">
-              <div class="table_bottom_heading">
-                <h4>$<%= getplans.advanced_val.monthly_price_local%></h4>
-              </div>
+                <div class="table_bottom_heading">
+                    <h4><%= currencySign %><%= getplans.advanced_val.monthly_price_local %></h4>
+                </div>
             </div>
             <div class="table_bottom_item">
-              <div class="table_bottom_heading">
-                <h4>$<%= getplans.premium_val.monthly_price_local%></h4>
-              </div>
-      
+                <div class="table_bottom_heading">
+                    <h4><%= currencySign %><%= getplans.premium_val.monthly_price_local %></h4>
+                </div>
             </div>
             <div class="table_bottom_item">
-              <div class="table_bottom_heading">
-                <h4><%= getplans.enterprise_val.monthly_price_local%></h4>
-              </div>
+                <div class="table_bottom_heading">
+                    <h4><%= currencySign %><%= getplans.enterprise_val.monthly_price_local %></h4>
+                </div>
             </div>
-          </div>
+        </div>
          <div class="table_last_bottom_wrap">
            <div class="table_last_wrp">
              <div>User License included</div>

@@ -2377,6 +2377,14 @@ router.get('/business', checkCookieValue, async (req, res) => {
         ]);
         console.log("getplans", getplans);
         console.log("getSubscribedUserssss", getSubscribedUsers);
+        let currencySign;
+        if (country_name == "United Kingdom") {
+              currencySign = '£'; // British Pound
+        } else if (country_name === "Japan") {
+              currencySign = '¥'; 
+        } else {
+              currencySign = '$'; 
+        }
 
         const sql = `SELECT * FROM page_info where secret_Key = 'business' AND country = "${country_code}"`;
         db.query(sql, (err, results, fields) => {
@@ -2393,6 +2401,7 @@ router.get('/business', checkCookieValue, async (req, res) => {
                 })
                 const UpcomingBusinessFeature = await comFunction2.getUpcomingBusinessFeature();
                 const BusinessFeature = await comFunction2.getBusinessFeature();
+
                 //console.log(meta_values_array);
                 res.render('front-end/business', {
                     menu_active_id: 'business',
@@ -2406,7 +2415,10 @@ router.get('/business', checkCookieValue, async (req, res) => {
                     getplans: getplans,
                     country_name: country_name,
                     getSubscribedUsers: getSubscribedUsers,
-                    encryptedEmail: encryptedEmail
+                    encryptedEmail: encryptedEmail,
+                    country_code,
+                    country_name,
+                    currencySign
                 });
             })
 
@@ -2459,6 +2471,14 @@ router.get('/business/:getcountryname', checkCookieValue, async (req, res) => {
             ]);
             console.log("getplans", getplans);
             console.log("getSubscribedUsers", getSubscribedUsers);
+            let currencySign;
+            if (country_name == "United Kingdom") {
+                  currencySign = '£'; // British Pound
+            } else if (country_name === "Japan") {
+                  currencySign = '¥'; 
+            } else {
+                  currencySign = '$'; 
+            }
 
             const sql = `SELECT * FROM page_info where secret_Key = 'business' AND country = "US"`;
             db.query(sql, (err, results, fields) => {
@@ -2488,7 +2508,8 @@ router.get('/business/:getcountryname', checkCookieValue, async (req, res) => {
                         getplans: getplans,
                         country_name: country_name,
                         getSubscribedUsers: getSubscribedUsers,
-                        encryptedEmail: encryptedEmail
+                        encryptedEmail: encryptedEmail,
+                        currencySign: currencySign
                     });
                 })
 
@@ -2501,6 +2522,14 @@ router.get('/business/:getcountryname', checkCookieValue, async (req, res) => {
             ]);
             console.log("getplans", getplans);
             console.log("getSubscribedUsers", getSubscribedUsers);
+            let currencySign;
+            if (country_name == "United Kingdom") {
+                  currencySign = '£'; // British Pound
+            } else if (country_name === "Japan") {
+                  currencySign = '¥'; 
+            } else {
+                  currencySign = '$'; 
+            }
 
             const sql = `SELECT * FROM page_info where secret_Key = 'business' AND country = "${getcountryname}"`;
             db.query(sql, (err, results, fields) => {
@@ -2530,7 +2559,8 @@ router.get('/business/:getcountryname', checkCookieValue, async (req, res) => {
                         getplans: getplans,
                         country_name: country_name,
                         getSubscribedUsers: getSubscribedUsers,
-                        encryptedEmail: encryptedEmail
+                        encryptedEmail: encryptedEmail,
+                        currencySign: currencySign
                     });
                 })
 
