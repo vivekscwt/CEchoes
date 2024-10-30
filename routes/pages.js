@@ -3094,6 +3094,8 @@ router.get('/create-user-company-subscription', checkCookieValue, async (req, re
         } else {
             var per_user_price = per_user_prices
         }
+        console.log("per_user_price",per_user_price);
+        
 
 
         const exchangeRates = await comFunction2.getCurrency();
@@ -3198,6 +3200,7 @@ router.get('/create-company-subscription', checkCookieValue, async (req, res) =>
         } else {
             var per_user_price = per_user_prices
         }
+        console.log("per_user_price",per_user_price);
 
         const exchangeRates = await comFunction2.getCurrency();
 
