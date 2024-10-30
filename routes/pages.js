@@ -3168,7 +3168,8 @@ router.get('/create-user-company-subscription', checkCookieValue, async (req, re
 
         if (country_code == 'UK') {
             console.log("ukcountry");
-            
+            console.log("ukper_user_prices",per_user_prices);
+            console.log("ukindian_currency",indian_currency);
             var per_user_price = per_user_prices * indian_currency;
             console.log("ukper_user_orice",per_user_price);
             
