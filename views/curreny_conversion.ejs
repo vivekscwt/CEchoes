@@ -32,7 +32,15 @@
                         <% if (getcurrency) { %>
                             <form id="current_edit" class="form" action="/auth/currency-convert" method="POST">
                                 <div class="card-body border-top p-9">
-                                    <h2>1 Dollar($) = </h2>
+                                    <div class="row mb-6">
+                                        <label class="col-lg-4 col-form-label required fw-bold fs-6">Dollar($)</label>
+                                        <div class="col-lg-8">
+                                            <input type="number" name="USA_currency"
+                                                class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
+                                                placeholder="USA Currency" value="1" readonly/>
+                                               
+                                        </div>
+                                    </div>
                                     <div class="row mb-6">
                                         <label class="col-lg-4 col-form-label required fw-bold fs-6">UK
                                             Currency(£)</label>
@@ -63,7 +71,15 @@
                             <% } else { %>
                                 <form id="current_add" class="form" action="/auth/currency-convert" method="POST">
                                     <div class="card-body border-top p-9">
-                                        <h2>1 Dollar($) = </h2>
+                                        <div class="row mb-6">
+                                            <label class="col-lg-4 col-form-label required fw-bold fs-6">Dollar($)</label>
+                                            <div class="col-lg-8">
+                                                <input type="number" name="USA_currency"
+                                                    class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
+                                                    placeholder="USA Currency" value="1" readonly/>
+                                                   
+                                            </div>
+                                        </div>
                                         <div class="row mb-6">
                                             <label class="col-lg-4 col-form-label required fw-bold fs-6">UK
                                                 Currency</label>

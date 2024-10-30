@@ -3193,6 +3193,9 @@ router.get('/create-user-company-subscription', checkCookieValue, async (req, re
         //console.log("getCountriesList",getCountriesList);
         console.log("actualper_user_price",per_user_price);
         console.log("accountry_code",country_code);
+        if (country_code == 'UK') {
+            console.log("ukcountry");
+        } 
 
         res.render('front-end/company-subscription-monthly', {
             menu_active_id: 'Subscription',
