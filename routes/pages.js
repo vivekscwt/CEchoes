@@ -3153,6 +3153,7 @@ router.get('/create-user-company-subscription', checkCookieValue, async (req, re
             var per_user_prices = planidvalue[0].per_user_price;
             console.log("per_user_prices", per_user_prices);
             var user_no = planidvalue[0].user_no;
+            
         }
         const getcurencyquery = `SELECT * FROM currency_conversion`;
         const getcurrencyval = await queryAsync(getcurencyquery);
