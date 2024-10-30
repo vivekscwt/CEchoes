@@ -10469,7 +10469,6 @@ router.get('/plans-managemnet', checkLoggedIn, async (req, res) => {
             var comp_state_id = getcompanyvalue[0].main_address_state;
             //console.log("comp_state_id",comp_state_id);
             var comp_country_shortname = getcompanyvalue[0].main_address_country;
-            //console.log("comp_country_shortname",comp_country_shortname);
         }
         const getcountryidquery = `SELECT * FROM countries WHERE shortname=?`;
         const getcountryidvalue = await query(getcountryidquery, [comp_country_shortname]);
