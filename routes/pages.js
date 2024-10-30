@@ -3163,7 +3163,7 @@ router.get('/create-user-company-subscription', checkCookieValue, async (req, re
         var jp_currency = getcurrencyval[0].jpy_currency;
         console.log("jp_currency", jp_currency);
 
-        if (country_code == 'IN') {
+        if (country_code == 'UK') {
             var per_user_price = per_user_prices * indian_currency;
         } else if (country_code == 'JP') {
             var per_user_price = per_user_prices * jp_currency;
@@ -3269,7 +3269,7 @@ router.get('/create-company-subscription', checkCookieValue, async (req, res) =>
         var jp_currency = getcurrencyval[0].jpy_currency;
         console.log("jp_currency", jp_currency);
 
-        if (country_code == 'IN') {
+        if (country_code == 'UK') {
             var per_user_price = per_user_prices * indian_currency;
         } else if (country_code == 'JP') {
             var per_user_price = per_user_prices * jp_currency;
