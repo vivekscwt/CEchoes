@@ -3163,8 +3163,12 @@ router.get('/create-user-company-subscription', checkCookieValue, async (req, re
         console.log("indian_currency", indian_currency);
         var jp_currency = getcurrencyval[0].jpy_currency;
         console.log("jp_currency", jp_currency);
+        
+        
 
         if (country_code == 'UK') {
+            console.log("ukcountry");
+            
             var per_user_price = per_user_prices * indian_currency;
         } else if (country_code == 'JP') {
             var per_user_price = per_user_prices * jp_currency;
@@ -3178,6 +3182,7 @@ router.get('/create-user-company-subscription', checkCookieValue, async (req, re
         const exchangeRates = await comFunction2.getCurrency();
         //console.log("exchangeRates",exchangeRates);
         console.log("per_user_price",per_user_price);
+        console.log("accountry_code",country_code);
 
         const [globalPageMeta, getplans, getCountries, getCountriesList] = await Promise.all([
             comFunction2.getPageMetaValues('global'),
