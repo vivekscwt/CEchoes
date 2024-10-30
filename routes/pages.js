@@ -3170,6 +3170,8 @@ router.get('/create-user-company-subscription', checkCookieValue, async (req, re
             console.log("ukcountry");
             
             var per_user_price = per_user_prices * indian_currency;
+            console.log("ukper_user_orice",per_user_price);
+            
         } else if (country_code == 'JP') {
             var per_user_price = per_user_prices * jp_currency;
         } else {
