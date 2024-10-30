@@ -3153,7 +3153,7 @@ router.get('/create-user-company-subscription', checkCookieValue, async (req, re
             var per_user_prices = planidvalue[0].per_user_price;
             console.log("per_user_prices", per_user_prices);
             var user_no = planidvalue[0].user_no;
-            
+
         }
         const getcurencyquery = `SELECT * FROM currency_conversion`;
         const getcurrencyval = await queryAsync(getcurencyquery);
@@ -3171,12 +3171,13 @@ router.get('/create-user-company-subscription', checkCookieValue, async (req, re
         } else {
             var per_user_price = per_user_prices
         }
-        console.log("per_user_price",per_user_price);
+        
         
 
 
         const exchangeRates = await comFunction2.getCurrency();
         //console.log("exchangeRates",exchangeRates);
+        console.log("per_user_price",per_user_price);
 
         const [globalPageMeta, getplans, getCountries, getCountriesList] = await Promise.all([
             comFunction2.getPageMetaValues('global'),
@@ -3185,6 +3186,7 @@ router.get('/create-user-company-subscription', checkCookieValue, async (req, re
             comFunction.getCountriesList()
         ]);
         //console.log("getCountriesList",getCountriesList);
+        console.log("actualper_user_price",per_user_price);
 
         res.render('front-end/company-subscription-monthly', {
             menu_active_id: 'Subscription',
