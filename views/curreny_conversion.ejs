@@ -11,7 +11,7 @@
                     class="page-title d-flex align-items-center flex-wrap me-3 mb-5 mb-lg-0">
                     <!--begin::Title-->
                     <h1 class="d-flex align-items-center text-dark fw-bolder fs-3 my-1">
-                        Membership Details
+                        Currency Convertion from dollar($)
                         <!--end::Description-->
                     </h1>
                     <!--end::Title-->
@@ -27,34 +27,31 @@
             <div id="kt_content_container" class="container-xxl">
                 <!-- Basic Plan -->
                 <div class="card mb-5 mb-xl-10">
-                    <div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse"
-                        data-bs-target="#kt_account_profile_details_basic" aria-expanded="true"
-                        aria-controls="kt_account_profile_details_basic">
-                        <div class="card-title m-0">
-                            <h3 class="fw-bolder m-0">Basic</h3>
-                        </div>
-                    </div>
+                    
                     <div id="kt_account_profile_details_basic" class="collapse show">
                         <% if (getcurrency) { %>
                             <form id="current_edit" class="form" action="/auth/currency-convert" method="POST">
                                 <div class="card-body border-top p-9">
+                                    <h2>1 Dollar($) = </h2>
                                     <div class="row mb-6">
-                                        <label class="col-lg-4 col-form-label required fw-bold fs-6">INR
-                                            Currency</label>
+                                        <label class="col-lg-4 col-form-label required fw-bold fs-6">UK
+                                            Currency(£)</label>
                                         <div class="col-lg-8">
                                             <input type="number" name="inr_currency" id="inrs_currency"
                                                 class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
                                                 placeholder="UK Currency" value="<%= getcurrency.inr_currency %>" />
+                                                <small class="form-text text-muted">Current Rate: 1 USD = <span id="gbp_rate">0.75</span> GBP</small>
                                         </div>
                                     </div>
 
                                     <div class="row mb-6">
                                         <label class="col-lg-4 col-form-label required fw-bold fs-6">JPY
-                                            Currency</label>
+                                            Currency(¥)</label>
                                         <div class="col-lg-8">
                                             <input type="number" name="jpy_currency" id="jpys_currency"
                                                 class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
-                                                placeholder="INR Currency" value="<%= getcurrency.jpy_currency %>" />
+                                                placeholder="UK Currency" value="<%= getcurrency.jpy_currency %>" />
+                                                <small class="form-text text-muted">Current Rate: 1 USD = <span id="jpy_rate">110</span> JPY</small>
                                         </div>
                                     </div>
                                 </div>
@@ -66,13 +63,14 @@
                             <% } else { %>
                                 <form id="current_add" class="form" action="/auth/currency-convert" method="POST">
                                     <div class="card-body border-top p-9">
+                                        <h2>1 Dollar($) = </h2>
                                         <div class="row mb-6">
-                                            <label class="col-lg-4 col-form-label required fw-bold fs-6">INR
+                                            <label class="col-lg-4 col-form-label required fw-bold fs-6">UK
                                                 Currency</label>
                                             <div class="col-lg-8">
                                                 <input type="number" name="inr_currency" id="inr_currency"
                                                     class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
-                                                    placeholder="INR Currency" />
+                                                    placeholder="UK Currency" />
                                             </div>
                                         </div>
                                         <div class="row mb-6">

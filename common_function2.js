@@ -8207,7 +8207,8 @@ async function getCurrency() {
   const exchangeRates = {};
   for (const row of getcurrencyvalue) {
     if (row.inr_currency) {
-      exchangeRates['INR'] = row.inr_currency;
+      //exchangeRates['INR'] = row.inr_currency;
+      exchangeRates['GBP'] = row.inr_currency;
     }
     if (row.jpy_currency) {
       exchangeRates['JPY'] = row.jpy_currency;
@@ -8229,6 +8230,7 @@ async function convertPrices(plan, userCountry) {
   let yearlyPriceConverted = plan.yearly_price;
   let perUserPriceConverted = plan.per_user_price;
 
+  console.log("yearlyPriceConverted",yearlyPriceConverted);
   
   
 //previopus
@@ -8305,6 +8307,7 @@ function getUserCurrency(userCountry) {
   const countryCurrencyMap = {
     'India': 'INR',
     'Japan': 'JPY',
+    'United Kingdom': 'GBP',
   };
 
   return countryCurrencyMap[userCountry] || 'USD';
