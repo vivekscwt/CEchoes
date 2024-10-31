@@ -34,11 +34,11 @@
 
               <% if (plan !== 'enterprise') { %>
                 <% if (country_name === "United Kingdom") { %>
-                  £ <%= getplans[plan + '_val'].monthly_price_local %> <span>/ Year</span>
+                  £ <%= getplans[plan + '_val'].monthly_price_local %> <span>/ Month</span>
                 <% } else if (country_name === "Japan") { %>
-                  ¥ <%= getplans[plan + '_val'].monthly_price_local %> <span>/ Year</span>
+                  ¥ <%= getplans[plan + '_val'].monthly_price_local %> <span>/ Month</span>
                 <% } else { %>
-                  $ <%= getplans[plan + '_val'].monthly_price_local %> <span>/ Year</span>
+                  $ <%= getplans[plan + '_val'].monthly_price_local %> <span>/ Month</span>
                 <% } %>
               <% } else { %>
                 <% if (country_name === "United Kingdom") { %>
@@ -148,11 +148,11 @@
                 <% } %>
               <% } else { %>
                 <% if (country_name === "United Kingdom") { %>
-                  £ <%= getplans[plan + '_val'].monthly_price_local %> <span>/ Month</span>
+                  £ <%= getplans[plan + '_val'].monthly_price_local %> <span>/ Year</span>
                 <% } else if (country_name === "Japan") { %>
-                  ¥ <%= getplans[plan + '_val'].monthly_price_local %> <span>/ Month</span>
+                  ¥ <%= getplans[plan + '_val'].monthly_price_local %> <span>/ Year</span>
                 <% } else { %>
-                  $ <%= getplans[plan + '_val'].monthly_price_local %> <span>/ Month</span>
+                  $ <%= getplans[plan + '_val'].monthly_price_local %> <span>/ Year</span>
                 <% } %>
               <% } %>
             </div>
