@@ -7088,12 +7088,12 @@ async function getuserAllPaymentHistory(user_id) {
             payments.push(modifiedRow);
           });
 
-         // console.log('All Payments:', payments); 
+         console.log('All Payments:', payments); 
           const groupedPayments = {
             PLUS: payments.filter(payment => payment.plan_name === 'basic'),
             PRO: payments.filter(payment => payment.plan_name === 'standard'),
             STAR: payments.filter(payment => payment.plan_name === 'advanced'),
-            STAR: payments.filter(payment => payment.plan_name === 'premium'),
+            PREMIUM: payments.filter(payment => payment.plan_name === 'premium'),
             ENTERPRISE: payments.filter(payment => payment.plan_name === 'enterprise'),
           };
 

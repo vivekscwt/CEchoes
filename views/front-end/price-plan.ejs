@@ -83,12 +83,12 @@
                         </div>
                     <% }else if (currentUserData.claimed_comp_id!=null || currentUserData.claimed_comp_id!=undefined ) { %>
                     <div class="proceed_btn">
-                      <a href="#" style="color: black;"  onclick="redirectToStripePayment('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].monthly_price_local %>', 'monthly')">Get Started</a>
+                      <a href="#" style="color: black;"  onclick="redirectToStripePayment('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].monthly_price %>', 'monthly')">Get Started</a>
                       
                     </div>
                   <% } else { %>
                     <div class="proceed_btn">
-                      <a href="#" style="color: black;"  onclick="redirectTocompanymonthlySubscriptionPage('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].monthly_price_local %>', 'monthly')">Get Started</a>
+                      <a href="#" style="color: black;"  onclick="redirectTocompanymonthlySubscriptionPage('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].monthly_price %>', 'monthly')">Get Started</a>
                     </div>
                   <% } %>
                 </div>
@@ -122,7 +122,7 @@
                     </button>
                   <% } else { %>
                     <div class="proceed_btn">
-                      <a href="#" style="color: black;" onclick="redirectToSubscriptionPage('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].monthly_price_local %>', 'monthly')">Get Started</a>
+                      <a href="#" style="color: black;" onclick="redirectToSubscriptionPage('<%= getplans[plan + '_val'].name %>', '<%= getplans[plan + '_val'].monthly_price %>', 'monthly')">Get Started</a>
                     </div>
                   <% } %>
                 </div>

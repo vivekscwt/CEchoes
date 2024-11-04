@@ -159,7 +159,7 @@
 
                             </span></p>
                         <p>Total Amount: <span id="amount-count-display">
-                                $<%= total_price / 1 %>
+                                $<%= pricevalue / 1 %>
                             </span></p>
                         <p>Are you sure you want to submit the form?</p>
 
@@ -1405,19 +1405,13 @@
                     $('#member-count-display').text(memberCount_val);
 
                     const totalAmount = memberCount_val * pricePerUser;
-                    //console.log("Total Amount Calculated:", totalAmount.toFixed(2));
-                    const total_prices = parseFloat(urlParams.get('total_price'));
-                    //console.log("total_prices", total_prices);
+                    // const total_prices = parseFloat(urlParams.get('total_price'));
+                    const total_prices = '<%= pricevalue%>'
+                    
 
                     const alltotal_amount = totalAmount + total_prices;
-                    //console.log("alltotal_amount", alltotal_amount.toFixed(2));
                     var allamount = alltotal_amount / 1;
 
-                    // if (memberCount_val > 0) {
-                    //     $('#amount-count-display').text(alltotal_amount.toFixed(2));
-                    // } else {
-                    //     $('#amount-count-display').text('<%= total_price%>');
-                    // }
                     const countryNames = '<%= country_name %>';
                     let currencySigns;
 
@@ -1436,7 +1430,7 @@
                     } else {
                         console.log("without members");
 
-                        const total_price = '<%= total_price %>';
+                        const total_price = '<%= pricevalue %>';
                         $('#user-amount-count-display').text(`${currencySigns}${parseFloat(totalAmount).toFixed(1).replace(/\.0$/, '')}`);
                         $('#plan-price').text(`${currencySigns}${parseFloat(total_prices).toFixed(1).replace(/\.0$/, '')}`);
                         $('#amount-count-display').text(`${currencySigns}${parseFloat(total_price).toFixed(1).replace(/\.0$/, '')}`);
