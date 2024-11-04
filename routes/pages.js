@@ -3147,13 +3147,9 @@ router.get('/create-user-company-subscription', checkCookieValue, async (req, re
         const stripe_key = process.env.STRIPE_SECRET_KEY;
 
         const stripe_publish_key = process.env.STRIPE_PUBLISH_KEY
-        console.log("stripe_publish_key",stripe_publish_key);
 
         var monthlyprice = req.query.monthlyPrice;
-        
-
         let currentUserData = JSON.parse(req.userData);
-        console.log("currentUserData", currentUserData);
         if (currentUserData != null) {
             var user_id = currentUserData.user_id;
             console.log("user_idsssss", user_id);
@@ -3166,9 +3162,6 @@ router.get('/create-user-company-subscription', checkCookieValue, async (req, re
 
         let country_name = req.cookies.countryName || 'India';
         let country_code = req.cookies.countryCode || 'IN';
-
-        console.log("country_names", country_name);
-        console.log("country_codes", country_code);
 
         const planids = `SELECT * FROM plan_management WHERE name = "${planName}"`;
         const planidvalue = await queryAsync(planids);
@@ -3183,18 +3176,15 @@ router.get('/create-user-company-subscription', checkCookieValue, async (req, re
             var per_user_prices = planidvalue[0].per_user_price;
             console.log("per_user_prices", per_user_prices);
             var user_no = planidvalue[0].user_no;
-
         }
         const getcurencyquery = `SELECT * FROM currency_conversion`;
         const getcurrencyval = await queryAsync(getcurencyquery);
-        console.log("getcurrencyval", getcurrencyval);
+        // console.log("getcurrencyval", getcurrencyval);
 
         var indian_currency = getcurrencyval[0].inr_currency;
         console.log("indian_currency", indian_currency);
         var jp_currency = getcurrencyval[0].jpy_currency;
         console.log("jp_currency", jp_currency);
-        
-        
 
         if (country_code == 'UK') {
             console.log("ukcountry");
@@ -3208,10 +3198,6 @@ router.get('/create-user-company-subscription', checkCookieValue, async (req, re
         } else {
             var per_user_price = per_user_prices
         }
-        
-        
-
-
         const exchangeRates = await comFunction2.getCurrency();
         //console.log("exchangeRates",exchangeRates);
         console.log("per_user_price",per_user_price);
@@ -3223,13 +3209,26 @@ router.get('/create-user-company-subscription', checkCookieValue, async (req, re
             comFunction.getCountries(),
             comFunction.getCountriesList()
         ]);
-        //console.log("getCountriesList",getCountriesList);
-        console.log("actualper_user_price",per_user_price);
-        console.log("accountry_code",country_code);
+
         if (country_code == 'UK') {
             console.log("ukcountry");
         } 
+        const planKey = `${planName.toLowerCase()}_val`; 
+        const selectedPlan = getplans[planKey];
+        console.log("selectedPlan",selectedPlan);
+        let pricevalue;
+        if (selectedPlan) {
 
+        if (subscriptionType === 'monthly') {
+            pricevalue = selectedPlan.monthly_price_local;
+        } else {
+            pricevalue = selectedPlan.yearly_price_local;
+        }
+        } else {
+        console.error(`Plan ${planName} not found.`);
+        }
+        console.log("pricevalue",pricevalue);
+        
         res.render('front-end/company-subscription-monthly', {
             menu_active_id: 'Subscription',
             page_title: 'Company creation',
@@ -3257,7 +3256,8 @@ router.get('/create-user-company-subscription', checkCookieValue, async (req, re
             stripe_publish_key: stripe_publish_key,
             user_no,
             monthlyprice: monthlyprice,
-            country_name: country_name
+            country_name: country_name,
+            pricevalue: pricevalue
         });
     } catch (err) {
         console.error(err);
@@ -3337,6 +3337,21 @@ router.get('/create-company-subscription', checkCookieValue, async (req, res) =>
         console.log("getUser",getUser);
         console.log("getUserMeta",getUserMeta);
 
+        const planKey = `${planName.toLowerCase()}_val`; 
+        const selectedPlan = getplans[planKey];
+        console.log("selectedPlan",selectedPlan);
+        let pricevalue;
+        if (selectedPlan) {
+        if (subscriptionType === 'monthly') {
+            pricevalue = selectedPlan.monthly_price_local;
+        } else {
+            pricevalue = selectedPlan.yearly_price_local;
+        }
+        } else {
+        console.error(`Plan ${planName} not found.`);
+        }
+        console.log("pricevalue",pricevalue);
+
         res.render('front-end/company-only-subscription', {
             menu_active_id: 'Subscription',
             page_title: 'Company creation',
@@ -3364,7 +3379,8 @@ router.get('/create-company-subscription', checkCookieValue, async (req, res) =>
             user: getUser,
             userMeta: getUserMeta,
             user_no,
-            country_name: country_name
+            country_name: country_name,
+            pricevalue: pricevalue
         });
     }  catch (err) {
         console.error(err);
