@@ -586,10 +586,23 @@
 			return;
 		}
 
+		const countryNames = '<%= country_name %>';
+            let currencySigns;
+
+            if (countryNames === "United Kingdom") {
+                currencySigns = '£';
+            } else if (countryNames === "Japan") {
+                currencySigns = '¥';
+            } else {
+                currencySigns = '$';
+            }
+
 		convertToUSD(totalPrice, countryCode)
 			.then(convertedPrice => {
 				if (!isNaN(convertedPrice)) {
-					amountElement.textContent = '$' + convertedPrice;
+					// amountElement.textContent = '$' + convertedPrice;
+					amountElement.textContent = currencySigns + convertedPrice;
+					console.log(`Converted Total Price to ${currencySigns}:`, convertedPrice);
 					console.log('Converted Total Price to USD:', convertedPrice);
 				} else {
 					amountElement.textContent = '0.00';

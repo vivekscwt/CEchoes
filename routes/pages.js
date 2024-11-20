@@ -2637,6 +2637,7 @@ router.get('/stripe-payment', checkCookieValue, async (req, res) => {
             memberCount,
             total_price,
             country_code: country_code,
+            country_name: country_name,
             exchangeRates: exchangeRates,
             encryptedEmail,
             user_id,
@@ -3002,6 +3003,15 @@ router.get('/stripe-user-update-payment', checkCookieValue, async (req, res) => 
             var user_payment_status = userupdateval[0].status;
         }
 
+
+        if (billingCycle === 'monthly') {
+            pricevalue = planidvalue[0].monthly_price
+        } else {
+            pricevalue = planidvalue[0].yearly_price
+        }
+
+        console.log("pricevalue",pricevalue);
+
         res.render('front-end/stripe-user-update-payment', {
             menu_active_id: 'Stripe Payment',
             page_title: 'Stripe Payment',
@@ -3021,7 +3031,8 @@ router.get('/stripe-user-update-payment', checkCookieValue, async (req, res) => 
             membercount,
             per_user_price: per_user_prices,
             user_no: user_no,
-            user_payment_status: user_payment_status
+            user_payment_status: user_payment_status,
+            country_name
         });
     } catch (err) {
         console.error(err);
