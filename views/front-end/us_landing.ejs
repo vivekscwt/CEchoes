@@ -271,7 +271,6 @@
                         <div class="review-like-dislike" id="rev_<%= latestReview.id %>">
                            <span><a href="#" class="review-voting like_class <% if(user_voting_value == '1'){ %> active <% } %>" data-voting="1" data-userId="<%= currentUserData.user_id %>" data-reviewId="<%= latestReview.id %>"><i class="fa-solid fa-thumbs-up"></i> <span class="like_count"><%= totalLikes %></span></a></span>
 
-                           <span><a href="#" class="review-voting dislike_class <% if(user_voting_value == '0'){ %> active <% } %>"  data-voting="0" data-userId="<%= currentUserData.user_id %>" data-reviewId="<%= latestReview.id %>"><i class="fa-solid fa-thumbs-down"></i> <span class="dislike_count"><%= totalDislikes %></span></a></span>
                         </div>
                      <% } %>
                     </div>
