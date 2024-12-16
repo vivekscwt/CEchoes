@@ -115,24 +115,6 @@
                     <% } %>
 
 
-                      <% if (NegativeReviewsCompany && NegativeReviewsCompany.length> 0) { %>
-                        <div class="banner-trending-scroll">
-                          <div class="like-dislike-tren-label">
-                            <i class="fa-solid fa-thumbs-down"></i>
-                          </div>
-                          <div class="like-dislike-company-scroll">
-                            <marquee behavior="scroll" direction="left" onmouseover="this.stop();"
-                              onmouseout="this.start();">
-                              <ul>
-                                <% NegativeReviewsCompany.forEach((company, index)=> { %>
-                                  <li><a href="/company/<%- company.slug %>"><%- company.company_name %></a></li>
-                                  <% }); %>
-                              </ul>
-                            </marquee>
-                          </div>
-                        </div>
-                        <% } else { %>
-                          <% } %>
 
 
 
@@ -270,7 +252,7 @@
                         %>
                         <div class="review-like-dislike" id="rev_<%= latestReview.id %>">
                            <span><a href="#" class="review-voting like_class <% if(user_voting_value == '1'){ %> active <% } %>" data-voting="1" data-userId="<%= currentUserData.user_id %>" data-reviewId="<%= latestReview.id %>"><i class="fa-solid fa-thumbs-up"></i> <span class="like_count"><%= totalLikes %></span></a></span>
-
+                           <span><a href="#" class="review-voting dislike_class <% if(user_voting_value == '0'){ %> active <% } %>"  data-voting="0" data-userId="<%= currentUserData.user_id %>" data-reviewId="<%= latestReview.id %>"><i class="fa-solid fa-thumbs-down"></i> <span class="dislike_count"><%= totalDislikes %></span></a></span>
                         </div>
                      <% } %>
                     </div>
