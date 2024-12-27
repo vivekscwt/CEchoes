@@ -3231,9 +3231,9 @@ router.get('/create-user-company-subscription', checkCookieValue, async (req, re
         if (selectedPlan) {
 
         if (subscriptionType === 'monthly') {
-            pricevalue = selectedPlan.monthly_price_local;
+            pricevalue = selectedPlan.monthly_price;
         } else {
-            pricevalue = selectedPlan.yearly_price_local;
+            pricevalue = selectedPlan.yearly_price;
         }
         } else {
         console.error(`Plan ${planName} not found.`);

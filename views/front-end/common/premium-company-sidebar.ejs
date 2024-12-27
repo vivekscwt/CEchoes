@@ -135,6 +135,33 @@
      <li <% if( menu_active_id == 'company-dashboard') { %> class="active" <% } %>>
         <a href="/company-dashboard/<%= company.slug  %>"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
         </li>
+        <li <% if( menu_active_id == 'company-review-listing' || menu_active_id == 'send-review-invitation') { %> class="active" <% } %>>
+         <a href="/company-review-listing/<%= company.slug  %>"><i class="fas fa-envelope"></i> Reviews</a>
+         <ul>
+            <li <% if( menu_active_id == 'send-review-invitation') { %>  class="active" <% } %>><a href="/send-review-invitation/<%= company.slug  %>">Send Review Invitation</a></li>
+         </ul>
+      </li>
+      <% if(company && company.membership_type_id>=3 ){ %>
+         <li <% if( menu_active_id == 'complaint') { %> class="active" <% } %>><a href="/company-complaint-listing/<%= company.slug  %>"><i class="fa-solid fa-comment-exclamation"></i> Complaint</a>
+            <ul>
+               <!-- <li><a href="/complaint-level-management/<%= company.slug  %>">Level Management</a></li> -->
+               <li><a href="/company-complaint-listing/<%= company.slug  %>">Complaint Listing</a></li>
+               <li><a href="/new_complain/<%= company.slug  %>">Settings</a></li>
+            </ul>
+        </li>
+        <% } %>
+        <% if(company && company.membership_type_id>=3 ){ %>
+         <li <% if( menu_active_id == 'survey') { %> class="active" <% } %> >
+            <a href="/create-survey/<%= company.slug  %>"><i class="fa-solid fa-clipboard-question"></i> Survey</a>
+            <!-- <ul>
+               <li <% if( menu_active_id == 'survey') { %>  class="active" <% } %>><a href="/send-survey-invitation/<%= company.slug  %>">Send Survey Invitation</a></li>
+            </ul> -->
+         </li>
+         <% } %>
+         <li <% if( menu_active_id == 'company-poll-listing') { %> class="active" <% } %>>
+            <a href="/company-poll-listing/<%= company.slug  %>"><i class="fas fa-poll"></i> Polls</a>
+         </li>
+    
      <li <% if( menu_active_id == 'company-profile-management') { %>  class="active" <% } %>>
         <a href="#"><i class="fas fa-user-tie"></i> Queries</a>
 
@@ -148,34 +175,8 @@
         </ul>
 
      </li>
-     <li <% if( menu_active_id == 'company-review-listing' || menu_active_id == 'send-review-invitation') { %> class="active" <% } %>>
-        <a href="/company-review-listing/<%= company.slug  %>"><i class="fas fa-envelope"></i> Reviews</a>
-        <ul>
-           <li <% if( menu_active_id == 'send-review-invitation') { %>  class="active" <% } %>><a href="/send-review-invitation/<%= company.slug  %>">Send Review Invitation</a></li>
-        </ul>
-     </li>
-     <li <% if( menu_active_id == 'company-poll-listing') { %> class="active" <% } %>>
-        <a href="/company-poll-listing/<%= company.slug  %>"><i class="fas fa-poll"></i> Polls</a>
-     </li>
 
-     <% if(company && company.membership_type_id>=3 ){ %>
-     <li <% if( menu_active_id == 'complaint') { %> class="active" <% } %>><a href="/company-complaint-listing/<%= company.slug  %>"><i class="fa-solid fa-comment-exclamation"></i> Complaint</a>
-        <ul>
-           <!-- <li><a href="/complaint-level-management/<%= company.slug  %>">Level Management</a></li> -->
-           <li><a href="/company-complaint-listing/<%= company.slug  %>">Complaint Listing</a></li>
-           <li><a href="/new_complain/<%= company.slug  %>">Settings</a></li>
-        </ul>
-    </li>
-    <% } %>
 
-     <% if(company && company.membership_type_id>=3 ){ %>
-     <li <% if( menu_active_id == 'survey') { %> class="active" <% } %> >
-        <a href="/create-survey/<%= company.slug  %>"><i class="fa-solid fa-clipboard-question"></i> Survey</a>
-        <!-- <ul>
-           <li <% if( menu_active_id == 'survey') { %>  class="active" <% } %>><a href="/send-survey-invitation/<%= company.slug  %>">Send Survey Invitation</a></li>
-        </ul> -->
-     </li>
-     <% } %>
 
      <li <% if( menu_active_id == 'settings') { %> class="active" <% } %> ><a href="#"><i class="fas fa-cog"></i> Settings</a>
       <ul>

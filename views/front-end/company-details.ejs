@@ -552,6 +552,15 @@
                                     <!-- <input type="text" class="form-control" placeholder="Sub-category Name" name="sub_category"> -->
                                 </div>
                             </div>
+                            <div class="col-md-12">
+                              <div class="custom-form" id="dynamic_sub_field_wrapper">
+                                  <select id="review_sub_id" name="review_sub_id" class="form-select">
+                                      <option value="0"selected disabled>Select Sub Category</option>
+                                      <option value="0">General</option>
+                                  </select>
+                                  <!-- <input type="text" class="form-control" placeholder="Sub-category Name" name="review_sub_id"> -->
+                              </div>
+                          </div>
                         </div>
                     </div>
                   </div>
@@ -790,6 +799,7 @@ $('.review_reply_form').submit(function(e){
 
 $('#select_category').change(function() {
       $('#select_sub_category').empty().append($('<option value="0">Select Product</option><option value="0">General</option>'));
+      $('#review_sub_id').empty().append($('<option value="0">Select Sub Category</option><option value="0">General</option>'));
       //$("#select_state").prop('required',false);
       //$('#dynamic_sub_category_field_wrapper').hide();
       var category_id = $(this).val();
@@ -830,6 +840,40 @@ $('#select_category').change(function() {
             submitButton.disabled = false;
          }
       });    
+      $.ajax({
+        url: '/api/complain_sub_category',
+        method: 'POST',
+        data: {category_id:category_id},
+        ContentType: 'application/json',
+        success: function (data) {
+           if (data.status == 'ok') {
+              $('#dynamic_sub_field_wrapper').show();
+              //$("#select_state").prop('required',true);
+              $.each(data.data, function (i, item) {
+                    $('#review_sub_id').append($('<option>', { 
+                     value: item.id,
+                     text: item.category_name 
+                    }));
+              });                
+           } else {
+              //$('#dynamic_sub_category_field_wrapper').hide();
+              $("#review_sub_id").prop('required',false);
+           }
+        },
+        error: function (error) {
+           // Handle any errors
+           Swal.fire({
+              text: error,
+              icon: "error",
+              buttonsStyling: false,
+              confirmButtonText: "Ok, got it!",
+              customClass: {
+                    confirmButton: "btn btn-primary"
+              }
+           });
+           submitButton.disabled = false;
+        }
+     });    
    });
 
 </script>

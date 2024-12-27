@@ -2242,6 +2242,40 @@
               submitButton.disabled = false;
             }
           });
+          $.ajax({
+            url: '/api/complain_sub_category',
+            method: 'POST',
+            data: {category_id:category_id},
+            ContentType: 'application/json',
+            success: function (data) {
+               if (data.status == 'ok') {
+                  $('#dynamic_sub_field_wrapper').show();
+                  //$("#select_state").prop('required',true);
+                  $.each(data.data, function (i, item) {
+                        $('#review_sub_id').append($('<option>', { 
+                         value: item.id,
+                         text: item.category_name 
+                        }));
+                  });                
+               } else {
+                  //$('#dynamic_sub_category_field_wrapper').hide();
+                  $("#review_sub_id").prop('required',false);
+               }
+            },
+            error: function (error) {
+               // Handle any errors
+               Swal.fire({
+                  text: error,
+                  icon: "error",
+                  buttonsStyling: false,
+                  confirmButtonText: "Ok, got it!",
+                  customClass: {
+                        confirmButton: "btn btn-primary"
+                  }
+               });
+               submitButton.disabled = false;
+            }
+         });    
         });
 
         let apiKey = '<%= apiKey%>'
