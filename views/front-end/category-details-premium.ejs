@@ -138,9 +138,9 @@
                 </div>
             </div>
             <% if(company && company.about_company){ %>
-            <div class="company-content">
-                <p><%= company.about_company  %></p>
-            </div>
+                <div class="company-content">
+                    <p><%- company.about_company.replace(/\r\n|\n/g, '<br>') %></p>
+                </div>
             <% } %>
 
             <% if(company && company.membership_type_id>0 ){ %>

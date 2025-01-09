@@ -4273,6 +4273,8 @@ router.get('/company/:slug', checkCookieValue, async (req, res) => {
 
         }
         console.log("products", products);
+        console.log("CompanyInfo",CompanyInfo);
+        
 
         if (CompanyInfo) {
             //console.log("CompanyInfo",CompanyInfo);
