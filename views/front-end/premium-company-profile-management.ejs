@@ -407,9 +407,13 @@
                           <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
                         </span>
                     </div>
-                    <div class="submit_button text-end custom-form m-0" >
-                        <input type="submit" value="Save & Close" class="btn btn-warning " id="premium_update_btn" />
+                    <div class="submit_button text-end custom-form m-0">
+                        <button type="button" class="btn btn-success" id="save_btn">Save</button>
+                        <button type="button" class="btn btn-warning" id="save_close_btn">Save & Close</button>
                     </div>
+                    <!-- <div class="submit_button text-end custom-form m-0" >
+                        <input type="submit" value="Save & Close" class="btn btn-warning " id="premium_update_btn" />
+                    </div> -->
                     <div style=" width: 100%; text-align: center; display: block; border: 2px solid #fccb06; padding: 6px; margin-top: 20px; border-radius: 5px; display: none;" class="company-edit-message"></div>
                 </form>
             </div>
@@ -421,63 +425,6 @@
 <script>
     jQuery(function ($) {
         $(document).ready(() => {
-
-            $('#premium_company_profile_form').submit(function (e) {
-                e.preventDefault();
-                //alert('aaaaaa');
-                $('#premium_update_btn').prop('disabled', true);
-                $('.company-edit-message').hide();
-                $('.company-edit-message').text('');
-                const formData = new FormData($('#premium_company_profile_form')[0])
-                //const formData = $('#premium_company_profile_form').serialize();
-                $('.product_image').each(function(index, element) {
-                    const fileInput = element;
-                    // Check if the file input has a selected file
-                    if (fileInput.files.length === 0) {
-                        formData.set(`product_image[${index}]`, '');
-                    }else{
-                        formData.set(`product_image[${index}]`, 'file');
-                    }
-                });
-                $('.promotion_image').each(function(index, element) {
-                    const fileInput = element;
-                    // Check if the file input has a selected file
-                    if (fileInput.files.length === 0) {
-                        // If no file is chosen, set the corresponding value to null
-                        formData.set(`promotion_image[${index}]`, '');
-                    }else{
-                        formData.set(`promotion_image[${index}]`, 'file');
-                    }
-                });
-                console.log(formData);
-                $.ajax({
-                url: '/auth/premium_company_profile_update', 
-                method: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function (data) {
-                    if (data.status == 'ok') {
-                        $('.company-edit-message').text(data.message);
-                        $('.company-edit-message').show();
-                        $('#premium_update_btn').prop('disabled', false);
-                        setTimeout(function() {
-                            window.location.href = "/company-dashboard/" + data.data;
-                        }, 2000);
-                    } else {
-                        $('.company-edit-message').text(data.message);
-                        $('.company-edit-message').show();
-                        $('#premium_update_btn').prop('disabled', false);
-                        console.log('Something went wrong');
-                    }
-                },
-                error: function (xhr, status, error) {
-                    // Handle any errors that occur during the request
-                    console.log(error);
-                }
-                })
-            });
-
             $('#upload-company-logo').change(function () {
                 const file = this.files[0];
                 console.log(file);
@@ -654,7 +601,83 @@
                 $(this).val(inputValue);
             });
 
+            function saveFormData(shouldClose) {
+                $('#save_btn, #save_close_btn').prop('disabled', true);
+                $('.company-edit-message').hide().text('');
 
+                // Collect form data
+                const formData = new FormData($('#premium_company_profile_form')[0]);
+
+                // Handle product image files
+                $('.product_image').each(function (index, element) {
+                    const fileInput = element;
+                    if (fileInput.files.length === 0) {
+                        formData.set(`product_image[${index}]`, '');
+                    } else {
+                        formData.set(`product_image[${index}]`, 'file');
+                    }
+                });
+
+                // Handle promotion image files
+                $('.promotion_image').each(function (index, element) {
+                    const fileInput = element;
+                    if (fileInput.files.length === 0) {
+                        formData.set(`promotion_image[${index}]`, '');
+                    } else {
+                        formData.set(`promotion_image[${index}]`, 'file');
+                    }
+                });
+
+                $.ajax({
+                    url: '/auth/premium_company_profile_update',
+                    method: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                        if (data.status === 'ok') {
+                            let messageTimeout;
+
+                            $('.company-edit-message').text(data.message).show();
+                            clearTimeout(messageTimeout);
+                            
+                            messageTimeout = setTimeout(function () {
+                                $('.company-edit-message').fadeOut();
+                            }, 2000);
+            
+                            $('#save_btn, #save_close_btn').prop('disabled', false);
+            
+                            if (shouldClose) {
+                                setTimeout(function () {
+                                    window.location.href = "/company-dashboard/" + data.data;
+                                }, 2000);
+                            }
+                        } else {
+                            $('.company-edit-message').text(data.message).show();
+                            setTimeout(function () {
+                                $('.company-edit-message').fadeOut();
+                            }, 20000);
+            
+                            $('#save_btn, #save_close_btn').prop('disabled', false);
+                            console.log('Something went wrong');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(error);
+                        $('#save_btn, #save_close_btn').prop('disabled', false);
+                    }
+                });
+            }
+
+            // Event listener for Save button
+            $('#save_btn').click(function () {
+                saveFormData(false); // Pass `false` to indicate the page should not reload
+            });
+
+            // Event listener for Save & Close button
+            $('#save_close_btn').click(function () {
+                saveFormData(true); // Pass `true` to indicate the page should close
+            });
         });
     });
 </script>

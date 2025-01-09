@@ -3519,7 +3519,7 @@ async function updateComplaintStatus(complaint_id, status, message) {
   try {
     const assignuservalue= await query(deleteAssignedUsersSql, [complaint_id]);
     const results = await query(sql);
-    var history_details = `The complaint ${complaint_id} has reopend on "${formattedDate}".`
+    var history_details = `The complaint has reopend on "${formattedDate}".`
     //console.log("history_details",history_details);
     const updatequery = `INSERT INTO complaint_history SET history_details =?,complaint_id=?,created_at=?`;
     const updatevalue = await query(updatequery,[history_details,complaint_id,formattedDate]);
@@ -3544,7 +3544,7 @@ async function updateresolveComplaintStatus(complaint_id, status) {
   try {
     //const assignuservalue= await query(deleteAssignedUsersSql, [complaint_id]);
     const results = await query(sql);
-    var history_details = `The complaint ${complaint_id} has resolved on "${formattedDate}".`
+    var history_details = `The complaint has resolved on "${formattedDate}".`
     //console.log("history_details",history_details);
     const updatequery = `INSERT INTO complaint_history SET history_details =?,complaint_id=?,created_at=?`;
     const updatevalue = await query(updatequery,[history_details,complaint_id,formattedDate]);
@@ -4196,7 +4196,7 @@ async function getresolvedcomplaints() {
     //console.log("complaint_idDD",complaint_id);
     var company_id = result.company_id;
     //console.log("company_id",company_id);
-    var history_details = `The complaint ${complaint_id} has resolved.`
+    var history_details = `The complaint has resolved.`
     //console.log("history_details",history_details);
     const updatequery = `INSERT INTO complaint_history SET history_details =?,complaint_id=?,created_at=?`;
     const updatevalue = await query(updatequery,[history_details,complaint_id,formattedDate]);
@@ -4231,7 +4231,7 @@ async function getreopencomplaints() {
     //console.log("complaint_idDD",complaint_id);
     var company_id = result.company_id;
     //console.log("company_id",company_id);
-    var history_details = `The complaint ${complaint_id} has resolved.`
+    var history_details = `The complaint has resolved.`
     //console.log("history_details",history_details);
     const updatequery = `INSERT INTO complaint_history SET history_details =?,complaint_id=?,created_at=?`;
     const updatevalue = await query(updatequery,[history_details,complaint_id,formattedDate]);
@@ -4567,7 +4567,7 @@ async function updateresolveComplaintStatus(complaint_id, status) {
   try {
     //const assignuservalue= await query(deleteAssignedUsersSql, [complaint_id]);
     const results = await query(sql);
-    var history_details = `The complaint ${complaint_id} has resolved on "${formattedDate}".`
+    var history_details = `The complaint has resolved on "${formattedDate}".`
     //console.log("history_details",history_details);
     const updatequery = `INSERT INTO complaint_history SET history_details =?,complaint_id=?,created_at=?`;
     const updatevalue = await query(updatequery,[history_details,complaint_id,formattedDate]);
@@ -4736,7 +4736,7 @@ async function complaintCompanyResolvedEmail(complaint_id) {
   `;
   try {
     const results = await query(sql);
-    var history_details = `The complaint ${complaint_id} has resolved on "${formattedDate}".`
+    var history_details = `The complaint has resolved on "${formattedDate}".`
     //console.log("history_details",history_details);
     const updatequery = `INSERT INTO complaint_history SET history_details =?,complaint_id=?,created_at=?`;
     const updatevalue = await query(updatequery,[history_details,complaint_id,formattedDate]);

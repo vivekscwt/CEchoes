@@ -2657,7 +2657,7 @@ router.get('/stripe-year-payment', checkCookieValue, async (req, res) => {
         console.log("req.query-yearly", req.query);
         // const apiKey = process.env.GEO_LOCATION_API_KEY;
         // console.log("apiKey",apiKey);
-        const stripe_publish_key = process.env.stripe_publish_key;
+        const stripe_publish_key = process.env.STRIPE_PUBLISH_KEY;
 
         let country_name = req.cookies.countryName || 'India';
         let country_code = req.cookies.countryCode || 'IN';
@@ -2830,7 +2830,7 @@ router.get('/stripe-update-year-payment', checkCookieValue, async (req, res) => 
         console.log("stripe-update-year-payment", req.query);
         // const apiKey = process.env.GEO_LOCATION_API_KEY;
         // console.log("apiKey",apiKey);
-        const stripe_publish_key = process.env.stripe_publish_key;
+        const stripe_publish_key = process.env.STRIPE_PUBLISH_KEY;
 
         let country_name = req.cookies.countryName || 'India';
         let country_code = req.cookies.countryCode || 'IN';
@@ -3045,7 +3045,7 @@ router.get('/stripe-user-update-year-payment', checkCookieValue, async (req, res
         console.log("stripe-update-year-payment", req.query);
         // const apiKey = process.env.GEO_LOCATION_API_KEY;
         // console.log("apiKey",apiKey);
-        const stripe_publish_key = process.env.stripe_publish_key;
+        const stripe_publish_key = process.env.STRIPE_PUBLISH_KEY;
 
         let country_name = req.cookies.countryName || 'India';
         let country_code = req.cookies.countryCode || 'IN';
