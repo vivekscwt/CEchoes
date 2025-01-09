@@ -105,10 +105,10 @@
       </div>
     </div>
     <% if(CompanyInfo.about_company){ %>
-    <div class="company-content">
-      <p><%= CompanyInfo.about_company %></p>
-    </div>
-    <% } %>
+      <div class="company-content">
+          <p><%- CompanyInfo.about_company.replace(/\r\n|\n/g, '<br>') %></p>
+      </div>
+  <% } %>
     <section class="main-content pt-0">
       <div class="container">
         <% if(company && company.membership_type_id>0 ){ %>
