@@ -9927,7 +9927,7 @@ exports.complaintRegister = (req, res) => {
                 console.log("No data returned from the query.");
             }
 
-            var history_details = `This complaint with ticket id ${ticket_id} about ${category_name} is created by ${fullName} on ${dateOnly}.`
+            var history_details = `This complaint with ticket id ${ticket_id} is created by ${fullName} on ${dateOnly}.`
             const history_data = {
                 complaint_id: result.insertId,
                 history_details: history_details,
