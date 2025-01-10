@@ -95,35 +95,35 @@
                          </div>
                      </div>
 
-                        <div class="col-sm-6">
-                           <div class="custom-form">
-                              <div class="custom-form m-0 dynamic_state_field_wrapper" >
-                                 <select id="select_category" name="category_id" id="select_category"  class="form-select" required>
-                                     <option value="" disabled selected>Category</option>
-                                     <option value="0">General</option>
-                                 </select>
-                             </div> 
-                           </div>
+                     <div class="col-sm-6">
+                        <div class="custom-form">
+                           <div class="custom-form m-0 dynamic_state_field_wrapper">
+                              <select id="select_category" name="category_id" class="form-select" required>
+                                  <option value="" disabled selected>Category</option>
+                              </select>
+                          </div>
                         </div>
-                        <div class="col-sm-6">
-                           <div class="custom-form">
-                              <div class="custom-form m-0 dynamic_product_field_wrapper" >
-                                 <select id="select_sub_category" name="sub_category_id"  class="form-select" required>
-                                     <option value="" disabled selected>Sub-Category</option>
-                                     <option value="0">General</option>
-                                 </select>
-                             </div>
-                           </div>
+                     </div>
+                     
+                     <div class="col-sm-6">
+                        <div class="custom-form">
+                           <div class="custom-form m-0 dynamic_product_field_wrapper">
+                              <select id="select_sub_category" name="sub_category_id" class="form-select" required>
+                                  <option value="" disabled selected>Sub-Category</option>
+                              </select>
+                          </div>
                         </div>
-                        <div class="col-sm-6">
-                            <div class="custom-form">
-                               <div class="custom-form m-0 dynamic_sub_category_field_wrapper" >
-                                  <select id="select_complaint_product" name="select_complaint_product"  class="form-select" required>
-                                    <option value="" disabled selected>Product</option>
-                                  </select>
-                              </div>
-                            </div>
-                         </div>
+                     </div>
+                     
+                     <div class="col-sm-6">
+                        <div class="custom-form">
+                           <div class="custom-form m-0 dynamic_sub_category_field_wrapper">
+                              <select id="select_complaint_product" name="select_complaint_product" class="form-select" required>
+                                <option value="" disabled selected>Product</option>
+                              </select>
+                          </div>
+                        </div>
+                     </div>
                         <div class="col-sm-6">
                            <div class="custom-form">
                               <input type="text" name="model_no" id="model_no" class="form-control" placeholder="Product Model / Serial No">
@@ -750,6 +750,25 @@ $('#companyDropdown').on('change', function() {
     placeholder: "Name of Organisation/Company/Institute",
     allowClear: true, 
     width: '100%' 
+  });
+  $('#select_category').select2({
+    placeholder: "Select Category",
+    allowClear: true,
+    width: '100%' // Adjusts the width to 100% of its container
+  });
+
+  // Initialize Select2 for the sub-category select
+  $('#select_sub_category').select2({
+    placeholder: "Select Sub-Category",
+    allowClear: true,
+    width: '100%' // Adjusts the width to 100% of its container
+  });
+
+  // Initialize Select2 for the complaint product select
+  $('#select_complaint_product').select2({
+    placeholder: "Select Product",
+    allowClear: true,
+    width: '100%' // Adjusts the width to 100% of its container
   });
   $('#state').select2({
     placeholder: "State",
