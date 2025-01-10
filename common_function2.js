@@ -3506,6 +3506,11 @@ async function getAllComplaintsByUserId(user_id) {
 
 //Function to update complaint status to complaint table
 async function updateComplaintStatus(complaint_id, status, message) {
+  const getcomplainttoken = `SELECT * FROM complaint WHERE id=?`;
+  const complainttokenval = await query(getcomplainttoken,[complaint_id]);
+  console.log("complainttokenval",complainttokenval);
+  var ticket = complainttokenval[0].ticket_id;
+  console.log("ticket",ticket);
 
   const currentDate = new Date();
   const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ');
@@ -3519,7 +3524,7 @@ async function updateComplaintStatus(complaint_id, status, message) {
   try {
     const assignuservalue= await query(deleteAssignedUsersSql, [complaint_id]);
     const results = await query(sql);
-    var history_details = `The complaint has reopend on "${formattedDate}".`
+    var history_details = `This complaint with ticket id ${ticket} has reopend on "${formattedDate}".`
     //console.log("history_details",history_details);
     const updatequery = `INSERT INTO complaint_history SET history_details =?,complaint_id=?,created_at=?`;
     const updatevalue = await query(updatequery,[history_details,complaint_id,formattedDate]);
@@ -3535,6 +3540,12 @@ async function updateresolveComplaintStatus(complaint_id, status) {
   const currentDate = new Date();
   const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ');
 
+  const getcomplainttoken = `SELECT * FROM complaint WHERE id=?`;
+  const complainttokenval = await query(getcomplainttoken,[complaint_id]);
+  console.log("complainttokenval",complainttokenval);
+  var ticket = complainttokenval[0].ticket_id;
+  console.log("ticket",ticket);
+
   const sql = `
   UPDATE complaint SET status='${status}' WHERE id = '${complaint_id}'
   `;
@@ -3544,7 +3555,7 @@ async function updateresolveComplaintStatus(complaint_id, status) {
   try {
     //const assignuservalue= await query(deleteAssignedUsersSql, [complaint_id]);
     const results = await query(sql);
-    var history_details = `The complaint has resolved on "${formattedDate}".`
+    var history_details = `This complaint with ticket id ${ticket} has resolved on "${formattedDate}".`
     //console.log("history_details",history_details);
     const updatequery = `INSERT INTO complaint_history SET history_details =?,complaint_id=?,created_at=?`;
     const updatevalue = await query(updatequery,[history_details,complaint_id,formattedDate]);
@@ -4196,7 +4207,13 @@ async function getresolvedcomplaints() {
     //console.log("complaint_idDD",complaint_id);
     var company_id = result.company_id;
     //console.log("company_id",company_id);
-    var history_details = `The complaint has resolved.`
+    const getcomplainttoken = `SELECT * FROM complaint WHERE id=?`;
+    const complainttokenval = await query(getcomplainttoken,[complaint_id]);
+    console.log("complainttokenval",complainttokenval);
+    var ticket = complainttokenval[0].ticket_id;
+    console.log("ticket",ticket);
+
+    var history_details = `This complaint with ticket id ${ticket} has been resolved.`
     //console.log("history_details",history_details);
     const updatequery = `INSERT INTO complaint_history SET history_details =?,complaint_id=?,created_at=?`;
     const updatevalue = await query(updatequery,[history_details,complaint_id,formattedDate]);
@@ -4231,7 +4248,13 @@ async function getreopencomplaints() {
     //console.log("complaint_idDD",complaint_id);
     var company_id = result.company_id;
     //console.log("company_id",company_id);
-    var history_details = `The complaint has resolved.`
+    const getcomplainttoken = `SELECT * FROM complaint WHERE id=?`;
+    const complainttokenval = await query(getcomplainttoken,[complaint_id]);
+    console.log("complainttokenval",complainttokenval);
+    var ticket = complainttokenval[0].ticket_id;
+    console.log("ticket",ticket);
+
+    var history_details = `This complaint with ticket id ${ticket} has resolved.`
     //console.log("history_details",history_details);
     const updatequery = `INSERT INTO complaint_history SET history_details =?,complaint_id=?,created_at=?`;
     const updatevalue = await query(updatequery,[history_details,complaint_id,formattedDate]);
@@ -4567,7 +4590,12 @@ async function updateresolveComplaintStatus(complaint_id, status) {
   try {
     //const assignuservalue= await query(deleteAssignedUsersSql, [complaint_id]);
     const results = await query(sql);
-    var history_details = `The complaint has resolved on "${formattedDate}".`
+    const getcomplainttoken = `SELECT * FROM complaint WHERE id=?`;
+    const complainttokenval = await query(getcomplainttoken,[complaint_id]);
+    console.log("complainttokenval",complainttokenval);
+    var ticket = complainttokenval[0].ticket_id;
+    console.log("ticket",ticket);
+    var history_details = `This complaint with ticket id ${ticket} has resolved on "${formattedDate}".`
     //console.log("history_details",history_details);
     const updatequery = `INSERT INTO complaint_history SET history_details =?,complaint_id=?,created_at=?`;
     const updatevalue = await query(updatequery,[history_details,complaint_id,formattedDate]);
@@ -4727,6 +4755,13 @@ async function complaintcompanyuserResponseEmail(complaint_id,fullName,maskedTic
 
 //Function send Company Resolved Email  to customer by complaint_id 
 async function complaintCompanyResolvedEmail(complaint_id) {
+
+  const getcomplainttoken = `SELECT * FROM complaint WHERE id=?`;
+  const complainttokenval = await query(getcomplainttoken,[complaint_id]);
+  console.log("complainttokenval",complainttokenval);
+  var ticket = complainttokenval[0].ticket_id;
+  console.log("ticket",ticket);
+
   const sql = `
   SELECT u.email, u.first_name, c.company_name  
   FROM complaint 
@@ -4736,7 +4771,7 @@ async function complaintCompanyResolvedEmail(complaint_id) {
   `;
   try {
     const results = await query(sql);
-    var history_details = `The complaint has resolved on "${formattedDate}".`
+    var history_details = `The complaint with ticket id ${ticket} has resolved on "${formattedDate}".`
     //console.log("history_details",history_details);
     const updatequery = `INSERT INTO complaint_history SET history_details =?,complaint_id=?,created_at=?`;
     const updatevalue = await query(updatequery,[history_details,complaint_id,formattedDate]);

@@ -9875,11 +9875,12 @@ exports.complaintRegister = (req, res) => {
             }
             //console.log("leveluseremail", leveluseremail);
 
-            const selectQuery = `SELECT created_at FROM complaint WHERE id = ?`;
+            const selectQuery = `SELECT created_at,ticket_id FROM complaint WHERE id = ?`;
             const selectval = await queryAsync(selectQuery, [result.insertId]);
     
                 if (selectval.length > 0) {
                     var created_complaint_date = selectval[0].created_at;
+                    var ticket_id = selectval[0].ticket_id
                     var date = new Date(created_complaint_date);
                     var formattedDates = date.toLocaleDateString('en-US', {
                         year: 'numeric',
@@ -9926,7 +9927,7 @@ exports.complaintRegister = (req, res) => {
                 console.log("No data returned from the query.");
             }
 
-            var history_details = `The complaint id ${catId} about ${category_name} is created by ${fullName} on ${dateOnly}.`
+            var history_details = `This complaint with ticket id ${ticket_id} about ${category_name} is created by ${fullName} on ${dateOnly}.`
             const history_data = {
                 complaint_id: result.insertId,
                 history_details: history_details,
@@ -23190,7 +23191,7 @@ exports.assignUsers = async (req, res) => {
             }
         })
 
-        var history_details = `The complaint ${complaint_id} has assigned to ${fullName} by ${addedbyfullName} on ${formattedDate} for level ${level}.`
+        var history_details = `This complaint with ticket id ${complain_ticket_id} has assigned to ${fullName} by ${addedbyfullName} on ${formattedDate} for level ${level}.`
 
         const history_data = {
             complaint_id: complaint_id,
@@ -23556,7 +23557,7 @@ exports.escalateassignUsers = async (req, res) => {
 
 
 
-        var history_details = `The complaint ${complaint_id} has assigned to ${fullName} on ${formattedDate} for level ${level}. `
+        var history_details = `The complaint with ticket id ${complain_ticket_id} has assigned to ${fullName} on ${formattedDate} for level ${level}. `
         const history_data = {
             complaint_id: complaint_id,
             history_details: history_details,
