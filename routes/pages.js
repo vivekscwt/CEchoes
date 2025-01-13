@@ -6507,13 +6507,13 @@ router.get('/update-survey/:slug/:survey_id', checkClientClaimedCompany, async (
         comFunction2.getSurveyemailDetailsByUniqueId(surveyUniqueId),
         
     ]);
-    console.log('SurveyAnswerCount', SurveyAnswerCount);
-    console.log("getSurveyemailDetailsByUniqueId", getSurveyemailDetailsByUniqueId);
+    // console.log('SurveyAnswerCount', SurveyAnswerCount);
+    // console.log("getSurveyemailDetailsByUniqueId", getSurveyemailDetailsByUniqueId);
 
     const getsurveyquery = `SELECT * FROM survey WHERE expire_at >= CURDATE();`;
     const getsurveyval = await query(getsurveyquery);
 
-    console.log("getsurveyval", getsurveyval);
+    // console.log("getsurveyval", getsurveyval);
 
     var emailAddresses = getSurveyemailDetailsByUniqueId.map(function (item) {
         return item.emails;

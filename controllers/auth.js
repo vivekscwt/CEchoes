@@ -10612,10 +10612,10 @@ exports.createSurvey = async (req, res) => {
 
 // Create Survey
 exports.updateSurveyData = async (req, res) => {
-    //  console.log( 'updateSurveyData', req.body );
-    //  console.log( 'updateSurveyData', req.file );
+     console.log( 'updateSurveyData', req.body );
+     console.log( 'updateSurveyData', req.file );
     //return false;
-    const { unique_id, created_at, expire_at, title, invitation_type, email, email_body, company_id, questions } = req.body;
+    var { unique_id, created_at, expire_at, title, invitation_type, email, email_body, company_id, questions } = req.body;
     // const jsonString = Object.keys(req.body)[0];
     // const surveyResponse = JSON.parse(jsonString);
     // console.log(surveyResponse[0].questions);
@@ -10629,6 +10629,12 @@ exports.updateSurveyData = async (req, res) => {
     // req.body.unique_id = uniqueNumber;
 
     if (invitation_type[0] == 'Email' || invitation_type[0] == 'Both') {
+        const deleteExistingQuery = `
+            DELETE FROM suvey_invitation_details
+            WHERE unique_id = ?
+            `;
+        await query(deleteExistingQuery, [unique_id[0]]);
+        console.log("Deleted existing entries for unique_id:", unique_id[0]);
         if (req.file) {
             const csvFilePath = path.join(__dirname, '..', 'company-csv', req.file.filename);
             const connection = await mysql.createConnection(dbConfig);
@@ -10639,35 +10645,42 @@ exports.updateSurveyData = async (req, res) => {
             const worksheet = workbook.getWorksheet(1);
             const emailsArr = await processReviewCSVRows(worksheet);
             const emails = emailsArr.flat();
-            console.log(emails);
+            console.log("emailsArremails",emails);
             if (emails.length > 0) {
-                req.body.emails = emails;
-                // console.log('emails',emails);
-                // console.log('req.body',req.body);
+                console.log("emailss");
+                
+                // req.body.emails = emails;
+                // // console.log('emails',emails);
+                // // console.log('req.body',req.body);
+
+                // const [SurveyInvitationFile] = await Promise.all([
+                //     comFunction2.SurveyInvitationFile(req.body)
+                // ]);
+
+                const existingEmailsQuery = `
+                SELECT *
+                FROM suvey_invitation_details
+                WHERE unique_id = ?
+            `;
+            const [existingEmailsRows] = await connection.execute(existingEmailsQuery, [unique_id[0]]);
+            const existingEmails = existingEmailsRows.map(row => row.emails);
+
+            const newEmails = emails.filter(email => !existingEmails.includes(emails));
+            console.log("New emails to be inserted:", newEmails);
+
+            if (newEmails.length > 0) {
+                req.body.emails = newEmails;
 
                 const [SurveyInvitationFile] = await Promise.all([
                     comFunction2.SurveyInvitationFile(req.body)
                 ]);
-
-            } else {
-
-                return res.send(
-                    {
-                        status: 'err',
-                        message: 'You have to submit at least one email id.'
-                    }
-                )
-
-            }
-        } else {
-
-            if (email.length > 2) {
-                // console.log('emails',emails);
-                // console.log('req.body',req.body);
-
-                const [SurveyInvitationByArray] = await Promise.all([
-                    comFunction2.SurveyInvitationByArray(req.body)
-                ]);
+            } 
+            // else {
+            //     return res.send({
+            //         status: 'err',
+            //         message: 'All provided emails already exist in the system.'
+            //     });
+            // }
 
             } else {
 
@@ -10680,8 +10693,67 @@ exports.updateSurveyData = async (req, res) => {
 
             }
         }
-    }
+        //  else {
 
+        //     if (email.length > 2) {
+        //         // console.log('emails',emails);
+        //         // console.log('req.body',req.body);
+
+        //         const [SurveyInvitationByArray] = await Promise.all([
+        //             comFunction2.SurveyInvitationByArray(req.body)
+        //         ]);
+
+        //     } else {
+
+        //         return res.send(
+        //             {
+        //                 status: 'err',
+        //                 message: 'You have to submit at least one email id.'
+        //             }
+        //         )
+
+        //     }
+        // }
+        else {
+            if (email.length > 2) {
+                const connection = await mysql.createConnection(dbConfig);
+
+                const existingEmailsQuery = `
+                    SELECT emails
+                    FROM suvey_invitation_details
+                    WHERE unique_id = ?
+                `;
+                const [existingEmailsRows] = await connection.execute(existingEmailsQuery, [unique_id[0]]);
+                const existingEmails = existingEmailsRows.map(row => row.emails);
+
+
+                const newEmails = email.filter(email => !existingEmails.includes(email));
+
+                console.log("New emails to be inserted:", newEmails);
+
+                
+
+                if (newEmails.length > 0) {
+                    req.body.emails = newEmails;
+
+                    const [SurveyInvitationByArray] = await Promise.all([
+                        comFunction2.SurveyInvitationByArray(req.body)
+                    ]);
+                } else {
+                    return res.send({
+                        status: 'err',
+                        message: 'All provided emails have already been invited.'
+                    });
+                }
+            } else {
+                // If there are no emails in the request body
+                return res.send({
+                    status: 'err',
+                    message: 'You have to submit at least one email id.'
+                });
+            }
+        }
+    }
     const checkOngoingSurveySql = `
         SELECT COUNT(*) as ongoingSurveys
         FROM survey
@@ -10698,7 +10770,6 @@ exports.updateSurveyData = async (req, res) => {
             message: 'Another survey is already ongoing. Please wait until it is completed.'
         });
     }
-
     const surveyInsertData = [
         expire_at[0],
         title[0],
@@ -10710,8 +10781,6 @@ exports.updateSurveyData = async (req, res) => {
 
     // const update_previous_sql = "DELETE FROM survey_customer_answers WHERE survey_unique_id=?";
     // const update_previous_val = await query(update_previous_sql, [unique_id[0]]);    
-
-
     db.query(sql, surveyInsertData, async (err, result) => {
         if (err) {
             return res.send({
