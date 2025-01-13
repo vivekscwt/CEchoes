@@ -7942,19 +7942,38 @@ exports.reviewBulkInvitation = async (req, res) => {
 // }
 
 // Define a promise-based function for processing review invitation csv
+// function processReviewCSVRows(worksheet) {
+//     return new Promise(async (resolve, reject) => {
+//         const emails = [];
+
+//         await worksheet.eachRow(async (row, rowNumber) => {
+//             if (rowNumber !== 1) { // Skip the header row
+
+//                 emails.push([row.values[1]]);
+
+//             }
+//         });
+
+//         // Resolve the promise after all rows have been processed
+//         resolve(emails);
+//     });
+// }
+
 function processReviewCSVRows(worksheet) {
-    return new Promise(async (resolve, reject) => {
+    return new Promise((resolve, reject) => {
         const emails = [];
 
-        await worksheet.eachRow(async (row, rowNumber) => {
+        if (!worksheet) {
+            return reject('Worksheet is undefined.');
+        }
+
+        worksheet.eachRow((row, rowNumber) => {
             if (rowNumber !== 1) { // Skip the header row
-
-                emails.push([row.values[1]]);
-
+                // Assuming the email is in the 3rd column (index 3)
+                emails.push(row.values[3]);  // Adjust to correct column
             }
         });
 
-        // Resolve the promise after all rows have been processed
         resolve(emails);
     });
 }
@@ -10448,61 +10467,121 @@ exports.createSurvey = async (req, res) => {
     const uniqueNumber = Date.now().toString().replace(/\D/g, "");
     req.body.unique_id = uniqueNumber;
 
+    // if (invitation_type[0] == 'Email' || invitation_type[0] == 'Both') {
+    //     if (req.file) {
+    //         const csvFilePath = path.join(__dirname, '..', 'company-csv', req.file.filename);
+    //         const connection = await mysql.createConnection(dbConfig);
+
+    //         const workbook = new ExcelJS.Workbook();
+    //         await workbook.csv.readFile(csvFilePath);
+
+    //         const worksheet = workbook.getWorksheet(3);
+    //         const emailsArr = await processReviewCSVRows(worksheet);
+    //         const emails = emailsArr.flat();
+    //         console.log("surveyemails", emails);
+    //         if (emails.length > 0) {
+    //             req.body.emails = emails;
+    //             // console.log('emails',emails);
+    //             // console.log('req.body',req.body);
+
+    //             const [SurveyInvitationFile] = await Promise.all([
+    //                 comFunction2.SurveyInvitationFile(req.body)
+    //             ]);
+    //             console.log("SurveyInvitationFilesss", SurveyInvitationFile);
+
+    //         } else {
+
+    //             return res.send(
+    //                 {
+    //                     status: 'err',
+    //                     message: 'You have to submit at least one email id.'
+    //                 }
+    //             )
+
+    //         }
+    //     } else {
+
+    //         if (email.length > 2) {
+    //             // console.log('emails',emails);
+    //             // console.log('req.body',req.body);
+
+    //             const [SurveyInvitationByArray] = await Promise.all([
+    //                 comFunction2.SurveyInvitationByArray(req.body)
+    //             ]);
+
+    //         } else {
+
+    //             return res.send(
+    //                 {
+    //                     status: 'err',
+    //                     message: 'You have to submit at least one email id.'
+    //                 }
+    //             )
+
+    //         }
+    //     }
+    // }
     if (invitation_type[0] == 'Email' || invitation_type[0] == 'Both') {
         if (req.file) {
             const csvFilePath = path.join(__dirname, '..', 'company-csv', req.file.filename);
             const connection = await mysql.createConnection(dbConfig);
-
+    
             const workbook = new ExcelJS.Workbook();
             await workbook.csv.readFile(csvFilePath);
-
-            const worksheet = workbook.getWorksheet(1);
-            const emailsArr = await processReviewCSVRows(worksheet);
-            const emails = emailsArr.flat();
-            console.log("surveyemails", emails);
-            if (emails.length > 0) {
-                req.body.emails = emails;
-                // console.log('emails',emails);
-                // console.log('req.body',req.body);
-
-                const [SurveyInvitationFile] = await Promise.all([
-                    comFunction2.SurveyInvitationFile(req.body)
-                ]);
-                console.log("SurveyInvitationFilesss", SurveyInvitationFile);
-
-            } else {
-
-                return res.send(
-                    {
+    
+            // Debugging: Check the available worksheets
+            console.log(`Available worksheets: ${workbook.worksheets.length}`);
+    
+            // Try to get the first worksheet (index 1)
+            const worksheet = workbook.getWorksheet(1); // Use 1-based index
+    
+            if (!worksheet) {
+                return res.send({
+                    status: 'err',
+                    message: 'The worksheet could not be found.'
+                });
+            }
+    
+            // Process the rows to get emails
+            try {
+                const emailsArr = await processReviewCSVRows(worksheet);
+                console.log("emailsArr", emailsArr);
+    
+                const emails = emailsArr.filter(email => email).map(email => email.trim());
+                console.log("surveyemails", emails);
+    
+                if (emails.length > 0) {
+                    req.body.emails = emails;
+                    const [SurveyInvitationFile] = await Promise.all([
+                        comFunction2.SurveyInvitationFile(req.body)
+                    ]);
+                    console.log("SurveyInvitationFile", SurveyInvitationFile);
+                } else {
+                    return res.send({
                         status: 'err',
                         message: 'You have to submit at least one email id.'
-                    }
-                )
-
+                    });
+                }
+            } catch (error) {
+                return res.send({
+                    status: 'err',
+                    message: `Error processing CSV rows: ${error}`
+                });
             }
         } else {
-
             if (email.length > 2) {
-                // console.log('emails',emails);
-                // console.log('req.body',req.body);
-
                 const [SurveyInvitationByArray] = await Promise.all([
                     comFunction2.SurveyInvitationByArray(req.body)
                 ]);
-
             } else {
-
-                return res.send(
-                    {
-                        status: 'err',
-                        message: 'You have to submit at least one email id.'
-                    }
-                )
-
+                return res.send({
+                    status: 'err',
+                    message: 'You have to submit at least one email id.'
+                });
             }
         }
     }
-
+    
     const surveyInsertData = [
         uniqueNumber,
         company_id[0],
