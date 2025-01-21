@@ -1522,23 +1522,91 @@ exports.createCategory = async (req, res) => {
 }
 
 //Update Category
-exports.updatecategory = async (req, res) => {
-    try {
-        const { complaint_id, category_id, updated_user_id } = req.body;
-        console.log("req.body", req.body);
-        const updateQuery = `UPDATE complaint SET category_id = ?, updated_user_id = ? WHERE id = ?`;
-        const updateValue = await query(updateQuery, [category_id, updated_user_id, complaint_id])
-        //console.log("updateValue",updateValue[0]);
-        return res.status(200).json({ success_message: 'category updated succesfully.' });
+// exports.updatecategory = async (req, res) => {
+//     try {
+//         const { complaint_id, category_id, updated_user_id } = req.body;
+//         console.log("req.body", req.body);
+//         const updateQuery = `UPDATE complaint SET category_id = ?, updated_user_id = ? WHERE id = ?`;
+//         const updateValue = await query(updateQuery, [category_id, updated_user_id, complaint_id])
+//         //console.log("updateValue",updateValue[0]);
+//         return res.status(200).json({ success_message: 'category updated succesfully.' });
 
-    } catch (error) {
-        console.error("error", error);
-        res.send({
-            status: 'error',
-            message: 'An error occurred while processing your request.'
+//     } catch (error) {
+//         console.error("error", error);
+//         res.send({
+//             status: 'error',
+//             message: 'An error occurred while processing your request.'
+//         });
+//     }
+// }
+
+exports.updatecategory = async (req, res) => {
+    console.log('Updating category', req.body);
+
+    const { cat_id, cat_name, cat_parent_id, country } = req.body;
+
+    // Generate a unique slug if category name is updated
+    const catSlug = await new Promise((resolve, reject) => {
+        comFunction2.generateUniqueSlugCategory(cat_name, (error, generatedSlug) => {
+            if (error) {
+                console.log('Error:', error.message);
+                reject(error);
+            } else {
+                console.log('Generated Category Slug:', generatedSlug);
+                resolve(generatedSlug);
+            }
         });
-    }
-}
+    });
+
+    const checkSql = "SELECT * FROM category WHERE category_name = ? AND ID != ?";
+    db.query(checkSql, [cat_name, cat_id], (err, result) => {
+        if (err) return res.status(500).json({ status: 'error', message: err.message });
+
+        if (result.length > 0) {
+            return res.status(400).json({ status: 'Not ok', message: 'Category name already exists' });
+        }
+
+        let updateSql;
+        const values = [cat_name, cat_parent_id || 0, catSlug, cat_id];
+
+        if (req.file) {
+            // If a new image is uploaded
+            updateSql = `
+                UPDATE category 
+                SET category_name = ?, parent_id = ?, category_slug = ?, category_img = ? 
+                WHERE ID = ?`;
+            values.splice(3, 0, req.file.filename); // Add the image filename to the query values
+        } else {
+            // If no new image is uploaded
+            updateSql = `
+                UPDATE category 
+                SET category_name = ?, parent_id = ?, category_slug = ? 
+                WHERE ID = ?`;
+        }
+
+        db.query(updateSql, values, async (updateErr, updateResult) => {
+            if (updateErr) return res.status(500).json({ status: 'error', message: updateErr.message });
+
+            // Update the country relationships
+            const deleteRelationSql = `DELETE FROM category_country_relation WHERE cat_id = ?`;
+            db.query(deleteRelationSql, [cat_id], (deleteErr) => {
+                if (deleteErr) return res.status(500).json({ status: 'error', message: deleteErr.message });
+
+                // Insert new country relationships
+                const relationSql = `INSERT INTO category_country_relation (cat_id, country_id) VALUES (?, ?)`;
+                db.query(relationSql, [cat_id, country], (relationErr) => {
+                    if (relationErr) return res.status(500).json({ status: 'error', message: relationErr.message });
+
+                    return res.json({
+                        status: 'ok',
+                        message: 'Category updated successfully',
+                    });
+                });
+            });
+        });
+    });
+};
+
 
 exports.getcatsbyCountry = async (req, res) => {
     try {
