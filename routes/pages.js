@@ -9891,7 +9891,7 @@ router.get('/fetch-parent-categories', async (req, res) => {
 
     try {
         const results = await queryAsync(querys, [countryId]);
-        console.log("results", results);
+        console.log("fetch-parent-categoriesresults", results);
 
         res.json(results);
     } catch (error) {
