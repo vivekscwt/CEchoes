@@ -1109,7 +1109,7 @@
                     // const total_prices = parseFloat(urlParams.get('total_price'));
                     const total_prices = '<%= pricevalue%>'
 
-                    const alltotal_amount = totalAmount + total_prices;
+                    const alltotal_amount = parseInt(totalAmount) + parseInt(total_prices);
                     var allamount = alltotal_amount/1;
 
                     // if (memberCount_val > 0) {

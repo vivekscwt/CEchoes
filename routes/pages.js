@@ -1661,9 +1661,6 @@ router.get('/plans', checkCookieValue, async (req, res) => {
             comFunction2.getSubscribedUsers(user_id),
             
         ]);
-        console.log("getplans", getplans);
-        console.log("getSubscribedUserssss", getSubscribedUsers);
-
         const sql = `SELECT * FROM page_info where secret_Key = 'business' AND country = "${country_code}"`;
         db.query(sql, (err, results, fields) => {
             if (err) throw err;
@@ -1797,8 +1794,7 @@ router.get('/plans/:getcountryname', checkCookieValue, async (req, res) => {
                 comFunction2.getSubscribedUsers(user_id),
                 
             ]);
-            console.log("getplans", getplans);
-            console.log("getSubscribedUserssss", getSubscribedUsers);
+
     
             const sql = `SELECT * FROM page_info where secret_Key = 'business' AND country = "US"`;
             db.query(sql, (err, results, fields) => {
@@ -2936,7 +2932,7 @@ router.get('/stripe-update-year-payment', checkCookieValue, async (req, res) => 
 
 router.get('/stripe-user-update-payment', checkCookieValue, async (req, res) => {
     try {
-        const { planId, planPrice, monthly, memberCount, total_price, encryptedEmail } = req.query;
+        const { planId, planPrice, monthly, memberCount, total_price, encryptedEmail, billingCycle } = req.query;
         console.log("stripe-update-payment", req.query);
         // const apiKey = process.env.GEO_LOCATION_API_KEY;
         //console.log("apiKey",apiKey);
@@ -3354,9 +3350,9 @@ router.get('/create-company-subscription', checkCookieValue, async (req, res) =>
         let pricevalue;
         if (selectedPlan) {
         if (subscriptionType === 'monthly') {
-            pricevalue = selectedPlan.monthly_price_local;
+            pricevalue = selectedPlan.monthly_price;
         } else {
-            pricevalue = selectedPlan.yearly_price_local;
+            pricevalue = selectedPlan.yearly_price;
         }
         } else {
         console.error(`Plan ${planName} not found.`);
